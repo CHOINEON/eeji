@@ -31,15 +31,15 @@ export const WidgetData = [
       {
         name: "Table",
       },
-      {
-        name: "Calendar",
-      },
-      {
-        name: "Input",
-      },
-      {
-        name: "Clock",
-      },
+      // {
+      //   name: "Calendar",
+      // },
+      // {
+      //   name: "Input",
+      // },
+      // {
+      //   name: "Clock",
+      // },
     ],
   },
 ];

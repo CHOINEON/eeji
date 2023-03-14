@@ -1,12 +1,18 @@
 import React from "react";
 import layout_list from "../data/layout_list";
 import { Grid, GridItem, useColorModeValue } from "@chakra-ui/react";
+import WidgetModal from "../components/WidgetModal";
 
 interface GridInfoProps {
   gridInfo: string;
 }
 
 export const GridLayoutBox: React.FC<GridInfoProps> = (props) => {
+  //widget Modal
+  const [isOpenWidgetModal, setIsOpenWidgetModal] =
+    React.useState<boolean>(false);
+  const [WidgetInfo, setWidgetInfo] = React.useState<string>("");
+
   const [CursorGridItem, setCursorGridItem] = React.useState<string>("none");
   const [LayoutChildOption, setLayoutChildOption] = React.useState<any>();
 
@@ -50,6 +56,7 @@ export const GridLayoutBox: React.FC<GridInfoProps> = (props) => {
   const ClickItem = (item: any) => {
     console.log(item);
     console.log(item.target.css);
+    setIsOpenWidgetModal(true);
   };
 
   const render = () => {
@@ -138,16 +145,31 @@ export const GridLayoutBox: React.FC<GridInfoProps> = (props) => {
   };
 
   return (
-    <Grid
-      h="40vw"
-      pt={8}
-      cursor={"pointer"}
-      templateRows={rows}
-      templateColumns={cols}
-      gap={4}
-    >
-      {render()}
-    </Grid>
+    <>
+      <WidgetModal
+        WidgetModalisOpen={isOpenWidgetModal}
+        setCloseWidgetModal={(isClose: boolean) => {
+          if (isClose) {
+            setIsOpenWidgetModal(false);
+          }
+        }}
+        setWidgetInfo={(WidgetInfo: string) => {
+          if (WidgetInfo !== undefined) {
+            setWidgetInfo(WidgetInfo);
+          }
+        }}
+      />
+      <Grid
+        h="40vw"
+        pt={8}
+        cursor={"pointer"}
+        templateRows={rows}
+        templateColumns={cols}
+        gap={4}
+      >
+        {render()}
+      </Grid>
+    </>
   );
 };
 

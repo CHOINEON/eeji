@@ -27,7 +27,15 @@ import ico_table from "../../../assets/img/ineeji/ico_table.png";
 
 import WidgetData from "../data/widget_list";
 
+const WidgetListWrap = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+`;
+
 const WidgetIcon = styled.li<{ Type: string }>`
+  list-style: none;
   width: calc(33.3% - 2vw);
   margin: 1vw !important;
   background-position: center top 0.6vw;
@@ -91,6 +99,7 @@ interface WidgetModalProps {
 
 export const WidgetModal: React.FC<WidgetModalProps> = (props) => {
   const { onClose } = useDisclosure();
+  const [WidgetType, setWidgetType] = React.useState<string>("chart");
 
   const CreateTabItems = (type: string) => {
     let chart: any = [];
@@ -152,25 +161,26 @@ export const WidgetModal: React.FC<WidgetModalProps> = (props) => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Layout 선택</ModalHeader>
+          <ModalHeader>Widget 선택</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Grid templateColumns="repeat(2, 1fr)" gap={3}>
               <Button
                 colorScheme="brand"
                 mr={3}
-                onClick={() => CreateTabItems("chart")}
+                onClick={() => setWidgetType("chart")}
               >
                 Chart
               </Button>
               <Button
                 colorScheme="brand"
                 mr={3}
-                onClick={() => CreateTabItems("component")}
+                onClick={() => setWidgetType("component")}
               >
                 Component
               </Button>
             </Grid>
+            <WidgetListWrap>{CreateTabItems(WidgetType)}</WidgetListWrap>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="brand" mr={3} onClick={onClose}>
