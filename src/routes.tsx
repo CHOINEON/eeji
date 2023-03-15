@@ -1,9 +1,9 @@
-import { Icon } from "@chakra-ui/react";
-import { MdDashboard, MdDatasetLinked } from "react-icons/md";
+import { Icon } from '@chakra-ui/react'
+import { MdDashboard, MdDatasetLinked } from 'react-icons/md'
 
 // Admin Imports
-import MainDashboard from "views/hmid";
-import Login from "layouts/login/login";
+import MainDashboard from 'views/hmid'
+import Login from 'layouts/login/login'
 
 // Auth Imports
 
@@ -16,21 +16,19 @@ const routes = [
   //   component: Login,
   // },
   {
-    name: "HMID",
-    layout: "/admin",
-    path: "/hmid",
+    name: 'HMID',
+    layout: '/admin',
+    path: '/hmid',
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: MainDashboard,
   },
   {
-    name: "FoundationStructure",
-    layout: "/admin",
-    path: "/foundation-structure-analysis",
-    icon: (
-      <Icon as={MdDatasetLinked} width="20px" height="20px" color="inherit" />
-    ),
+    name: 'FoundationStructure',
+    layout: '/admin',
+    path: '/foundation-structure-analysis',
+    icon: <Icon as={MdDatasetLinked} width="20px" height="20px" color="inherit" />,
     component: MainDashboard,
   },
-];
+]
 
-export default routes;
+export default routes

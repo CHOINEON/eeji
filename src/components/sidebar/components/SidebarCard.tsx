@@ -1,7 +1,7 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex } from '@chakra-ui/react'
 
 export default function SidebarDocs() {
-  const bgColor = "linear-gradient(135deg, #868CFF 0%, #4318FF 100%)";
+  const bgColor = 'linear-gradient(135deg, #868CFF 0%, #4318FF 100%)'
 
   return (
     <Flex
@@ -10,8 +10,8 @@ export default function SidebarDocs() {
       align="center"
       bg={bgColor}
       borderRadius="30px"
-      me={{ base: "20px" }}
+      me={{ base: '20px' }}
       position="relative"
     ></Flex>
-  );
+  )
 }

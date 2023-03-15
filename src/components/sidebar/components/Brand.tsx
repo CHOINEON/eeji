@@ -1,10 +1,10 @@
 // Chakra imports
-import { Flex, useColorModeValue } from "@chakra-ui/react";
-import styled from "@emotion/styled";
+import { Flex, useColorModeValue } from '@chakra-ui/react'
+import styled from '@emotion/styled'
 
 // Custom components
-import ineeji from "components/sidebar/components/ineeji_logo.png";
-import ineeji_bl from "components/sidebar/components/ineeji_logo_bl.png";
+import ineeji from 'components/sidebar/components/ineeji_logo.png'
+import ineeji_bl from 'components/sidebar/components/ineeji_logo_bl.png'
 
 const Logo = styled.div<{ colorMode: string }>`
   width: 100%;
@@ -13,25 +13,27 @@ const Logo = styled.div<{ colorMode: string }>`
   background-repeat: no-repeat;
   background-size: auto 65%;
   ${(props: any) => {
-    if (props.colorMode === "white") {
+    if (props.colorMode === 'white') {
       return `
       background-image : url(${ineeji});
-      `;
+      `
     } else {
       return `
       background-image : url(${ineeji_bl});
-      `;
+      `
     }
   }};
   border-bottom: 1px solid #efefef;
-`;
+`
 
 export function SidebarBrand() {
   //   Chakra color mode
-  let logoColor = useColorModeValue("navy.700", "white");
+  const logoColor = useColorModeValue('navy.700', 'white')
   // console.log(logoColor);
 
-  const ToMain = () => {};
+  const ToMain = () => {
+    window.location.href = '/home'
+  }
 
   return (
     <Flex alignItems="center" flexDirection="column">
@@ -39,7 +41,7 @@ export function SidebarBrand() {
       {/* <HSeparator mb="20px" /> */}
       <Logo onClick={ToMain} colorMode={logoColor} />
     </Flex>
-  );
+  )
 }
 
-export default SidebarBrand;
+export default SidebarBrand

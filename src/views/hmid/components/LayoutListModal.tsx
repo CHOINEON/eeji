@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   Button,
   Modal,
@@ -10,27 +10,27 @@ import {
   ModalCloseButton,
   useDisclosure,
   Grid,
-} from "@chakra-ui/react";
-import { MdOutlineGridOn } from "react-icons/md";
+} from '@chakra-ui/react'
+import { MdOutlineGridOn } from 'react-icons/md'
 
-import LayoutList from "../data/layout_list";
+import LayoutList from '../data/layout_list'
 
 interface LayoutModalProps {
-  isOpen: boolean;
-  setClose: (isClose: boolean) => void;
-  setGridInfo: (gridInfo: string) => void;
+  isOpen: boolean
+  setClose: (isClose: boolean) => void
+  setGridInfo: (gridInfo: string) => void
 }
 
 export const LayoutModal: React.FC<LayoutModalProps> = (props) => {
-  const { onClose } = useDisclosure();
+  const { onClose } = useDisclosure()
 
   const SelectLayout = (e: any) => {
-    props.setClose(true);
-    props.setGridInfo(e.target.innerText);
-  };
+    props.setClose(true)
+    props.setGridInfo(e.target.innerText)
+  }
 
   const RenderLayoutList = () => {
-    let Component = [];
+    const Component = []
     for (let i = 0, len = LayoutList.length; i < len; i++) {
       Component.push(
         <Button
@@ -43,18 +43,18 @@ export const LayoutModal: React.FC<LayoutModalProps> = (props) => {
         >
           {LayoutList[i]}
         </Button>
-      );
+      )
     }
 
-    return Component;
-  };
+    return Component
+  }
 
   return (
     <>
       <Modal
         isCentered
         onClose={() => {
-          props.setClose(true);
+          props.setClose(true)
         }}
         isOpen={props.isOpen}
         motionPreset="slideInBottom"
@@ -76,7 +76,7 @@ export const LayoutModal: React.FC<LayoutModalProps> = (props) => {
         </ModalContent>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default LayoutModal;
+export default LayoutModal

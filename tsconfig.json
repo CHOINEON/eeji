@@ -38,9 +38,13 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    /* Experimental Options */
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
+    "incremental": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": false,
@@ -51,6 +55,13 @@
     },
   },
   "include": [
-    "./src"
+    "./src",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "map/user_map.txs"
   ], 
+  "exclude": [
+    "node_modules"
+  ]
 }

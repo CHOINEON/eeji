@@ -1,35 +1,35 @@
 export const WidgetData = [
   {
-    type: "chart",
+    type: 'chart',
     data: [
       {
-        name: "Line",
+        name: 'Line',
       },
       {
-        name: "Bar",
+        name: 'Bar',
       },
       {
-        name: "Pie",
+        name: 'Pie',
       },
       {
-        name: "Scatter Plot",
+        name: 'Scatter Plot',
       },
       {
-        name: "Box Plot",
+        name: 'Box Plot',
       },
       {
-        name: "Heatmap",
+        name: 'Heatmap',
       },
       {
-        name: "Waterfall",
+        name: 'Waterfall',
       },
     ],
   },
   {
-    type: "component",
+    type: 'component',
     data: [
       {
-        name: "Table",
+        name: 'Table',
       },
       // {
       //   name: "Calendar",
@@ -42,6 +42,6 @@ export const WidgetData = [
       // },
     ],
   },
-];
+]
 
-export default WidgetData;
+export default WidgetData
