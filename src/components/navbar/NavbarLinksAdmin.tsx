@@ -42,6 +42,14 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     '14px 17px 40px 4px rgba(112, 144, 176, 0.18)',
     '14px 17px 40px 4px rgba(112, 144, 176, 0.06)'
   )
+
+  const [UserName, setUserName] = React.useState<string>(JSON.parse(window.localStorage.getItem('userData')).name)
+  console.log(JSON.parse(window.localStorage.getItem('userData')).name)
+
+  React.useEffect(() => {
+    setUserName(JSON.parse(window.localStorage.getItem('userData')).name)
+  }, [window.localStorage])
+
   const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200')
   return (
     <Flex
@@ -199,7 +207,15 @@ export default function HeaderLinks(props: { secondary: boolean }) {
       </Button>
       <Menu>
         <MenuButton p="0px">
-          <Avatar _hover={{ cursor: 'pointer' }} color="white" name="Ineeji" bg="#11047A" size="sm" w="40px" h="40px" />
+          <Avatar
+            _hover={{ cursor: 'pointer' }}
+            color="white"
+            name={UserName}
+            bg="#11047A"
+            size="sm"
+            w="40px"
+            h="40px"
+          />
         </MenuButton>
         <MenuList boxShadow={shadow} p="0px" mt="10px" borderRadius="20px" bg={menuBg} border="none">
           <Flex w="100%" mb="0px">
@@ -214,7 +230,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
               fontWeight="700"
               color={textColor}
             >
-              👋&nbsp; Hey, Ineeji
+              👋&nbsp; {'Hey, ' + UserName}
             </Text>
           </Flex>
           <Flex flexDirection="column" p="10px">

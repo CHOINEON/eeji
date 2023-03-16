@@ -17,6 +17,7 @@ export function SearchBar(props: {
   return (
     <InputGroup w={{ base: '100%', md: '200px' }} {...rest}>
       <InputLeftElement
+        // eslint-disable-next-line react/no-children-prop
         children={
           <IconButton
             aria-label="search"

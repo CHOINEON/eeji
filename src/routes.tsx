@@ -1,5 +1,5 @@
 import { Icon } from '@chakra-ui/react'
-import { MdDashboard, MdDatasetLinked } from 'react-icons/md'
+import { MdDashboard, MdDatasetLinked, MdSettings } from 'react-icons/md'
 
 // Admin Imports
 import MainDashboard from 'views/hmid'
@@ -27,6 +27,13 @@ const routes = [
     layout: '/admin',
     path: '/foundation-structure-analysis',
     icon: <Icon as={MdDatasetLinked} width="20px" height="20px" color="inherit" />,
+    component: MainDashboard,
+  },
+  {
+    name: 'configuration',
+    layout: '/admin',
+    path: '/configuration',
+    icon: <Icon as={MdSettings} width="20px" height="20px" color="inherit" />,
     component: MainDashboard,
   },
 ]

@@ -12,6 +12,7 @@ const Logo = styled.div<{ colorMode: string }>`
   background-position: left 5vw top;
   background-repeat: no-repeat;
   background-size: auto 65%;
+  cursor: pointer;
   ${(props: any) => {
     if (props.colorMode === 'white') {
       return `

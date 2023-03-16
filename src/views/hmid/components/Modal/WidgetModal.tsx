@@ -11,17 +11,16 @@ import {
   useDisclosure,
   Grid,
 } from '@chakra-ui/react'
-import { MdOutlineGridOn } from 'react-icons/md'
 import styled from '@emotion/styled'
 
-import ico_line from '../../../assets/img/ineeji/ico_line.png'
-import ico_bar from '../../../assets/img/ineeji/ico_bar.png'
-import ico_pie from '../../../assets/img/ineeji/ico_pie.png'
-import ico_heatmap from '../../../assets/img/ineeji/ico_heatmap.png'
-import ico_scatter_plot from '../../../assets/img/ineeji/ico_scatter_plot.png'
-import ico_waterfall from '../../../assets/img/ineeji/ico_waterfall.png'
-import ico_box_plot from '../../../assets/img/ineeji/ico_box_plot.png'
-import ico_table from '../../../assets/img/ineeji/ico_table.png'
+import ico_line from '../../../../assets/img/ineeji/ico_line.png'
+import ico_bar from '../../../../assets/img/ineeji/ico_bar.png'
+import ico_pie from '../../../../assets/img/ineeji/ico_pie.png'
+import ico_heatmap from '../../../../assets/img/ineeji/ico_heatmap.png'
+import ico_scatter_plot from '../../../../assets/img/ineeji/ico_scatter_plot.png'
+import ico_waterfall from '../../../../assets/img/ineeji/ico_waterfall.png'
+import ico_box_plot from '../../../../assets/img/ineeji/ico_box_plot.png'
+import ico_table from '../../../../assets/img/ineeji/ico_table.png'
 
 import WidgetData from '../data/widget_list'
 
@@ -108,10 +107,11 @@ export const WidgetModal: React.FC<WidgetModalProps> = (props) => {
         for (let j = 0, len = WidgetData[i].data.length; j < len; j++) {
           chart.push(
             <WidgetIcon
+              id={WidgetData[i].data[j].name}
               key={WidgetData[i].data[j].name}
               Type={WidgetData[i].data[j].name}
               onClick={(e: any) => {
-                WidgetClick(e)
+                WidgetClick(e.target.id)
               }}
             >
               <WidgetText>{WidgetData[i].data[j].name}</WidgetText>
@@ -122,10 +122,11 @@ export const WidgetModal: React.FC<WidgetModalProps> = (props) => {
         for (let j = 0, len = WidgetData[i].data.length; j < len; j++) {
           component.push(
             <WidgetIcon
+              id={WidgetData[i].data[j].name}
               key={WidgetData[i].data[j].name}
               Type={WidgetData[i].data[j].name}
               onClick={(e: any) => {
-                WidgetClick(e)
+                WidgetClick(e.target.id)
               }}
             >
               <WidgetText>{WidgetData[i].data[j].name}</WidgetText>
@@ -144,7 +145,7 @@ export const WidgetModal: React.FC<WidgetModalProps> = (props) => {
 
   const WidgetClick = (widgetType: any) => {
     console.log(widgetType)
-    console.log('test')
+    props.setWidgetInfo(widgetType)
     props.setCloseWidgetModal(true)
   }
 

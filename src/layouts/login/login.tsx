@@ -72,39 +72,35 @@ export const Login: React.FC = () => {
   }
 
   const setLogin = (id: string, password: string) => {
-    // if (id === "ineeji" && password === "ineeji") {
-    //   window.location.href = "/admin/hmid";
-    // } else {
-    //   error("아이디 또는 비밀번호가 틀립니다.");
-    // }
     axios
-      .get('http://220.94.157.27:59871/getUsers', { withCredentials: true })
+      .get('http://220.94.157.27:59871/getUser/' + id + '/' + password, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;',
+        },
+        timeout: 5000,
+      })
       .then((response) => {
-        // 성공시
         console.log('[ axios response data ] : ')
-        console.log(response)
+        console.log(response.data)
+
+        window.location.href = '/admin/hmid'
+        window.localStorage.setItem('userData', JSON.stringify(response.data))
       })
       .catch((error) => {
-        // 실패시
-        console.log(error.response)
-      })
-      .finally(() => {
-        console.log('finaly ...')
+        // console.log(error.response)
+        error('아이디 또는 비밀번호가 틀립니다.')
       })
   }
 
   const ChangeId = (e: any) => {
-    console.log(e.target.value)
     setId(e.target.value)
   }
 
   const ChangePassword = (e: any) => {
-    console.log(e.target.value)
     setPassword(e.target.value)
   }
 
   const onEnterLogin = (e: any) => {
-    console.log(e)
     if (e.keyCode === 13) {
       setLogin(id, password)
     }

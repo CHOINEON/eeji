@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { MdOutlineGridOn } from 'react-icons/md'
 
-import LayoutList from '../data/layout_list'
+import LayoutList from './data/layout_list'
 
 interface LayoutModalProps {
   isOpen: boolean
