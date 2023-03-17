@@ -3,7 +3,7 @@ import { MdDashboard, MdDatasetLinked, MdSettings } from 'react-icons/md'
 
 // Admin Imports
 import MainDashboard from 'views/hmid'
-import Login from 'layouts/login/login'
+import FoundationStructureAnalysis from 'views/ProcessModeling'
 
 // Auth Imports
 
@@ -27,7 +27,7 @@ const routes = [
     layout: '/admin',
     path: '/foundation-structure-analysis',
     icon: <Icon as={MdDatasetLinked} width="20px" height="20px" color="inherit" />,
-    component: MainDashboard,
+    component: FoundationStructureAnalysis,
   },
   {
     name: 'configuration',
