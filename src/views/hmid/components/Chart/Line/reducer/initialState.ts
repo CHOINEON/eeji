@@ -27,6 +27,8 @@ export const initialState = {
   SHOW_DRAWER: false,
   CHART_TYPE: '',
   TITLE: 'Line Chart',
+  AXIS_X_TITLE: 'X Axis Title',
+  AXIS_Y_TITLE: 'Y Axis Title',
   WIDTH: 0,
   HEIGHT: 0,
   FONT_SIZE: 10,
@@ -59,9 +61,6 @@ export const initialState = {
   PLOT_BG_COLOR_TEXT: '#fff',
   FONT_COLOR_PICKER: '#000',
   FONT_COLOR_TEXT: '#000',
-  ARROW_X: 0,
-  ARROW_Y: 0,
-  ARROW_TEXT: 'test arrow',
 }
 
 export default initialState

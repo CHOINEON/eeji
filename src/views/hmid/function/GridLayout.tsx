@@ -1,9 +1,18 @@
+/**
+ * INFINITE OPTIMAL
+ * 메뉴 : HMI Designer - GridLayout
+ * 시작 날짜 : 2023-03-16
+ * 최종 수정 날짜 : 2023-03-17
+ * 개발자 : 박윤희 (BAK YUN HEE)
+ */
+
 import React from 'react'
 import layout_list from '../components/data/layout_list'
 import { Grid, GridItem, useColorModeValue } from '@chakra-ui/react'
 import WidgetModal from '../components/Modal/WidgetModal'
 import LineChartComponent from '../components/Chart/Line/LineChartComponent'
 import Plot from 'react-plotly.js'
+import ReactDOM from 'react-dom'
 
 interface GridInfoProps {
   gridInfo: string
@@ -15,55 +24,19 @@ export const GridLayoutBox: React.FC<GridInfoProps> = (props) => {
   const [WidgetInfo, setWidgetInfo] = React.useState<string>('')
 
   const [appendChart, setAppendChart] = React.useState<boolean>(false)
+  const [LayoutChildOption, setLayoutChildOption] = React.useState<any>()
 
   const [CursorGridItem, setCursorGridItem] = React.useState<string>('none')
-  const [LayoutChildOption, setLayoutChildOption] = React.useState<any>()
 
   const [rows, setRows] = React.useState<string>()
   const [cols, setCols] = React.useState<string>()
 
   const [ItemColor, setItemColor] = React.useState('#0044620f')
 
-  const [ChartLayoutOption, setChartLayoutOption] = React.useState<any>({
-    yaxis: {
-      title: 'K6 예열실 1단 온도(Cº)',
-      titlefont: {
-        family: 'Arial, sans-serif',
-        size: 25,
-        color: '#fff',
-        type: 'lines',
-      },
-      line: {
-        color: 'purple',
-        width: 10,
-      },
+  const [BoxId, setBoxId] = React.useState<any>()
 
-      tickfont: {
-        color: '#fff',
-        size: 22,
-      },
-    },
-    plot_bgcolor: '#080808',
-    paper_bgcolor: '#080808',
-    autosize: true,
-    title: 'K6 소성로',
-    font: {
-      size: 25,
-      color: '#fff',
-    },
-  })
-  const [ChartDataOption, setChartDataOption] = React.useState<any>([
-    {
-      x: [1, 2, 3, 4],
-      y: [10, 15, 13, 17],
-      mode: 'lines',
-    },
-    {
-      x: [1, 2, 3, 4],
-      y: [16, 5, 11, 9],
-      mode: 'lines',
-    },
-  ])
+  const [ChartLayoutOption, setChartLayoutOption] = React.useState<any>('')
+  const [ChartDataOption, setChartDataOption] = React.useState<any>('')
 
   const theme = useColorModeValue('navy.700', 'white')
 
@@ -78,8 +51,27 @@ export const GridLayoutBox: React.FC<GridInfoProps> = (props) => {
   React.useEffect(() => {
     console.log(WidgetInfo)
     if (WidgetInfo === 'Line') {
+      if (BoxId !== undefined && BoxId.length !== 0) {
+        if (ChartLayoutOption.length !== 0 && ChartDataOption.length !== 0) {
+          const node: any = document.getElementById(BoxId)
+          const config = {
+            displaylogo: false,
+          }
+
+          const Layout: any = {
+            ...ChartLayoutOption,
+            width: node.clientWidth,
+            height: node.clientHeight,
+            plot_bgcolor: 'rgba(255,255,255,0)',
+            paper_bgcolor: 'rgba(255,255,255,0)',
+          }
+          const data = <Plot data={ChartDataOption} layout={Layout} config={config} />
+          const element = React.createElement(data.type, { data: data.props.data, layout: data.props.layout })
+          ReactDOM.render(element, node)
+        }
+      }
     }
-  }, [WidgetInfo])
+  }, [ChartLayoutOption, ChartDataOption, WidgetInfo, BoxId])
 
   React.useEffect(() => {
     let cols = 0
@@ -104,33 +96,43 @@ export const GridLayoutBox: React.FC<GridInfoProps> = (props) => {
   })
 
   const ClickItem = (item: any) => {
-    console.log(item)
-    const node: any = document.getElementById(item.target.id)
-    console.log(node)
+    setBoxId(item.target.id)
 
-    const data = <Plot data={ChartDataOption} layout={ChartLayoutOption} />
-    // console.log(data)
-    // console.log(data.type)
-    // console.log(data.props)
-
-    const element = React.createElement(data.type, { data: data.props.data, layout: data.props.layout })
-    const element2 = React.createElement('h1', { className: 'greeting' }, 'Hello ')
-
-    console.log('----------------------------------------------')
-    console.log(element)
-    node.appendChild(element2)
-    // const test = mount(<div>Test !!!!</div>)
-    // node.appendChild(test)
-    // console.log(item.target.css)
     setIsOpenWidgetModal(true)
   }
 
   const getChartLayout = (props: any) => {
-    console.log(props)
+    setChartLayoutOption(props)
   }
 
   const getChartData = (props: any) => {
-    console.log(props)
+    let ChartDataObj: any = {}
+    const ChartDataArr: any = []
+
+    const data = [
+      {
+        x: [1, 2, 3, 4, 5, 6, 7, 8],
+        y: [10, 15, null, 17, 14, 12, 10, null, 15],
+      },
+      {
+        x: [1, 2, 3, 4, 5, 6, 7, 8],
+        y: [16, null, 13, 10, 8, null, 11, 12],
+      },
+    ]
+
+    for (let i = 0, len = data.length; i < len; i++) {
+      ChartDataObj = {
+        ...props,
+        x: data[i].x,
+        y: data[i].y,
+      }
+
+      ChartDataArr.push(ChartDataObj)
+
+      ChartDataObj = new Object()
+    }
+
+    setChartDataOption(ChartDataArr)
   }
 
   const render = () => {

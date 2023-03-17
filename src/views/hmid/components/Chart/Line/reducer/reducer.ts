@@ -74,31 +74,31 @@ const reducer = (state: any, action: any) => {
         ...state,
         NAVIGATION_COLLAPSED: !state.NAVIGATION_COLLAPSED,
       }
-    case 'DISPLAY_COLOR_PICKER':
-      return {
-        ...state,
-        DISPLAY_COLOR_PICKER: !state.DISPLAY_COLOR_PICKER,
-      }
-    case 'DISPLAY_MARKER_COLOR_PICEKR':
-      return {
-        ...state,
-        DISPLAY_MARKER_COLOR_PICEKR: !state.DISPLAY_MARKER_COLOR_PICEKR,
-      }
-    case 'DISPLAY_PAPER_BG_COLOR_PICKER':
-      return {
-        ...state,
-        DISPLAY_PAPER_BG_COLOR_PICKER: !state.DISPLAY_PAPER_BG_COLOR_PICKER,
-      }
-    case 'DISPLAY_PLOT_BG_COLOR_PICKER':
-      return {
-        ...state,
-        DISPLAY_PLOT_BG_COLOR_PICKER: !state.DISPLAY_PLOT_BG_COLOR_PICKER,
-      }
-    case 'DISPLAY_FONT_COLOR_PICKER':
-      return {
-        ...state,
-        DISPLAY_FONT_COLOR_PICKER: !state.DISPLAY_FONT_COLOR_PICKER,
-      }
+    // case 'DISPLAY_COLOR_PICKER':
+    //   return {
+    //     ...state,
+    //     DISPLAY_COLOR_PICKER: !state.DISPLAY_COLOR_PICKER,
+    //   }
+    // case 'DISPLAY_MARKER_COLOR_PICEKR':
+    //   return {
+    //     ...state,
+    //     DISPLAY_MARKER_COLOR_PICEKR: !state.DISPLAY_MARKER_COLOR_PICEKR,
+    //   }
+    // case 'DISPLAY_PAPER_BG_COLOR_PICKER':
+    //   return {
+    //     ...state,
+    //     DISPLAY_PAPER_BG_COLOR_PICKER: !state.DISPLAY_PAPER_BG_COLOR_PICKER,
+    //   }
+    // case 'DISPLAY_PLOT_BG_COLOR_PICKER':
+    //   return {
+    //     ...state,
+    //     DISPLAY_PLOT_BG_COLOR_PICKER: !state.DISPLAY_PLOT_BG_COLOR_PICKER,
+    //   }
+    // case 'DISPLAY_FONT_COLOR_PICKER':
+    //   return {
+    //     ...state,
+    //     DISPLAY_FONT_COLOR_PICKER: !state.DISPLAY_FONT_COLOR_PICKER,
+    //   }
     case 'SHOW_DRAWER':
       return {
         ...state,
@@ -209,41 +209,41 @@ const reducer = (state: any, action: any) => {
         ...state,
         LINE_WIDTH: action.data,
       }
-    case 'MARKER_SIZE':
-      return {
-        ...state,
-        MARKER_SIZE: action.data,
-      }
-    case 'MARKER_COLOR':
-      return {
-        ...state,
-        MARKER_COLOR: action.data,
-      }
-    case 'MARKER_COLOR_PICKER':
-      return {
-        ...state,
-        MARKER_COLOR_PICKER: action.data,
-      }
-    case 'MAKRER_BORDER_WIDTH':
-      return {
-        ...state,
-        MAKRER_BORDER_WIDTH: action.data,
-      }
-    case 'MARKER_BORDER_COLOR_TEXT':
-      return {
-        ...state,
-        MARKER_BORDER_COLOR_TEXT: action.data,
-      }
-    case 'MARKER_BORDER_COLOR_PICKER':
-      return {
-        ...state,
-        MARKER_BORDER_COLOR_PICKER: action.data,
-      }
-    case 'DISPLAY_MARKER_BORDER_COLOR_PICKER':
-      return {
-        ...state,
-        DISPLAY_MARKER_BORDER_COLOR_PICKER: !state.DISPLAY_MARKER_BORDER_COLOR_PICKER,
-      }
+    // case 'MARKER_SIZE':
+    //   return {
+    //     ...state,
+    //     MARKER_SIZE: action.data,
+    //   }
+    // case 'MARKER_COLOR':
+    //   return {
+    //     ...state,
+    //     MARKER_COLOR: action.data,
+    //   }
+    // case 'MARKER_COLOR_PICKER':
+    //   return {
+    //     ...state,
+    //     MARKER_COLOR_PICKER: action.data,
+    //   }
+    // case 'MAKRER_BORDER_WIDTH':
+    //   return {
+    //     ...state,
+    //     MAKRER_BORDER_WIDTH: action.data,
+    //   }
+    // case 'MARKER_BORDER_COLOR_TEXT':
+    //   return {
+    //     ...state,
+    //     MARKER_BORDER_COLOR_TEXT: action.data,
+    //   }
+    // case 'MARKER_BORDER_COLOR_PICKER':
+    //   return {
+    //     ...state,
+    //     MARKER_BORDER_COLOR_PICKER: action.data,
+    //   }
+    // case 'DISPLAY_MARKER_BORDER_COLOR_PICKER':
+    //   return {
+    //     ...state,
+    //     DISPLAY_MARKER_BORDER_COLOR_PICKER: !state.DISPLAY_MARKER_BORDER_COLOR_PICKER,
+    //   }
     case 'ENABLE_SELECT_MARKER_LABEL_POSITION':
       return {
         ...state,
@@ -304,20 +304,15 @@ const reducer = (state: any, action: any) => {
         ...state,
         FONT_COLOR_TEXT: action.data,
       }
-    case 'ARROW_X':
+    case 'AXIS_X_TITLE':
       return {
         ...state,
-        ARROW_X: action.data,
+        AXIS_X_TITLE: action.data,
       }
-    case 'ARROW_Y':
+    case 'AXIS_Y_TITLE':
       return {
         ...state,
-        ARROW_Y: action.data,
-      }
-    case 'ARROW_TEXT':
-      return {
-        ...state,
-        ARROW_TEXT: action.data,
+        AXIS_Y_TITLE: action.data,
       }
     default:
       return state
