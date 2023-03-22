@@ -46,6 +46,7 @@ export default function AdminNavbar(props: {
 
   return (
     <Box
+      style={{ zIndex: 9999 }}
       position={navbarPosition}
       boxShadow={navbarShadow}
       bg={navbarBg}

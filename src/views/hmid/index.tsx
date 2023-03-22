@@ -25,10 +25,11 @@ import { Box, useColorModeValue, Stack, Button } from '@chakra-ui/react'
 
 import React from 'react'
 import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
-import LayoutModal from './components/LayoutListModal'
+import LayoutModal from './components/Modal/LayoutListModal'
 
 //function
 import GridLayoutBox from './function/GridLayout'
+import PredefinedLayouts from './function/GridLayoutTest'
 
 export default function HMID() {
   const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
@@ -87,8 +88,11 @@ export default function HMID() {
           </Button>
         </Stack>
         {/* <Box>{renderGrid(GridInfo)}</Box> */}
-        <Box>
+        {/* <Box>
           <GridLayoutBox gridInfo={GridInfo} />
+        </Box> */}
+        <Box>
+          <PredefinedLayouts target={GridInfo} />
         </Box>
       </Box>
     </>
