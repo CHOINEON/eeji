@@ -5,11 +5,35 @@
   /* align-items:center; */
 }
 
+.grid-setting-btn{
+  width:1.3vw;
+  height:1.3vw;
+  background-color:#0094d8 !important;
+  border-radius:8px !important;
+  color:white !important;
+  text-align:center;
+  padding:0 0.5vw;
+  position:absolute;
+  right:0.1vw;
+  top:55%;
+  transform:translateY(-50%);
+  background-image: url('./settings.png');
+  background-repeat:no-repeat;
+  background-size:60% auto;
+  background-position:center center;
+}
+
 #predefine_dashboard{
   position:relative;
   height:80vh !important;
   /* width:100% !important;
   max-height:80vh !important; */
+}
+
+#predefine_dashboard .e-header-text{
+  position:relative;
+  width:100%;
+  height:100%;
 }
 
 #predefine_dashboard.e-dashboardlayout .e-panel .e-panel-container .e-panel-header .e-header-text {

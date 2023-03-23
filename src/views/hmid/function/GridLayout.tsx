@@ -236,7 +236,7 @@ export const GridLayoutBox: React.FC<GridInfoProps> = (props) => {
         {render()}
       </Grid>
 
-      <LineChartComponent ChartType={WidgetInfo} ChartLayout={getChartLayout} ChartData={getChartData} />
+      {/* <LineChartComponent ChartType={WidgetInfo} ChartLayout={getChartLayout} ChartData={getChartData} /> */}
     </>
   )
 }

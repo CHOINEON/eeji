@@ -27,7 +27,7 @@ import {
 } from '@chakra-ui/react'
 import {
   MdArrowDropDown,
-  MdSsidChart,
+  MdOutlineDonutSmall,
   MdTitle,
   MdMargin,
   MdGraphicEq,
@@ -40,7 +40,7 @@ import {
 import reducer from '../reducer/reducer'
 import initialState from '../reducer/initialState'
 
-import type { LineChartProps } from '../interface/interface'
+import type { PieChartProps } from '../interface/interface'
 
 const AccordionTitle = styled.div`
   display: inline-block;
@@ -56,26 +56,17 @@ const Margin = styled.div`
   margin: 1.5vw 0;
 `
 
-export const ChartOption: React.FC<LineChartProps> = (props: any) => {
+export const ChartOption: React.FC<PieChartProps> = (props: any) => {
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const { onClose } = useDisclosure()
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const btnRef = React.useRef()
 
   React.useEffect(() => {
-    if (props.ChartType === 'Line') {
-      //setIsOpen(true)
+    if (props.ChartType === 'Pie') {
+      setIsOpen(true)
     }
   }, [props.ChartType])
-
-  React.useEffect(() => {
-    console.log(isOpen)
-  }, [isOpen])
-
-  React.useEffect(() => {
-    console.log('[상위에서 받은 props ] : ' + props.ShowDrawer)
-    setIsOpen(props.ShowDrawer)
-  }, [props.ShowDrawer])
 
   return (
     <>
@@ -84,7 +75,6 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
         placement="right"
         onClose={() => {
           setIsOpen(false)
-          props.setShowDrawer(false)
         }}
         finalFocusRef={btnRef}
         size={'sm'}
@@ -92,7 +82,7 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>LineChart Option</DrawerHeader>
+          <DrawerHeader>PieChart Option</DrawerHeader>
 
           <DrawerBody>
             <Accordion allowToggle>
@@ -100,18 +90,38 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                 <h2>
                   <AccordionButton>
                     <Box as="span" flex="1" textAlign="left">
-                      <MdSsidChart style={{ display: 'inline-block' }} />
-                      <AccordionTitle>Line Mode</AccordionTitle>
+                      <MdOutlineDonutSmall style={{ display: 'inline-block' }} />
+                      <AccordionTitle>Hole</AccordionTitle>
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
-                  <Select icon={<MdArrowDropDown />} variant="filled" placeholder="Select Line Mode">
-                    <option value="lines">lines</option>
-                    <option value="markers">markers</option>
-                    <option value="lines+markers">lines+markers</option>
-                  </Select>
+                  <Slider
+                    aria-label="slider-ex-6"
+                    defaultValue={state.HOLE}
+                    min={0}
+                    max={300}
+                    onChange={(val) => dispatch({ type: 'HOLE', data: val })}
+                  >
+                    <SliderMark
+                      value={state.HOLE}
+                      textAlign="center"
+                      bg="blue.500"
+                      color="white"
+                      mt="-10"
+                      ml="-5"
+                      w="12"
+                    >
+                      {state.MARGIN_TOP}
+                    </SliderMark>
+                    <SliderTrack bg="blue.100">
+                      <SliderFilledTrack bg="#00a0e9" />
+                    </SliderTrack>
+                    <SliderThumb boxSize={6}>
+                      <Box color="brand" as={MdGraphicEq} />
+                    </SliderThumb>
+                  </Slider>
                 </AccordionPanel>
               </AccordionItem>
 
@@ -260,68 +270,6 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                 <h2>
                   <AccordionButton>
                     <Box as="span" flex="1" textAlign="left">
-                      <MdLineWeight style={{ display: 'inline-block' }} />
-                      <AccordionTitle>Line Width</AccordionTitle>
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel pb={4}>
-                  <Margin />
-                  <Slider
-                    aria-label="slider-ex-4"
-                    min={0}
-                    max={50}
-                    onChange={(val) => dispatch({ type: 'LINE_WIDTH', data: val })}
-                    defaultValue={state.LINE_WIDTH}
-                  >
-                    <SliderMark
-                      value={state.LINE_WIDTH}
-                      textAlign="center"
-                      bg="blue.500"
-                      color="white"
-                      mt="-10"
-                      ml="-5"
-                      w="12"
-                    >
-                      {state.LINE_WIDTH}
-                    </SliderMark>
-                    <SliderTrack bg="blue.100">
-                      <SliderFilledTrack bg="#00a0e9" />
-                    </SliderTrack>
-                    <SliderThumb boxSize={6}>
-                      <Box color="brand" as={MdGraphicEq} />
-                    </SliderThumb>
-                  </Slider>
-                </AccordionPanel>
-              </AccordionItem>
-
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      <MdLineStyle style={{ display: 'inline-block' }} />
-                      <AccordionTitle>Line Dash</AccordionTitle>
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel pb={4}>
-                  <Select icon={<MdArrowDropDown />} variant="filled" placeholder="Line Dash">
-                    <option value="solid">solid</option>
-                    <option value="dot">dot</option>
-                    <option value="dashdot">dashdot</option>
-                    <option value="longdashdot">longdashdot</option>
-                    <option value="dash">dash</option>
-                    <option value="longdash">longdash</option>
-                  </Select>
-                </AccordionPanel>
-              </AccordionItem>
-
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
                       <MdLabel style={{ display: 'inline-block' }} />
                       <AccordionTitle>Marker</AccordionTitle>
                     </Box>
@@ -354,15 +302,8 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                   >
                     <option value="auto">auto</option>
                     <option value="none">none</option>
-                    <option value="top left">top left</option>
-                    <option value="top center">top center</option>
-                    <option value="top right">top right</option>
-                    <option value="middle left">middle left</option>
-                    <option value="middle center">middle center</option>
-                    <option value="middle right">middle right</option>
-                    <option value="bottom left">bottom left</option>
-                    <option value="bottom center">bottom center</option>
-                    <option value="bottom right">bottom right</option>
+                    <option value="outside">outside</option>
+                    <option value="inside">inside</option>
                   </Select>
                 </AccordionPanel>
               </AccordionItem>
