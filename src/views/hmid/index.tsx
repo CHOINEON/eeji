@@ -60,7 +60,7 @@ export default function HMID() {
           }
         }}
       />
-      <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
+      <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
         <Stack direction="row" spacing={4} pl={3} display={AdminInfo}>
           <Button
             leftIcon={<MdOutlineGridView />}
@@ -71,9 +71,9 @@ export default function HMID() {
           >
             Grid
           </Button>
-          <Button leftIcon={<MdOutlineSettingsInputComposite />} variant="brand" disabled={ButtonDisabled}>
+          {/* <Button leftIcon={<MdOutlineSettingsInputComposite />} variant="brand" disabled={ButtonDisabled}>
             Option
-          </Button>
+          </Button> */}
           <Button
             leftIcon={<MdOutlineRestartAlt />}
             variant="brand"

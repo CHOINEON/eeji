@@ -1,0 +1,28 @@
+export const initialState = {
+  ENABLE_LEGEND: true,
+  ENABLE_TEXT_POSITION: true,
+  ENABLE_MARKER_LABEL: false,
+  DISPLAY_PAPER_BG_COLOR_PICKER: false,
+  DISPLAY_PLOT_BG_COLOR_PICKER: false,
+  TITLE: 'Pie Chart',
+  HOLE: 0,
+  SHOW_DRAWER: false,
+  NAVIGATION_COLLAPSED: true,
+  PAPER_BG_COLOR_TEXT: '#fff',
+  PLOT_BG_COLOR_TEXT: '#fff',
+  GRID_ROWS: 0,
+  GRID_COLUMNS: 0,
+  TRANSLATE_X: 1,
+  TRANSLATE_Y: 1,
+  LEGEND_TRACEORDER: 'normal',
+  LEGEND_ORIENTATION: 'v',
+  MARGIN_TOP: 100,
+  MARGIN_RIGHT: 100,
+  MARGIN_LEFT: 100,
+  MARGIN_BOTTOM: 126,
+  TEXT_POSITION: 'auto',
+  AXIS_X_TITLE: 'x axis',
+  AXIS_Y_TITLE: 'y axis',
+}
+
+export default initialState

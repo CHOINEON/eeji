@@ -15,9 +15,20 @@ import type { LineChartProps } from './interface/interface'
 export const LineChartComponent: React.FC<LineChartProps> = (props: any) => {
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const [chartType, setChartType] = React.useState()
+  const [ShowDrawer, setShowDrawer] = React.useState(false)
 
   React.useEffect(() => {
-    setChartType(props.ChartType)
+    console.log('[상위에서 받은 props ] : ' + props.ShowDrawer)
+    setShowDrawer(props.ShowDrawer)
+  }, [props.ShowDrawer])
+
+  React.useEffect(() => {
+    console.log(props.ChartType)
+    if (props.ChartType === 'Line') {
+      setChartType(props.ChartType)
+      props.ChartData(LineChartData)
+      props.ChartLayout(LineChartLayout)
+    }
   }, [props.ChartType])
 
   React.useEffect(() => {
@@ -34,8 +45,6 @@ export const LineChartComponent: React.FC<LineChartProps> = (props: any) => {
       },
       type: 'scatter',
     })
-
-    props.ChartData(LineChartData)
   }, [
     state.LINEMODE,
     state.ENABLE_MARKER_LABEL,
@@ -63,8 +72,6 @@ export const LineChartComponent: React.FC<LineChartProps> = (props: any) => {
         title: state.AXIS_Y_TITLE,
       },
     })
-
-    props.ChartLayout(LineChartLayout)
   }, [
     state.TITLE,
     state.MARGIN_LEFT,
@@ -121,9 +128,21 @@ export const LineChartComponent: React.FC<LineChartProps> = (props: any) => {
     console.log(chartData)
   }
 
+  const getShowDrawer = (ShowDrawer: boolean) => {
+    console.log('[ 하위 option에서 받은 props ] : ' + ShowDrawer)
+    setShowDrawer(ShowDrawer)
+    props.setShowDrawer(ShowDrawer)
+  }
+
   return (
     <>
-      <ChartOption ChartType={chartType} ChartLayout={getChartLayout} ChartData={getChartData} />
+      <ChartOption
+        ChartType={chartType}
+        ChartLayout={getChartLayout}
+        ChartData={getChartData}
+        ShowDrawer={ShowDrawer}
+        setShowDrawer={getShowDrawer}
+      />
     </>
   )
 }
