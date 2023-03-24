@@ -32,6 +32,10 @@ export const LineChartComponent: React.FC<LineChartProps> = (props: any) => {
   }, [props.ChartType])
 
   React.useEffect(() => {
+    console.log(' Change LineChart Layout Option >>> ')
+    console.log(state.LINE_MODE)
+    console.log(state.LINE_WIDTH)
+
     setLineChartData({
       mode: state.LINE_MODE,
       //추후 속성 추가 예정
@@ -46,16 +50,18 @@ export const LineChartComponent: React.FC<LineChartProps> = (props: any) => {
       type: 'scatter',
     })
   }, [
-    state.LINEMODE,
+    state.LINE_MODE,
     state.ENABLE_MARKER_LABEL,
     state.MARKER_LABEL_POSITION,
     state.LINE_SHAPE,
     state.LINE_WIDTH,
     state.LINE_DASH,
-    state.LINE_MODE,
   ])
 
   React.useEffect(() => {
+    console.log(' Change LineChart Data >>>>>>>>>>>>>>>>')
+    console.log(state.TITLE)
+
     setLineChartLayout({
       title: state.TITLE,
       margin: {
