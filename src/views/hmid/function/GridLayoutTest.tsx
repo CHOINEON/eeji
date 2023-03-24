@@ -4,13 +4,14 @@ import { updateSampleSection } from './base'
 import { DashboardLayoutComponent, PanelModel, PanelsDirective, PanelDirective } from '@syncfusion/ej2-react-layouts'
 import { panelData } from './data/panel-data'
 import './style/style.css'
-import { Alert, AlertIcon, AlertDescription, CloseButton, Box } from '@chakra-ui/react'
 import WidgetModal from '../components/Modal/WidgetModal'
 import Plot from 'react-plotly.js'
 
 import LineChartComponent from '../components/Chart/Line/LineChartComponent'
 import PieChartComponent from '../components/Chart/Pie/PieChartComponent'
 import WidgetDataTable from '../components/DataGrid/DataGrid'
+
+import { Alert, AlertIcon, AlertDescription, CloseButton, Box } from '@chakra-ui/react'
 
 interface GridLayoutProps {
   target: any
@@ -31,7 +32,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   const [AlertVisibility, setAlertVisibility] = React.useState(true)
 
-  const [ShowDrawer, setShowDrawer] = React.useState(false)
+  const [LineChartShowDrawer, setLineChartShowDrawer] = React.useState(false)
+  const [PieChartShowDrawer, setPieChartShowDrawer] = React.useState(false)
 
   const TableRows: any = [
     { make: 'Porsche', model: 'Boxter', price: 72000 },
@@ -59,15 +61,16 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const cellSpacing: number[] = [4, 5]
 
   React.useEffect(() => {
+    console.log('use Effect !!!')
+    console.log(PieChartShowDrawer)
+  }, [PieChartShowDrawer])
+
+  React.useEffect(() => {
     if (props.target !== undefined) {
       updateSampleSection()
       rendereComplete(props.target)
     }
   }, [dashboardObj, props.target])
-
-  React.useEffect(() => {
-    console.log('하위에서 받은 props : ' + ShowDrawer)
-  }, [ShowDrawer])
 
   const DrawPlotlyChart = (ChartLayoutOption: any, ChartDataOption: any, BoxTargetId: any) => {
     console.log('[ Draw Plotly Chart Function ] : ')
@@ -198,10 +201,24 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data !== undefined) {
             console.log(e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type)
             console.log(WidgetInfo)
-            setShowDrawer(true)
+            if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type === 'scatter') {
+              setLineChartShowDrawer(true)
+            } else if (
+              e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type === 'pie'
+            ) {
+              setPieChartShowDrawer(true)
+            } else if (
+              e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type === 'bar'
+            ) {
+              //setPieChartShowDrawer(true)
+              console.log('bar')
+            }
           } else {
             if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[1].className !== undefined) {
               console.log(e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[1].className)
+              if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[1].className.includes('ag')) {
+                console.log('ag grid setting')
+              }
             }
             setAlertVisibility(false)
           }
@@ -245,15 +262,19 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   /**
    * Get Chart Option
    */
-  const getChartLayout = (props: any) => {
+  const getLineChartLayout = (props: any) => {
     if (WidgetInfo === 'Line') {
       setLineChartLayoutOption(props)
-    } else if (WidgetInfo === 'Pie') {
+    }
+  }
+
+  const getPieChartLayout = (props: any) => {
+    if (WidgetInfo === 'Pie') {
       setPieChartLayoutOption(props)
     }
   }
 
-  const getChartData = (props: any) => {
+  const getLineChartData = (props: any) => {
     let ChartDataObj: any = {}
     const ChartDataArr: any = []
 
@@ -282,7 +303,14 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       }
 
       setLineChartDataOption(ChartDataArr)
-    } else if (WidgetInfo === 'Pie') {
+    }
+  }
+
+  const getPieChartData = (props: any) => {
+    let ChartDataObj: any = {}
+    const ChartDataArr: any = []
+
+    if (WidgetInfo === 'Pie') {
       const data = [
         {
           values: [27, 11, 25, 8, 1, 3, 25],
@@ -307,10 +335,16 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     }
   }
 
-  const getShowDrawer = (ShowDrawer: boolean) => {
-    console.log('[ Grid에서 받은 props ] : ')
+  const getLineChartShowDrawer = (ShowDrawer: boolean) => {
+    console.log('[ Grid에서 받은 LineChart Drawer props ] : ')
     console.log(ShowDrawer)
-    setShowDrawer(ShowDrawer)
+    setLineChartShowDrawer(ShowDrawer)
+  }
+
+  const getPieChartShowDrawer = (ShowDrawer: boolean) => {
+    console.log('[ Grid에서 받은 PieChart Drawer props ] : ')
+    console.log(ShowDrawer)
+    setPieChartShowDrawer(ShowDrawer)
   }
 
   return (
@@ -331,12 +365,18 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       />
       <LineChartComponent
         ChartType={WidgetInfo}
-        ChartLayout={getChartLayout}
-        ChartData={getChartData}
-        ShowDrawer={ShowDrawer}
-        setShowDrawer={getShowDrawer}
+        ChartLayout={getLineChartLayout}
+        ChartData={getLineChartData}
+        ShowDrawer={LineChartShowDrawer}
+        setShowDrawer={getLineChartShowDrawer}
       />
-      <PieChartComponent ChartType={WidgetInfo} ChartLayout={getChartLayout} ChartData={getChartData} />
+      <PieChartComponent
+        ChartType={WidgetInfo}
+        ChartLayout={getPieChartLayout}
+        ChartData={getPieChartData}
+        ShowPieDrawer={PieChartShowDrawer}
+        setShowDrawer={getPieChartShowDrawer}
+      />
       <div id="DashboardBox">
         <div className="col-lg-8 control-section" id="predefine_control">
           <div className="content-wrapper" style={{ maxWidth: '100%' }}>

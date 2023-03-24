@@ -42,7 +42,35 @@ export default function HMID() {
 
   const theme = useColorModeValue('navy.700', 'white')
   console.log(theme)
+
+  //새로고침 막기
+  const preventClose = (e: BeforeUnloadEvent) => {
+    e.preventDefault()
+    e.returnValue = '' //Chrome에서 동작하도록; deprecated
+  }
+
+  React.useEffect(() => {
+    ;(() => {
+      window.addEventListener('beforeunload', preventClose)
+    })()
+
+    return () => {
+      window.removeEventListener('beforeunload', preventClose)
+    }
+  }, [])
+  //end 새로고침 막기
+
   // #ffffff0f
+
+  // const NotReload = () => {
+  //   if( (event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) || (event.keyCode == 116) ) {
+  //     event.keyCode = 0;
+  //     event.cancelBubble = true;
+  //     event.returnValue = false;
+  // }
+  // }
+
+  // document.onkeydown = NotReload()
 
   return (
     <>

@@ -69,11 +69,6 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
   }, [props.ChartType])
 
   React.useEffect(() => {
-    console.log(isOpen)
-  }, [isOpen])
-
-  React.useEffect(() => {
-    console.log('[상위에서 받은 props ] : ' + props.ShowDrawer)
     setIsOpen(props.ShowDrawer)
   }, [props.ShowDrawer])
 
@@ -107,7 +102,13 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
-                  <Select icon={<MdArrowDropDown />} variant="filled" placeholder="Select Line Mode">
+                  <Select
+                    icon={<MdArrowDropDown />}
+                    value={state.LINE_MODE}
+                    variant="filled"
+                    placeholder="Select Line Mode"
+                    onChange={(val) => dispatch({ type: 'LINE_MODE', data: val })}
+                  >
                     <option value="lines">lines</option>
                     <option value="markers">markers</option>
                     <option value="lines+markers">lines+markers</option>
@@ -307,7 +308,13 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
-                  <Select icon={<MdArrowDropDown />} variant="filled" placeholder="Line Dash">
+                  <Select
+                    icon={<MdArrowDropDown />}
+                    value={state.LINE_SHAPE}
+                    variant="filled"
+                    placeholder="Line Dash"
+                    onChange={(val) => dispatch({ type: 'LINE_DASH', data: val })}
+                  >
                     <option value="solid">solid</option>
                     <option value="dot">dot</option>
                     <option value="dashdot">dashdot</option>
@@ -416,6 +423,7 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
               mr={3}
               onClick={() => {
                 setIsOpen(false)
+                props.setLineChartShowDrawer(false)
               }}
             >
               Cancel

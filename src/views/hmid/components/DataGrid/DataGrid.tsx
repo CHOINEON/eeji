@@ -4,6 +4,7 @@ import { AgGridReact } from 'ag-grid-react'
 import { Button, Stack, useColorModeValue } from '@chakra-ui/react'
 import { MdOutlineAdd, MdOutlineRemove, MdSave } from 'react-icons/md'
 import { RowValueChangedEvent, CellValueChangedEvent, ColDef } from 'ag-grid-community'
+import DataGridDeleteModal from '../Modal/DataGridDeleteModal'
 
 import 'ag-grid-community/styles/ag-grid.css' // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css' // Optional theme CSS
@@ -24,6 +25,9 @@ export const WidgetDataTable: React.FC<WidgetDataTableProps> = (args: any) => {
 
   const [TableRows, setTableRows] = React.useState<any>()
   const [TableColumns, setTableColumns] = React.useState<any>()
+
+  //Data Grid Delete Modal
+  const [DataGridDeleteModalisOpen, setDataGridDeleteModalIsOpen] = React.useState<boolean>(false)
 
   const [Theme, setTheme] = React.useState('ag-theme-alpine')
 
@@ -50,9 +54,6 @@ export const WidgetDataTable: React.FC<WidgetDataTableProps> = (args: any) => {
 
     console.log('[ props ] : ')
     console.log(args)
-
-    // console.log(props.rows)
-    // console.log(props.columns)
   }, [args])
 
   //default 수정권한
@@ -70,6 +71,7 @@ export const WidgetDataTable: React.FC<WidgetDataTableProps> = (args: any) => {
 
   const rowClickedListener = React.useCallback((event: any) => {
     console.log('rowClicked', event)
+    console.log(event.rowIndex)
   }, [])
 
   const onCellValueChanged = React.useCallback((event: CellValueChangedEvent) => {
@@ -103,8 +105,27 @@ export const WidgetDataTable: React.FC<WidgetDataTableProps> = (args: any) => {
     }
   }
 
+  const onDeleteRow = () => {
+    console.log('delete Row')
+    setDataGridDeleteModalIsOpen(true)
+  }
+
+  const getCloseDataGridDeleteModal = (CloseDataGridDeleteModal: boolean) => {
+    console.log(CloseDataGridDeleteModal)
+    setDataGridDeleteModalIsOpen(CloseDataGridDeleteModal)
+  }
+
+  const getDataGridDeleteInfo = (DeleteInfo: string) => {
+    console.log(DeleteInfo)
+  }
+
   return (
     <>
+      <DataGridDeleteModal
+        DataGridDeleteModalisOpen={DataGridDeleteModalisOpen}
+        setCloseDataGridDeleteModal={getCloseDataGridDeleteModal}
+        setDataGridDeleteInfo={getDataGridDeleteInfo}
+      />
       <Stack direction="row" spacing={4} pl={3} display={AdminInfo} marginTop={2} marginBottom={2}>
         <Button
           leftIcon={<MdOutlineAdd />}
@@ -116,7 +137,14 @@ export const WidgetDataTable: React.FC<WidgetDataTableProps> = (args: any) => {
         >
           Add
         </Button>
-        <Button leftIcon={<MdOutlineRemove />} variant="brand" size="md">
+        <Button
+          leftIcon={<MdOutlineRemove />}
+          variant="brand"
+          size="md"
+          onClick={() => {
+            onDeleteRow()
+          }}
+        >
           Remove
         </Button>
         <Button leftIcon={<MdSave />} variant="brand" size="md">

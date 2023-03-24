@@ -31,8 +31,6 @@ import {
   MdTitle,
   MdMargin,
   MdGraphicEq,
-  MdLineWeight,
-  MdLineStyle,
   MdLabel,
   MdOutlineLegendToggle,
   MdOutlineLineAxis,
@@ -64,9 +62,14 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
 
   React.useEffect(() => {
     if (props.ChartType === 'Pie') {
-      setIsOpen(true)
+      // setIsOpen(true)
     }
   }, [props.ChartType])
+
+  React.useEffect(() => {
+    console.log('[  상위에서 받은 PieChart Props ] : ' + props.ShowPieDrawer)
+    setIsOpen(props.ShowPieDrawer)
+  }, [props.ShowPieDrawer])
 
   return (
     <>
@@ -75,6 +78,7 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
         placement="right"
         onClose={() => {
           setIsOpen(false)
+          props.setShowDrawer(false)
         }}
         finalFocusRef={btnRef}
         size={'sm'}
@@ -97,6 +101,7 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
+                  <Margin />
                   <Slider
                     aria-label="slider-ex-6"
                     defaultValue={state.HOLE}
@@ -357,6 +362,7 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
               mr={3}
               onClick={() => {
                 setIsOpen(false)
+                props.setPieChartShowDrawer(false)
               }}
             >
               Cancel
