@@ -1,3 +1,11 @@
+/**
+ * INFINITE OPTIMAL
+ * 메뉴 : HMI Designer - GridLayout
+ * 시작 날짜 : 2023-03-10
+ * 최종 수정 날짜 : 2023-03-24
+ * 개발자 : 박윤희 (BAK YUN HEE)
+ */
+
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 import { updateSampleSection } from './base'
@@ -9,9 +17,10 @@ import Plot from 'react-plotly.js'
 
 import LineChartComponent from '../components/Chart/Line/LineChartComponent'
 import PieChartComponent from '../components/Chart/Pie/PieChartComponent'
+import BarChartComponent from '../components/Chart/Bar/BarChartComponent'
 import WidgetDataTable from '../components/DataGrid/DataGrid'
 
-import { Alert, AlertIcon, AlertDescription, CloseButton, Box } from '@chakra-ui/react'
+// import { Alert, AlertIcon, AlertDescription, CloseButton, Box } from '@chakra-ui/react'
 
 interface GridLayoutProps {
   target: any
@@ -30,10 +39,14 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const [PieChartLayoutOption, setPieChartLayoutOption] = React.useState<any>('')
   const [PieChartDataOption, setPieChartDataOption] = React.useState<any>('')
 
+  const [BarChartLayoutOption, setBarChartLayoutOption] = React.useState<any>('')
+  const [BarChartDataOption, setBarChartDataOption] = React.useState<any>('')
+
   const [AlertVisibility, setAlertVisibility] = React.useState(true)
 
   const [LineChartShowDrawer, setLineChartShowDrawer] = React.useState(false)
   const [PieChartShowDrawer, setPieChartShowDrawer] = React.useState(false)
+  const [BarChartShowDrawer, setBarChartShowDrawer] = React.useState(false)
 
   const TableRows: any = [
     { make: 'Porsche', model: 'Boxter', price: 72000 },
@@ -117,9 +130,15 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   React.useEffect(() => {
     if (WidgetInfo === 'Line') {
+      // console.log('[ Grid Layout 에서 받은 Line Chart Option ] : ')
+      // console.log(LineChartLayoutOption)
+      // console.log(LineChartDataOption)
+      // console.log('--------------------------------------------')
       DrawPlotlyChart(LineChartLayoutOption, LineChartDataOption, BoxTargetId)
     } else if (WidgetInfo === 'Pie') {
       DrawPlotlyChart(PieChartLayoutOption, PieChartDataOption, BoxTargetId)
+    } else if (WidgetInfo === 'Bar') {
+      DrawPlotlyChart(BarChartLayoutOption, BarChartDataOption, BoxTargetId)
     } else if (WidgetInfo === 'Table') {
       console.log(BoxTargetId)
       if (BoxTargetId !== undefined) {
@@ -131,7 +150,15 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         ReactDOM.render(element, node)
       }
     }
-  }, [WidgetInfo, LineChartLayoutOption, LineChartDataOption, PieChartLayoutOption, PieChartDataOption])
+  }, [
+    WidgetInfo,
+    LineChartLayoutOption,
+    LineChartDataOption,
+    PieChartLayoutOption,
+    PieChartDataOption,
+    BarChartLayoutOption,
+    BarChartDataOption,
+  ])
 
   /**
    * GridLayout Evt
@@ -199,25 +226,33 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           // console.log(e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data)
 
           if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data !== undefined) {
-            console.log(e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type)
-            console.log(WidgetInfo)
+            // console.log(e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type)
+            // console.log(WidgetInfo)
             if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type === 'scatter') {
               setLineChartShowDrawer(true)
+              setWidgetInfo('Line')
+              setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
+              console.log(e)
             } else if (
               e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type === 'pie'
             ) {
               setPieChartShowDrawer(true)
+              setWidgetInfo('Pie')
+              setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
             } else if (
               e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type === 'bar'
             ) {
-              //setPieChartShowDrawer(true)
-              console.log('bar')
+              setBarChartShowDrawer(true)
+              setWidgetInfo('Bar')
+              setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
             }
           } else {
             if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[1].className !== undefined) {
               console.log(e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[1].className)
               if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[1].className.includes('ag')) {
                 console.log('ag grid setting')
+                setWidgetInfo('Table')
+                setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
               }
             }
             setAlertVisibility(false)
@@ -271,6 +306,12 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const getPieChartLayout = (props: any) => {
     if (WidgetInfo === 'Pie') {
       setPieChartLayoutOption(props)
+    }
+  }
+
+  const getBarChartLayout = (props: any) => {
+    if (WidgetInfo === 'Bar') {
+      setBarChartLayoutOption(props)
     }
   }
 
@@ -335,16 +376,50 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     }
   }
 
+  const getBarChartData = (props: any) => {
+    let ChartDataObj: any = {}
+    const ChartDataArr: any = []
+
+    if (WidgetInfo === 'Bar') {
+      const data = [
+        {
+          x: ['giraffes', 'orangutans', 'monkeys'],
+          y: [20, 14, 23],
+          name: 'SF Zoo',
+          type: 'bar',
+        },
+        {
+          x: ['giraffes', 'orangutans', 'monkeys'],
+          y: [12, 18, 29],
+          name: 'LA Zoo',
+          type: 'bar',
+        },
+      ]
+
+      for (let i = 0, len = data.length; i < len; i++) {
+        ChartDataObj = {
+          ...props,
+          x: data[i].x,
+          y: data[i].y,
+        }
+
+        ChartDataArr.push(ChartDataObj)
+
+        ChartDataObj = new Object()
+      }
+      setBarChartDataOption(ChartDataArr)
+    }
+  }
   const getLineChartShowDrawer = (ShowDrawer: boolean) => {
-    console.log('[ Grid에서 받은 LineChart Drawer props ] : ')
-    console.log(ShowDrawer)
     setLineChartShowDrawer(ShowDrawer)
   }
 
   const getPieChartShowDrawer = (ShowDrawer: boolean) => {
-    console.log('[ Grid에서 받은 PieChart Drawer props ] : ')
-    console.log(ShowDrawer)
     setPieChartShowDrawer(ShowDrawer)
+  }
+
+  const getBarChartShowDrawer = (ShowDrawer: boolean) => {
+    setBarChartShowDrawer(ShowDrawer)
   }
 
   return (
@@ -376,6 +451,13 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         ChartData={getPieChartData}
         ShowPieDrawer={PieChartShowDrawer}
         setShowDrawer={getPieChartShowDrawer}
+      />
+      <BarChartComponent
+        ChartType={WidgetInfo}
+        ChartLayout={getBarChartLayout}
+        ChartData={getBarChartData}
+        ShowBarDrawer={BarChartShowDrawer}
+        setShowDrawer={getBarChartShowDrawer}
       />
       <div id="DashboardBox">
         <div className="col-lg-8 control-section" id="predefine_control">

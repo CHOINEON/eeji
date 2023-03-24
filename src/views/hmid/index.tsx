@@ -44,20 +44,20 @@ export default function HMID() {
   console.log(theme)
 
   //새로고침 막기
-  const preventClose = (e: BeforeUnloadEvent) => {
-    e.preventDefault()
-    e.returnValue = '' //Chrome에서 동작하도록; deprecated
-  }
+  // const preventClose = (e: BeforeUnloadEvent) => {
+  //   e.preventDefault()
+  //   e.returnValue = '' //Chrome에서 동작하도록; deprecated
+  // }
 
-  React.useEffect(() => {
-    ;(() => {
-      window.addEventListener('beforeunload', preventClose)
-    })()
+  // React.useEffect(() => {
+  //   ;(() => {
+  //     window.addEventListener('beforeunload', preventClose)
+  //   })()
 
-    return () => {
-      window.removeEventListener('beforeunload', preventClose)
-    }
-  }, [])
+  //   return () => {
+  //     window.removeEventListener('beforeunload', preventClose)
+  //   }
+  // }, [])
   //end 새로고침 막기
 
   // #ffffff0f

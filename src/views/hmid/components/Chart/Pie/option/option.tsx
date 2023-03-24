@@ -59,17 +59,79 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
   const { onClose } = useDisclosure()
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const btnRef = React.useRef()
-
-  React.useEffect(() => {
-    if (props.ChartType === 'Pie') {
-      // setIsOpen(true)
-    }
-  }, [props.ChartType])
+  // const [PieChartData, setPieChartData] = React.useState<any>({
+  //   textinfo: state.ENABLE_MARKER_LABEL,
+  //   textposition: state.TEXT_POSITION,
+  //   hole: state.HOLE,
+  //   type: 'pie',
+  //   //autosize: true,
+  //   // font: {
+  //   //   family: state.FONT_FAMILY,
+  //   //   size: state.FONT_SIZE,
+  //   //   color: state.FONT_COLOR_TEXT,
+  //   // },
+  // })
+  // const [PieChartLayout, setPieChartLayout] = React.useState<any>({
+  //   title: state.TITLE,
+  //   margin: {
+  //     l: state.MARGIN_LEFT,
+  //     r: state.MARGIN_RIGHT,
+  //     b: state.MARGIN_BOTTOM,
+  //     t: state.MARGIN_TOP,
+  //   },
+  //   showlegend: state.ENABLE_LEGEND,
+  //   xaxis: {
+  //     title: state.AXIS_X_TITLE,
+  //   },
+  //   yaxis: {
+  //     title: state.AXIS_Y_TITLE,
+  //   },
+  // })
 
   React.useEffect(() => {
     console.log('[  상위에서 받은 PieChart Props ] : ' + props.ShowPieDrawer)
     setIsOpen(props.ShowPieDrawer)
   }, [props.ShowPieDrawer])
+
+  React.useEffect(() => {
+    props.ChartLayout({
+      title: state.TITLE,
+      margin: {
+        l: state.MARGIN_LEFT,
+        r: state.MARGIN_RIGHT,
+        b: state.MARGIN_BOTTOM,
+        t: state.MARGIN_TOP,
+      },
+      showlegend: state.ENABLE_LEGEND,
+      xaxis: {
+        title: state.AXIS_X_TITLE,
+      },
+      yaxis: {
+        title: state.AXIS_Y_TITLE,
+      },
+    })
+  }, [
+    state.TITLE,
+    state.MARGIN_LEFT,
+    state.MARGIN_RIGHT,
+    state.LINE_SHAPE,
+    state.MARGIN_BOTTOM,
+    state.MARGIN_TOP,
+    state.ENABLE_LEGEND,
+    state.AXIS_X_TITLE,
+    state.AXIS_Y_TITLE,
+  ])
+
+  React.useEffect(() => {
+    console.log('[ Hole ] : ' + state.HOLE)
+
+    props.ChartData({
+      textinfo: state.ENABLE_MARKER_LABEL,
+      textposition: state.TEXT_POSITION,
+      hole: state.HOLE,
+      type: 'pie',
+    })
+  }, [state.ENABLE_MARKER_LABEL, state.TEXT_POSITION, state.HOLE])
 
   return (
     <>
@@ -106,8 +168,12 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
                     aria-label="slider-ex-6"
                     defaultValue={state.HOLE}
                     min={0}
-                    max={300}
-                    onChange={(val) => dispatch({ type: 'HOLE', data: val })}
+                    max={1}
+                    step={0.1}
+                    onChange={(val) => {
+                      console.log(val)
+                      dispatch({ type: 'HOLE', data: val })
+                    }}
                   >
                     <SliderMark
                       value={state.HOLE}
@@ -118,7 +184,7 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
                       ml="-5"
                       w="12"
                     >
-                      {state.MARGIN_TOP}
+                      {state.HOLE}
                     </SliderMark>
                     <SliderTrack bg="blue.100">
                       <SliderFilledTrack bg="#00a0e9" />
@@ -141,7 +207,7 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
-                  <Input value={state.TITLE} onChange={(val) => dispatch({ type: 'TITLE', data: val })} />
+                  <Input value={state.TITLE} onChange={(e) => dispatch({ type: 'TITLE', data: e.target.value })} />
                 </AccordionPanel>
               </AccordionItem>
 
@@ -299,10 +365,10 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
                     icon={<MdArrowDropDown />}
                     variant="filled"
                     disabled={state.ENABLE_SELECT_MARKER_LABEL_POSITION}
-                    placeholder="Text & Position"
+                    // placeholder="Text & Position"
                     value={state.MAKER_LABEL_POSITION}
-                    onChange={(val: any) => {
-                      dispatch({ type: 'MARKER_LABEL_POSITION', data: val })
+                    onChange={(e: any) => {
+                      dispatch({ type: 'MARKER_LABEL_POSITION', data: e.target.value })
                     }}
                   >
                     <option value="auto">auto</option>
@@ -336,7 +402,7 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
                 </AccordionPanel>
               </AccordionItem>
 
-              <AccordionItem>
+              {/* <AccordionItem>
                 <h2>
                   <AccordionButton>
                     <Box as="span" flex="1" textAlign="left">
@@ -348,11 +414,17 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
                 </h2>
                 <AccordionPanel pb={4}>
                   <AccordionTitle>Set X Axis Title.</AccordionTitle>
-                  <Input value={state.AXIS_X_TITLE} onChange={(val) => dispatch({ type: 'AXIS_X_TITLE', data: val })} />
+                  <Input
+                    value={state.AXIS_X_TITLE}
+                    onChange={(e) => dispatch({ type: 'AXIS_X_TITLE', data: e.target.value })}
+                  />
                   <AccordionTitle>Set Y Axis Title.</AccordionTitle>
-                  <Input value={state.AXIS_Y_TITLE} onChange={(val) => dispatch({ type: 'AXIS_Y_TITLE', data: val })} />
+                  <Input
+                    value={state.AXIS_Y_TITLE}
+                    onChange={(e) => dispatch({ type: 'AXIS_Y_TITLE', data: e.target.value })}
+                  />
                 </AccordionPanel>
-              </AccordionItem>
+              </AccordionItem> */}
             </Accordion>
           </DrawerBody>
 
@@ -362,12 +434,20 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
               mr={3}
               onClick={() => {
                 setIsOpen(false)
-                props.setPieChartShowDrawer(false)
+                props.setShowDrawer(false)
               }}
             >
               Cancel
             </Button>
-            <Button colorScheme="brand">Save</Button>
+            <Button
+              colorScheme="brand"
+              onClick={() => {
+                setIsOpen(false)
+                props.setShowDrawer(false)
+              }}
+            >
+              Save
+            </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
