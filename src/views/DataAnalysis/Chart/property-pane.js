@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 export class PropertyPane extends React.Component {
   render() {
     return (

@@ -115,7 +115,8 @@ const SAMPLE_CSS = `
      .control-fluid {
          padding: 0px !important;
      }`
-function RangeSelection(this: any) {
+
+function DataSelection(this: any) {
   let chartInstance: any
   let dropElement: any
   let checkElement: any
@@ -134,8 +135,13 @@ function RangeSelection(this: any) {
   }
 
   const onSelectedDataIndexes = (e: any) => {
-    console.log('e:', e)
+    // console.log('e:', e)
   }
+
+  const dragComplete = (e: any) => {
+    console.log('e::', e)
+  }
+
   return (
     <div className="control-pane">
       <style>{SAMPLE_CSS}</style>
@@ -164,7 +170,7 @@ function RangeSelection(this: any) {
             legendSettings={{ visible: true, toggleVisibility: false }}
             title="Profit Comparision of A and B"
             selectionMode="DragXY"
-            // selectedDataIndexes={'Point'}
+            dragComplete={dragComplete}
           >
             <Inject services={[Selection, Legend, ColumnSeries, Category, ScatterSeries]} />
             <SeriesCollectionDirective>
@@ -233,4 +239,4 @@ function RangeSelection(this: any) {
     </div>
   )
 }
-export default RangeSelection
+export default DataSelection

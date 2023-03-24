@@ -21,6 +21,8 @@
 		"@syncfusion/ej2-react-dropdowns": "^20.4.54",
 		"@syncfusion/ej2-react-grids": "^20.4.54",
 		"@syncfusion/ej2-react-layouts": "^20.4.53",
+		"@syncfusion/ej2-react-popups": "^21.1.35",
+		"@syncfusion/ej2-react-splitbuttons": "^21.1.35",
 		"@tanstack/react-table": "^8.5.13",
 		"@testing-library/jest-dom": "^5.14.1",
 		"@testing-library/react": "^11.2.7",

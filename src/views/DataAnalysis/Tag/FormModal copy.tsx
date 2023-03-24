@@ -9,6 +9,7 @@ interface FormModalProps {
   type: string
   onSaveClick: () => void
   onCloseClick: () => void
+  selectedData: object
 }
 
 const index: any = 0
@@ -17,15 +18,19 @@ const tailLayout = {
 }
 
 export const FormModal: React.FC<FormModalProps> = (props) => {
-  const { show, type, onSaveClick, onCloseClick } = props
+  const { show, type, onSaveClick, onCloseClick, selectedData } = props
+  const [modalTitle, setModalTitle] = useState('태그 등록')
   const [visible, setVisible] = React.useState(show)
   const [items, setItems] = React.useState(['%', 'kg'])
   const [name, setName] = React.useState('')
   const inputRef = useRef<InputRef>(null)
 
   useEffect(() => {
+    console.log('selectedData:', selectedData)
     if (type === 'add') {
+      setModalTitle('태그 등록')
     } else if (type === 'update') {
+      setModalTitle('태그 수정')
     }
     setVisible(show)
   }, [props])
@@ -56,9 +61,9 @@ export const FormModal: React.FC<FormModalProps> = (props) => {
 
   return (
     <Modal
-      title="태그 등록"
+      title={modalTitle}
       open={visible}
-      //   closable
+      closable
       onOk={handleOk}
       // confirmLoading={confirmLoading}
       onCancel={handleCancel}
@@ -66,10 +71,10 @@ export const FormModal: React.FC<FormModalProps> = (props) => {
     >
       <Row>
         <Form labelCol={{ span: 10 }} wrapperCol={{ span: 40 }} style={{ maxWidth: 400 }}>
-          <Form.Item label="Tag Name">
+          <Form.Item label="Tag Name" required>
             <Input />
           </Form.Item>
-          <Form.Item label="Units">
+          <Form.Item label="Units" required>
             <Select
               options={items.map((item) => ({ label: item, value: item }))}
               dropdownRender={(items) => (
