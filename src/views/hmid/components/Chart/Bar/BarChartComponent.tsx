@@ -1,22 +1,22 @@
 /**
  * INFINITE OPTIMAL
- * 메뉴 : HMI Designer - LineChart Option
- * 시작 날짜 : 2023-03-16
- * 최종 수정 날짜 : 2023-03-17
+ * 메뉴 : HMI Designer - BarChart Option
+ * 시작 날짜 : 2023-03-24
+ * 최종 수정 날짜 : 2023-03-24
  * 개발자 : 박윤희 (BAK YUN HEE)
  */
 
 import React from 'react'
 import ChartOption from './option/option'
-import type { LineChartProps } from './interface/interface'
+import type { BarChartProps } from './interface/interface'
 // import reducer from './reducer/reducer'
 // import initialState from './reducer/initialState'
 
-export const LineChartComponent: React.FC<LineChartProps> = (props: any) => {
+export const BarChartComponent: React.FC<BarChartProps> = (props: any) => {
   const [chartType, setChartType] = React.useState()
   const [ShowDrawer, setShowDrawer] = React.useState(false)
-  const [LineChartData, setLineChartData] = React.useState<any>()
-  const [LineChartLayout, setLineChartLayout] = React.useState<any>()
+  const [BarChartData, setBarChartData] = React.useState<any>()
+  const [BarChartLayout, setBarChartLayout] = React.useState<any>()
 
   React.useEffect(() => {
     setShowDrawer(props.ShowDrawer)
@@ -32,22 +32,18 @@ export const LineChartComponent: React.FC<LineChartProps> = (props: any) => {
   // }, [props.ChartType])
 
   React.useEffect(() => {
-    if (props.ChartType === 'Line') {
-      console.log('[ 하위 LineChart 에서 받은 props ] : ')
-      console.log(LineChartData)
-      console.log(LineChartLayout)
-
-      props.ChartData(LineChartData)
-      props.ChartLayout(LineChartLayout)
+    if (props.ChartType === 'Bar') {
+      props.ChartData(BarChartData)
+      props.ChartLayout(BarChartLayout)
     }
-  }, [props.ChartType, LineChartData, LineChartLayout])
+  }, [props.ChartType, BarChartData, BarChartLayout])
 
   const getChartLayout = (chartLayout: any) => {
-    setLineChartLayout(chartLayout)
+    setBarChartLayout(chartLayout)
   }
 
   const getChartData = (chartData: any) => {
-    setLineChartData(chartData)
+    setBarChartData(chartData)
   }
 
   const getShowDrawer = (ShowDrawer: boolean) => {
@@ -60,11 +56,11 @@ export const LineChartComponent: React.FC<LineChartProps> = (props: any) => {
         ChartType={chartType}
         ChartLayout={getChartLayout}
         ChartData={getChartData}
-        ShowDrawer={ShowDrawer}
+        ShowBarDrawer={ShowDrawer}
         setShowDrawer={getShowDrawer}
       />
     </>
   )
 }
 
-export default LineChartComponent
+export default BarChartComponent

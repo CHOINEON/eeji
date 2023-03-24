@@ -5,7 +5,7 @@ export const initialState = {
   DISPLAY_PAPER_BG_COLOR_PICKER: false,
   DISPLAY_PLOT_BG_COLOR_PICKER: false,
   TITLE: 'Pie Chart',
-  HOLE: 0,
+  HOLE: 0.1,
   SHOW_DRAWER: false,
   NAVIGATION_COLLAPSED: true,
   PAPER_BG_COLOR_TEXT: '#fff',

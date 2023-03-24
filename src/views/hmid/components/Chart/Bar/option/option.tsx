@@ -32,7 +32,6 @@ import {
   MdMargin,
   MdGraphicEq,
   MdLineWeight,
-  MdLineStyle,
   MdLabel,
   MdOutlineLegendToggle,
   MdOutlineLineAxis,
@@ -40,7 +39,7 @@ import {
 import reducer from '../reducer/reducer'
 import initialState from '../reducer/initialState'
 
-import type { LineChartProps } from '../interface/interface'
+import type { BarChartProps } from '../interface/interface'
 
 const AccordionTitle = styled.div`
   display: inline-block;
@@ -56,83 +55,50 @@ const Margin = styled.div`
   margin: 1.5vw 0;
 `
 
-export const ChartOption: React.FC<LineChartProps> = (props: any) => {
+export const ChartOption: React.FC<BarChartProps> = (props: any) => {
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const { onClose } = useDisclosure()
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const btnRef = React.useRef()
-  // const [LineChartData, setLineChartData] = React.useState<any>({
-  //   mode: state.LINE_MODE,
-  //   //추후 속성 추가 예정
-  //   //name: 'vh',
-  //   text: state.ENABLE_MARKER_LABEL,
-  //   textposition: state.MARKER_LABEL_POSITION,
-  //   line: {
-  //     shape: state.LINE_SHAPE,
-  //     width: state.LINE_WIDTH,
-  //     dash: state.LINE_DASH,
-  //   },
-  //   type: 'scatter',
-  //   //autosize: true,
-  //   // font: {
-  //   //   family: state.FONT_FAMILY,
-  //   //   size: state.FONT_SIZE,
-  //   //   color: state.FONT_COLOR_TEXT,
-  //   // },
-  // })
-  // const [LineChartLayout, setLineChartLayout] = React.useState<any>({
-  //   title: state.TITLE,
-  //   margin: {
-  //     l: state.MARGIN_LEFT,
-  //     r: state.MARGIN_RIGHT,
-  //     b: state.MARGIN_BOTTOM,
-  //     t: state.MARGIN_TOP,
-  //   },
-  //   showlegend: state.ENABLE_LEGEND,
-  //   xaxis: {
-  //     title: state.AXIS_X_TITLE,
-  //   },
-  //   yaxis: {
-  //     title: state.AXIS_Y_TITLE,
-  //   },
-  // })
-
-  // React.useEffect(() => {
-  //   if (props.ChartType === 'Line') {
-  //     //setIsOpen(true)
-  //   }
-  // }, [props.ChartType])
 
   React.useEffect(() => {
-    setIsOpen(props.ShowDrawer)
-  }, [props.ShowDrawer])
+    console.log('[  상위에서 받은 BarChart Props ] : ' + props.ShowBarDrawer)
+    setIsOpen(props.ShowBarDrawer)
+  }, [props.ShowBarDrawer])
 
   React.useEffect(() => {
     props.ChartData({
-      mode: state.LINE_MODE,
-      //추후 속성 추가 예정
-      //name: 'vh',
+      type: 'bar',
+      // font: {
+      //   family: state.FONT_FAMILY,
+      //   size: state.FONT_SIZE,
+      //   color: state.FONT_COLOR_TEXT,
+      // },
+      //추후 추가
       text: state.ENABLE_MARKER_LABEL,
-      textposition: state.MARKER_LABEL_POSITION,
-      line: {
-        shape: state.LINE_SHAPE,
-        width: state.LINE_WIDTH,
-        dash: state.LINE_DASH,
-      },
-      type: 'scatter',
+      textposition: state.TEXT_POSITION,
+      // marker: {
+      //   color: state.MARKER_COLOR,
+      //   opacity: state.MARKER_OPACITY,
+      //   line: {
+      //     color: state.MARKER_BORDER_COLOR_TEXT,
+      //     width: state.MARKER_BORDER_WIDTH,
+      //   },
+      // },
     })
-  }, [
-    state.LINE_MODE,
-    state.ENABLE_MARKER_LABEL,
-    state.MARKER_LABEL_POSITION,
-    state.LINE_SHAPE,
-    state.LINE_WIDTH,
-    state.LINE_DASH,
-  ])
+  }, [state.ENABLE_TEXT_POSITION, state.TEXT_POSITION])
 
   React.useEffect(() => {
     props.ChartLayout({
+      type: 'Bar',
       title: state.TITLE,
+      // plot_bgcolor: state.PLOT_BG_COLOR_TEXT,
+      // paper_bgcolor: state.PAPER_BG_COLOR_TEXT,
+      // autosize: true,
+      bargap: state.BAR_GAP,
+      barmode: state.BAR_MODE,
+      //   width: state.WIDTH,
+      //   height: state.HEIGHT,
       margin: {
         l: state.MARGIN_LEFT,
         r: state.MARGIN_RIGHT,
@@ -140,18 +106,42 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
         t: state.MARGIN_TOP,
       },
       showlegend: state.ENABLE_LEGEND,
+      // legend: {
+      //   x: state.TRANSLATE_X,
+      //   xanchor: 'right',
+      //   y: state.TRANSLATE_Y,
+      //   orientation: state.LEGEND_ORIENTATION,
+      //   traceorder: state.LEGEND_TRACEORDER,
+      // },
       xaxis: {
         title: state.AXIS_X_TITLE,
+        showgrid: state.ENABLE_GRIDX,
+        autorange: true,
+        autotick: true,
+        // 추후 추가 예정
+        zeroline: false,
+        showline: true,
+        //ticks: '',
+        showticklabels: true,
       },
       yaxis: {
         title: state.AXIS_Y_TITLE,
+        showgrid: state.ENABLE_GRIDY,
+        autorange: true,
+        autotick: true,
+        // 추후 추가 예정
+        zeroline: false,
+        showline: true,
+        //ticks: '',
+        showticklabels: true,
       },
     })
   }, [
     state.TITLE,
+    state.BAR_GAP,
+    state.BAR_MODE,
     state.MARGIN_LEFT,
     state.MARGIN_RIGHT,
-    state.LINE_SHAPE,
     state.MARGIN_BOTTOM,
     state.MARGIN_TOP,
     state.ENABLE_LEGEND,
@@ -174,7 +164,7 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>LineChart Option</DrawerHeader>
+          <DrawerHeader>BarChart Option</DrawerHeader>
 
           <DrawerBody>
             <Accordion allowToggle>
@@ -183,7 +173,7 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                   <AccordionButton>
                     <Box as="span" flex="1" textAlign="left">
                       <MdSsidChart style={{ display: 'inline-block' }} />
-                      <AccordionTitle>Line Mode</AccordionTitle>
+                      <AccordionTitle>Bar Mode</AccordionTitle>
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
@@ -191,16 +181,17 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                 <AccordionPanel pb={4}>
                   <Select
                     icon={<MdArrowDropDown />}
-                    value={state.LINE_MODE}
+                    value={state.BAR_MODE}
                     variant="filled"
-                    placeholder="Select Line Mode"
+                    // placeholder="Select Bar Mode"
                     onChange={(e) => {
-                      dispatch({ type: 'LINE_MODE', data: e.target.value })
+                      dispatch({ type: 'BAR_MODE', data: e.target.value })
                     }}
                   >
-                    <option value="lines">lines</option>
-                    <option value="markers">markers</option>
-                    <option value="lines+markers">lines+markers</option>
+                    <option value="stack">stack</option>
+                    <option value="group">group</option>
+                    <option value="overlay">overlay</option>
+                    <option value="relative">relative</option>
                   </Select>
                 </AccordionPanel>
               </AccordionItem>
@@ -360,7 +351,7 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                   <AccordionButton>
                     <Box as="span" flex="1" textAlign="left">
                       <MdLineWeight style={{ display: 'inline-block' }} />
-                      <AccordionTitle>Line Width</AccordionTitle>
+                      <AccordionTitle>Bar Gap</AccordionTitle>
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
@@ -370,14 +361,15 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                   <Slider
                     aria-label="slider-ex-4"
                     min={0}
-                    max={50}
+                    max={1}
+                    step={0.01}
                     onChange={(val) => {
-                      dispatch({ type: 'LINE_WIDTH', data: val })
+                      dispatch({ type: 'BAR_GAP', data: val })
                     }}
-                    defaultValue={state.LINE_WIDTH}
+                    defaultValue={state.BAR_GAP}
                   >
                     <SliderMark
-                      value={state.LINE_WIDTH}
+                      value={state.BAR_GAP}
                       textAlign="center"
                       bg="blue.500"
                       color="white"
@@ -385,7 +377,7 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                       ml="-5"
                       w="12"
                     >
-                      {state.LINE_WIDTH}
+                      {state.BAR_GAP}
                     </SliderMark>
                     <SliderTrack bg="blue.100">
                       <SliderFilledTrack bg="#00a0e9" />
@@ -394,36 +386,6 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                       <Box color="brand" as={MdGraphicEq} />
                     </SliderThumb>
                   </Slider>
-                </AccordionPanel>
-              </AccordionItem>
-
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      <MdLineStyle style={{ display: 'inline-block' }} />
-                      <AccordionTitle>Line Dash</AccordionTitle>
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel pb={4}>
-                  <Select
-                    icon={<MdArrowDropDown />}
-                    value={state.LINE_DASH}
-                    variant="filled"
-                    onChange={(e) => {
-                      console.log(e.target.value)
-                      dispatch({ type: 'LINE_DASH', data: e.target.value })
-                    }}
-                  >
-                    <option value="solid">solid</option>
-                    <option value="dot">dot</option>
-                    <option value="dashdot">dashdot</option>
-                    <option value="longdashdot">longdashdot</option>
-                    <option value="dash">dash</option>
-                    <option value="longdash">longdash</option>
-                  </Select>
                 </AccordionPanel>
               </AccordionItem>
 
@@ -456,22 +418,15 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                     variant="filled"
                     disabled={state.ENABLE_SELECT_MARKER_LABEL_POSITION}
                     // placeholder="Text & Position"
-                    value={state.MAKER_LABEL_POSITION}
+                    value={state.TEXT_POSITION}
                     onChange={(e: any) => {
-                      dispatch({ type: 'MARKER_LABEL_POSITION', data: e.target.value })
+                      dispatch({ type: 'TEXT_POSITION', data: e.target.value })
                     }}
                   >
                     <option value="auto">auto</option>
                     <option value="none">none</option>
-                    <option value="top left">top left</option>
-                    <option value="top center">top center</option>
-                    <option value="top right">top right</option>
-                    <option value="middle left">middle left</option>
-                    <option value="middle center">middle center</option>
-                    <option value="middle right">middle right</option>
-                    <option value="bottom left">bottom left</option>
-                    <option value="bottom center">bottom center</option>
-                    <option value="bottom right">bottom right</option>
+                    <option value="outside">outside</option>
+                    <option value="inside">inside</option>
                   </Select>
                 </AccordionPanel>
               </AccordionItem>
@@ -493,7 +448,7 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                     colorScheme="brand"
                     value={state.ENABLE_LEGEND}
                     onChange={(e) => {
-                      dispatch({ type: 'ENABLE_LEGEND' })
+                      dispatch({ type: 'ENABLE_LEGEND', data: e.target.value })
                     }}
                   />
                 </AccordionPanel>
