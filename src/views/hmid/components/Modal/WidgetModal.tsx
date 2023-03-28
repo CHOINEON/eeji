@@ -19,7 +19,7 @@ import ico_pie from '../../../../assets/img/ineeji/ico_pie.png'
 import ico_heatmap from '../../../../assets/img/ineeji/ico_heatmap.png'
 import ico_scatter_plot from '../../../../assets/img/ineeji/ico_scatter_plot.png'
 import ico_waterfall from '../../../../assets/img/ineeji/ico_waterfall.png'
-import ico_box_plot from '../../../../assets/img/ineeji/ico_box_plot.png'
+// import ico_box_plot from '../../../../assets/img/ineeji/ico_box_plot.png'
 import ico_table from '../../../../assets/img/ineeji/ico_table.png'
 
 import WidgetData from '../data/widget_list'
@@ -66,10 +66,6 @@ const WidgetIcon = styled.li<{ Type: string }>`
     } else if (props.Type === 'Scatter Plot') {
       return `
       background-image: url(${ico_scatter_plot});
-      `
-    } else if (props.Type === 'Box Plot') {
-      return `
-      background-image: url(${ico_box_plot});
       `
     } else if (props.Type === 'Heatmap') {
       return `

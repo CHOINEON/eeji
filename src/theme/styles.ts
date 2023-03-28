@@ -5,7 +5,7 @@ export const globalStyles = {
       100: '#c9eeff4a',
       200: '#422AFB',
       300: '#422AFB',
-      400: '#7551FF',
+      400: '#5156be',
       // 500: '#422AFB',
       500: '#00a0e9',
       600: '#005b84',
@@ -71,10 +71,10 @@ export const globalStyles = {
       300: '#728fea',
       400: '#3652ba',
       500: '#1b3bbb',
-      600: '#24388a',
+      600: '#313533',
       700: '#1B254B',
-      800: '#111c44',
-      900: '#0b1437',
+      800: '#2c302e',
+      900: '#2c302e',
     },
     gray: {
       100: '#FAFCFE',
@@ -84,7 +84,7 @@ export const globalStyles = {
     global: (props: any) => ({
       body: {
         overflowX: 'hidden',
-        bg: mode('secondaryGray.300', 'navy.900')(props),
+        bg: mode('secondaryGray.300', 'navy.600')(props),
         fontFamily: 'DM Sans',
         letterSpacing: '-0.5px',
       },

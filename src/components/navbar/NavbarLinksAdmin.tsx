@@ -38,6 +38,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
   const borderColor = useColorModeValue('#E6ECFA', 'rgba(135, 140, 189, 0.3)')
   const ethBg = useColorModeValue('secondaryGray.300', 'navy.900')
   const ethBox = useColorModeValue('white', 'navy.800')
+  const userBg = useColorModeValue('#00a0e9', '#676a68')
   const shadow = useColorModeValue(
     '14px 17px 40px 4px rgba(112, 144, 176, 0.18)',
     '14px 17px 40px 4px rgba(112, 144, 176, 0.06)'
@@ -211,7 +212,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
             _hover={{ cursor: 'pointer' }}
             color="white"
             name={UserName}
-            bg="#11047A"
+            bg={userBg}
             size="sm"
             w="40px"
             h="40px"

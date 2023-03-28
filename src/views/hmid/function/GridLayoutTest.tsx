@@ -9,7 +9,14 @@
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 import { updateSampleSection } from './base'
-import { DashboardLayoutComponent, PanelModel, PanelsDirective, PanelDirective } from '@syncfusion/ej2-react-layouts'
+import {
+  DashboardLayoutComponent,
+  PanelModel,
+  ResizeArgs,
+  PanelsDirective,
+  PanelDirective,
+} from '@syncfusion/ej2-react-layouts'
+import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { panelData } from './data/panel-data'
 import './style/style.css'
 import WidgetModal from '../components/Modal/WidgetModal'
@@ -71,12 +78,33 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const headerCount = 1
   const panels: any = panelData
   let dashboardObj: DashboardLayoutComponent
-  const cellSpacing: number[] = [4, 5]
+  const cellSpacing: number[] = [5, 5]
+  let count = 0
 
   React.useEffect(() => {
-    console.log('use Effect !!!')
-    console.log(PieChartShowDrawer)
-  }, [PieChartShowDrawer])
+    const updatePanels: PanelModel[] = []
+    const index = 0
+    const panel: any = Object.keys(panels[index]).map((panelIndex: string) => {
+      return panels[index][panelIndex]
+    })
+
+    count = panel.length
+
+    for (let i = 0; i < panel.length; i++) {
+      const panelModelValue: PanelModel = {
+        id: i.toString(),
+        row: panel[i].row,
+        col: panel[i].col,
+        sizeX: panel[i].sizeX,
+        sizeY: panel[i].sizeY,
+        header: `<div class="e-header-text"> <button class="grid-setting-btn">
+      </button></div><div class="header-border"></div>`,
+        content: '<div class="panel-content">Content Area</div>',
+      }
+      updatePanels.push(panelModelValue)
+    }
+    dashboardObj.panels = updatePanels
+  }, [])
 
   React.useEffect(() => {
     if (props.target !== undefined) {
@@ -163,6 +191,35 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   /**
    * GridLayout Evt
    */
+  //grid box add
+  function btnClick(): void {
+    const panel: PanelModel[] = [
+      {
+        id: count.toString() + '_layout',
+        sizeX: 1,
+        sizeY: 1,
+        row: 0,
+        col: 0,
+        header: `<div class="e-header-text"> <button class="grid-setting-btn">
+      </button></div><div class="header-border"></div>`,
+        content: '<div class="panel-content">Content Area</div>',
+      },
+    ]
+    ;(dashboardObj as any).addPanel(panel[0])
+    const closeIcon: any = document.getElementById(count.toString() + '_layout').querySelector('.e-clear-icon')
+    // closeIcon.addEventListener('click', onCloseIconHandler.bind(this))
+    count = count + 1
+  }
+
+  function onPanelResize(args: ResizeArgs): void {
+    if (args.element && args.element.querySelector('.e-panel-container .e-panel-content div div')) {
+      const chartObj: any = (args.element.querySelector('.e-panel-container .e-panel-content div div') as any)
+        .ej2_instances[0]
+      chartObj.height = '95%'
+      chartObj.width = '100%'
+      chartObj.refresh()
+    }
+  }
   function reset(): void {
     // const selectedElement: any = document.getElementsByClassName('e-selected-style')
     // initializeTemplate(selectedElement[0], dashboardObj)
@@ -175,6 +232,9 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     const panel: any = Object.keys(panels[index]).map((panelIndex: string) => {
       return panels[index][panelIndex]
     })
+
+    count = panel.length
+
     for (let i = 0; i < panel.length; i++) {
       const panelModelValue: PanelModel = {
         id: i.toString(),
@@ -188,6 +248,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       }
       updatePanels.push(panelModelValue)
     }
+
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+    console.log(dashboardObj)
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
     dashboardObj.panels = updatePanels
   }
 
@@ -271,19 +335,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   }
 
   const rendereComplete = (args: any) => {
-    // document.getElementById('templateContainer').onclick = (args: any) => {
-    //   const target: any = args.target
-    //   const selectedElement: any = document.getElementsByClassName('e-selected-style')
-    //   if (selectedElement.length) {
-    //     selectedElement[0].classList.remove('e-selected-style')
-    //   }
-    //   if (target.className === 'image-pattern-style') {
-    //     dashboardObj.removeAll()
-    //     initializeTemplate(args.target, dashboardObj)
-    //   }
-    //   target.classList.add('e-selected-style')
-    // }
-
     if (args !== 'reset') {
       if (args.className.includes('image-pattern-style')) {
         dashboardObj.removeAll()
@@ -459,20 +510,29 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         ShowBarDrawer={BarChartShowDrawer}
         setShowDrawer={getBarChartShowDrawer}
       />
-      <div id="DashboardBox">
-        <div className="col-lg-8 control-section" id="predefine_control">
+      <div id="DashboardBox" style={{ position: 'relative' }}>
+        <div className="addContainer">
+          <ButtonComponent id="add" cssClass="e-info" onClick={btnClick.bind(this)}>
+            Add Panel
+          </ButtonComponent>
+        </div>
+        <div className="col-lg-8 control-section" id="control_dash">
           <div className="content-wrapper" style={{ maxWidth: '100%' }}>
             <DashboardLayoutComponent
+              id="api_dashboard"
+              cellSpacing={cellSpacing}
+              allowFloating={true}
+              allowResizing={true}
               // created={onCreate.bind(this)}
               onClick={(e: any) => {
                 ClickDashBoardComponent(e)
               }}
-              columns={6}
+              columns={8}
               ref={(scope) => {
-                dashboardObj = scope
+                ;(dashboardObj as any) = scope
               }}
-              id="predefine_dashboard"
-              cellSpacing={cellSpacing}
+              resizeStop={onPanelResize.bind(this)}
+              // allowDragging={true}
             >
               {/* <PanelsDirective>
               <PanelDirective
