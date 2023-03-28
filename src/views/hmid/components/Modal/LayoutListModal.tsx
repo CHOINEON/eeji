@@ -27,7 +27,6 @@ export const LayoutModal: React.FC<LayoutModalProps> = (props) => {
   //   props.setClose(true)
   //   props.setGridInfo(e.target.innerText)
   // }
-
   // const RenderLayoutList = () => {
   //   const Component = []
   //   for (let i = 0, len = LayoutList.length; i < len; i++) {
@@ -62,6 +61,7 @@ export const LayoutModal: React.FC<LayoutModalProps> = (props) => {
   //     target.classList.add('e-selected-style')
   //   }
   // }
+  // function RenderComplete() {}
 
   const ClickLayoutContainer = (args: any) => {
     const target: any = args.target

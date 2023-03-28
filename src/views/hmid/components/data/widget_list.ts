@@ -14,9 +14,9 @@ export const WidgetData = [
       {
         name: 'Scatter Plot',
       },
-      {
-        name: 'Box Plot',
-      },
+      // {
+      //   name: 'Box Plot',
+      // },
       {
         name: 'Heatmap',
       },
