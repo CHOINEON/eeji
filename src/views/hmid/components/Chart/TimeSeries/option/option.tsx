@@ -40,7 +40,7 @@ import {
 import reducer from '../reducer/reducer'
 import initialState from '../reducer/initialState'
 
-import type { LineChartProps } from '../interface/interface'
+import type { TimeSeriesProps } from '../interface/interface'
 
 const AccordionTitle = styled.div`
   display: inline-block;
@@ -56,7 +56,7 @@ const Margin = styled.div`
   margin: 1.5vw 0;
 `
 
-export const ChartOption: React.FC<LineChartProps> = (props: any) => {
+export const TimeSeriesOption: React.FC<TimeSeriesProps> = (props: any) => {
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const { onClose } = useDisclosure()
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
@@ -130,6 +130,38 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
     state.LINE_DASH,
   ])
 
+  const selectorOptions = {
+    buttons: [
+      {
+        step: 'month',
+        stepmode: 'backward',
+        count: 1,
+        label: '1m',
+      },
+      {
+        step: 'month',
+        stepmode: 'backward',
+        count: 6,
+        label: '6m',
+      },
+      {
+        step: 'year',
+        stepmode: 'todate',
+        count: 1,
+        label: 'YTD',
+      },
+      {
+        step: 'year',
+        stepmode: 'backward',
+        count: 1,
+        label: '1y',
+      },
+      {
+        step: 'all',
+      },
+    ],
+  }
+
   React.useEffect(() => {
     props.ChartLayout({
       title: state.TITLE,
@@ -142,9 +174,12 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
       showlegend: state.ENABLE_LEGEND,
       xaxis: {
         title: state.AXIS_X_TITLE,
+        rangeselector: selectorOptions,
+        rangeslider: {},
       },
       yaxis: {
         title: state.AXIS_Y_TITLE,
+        fixedrange: true,
       },
     })
   }, [
@@ -174,7 +209,7 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>LineChart Option</DrawerHeader>
+          <DrawerHeader>TimeSeriesChart Option</DrawerHeader>
 
           <DrawerBody>
             <Accordion allowToggle>
@@ -427,7 +462,7 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                 </AccordionPanel>
               </AccordionItem>
 
-              <AccordionItem>
+              {/* <AccordionItem>
                 <h2>
                   <AccordionButton>
                     <Box as="span" flex="1" textAlign="left">
@@ -474,7 +509,7 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                     <option value="bottom right">bottom right</option>
                   </Select>
                 </AccordionPanel>
-              </AccordionItem>
+              </AccordionItem> */}
 
               <AccordionItem>
                 <h2>
@@ -552,4 +587,4 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
   )
 }
 
-export default ChartOption
+export default TimeSeriesOption

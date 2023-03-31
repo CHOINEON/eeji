@@ -11,7 +11,7 @@ import styled from '@emotion/styled'
 import bg_vedio from '../../assets/img/ineeji/ineeji_video.gif'
 import title from '../../assets/img/ineeji/title.svg'
 import axios from 'axios'
-import { FormControl, FormLabel, Alert, AlertIcon, AlertTitle, AlertDescription, Button, Input } from '@chakra-ui/react'
+import { FormControl, FormLabel, Select, Button, Input } from '@chakra-ui/react'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -48,7 +48,7 @@ const FormWrap = styled.div`
 const Title = styled.div`
   background-position: left 10vw top 5vw;
   background-repeat: no-repeat;
-  background-size: 50% auto;
+  background-size: 40% auto;
   background-image: url(${title});
   position: fixed;
   left: 0;
@@ -112,6 +112,11 @@ export const Login: React.FC = () => {
     }
   }
 
+  // 회사 리스트
+  const RenderCompanyList = () => {
+    console.log('test')
+  }
+
   return (
     <>
       {/* <Alert status="error">
@@ -124,6 +129,12 @@ export const Login: React.FC = () => {
       <Title />
       <FormWrap>
         <FormControl id="text">
+          <FormLabel mt={5} color={'white'}>
+            Company
+          </FormLabel>
+          <Select mb={2} size="md">
+            {/* {RenderCompanyList} */}
+          </Select>
           <FormLabel color={'white'}>I D</FormLabel>
           <Input color={'white'} type="text" onChange={(e: any) => ChangeId(e)} onKeyDown={(e: any) => onEnterId(e)} />
           <FormLabel mt={5} color={'white'}>

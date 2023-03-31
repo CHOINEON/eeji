@@ -19,8 +19,9 @@ import ico_pie from '../../../../assets/img/ineeji/ico_pie.png'
 import ico_heatmap from '../../../../assets/img/ineeji/ico_heatmap.png'
 import ico_scatter_plot from '../../../../assets/img/ineeji/ico_scatter_plot.png'
 import ico_waterfall from '../../../../assets/img/ineeji/ico_waterfall.png'
-// import ico_box_plot from '../../../../assets/img/ineeji/ico_box_plot.png'
+import ico_box_plot from '../../../../assets/img/ineeji/ico_box_plot.png'
 import ico_table from '../../../../assets/img/ineeji/ico_table.png'
+import ico_time_series_chart from '../../../../assets/img/ineeji/ico_time_series_chart.png'
 
 import WidgetData from '../data/widget_list'
 
@@ -55,6 +56,10 @@ const WidgetIcon = styled.li<{ Type: string }>`
       return `
       background-image: url(${ico_bar});
       `
+    } else if (props.Type === 'Time Series') {
+      return `
+      background-image: url(${ico_time_series_chart});
+      `
     } else if (props.Type === 'Pie') {
       return `
       background-image: url(${ico_pie});
@@ -63,9 +68,9 @@ const WidgetIcon = styled.li<{ Type: string }>`
       return `
       background-image: url(${ico_waterfall});
       `
-    } else if (props.Type === 'Scatter Plot') {
+    } else if (props.Type === 'Box Plot') {
       return `
-      background-image: url(${ico_scatter_plot});
+      background-image: url(${ico_box_plot});
       `
     } else if (props.Type === 'Heatmap') {
       return `

@@ -22,11 +22,17 @@ import { panelData } from './data/panel-data'
 import './style/style.css'
 import WidgetModal from '../components/Modal/WidgetModal'
 import Plot from 'react-plotly.js'
+import * as d3 from 'd3'
+
+//Data Connection Modal
+import DataConnection from '../components/Modal/DataConnection'
 
 import LineChartComponent from '../components/Chart/Line/LineChartComponent'
 import PieChartComponent from '../components/Chart/Pie/PieChartComponent'
 import BarChartComponent from '../components/Chart/Bar/BarChartComponent'
+import TimeSeriesComponents from '../components/Chart/TimeSeries/TimeSeriesComponents'
 import WidgetDataTable from '../components/DataGrid/DataGrid'
+import { rowSelectionComplete } from '@syncfusion/ej2-react-grids'
 
 // import { Alert, AlertIcon, AlertDescription, CloseButton, Box } from '@chakra-ui/react'
 
@@ -39,6 +45,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const [isOpenWidgetModal, setIsOpenWidgetModal] = React.useState<boolean>(false)
   const [WidgetInfo, setWidgetInfo] = React.useState<string>('')
 
+  const [isOpenDataConnectionModal, setIsOpenDataConnectionModal] = React.useState<boolean>(false)
+
   const [BoxTargetId, setBoxTargetId] = React.useState<any>()
 
   const [LineChartLayoutOption, setLineChartLayoutOption] = React.useState<any>('')
@@ -50,11 +58,15 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const [BarChartLayoutOption, setBarChartLayoutOption] = React.useState<any>('')
   const [BarChartDataOption, setBarChartDataOption] = React.useState<any>('')
 
+  const [TimeSeriesLayoutOption, setTimeSeriesLayoutOption] = React.useState<any>('')
+  const [TimeSeriesDataOption, setTimeSeriesDataOption] = React.useState<any>('')
+
   const [AlertVisibility, setAlertVisibility] = React.useState(true)
 
   const [LineChartShowDrawer, setLineChartShowDrawer] = React.useState(false)
   const [PieChartShowDrawer, setPieChartShowDrawer] = React.useState(false)
   const [BarChartShowDrawer, setBarChartShowDrawer] = React.useState(false)
+  const [TimeSeriesShowDrawer, setTimeSeriesShowDrawer] = React.useState(false)
 
   //theme color mode
   const dashboardBoxColor = useColorModeValue('white', 'dark')
@@ -103,6 +115,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         sizeX: panel[i].sizeX,
         sizeY: panel[i].sizeY,
         header: `<div class="e-header-text"> <button class="grid-setting-btn">
+      </button><button class="connection-chart-data">
       </button></div><div class="header-border"></div>`,
         content: '<div class="panel-content ${dashboardBoxColor}">Content Area</div>',
       }
@@ -123,6 +136,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     console.log(BoxTargetId)
     console.log(ChartLayoutOption)
     console.log(ChartDataOption)
+
     if (BoxTargetId !== undefined) {
       if (ChartLayoutOption.length !== 0 && ChartDataOption.length !== 0) {
         const node: any = document.getElementById(BoxTargetId)
@@ -172,6 +186,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       DrawPlotlyChart(PieChartLayoutOption, PieChartDataOption, BoxTargetId)
     } else if (WidgetInfo === 'Bar') {
       DrawPlotlyChart(BarChartLayoutOption, BarChartDataOption, BoxTargetId)
+    } else if (WidgetInfo === 'Time Series') {
+      DrawPlotlyChart(TimeSeriesLayoutOption, TimeSeriesDataOption, BoxTargetId)
     } else if (WidgetInfo === 'Table') {
       console.log(BoxTargetId)
       if (BoxTargetId !== undefined) {
@@ -191,6 +207,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     PieChartDataOption,
     BarChartLayoutOption,
     BarChartDataOption,
+    TimeSeriesLayoutOption,
+    TimeSeriesDataOption,
   ])
 
   /**
@@ -206,6 +224,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         row: 0,
         col: 0,
         header: `<div class="e-header-text"> <button class="grid-setting-btn">
+      </button><button class="connection-chart-data">
       </button></div><div class="header-border"></div>`,
         content: '<div class="panel-content">Content Area</div>',
       },
@@ -248,15 +267,16 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         sizeX: panel[i].sizeX,
         sizeY: panel[i].sizeY,
         header: `<div class="e-header-text"> <button class="grid-setting-btn">
+      </button> <button class="connection-chart-data">
       </button></div><div class="header-border"></div>`,
         content: '<div class="panel-content">Content Area</div>',
       }
       updatePanels.push(panelModelValue)
     }
 
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-    console.log(dashboardObj)
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+    // console.log(dashboardObj)
+    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
     dashboardObj.panels = updatePanels
   }
 
@@ -317,6 +337,11 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
               setWidgetInfo('Bar')
               setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
             }
+            {
+              setBarChartShowDrawer(true)
+              setWidgetInfo('Time Series')
+              setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
+            }
           } else {
             if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[1].className !== undefined) {
               console.log(e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[1].className)
@@ -328,6 +353,9 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             }
             setAlertVisibility(false)
           }
+        } else if (e.target.className.includes('connection-chart-data')) {
+          console.log(' modal 열기')
+          setIsOpenDataConnectionModal(true)
         }
       }
     } else {
@@ -370,6 +398,12 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const getBarChartLayout = (props: any) => {
     if (WidgetInfo === 'Bar') {
       setBarChartLayoutOption(props)
+    }
+  }
+
+  const getTimeSeriesLayout = (props: any) => {
+    if (WidgetInfo === 'Time Series') {
+      setTimeSeriesLayoutOption(props)
     }
   }
 
@@ -468,6 +502,99 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       setBarChartDataOption(ChartDataArr)
     }
   }
+
+  // const getPrepData = (rawData: any) => {
+  //   console.log('#########################')
+  //   console.log(rawData)
+
+  //   const x: any[] = []
+  //   const y: any[] = []
+
+  //   const xField: any = 'Date'
+  //   const yField: any = 'Mean_TemperatureC'
+
+  //   rawData.forEach(function (datum: any[], i: any) {
+  //     x.push(new Date(datum[xField]))
+  //     y.push(datum[yField])
+  //   })
+
+  //   return [
+  //     {
+  //       mode: 'lines',
+  //       x: x,
+  //       y: y,
+  //     },
+  //   ]
+  // }
+  // const unpack = (rows: any[] | any, key: string) => {
+  //   return rows.map(function (row: { [x: string]: any }) {
+  //     return row[key]
+  //   })
+  // }
+
+  const prepData = (rawData: any[]) => {
+    const xField = 'Date'
+    const yField = 'Mean_TemperatureC'
+
+    const x: Date[] = []
+    const y: any[] = []
+
+    rawData.forEach(function (datum: { [x: string]: any }, i: any) {
+      x.push(new Date(datum[xField]))
+      y.push(datum[yField])
+    })
+
+    return [
+      {
+        mode: 'lines',
+        x: x,
+        y: y,
+      },
+    ]
+  }
+
+  const getTimeSeriesData = async (props: any) => {
+    let ChartDataObj: any = {}
+    const ChartDataArr: any = []
+
+    if (WidgetInfo === 'Time Series') {
+      const data = await d3.csv(
+        'https://raw.githubusercontent.com/plotly/datasets/master/2016-weather-data-seattle.csv'
+      )
+
+      const trace1 = prepData(data)
+
+      // const trace1 = {
+      //   type: 'scatter',
+      //   mode: 'lines',
+      //   x: unpack(data, 'Date'),
+      //   y: unpack(data, 'Mean_TemperatureC'),
+      // }
+      // const trace2 = {
+      //   type: 'scatter',
+      //   mode: 'lines',
+      //   name: 'AAPL Low',
+      //   x: unpack(data, 'Date'),
+      //   y: unpack(data, 'AAPL.Low'),
+      //   line: { color: '#7F7F7F' },
+      // }
+
+      // const Chartdata = [trace1]
+
+      for (let i = 0, len = trace1.length; i < len; i++) {
+        ChartDataObj = {
+          ...props,
+          x: trace1[i].x,
+          y: trace1[i].y,
+        }
+        ChartDataArr.push(ChartDataObj)
+        ChartDataObj = new Object()
+      }
+
+      setTimeSeriesDataOption(ChartDataArr)
+    }
+  }
+
   const getLineChartShowDrawer = (ShowDrawer: boolean) => {
     setLineChartShowDrawer(ShowDrawer)
   }
@@ -478,6 +605,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   const getBarChartShowDrawer = (ShowDrawer: boolean) => {
     setBarChartShowDrawer(ShowDrawer)
+  }
+
+  const getTimeSeriesShowDrawer = (ShowDrawer: boolean) => {
+    setTimeSeriesShowDrawer(ShowDrawer)
   }
 
   return (
@@ -494,6 +625,17 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           if (WidgetInfo !== undefined) {
             setWidgetInfo(WidgetInfo)
           }
+        }}
+      />
+      <DataConnection
+        DataConnectionModalisOpen={isOpenDataConnectionModal}
+        setCloseDataConnectionModal={(isClose: boolean) => {
+          if (isClose) {
+            setIsOpenDataConnectionModal(false)
+          }
+        }}
+        setDataConnectionInfo={(dataInfo: string) => {
+          console.log(dataInfo)
         }}
       />
       <LineChartComponent
@@ -517,6 +659,13 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         ShowBarDrawer={BarChartShowDrawer}
         setShowDrawer={getBarChartShowDrawer}
       />
+      <TimeSeriesComponents
+        ChartType={WidgetInfo}
+        ChartLayout={getTimeSeriesLayout}
+        ChartData={getTimeSeriesData}
+        ShowTimeSeriesDrawer={TimeSeriesShowDrawer}
+        setShowDrawer={getTimeSeriesShowDrawer}
+      />
       <div id="DashboardBox" style={{ position: 'relative' }}>
         <div className="addContainer">
           <ButtonComponent id="add" cssClass="e-info" onClick={btnClick.bind(this)}>
@@ -530,6 +679,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
               cellSpacing={cellSpacing}
               allowFloating={true}
               allowResizing={true}
+              draggableHandle={'.e-panel-header'}
               // created={onCreate.bind(this)}
               onClick={(e: any) => {
                 ClickDashBoardComponent(e)
