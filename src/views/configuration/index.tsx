@@ -22,16 +22,11 @@
 
 // Chakra imports
 import { Box, useColorModeValue, Stack, Button } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
 import React from 'react'
-import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
 
 export default function Configuration() {
-  const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
-  const [OpenLayoutModal, setOpenLayoutModal] = React.useState<boolean>(false)
-  const [GridInfo, setGridInfo] = React.useState<string>()
-  const [ItemColor, setItemColor] = React.useState('#0044620f')
-
   //권한
   const [AdminInfo, setAdminInfo] = React.useState('block')
 
@@ -70,10 +65,20 @@ export default function Configuration() {
   return (
     <>
       <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
-        {/* <Box>{renderGrid(GridInfo)}</Box> */}
-        {/* <Box>
-          <GridLayoutBox gridInfo={GridInfo} />
-        </Box> */}
+        <Tabs variant="unstyled">
+          <TabList>
+            <Tab _selected={{ color: 'white', bg: 'blue.500' }}>Tab 1</Tab>
+            <Tab _selected={{ color: 'white', bg: 'green.400' }}>Tab 2</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <p>one!</p>
+            </TabPanel>
+            <TabPanel>
+              <p>two!</p>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </Box>
     </>
   )
