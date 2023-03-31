@@ -114,7 +114,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
           mt="22px"
           me={{ base: "30px", md: "unset" }}
           minW={{ base: "unset", md: "400px", xl: "450px" }}
-          maxW={{ base: "360px", md: "unset" }}
+          maxW={{7 base: "360px", md: "unset" }}
         >
           <Flex w="100%" mb="20px">
             <Text fontSize="md" fontWeight="600" color={textColor}>

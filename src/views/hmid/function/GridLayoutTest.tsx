@@ -16,6 +16,7 @@ import {
   PanelsDirective,
   PanelDirective,
 } from '@syncfusion/ej2-react-layouts'
+import { useColorModeValue } from '@chakra-ui/react'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { panelData } from './data/panel-data'
 import './style/style.css'
@@ -54,6 +55,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const [LineChartShowDrawer, setLineChartShowDrawer] = React.useState(false)
   const [PieChartShowDrawer, setPieChartShowDrawer] = React.useState(false)
   const [BarChartShowDrawer, setBarChartShowDrawer] = React.useState(false)
+
+  //theme color mode
+  const dashboardBoxColor = useColorModeValue('white', 'dark')
+  console.log(dashboardBoxColor)
 
   const TableRows: any = [
     { make: 'Porsche', model: 'Boxter', price: 72000 },
@@ -99,7 +104,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         sizeY: panel[i].sizeY,
         header: `<div class="e-header-text"> <button class="grid-setting-btn">
       </button></div><div class="header-border"></div>`,
-        content: '<div class="panel-content">Content Area</div>',
+        content: '<div class="panel-content ${dashboardBoxColor}">Content Area</div>',
       }
       updatePanels.push(panelModelValue)
     }
@@ -282,6 +287,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const ClickDashBoardComponent = (e: any) => {
     if (e.target.id.length === 0) {
       //chart & table인 경우...
+      console.log('&&&&&&&&&&&&&&&&&&&&&&&')
+      console.log(e.target.className)
       if (e.target.className.includes('ag')) {
         console.log('ag')
       } else {
