@@ -27,6 +27,8 @@ import PieChartComponent from '../components/Chart/Pie/PieChartComponent'
 import BarChartComponent from '../components/Chart/Bar/BarChartComponent'
 import TimeSeriesComponents from '../components/Chart/TimeSeries/TimeSeriesComponents'
 import WidgetDataTable from '../components/DataGrid/DataGrid'
+import { Select, Spin } from 'antd'
+import '../components/Modal/style/style.css'
 
 // import { Alert, AlertIcon, AlertDescription, CloseButton, Box } from '@chakra-ui/react'
 
@@ -62,6 +64,13 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const [BarChartShowDrawer, setBarChartShowDrawer] = React.useState(false)
   const [TimeSeriesShowDrawer, setTimeSeriesShowDrawer] = React.useState(false)
 
+  const [TagListArr, setTagListArr] = React.useState<any>('')
+  const [DataArr, setDataArr] = React.useState<any>('')
+
+  const [SelectTagInfo, setSelectTagInfo] = React.useState<any>()
+
+  const [ShowLoading, setShowLoading] = React.useState(false)
+
   //theme color mode
   const dashboardBoxColor = useColorModeValue('white', 'dark')
   console.log(dashboardBoxColor)
@@ -91,6 +100,45 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   let dashboardObj: DashboardLayoutComponent
   const cellSpacing: number[] = [5, 5]
   let count = 0
+
+  React.useEffect(() => {
+    if (SelectTagInfo !== undefined) {
+      console.log('-------------------------')
+      console.log(DataArr)
+      console.log(SelectTagInfo)
+      console.log('-------------------------')
+      const ReDrawData: any = []
+      const x: Date[] = []
+      const y: any[] = []
+
+      for (let i = 0, len = SelectTagInfo.length; i < len; i++) {
+        for (let j = 0, jlen = DataArr.length; j < jlen; j++) {
+          if (SelectTagInfo[i] === DataArr[j].name) {
+            ReDrawData.push(DataArr[j])
+          }
+        }
+      }
+
+      console.log('****************************')
+      console.log(ReDrawData)
+      console.log(BoxTargetId)
+      console.log(TimeSeriesLayoutOption)
+      console.log(TimeSeriesDataOption)
+      console.log('****************************')
+
+      ReDrawData.forEach(function (datum: { [x: string]: any }, i: any) {
+        console.log(datum['x'])
+        for (let i = 0, len = datum['x'].length; i < len; i++) {
+          datum['x'][i] = new Date(datum['x'][i])
+        }
+      })
+
+      console.log(ReDrawData)
+      setTimeSeriesDataOption(ReDrawData)
+
+      DrawPlotlyChart(TimeSeriesLayoutOption, ReDrawData, BoxTargetId)
+    }
+  }, [SelectTagInfo])
 
   React.useEffect(() => {
     const updatePanels: PanelModel[] = []
@@ -527,6 +575,9 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   // }
 
   const prepData = (rawData: any[]) => {
+    // console.log(' raw Data !!!!!!!!!!!!!! ')
+    // console.log(rawData)
+
     const xField = 'Date'
     const yField = 'Mean_TemperatureC'
 
@@ -606,37 +657,96 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   }
 
   const getDataBySelctedCompany = (company: string) => {
-    if (company !== undefined) {
+    console.log(company)
+    if (company === 'Dongwon') {
+      setShowLoading(true)
       axios
-        .get('http://220.94.157.27:59871/chartData?day=' + 1, {
+        .get('http://192.168.1.20:8000/chartData?day=' + 3, {
           headers: {
+            Accept: '*/*',
             'Content-Type': 'application/x-www-form-urlencoded;',
           },
-          timeout: 5000,
+          timeout: 500000,
         })
         .then((response) => {
           console.log('[ Chart response data ] : ')
           console.log(response.data)
+
+          setDataArr(response.data)
+          setShowLoading(false)
+
+          const data = response.data
+          const DataTagList: string[] = []
+
+          data.forEach((element: any, i: any) => {
+            DataTagList.push(element['name'])
+          })
+
+          setTagListArr(DataTagList)
+
+          // data.forEach(function (datum: { [x: string]: any }, i: any) {
+          //   x.push(new Date(datum[xField]))
+          //   y.push(datum[yField])
+          // })
         })
         .catch((error) => {
-          console.log(error.response)
+          console.log(error)
         })
     }
   }
 
   // resize 이번트 시 chart 크기 조정
-  const onResize = (e: any) => {
-    console.log(' resize >>>>>>>>>>>>>> ')
-    console.log(e)
-  }
+  // const onResize = (e: any) => {
+  //   console.log(' resize >>>>>>>>>>>>>> ')
+  //   // console.log(e)
+  // }
 
-  const onResizeStart = (e: any) => {
-    console.log(' resize start !!!!!!!!!!!!!!!!')
+  // const onResizeStart = (e: any) => {
+  //   console.log(' resize start !!!!!!!!!!!!!!!!')
+  //   // console.log(e)
+  // }
+
+  const onResizeStop = (e: any) => {
+    console.log(WidgetInfo)
     console.log(e)
+    // console.log(' resize stop !!!!!!!!!!!!!!!!')
+    // // console.log(e)
+    // console.log(e.element.children[0].children[1].clientWidth)
+    // console.log(e.element.children[0].children[1].clientHeight)
+    // console.log('-------------------------------------------------')
+    // console.log(WidgetInfo)
+    // console.log(TimeSeriesLayoutOption)
+    // console.log(TimeSeriesDataOption)
+    // console.log(BoxTargetId)
+    // console.log('-------------------------------------------------')
+    // if(WidgetInfo)
+
+    setWidgetInfo(e.element.children[0].children[1].children[0].data[0].type)
+    setBoxTargetId(e.element.children[0].children[1].id)
+
+    onPanelResize.bind(e)
+
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>')
+    console.log(WidgetInfo)
+    console.log(BoxTargetId)
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>')
+
+    if (WidgetInfo === 'Bar') {
+      DrawPlotlyChart(BarChartLayoutOption, BarChartDataOption, BoxTargetId)
+    } else if (WidgetInfo === 'Line') {
+      DrawPlotlyChart(LineChartLayoutOption, LineChartDataOption, BoxTargetId)
+    } else if (WidgetInfo === 'Pie') {
+      DrawPlotlyChart(PieChartLayoutOption, PieChartDataOption, BoxTargetId)
+    } else if (WidgetInfo === 'Time Series') {
+      DrawPlotlyChart(TimeSeriesLayoutOption, TimeSeriesDataOption, BoxTargetId)
+    }
   }
 
   return (
     <>
+      <Spin tip="Loading" size="large" spinning={ShowLoading}>
+        <div className="content" />
+      </Spin>
       {/* {renderAlert()} */}
       <WidgetModal
         WidgetModalisOpen={isOpenWidgetModal}
@@ -652,6 +762,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         }}
       />
       <DataConnection
+        DataTagList={TagListArr}
         DataConnectionModalisOpen={isOpenDataConnectionModal}
         setCloseDataConnectionModal={(isClose: boolean) => {
           if (isClose) {
@@ -660,6 +771,9 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         }}
         setDataConnectionInfo={(dataInfo: string) => {
           getDataBySelctedCompany(dataInfo)
+        }}
+        setTagInfo={(TagInfo: any) => {
+          setSelectTagInfo(TagInfo)
         }}
       />
       <LineChartComponent
@@ -700,8 +814,9 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           <div className="content-wrapper" style={{ maxWidth: '100%' }}>
             <DashboardLayoutComponent
               id="api_dashboard"
-              resize={(e: any) => onResize(e)}
-              resizeStart={(e: any) => onResizeStart(e)}
+              // resize={(e: any) => onResize(e)}
+              // resizeStart={(e: any) => onResizeStart(e)}
+              resizeStop={(e: any) => onResizeStop(e)}
               cellSpacing={cellSpacing}
               allowFloating={true}
               allowResizing={true}
@@ -714,7 +829,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
               ref={(scope) => {
                 ;(dashboardObj as any) = scope
               }}
-              resizeStop={onPanelResize.bind(this)}
+              // resizeStop={onPanelResize.bind(this)}
               // allowDragging={true}
             >
               {/* <PanelsDirective>

@@ -88,12 +88,17 @@ export const Login: React.FC = () => {
       alert('회사를 선택 해주세요.')
     } else {
       axios
-        .get('http://220.94.157.27:59871/getUser/' + id + '/' + password, {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;',
-          },
-          timeout: 5000,
-        })
+        .get(
+          'http://192.168.1.20:8000/getUser/' + id + '/' + password,
+          {
+            headers: {
+              Accept: '*/*',
+              'Content-Type': 'application/x-www-form-urlencoded;',
+            },
+            timeout: 5000,
+          }
+          // { withCredentials: true }
+        )
         .then((response) => {
           console.log('[ axios response data ] : ')
           console.log(response.data)
@@ -134,8 +139,9 @@ export const Login: React.FC = () => {
     let Obj: any = new Object()
 
     axios
-      .get('http://220.94.157.27:59871/getCompany/', {
+      .get('http://192.168.1.20:8000/getCompany', {
         headers: {
+          Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
         },
         timeout: 5000,
@@ -150,6 +156,8 @@ export const Login: React.FC = () => {
           Arr.push(Obj)
           Obj = new Object()
         }
+
+        console.log(Arr)
 
         setCompanyList(Arr)
       })
