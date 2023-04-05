@@ -9,13 +9,8 @@
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 import { updateSampleSection } from './base'
-import {
-  DashboardLayoutComponent,
-  PanelModel,
-  ResizeArgs,
-  PanelsDirective,
-  PanelDirective,
-} from '@syncfusion/ej2-react-layouts'
+import { DashboardLayoutComponent, PanelModel, ResizeArgs } from '@syncfusion/ej2-react-layouts'
+import axios from 'axios'
 import { useColorModeValue } from '@chakra-ui/react'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { panelData } from './data/panel-data'
@@ -32,7 +27,6 @@ import PieChartComponent from '../components/Chart/Pie/PieChartComponent'
 import BarChartComponent from '../components/Chart/Bar/BarChartComponent'
 import TimeSeriesComponents from '../components/Chart/TimeSeries/TimeSeriesComponents'
 import WidgetDataTable from '../components/DataGrid/DataGrid'
-import { rowSelectionComplete } from '@syncfusion/ej2-react-grids'
 
 // import { Alert, AlertIcon, AlertDescription, CloseButton, Box } from '@chakra-ui/react'
 
@@ -307,8 +301,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const ClickDashBoardComponent = (e: any) => {
     if (e.target.id.length === 0) {
       //chart & table인 경우...
-      console.log('&&&&&&&&&&&&&&&&&&&&&&&')
-      console.log(e.target.className)
+      // console.log('&&&&&&&&&&&&&&&&&&&&&&&')
+      // console.log(e.target.className)
       if (e.target.className.includes('ag')) {
         console.log('ag')
       } else {
@@ -354,7 +348,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             setAlertVisibility(false)
           }
         } else if (e.target.className.includes('connection-chart-data')) {
-          console.log(' modal 열기')
+          //console.log(' modal 열기')
           setIsOpenDataConnectionModal(true)
         }
       }
@@ -611,6 +605,36 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     setTimeSeriesShowDrawer(ShowDrawer)
   }
 
+  const getDataBySelctedCompany = (company: string) => {
+    if (company !== undefined) {
+      axios
+        .get('http://220.94.157.27:59871/chartData?day=' + 1, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;',
+          },
+          timeout: 5000,
+        })
+        .then((response) => {
+          console.log('[ Chart response data ] : ')
+          console.log(response.data)
+        })
+        .catch((error) => {
+          console.log(error.response)
+        })
+    }
+  }
+
+  // resize 이번트 시 chart 크기 조정
+  const onResize = (e: any) => {
+    console.log(' resize >>>>>>>>>>>>>> ')
+    console.log(e)
+  }
+
+  const onResizeStart = (e: any) => {
+    console.log(' resize start !!!!!!!!!!!!!!!!')
+    console.log(e)
+  }
+
   return (
     <>
       {/* {renderAlert()} */}
@@ -635,7 +659,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           }
         }}
         setDataConnectionInfo={(dataInfo: string) => {
-          console.log(dataInfo)
+          getDataBySelctedCompany(dataInfo)
         }}
       />
       <LineChartComponent
@@ -676,6 +700,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           <div className="content-wrapper" style={{ maxWidth: '100%' }}>
             <DashboardLayoutComponent
               id="api_dashboard"
+              resize={(e: any) => onResize(e)}
+              resizeStart={(e: any) => onResizeStart(e)}
               cellSpacing={cellSpacing}
               allowFloating={true}
               allowResizing={true}

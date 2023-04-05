@@ -45,7 +45,10 @@ export default function HeaderLinks(props: { secondary: boolean }) {
   )
 
   const [UserName, setUserName] = React.useState<string>(JSON.parse(window.localStorage.getItem('userData')).name)
-  console.log(JSON.parse(window.localStorage.getItem('userData')).name)
+  const [UserCompany, setUserCompnay] = React.useState<string>(
+    JSON.parse(window.localStorage.getItem('userData')).company_name
+  )
+  // console.log(JSON.parse(window.localStorage.getItem('userData')).name)
 
   React.useEffect(() => {
     setUserName(JSON.parse(window.localStorage.getItem('userData')).name)
@@ -232,6 +235,9 @@ export default function HeaderLinks(props: { secondary: boolean }) {
               color={textColor}
             >
               👋&nbsp; {'Hey, ' + UserName}
+              <Text ps="3px" pt="16px" pb="10px" w="100%" fontSize="sm" fontWeight="700" color={textColor}>
+                🏬&nbsp; {UserCompany}
+              </Text>
             </Text>
           </Flex>
           <Flex flexDirection="column" p="10px">

@@ -32,6 +32,11 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
   const { onClose } = useDisclosure()
   const [SelectDataType, setSelectDataType] = React.useState<string>()
 
+  React.useEffect(() => {
+    console.log('[ 상위로 보낼 SelectDataType ] : ' + SelectDataType)
+    props.setDataConnectionInfo(SelectDataType)
+  }, [SelectDataType])
+
   const CreateDtataListItems = () => {
     const dataList: any = []
 
