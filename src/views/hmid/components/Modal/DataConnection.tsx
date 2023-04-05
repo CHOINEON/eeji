@@ -1,17 +1,20 @@
 import React from 'react'
 import {
   Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  Select,
+  // Modal,
+  // ModalOverlay,
+  // ModalContent,
+  // ModalHeader,
+  // ModalFooter,
+  // ModalBody,
+  // ModalCloseButton,
+  // useDisclosure,
+  // Select,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
+import type { SelectProps } from 'antd'
+import { Select, Modal } from 'antd'
+import './style/style.css'
 
 import DataConnection from '../data/data_connection_list'
 
@@ -23,76 +26,124 @@ const DataListWrap = styled.div`
 `
 
 interface DataConnectionModalProps {
+  DataTagList: any
   DataConnectionModalisOpen: boolean
   setCloseDataConnectionModal: (isClose: boolean) => void
   setDataConnectionInfo: (DataType: string) => void
+  setTagInfo: (TagInfo: any) => void
 }
 
 export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
-  const { onClose } = useDisclosure()
-  const [SelectDataType, setSelectDataType] = React.useState<string>()
+  // const { onClose } = useDisclosure()
+  const [SelectDataType, setSelectDataType] = React.useState<any>()
+  const [TagNodeData, setTagNodeData] = React.useState<any>()
+  const [DataNodeData, setDataNodeData] = React.useState<any>()
+  const [TagInfo, setTagInfo] = React.useState<any>()
+
+  React.useEffect(() => {
+    CreateDtataListItems()
+  }, [])
+
+  React.useEffect(() => {
+    console.log(DataNodeData)
+  }, [DataNodeData])
+
+  React.useEffect(() => {
+    console.log('[ 상위로 보낼 SelectDataType ] : ' + SelectDataType)
+    props.setDataConnectionInfo(SelectDataType)
+  }, [SelectDataType])
+
+  React.useEffect(() => {
+    console.log('[ 상위에서 받은 TagList ] : ')
+    console.log(props.DataTagList)
+    if (props.DataTagList.length !== 0) {
+      CreateTagListItems(props.DataTagList)
+    } else {
+      CreateTagListItems('태그를 선택하여 주세요.')
+    }
+  }, [props.DataTagList])
 
   const CreateDtataListItems = () => {
-    const dataList: any = []
+    const Arr: any = []
+    let Obj: any = new Object()
 
     for (let i = 0, len = DataConnection.length; i < len; i++) {
-      dataList.push(
-        <option key={DataConnection[i].id} value={DataConnection[i].id}>
-          {DataConnection[i].name}
-        </option>
-      )
+      Obj.value = DataConnection[i].value
+      Obj.label = DataConnection[i].label
+      Arr.push(Obj)
+      Obj = new Object()
     }
 
-    return dataList
+    setDataNodeData(Arr)
   }
 
-  const ChangeDataType = (DataType: any) => {
-    if (DataType.target.value !== undefined) {
-      setSelectDataType(DataType.target.value)
+  const CreateTagListItems = (TagData: any) => {
+    const Arr: any = []
+    let Obj: any = new Object()
+
+    if (typeof TagData === 'string') {
+      Obj.value = 'default'
+      Obj.label = '태그를 선택 해주세요.'
+      Arr.push(Obj)
+      Obj = new Object()
+    } else {
+      for (let i = 0, len = TagData.length; i < len; i++) {
+        Obj.value = TagData[i]
+        Obj.label = TagData[i]
+        Arr.push(Obj)
+        Obj = new Object()
+      }
+    }
+
+    setTagNodeData(Arr)
+    // return TagList
+  }
+
+  const handleDataChange = (value: string | string[]) => {
+    if (value !== undefined) {
+      setSelectDataType(value)
     }
   }
 
-  const SelectedDataType = () => {
-    if (SelectDataType !== undefined) {
-      props.setDataConnectionInfo(SelectDataType)
-    }
+  const handleTagChange = (value: string | string[]) => {
+    console.log(value)
+    setTagInfo(value)
   }
+
+  // const SelectedDataType = () => {
+  //   if (SelectDataType !== undefined) {
+  //     props.setDataConnectionInfo(SelectDataType)
+  //   }
+  // }
 
   return (
     <>
       <Modal
-        isCentered
-        onClose={() => {
+        title="Modal"
+        open={props.DataConnectionModalisOpen}
+        onOk={() => {
+          props.setTagInfo(TagInfo)
           props.setCloseDataConnectionModal(true)
         }}
-        isOpen={props.DataConnectionModalisOpen}
-        motionPreset="slideInBottom"
+        onCancel={() => {
+          props.setCloseDataConnectionModal(true)
+        }}
+        okText="Connect"
+        cancelText="Cancel"
       >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Data Connection</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <DataListWrap>
-              <Select
-                size="md"
-                onChange={(e: any) => {
-                  ChangeDataType(e)
-                }}
-              >
-                {CreateDtataListItems()}
-              </Select>
-            </DataListWrap>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="brand" mr={3} onClick={SelectedDataType}>
-              선택
-            </Button>
-            <Button colorScheme="brand" mr={3} onClick={onClose}>
-              닫기
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+        <DataListWrap>
+          <div>Data .</div>
+          <Select style={{ width: 120 }} onChange={handleDataChange} options={DataNodeData} />
+          <div>Tag .</div>
+          <Select
+            mode="tags"
+            size={'large'}
+            placeholder={'Tag Select'}
+            onChange={handleTagChange}
+            style={{ width: '100%' }}
+            options={TagNodeData}
+          />
+        </DataListWrap>
       </Modal>
     </>
   )

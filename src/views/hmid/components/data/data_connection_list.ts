@@ -1,19 +1,15 @@
 export const DataConnection = [
   {
-    name: '데이터 선택',
-    id: 'Undefined',
+    value: 'Undefined',
+    label: '데이터 선택',
   },
   {
-    name: 'Dongwon',
-    id: 'Dongwon',
+    value: 'Dongwon',
+    label: 'Dongwon',
   },
   {
-    name: 'Test1',
-    id: 'Test1',
-  },
-  {
-    name: 'Test2',
-    id: 'Test2',
+    value: 'Test1',
+    label: 'Test1',
   },
 ]
 

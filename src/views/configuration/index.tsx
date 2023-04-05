@@ -72,10 +72,10 @@ export default function Configuration() {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <p>one!</p>
+              <p>기본</p>
             </TabPanel>
             <TabPanel>
-              <p>two!</p>
+              <p>고급</p>
             </TabPanel>
           </TabPanels>
         </Tabs>

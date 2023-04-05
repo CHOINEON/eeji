@@ -81,9 +81,9 @@ export const WidgetDataTable: React.FC<WidgetDataTableProps> = (args: any) => {
   const rowValueChanged = React.useCallback((event: RowValueChangedEvent) => {
     console.log('rowValueChanged', event)
     const data = event.data
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>')
-    console.log(data)
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>')
+    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>')
+    // console.log(data)
+    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>')
   }, [])
 
   //   // Example load data from sever
