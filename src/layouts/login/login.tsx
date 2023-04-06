@@ -89,7 +89,7 @@ export const Login: React.FC = () => {
     } else {
       axios
         .get(
-          'http://192.168.1.20:8000/getUser/' + id + '/' + password,
+          'http://192.168.1.27:8000/getUser/' + id + '/' + password,
           {
             headers: {
               Accept: '*/*',
@@ -139,7 +139,7 @@ export const Login: React.FC = () => {
     let Obj: any = new Object()
 
     axios
-      .get('http://192.168.1.20:8000/getCompany', {
+      .get('http://192.168.1.27:8000/getCompany', {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',

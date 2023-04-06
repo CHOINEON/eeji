@@ -2,7 +2,7 @@
  * INFINITE OPTIMAL
  * 메뉴 : HMI Designer - GridLayout
  * 시작 날짜 : 2023-03-10
- * 최종 수정 날짜 : 2023-03-24
+ * 최종 수정 날짜 : 2023-04-06
  * 개발자 : 박윤희 (BAK YUN HEE)
  */
 
@@ -16,6 +16,7 @@ import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { panelData } from './data/panel-data'
 import './style/style.css'
 import WidgetModal from '../components/Modal/WidgetModal'
+import SaveConfirmModal from '../components/Modal/SaveConfirm'
 import Plot from 'react-plotly.js'
 import * as d3 from 'd3'
 
@@ -34,6 +35,9 @@ import '../components/Modal/style/style.css'
 
 interface GridLayoutProps {
   target: any
+  SaveConfirmIsOpen: boolean
+  SaveInfo: string
+  setSaveConfirmIsOpen: (isOpen: boolean) => void
 }
 
 export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
@@ -70,6 +74,13 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const [SelectTagInfo, setSelectTagInfo] = React.useState<any>()
 
   const [ShowLoading, setShowLoading] = React.useState(false)
+
+  //Save Confirm Modal
+  const [SaveGridModalIsOpen, setSaveGridModalIsOpen] = React.useState(false)
+
+  React.useEffect(() => {
+    setSaveGridModalIsOpen(props.SaveConfirmIsOpen)
+  }, [props.SaveConfirmIsOpen])
 
   //theme color mode
   const dashboardBoxColor = useColorModeValue('white', 'dark')
@@ -127,7 +138,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       console.log('****************************')
 
       ReDrawData.forEach(function (datum: { [x: string]: any }, i: any) {
-        console.log(datum['x'])
+        // console.log(datum['x'])
         for (let i = 0, len = datum['x'].length; i < len; i++) {
           datum['x'][i] = new Date(datum['x'][i])
         }
@@ -657,11 +668,11 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   }
 
   const getDataBySelctedCompany = (company: string) => {
-    console.log(company)
+    // console.log(company)
     if (company === 'Dongwon') {
       setShowLoading(true)
       axios
-        .get('http://192.168.1.20:8000/chartData?day=' + 3, {
+        .get('http://192.168.1.27:8000/chartData?day=' + 3, {
           headers: {
             Accept: '*/*',
             'Content-Type': 'application/x-www-form-urlencoded;',
@@ -742,6 +753,27 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     }
   }
 
+  //SaveLayoutModal
+  const getSaveLayoutTitle = (title: string) => {
+    console.log('[ Save Layout Title ] : ', title)
+  }
+
+  const getSaveLayoutInfo = (SaveInfo: string) => {
+    console.log('[ Save Layout Info ] : ', SaveInfo)
+
+    if (SaveInfo === 'unSave') {
+      setSaveGridModalIsOpen(false)
+    } else {
+      console.log('############ save !!! ')
+    }
+  }
+
+  const getCloseLayoutModal = (IsOpen: boolean) => {
+    console.log('[ Save Confirm Modal Is Open ] : ', IsOpen)
+    props.setSaveConfirmIsOpen(false)
+    setSaveGridModalIsOpen(false)
+  }
+
   return (
     <>
       <Spin tip="Loading" size="large" spinning={ShowLoading}>
@@ -760,6 +792,12 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             setWidgetInfo(WidgetInfo)
           }
         }}
+      />
+      <SaveConfirmModal
+        SaveGridisOpen={SaveGridModalIsOpen}
+        setSaveLayoutTitle={getSaveLayoutTitle}
+        setSaveLayoutInfo={getSaveLayoutInfo}
+        setCloseSaveLayoutModal={getCloseLayoutModal}
       />
       <DataConnection
         DataTagList={TagListArr}
