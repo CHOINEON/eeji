@@ -21,7 +21,7 @@
 */
 
 // Chakra imports
-import { Box, useColorModeValue, Stack, Button } from '@chakra-ui/react'
+import { Box, useColorModeValue, Stack, Button, Checkbox } from '@chakra-ui/react'
 
 import React from 'react'
 import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
@@ -40,8 +40,20 @@ export default function HMID() {
   //권한
   const [AdminInfo, setAdminInfo] = React.useState('block')
 
+  //실시간 데이터
+  const [realTimeBtnColor, setRealTimeBtnColor] = React.useState('#8F9BBA')
+  const [realTimeBtnFont, setRealTimeBtnFont] = React.useState('#fff')
+
+  //레이아웃 저장 confirm 창 & info
+  const [OpenSaveLayout, setOpenSaveLayout] = React.useState<boolean>(false)
+
   const theme = useColorModeValue('navy.700', 'white')
   console.log(theme)
+
+  // React.useState(() => {
+  //   console.log('[ 하위에서 받은 props ] : ')
+  //   console.log(OpenSaveLayout)
+  // }, [OpenSaveLayout])
 
   //새로고침 막기
   // const preventClose = (e: BeforeUnloadEvent) => {
@@ -71,6 +83,11 @@ export default function HMID() {
   // }
 
   // document.onkeydown = NotReload()
+
+  //SaveLayout toggle
+  const getSaveInfoConformOpen = (isOpen: boolean) => {
+    setOpenSaveLayout(isOpen)
+  }
 
   return (
     <>
@@ -111,8 +128,23 @@ export default function HMID() {
           >
             Reset
           </Button>
-          <Button leftIcon={<MdSave />} variant="brand">
+          <Button
+            leftIcon={<MdSave />}
+            variant="brand"
+            onClick={() => {
+              setOpenSaveLayout(true)
+            }}
+          >
             Save
+          </Button>
+          <Button
+            leftIcon={<MdOutlineRestartAlt />}
+            style={{ backgroundColor: realTimeBtnColor, color: realTimeBtnFont }}
+            onClick={() => {
+              setRealTimeBtnColor('#00ae2f')
+            }}
+          >
+            실시간 데이터
           </Button>
         </Stack>
         {/* <Box>{renderGrid(GridInfo)}</Box> */}
@@ -120,7 +152,12 @@ export default function HMID() {
           <GridLayoutBox gridInfo={GridInfo} />
         </Box> */}
         <Box>
-          <PredefinedLayouts target={GridInfo} />
+          <PredefinedLayouts
+            target={GridInfo}
+            SaveConfirmIsOpen={OpenSaveLayout}
+            SaveInfo={''}
+            setSaveConfirmIsOpen={getSaveInfoConformOpen}
+          />
         </Box>
       </Box>
     </>
