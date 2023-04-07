@@ -44,14 +44,24 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     '14px 17px 40px 4px rgba(112, 144, 176, 0.06)'
   )
 
-  const [UserName, setUserName] = React.useState<string>(JSON.parse(window.localStorage.getItem('userData')).name)
-  const [UserCompany, setUserCompnay] = React.useState<string>(
-    JSON.parse(window.localStorage.getItem('userData')).company_name
+  const [UserName, setUserName] = React.useState<any>(JSON.parse(window.localStorage.getItem('userData'))[0].user_nm)
+  const [UserCompany, setUserCompnay] = React.useState<any>(
+    JSON.parse(window.localStorage.getItem('company_info')).com_nm
   )
+  const [UserCompanyEmail, setCompanyEmail] = React.useState<any>(
+    JSON.parse(window.localStorage.getItem('company_info')).com_email
+  )
+  const [UserCompanyTel, setCompnayTel] = React.useState<any>(
+    JSON.parse(window.localStorage.getItem('company_info')).com_tel
+  )
+
   // console.log(JSON.parse(window.localStorage.getItem('userData')).name)
 
   React.useEffect(() => {
-    setUserName(JSON.parse(window.localStorage.getItem('userData')).name)
+    setUserName(JSON.parse(window.localStorage.getItem('userData'))[0].user_nm)
+    setUserCompnay(JSON.parse(window.localStorage.getItem('company_info')).com_nm)
+    setCompanyEmail(JSON.parse(window.localStorage.getItem('company_info')).com_email)
+    setCompnayTel(JSON.parse(window.localStorage.getItem('company_info')).com_tel)
   }, [window.localStorage])
 
   const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200')
@@ -67,6 +77,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
       boxShadow={shadow}
     >
       {/* <SearchBar
+      
         mb={() => {
           if (secondary) {
             return { base: "10px", md: "unset" };
@@ -237,6 +248,12 @@ export default function HeaderLinks(props: { secondary: boolean }) {
               👋&nbsp; {'Hey, ' + UserName}
               <Text ps="3px" pt="16px" pb="10px" w="100%" fontSize="sm" fontWeight="700" color={textColor}>
                 🏬&nbsp; {UserCompany}
+              </Text>
+              <Text ps="3px" pt="16px" pb="10px" w="100%" fontSize="sm" fontWeight="700" color={textColor}>
+                📧&nbsp; {UserCompanyEmail}
+              </Text>
+              <Text ps="3px" pt="16px" pb="10px" w="100%" fontSize="sm" fontWeight="700" color={textColor}>
+                📞&nbsp; {UserCompanyTel}
               </Text>
             </Text>
           </Flex>
