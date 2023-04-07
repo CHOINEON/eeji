@@ -89,7 +89,7 @@ export const Login: React.FC = () => {
     } else {
       axios
         .get(
-          'http://192.168.1.27:8000/getUser/' + id + '/' + password,
+          'http://192.168.1.27:8000/hmid/getUser?id=' + id + '&password=' + password,
           {
             headers: {
               Accept: '*/*',
@@ -103,8 +103,10 @@ export const Login: React.FC = () => {
           console.log('[ axios response data ] : ')
           console.log(response.data)
 
+          getCompanyInfo(company)
           window.location.href = '/admin/hmid'
           window.localStorage.setItem('userData', JSON.stringify(response.data))
+          window.localStorage.setItem('companyId', company)
         })
         .catch((error) => {
           console.log(error.response)
@@ -139,7 +141,7 @@ export const Login: React.FC = () => {
     let Obj: any = new Object()
 
     axios
-      .get('http://192.168.1.27:8000/getCompany', {
+      .get('http://192.168.1.27:8000/hmid/getCompany', {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
@@ -151,14 +153,13 @@ export const Login: React.FC = () => {
         console.log(response.data)
 
         for (let i = 0, len = response.data.length; i < len; i++) {
-          Obj.value = response.data[i].id
-          Obj.label = response.data[i].company_name
+          Obj.value = response.data[i].com_id
+          Obj.label = response.data[i].com_nm
           Arr.push(Obj)
           Obj = new Object()
         }
 
-        console.log(Arr)
-
+        // console.log(Arr)
         setCompanyList(Arr)
       })
       .catch((error) => {
@@ -167,8 +168,29 @@ export const Login: React.FC = () => {
   }
 
   const handleChange = (value: string | string[]) => {
-    console.log(`Selected: ${value}`)
+    console.log(`Compnay Selected: ${value}`)
     setCompany(value)
+  }
+
+  const getCompanyInfo = (companyId: string) => {
+    console.log(companyId)
+    axios
+      .get('http://192.168.1.27:8000/hmid/getCompanyInfo?company_id=' + companyId, {
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/x-www-form-urlencoded;',
+        },
+        timeout: 5000,
+      })
+      .then((response) => {
+        console.log('[ get Company Info axios response data ] : ')
+        console.log(response.data)
+
+        window.localStorage.setItem('company_info', JSON.stringify(response.data[0]))
+      })
+      .catch((error) => {
+        console.log(error.response)
+      })
   }
 
   return (

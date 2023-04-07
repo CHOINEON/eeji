@@ -1,5 +1,6 @@
 import { Icon } from '@chakra-ui/react'
 import { MdDashboard, MdDatasetLinked, MdSettings } from 'react-icons/md'
+import { VscSettings } from 'react-icons/vsc'
 import { ImDatabase } from 'react-icons/im'
 import { BsHammer } from 'react-icons/bs'
 import { FaHourglassHalf } from 'react-icons/fa'
@@ -11,6 +12,7 @@ import DataConnection from 'views/dataConnection'
 import DataPlantModeling from 'views/dataPlantModeling'
 import AIPlantModeling from 'views/AiPlantModeling'
 import Configuration from 'views/configuration'
+import LayoutList from 'views/hmid/list/LayoutList'
 
 // Auth Imports
 
@@ -52,10 +54,17 @@ const routes = [
   },
   {
     name: 'HMID',
-    layout: '/admin',
+    layout: '/admin/sub',
     path: '/hmid',
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: MainDashboard,
+  },
+  {
+    name: 'HMID - LayoutSetting',
+    layout: '/admin/sub',
+    path: '/hmid/LayoutSetting',
+    icon: <Icon as={VscSettings} width="20px" height="20px" color="inherit" />,
+    component: LayoutList,
   },
   {
     name: 'Configuration',
