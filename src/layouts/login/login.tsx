@@ -73,7 +73,7 @@ export const Login: React.FC = () => {
 
   const setLogin = (id: string, password: string) => {
     axios
-      .get('http://220.94.157.27:59871/getUser/' + id + '/' + password, {
+      .get('http://192.168.1.27:8000/api/hmid/user/info?id=' + id + '&password=' + password, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded;',
         },

@@ -1,5 +1,5 @@
 import React from 'react'
-import RangeSelection from './Selection'
+import DataSelection from './ChartDataSelection'
 import EditingData from './EditingData'
 import { DropDownButton, DropDownButtonComponent, ItemModel } from '@syncfusion/ej2-react-splitbuttons'
 import { Box, useColorModeValue, Stack, Button } from '@chakra-ui/react'
@@ -18,7 +18,7 @@ export const Chart = () => {
           기능 선택
         </DropDownButtonComponent>
       </Box>
-      <RangeSelection />
+      <DataSelection />
       <EditingData />
     </>
   )
