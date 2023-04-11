@@ -89,7 +89,7 @@ export const Login: React.FC = () => {
     } else {
       axios
         .get(
-          'http://192.168.1.27:8000/api/hmid/user/info?id=' + id + '&password=' + password,
+          'http://34.64.197.87:5001/api/hmid/user/info?id=' + id + '&password=' + password,
           {
             headers: {
               Accept: '*/*',
@@ -141,7 +141,7 @@ export const Login: React.FC = () => {
     let Obj: any = new Object()
 
     axios
-      .get('http://192.168.1.27:8000/api/hmid/company', {
+      .get('http://34.64.197.87:5001/api/hmid/company', {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
@@ -175,7 +175,7 @@ export const Login: React.FC = () => {
   const getCompanyInfo = (companyId: string) => {
     console.log(companyId)
     axios
-      .get('http://192.168.1.27:8000/api/hmid/company/info?company_id=' + companyId, {
+      .get('http://34.64.197.87:5001/api/hmid/company/info?company_id=' + companyId, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
