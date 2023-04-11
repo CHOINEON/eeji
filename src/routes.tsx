@@ -25,13 +25,13 @@ const routes = [
   //   icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
   //   component: Login,
   // },
-  {
-    name: 'Data Connection',
-    layout: '/admin',
-    path: '/data-connection',
-    icon: <Icon as={ImDatabase} width="20px" height="20px" color="inherit" />,
-    component: DataConnection,
-  },
+  // {
+  //   name: 'Data Connection',
+  //   layout: '/admin',
+  //   path: '/data-connection',
+  //   icon: <Icon as={ImDatabase} width="20px" height="20px" color="inherit" />,
+  //   component: DataConnection,
+  // },
   {
     name: 'Data Plant Modeling',
     layout: '/admin',
