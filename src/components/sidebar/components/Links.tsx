@@ -27,8 +27,8 @@ export function SidebarLinks(props: { routes: RoutesType[] }) {
   // this function creates the links from the secondary accordions (for example auth -> sign-in -> default)
   const createLinks = (routes: RoutesType[]) => {
     return routes.map((route: RoutesType, index: number) => {
-      // if (route.layout === '/admin'  || route.layout === '/rtl') {
-      if (route.path !== '/layoutsetting') {
+      // if (route.layout === '/admin' || route.layout === '/rtl') {
+      if (route.path !== '/layoutconfig') {
         return (
           <NavLink key={index + route.path} to={route.layout + route.path}>
             {route.icon ? (
@@ -70,105 +70,106 @@ export function SidebarLinks(props: { routes: RoutesType[] }) {
             )}
           </NavLink>
         )
-      } else if (route.path === '/layoutsetting') {
-        return (
-          <Box key={index}>
-            {route.icon ? (
-              <Box>
-                <HStack
-                  spacing={activeRoute(route.path.toLowerCase()) ? '22px' : '26px'}
-                  py="5px"
-                  ps="10px"
-                  onClick={() => {
-                    if (toggleIcon === '100%') {
-                      setToggleIcon('0')
-                      setToggleState(false)
-                    } else {
-                      setToggleIcon('100%')
-                      setToggleState(true)
-                    }
-                  }}
-                >
-                  <Flex w="100%" alignItems="center" justifyContent="center">
-                    <Box color={activeRoute(route.path.toLowerCase()) ? activeIcon : textColor} me="18px">
-                      {route.icon}
-                    </Box>
-                    <Text
-                      me="auto"
-                      color={activeRoute(route.path.toLowerCase()) ? activeColor : textColor}
-                      fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}
-                    >
-                      {route.name}
-                    </Text>
-                    {/* <Box
-                    h="36px"
-                    w="4px"
-                    bg={activeRoute(route.path.toLowerCase()) ? brandColor : 'transparent'}
-                    borderRadius="5px"
-                  /> */}
-                    <Box
-                      mr="10px"
-                      style={{ cursor: 'pointer' }}
-                      color={activeRoute(route.path.toLowerCase()) ? activeIcon : textColor}
-                    >
-                      <Icon
-                        as={toggleState ? RxTriangleUp : RxTriangleDown}
-                        width="20px"
-                        height="20px"
-                        color="inherit"
-                      />
-                    </Box>
-                  </Flex>
-                </HStack>
-                <NavLink
-                  key={index}
-                  to={route.sub[0].layout + route.path}
-                  style={{ height: toggleIcon, transition: 'all 0.2s ease-out', overflow: 'hidden', display: 'block' }}
-                >
-                  <HStack
-                    spacing={activeRoute(route.path.toLowerCase()) ? '22px' : '26px'}
-                    py="5px"
-                    ps="10px"
-                    ml="17px"
-                  >
-                    <Flex w="100%" alignItems="center" justifyContent="center">
-                      <Box color={activeRoute(route.path.toLowerCase()) ? activeIcon : textColor} me="18px">
-                        {route.icon}
-                      </Box>
-                      <Text
-                        me="auto"
-                        color={activeRoute(route.path.toLowerCase()) ? activeColor : textColor}
-                        fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}
-                      >
-                        {route.sub[0].name}
-                      </Text>
-                    </Flex>
-                    <Box
-                      h="36px"
-                      w="4px"
-                      bg={activeRoute(route.path.toLowerCase()) ? brandColor : 'transparent'}
-                      borderRadius="5px"
-                    />
-                  </HStack>
-                </NavLink>
-              </Box>
-            ) : (
-              <Box>
-                <HStack spacing={activeRoute(route.path.toLowerCase()) ? '22px' : '26px'} py="5px" ps="10px">
-                  <Text
-                    me="auto"
-                    color={activeRoute(route.path.toLowerCase()) ? activeColor : inactiveColor}
-                    fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}
-                  >
-                    {route.name}
-                  </Text>
-                  <Box h="36px" w="4px" bg="brand.400" borderRadius="5px" />
-                </HStack>
-              </Box>
-            )}
-          </Box>
-        )
       }
+      // else if (route.path === '/layoutsetting') {
+      //   return (
+      //     <Box key={index}>
+      //       {route.icon ? (
+      //         <Box>
+      //           <HStack
+      //             spacing={activeRoute(route.path.toLowerCase()) ? '22px' : '26px'}
+      //             py="5px"
+      //             ps="10px"
+      //             onClick={() => {
+      //               if (toggleIcon === '100%') {
+      //                 setToggleIcon('0')
+      //                 setToggleState(false)
+      //               } else {
+      //                 setToggleIcon('100%')
+      //                 setToggleState(true)
+      //               }
+      //             }}
+      //           >
+      //             <Flex w="100%" alignItems="center" justifyContent="center">
+      //               <Box color={activeRoute(route.path.toLowerCase()) ? activeIcon : textColor} me="18px">
+      //                 {route.icon}
+      //               </Box>
+      //               <Text
+      //                 me="auto"
+      //                 color={activeRoute(route.path.toLowerCase()) ? activeColor : textColor}
+      //                 fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}
+      //               >
+      //                 {route.name}
+      //               </Text>
+      //               {/* <Box
+      //               h="36px"
+      //               w="4px"
+      //               bg={activeRoute(route.path.toLowerCase()) ? brandColor : 'transparent'}
+      //               borderRadius="5px"
+      //             /> */}
+      //               <Box
+      //                 mr="10px"
+      //                 style={{ cursor: 'pointer' }}
+      //                 color={activeRoute(route.path.toLowerCase()) ? activeIcon : textColor}
+      //               >
+      //                 <Icon
+      //                   as={toggleState ? RxTriangleUp : RxTriangleDown}
+      //                   width="20px"
+      //                   height="20px"
+      //                   color="inherit"
+      //                 />
+      //               </Box>
+      //             </Flex>
+      //           </HStack>
+      //           <NavLink
+      //             key={index}
+      //             to={route.sub[0].layout + route.path}
+      //             style={{ height: toggleIcon, transition: 'all 0.2s ease-out', overflow: 'hidden', display: 'block' }}
+      //           >
+      //             <HStack
+      //               spacing={activeRoute(route.path.toLowerCase()) ? '22px' : '26px'}
+      //               py="5px"
+      //               ps="10px"
+      //               ml="17px"
+      //             >
+      //               <Flex w="100%" alignItems="center" justifyContent="center">
+      //                 <Box color={activeRoute(route.path.toLowerCase()) ? activeIcon : textColor} me="18px">
+      //                   {route.icon}
+      //                 </Box>
+      //                 <Text
+      //                   me="auto"
+      //                   color={activeRoute(route.path.toLowerCase()) ? activeColor : textColor}
+      //                   fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}
+      //                 >
+      //                   {route.sub[0].name}
+      //                 </Text>
+      //               </Flex>
+      //               <Box
+      //                 h="36px"
+      //                 w="4px"
+      //                 bg={activeRoute(route.path.toLowerCase()) ? brandColor : 'transparent'}
+      //                 borderRadius="5px"
+      //               />
+      //             </HStack>
+      //           </NavLink>
+      //         </Box>
+      //       ) : (
+      //         <Box>
+      //           <HStack spacing={activeRoute(route.path.toLowerCase()) ? '22px' : '26px'} py="5px" ps="10px">
+      //             <Text
+      //               me="auto"
+      //               color={activeRoute(route.path.toLowerCase()) ? activeColor : inactiveColor}
+      //               fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}
+      //             >
+      //               {route.name}
+      //             </Text>
+      //             <Box h="36px" w="4px" bg="brand.400" borderRadius="5px" />
+      //           </HStack>
+      //         </Box>
+      //       )}
+      //     </Box>
+      //   )
+      // }
     })
   }
   //  BRAND
