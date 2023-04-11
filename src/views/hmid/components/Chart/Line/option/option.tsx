@@ -481,7 +481,7 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
                   <AccordionButton>
                     <Box as="span" flex="1" textAlign="left">
                       <MdOutlineLegendToggle style={{ display: 'inline-block' }} />
-                      <AccordionTitle>Lagend</AccordionTitle>
+                      <AccordionTitle>Legend</AccordionTitle>
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>

@@ -11,7 +11,10 @@ import styled from '@emotion/styled'
 import bg_vedio from '../../assets/img/ineeji/ineeji_video.gif'
 import title from '../../assets/img/ineeji/title.svg'
 import axios from 'axios'
-import { FormControl, FormLabel, Alert, AlertIcon, AlertTitle, AlertDescription, Button, Input } from '@chakra-ui/react'
+import { FormControl, FormLabel, Button, Input } from '@chakra-ui/react'
+import type { SelectProps } from 'antd'
+import { Select } from 'antd'
+import './style/style.css'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -48,7 +51,7 @@ const FormWrap = styled.div`
 const Title = styled.div`
   background-position: left 10vw top 5vw;
   background-repeat: no-repeat;
-  background-size: 50% auto;
+  background-size: 40% auto;
   background-image: url(${title});
   position: fixed;
   left: 0;
@@ -65,31 +68,51 @@ const Title = styled.div`
 export const Login: React.FC = () => {
   const [id, setId] = React.useState()
   const [password, setPassword] = React.useState()
+  const [company, setCompany] = React.useState<any>('')
+  const [companyList, setCompanyList] = React.useState<any>()
   //   const [messageApi, contextHolder] = message.useMessage();
+
+  React.useEffect(() => {
+    RenderCompanyList()
+  }, [])
+  //select field
+
+  const options: SelectProps['options'] = []
 
   const error = (e: string) => {
     alert(e)
   }
 
   const setLogin = (id: string, password: string) => {
-    axios
-      .get('http://192.168.1.27:8000/api/hmid/user/info?id=' + id + '&password=' + password, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded;',
-        },
-        timeout: 5000,
-      })
-      .then((response) => {
-        console.log('[ axios response data ] : ')
-        console.log(response.data)
+    if (company.length === 0 || company === undefined) {
+      alert('회사를 선택 해주세요.')
+    } else {
+      axios
+        .get(
+          'http://192.168.1.27:8000/api/hmid/user/info?id=' + id + '&password=' + password,
+          {
+            headers: {
+              Accept: '*/*',
+              'Content-Type': 'application/x-www-form-urlencoded;',
+            },
+            timeout: 5000,
+          }
+          // { withCredentials: true }
+        )
+        .then((response) => {
+          console.log('[ axios response data ] : ')
+          console.log(response.data)
 
-        window.location.href = '/admin/hmid'
-        window.localStorage.setItem('userData', JSON.stringify(response.data))
-      })
-      .catch((error) => {
-        // console.log(error.response)
-        error('아이디 또는 비밀번호가 틀립니다.')
-      })
+          getCompanyInfo(company)
+          window.location.href = '/admin/layoutsetting'
+          window.localStorage.setItem('userData', JSON.stringify(response.data))
+          window.localStorage.setItem('companyId', company)
+        })
+        .catch((error) => {
+          console.log(error.response)
+          // error('아이디 또는 비밀번호가 틀립니다.')
+        })
+    }
   }
 
   const ChangeId = (e: any) => {
@@ -112,6 +135,64 @@ export const Login: React.FC = () => {
     }
   }
 
+  // 회사 리스트
+  function RenderCompanyList() {
+    const Arr: any = []
+    let Obj: any = new Object()
+
+    axios
+      .get('http://192.168.1.27:8000/api/hmid/company', {
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/x-www-form-urlencoded;',
+        },
+        timeout: 5000,
+      })
+      .then((response) => {
+        console.log('[ axios response data ] : ')
+        console.log(response.data)
+
+        for (let i = 0, len = response.data.length; i < len; i++) {
+          Obj.value = response.data[i].com_id
+          Obj.label = response.data[i].com_nm
+          Arr.push(Obj)
+          Obj = new Object()
+        }
+
+        // console.log(Arr)
+        setCompanyList(Arr)
+      })
+      .catch((error) => {
+        console.log(error.response)
+      })
+  }
+
+  const handleChange = (value: string | string[]) => {
+    console.log(`Compnay Selected: ${value}`)
+    setCompany(value)
+  }
+
+  const getCompanyInfo = (companyId: string) => {
+    console.log(companyId)
+    axios
+      .get('http://192.168.1.27:8000/api/hmid/company/info?company_id=' + companyId, {
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/x-www-form-urlencoded;',
+        },
+        timeout: 5000,
+      })
+      .then((response) => {
+        console.log('[ get Company Info axios response data ] : ')
+        console.log(response.data)
+
+        window.localStorage.setItem('company_info', JSON.stringify(response.data[0]))
+      })
+      .catch((error) => {
+        console.log(error.response)
+      })
+  }
+
   return (
     <>
       {/* <Alert status="error">
@@ -124,6 +205,16 @@ export const Login: React.FC = () => {
       <Title />
       <FormWrap>
         <FormControl id="text">
+          <FormLabel mt={5} color={'white'}>
+            Company
+          </FormLabel>
+          <Select
+            size={'large'}
+            placeholder={'Select Company'}
+            onChange={handleChange}
+            style={{ width: 200 }}
+            options={companyList}
+          />
           <FormLabel color={'white'}>I D</FormLabel>
           <Input color={'white'} type="text" onChange={(e: any) => ChangeId(e)} onKeyDown={(e: any) => onEnterId(e)} />
           <FormLabel mt={5} color={'white'}>

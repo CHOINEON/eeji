@@ -1,0 +1,22 @@
+.ant-select{
+    width:100% !important;
+    margin-bottom:1vw;
+}
+
+.ant-select-dropdown ant-select-dropdown-hidden css-dev-only-do-not-override-1vtf12y ant-select-dropdown-placement-bottomLeft{
+    z-index:99999 !important;
+}
+
+.ant-spin-nested-loading{
+    z-index:999999999 !important;
+    top:50% !important;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4vw;
+    height: 4vw;
+}
+
+.ant-modal-root .ant-modal-mask{
+    display: none;
+}

@@ -1,9 +1,19 @@
 import { Icon } from '@chakra-ui/react'
 import { MdDashboard, MdDatasetLinked, MdSettings } from 'react-icons/md'
+import { VscSettings } from 'react-icons/vsc'
+import { ImDatabase } from 'react-icons/im'
+import { BsHammer } from 'react-icons/bs'
+import { FaHourglassHalf } from 'react-icons/fa'
 
 // Admin Imports
 import MainDashboard from 'views/hmid'
 import FoundationStructureAnalysis from 'views/DataAnalysis'
+import DataConnection from 'views/dataConnection'
+import DataPlantModeling from 'views/dataPlantModeling'
+import AIPlantModeling from 'views/AiPlantModeling'
+import Configuration from 'views/configuration'
+import DashboardConfig from 'views/hmid_config'
+// import LayoutList from 'views/hmid/list/LayoutList'
 
 // Auth Imports
 
@@ -16,11 +26,25 @@ const routes = [
   //   component: Login,
   // },
   {
-    name: 'HMID',
+    name: 'Data Connection',
     layout: '/admin',
-    path: '/hmid',
-    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
-    component: MainDashboard,
+    path: '/data-connection',
+    icon: <Icon as={ImDatabase} width="20px" height="20px" color="inherit" />,
+    component: DataConnection,
+  },
+  {
+    name: 'Data Plant Modeling',
+    layout: '/admin',
+    path: '/data-plant-modeling',
+    icon: <Icon as={BsHammer} width="20px" height="20px" color="inherit" />,
+    component: DataPlantModeling,
+  },
+  {
+    name: 'AI Plant Modeling',
+    layout: '/admin',
+    path: '/ai-plant-modeling',
+    icon: <Icon as={FaHourglassHalf} width="20px" height="20px" color="inherit" />,
+    component: AIPlantModeling,
   },
   {
     name: 'Data Analysis',
@@ -30,11 +54,25 @@ const routes = [
     component: FoundationStructureAnalysis,
   },
   {
-    name: 'configuration',
+    name: 'HMID',
+    layout: '/admin',
+    path: '/layoutsetting',
+    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+    component: MainDashboard,
+  },
+  {
+    name: 'HMID-Config',
+    layout: '/admin',
+    path: '/layoutconfig',
+    icon: <Icon as={MainDashboard} width="20px" height="20px" color="inherit" />,
+    component: DashboardConfig,
+  },
+  {
+    name: 'Configuration',
     layout: '/admin',
     path: '/configuration',
     icon: <Icon as={MdSettings} width="20px" height="20px" color="inherit" />,
-    component: MainDashboard,
+    component: Configuration,
   },
 ]
 

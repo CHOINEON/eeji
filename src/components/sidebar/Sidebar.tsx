@@ -89,7 +89,8 @@ export function SidebarResponsive(props: { routes: RoutesType[] }) {
         <DrawerOverlay />
         <DrawerContent w="285px" maxW="285px" bg={sidebarBackgroundColor}>
           <DrawerCloseButton
-            zIndex="3"
+            zIndex="9999"
+            className="thisis"
             onClick={onClose}
             _focus={{ boxShadow: 'none' }}
             _hover={{ boxShadow: 'none' }}

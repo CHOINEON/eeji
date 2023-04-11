@@ -3,6 +3,9 @@ export const WidgetData = [
     type: 'chart',
     data: [
       {
+        name: 'Time Series',
+      },
+      {
         name: 'Line',
       },
       {
@@ -11,18 +14,18 @@ export const WidgetData = [
       {
         name: 'Pie',
       },
-      {
-        name: 'Scatter Plot',
-      },
-      {
-        name: 'Box Plot',
-      },
-      {
-        name: 'Heatmap',
-      },
-      {
-        name: 'Waterfall',
-      },
+      // {
+      //   name: 'Scatter Plot',
+      // },
+      // {
+      //   name: 'Box Plot',
+      // },
+      // {
+      //   name: 'Heatmap',
+      // },
+      // {
+      //   name: 'Waterfall',
+      // },
     ],
   },
   {
