@@ -26,9 +26,9 @@ export const SaveConfirmModal: React.FC<SaveConfirmModalProps> = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   React.useEffect(() => {
-    console.log('################################')
-    console.log(props.SaveGridisOpen)
-    console.log('################################')
+    // console.log('################################')
+    // console.log(props.SaveGridisOpen)
+    // console.log('################################')
     setSaveModalIsOpen(props.SaveGridisOpen)
     console.log(SaveModalIsOpen)
   }, [props.SaveGridisOpen])

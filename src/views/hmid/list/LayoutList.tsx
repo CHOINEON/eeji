@@ -2,12 +2,12 @@ import React from 'react'
 import axios from 'axios'
 import { Box, useColorModeValue, Stack, Button, Checkbox } from '@chakra-ui/react'
 
-// interface LayoutListProps {
-//   company_id: string
-//   setLayoutId: (layout_id: string) => void
-// }
+interface LayoutListProps {
+  company_id: string
+  // setLayoutId: (layout_id: string) => void
+}
 
-export default function LayoutList() {
+export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
   const [OpenLayoutModal, setOpenLayoutModal] = React.useState<boolean>(false)
   const [GridInfo, setGridInfo] = React.useState<string>()
@@ -17,15 +17,14 @@ export default function LayoutList() {
   const [AdminInfo, setAdminInfo] = React.useState('block')
 
   const theme = useColorModeValue('navy.700', 'white')
-  console.log(theme)
 
-  // React.useEffect(() => {
-  //   getLayoutList(props.company_id)
-  // }, [props.company_id])
+  React.useEffect(() => {
+    getLayoutList(props.company_id)
+  }, [props.comapny_id])
 
   const getLayoutList = (company_id: string) => {
     axios
-      .get('http://192.168.1.27:8000/hmid/getLayout?company_id=' + company_id, {
+      .get('http://192.168.1.27:8000/api/hmid/getLayout?company_id=' + company_id, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
@@ -47,3 +46,5 @@ export default function LayoutList() {
     </>
   )
 }
+
+export default LayoutList

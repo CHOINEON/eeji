@@ -53,6 +53,17 @@
   height:100%;
 }
 
+#api_dashboard .e-panel .e-header-text input{
+  position:absolute;
+  left: 0.5vw;
+  top:50%;
+  height:1.3vw;
+  transform:translateY(-50%);
+  background-color: #e0e5f0;
+  border-radius: 10px;
+  padding: 0 0.5vw;
+}
+
 #predefine_dashboard.e-dashboardlayout .e-panel .e-panel-container .e-panel-header .e-header-text {
   padding: 12px 0 12px 0;
 }

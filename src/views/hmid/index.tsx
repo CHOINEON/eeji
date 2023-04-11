@@ -21,17 +21,21 @@
 */
 
 // Chakra imports
-import { Box, useColorModeValue, Stack, Button, Checkbox } from '@chakra-ui/react'
+import { Box, useColorModeValue } from '@chakra-ui/react'
 
 import React from 'react'
-import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
-import LayoutModal from './components/Modal/LayoutListModal'
 
 //function
 import GridLayoutBox from './function/GridLayout'
+import LayoutList from './list/LayoutList'
 import PredefinedLayouts from './function/GridLayoutTest'
 
 export default function HMID() {
+  const theme = useColorModeValue('navy.700', 'white')
+
+  const [Company_id, setCompanyId] = React.useState<any>()
+
+  //상단바 -- admin index에서 가져옴
   const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
   const [OpenLayoutModal, setOpenLayoutModal] = React.useState<boolean>(false)
   const [GridInfo, setGridInfo] = React.useState<string>()
@@ -47,8 +51,11 @@ export default function HMID() {
   //레이아웃 저장 confirm 창 & info
   const [OpenSaveLayout, setOpenSaveLayout] = React.useState<boolean>(false)
 
-  const theme = useColorModeValue('navy.700', 'white')
-  console.log(theme)
+  React.useEffect(() => {
+    if (window.localStorage.getItem('companyId') !== null) {
+      setCompanyId(window.localStorage.getItem('companyId'))
+    }
+  }, [window.localStorage])
 
   // React.useState(() => {
   //   console.log('[ 하위에서 받은 props ] : ')
@@ -84,81 +91,25 @@ export default function HMID() {
 
   // document.onkeydown = NotReload()
 
-  //SaveLayout toggle
-  const getSaveInfoConformOpen = (isOpen: boolean) => {
-    setOpenSaveLayout(isOpen)
+  const getSaveInfoConformOpen = (e: any) => {
+    console.log(e)
   }
 
   return (
     <>
-      <LayoutModal
-        isOpen={OpenLayoutModal}
-        setClose={(isClose: boolean) => {
-          if (isClose) {
-            setOpenLayoutModal(false)
-          }
-        }}
-        setGridInfo={(gridInfo: string) => {
-          if (gridInfo !== undefined) {
-            setGridInfo(gridInfo)
-            setButtonDisabled(false)
-          }
-        }}
-      />
-      <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
-        <Stack direction="row" spacing={4} pl={3} display={AdminInfo}>
-          <Button
-            leftIcon={<MdOutlineGridView />}
-            variant="brand"
-            onClick={() => {
-              setOpenLayoutModal(true)
-            }}
-          >
-            Grid
-          </Button>
-          {/* <Button leftIcon={<MdOutlineSettingsInputComposite />} variant="brand" disabled={ButtonDisabled}>
-            Option
-          </Button> */}
-          <Button
-            leftIcon={<MdOutlineRestartAlt />}
-            variant="brand"
-            onClick={() => {
-              setGridInfo('reset')
-            }}
-          >
-            Reset
-          </Button>
-          <Button
-            leftIcon={<MdSave />}
-            variant="brand"
-            onClick={() => {
-              setOpenSaveLayout(true)
-            }}
-          >
-            Save
-          </Button>
-          <Button
-            leftIcon={<MdOutlineRestartAlt />}
-            style={{ backgroundColor: realTimeBtnColor, color: realTimeBtnFont }}
-            onClick={() => {
-              setRealTimeBtnColor('#00ae2f')
-            }}
-          >
-            실시간 데이터
-          </Button>
-        </Stack>
-        {/* <Box>{renderGrid(GridInfo)}</Box> */}
-        {/* <Box>
+      {/* <Box>{renderGrid(GridInfo)}</Box> */}
+      {/* <Box>
           <GridLayoutBox gridInfo={GridInfo} />
         </Box> */}
-        <Box>
-          <PredefinedLayouts
-            target={GridInfo}
-            SaveConfirmIsOpen={OpenSaveLayout}
-            SaveInfo={''}
-            setSaveConfirmIsOpen={getSaveInfoConformOpen}
-          />
-        </Box>
+      <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
+        <PredefinedLayouts
+          // target={GridInfo}
+          CompanyId={Company_id}
+          SaveConfirmIsOpen={OpenSaveLayout}
+          SaveInfo={''}
+          setSaveConfirmIsOpen={getSaveInfoConformOpen}
+        />
+        {/* <LayoutList company_id={Company_id} /> */}
       </Box>
     </>
   )
