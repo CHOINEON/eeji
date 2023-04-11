@@ -126,7 +126,7 @@ export const WidgetDataTable: React.FC<WidgetDataTableProps> = (args: any) => {
         setCloseDataGridDeleteModal={getCloseDataGridDeleteModal}
         setDataGridDeleteInfo={getDataGridDeleteInfo}
       />
-      <Stack direction="row" spacing={4} pl={3} display={AdminInfo} marginTop={2} marginBottom={2}>
+      {/* <Stack direction="row" spacing={4} pl={3} display={AdminInfo} marginTop={2} marginBottom={2}>
         <Button
           leftIcon={<MdOutlineAdd />}
           variant="brand"
@@ -150,7 +150,7 @@ export const WidgetDataTable: React.FC<WidgetDataTableProps> = (args: any) => {
         <Button leftIcon={<MdSave />} variant="brand" size="md">
           Save
         </Button>
-      </Stack>
+      </Stack> */}
       <DataGridWrap className={Theme}>
         <AgGridReact
           ref={gridRef}

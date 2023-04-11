@@ -11,12 +11,14 @@ import * as React from 'react'
 import { updateSampleSection } from './base'
 import { DashboardLayoutComponent, PanelModel, ResizeArgs } from '@syncfusion/ej2-react-layouts'
 import axios from 'axios'
-import { useColorModeValue } from '@chakra-ui/react'
+import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
+import { Box, useColorModeValue, Stack, Button, Checkbox } from '@chakra-ui/react'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { panelData } from './data/panel-data'
 import './style/style.css'
 import WidgetModal from '../components/Modal/WidgetModal'
 import SaveConfirmModal from '../components/Modal/SaveConfirm'
+import LayoutModal from '../components/Modal/LayoutListModal'
 import Plot from 'react-plotly.js'
 import * as d3 from 'd3'
 
@@ -34,7 +36,8 @@ import '../components/Modal/style/style.css'
 // import { Alert, AlertIcon, AlertDescription, CloseButton, Box } from '@chakra-ui/react'
 
 interface GridLayoutProps {
-  target: any
+  // target: any
+  CompanyId: string
   SaveConfirmIsOpen: boolean
   SaveInfo: string
   setSaveConfirmIsOpen: (isOpen: boolean) => void
@@ -75,11 +78,29 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   const [ShowLoading, setShowLoading] = React.useState(false)
 
-  //Save Confirm Modal
-  const [SaveGridModalIsOpen, setSaveGridModalIsOpen] = React.useState(false)
+  //상단바 -- admin index에서 가져옴
+  const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
+  const [OpenLayoutModal, setOpenLayoutModal] = React.useState<boolean>(false)
+  const [GridInfo, setGridInformation] = React.useState<string>()
+  const [ItemColor, setItemColor] = React.useState('#0044620f')
+
+  //권한
+  const [AdminInfo, setAdminInfo] = React.useState('block')
+
+  //실시간 데이터
+  const [realTimeBtnColor, setRealTimeBtnColor] = React.useState('#8F9BBA')
+  const [realTimeBtnFont, setRealTimeBtnFont] = React.useState('#fff')
+
+  //레이아웃 저장 confirm 창 & info
+  const [OpenSaveLayout, setOpenSaveLayout] = React.useState<boolean>(false)
+
+  //box title
+  // const [BoxTitle, setBoxTitle] = React.useState<string>('타이틀')
+  //box title input disabled
+  const [BoxTitleDisabled, setBoxTitleDisabled] = React.useState<any>()
 
   React.useEffect(() => {
-    setSaveGridModalIsOpen(props.SaveConfirmIsOpen)
+    setOpenSaveLayout(props.SaveConfirmIsOpen)
   }, [props.SaveConfirmIsOpen])
 
   //theme color mode
@@ -151,6 +172,12 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     }
   }, [SelectTagInfo])
 
+  // function handleChagne(e: any) {
+  //   console.log('Input Handle Change')
+  //   console.log(e)
+  // }
+
+  //레이아웃 만들 경우 default값 나타내기
   React.useEffect(() => {
     const updatePanels: PanelModel[] = []
     const index = 0
@@ -167,9 +194,15 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         col: panel[i].col,
         sizeX: panel[i].sizeX,
         sizeY: panel[i].sizeY,
-        header: `<div class="e-header-text"> <button class="grid-setting-btn">
-      </button><button class="connection-chart-data">
-      </button></div><div class="header-border"></div>`,
+        header: `
+        <div class="e-header-text">
+          <input value=${'타이틀'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." id=${
+          'input' + i.toString()
+        }> 
+          <button class="grid-setting-btn"></button>
+          <button class="connection-chart-data"></button>
+        </div>
+        <div class="header-border"></div>`,
         content: '<div class="panel-content ${dashboardBoxColor}">Content Area</div>',
       }
       updatePanels.push(panelModelValue)
@@ -177,12 +210,16 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     dashboardObj.panels = updatePanels
   }, [])
 
+  //grid 선택해서 레이아웃 변경 한 경우
   React.useEffect(() => {
-    if (props.target !== undefined) {
+    console.log('#####################################')
+    console.log(GridInfo)
+    console.log('#####################################')
+    if (GridInfo !== undefined) {
       updateSampleSection()
-      rendereComplete(props.target)
+      rendereComplete(GridInfo)
     }
-  }, [dashboardObj, props.target])
+  }, [dashboardObj, GridInfo])
 
   const DrawPlotlyChart = (ChartLayoutOption: any, ChartDataOption: any, BoxTargetId: any) => {
     console.log('[ Draw Plotly Chart Function ] : ')
@@ -230,10 +267,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   React.useEffect(() => {
     if (WidgetInfo === 'Line') {
-      // console.log('[ Grid Layout 에서 받은 Line Chart Option ] : ')
-      // console.log(LineChartLayoutOption)
-      // console.log(LineChartDataOption)
-      // console.log('--------------------------------------------')
       DrawPlotlyChart(LineChartLayoutOption, LineChartDataOption, BoxTargetId)
     } else if (WidgetInfo === 'Pie') {
       DrawPlotlyChart(PieChartLayoutOption, PieChartDataOption, BoxTargetId)
@@ -276,9 +309,13 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         sizeY: 1,
         row: 0,
         col: 0,
-        header: `<div class="e-header-text"> <button class="grid-setting-btn">
-      </button><button class="connection-chart-data">
-      </button></div><div class="header-border"></div>`,
+        header: `
+        <div class="e-header-text"> 
+        <input value=${'타이틀'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." ref={BoxTitleRef}> 
+          <button class="grid-setting-btn"></button>
+          <button class="connection-chart-data"></button>
+        </div>
+        <div class="header-border"></div>`,
         content: '<div class="panel-content">Content Area</div>',
       },
     ]
@@ -303,12 +340,18 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     dashboardObj.removeAll()
   }
 
+  // 그리드 레이아웃 선택 시 그리드 다시 그림
   function initializeTemplate(element: any, dashboardObj: any): void {
     const updatePanels: PanelModel[] = []
     const index: number = parseInt(element.getAttribute('data-id'), 10) - 1
     const panel: any = Object.keys(panels[index]).map((panelIndex: string) => {
       return panels[index][panelIndex]
     })
+
+    console.log('-------------------- [ Panel Data ] --------------------')
+    console.log(panel)
+    console.log(element)
+    console.log('--------------------------------------------------------')
 
     count = panel.length
 
@@ -319,9 +362,13 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         col: panel[i].col,
         sizeX: panel[i].sizeX,
         sizeY: panel[i].sizeY,
-        header: `<div class="e-header-text"> <button class="grid-setting-btn">
-      </button> <button class="connection-chart-data">
-      </button></div><div class="header-border"></div>`,
+        header: `
+        <div class="e-header-text"> 
+        <input value=${'타이틀'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." ref={BoxTitleRef}> 
+          <button class="grid-setting-btn"></button> 
+          <button class="connection-chart-data"></button>
+        </div>
+        <div class="header-border"></div>`,
         content: '<div class="panel-content">Content Area</div>',
       }
       updatePanels.push(panelModelValue)
@@ -408,13 +455,26 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           }
         } else if (e.target.className.includes('connection-chart-data')) {
           //console.log(' modal 열기')
-          setIsOpenDataConnectionModal(true)
+          console.log(e)
+          console.log(e.target.offsetParent.offsetParent.children[0].children[1].children[0].className)
+          if (e.target.offsetParent.offsetParent.children[0].children[1].children[0].className !== undefined) {
+            if (e.target.offsetParent.offsetParent.children[0].children[1].children[0].className !== 'js-plotly-plot') {
+              console.log(' Table 용 모달 창')
+            } else {
+              setIsOpenDataConnectionModal(true)
+            }
+          }
         }
       }
     } else {
       if (e.target.id === 'predefine_dashboard' || e.target.id.includes('input')) {
         console.log('else ...')
+      } else if (e.target.nodeName === 'INPUT') {
+        console.log('Input')
+        const id = e.target.id
+        // document.querySelector(id).focus()
       } else {
+        console.log(e)
         console.log(e.target.id)
         setBoxTargetId(e.target.id)
         setIsOpenWidgetModal(true)
@@ -422,6 +482,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     }
   }
 
+  //다시 그리드 rendering
+  //기존 dashboardObj 지우고, 다시 init 함
   const rendereComplete = (args: any) => {
     if (args !== 'reset') {
       if (args.className.includes('image-pattern-style')) {
@@ -672,7 +734,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     if (company === 'Dongwon') {
       setShowLoading(true)
       axios
-        .get('http://192.168.1.27:8000/hmid/chartData?day=' + 3, {
+        .get('http://192.168.1.27:8000/api/hmid/chartData?day=' + 3, {
           headers: {
             Accept: '*/*',
             'Content-Type': 'application/x-www-form-urlencoded;',
@@ -762,20 +824,86 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     console.log('[ Save Layout Info ] : ', SaveInfo)
 
     if (SaveInfo === 'unSave') {
-      setSaveGridModalIsOpen(false)
+      // setSaveGridModalIsOpen(false)
+      setOpenSaveLayout(false)
     } else {
       console.log('############ save !!! ')
+      console.log()
     }
   }
 
   const getCloseLayoutModal = (IsOpen: boolean) => {
     console.log('[ Save Confirm Modal Is Open ] : ', IsOpen)
     props.setSaveConfirmIsOpen(false)
-    setSaveGridModalIsOpen(false)
+    setOpenSaveLayout(false)
   }
 
   return (
     <>
+      <LayoutModal
+        isOpen={OpenLayoutModal}
+        setClose={(isClose: boolean) => {
+          if (isClose) {
+            setOpenLayoutModal(false)
+          }
+        }}
+        setGridInfo={(gridInfo: string) => {
+          if (gridInfo !== undefined) {
+            console.log(gridInfo)
+            setGridInformation(gridInfo)
+            setButtonDisabled(false)
+          }
+        }}
+      />
+      <SaveConfirmModal
+        SaveGridisOpen={OpenSaveLayout}
+        setSaveLayoutTitle={getSaveLayoutTitle}
+        setSaveLayoutInfo={getSaveLayoutInfo}
+        setCloseSaveLayoutModal={getCloseLayoutModal}
+      />
+      <Box style={{ position: 'relative', zIndex: 1000 }}>
+        <Stack direction="row" spacing={4} pl={3} display={AdminInfo}>
+          <Button
+            leftIcon={<MdOutlineGridView />}
+            variant="brand"
+            onClick={() => {
+              setOpenLayoutModal(true)
+            }}
+          >
+            Grid
+          </Button>
+          {/* <Button leftIcon={<MdOutlineSettingsInputComposite />} variant="brand" disabled={ButtonDisabled}>
+            Option
+          </Button> */}
+          <Button
+            leftIcon={<MdOutlineRestartAlt />}
+            variant="brand"
+            onClick={() => {
+              setGridInformation('reset')
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            leftIcon={<MdSave />}
+            variant="brand"
+            onClick={() => {
+              setOpenSaveLayout(true)
+            }}
+          >
+            Save
+          </Button>
+          <Button
+            leftIcon={<MdOutlineRestartAlt />}
+            style={{ backgroundColor: realTimeBtnColor, color: realTimeBtnFont }}
+            onClick={() => {
+              setRealTimeBtnColor('#00ae2f')
+            }}
+          >
+            실시간 데이터
+          </Button>
+        </Stack>
+      </Box>
       <Spin tip="Loading" size="large" spinning={ShowLoading}>
         <div className="content" />
       </Spin>
@@ -792,12 +920,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             setWidgetInfo(WidgetInfo)
           }
         }}
-      />
-      <SaveConfirmModal
-        SaveGridisOpen={SaveGridModalIsOpen}
-        setSaveLayoutTitle={getSaveLayoutTitle}
-        setSaveLayoutInfo={getSaveLayoutInfo}
-        setCloseSaveLayoutModal={getCloseLayoutModal}
       />
       <DataConnection
         DataTagList={TagListArr}
