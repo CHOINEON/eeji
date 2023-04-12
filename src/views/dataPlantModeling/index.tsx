@@ -90,7 +90,6 @@ export default function DataPlantModeling() {
             <TabPanel>
               <StatisticsGrid />
             </TabPanel>
-
             <TabPanel>
               <DataAnalysis />
             </TabPanel>
