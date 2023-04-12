@@ -3,14 +3,14 @@
 	"version": "1.1.0",
 	"private": true,
 	"scripts": {
-		"start": "export PORT=9872 && react-scripts start",
+		"start": "set PORT=9871 && react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"predeploy": "npm run build",
 		"deploy": "scp -P 50022 -r /Users/82106/repos/infinite-optimal/build/* yunhee@220.94.157.27:~/infinite_optimal",
-		"openapi:local":  "openapi-generator generate -i https//192.168.1.27:8000/docs/json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec",
-		"openapi":  "openapi-generator generate -i http://220.94.157.27:59871/docs/docs/json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec",
+		"openapi:local": "openapi-generator generate -i https//192.168.1.27:8000/docs/json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec",
+		"openapi": "openapi-generator generate -i http://220.94.157.27:59871/docs/docs/json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec",
 		"react-query-swagger": "react-query-swagger /input:http://220.94.157.27:59871/docs/json /output:./api/axios-client.ts /template:Axios /serviceHost:. /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined",
 		"react-query-swagger:local": "react-query-swagger /input:http://220.94.157.27:59871/docs/json /output:./api/axios-client.ts /template:Axios /serviceHost:. /TypeScriptVersion:4.6 /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined /TypeScriptTypeStyle:Interface"
 	},
@@ -59,6 +59,8 @@
 		"d3-fetch": "^3.0.1",
 		"devextreme": "^22.2.5",
 		"devextreme-react": "22.2.5",
+		"dom-to-image": "^2.6.0",
+		"file-saver": "^2.0.5",
 		"framer-motion": "^4.1.17",
 		"next": "^12.1.6",
 		"next-auth": "^4.3.4",
@@ -108,6 +110,8 @@
 	"devDependencies": {
 		"@openapitools/openapi-generator-cli": "^2.6.0",
 		"@types/d3": "^7.4.0",
+		"@types/dom-to-image": "^2.6.4",
+		"@types/file-saver": "^2.0.5",
 		"@types/react-calendar": "^3.5.2",
 		"@types/react-grid-layout": "^1.3.2",
 		"@types/react-router-dom": "^5.3.3",
@@ -127,5 +131,4 @@
 		"prettier": "^2.7.1",
 		"ts-node": "^10.9.1"
 	}
-
 }
