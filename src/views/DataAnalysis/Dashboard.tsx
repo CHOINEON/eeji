@@ -12,17 +12,6 @@ import Paper from '@mui/material/Paper'
 import Link from '@mui/material/Link'
 import TagList from './Tag/TagList'
 
-/**주석처리된 부분 */
-import MenuIcon from '@mui/icons-material/Menu'
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import NotificationsIcon from '@mui/icons-material/Notifications'
-import { mainListItems, secondaryListItems } from './listItems'
-import RangeSelection from './Chart/Selection'
-import Divider from '@mui/material/Divider'
-import IconButton from '@mui/material/IconButton'
-import Badge from '@mui/material/Badge'
-import List from '@mui/material/List'
-
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -110,57 +99,6 @@ function DashboardContent() {
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        {/**20230317 박윤희 >> 해당 Toolbar, Drawer 우선 주석 처리했습니다. Drawer안의 내용은 메뉴바에 추가 예정입니다.*/}
-        {/* <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-              기초 구조 분석
-            </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Toolbar>
-        </AppBar> */}
-        {/* <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              px: [1],
-            }}
-          >
-            <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </Toolbar>
-          <Divider />
-          <List component="nav">
-            {mainListItems}
-            <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
-          </List>
-        </Drawer> */}
-
-        {/**20230317 박윤희 >> 해당 박스안의 bakcgroundColor 주석 처리했습니다. */}
         <Box
           component="main"
           sx={{

@@ -148,14 +148,14 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   return (
     <>
       <Box style={{ position: 'relative', zIndex: 1000 }}>
-        <Stack direction="row" spacing={4} pl={3} display={AdminInfo}>
+        {/* <Stack direction="row" spacing={4} pl={3} display={AdminInfo}>
           <Button leftIcon={<BiSelectMultiple />} variant="brand">
             선택
           </Button>
           <Button leftIcon={<RiDeleteBinLine />} variant="brand">
             삭제
           </Button>
-        </Stack>
+        </Stack> */}
       </Box>
       <Box mt={10}>
         <LayoutListWrap>{Component}</LayoutListWrap>

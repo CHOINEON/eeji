@@ -75,12 +75,14 @@ export const EditingData = () => {
       primaryXAxis={primaryxAxis}
       primaryYAxis={primaryyAxis}
       chartArea={border}
-      title="Sales Prediction of Products"
+      title=" "
       tooltip={tooltip}
       // dragStart={dragStart}
       // dragEnd={dragEnd}
       // dragComplete={dragComplete}
       pointClick={pointClick}
+      height={'200px'}
+      max-height={'200px'}
     >
       <Inject services={[ColumnSeries, Legend, Tooltip, DataLabel, Category, LineSeries, DataEditing]} />
       <SeriesCollectionDirective>
@@ -88,8 +90,8 @@ export const EditingData = () => {
           dataSource={columnData}
           xName="x"
           yName="y"
-          name="Product A"
-          type="Column"
+          name="Tag A"
+          type="Line"
           dragSettings={{ enable: false }}
           marker={{ visible: true, width: 10, height: 10 }}
         ></SeriesDirective>
@@ -97,7 +99,7 @@ export const EditingData = () => {
           dataSource={lineData}
           xName="x"
           yName="y"
-          name="Product B"
+          name="Tag B"
           type="Line"
           marker={{ visible: true, width: 10, height: 10 }}
           dragSettings={{ enable: false }}

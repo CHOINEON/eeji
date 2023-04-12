@@ -15,6 +15,11 @@
 		"react-query-swagger:local": "react-query-swagger /input:http://220.94.157.27:59871/docs/json /output:./api/axios-client.ts /template:Axios /serviceHost:. /TypeScriptVersion:4.6 /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined /TypeScriptTypeStyle:Interface"
 	},
 	"dependencies": {
+		"@ag-grid-community/client-side-row-model": "^29.2.0",
+		"@ag-grid-community/react": "^29.2.0",
+		"@ag-grid-enterprise/column-tool-panel": "^29.2.0",
+		"@ag-grid-enterprise/menu": "^29.2.0",
+		"@ag-grid-enterprise/row-grouping": "^29.2.0",
 		"@ant-design/icons": "^5.0.1",
 		"@chakra-ui/icons": "^1.1.5",
 		"@chakra-ui/react": "1.8.8",
@@ -32,6 +37,7 @@
 		"@syncfusion/ej2-react-charts": "^20.4.54",
 		"@syncfusion/ej2-react-dropdowns": "^20.4.54",
 		"@syncfusion/ej2-react-grids": "^20.4.54",
+		"@syncfusion/ej2-react-inputs": "^21.1.38",
 		"@syncfusion/ej2-react-layouts": "^20.4.53",
 		"@syncfusion/ej2-react-popups": "^21.1.35",
 		"@syncfusion/ej2-react-splitbuttons": "^21.1.35",
@@ -58,6 +64,7 @@
 		"next-auth": "^4.3.4",
 		"next-http-proxy-middleware": "^1.2.4",
 		"node-cache": "^5.1.2",
+		"plotly.js": "^2.20.0",
 		"react": "^17.0.2",
 		"react-apexcharts": "^1.4.0",
 		"react-calendar": "^3.7.0",
@@ -119,8 +126,6 @@
 		"gh-pages": "^3.2.3",
 		"prettier": "^2.7.1",
 		"ts-node": "^10.9.1"
-	},
-	"overrides": {
-		"@types/react": "^17.0.38"
 	}
+
 }
