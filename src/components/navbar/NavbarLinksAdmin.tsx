@@ -46,7 +46,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 
   const [UserName, setUserName] = React.useState<any>(JSON.parse(window.localStorage.getItem('userData'))[0].user_nm)
   const [UserCompany, setUserCompnay] = React.useState<any>(
-    JSON.parse(window.localStorage.getItem('company_info')).com_nm
+    JSON.parse(window.localStorage.getItem('company_info')).
   )
   const [UserCompanyEmail, setCompanyEmail] = React.useState<any>(
     JSON.parse(window.localStorage.getItem('company_info')).com_email
