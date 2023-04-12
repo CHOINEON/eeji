@@ -223,7 +223,7 @@ export const Login: React.FC = () => {
             color={'white'}
             type="password"
             onChange={(e: any) => ChangePassword(e)}
-            onKeyDown={(e: any) => onEnterLogin(e)}
+            onKeyDown={(e: unknown) => onEnterLogin(e)}
           />
         </FormControl>
         <Button mt={4} colorScheme="brand" type="submit" onClick={() => setLogin(id, password)}>
