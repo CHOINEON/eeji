@@ -734,7 +734,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     if (company === 'Dongwon') {
       setShowLoading(true)
       axios
-        .get('http://34.64.197.87:5001/api/hmid/chartData?day=' + 3, {
+        .get('http://220.94.157.27:59871/api/hmid/chartData?day=' + 3, {
           headers: {
             Accept: '*/*',
             'Content-Type': 'application/x-www-form-urlencoded;',
