@@ -196,7 +196,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         sizeY: panel[i].sizeY,
         header: `
         <div class="e-header-text">
-          <input value=${'타이틀'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." id=${
+          <input value=${'타이틀22'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." id=${
           'input' + i.toString()
         }> 
           <button class="grid-setting-btn"></button>
@@ -311,7 +311,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         col: 0,
         header: `
         <div class="e-header-text"> 
-        <input value=${'타이틀'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." ref={BoxTitleRef}> 
+        <input value=${'타이틀22'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." ref={BoxTitleRef}> 
           <button class="grid-setting-btn"></button>
           <button class="connection-chart-data"></button>
         </div>
@@ -364,7 +364,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         sizeY: panel[i].sizeY,
         header: `
         <div class="e-header-text"> 
-        <input value=${'타이틀'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." ref={BoxTitleRef}> 
+        <input value=${'타이틀22'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." ref={BoxTitleRef}> 
           <button class="grid-setting-btn"></button> 
           <button class="connection-chart-data"></button>
         </div>
@@ -861,7 +861,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         setSaveLayoutInfo={getSaveLayoutInfo}
         setCloseSaveLayoutModal={getCloseLayoutModal}
       />
-      <Box style={{ position: 'relative', zIndex: 1000 }}>
+      {/* <Box style={{ position: 'relative', zIndex: 1000 }}>
         <Stack direction="row" spacing={4} pl={3} display={AdminInfo}>
           <Button
             leftIcon={<MdOutlineGridView />}
@@ -872,9 +872,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           >
             Grid
           </Button>
-          {/* <Button leftIcon={<MdOutlineSettingsInputComposite />} variant="brand" disabled={ButtonDisabled}>
-            Option
-          </Button> */}
           <Button
             leftIcon={<MdOutlineRestartAlt />}
             variant="brand"
@@ -903,7 +900,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             실시간 데이터
           </Button>
         </Stack>
-      </Box>
+      </Box> */}
       <Spin tip="Loading" size="large" spinning={ShowLoading}>
         <div className="content" />
       </Spin>
