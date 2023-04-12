@@ -6,6 +6,26 @@
   /* align-items:center; */
 }
 
+
+.widget-setting-btn{
+  width:1.3vw;
+  height:1.3vw;
+  background-color:#0094d8 !important;
+  border-radius:8px !important;
+  color:white !important;
+  text-align:center;
+  padding:0 0.5vw;
+  position:absolute;
+  right:4vw;
+  top:55%;
+  transform:translateY(-50%);
+  background-image: url('./settings.png');
+  background-repeat:no-repeat;
+  background-size:60% auto;
+  background-position:center center;
+}
+
+
 .grid-setting-btn{
   width:1.3vw;
   height:1.3vw;

@@ -200,6 +200,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           <input value=${'타이틀'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." id=${
           'input' + i.toString()
         }> 
+          <button class="widget-setting-btn"></button>
           <button class="grid-setting-btn"></button>
           <button class="connection-chart-data"></button>
         </div>
@@ -313,6 +314,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         header: `
         <div class="e-header-text"> 
         <input value=${'타이틀'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." ref={BoxTitleRef}> 
+          <button class="widget-setting-btn"></button>
           <button class="grid-setting-btn"></button>
           <button class="connection-chart-data"></button>
         </div>
@@ -366,6 +368,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         header: `
         <div class="e-header-text"> 
         <input value=${'타이틀'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." ref={BoxTitleRef}> 
+          <button class="widget-setting-btn"></button>
           <button class="grid-setting-btn"></button> 
           <button class="connection-chart-data"></button>
         </div>
@@ -406,10 +409,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   // }
 
   const ClickDashBoardComponent = (e: any) => {
-    if (e.target.id.length === 0) {
+    if (e.target.id.length === 0 && typeof e.target.className !== 'object') {
       //chart & table인 경우...
-      // console.log('&&&&&&&&&&&&&&&&&&&&&&&')
-      // console.log(e.target.className)
+      console.log('&&&&&&&&&&&&&&&&&&&&&&&')
+      console.log(typeof e.target.className)
       if (e.target.className.includes('ag')) {
         console.log('ag')
       } else {
@@ -735,7 +738,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     if (company === 'Dongwon') {
       setShowLoading(true)
       axios
-        .get('http://34.64.197.87:5001/api/hmid/chartData?day=' + 3, {
+        .get('http://34.64.197.87:5001/api/hmid/chartData?day=' + 7, {
           headers: {
             Accept: '*/*',
             'Content-Type': 'application/x-www-form-urlencoded;',
@@ -765,6 +768,9 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         })
         .catch((error) => {
           console.log(error)
+
+          alert('Error. 담당자에게 문의 바랍니다.')
+          setShowLoading(false)
         })
     }
   }
@@ -862,6 +868,46 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         setSaveLayoutInfo={getSaveLayoutInfo}
         setCloseSaveLayoutModal={getCloseLayoutModal}
       />
+      <Box style={{ position: 'relative', zIndex: 1000 }}>
+        <Stack direction="row" spacing={4} pl={3} display={AdminInfo}>
+          <Button
+            leftIcon={<MdOutlineGridView />}
+            variant="brand"
+            onClick={() => {
+              setOpenLayoutModal(true)
+            }}
+          >
+            Grid
+          </Button>
+          <Button
+            leftIcon={<MdOutlineRestartAlt />}
+            variant="brand"
+            onClick={() => {
+              setGridInformation('reset')
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            leftIcon={<MdSave />}
+            variant="brand"
+            onClick={() => {
+              setOpenSaveLayout(true)
+            }}
+          >
+            Save
+          </Button>
+          <Button
+            leftIcon={<MdOutlineRestartAlt />}
+            style={{ backgroundColor: realTimeBtnColor, color: realTimeBtnFont }}
+            onClick={() => {
+              setRealTimeBtnColor('#00ae2f')
+            }}
+          >
+            실시간 데이터
+          </Button>
+        </Stack>
+      </Box>
       <Spin tip="Loading" size="large" spinning={ShowLoading}>
         <div className="content" />
       </Spin>
