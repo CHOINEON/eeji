@@ -133,28 +133,34 @@ export const TimeSeriesOption: React.FC<TimeSeriesProps> = (props: any) => {
   const selectorOptions = {
     buttons: [
       {
-        step: 'month',
+        step: 'second',
+        stepmode: 'backward',
+        count: 1,
+        label: '1s',
+      },
+      {
+        step: 'minute',
         stepmode: 'backward',
         count: 1,
         label: '1m',
       },
       {
+        step: 'hour',
+        stepmode: 'backward',
+        count: 1,
+        label: '1h',
+      },
+      {
+        step: 'day',
+        stepmode: 'backward',
+        count: 1,
+        label: '1d',
+      },
+      {
         step: 'month',
         stepmode: 'backward',
-        count: 6,
-        label: '6m',
-      },
-      {
-        step: 'year',
-        stepmode: 'todate',
         count: 1,
-        label: 'YTD',
-      },
-      {
-        step: 'year',
-        stepmode: 'backward',
-        count: 1,
-        label: '1y',
+        label: '6M',
       },
       {
         step: 'all',
