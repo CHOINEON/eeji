@@ -21,7 +21,7 @@ ModuleRegistry.registerModules([ClientSideRowModelModule])
 
 const SeriesSelectionGrid = () => {
   const gridRef = useRef<AgGridReact<IOlympicData>>(null)
-  const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), [])
+  const containerStyle = useMemo(() => ({ width: '100%', height: '200px' }), [])
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), [])
   const [rowData, setRowData] = useState<IOlympicData[]>()
   const [columnDefs, setColumnDefs] = useState<ColDef[]>([
