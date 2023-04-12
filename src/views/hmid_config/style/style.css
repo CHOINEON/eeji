@@ -19,9 +19,9 @@
   right:4vw;
   top:55%;
   transform:translateY(-50%);
-  background-image: url('./settings.png');
+  background-image: url('./grid.png');
   background-repeat:no-repeat;
-  background-size:60% auto;
+  background-size:70% auto;
   background-position:center center;
 }
 

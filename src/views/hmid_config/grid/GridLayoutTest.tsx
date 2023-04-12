@@ -12,7 +12,6 @@ import { updateSampleSection } from './base'
 import { DashboardLayoutComponent, PanelModel, ResizeArgs } from '@syncfusion/ej2-react-layouts'
 import axios from 'axios'
 import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
-import { IoMdSkipBackward } from 'react-icons/io'
 import { Box, useColorModeValue, Stack, Button, Checkbox } from '@chakra-ui/react'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { panelData } from '../data/panel-data'
@@ -33,6 +32,10 @@ import TimeSeriesComponents from '../../hmid/components/Chart/TimeSeries/TimeSer
 import WidgetDataTable from '../../hmid/components/DataGrid/DataGrid'
 import { Select, Spin } from 'antd'
 import '../../hmid/components/Modal/style/style.css'
+
+//capture & filesaver
+import domtoimage from 'dom-to-image'
+import { saveAs } from 'file-saver'
 
 // import { Alert, AlertIcon, AlertDescription, CloseButton, Box } from '@chakra-ui/react'
 
@@ -106,7 +109,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   //theme color mode
   const dashboardBoxColor = useColorModeValue('white', 'dark')
-  console.log(dashboardBoxColor)
 
   const TableRows: any = [
     { make: 'Porsche', model: 'Boxter', price: 72000 },
@@ -178,6 +180,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   //   console.log(e)
   // }
 
+  const ChangeInput = () => {
+    console.log(' change input')
+  }
+
   //레이아웃 만들 경우 default값 나타내기
   React.useEffect(() => {
     const updatePanels: PanelModel[] = []
@@ -199,7 +205,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         <div class="e-header-text">
           <input value=${'타이틀'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." id=${
           'input' + i.toString()
-        }> 
+        }
+        > 
           <button class="widget-setting-btn"></button>
           <button class="grid-setting-btn"></button>
           <button class="connection-chart-data"></button>
@@ -411,8 +418,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const ClickDashBoardComponent = (e: any) => {
     if (e.target.id.length === 0 && typeof e.target.className !== 'object') {
       //chart & table인 경우...
-      console.log('&&&&&&&&&&&&&&&&&&&&&&&')
-      console.log(typeof e.target.className)
+      // console.log('&&&&&&&&&&&&&&&&&&&&&&&')
+      // console.log(typeof e.target.className)
       if (e.target.className.includes('ag')) {
         console.log('ag')
       } else {
@@ -423,7 +430,12 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data !== undefined) {
             // console.log(e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type)
             // console.log(WidgetInfo)
-            if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type === 'scatter') {
+            console.log(e.target)
+            // if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type === 'scatter') {
+            if (
+              e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.autorange ===
+              false
+            ) {
               setLineChartShowDrawer(true)
               setWidgetInfo('Line')
               setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
@@ -440,8 +452,9 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
               setBarChartShowDrawer(true)
               setWidgetInfo('Bar')
               setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
-            }
-            {
+            } else if (
+              e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.autorange === true
+            ) {
               setBarChartShowDrawer(true)
               setWidgetInfo('Time Series')
               setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
@@ -468,11 +481,18 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
               setIsOpenDataConnectionModal(true)
             }
           }
+        } else if (e.target.className.includes('widget-setting-btn')) {
+          setIsOpenWidgetModal(true)
+
+          //box target id 값 가져오기
+          setBoxTargetId(e.target.offsetParent.offsetParent.children[0].children[1].id)
         }
       }
     } else {
       if (e.target.id === 'predefine_dashboard' || e.target.id.includes('input')) {
-        console.log('else ...')
+        console.log(e)
+        console.log(e.target)
+        console.log(e.target.id)
       } else if (e.target.nodeName === 'INPUT') {
         console.log('Input')
         const id = e.target.id
@@ -480,8 +500,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       } else {
         console.log(e)
         console.log(e.target.id)
-        setBoxTargetId(e.target.id)
-        setIsOpenWidgetModal(true)
       }
     }
   }
@@ -738,7 +756,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     if (company === 'Dongwon') {
       setShowLoading(true)
       axios
-        .get('http://220.94.157.27:59871/api/hmid/chartData?day=' + 7, {
+        .get('http://220.94.157.27:59871/api/hmid/chartData?chart=`Tag-1`,`Tag-2`', {
           headers: {
             Accept: '*/*',
             'Content-Type': 'application/x-www-form-urlencoded;',
@@ -892,7 +910,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             leftIcon={<MdSave />}
             variant="brand"
             onClick={() => {
-              setOpenSaveLayout(true)
+              // setOpenSaveLayout(true)
+              domtoimage.toBlob(document.querySelector('#DashboardBox')).then((blob) => {
+                saveAs(blob, 'dashboard.png')
+              })
             }}
           >
             Save
