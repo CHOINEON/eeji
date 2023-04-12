@@ -88,7 +88,7 @@ export const Login: React.FC = () => {
       alert('회사를 선택 해주세요.')
     } else {
       axios
-        .get('http://34.64.197.87:5001/api/user/user/info?id=' + id + '&password=' + password, {
+        .get('http://34.64.197.87:5001/api/user/info?com_id=' + company + '&user_id=' + id + '&user_pass=' + password, {
           headers: {
             Accept: '*/*',
             'Content-Type': 'application/x-www-form-urlencoded;',
