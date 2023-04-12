@@ -174,7 +174,7 @@ export const Login: React.FC = () => {
   const getCompanyInfo = (companyId: string) => {
     console.log(companyId)
     axios
-      .get('http://220.94.157.27:59871/docs/api/hmid/company/info?company_id=' + companyId, {
+      .get('http://220.94.157.27:59871/api/hmid/company/info?company_id=' + companyId, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
