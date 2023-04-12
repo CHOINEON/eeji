@@ -11,6 +11,9 @@
 # production
 /build
 
+#open api generator
+/models
+
 # misc
 .DS_Store
 .env.local
