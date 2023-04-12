@@ -103,7 +103,7 @@ export const Login: React.FC = () => {
           console.log(response.data)
 
           getCompanyInfo(company)
-          window.location.href = '/admin/data-plant-modeling'
+          window.location.href = '/admin/layoutsetting'
           window.localStorage.setItem('userData', JSON.stringify(response.data))
           window.localStorage.setItem('companyId', company)
         })
