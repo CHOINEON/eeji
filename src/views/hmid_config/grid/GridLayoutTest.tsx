@@ -735,7 +735,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     if (company === 'Dongwon') {
       setShowLoading(true)
       axios
-        .get('http://34.64.197.87:5001/hmid/chartData?day=' + 3, {
+        .get('http://34.64.197.87:5001/api/hmid/chartData?day=' + 3, {
           headers: {
             Accept: '*/*',
             'Content-Type': 'application/x-www-form-urlencoded;',
@@ -862,58 +862,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         setSaveLayoutInfo={getSaveLayoutInfo}
         setCloseSaveLayoutModal={getCloseLayoutModal}
       />
-      <Box style={{ position: 'relative', zIndex: 1000 }}>
-        <Stack direction="row" spacing={4} pl={3} display={AdminInfo}>
-          <Button
-            leftIcon={<IoMdSkipBackward />}
-            variant="brand"
-            onClick={() => {
-              window.location.href = '/admin/layoutsetting'
-            }}
-          >
-            뒤로가기
-          </Button>
-          <Button
-            leftIcon={<MdOutlineGridView />}
-            variant="brand"
-            onClick={() => {
-              setOpenLayoutModal(true)
-            }}
-          >
-            Grid
-          </Button>
-          {/* <Button leftIcon={<MdOutlineSettingsInputComposite />} variant="brand" disabled={ButtonDisabled}>
-            Option
-          </Button> */}
-          <Button
-            leftIcon={<MdOutlineRestartAlt />}
-            variant="brand"
-            onClick={() => {
-              setGridInformation('reset')
-            }}
-          >
-            Reset
-          </Button>
-          <Button
-            leftIcon={<MdSave />}
-            variant="brand"
-            onClick={() => {
-              setOpenSaveLayout(true)
-            }}
-          >
-            Save
-          </Button>
-          <Button
-            leftIcon={<MdOutlineRestartAlt />}
-            style={{ backgroundColor: realTimeBtnColor, color: realTimeBtnFont }}
-            onClick={() => {
-              setRealTimeBtnColor('#00ae2f')
-            }}
-          >
-            실시간 데이터
-          </Button>
-        </Stack>
-      </Box>
       <Spin tip="Loading" size="large" spinning={ShowLoading}>
         <div className="content" />
       </Spin>
@@ -996,7 +944,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                 ClickDashBoardComponent(e)
               }}
               columns={8}
-              ref={(scope) => {
+              ref={(scope: any) => {
                 ;(dashboardObj as any) = scope
               }}
               // resizeStop={onPanelResize.bind(this)}

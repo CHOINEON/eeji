@@ -105,7 +105,23 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
 
   //layoutlist api 연결
   const getLayoutList = (company_id: string) => {
-    console.log('')
+    axios
+      .get('http://34.64.197.87:5001/api/hmid/layout/company_id=' + company_id, {
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/x-www-form-urlencoded;',
+        },
+        timeout: 5000,
+      })
+      .then((response) => {
+        console.log('[ get Layout List axios response data ] : ')
+        console.log(response.data)
+
+        renderLayoutList(response.data)
+      })
+      .catch((error) => {
+        console.log(error.response)
+      })
   }
 
   //레이아웃 삭제
