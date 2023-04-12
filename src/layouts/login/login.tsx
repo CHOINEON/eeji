@@ -140,7 +140,7 @@ export const Login: React.FC = () => {
     let Obj: any = new Object()
 
     axios
-      .get('http://220.94.157.27:59871/api/hmid/company', {
+      .get('http://192.168.1.27:8000/api/hmid/company', {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
