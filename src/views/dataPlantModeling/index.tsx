@@ -21,10 +21,12 @@
 */
 
 // Chakra imports
-import { Box, useColorModeValue, Stack, Button } from '@chakra-ui/react'
-
+import { Box, useColorModeValue, Stack, Button, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import React from 'react'
 import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
+import FileUploader from './FileUploader'
+import StatisticsGrid from './StatisticsGrid'
+import DataAnalysis from 'views/DataAnalysis'
 
 export default function DataPlantModeling() {
   const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
@@ -36,7 +38,7 @@ export default function DataPlantModeling() {
   const [AdminInfo, setAdminInfo] = React.useState('block')
 
   const theme = useColorModeValue('navy.700', 'white')
-  console.log(theme)
+  // console.log(theme)
 
   //새로고침 막기
   // const preventClose = (e: BeforeUnloadEvent) => {
@@ -74,6 +76,26 @@ export default function DataPlantModeling() {
         {/* <Box>
           <GridLayoutBox gridInfo={GridInfo} />
         </Box> */}
+        <Tabs>
+          <TabList>
+            <Tab>Data Upload</Tab>
+            <Tab>Statistics</Tab>
+            <Tab>Preprocessing</Tab>
+          </TabList>
+
+          <TabPanels>
+            <TabPanel>
+              <FileUploader />
+            </TabPanel>
+            <TabPanel>
+              <StatisticsGrid />
+            </TabPanel>
+
+            <TabPanel>
+              <DataAnalysis />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </Box>
     </>
   )

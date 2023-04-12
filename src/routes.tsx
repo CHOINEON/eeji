@@ -46,13 +46,13 @@ const routes = [
     icon: <Icon as={FaHourglassHalf} width="20px" height="20px" color="inherit" />,
     component: AIPlantModeling,
   },
-  {
-    name: 'Data Analysis',
-    layout: '/admin',
-    path: '/data-analysis',
-    icon: <Icon as={MdDatasetLinked} width="20px" height="20px" color="inherit" />,
-    component: FoundationStructureAnalysis,
-  },
+  // {
+  //   name: 'Data Analysis',
+  //   layout: '/admin',
+  //   path: '/data-analysis',
+  //   icon: <Icon as={MdDatasetLinked} width="20px" height="20px" color="inherit" />,
+  //   component: FoundationStructureAnalysis,
+  // },
   {
     name: 'HMID',
     layout: '/admin',
