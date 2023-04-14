@@ -3,14 +3,14 @@
 	"version": "1.1.0",
 	"private": true,
 	"scripts": {
-		"start": "set PORT=9872 && react-scripts start",
+		"start": "set PORT=9871 && react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"predeploy": "npm run build",
 		"deploy": "scp -P 50022 -r /Users/82106/repos/infinite-optimal/build/* yunhee@220.94.157.27:~/infinite_optimal",
-		"openapi:local":  "openapi-generator generate -i https//192.168.1.27:8000/docs/json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec",
-		"openapi":  "openapi-generator generate -i http://220.94.157.27:59871/docs/docs/json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec",
+		"openapi:local": "openapi-generator generate -i https//192.168.1.27:8000/docs/json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec",
+		"openapi": "openapi-generator generate -i http://220.94.157.27:59871/docs/docs/json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec",
 		"react-query-swagger": "react-query-swagger /input:http://220.94.157.27:59871/docs/json /output:./api/axios-client.ts /template:Axios /serviceHost:. /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined",
 		"react-query-swagger:local": "react-query-swagger /input:http://220.94.157.27:59871/docs/json /output:./api/axios-client.ts /template:Axios /serviceHost:. /TypeScriptVersion:4.6 /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined /TypeScriptTypeStyle:Interface"
 	},
@@ -28,7 +28,9 @@
 		"@emotion/cache": "^11.7.1",
 		"@emotion/react": "^11.10.6",
 		"@emotion/styled": "^11.10.6",
-		"@mui/icons-material": "^5.11.11",
+		"@material-ui/icons": "^4.11.3",
+		"@mui/icons-material": "^5.11.16",
+		"@mui/lab": "^5.0.0-alpha.126",
 		"@mui/material": "^5.11.15",
 		"@mui/x-data-grid": "^6.0.1",
 		"@mui/x-data-grid-pro": "^6.0.1",
@@ -127,5 +129,4 @@
 		"prettier": "^2.7.1",
 		"ts-node": "^10.9.1"
 	}
-
 }

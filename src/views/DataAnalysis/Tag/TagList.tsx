@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react'
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 // import Button from '@mui/material/Button';
 import { AgGridReact } from 'ag-grid-react'
 import { ColDef } from 'ag-grid-community'
@@ -12,68 +12,50 @@ import { Box } from '@mui/material'
 import UploadModal from './UploadModal'
 
 const TagList = (props: any) => {
+  const { syncSelectedTag } = props
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), [])
 
+  const gridRef = useRef<AgGridReact<any>>(null)
   const [uploadModal, setUploadModal] = React.useState(false)
   const [formModal, setFormModal] = React.useState(false)
   const [modalType, setModalType] = React.useState('')
   //datagrid row data
   const [rowData, setRowData] = useState<Array<any>>()
-  const [selectedRowData, setSelectedRowData] = useState({ id: 0, name: '', unit: '', description: '' })
+  // const [selectedRowData, setSelectedRowData] = useState({ id: 0, name: '', unit: '', description: '' })
+
+  const [selectedRowId, setSelectedRowId] = useState([])
 
   const [columnDefs] = useState<ColDef[]>([
-    // {
-    //   headerName: 'Id',
-    //   field: 'id',
-    //   floatingFilter: true,
-    //   filter: 'agNumberColumnFilter',
-    //   hide: true,
-    // },
     {
       headerName: 'TagName',
-      field: 'name',
+      field: 'tag_id',
       floatingFilter: true,
       filter: 'agTextColumnFilter',
       width: 200,
     },
-    // {
-    //   headerName: 'Units',
-    //   field: 'unit',
-    //   floatingFilter: true,
-    //   filter: 'agTextColumnFilter',
-    //   width: 130,
-    //   // hide: true,
-    // },
-    // {
-    //   headerName: 'Description',
-    //   field: 'description',
-    //   floatingFilter: true,
-    //   filter: 'agTextColumnFilter',
-    //   width: 300,
-    //   hide: true,
-    // },
   ])
 
   useEffect(() => {
     setRowData([])
+    getData()
   }, [])
 
   const getData = () => {
     axios
-      .get('http://220.94.157.27:59871/getTagList')
+      .get('http://220.94.157.27:59871/api/tag/list')
       .then((response) => {
-        console.log('resp:', response)
+        // console.log('resp:', response)
         setRowData(response.data)
       })
       .catch((error) => error('Data Load Failed'))
   }
 
-  const onUploaded = (isUploaded: boolean) => {
-    console.log('isupload:', isUploaded)
-    if (isUploaded) {
-      getData()
-    }
-  }
+  // const onUploaded = (isUploaded: boolean) => {
+  //   console.log('isupload:', isUploaded)
+  //   if (isUploaded) {
+  //     getData()
+  //   }
+  // }
 
   const toggleUploadModal = () => {
     // alert('기능 구현 완료/테스트 중')
@@ -105,38 +87,46 @@ const TagList = (props: any) => {
       .catch((error) => error('failed'))
   }
 
-  const handleDelete = () => {
-    // console.log('row:', selectedRowData)
-    //////////////////selectedRow 비우기
+  // const handleDelete = () => {
+  //   // console.log('row:', selectedRowData)
+  //   //////////////////selectedRow 비우기
 
-    if (selectedRowData) {
-      axios
-        .delete('http://220.94.157.27:59871/deleteTag/' + selectedRowData.id)
-        .then((response) => {
-          console.log('resp:', response)
+  //   if (selectedRowData) {
+  //     axios
+  //       .delete('http://220.94.157.27:59871/deleteTag/' + selectedRowData.id)
+  //       .then((response) => {
+  //         console.log('resp:', response)
 
-          // const progressBtn: ProgressButton = new ProgressButton({
-          //   content: '태그삭제',
-          //   spinSettings: { position: 'Right', width: 20, template: '<div class="template"></div>' },
-          // })
-          // progressBtn.appendTo('#progressbtn')
+  //         // const progressBtn: ProgressButton = new ProgressButton({
+  //         //   content: '태그삭제',
+  //         //   spinSettings: { position: 'Right', width: 20, template: '<div class="template"></div>' },
+  //         // })
+  //         // progressBtn.appendTo('#progressbtn')
 
-          alert('삭제 완료')
-          getData()
-        })
-        .catch((error) => error('failed'))
-    } else {
-      alert('삭제할 태그를 선택해 주세요')
+  //         alert('삭제 완료')
+  //         getData()
+  //       })
+  //       .catch((error) => error('failed'))
+  //   } else {
+  //     alert('삭제할 태그를 선택해 주세요')
+  //   }
+  // }
+
+  // const onRowSelected = (e: any) => {
+  //   // console.log('onRowSelected:', e)
+  //   setSelectedRowData(e.data)
+  // }
+
+  const onSelectionChanged = (e: any) => {
+    const selectedRows = gridRef.current!.api.getSelectedRows()
+
+    const arr = []
+    for (let i = 0; i < selectedRows.length; i++) {
+      arr.push(selectedRows[i].tag_id)
     }
-  }
-
-  const onRowSelected = (e: any) => {
-    // console.log('onRowSelected:', e)
-    setSelectedRowData(e.data)
-  }
-
-  const onRowEditted = () => {
-    getData()
+    // console.log('arr:', arr)
+    setSelectedRowId(arr)
+    syncSelectedTag(arr)
   }
 
   return (
@@ -164,19 +154,20 @@ const TagList = (props: any) => {
         {/* <Title>TagList</Title> */}
         <AgGridReact
           rowHeight={40}
-          //ref={gridRef}
+          ref={gridRef}
           rowData={rowData}
           columnDefs={columnDefs}
           rowSelection={'multiple'}
           // getRowId={getRowId}
-          onRowSelected={onRowSelected}
+          // onRowSelected={onRowSelected}
+          onSelectionChanged={onSelectionChanged}
         ></AgGridReact>
       </div>
-      <Box style={{ height: '40px', textAlign: 'center', marginTop: '10px' }}>
+      {/* <Box style={{ height: '40px', textAlign: 'center', marginTop: '10px' }}>
         <ButtonComponent cssClass="e-info" onClick={toggleUploadModal}>
           Load Data
         </ButtonComponent>
-      </Box>
+      </Box> */}
       {/* </Box> */}
       {/* <FormModal
         show={formModal}
@@ -187,7 +178,7 @@ const TagList = (props: any) => {
         onRowEditted={onRowEditted}
       /> */}
 
-      <UploadModal show={uploadModal} onUploaded={onUploaded} onCloseClick={() => setUploadModal(false)} />
+      {/* <UploadModal show={uploadModal} onUploaded={onUploaded} onCloseClick={() => setUploadModal(false)} /> */}
     </>
   )
 }

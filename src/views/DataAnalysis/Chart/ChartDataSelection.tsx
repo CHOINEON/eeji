@@ -116,7 +116,13 @@ const SAMPLE_CSS = `
          padding: 0px !important;
      }`
 
-export const ChartDataSelection = () => {
+export const ChartDataSelection = (props: any) => {
+  const { chartData } = props
+
+  React.useEffect(() => {
+    // console.log('chartdata:', chartData['Tag-15'])
+  }, [])
+
   let chartInstance: any
   let dropElement: any
   let checkElement: any
@@ -176,7 +182,7 @@ export const ChartDataSelection = () => {
       <Inject services={[Selection, Legend, ColumnSeries, Category, ScatterSeries]} />
       <SeriesCollectionDirective>
         <SeriesDirective
-          dataSource={data}
+          dataSource={chartData}
           name="Tag A"
           xName="x"
           yName="y"

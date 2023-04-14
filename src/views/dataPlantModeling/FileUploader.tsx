@@ -1,13 +1,28 @@
-import React, { useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
+import { createElement } from '@syncfusion/ej2-base'
 import { RemovingEventArgs, UploaderComponent } from '@syncfusion/ej2-react-inputs'
+import { Button } from '@chakra-ui/react'
+import { CircularProgress } from '@chakra-ui/react'
+import axios from 'axios'
 
-const FileUploader = () => {
+const FileUploader = (props: any) => {
   const uploadObj = useRef<UploaderComponent>(null)
+  // const uploadEle: HTMLElement = createElement('span', { className: 'upload e-icons', innerHTML: 'Upload All' })
+  // let uploadEle
+
+  // createElement('span', { className: 'upload e-icons', innerHTML: 'Upload All' })
+
+  const [loading, setLoading] = useState(false)
+  const { onClickNext, refresh } = props
 
   let dropContainerEle: HTMLElement = null
   const dropContainerRef = (element: HTMLElement) => {
     dropContainerEle = element
   }
+
+  useEffect(() => {
+    uploadObj.current.clearAll()
+  }, [refresh])
 
   const asyncSettings: object = {
     chunkSize: 100000000, // set chunk size for enable the chunk upload
@@ -15,6 +30,53 @@ const FileUploader = () => {
 
   function onRemoveFile(args: RemovingEventArgs): void {
     args.postRawFile = false
+  }
+
+  const onSuccess = (e: any) => {
+    // console.log('onSuccess e:', e)
+  }
+
+  const handleSubmit = async () => {
+    // console.log('uploadObj:', uploadObj.current.getFilesData())
+
+    if (uploadObj.current.getFilesData().length > 0) {
+      //Progress show
+      setLoading(true)
+
+      const formData = new FormData()
+      const uploadFiles = uploadObj.current.getFilesData()
+
+      for (const i in uploadFiles) {
+        formData.append('files', uploadFiles[i].rawFile)
+      }
+
+      axios
+        .post('http://220.94.157.27:59871/api/tag/uploadfile', formData, {
+          headers: {
+            'Content-Type': `multipart/form-data;`,
+          },
+        })
+        .then(
+          (response) => {
+            // console.log('RESP:', response)
+
+            setLoading(false)
+            if (response.status === 200) {
+              if (response.data) {
+                //Tab1로 이동하고 결과값 렌더링
+                onClickNext(1, response.data)
+              }
+            }
+          },
+          (error) => {
+            console.log('error:', error)
+            setLoading(false)
+            alert(error)
+          }
+        )
+    } else {
+      alert('업로드할 파일이 없습니다')
+    }
   }
 
   return (
@@ -30,14 +92,23 @@ const FileUploader = () => {
                 ref={uploadObj}
                 autoUpload={true}
                 // beforeUpload={onBeforeUpload}
-                //   chunkUploading={chunkUploading}
+                success={onSuccess}
+                // progress={onFileUpload}
                 allowedExtensions=".xls,.xlsx,.csv"
                 removing={onRemoveFile.bind(this)}
                 asyncSettings={asyncSettings}
                 maxFileSize={100000000} //100MB
+                // buttons={{ upload: uploadEle }}
               ></UploaderComponent>
               {/* {loading && <CircularProgress size={24} />} */}
               <p>Allowed file extensions : .xls(x), .csv</p>
+
+              <div style={{ textAlign: 'right' }}>
+                <Button colorScheme="teal" variant="ghost" onClick={handleSubmit}>
+                  NEXT
+                </Button>
+                {loading && <CircularProgress isIndeterminate color="green.300" />}
+              </div>
             </div>
           </div>
         </div>
