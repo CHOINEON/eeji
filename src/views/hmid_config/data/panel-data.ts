@@ -21,10 +21,10 @@ export const panelData: any = [
   {
     panel1: { sizeX: 4, sizeY: 2, row: 0, col: 0, widget: 'Bar' },
     panel2: { sizeX: 4, sizeY: 2, row: 0, col: 8, widget: 'Pie' },
-    panel3: { sizeX: 4, sizeY: 1, row: 2, col: 0, widget: 'TimeSeries' },
-    panel4: { sizeX: 4, sizeY: 1, row: 2, col: 0, widget: 'TimeSeries' },
+    panel3: { sizeX: 4, sizeY: 1, row: 2, col: 0, widget: 'Table' },
+    panel4: { sizeX: 4, sizeY: 1, row: 2, col: 0, widget: 'Table' },
     panel5: { sizeX: 8, sizeY: 1, row: 4, col: 0, widget: 'Table' },
-    panel6: { sizeX: 8, sizeY: 2, row: 4, col: 1, widget: 'Table' },
+    panel6: { sizeX: 8, sizeY: 2, row: 4, col: 1, widget: 'TimeSeries' },
   },
   //3
   {
