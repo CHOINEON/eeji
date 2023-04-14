@@ -43,7 +43,7 @@ export const DataAnalysis = (props: any) => {
         </GridItem>
         <GridItem rowSpan={2} colSpan={4} h={700}>
           <GridItem rowSpan={1} h={450} border={'1px solid lightgray'} mb={50}>
-            <Worksheet selectedTags={selectedTags} count={1} />
+            <Worksheet selectedTags={selectedTags} count={selectedTags.length} />
           </GridItem>
           <GridItem rowSpan={1}>
             <SeriesSelectionGrid selectedTags={selectedTags} />

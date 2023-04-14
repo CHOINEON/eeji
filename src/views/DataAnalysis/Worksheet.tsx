@@ -5,22 +5,27 @@ import EditingData from './Chart/EditingData'
 import SeriesSelectionGrid from './Tag/SeriesSelectionGrid'
 import axios from 'axios'
 
-export const chartDiv = (props: any) => {
-  return <div style={{ width: '100px', height: '30px', backgroundColor: 'pink' }}>{props}</div>
-}
+// export const chartDiv = (props: any) => {
+//   return <div style={{ width: '100px', height: '30px', backgroundColor: 'pink' }}>{props}</div>
+// }
 
 const Worksheet = (props: any) => {
   // const { chart } = props
-  const { selectedTags } = props
-  const chart = ['scatterPlot', 'line']
+  const { selectedTags, count } = props
+
+  // let chart = ['scatterPlot', 'line']\
+  const [chart, setChart] = useState([])
   const [height, setHeight] = useState('100%')
   const [chartData, setChartData] = useState()
 
-  //const chartWrapper = useRef(null)
+  const chartWrapper = useRef(null)
 
-  // useEffect(() => {
-  //   chartWrapper.current.style.height = 100 / chart.length
-  // }, [chart])
+  useEffect(() => {
+    console.log('chart:', chart)
+
+    const tempArray = new Array(chart.length)
+    // if (chartWrapper) chartWrapper.current.style.height = 100 / chart.length
+  }, [chart])
 
   const handleCreateChart = () => {
     // alert('차트 생성 팝업 show')
@@ -44,14 +49,14 @@ const Worksheet = (props: any) => {
 
   return (
     <>
-      <ChartDataSelection />
-      <div style={{ width: '100%', height: '30%', textAlign: 'center' }}>
+      {/* <ChartDataSelection data={chartData} /> */}
+      <div style={{ width: '100%', height: '100px', textAlign: 'center', marginTop: '200px' }}>
         <Button colorScheme="teal" variant="outline" onClick={handleCreateChart}>
           CREATE CHART
         </Button>
       </div>
 
-      {/* {chart.map((index: any) => {
+      {chart.map((index: any) => {
         return (
           <>
             <div
@@ -68,7 +73,7 @@ const Worksheet = (props: any) => {
             />
           </>
         )
-      })} */}
+      })}
     </>
   )
 }
