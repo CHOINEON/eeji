@@ -21,24 +21,43 @@
 */
 
 // Chakra imports
+import React, { useState, useEffect } from 'react'
 import { Box, useColorModeValue, Stack, Button, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
-import React from 'react'
 import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
 import FileUploader from './FileUploader'
-import StatisticsGrid from './StatisticsGrid'
+import DataInfoGrid from './DataInfoGrid'
 import DataAnalysis from 'views/DataAnalysis'
+import { refreshVirtualLazyLoadCache } from '@syncfusion/ej2-react-grids'
 
 export default function DataPlantModeling() {
-  const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
-  const [OpenLayoutModal, setOpenLayoutModal] = React.useState<boolean>(false)
-  const [GridInfo, setGridInfo] = React.useState<string>()
-  const [ItemColor, setItemColor] = React.useState('#0044620f')
+  // const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
+  // const [OpenLayoutModal, setOpenLayoutModal] = React.useState<boolean>(false)
+  // const [GridInfo, setGridInfo] = React.useState<string>()
+  // const [ItemColor, setItemColor] = React.useState('#0044620f')
 
-  //권한
-  const [AdminInfo, setAdminInfo] = React.useState('block')
+  // //권한
+  // const [AdminInfo, setAdminInfo] = React.useState('block')
 
-  const theme = useColorModeValue('navy.700', 'white')
+  // const theme = useColorModeValue('navy.700', 'white')
   // console.log(theme)
+
+  const [refresh, setRefresh] = useState(false)
+
+  const [tabIndex, setTabIndex] = useState(0)
+  const [isDisabled, setIsDisabled] = useState([true, false, false])
+  const [dataInfo, setDataInfo] = useState()
+  const [tagList, setTagList] = useState(false)
+
+  useEffect(() => {
+    const tempArray: Array<boolean> = new Array<boolean>()
+
+    for (let i = 0; i < 3; i++) {
+      if (tabIndex === i) tempArray.push(false)
+      else tempArray.push(true)
+    }
+
+    setIsDisabled(tempArray)
+  }, [tabIndex])
 
   //새로고침 막기
   // const preventClose = (e: BeforeUnloadEvent) => {
@@ -69,6 +88,29 @@ export default function DataPlantModeling() {
 
   // document.onkeydown = NotReload()
 
+  const handleTabsChange = (index: number) => {
+    setTabIndex(index)
+  }
+
+  const onClickNext = (tabNumber: any, data: any) => {
+    // console.log('e:', tabNumber)
+    // console.log('data:', data)
+
+    setTabIndex(tabNumber)
+    if (tabNumber === 1 && data) {
+      setDataInfo(data)
+    }
+  }
+
+  const handleNewStart = () => {
+    setTabIndex(0)
+    refreshAll()
+  }
+
+  const refreshAll = () => {
+    setRefresh(true)
+  }
+
   return (
     <>
       <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
@@ -76,19 +118,19 @@ export default function DataPlantModeling() {
         {/* <Box>
           <GridLayoutBox gridInfo={GridInfo} />
         </Box> */}
-        <Tabs>
+        <Tabs index={tabIndex} onChange={handleTabsChange}>
           <TabList>
-            <Tab>Data Upload</Tab>
-            <Tab>Statistics</Tab>
-            <Tab>Preprocessing</Tab>
+            <Tab isDisabled={isDisabled[0]}>Data Upload</Tab>
+            <Tab isDisabled={isDisabled[1]}>Data Info</Tab>
+            <Tab isDisabled={isDisabled[2]}>Preprocessing</Tab>
           </TabList>
 
           <TabPanels>
             <TabPanel>
-              <FileUploader />
+              <FileUploader onClickNext={onClickNext} refresh={refresh} />
             </TabPanel>
             <TabPanel>
-              <StatisticsGrid />
+              <DataInfoGrid dataInfo={dataInfo} onClickNext={onClickNext} />
             </TabPanel>
             <TabPanel>
               <DataAnalysis />
@@ -96,6 +138,13 @@ export default function DataPlantModeling() {
           </TabPanels>
         </Tabs>
       </Box>
+      {tabIndex === 2 && (
+        <div style={{ textAlign: 'right' }}>
+          <Button colorScheme="teal" variant="ghost" onClick={handleNewStart}>
+            NEW START
+          </Button>
+        </div>
+      )}
     </>
   )
 }
