@@ -43,10 +43,12 @@ export const LineChartComponent: React.FC<LineChartProps> = (props: any) => {
   }, [props.ChartType, LineChartData, LineChartLayout])
 
   const getChartLayout = (chartLayout: any) => {
+    props.ChartLayout(chartLayout)
     setLineChartLayout(chartLayout)
   }
 
   const getChartData = (chartData: any) => {
+    props.ChartData(chartData)
     setLineChartData(chartData)
   }
 

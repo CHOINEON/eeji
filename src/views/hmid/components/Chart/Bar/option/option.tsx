@@ -69,22 +69,63 @@ export const ChartOption: React.FC<BarChartProps> = (props: any) => {
   React.useEffect(() => {
     props.ChartData({
       type: 'bar',
-      // font: {
-      //   family: state.FONT_FAMILY,
-      //   size: state.FONT_SIZE,
-      //   color: state.FONT_COLOR_TEXT,
-      // },
-      //추후 추가
       text: state.ENABLE_MARKER_LABEL,
       textposition: state.TEXT_POSITION,
-      // marker: {
-      //   color: state.MARKER_COLOR,
-      //   opacity: state.MARKER_OPACITY,
-      //   line: {
-      //     color: state.MARKER_BORDER_COLOR_TEXT,
-      //     width: state.MARKER_BORDER_WIDTH,
-      //   },
+    })
+    props.ChartLayout({
+      type: 'Bar',
+      title: state.TITLE,
+      // plot_bgcolor: state.PLOT_BG_COLOR_TEXT,
+      // paper_bgcolor: state.PAPER_BG_COLOR_TEXT,
+      // autosize: true,
+      bargap: state.BAR_GAP,
+      barmode: state.BAR_MODE,
+      //   width: state.WIDTH,
+      //   height: state.HEIGHT,
+      margin: {
+        l: state.MARGIN_LEFT,
+        r: state.MARGIN_RIGHT,
+        b: state.MARGIN_BOTTOM,
+        t: state.MARGIN_TOP,
+      },
+      showlegend: state.ENABLE_LEGEND,
+      // legend: {
+      //   x: state.TRANSLATE_X,
+      //   xanchor: 'right',
+      //   y: state.TRANSLATE_Y,
+      //   orientation: state.LEGEND_ORIENTATION,
+      //   traceorder: state.LEGEND_TRACEORDER,
       // },
+      xaxis: {
+        title: state.AXIS_X_TITLE,
+        showgrid: state.ENABLE_GRIDX,
+        autorange: true,
+        autotick: true,
+        // 추후 추가 예정
+        zeroline: false,
+        showline: true,
+        //ticks: '',
+        showticklabels: true,
+      },
+      yaxis: {
+        title: state.AXIS_Y_TITLE,
+        showgrid: state.ENABLE_GRIDY,
+        autorange: true,
+        autotick: true,
+        // 추후 추가 예정
+        zeroline: false,
+        showline: true,
+        //ticks: '',
+        showticklabels: true,
+      },
+    })
+  }, [])
+
+  React.useEffect(() => {
+    props.ChartData({
+      type: 'bar',
+      text: state.ENABLE_MARKER_LABEL,
+      textposition: state.TEXT_POSITION,
     })
   }, [state.ENABLE_TEXT_POSITION, state.TEXT_POSITION])
 

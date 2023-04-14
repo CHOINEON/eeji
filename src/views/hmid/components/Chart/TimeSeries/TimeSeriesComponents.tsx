@@ -43,10 +43,12 @@ export const TimeSeriesComponents: React.FC<TimeSeriesProps> = (props: any) => {
   }, [props.ChartType, TimeSeriesChartData, TimeSeriesLayout])
 
   const getChartLayout = (chartLayout: any) => {
+    props.ChartLayout(chartLayout)
     setTimeSeriesLayout(chartLayout)
   }
 
   const getChartData = (chartData: any) => {
+    props.ChartData(chartData)
     setTimeSeriesData(chartData)
   }
 

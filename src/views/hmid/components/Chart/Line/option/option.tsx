@@ -121,6 +121,38 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
       },
       type: 'scatter',
     })
+    props.ChartLayout({
+      title: state.TITLE,
+      margin: {
+        l: state.MARGIN_LEFT,
+        r: state.MARGIN_RIGHT,
+        b: state.MARGIN_BOTTOM,
+        t: state.MARGIN_TOP,
+      },
+      showlegend: state.ENABLE_LEGEND,
+      xaxis: {
+        title: state.AXIS_X_TITLE,
+      },
+      yaxis: {
+        title: state.AXIS_Y_TITLE,
+      },
+    })
+  }, [])
+
+  React.useEffect(() => {
+    props.ChartData({
+      mode: state.LINE_MODE,
+      //추후 속성 추가 예정
+      //name: 'vh',
+      text: state.ENABLE_MARKER_LABEL,
+      textposition: state.MARKER_LABEL_POSITION,
+      line: {
+        shape: state.LINE_SHAPE,
+        width: state.LINE_WIDTH,
+        dash: state.LINE_DASH,
+      },
+      type: 'scatter',
+    })
   }, [
     state.LINE_MODE,
     state.ENABLE_MARKER_LABEL,

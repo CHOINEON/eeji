@@ -61,6 +61,44 @@ export const TimeSeriesOption: React.FC<TimeSeriesProps> = (props: any) => {
   const { onClose } = useDisclosure()
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const btnRef = React.useRef()
+
+  const selectorOptions = {
+    buttons: [
+      {
+        step: 'second',
+        stepmode: 'backward',
+        count: 1,
+        label: '1s',
+      },
+      {
+        step: 'minute',
+        stepmode: 'backward',
+        count: 1,
+        label: '1m',
+      },
+      {
+        step: 'hour',
+        stepmode: 'backward',
+        count: 1,
+        label: '1h',
+      },
+      {
+        step: 'day',
+        stepmode: 'backward',
+        count: 1,
+        label: '1d',
+      },
+      {
+        step: 'month',
+        stepmode: 'backward',
+        count: 1,
+        label: '6M',
+      },
+      {
+        step: 'all',
+      },
+    ],
+  }
   // const [LineChartData, setLineChartData] = React.useState<any>({
   //   mode: state.LINE_MODE,
   //   //추후 속성 추가 예정
@@ -121,6 +159,43 @@ export const TimeSeriesOption: React.FC<TimeSeriesProps> = (props: any) => {
       },
       type: 'scatter',
     })
+    props.ChartLayout({
+      title: state.TITLE,
+      margin: {
+        l: state.MARGIN_LEFT,
+        r: state.MARGIN_RIGHT,
+        b: state.MARGIN_BOTTOM,
+        t: state.MARGIN_TOP,
+      },
+      showlegend: state.ENABLE_LEGEND,
+      xaxis: {
+        title: state.AXIS_X_TITLE,
+        rangeselector: selectorOptions,
+        rangeslider: {},
+        autorange: true,
+      },
+      yaxis: {
+        title: state.AXIS_Y_TITLE,
+        autorange: true,
+        // fixedrange: true,
+      },
+    })
+  }, [])
+
+  React.useEffect(() => {
+    props.ChartData({
+      mode: state.LINE_MODE,
+      //추후 속성 추가 예정
+      //name: 'vh',
+      text: state.ENABLE_MARKER_LABEL,
+      textposition: state.MARKER_LABEL_POSITION,
+      line: {
+        shape: state.LINE_SHAPE,
+        width: state.LINE_WIDTH,
+        dash: state.LINE_DASH,
+      },
+      type: 'scatter',
+    })
   }, [
     state.LINE_MODE,
     state.ENABLE_MARKER_LABEL,
@@ -129,44 +204,6 @@ export const TimeSeriesOption: React.FC<TimeSeriesProps> = (props: any) => {
     state.LINE_WIDTH,
     state.LINE_DASH,
   ])
-
-  const selectorOptions = {
-    buttons: [
-      {
-        step: 'second',
-        stepmode: 'backward',
-        count: 1,
-        label: '1s',
-      },
-      {
-        step: 'minute',
-        stepmode: 'backward',
-        count: 1,
-        label: '1m',
-      },
-      {
-        step: 'hour',
-        stepmode: 'backward',
-        count: 1,
-        label: '1h',
-      },
-      {
-        step: 'day',
-        stepmode: 'backward',
-        count: 1,
-        label: '1d',
-      },
-      {
-        step: 'month',
-        stepmode: 'backward',
-        count: 1,
-        label: '6M',
-      },
-      {
-        step: 'all',
-      },
-    ],
-  }
 
   React.useEffect(() => {
     props.ChartLayout({

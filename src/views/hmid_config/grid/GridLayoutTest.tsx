@@ -111,6 +111,9 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const [PanelElement, setPanelElement] = React.useState<any>()
 
   const [DashboardObj, setDashboardObj] = React.useState<any>()
+  const [idx, setIdx] = React.useState<any>(0)
+
+  const [render, setRender] = React.useState(null)
 
   // React.useEffect(() => {
   //   // console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
@@ -199,6 +202,15 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     }
   }, [SelectTagInfo])
 
+  React.useEffect(() => {
+    console.log('&&&&&& Change DashboardObj &&&&&&&&&')
+    console.log(DashboardObj)
+    console.log(TimeSeriesLayoutOption)
+    console.log(idx)
+    console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+    AddGridGauid(dashboardObj, idx)
+  }, [DashboardObj])
+
   //레이아웃 만들 경우 default값 나타내기
   React.useEffect(() => {
     let panelModelValue: PanelModel = {}
@@ -239,12 +251,12 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     }
 
     dashboardObj.panels = updatePanels
-    setDashboardObj(dashboardObj)
+    console.log('*****************************')
+    console.log(dashboardObj)
+    console.log('*****************************')
+    setDashboardObj(dashboardObj.panels)
+    setIdx(index)
   }, [])
-
-  React.useEffect(() => {
-    AddGridGauid(dashboardObj)
-  }, [DashboardObj, PieChartLayoutOption, TimeSeriesLayoutOption, BarChartLayoutOption, LineChartLayoutOption])
 
   /**
    * 2023-04-14 박윤희
@@ -290,50 +302,72 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
    * Grid Gauid
    * 그리드 박스가 그려지고 난 후 실행 되도록
    */
-  const AddGridGauid = (e: any) => {
-    const index = 0
-    const panel: any = Object.keys(panels[index]).map((panelIndex: string) => {
-      return panels[index][panelIndex]
-    })
+  const AddGridGauid = (e: any, idx: number) => {
+    if (!render) return
+    else {
+      console.log(render)
+      console.log('[ Add Grid Gauid Idx ] : ' + idx)
+      const index = idx
+      const panel: any = Object.keys(panels[index]).map((panelIndex: string) => {
+        return panels[index][panelIndex]
+      })
 
-    if (e.panelCollection.length !== 0) {
-      console.log('[ PanelCollection 정보 ] :')
+      console.log(panel)
+      console.log(e)
       console.log(e.panelCollection)
+      console.log(e.element.children)
+      console.log(e.element.children.length)
 
-      // 그려지고 난 후 실행하기
-      for (let j = 0, len = e.panelCollection.length; j < len; j++) {
-        if (panel[j].widget === 'Line') {
-          setWidgetInfo('Pie')
-          const result: any = ChangeLineDataArr(LineChartDataOption)
-          result.then(function (args: any) {
-            const node: any = document.getElementById(e.panelCollection[j].children[0].childNodes[1].id)
-            DrawGauidWidget(panel[j].widget, node, args, LineChartLayoutOption)
-          })
-        } else if (panel[j].widget === 'Bar') {
-          setWidgetInfo('Pie')
-          const result: any = ChangeBarDataArr(BarChartDataOption)
-          result.then(function (args: any) {
-            const node: any = document.getElementById(e.panelCollection[j].children[0].childNodes[1].id)
-            DrawGauidWidget(panel[j].widget, node, args, BarChartLayoutOption)
-          })
-        } else if (panel[j].widget === 'Pie') {
-          setWidgetInfo('Pie')
-          const result: any = ChangePieDataArr(PieChartDataOption)
-          result.then(function (args: any) {
-            const node: any = document.getElementById(e.panelCollection[j].children[0].childNodes[1].id)
-            DrawGauidWidget(panel[j].widget, node, args, PieChartLayoutOption)
-          })
-        } else if (panel[j].widget === 'TimeSeries') {
-          setWidgetInfo('Time Series')
-          const result: any = ChangeTimeSeriesDataArr(TimeSeriesDataOption)
-          result.then(function (args: any) {
-            const node: any = document.getElementById(e.panelCollection[j].children[0].childNodes[1].id)
-            DrawGauidWidget(panel[j].widget, node, args, TimeSeriesLayoutOption)
-          })
-        } else if (panel[j].widget === 'Table') {
-          console.log(e.panelCollection)
-          const node: any = document.getElementById(e.panelCollection[j].children[0].childNodes[1].id)
-          DrawGauidWidget(panel[j].widget, node, TableRows, TableColumns)
+      if (e.element.children !== 0) {
+        console.log('[ PanelCollection 정보 ] :')
+        console.log(e.panelCollection)
+        console.log(e.element.children)
+
+        // 그려지고 난 후 실행하기
+        for (let j = 0, len = panel.length; j < len; j++) {
+          const node2 = document.getElementById(j + '_body')
+          console.log(node2)
+
+          if (panel[j].widget === 'Line') {
+            setWidgetInfo('Pie')
+            const result: any = ChangeLineDataArr(LineChartDataOption)
+            result.then(function (args: any) {
+              // const node: any = document.getElementById(e.panelCollection[j].children[0].childNodes[1].id)
+              const node: any = document.getElementById(j + '_body')
+              DrawGauidWidget(panel[j].widget, node, args, LineChartLayoutOption)
+            })
+          } else if (panel[j].widget === 'Bar') {
+            setWidgetInfo('Pie')
+            const result: any = ChangeBarDataArr(BarChartDataOption)
+            result.then(function (args: any) {
+              // const node: any = document.getElementById(e.panelCollection[j].children[0].childNodes[1].id)
+              const node: any = document.getElementById(j + '_body')
+              DrawGauidWidget(panel[j].widget, node, args, BarChartLayoutOption)
+            })
+          } else if (panel[j].widget === 'Pie') {
+            setWidgetInfo('Pie')
+            const result: any = ChangePieDataArr(PieChartDataOption)
+            result.then(function (args: any) {
+              // const node: any = document.getElementById(e.panelCollection[j].children[0].childNodes[1].id)
+              const node: any = document.getElementById(j + '_body')
+              DrawGauidWidget(panel[j].widget, node, args, PieChartLayoutOption)
+            })
+          } else if (panel[j].widget === 'TimeSeries') {
+            setWidgetInfo('Time Series')
+            console.log('TIME SERIES ----------------------------------')
+            console.log(TimeSeriesLayoutOption)
+            const result: any = ChangeTimeSeriesDataArr(TimeSeriesDataOption)
+            result.then(function (args: any) {
+              // const node: any = document.getElementById(e.panelCollection[j].children[0].childNodes[1].id)
+              const node: any = document.getElementById(j + '_body')
+              DrawGauidWidget(panel[j].widget, node, args, TimeSeriesLayoutOption)
+            })
+          } else if (panel[j].widget === 'Table') {
+            console.log(e.panelCollection)
+            // const node: any = document.getElementById(e.panelCollection[j].children[0].childNodes[1].id)
+            const node: any = document.getElementById(j + '_body')
+            DrawGauidWidget(panel[j].widget, node, TableRows, TableColumns)
+          }
         }
       }
     }
@@ -465,44 +499,49 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   }
 
   // 그리드 레이아웃 선택 시 그리드 다시 그림
-  function initializeTemplate(element: any, dashboardObj: any): void {
+  async function initializeTemplate(element: any, dashboardObj: any) {
+    console.log('다시 그림!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    let panelModelValue: PanelModel = {}
     const updatePanels: PanelModel[] = []
     const index: number = parseInt(element.getAttribute('data-id'), 10) - 1
+    setIdx(index)
     const panel: any = Object.keys(panels[index]).map((panelIndex: string) => {
       return panels[index][panelIndex]
     })
 
-    //reducer Element
-    // dispatch({ type: 'ELEMENT', data: element })
-
-    // console.log('-------------------- [ Panel Data ] --------------------')
-    // console.log(panel)
-    // console.log(element)
-    // setPanelElement(element)
-    // console.log('--------------------------------------------------------')
-
     count = panel.length
 
+    console.log('다시 그리는 값 : ')
+    console.log(panel)
+
     for (let i = 0; i < panel.length; i++) {
-      const panelModelValue: PanelModel = {
+      panelModelValue = {
         id: i.toString(),
         row: panel[i].row,
         col: panel[i].col,
         sizeX: panel[i].sizeX,
         sizeY: panel[i].sizeY,
         header: `
-        <div class="e-header-text"> 
-        <input value=${'타이틀'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." ref={BoxTitleRef}> 
+        <div class="e-header-text">
+          <input value=${'타이틀'} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." id=${
+          'input' + i.toString()
+        }
+        > 
           <button class="widget-setting-btn"></button>
-          <button class="grid-setting-btn"></button> 
+          <button class="grid-setting-btn"></button>
           <button class="connection-chart-data"></button>
         </div>
         <div class="header-border"></div>`,
-        content: '<div class="panel-content">Content Area</div>',
+        content: '<div class="panel-content ${dashboardBoxColor}">Content Area</div>',
       }
       updatePanels.push(panelModelValue)
     }
     dashboardObj.panels = updatePanels
+    console.log('[ 다시 그리는 dashboardObj ] : ')
+    console.log(dashboardObj)
+    setDashboardObj(dashboardObj.panels)
+
+    return dashboardObj
   }
 
   /**
@@ -625,6 +664,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   }
 
   const getTimeSeriesLayout = (props: any) => {
+    console.log(props)
     setTimeSeriesLayoutOption(props)
   }
 
@@ -1111,6 +1151,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
               columns={8}
               ref={(scope: any) => {
                 ;(dashboardObj as any) = scope
+                setRender(scope)
               }}
               // resizeStop={onPanelResize.bind(this)}
               // allowDragging={true}

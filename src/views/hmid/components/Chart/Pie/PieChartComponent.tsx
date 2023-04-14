@@ -36,10 +36,12 @@ export const PieChartComponent: React.FC<PieChartProps> = (props: any) => {
   }, [props.ChartType, PieChartLayout, PieChartData])
 
   const getChartLayout = (chartLayout: any) => {
+    props.ChartLayout(chartLayout)
     setPieChartLayout(chartLayout)
   }
 
   const getChartData = (chartData: any) => {
+    props.ChartData(chartData)
     setPieChartData(chartData)
   }
 
