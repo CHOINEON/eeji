@@ -33,20 +33,18 @@ export const TimeSeriesComponents: React.FC<TimeSeriesProps> = (props: any) => {
 
   React.useEffect(() => {
     if (props.ChartType === 'Time Series') {
-      console.log('[ 하위 TimeSeries 에서 받은 props ] : ')
-      console.log(TimeSeriesChartData)
-      console.log(TimeSeriesLayout)
-
       props.ChartData(TimeSeriesChartData)
       props.ChartLayout(TimeSeriesLayout)
     }
   }, [props.ChartType, TimeSeriesChartData, TimeSeriesLayout])
 
   const getChartLayout = (chartLayout: any) => {
+    props.ChartLayout(chartLayout)
     setTimeSeriesLayout(chartLayout)
   }
 
   const getChartData = (chartData: any) => {
+    props.ChartData(chartData)
     setTimeSeriesData(chartData)
   }
 

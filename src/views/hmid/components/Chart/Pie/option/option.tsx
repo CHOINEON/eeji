@@ -110,6 +110,32 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
         title: state.AXIS_Y_TITLE,
       },
     })
+
+    props.ChartData({
+      textinfo: state.ENABLE_MARKER_LABEL,
+      textposition: state.TEXT_POSITION,
+      hole: state.HOLE,
+      type: 'pie',
+    })
+  }, [])
+
+  React.useEffect(() => {
+    props.ChartLayout({
+      title: state.TITLE,
+      margin: {
+        l: state.MARGIN_LEFT,
+        r: state.MARGIN_RIGHT,
+        b: state.MARGIN_BOTTOM,
+        t: state.MARGIN_TOP,
+      },
+      showlegend: state.ENABLE_LEGEND,
+      xaxis: {
+        title: state.AXIS_X_TITLE,
+      },
+      yaxis: {
+        title: state.AXIS_Y_TITLE,
+      },
+    })
   }, [
     state.TITLE,
     state.MARGIN_LEFT,

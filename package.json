@@ -4,15 +4,14 @@
 	"private": true,
 	"scripts": {
 		"start": "set PORT=9871 && react-scripts start",
+		"dev": "start dev",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"predeploy": "npm run build",
 		"deploy": "scp -P 50022 -r /Users/82106/repos/infinite-optimal/build/* yunhee@220.94.157.27:~/infinite_optimal",
-		"openapi:local": "openapi-generator generate -i https//192.168.1.27:8000/docs/json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec",
-		"openapi": "openapi-generator generate -i http://220.94.157.27:59871/docs/docs/json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec",
-		"react-query-swagger": "react-query-swagger /input:http://220.94.157.27:59871/docs/json /output:./api/axios-client.ts /template:Axios /serviceHost:. /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined",
-		"react-query-swagger:local": "react-query-swagger /input:http://220.94.157.27:59871/docs/json /output:./api/axios-client.ts /template:Axios /serviceHost:. /TypeScriptVersion:4.6 /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined /TypeScriptTypeStyle:Interface"
+		"react-query-swagger": "yarn react-query-swagger /input:https://petstore.swagger.io/v2/swagger.json /output:./api/axios-client.ts /template:Axios /serviceHost:. /use-recommended-configuration",
+		"react-query-swagger:local": "react-query-swagger /input:http://192.168.1.27:8000/openapi.json /output:./api/axios-client.ts /template:Axios /serviceHost:. /TypeScriptVersion:4.6 /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined /TypeScriptTypeStyle:Interface"
 	},
 	"dependencies": {
 		"@ag-grid-community/client-side-row-model": "^29.2.0",
@@ -62,10 +61,11 @@
 		"dom-to-image": "^2.6.0",
 		"file-saver": "^2.0.5",
 		"framer-motion": "^4.1.17",
-		"next": "^12.1.6",
+		"next": "^12.3.4",
 		"next-auth": "^4.3.4",
 		"next-http-proxy-middleware": "^1.2.4",
 		"node-cache": "^5.1.2",
+		"nswag": "^13.18.2",
 		"plotly.js": "^2.20.0",
 		"react": "^17.0.2",
 		"react-apexcharts": "^1.4.0",
@@ -108,7 +108,6 @@
 		]
 	},
 	"devDependencies": {
-		"@openapitools/openapi-generator-cli": "^2.6.0",
 		"@types/d3": "^7.4.0",
 		"@types/dom-to-image": "^2.6.4",
 		"@types/file-saver": "^2.0.5",
@@ -128,6 +127,7 @@
 		"eslint-plugin-react": "^7.31.11",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"gh-pages": "^3.2.3",
+		"nodemon": "^2.0.22",
 		"prettier": "^2.7.1",
 		"ts-node": "^10.9.1"
 	}

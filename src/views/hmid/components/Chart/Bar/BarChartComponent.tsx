@@ -39,10 +39,12 @@ export const BarChartComponent: React.FC<BarChartProps> = (props: any) => {
   }, [props.ChartType, BarChartData, BarChartLayout])
 
   const getChartLayout = (chartLayout: any) => {
+    props.ChartLayout(BarChartLayout)
     setBarChartLayout(chartLayout)
   }
 
   const getChartData = (chartData: any) => {
+    props.ChartData(BarChartData)
     setBarChartData(chartData)
   }
 

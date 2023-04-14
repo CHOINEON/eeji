@@ -33,6 +33,9 @@ import WidgetDataTable from '../components/DataGrid/DataGrid'
 import { Select, Spin } from 'antd'
 import '../components/Modal/style/style.css'
 
+import reducer from '../components/Chart/Line/reducer/reducer'
+import initialState from '../components/Chart/Line/reducer/initialState'
+
 // import { Alert, AlertIcon, AlertDescription, CloseButton, Box } from '@chakra-ui/react'
 
 interface GridLayoutProps {
@@ -44,6 +47,7 @@ interface GridLayoutProps {
 }
 
 export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
+  const [state, dispatch] = React.useReducer(reducer, initialState)
   //state
   const [isOpenWidgetModal, setIsOpenWidgetModal] = React.useState<boolean>(false)
   const [WidgetInfo, setWidgetInfo] = React.useState<string>('')
@@ -52,8 +56,35 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   const [BoxTargetId, setBoxTargetId] = React.useState<any>()
 
-  const [LineChartLayoutOption, setLineChartLayoutOption] = React.useState<any>('')
-  const [LineChartDataOption, setLineChartDataOption] = React.useState<any>('')
+  const [LineChartLayoutOption, setLineChartLayoutOption] = React.useState<any>({
+    title: state.TITLE,
+    margin: {
+      l: state.MARGIN_LEFT,
+      r: state.MARGIN_RIGHT,
+      b: state.MARGIN_BOTTOM,
+      t: state.MARGIN_TOP,
+    },
+    showlegend: state.ENABLE_LEGEND,
+    xaxis: {
+      title: state.AXIS_X_TITLE,
+    },
+    yaxis: {
+      title: state.AXIS_Y_TITLE,
+    },
+  })
+  const [LineChartDataOption, setLineChartDataOption] = React.useState<any>({
+    mode: state.LINE_MODE,
+    //추후 속성 추가 예정
+    //name: 'vh',
+    text: state.ENABLE_MARKER_LABEL,
+    textposition: state.MARKER_LABEL_POSITION,
+    line: {
+      shape: state.LINE_SHAPE,
+      width: state.LINE_WIDTH,
+      dash: state.LINE_DASH,
+    },
+    type: 'scatter',
+  })
 
   const [PieChartLayoutOption, setPieChartLayoutOption] = React.useState<any>('')
   const [PieChartDataOption, setPieChartDataOption] = React.useState<any>('')

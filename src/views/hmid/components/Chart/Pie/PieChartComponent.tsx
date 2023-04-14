@@ -24,11 +24,6 @@ export const PieChartComponent: React.FC<PieChartProps> = (props: any) => {
 
   React.useEffect(() => {
     if (props.ChartType === 'Pie') {
-      console.log('[ 하위에서 받은 Pie Chart Option ] : ')
-      console.log(props.ChartType)
-      console.log(PieChartLayout)
-      console.log(PieChartData)
-      console.log('----------------------------------------')
       setChartType(props.ChartType)
       props.ChartLayout(PieChartLayout)
       props.ChartData(PieChartData)
@@ -36,10 +31,12 @@ export const PieChartComponent: React.FC<PieChartProps> = (props: any) => {
   }, [props.ChartType, PieChartLayout, PieChartData])
 
   const getChartLayout = (chartLayout: any) => {
+    props.ChartLayout(PieChartLayout)
     setPieChartLayout(chartLayout)
   }
 
   const getChartData = (chartData: any) => {
+    props.ChartData(PieChartData)
     setPieChartData(chartData)
   }
 
