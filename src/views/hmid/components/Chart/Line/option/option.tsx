@@ -61,44 +61,51 @@ export const ChartOption: React.FC<LineChartProps> = (props: any) => {
   const { onClose } = useDisclosure()
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const btnRef = React.useRef()
+  // const [LineChartData, setLineChartData] = React.useState<any>({
+  //   mode: state.LINE_MODE,
+  //   //추후 속성 추가 예정
+  //   //name: 'vh',
+  //   text: state.ENABLE_MARKER_LABEL,
+  //   textposition: state.MARKER_LABEL_POSITION,
+  //   line: {
+  //     shape: state.LINE_SHAPE,
+  //     width: state.LINE_WIDTH,
+  //     dash: state.LINE_DASH,
+  //   },
+  //   type: 'scatter',
+  //   //autosize: true,
+  //   // font: {
+  //   //   family: state.FONT_FAMILY,
+  //   //   size: state.FONT_SIZE,
+  //   //   color: state.FONT_COLOR_TEXT,
+  //   // },
+  // })
+  // const [LineChartLayout, setLineChartLayout] = React.useState<any>({
+  //   title: state.TITLE,
+  //   margin: {
+  //     l: state.MARGIN_LEFT,
+  //     r: state.MARGIN_RIGHT,
+  //     b: state.MARGIN_BOTTOM,
+  //     t: state.MARGIN_TOP,
+  //   },
+  //   showlegend: state.ENABLE_LEGEND,
+  //   xaxis: {
+  //     title: state.AXIS_X_TITLE,
+  //   },
+  //   yaxis: {
+  //     title: state.AXIS_Y_TITLE,
+  //   },
+  // })
+
+  // React.useEffect(() => {
+  //   if (props.ChartType === 'Line') {
+  //     //setIsOpen(true)
+  //   }
+  // }, [props.ChartType])
 
   React.useEffect(() => {
     setIsOpen(props.ShowDrawer)
   }, [props.ShowDrawer])
-
-  //사전에 미리 보내기
-  React.useEffect(() => {
-    props.ChartData({
-      mode: state.LINE_MODE,
-      //추후 속성 추가 예정
-      //name: 'vh',
-      text: state.ENABLE_MARKER_LABEL,
-      textposition: state.MARKER_LABEL_POSITION,
-      line: {
-        shape: state.LINE_SHAPE,
-        width: state.LINE_WIDTH,
-        dash: state.LINE_DASH,
-      },
-      type: 'scatter',
-    })
-
-    props.ChartLayout({
-      title: state.TITLE,
-      margin: {
-        l: state.MARGIN_LEFT,
-        r: state.MARGIN_RIGHT,
-        b: state.MARGIN_BOTTOM,
-        t: state.MARGIN_TOP,
-      },
-      showlegend: state.ENABLE_LEGEND,
-      xaxis: {
-        title: state.AXIS_X_TITLE,
-      },
-      yaxis: {
-        title: state.AXIS_Y_TITLE,
-      },
-    })
-  }, [])
 
   React.useEffect(() => {
     props.ChartData({

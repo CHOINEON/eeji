@@ -37,8 +37,8 @@ import '../../hmid/components/Modal/style/style.css'
 import domtoimage from 'dom-to-image'
 import { saveAs } from 'file-saver'
 
-import reducer from '../reducer/reducer'
-import initialState from '../reducer/initialState'
+// import reducer from '../reducer/reducer'
+// import initialState from '../reducer/initialState'
 
 // import { Alert, AlertIcon, AlertDescription, CloseButton, Box } from '@chakra-ui/react'
 
@@ -51,7 +51,7 @@ interface GridLayoutProps {
 }
 
 export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
-  const [state, dispatch] = React.useReducer(reducer, initialState)
+  //const [state, dispatch] = React.useReducer(reducer, initialState)
 
   //state
   const [isOpenWidgetModal, setIsOpenWidgetModal] = React.useState<boolean>(false)
@@ -112,19 +112,19 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   const [DashboardObj, setDashboardObj] = React.useState<any>()
 
-  React.useEffect(() => {
-    // console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-    // console.log(state)
-    // console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-  }, [state.COMPANY_ID, state.GRID_ID, state.ELEMENT])
+  // React.useEffect(() => {
+  //   // console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+  //   // console.log(state)
+  //   // console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+  // }, [state.COMPANY_ID, state.GRID_ID, state.ELEMENT])
 
   React.useEffect(() => {
     setOpenSaveLayout(props.SaveConfirmIsOpen)
   }, [props.SaveConfirmIsOpen])
 
-  React.useEffect(() => {
-    dispatch({ type: 'COMPANY_ID', data: window.localStorage.getItem('companyId') })
-  }, [])
+  // React.useEffect(() => {
+  //   dispatch({ type: 'COMPANY_ID', data: window.localStorage.getItem('companyId') })
+  // }, [])
 
   //theme color mode
   const dashboardBoxColor = useColorModeValue('white', 'dark')
@@ -208,7 +208,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       return panels[index][panelIndex]
     })
 
-    dispatch({ type: 'GRID_ID', data: index })
+    // dispatch({ type: 'GRID_ID', data: index })
 
     count = panel.length
 
@@ -473,7 +473,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     })
 
     //reducer Element
-    dispatch({ type: 'ELEMENT', data: element })
+    // dispatch({ type: 'ELEMENT', data: element })
 
     // console.log('-------------------- [ Panel Data ] --------------------')
     // console.log(panel)
@@ -935,7 +935,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   //SaveLayoutModal
   const getSaveLayoutTitle = (title: string) => {
     console.log('[ Save Layout Title ] : ', title)
-    dispatch({ type: 'LAYOUT_NAME', data: title })
+    // dispatch({ type: 'LAYOUT_NAME', data: title })
   }
 
   const getSaveLayoutInfo = (SaveInfo: string) => {

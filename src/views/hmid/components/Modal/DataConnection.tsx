@@ -63,7 +63,6 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
     }
   }, [props.DataTagList])
 
-  //회사 리스트
   const CreateDtataListItems = () => {
     const Arr: any = []
     let Obj: any = new Object()
@@ -78,19 +77,26 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
     setDataNodeData(Arr)
   }
 
-  //tag list select box 생성
   const CreateTagListItems = (TagData: any) => {
     const Arr: any = []
     let Obj: any = new Object()
 
-    for (let i = 0, len = TagData.length; i < len; i++) {
-      Obj.value = TagData[i].tag_id
-      Obj.label = TagData[i].tag_id
+    if (typeof TagData === 'string') {
+      Obj.value = 'default'
+      Obj.label = '태그를 선택 해주세요.'
       Arr.push(Obj)
       Obj = new Object()
+    } else {
+      for (let i = 0, len = TagData.length; i < len; i++) {
+        Obj.value = TagData[i]
+        Obj.label = TagData[i]
+        Arr.push(Obj)
+        Obj = new Object()
+      }
     }
 
     setTagNodeData(Arr)
+    // return TagList
   }
 
   const handleDataChange = (value: string | string[]) => {

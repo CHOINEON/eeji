@@ -7,9 +7,6 @@ import { Box, useColorModeValue, Stack, Button, Checkbox } from '@chakra-ui/reac
 import styled from '@emotion/styled'
 import no_image from './img/no-image.jpg'
 
-import reducer from '../../hmid_config/reducer/reducer'
-import initialState from '../../hmid_config/reducer/initialState'
-
 interface LayoutListProps {
   company_id: string
   // setLayoutId: (layout_id: string) => void
@@ -66,8 +63,6 @@ const AddLayoutListBox = styled(LayoutListBox)`
 `
 
 export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
-  const [state, dispatch] = React.useReducer(reducer, initialState)
-
   const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
   const [OpenLayoutModal, setOpenLayoutModal] = React.useState<boolean>(false)
   const [GridInfo, setGridInfo] = React.useState<string>()
@@ -106,12 +101,9 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   //render LayoutList UI
   const renderLayoutList = (data: any) => {
     const component: any = []
-    const layout_id: any = []
     console.log(data)
 
     for (let i = 0, len = data.length; i < len; i++) {
-      layout_id.push(data[i].lay_id)
-
       component.push(
         <LayoutListBox key={data[i].lay_id}>
           <LayoutListViewParent
@@ -134,13 +126,6 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
     )
 
     setComponent(component)
-
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-    console.log(layout_id.length)
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-
-    // //layout_id setting
-    dispatch({ type: 'LAYOUT_ID', data: layout_id.length })
   }
 
   const deleteLayout = () => {
