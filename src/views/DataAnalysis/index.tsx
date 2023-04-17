@@ -1,16 +1,9 @@
 import React, { useState } from 'react'
-import { styled } from '@mui/material/styles'
-import { createTheme } from '@mui/material/styles'
 import { Box, Grid, GridItem } from '@chakra-ui/react'
 import TagList from './Tag/TagList'
-import TagListGrid from './Tag/TagListGrid'
-import Worksheet from './Worksheet'
+import Worksheet from './Worksheets/Worksheet'
 import './style/uploader.css'
 import SeriesSelectionGrid from './Tag/SeriesSelectionGrid'
-import ChartDataSelection from './Chart/ChartDataSelection'
-import DatabaseNavigator from './Tag/DatabaseNavigator'
-import axios from 'axios'
-import ChartSelectionDialog from './ChartSelectionDialog'
 
 export const DataAnalysis = (props: any) => {
   const { onClickNext } = props
@@ -22,7 +15,7 @@ export const DataAnalysis = (props: any) => {
   }
 
   const onClickTag = (e: any) => {
-    // console.log('any:', e)
+    // console.log('onClickTag:', e)
     setSelectedTags(e)
   }
 
