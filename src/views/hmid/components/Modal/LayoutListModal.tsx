@@ -10,7 +10,7 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from '@chakra-ui/react'
-import '../../function/style/style.css'
+import '../../../hmid_config/style/style.css'
 
 import LayoutList from '../data/layout_list'
 

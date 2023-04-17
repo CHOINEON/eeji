@@ -90,7 +90,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
 
   //새로운 대시보드 만들기
   const NewDashboard = () => {
-    window.location.href = '/admin/layoutconfig'
+    window.location.href = '/admin/layout-configuration'
   }
 
   const addLineBox = (e: any) => {

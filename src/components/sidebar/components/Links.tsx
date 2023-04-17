@@ -24,52 +24,101 @@ export function SidebarLinks(props: { routes: RoutesType[] }) {
     return location.pathname.includes(routeName)
   }
 
+  console.log('[ Linek User Auth ]')
+  console.log(window.localStorage.getItem('userPosition'))
+
   // this function creates the links from the secondary accordions (for example auth -> sign-in -> default)
   const createLinks = (routes: RoutesType[]) => {
     return routes.map((route: RoutesType, index: number) => {
       // if (route.layout === '/admin' || route.layout === '/rtl') {
-      if (route.path !== '/layoutconfig') {
-        return (
-          <NavLink key={index + route.path} to={route.layout + route.path}>
-            {route.icon ? (
-              <Box key={index}>
-                <HStack spacing={activeRoute(route.path.toLowerCase()) ? '22px' : '26px'} py="5px" ps="10px">
-                  <Flex w="100%" alignItems="center" justifyContent="center">
-                    <Box color={activeRoute(route.path.toLowerCase()) ? activeIcon : textColor} me="18px">
-                      {route.icon}
-                    </Box>
+      if (window.localStorage.getItem('userPosition') === 'admin') {
+        if (route.path !== '/maindashboard' && route.path !== '/layout-configuration') {
+          return (
+            <NavLink key={index + route.path} to={route.layout + route.path}>
+              {route.icon ? (
+                <Box key={index}>
+                  <HStack spacing={activeRoute(route.path.toLowerCase()) ? '22px' : '26px'} py="5px" ps="10px">
+                    <Flex w="100%" alignItems="center" justifyContent="center">
+                      <Box color={activeRoute(route.path.toLowerCase()) ? activeIcon : textColor} me="18px">
+                        {route.icon}
+                      </Box>
+                      <Text
+                        me="auto"
+                        color={activeRoute(route.path.toLowerCase()) ? activeColor : textColor}
+                        fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}
+                      >
+                        {route.name}
+                      </Text>
+                    </Flex>
+                    <Box
+                      h="36px"
+                      w="4px"
+                      bg={activeRoute(route.path.toLowerCase()) ? brandColor : 'transparent'}
+                      borderRadius="5px"
+                    />
+                  </HStack>
+                </Box>
+              ) : (
+                <Box key={index}>
+                  <HStack spacing={activeRoute(route.path.toLowerCase()) ? '22px' : '26px'} py="5px" ps="10px">
                     <Text
                       me="auto"
-                      color={activeRoute(route.path.toLowerCase()) ? activeColor : textColor}
+                      color={activeRoute(route.path.toLowerCase()) ? activeColor : inactiveColor}
                       fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}
                     >
                       {route.name}
                     </Text>
-                  </Flex>
-                  <Box
-                    h="36px"
-                    w="4px"
-                    bg={activeRoute(route.path.toLowerCase()) ? brandColor : 'transparent'}
-                    borderRadius="5px"
-                  />
-                </HStack>
-              </Box>
-            ) : (
-              <Box key={index}>
-                <HStack spacing={activeRoute(route.path.toLowerCase()) ? '22px' : '26px'} py="5px" ps="10px">
-                  <Text
-                    me="auto"
-                    color={activeRoute(route.path.toLowerCase()) ? activeColor : inactiveColor}
-                    fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}
-                  >
-                    {route.name}
-                  </Text>
-                  <Box h="36px" w="4px" bg="brand.400" borderRadius="5px" />
-                </HStack>
-              </Box>
-            )}
-          </NavLink>
-        )
+                    <Box h="36px" w="4px" bg="brand.400" borderRadius="5px" />
+                  </HStack>
+                </Box>
+              )}
+            </NavLink>
+          )
+        }
+      } else {
+        if (route.path !== '/layout-list' && route.path !== '/layout-configuration') {
+          return (
+            <NavLink key={index + route.path} to={route.layout + route.path}>
+              {route.icon ? (
+                <Box key={index}>
+                  <HStack spacing={activeRoute(route.path.toLowerCase()) ? '22px' : '26px'} py="5px" ps="10px">
+                    <Flex w="100%" alignItems="center" justifyContent="center">
+                      <Box color={activeRoute(route.path.toLowerCase()) ? activeIcon : textColor} me="18px">
+                        {route.icon}
+                      </Box>
+                      <Text
+                        me="auto"
+                        color={activeRoute(route.path.toLowerCase()) ? activeColor : textColor}
+                        fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}
+                      >
+                        {route.name}
+                      </Text>
+                    </Flex>
+                    <Box
+                      h="36px"
+                      w="4px"
+                      bg={activeRoute(route.path.toLowerCase()) ? brandColor : 'transparent'}
+                      borderRadius="5px"
+                    />
+                  </HStack>
+                </Box>
+              ) : (
+                <Box key={index}>
+                  <HStack spacing={activeRoute(route.path.toLowerCase()) ? '22px' : '26px'} py="5px" ps="10px">
+                    <Text
+                      me="auto"
+                      color={activeRoute(route.path.toLowerCase()) ? activeColor : inactiveColor}
+                      fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}
+                    >
+                      {route.name}
+                    </Text>
+                    <Box h="36px" w="4px" bg="brand.400" borderRadius="5px" />
+                  </HStack>
+                </Box>
+              )}
+            </NavLink>
+          )
+        }
       }
       // else if (route.path === '/layoutsetting') {
       //   return (

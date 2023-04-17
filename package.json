@@ -8,11 +8,7 @@
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"predeploy": "npm run build",
-		"deploy": "scp -P 50022 -r /Users/82106/repos/infinite-optimal/build/* yunhee@220.94.157.27:~/infinite_optimal",
-		"openapi:local": "openapi-generator generate -i https//192.168.1.27:8000/docs/json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec",
-		"openapi": "openapi-generator generate -i http://220.94.157.27:59871/docs/docs/json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec",
-		"react-query-swagger": "react-query-swagger /input:http://220.94.157.27:59871/docs/json /output:./api/axios-client.ts /template:Axios /serviceHost:. /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined",
-		"react-query-swagger:local": "react-query-swagger /input:http://220.94.157.27:59871/docs/json /output:./api/axios-client.ts /template:Axios /serviceHost:. /TypeScriptVersion:4.6 /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined /TypeScriptTypeStyle:Interface"
+		"deploy": "scp -P 50022 -r /Users/82106/repos/infinite-optimal/build/* yunhee@220.94.157.27:~/infinite_optimal"
 	},
 	"dependencies": {
 		"@ag-grid-community/client-side-row-model": "^29.2.0",
@@ -49,7 +45,7 @@
 		"@testing-library/user-event": "^12.8.3",
 		"@types/jest": "^25.2.3",
 		"@types/node": "^12.20.55",
-		"@types/react": "^18.0.0",
+		"@types/react": "^17.0.0",
 		"@types/react-dom": "^18.0.6",
 		"@types/react-plotly.js": "^2.5.2",
 		"ag-grid-community": "^29.1.0",
@@ -64,8 +60,6 @@
 		"dom-to-image": "^2.6.0",
 		"file-saver": "^2.0.5",
 		"framer-motion": "^4.1.17",
-		"next": "^12.1.6",
-		"next-auth": "^4.3.4",
 		"next-http-proxy-middleware": "^1.2.4",
 		"node-cache": "^5.1.2",
 		"plotly.js": "^2.20.0",

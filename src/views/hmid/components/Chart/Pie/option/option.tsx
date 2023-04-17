@@ -94,7 +94,7 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
   }, [props.ShowPieDrawer])
 
   React.useEffect(() => {
-    props.ChartLayout({
+    props.PieChartLayout({
       title: state.TITLE,
       margin: {
         l: state.MARGIN_LEFT,
@@ -109,11 +109,17 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
       yaxis: {
         title: state.AXIS_Y_TITLE,
       },
+    })
+    props.PieChartData({
+      textinfo: state.ENABLE_MARKER_LABEL,
+      textposition: state.TEXT_POSITION,
+      hole: state.HOLE,
+      type: 'pie',
     })
   }, [])
 
   React.useEffect(() => {
-    props.ChartLayout({
+    props.PieChartLayout({
       title: state.TITLE,
       margin: {
         l: state.MARGIN_LEFT,
@@ -130,7 +136,7 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
       },
     })
 
-    props.ChartData({
+    props.PieChartData({
       textinfo: state.ENABLE_MARKER_LABEL,
       textposition: state.TEXT_POSITION,
       hole: state.HOLE,
@@ -151,7 +157,7 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
   React.useEffect(() => {
     console.log('[ Hole ] : ' + state.HOLE)
 
-    props.ChartData({
+    props.PieChartData({
       textinfo: state.ENABLE_MARKER_LABEL,
       textposition: state.TEXT_POSITION,
       hole: state.HOLE,
