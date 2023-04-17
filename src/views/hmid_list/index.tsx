@@ -26,9 +26,9 @@ import { Box, useColorModeValue } from '@chakra-ui/react'
 import React from 'react'
 
 //function
-import GridLayoutBox from './GridLayout'
-import LayoutList from '../list/LayoutList'
-import PredefinedLayouts from './GridLayoutTest'
+// import GridLayoutBox from './grid/GridLayout'
+// import LayoutList from '../hmid/list/LayoutList'
+import LayoutList from './LayoutList'
 
 export default function LayoutConfig() {
   const theme = useColorModeValue('navy.700', 'white')
@@ -80,37 +80,14 @@ export default function LayoutConfig() {
   // }, [])
   //end 새로고침 막기
 
-  // #ffffff0f
-
-  // const NotReload = () => {
-  //   if( (event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) || (event.keyCode == 116) ) {
-  //     event.keyCode = 0;
-  //     event.cancelBubble = true;
-  //     event.returnValue = false;
-  // }
-  // }
-
-  // document.onkeydown = NotReload()
-
   const getSaveInfoConformOpen = (e: any) => {
     console.log(e)
   }
 
   return (
     <>
-      {/* <Box>{renderGrid(GridInfo)}</Box> */}
-      {/* <Box>
-          <GridLayoutBox gridInfo={GridInfo} />
-        </Box> */}
       <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
-        {/* <PredefinedLayouts
-          // target={GridInfo}
-          CompanyId={Company_id}
-          SaveConfirmIsOpen={OpenSaveLayout}
-          SaveInfo={''}
-          setSaveConfirmIsOpen={getSaveInfoConformOpen}
-        /> */}
-        {/* <LayoutList company_id={window.localStorage.getItem('companyId')} /> */}
+        <LayoutList company_id={window.localStorage.getItem('companyId')} />
       </Box>
     </>
   )

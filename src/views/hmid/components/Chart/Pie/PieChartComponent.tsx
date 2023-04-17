@@ -24,24 +24,19 @@ export const PieChartComponent: React.FC<PieChartProps> = (props: any) => {
 
   React.useEffect(() => {
     if (props.ChartType === 'Pie') {
-      console.log('[ 하위에서 받은 Pie Chart Option ] : ')
-      console.log(props.ChartType)
-      console.log(PieChartLayout)
-      console.log(PieChartData)
-      console.log('----------------------------------------')
       setChartType(props.ChartType)
-      props.ChartLayout(PieChartLayout)
-      props.ChartData(PieChartData)
+      props.PieChartLayout(PieChartLayout)
+      props.PieChartData(PieChartData)
     }
-  }, [props.ChartType, PieChartLayout, PieChartData])
+  }, [props.ChartType])
 
-  const getChartLayout = (chartLayout: any) => {
-    props.ChartLayout(chartLayout)
+  const getPieChartLayout = (chartLayout: any) => {
+    props.PieChartLayout(chartLayout)
     setPieChartLayout(chartLayout)
   }
 
-  const getChartData = (chartData: any) => {
-    props.ChartData(chartData)
+  const getPieChartData = (chartData: any) => {
+    props.PieChartData(chartData)
     setPieChartData(chartData)
   }
 
@@ -53,8 +48,8 @@ export const PieChartComponent: React.FC<PieChartProps> = (props: any) => {
     <>
       <ChartOption
         ChartType={chartType}
-        ChartLayout={getChartLayout}
-        ChartData={getChartData}
+        PieChartLayout={getPieChartLayout}
+        PieChartData={getPieChartData}
         setShowDrawer={getShowDrawer}
         ShowPieDrawer={ShowDrawer}
       />
