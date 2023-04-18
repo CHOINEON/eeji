@@ -20,15 +20,18 @@ interface SaveConfirmModalProps {
   setCloseSaveLayoutModal: (isClose: boolean) => void
 }
 
+import reducer from '../../../hmid_config/reducer/reducer'
+import initialState from '../../../hmid_config/reducer/initialState'
+
 export const SaveConfirmModal: React.FC<SaveConfirmModalProps> = (props) => {
+  //state...
+  const [state, dispatch] = React.useReducer(reducer, initialState)
+
   const [SaveModalIsOpen, setSaveModalIsOpen] = React.useState(false)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   React.useEffect(() => {
-    // console.log('################################')
-    // console.log(props.SaveGridisOpen)
-    // console.log('################################')
     setSaveModalIsOpen(props.SaveGridisOpen)
     console.log(SaveModalIsOpen)
   }, [props.SaveGridisOpen])
@@ -41,6 +44,11 @@ export const SaveConfirmModal: React.FC<SaveConfirmModalProps> = (props) => {
   const unSaveLayout = () => {
     props.setSaveLayoutInfo('unSave')
     onClose()
+  }
+
+  //reducer dispatch
+  const ChangeLayoutName = (LayoutName: any) => {
+    dispatch({ type: 'LAYOUT_NAME', data: LayoutName.target.value })
   }
 
   return (
@@ -60,7 +68,11 @@ export const SaveConfirmModal: React.FC<SaveConfirmModalProps> = (props) => {
             <Text fontWeight="bold" mb="1rem">
               레이아웃 이름
             </Text>
-            <Input />
+            <Input
+              onChange={(e: any) => {
+                ChangeLayoutName(e)
+              }}
+            />
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="brand" mr={3} onClick={SaveLayout}>

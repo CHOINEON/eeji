@@ -37,8 +37,8 @@ import '../../hmid/components/Modal/style/style.css'
 import domtoimage from 'dom-to-image'
 import { saveAs } from 'file-saver'
 
-// import reducer from '../reducer/reducer'
-// import initialState from '../reducer/initialState'
+import reducer from '../reducer/reducer'
+import initialState from '../reducer/initialState'
 
 interface GridLayoutProps {
   // target: any
@@ -49,7 +49,7 @@ interface GridLayoutProps {
 }
 
 export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
-  //const [state, dispatch] = React.useReducer(reducer, initialState)
+  const [state, dispatch] = React.useReducer(reducer, initialState)
 
   //state
   const [isOpenWidgetModal, setIsOpenWidgetModal] = React.useState<boolean>(false)
@@ -113,19 +113,20 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   const [render, setRender] = React.useState(null)
 
-  // React.useEffect(() => {
-  //   // console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-  //   // console.log(state)
-  //   // console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-  // }, [state.COMPANY_ID, state.GRID_ID, state.ELEMENT])
+  React.useEffect(() => {
+    console.log('------- [ State 변경 ] -------')
+    console.log(state)
+    console.log('------------------------------')
+  }, [state.LAYOUT_NAME, state.COMPANY_ID, state.LAYOUT_ID, state.GRID_ID, state.GRID_DATA])
 
   React.useEffect(() => {
     setOpenSaveLayout(props.SaveConfirmIsOpen)
   }, [props.SaveConfirmIsOpen])
 
-  // React.useEffect(() => {
-  //   dispatch({ type: 'COMPANY_ID', data: window.localStorage.getItem('companyId') })
-  // }, [])
+  //company id
+  React.useEffect(() => {
+    dispatch({ type: 'COMPANY_ID', data: window.localStorage.getItem('companyId') })
+  }, [])
 
   //theme color mode
   const dashboardBoxColor = useColorModeValue('white', 'dark')
@@ -212,7 +213,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       return panels[index][panelIndex]
     })
 
-    // dispatch({ type: 'GRID_ID', data: index })
+    console.log('[ GRID ID ] : ' + index)
+    dispatch({ type: 'GRID_ID', data: index })
 
     count = panel.length
 
@@ -315,36 +317,36 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
       // 그려지고 난 후 실행하기
       for (let j = 0, len = panel.length; j < len; j++) {
+        const node: any = document.getElementById(panel[j].id)
         if (panel[j].widget === 'Line') {
           setWidgetInfo('Line')
           const result: any = ChangeLineDataArr(LineChartDataOption)
           result.then(function (args: any) {
-            const node: any = document.getElementById(panel[j].id)
             DrawGauidWidget(panel[j].widget, node, args, LineChartLayoutOption)
           })
         } else if (panel[j].widget === 'Bar') {
           setWidgetInfo('Bar')
           const result: any = ChangeBarDataArr(BarChartDataOption)
           result.then(function (args: any) {
-            const node: any = document.getElementById(panel[j].id)
+            // const node: any = document.getElementById(panel[j].id)
             DrawGauidWidget(panel[j].widget, node, args, BarChartLayoutOption)
           })
         } else if (panel[j].widget === 'Pie') {
           setWidgetInfo('Pie')
           const result: any = ChangePieDataArr(PieChartDataOption)
           result.then(function (args: any) {
-            const node: any = document.getElementById(panel[j].id)
+            // const node: any = document.getElementById(panel[j].id)
             DrawGauidWidget(panel[j].widget, node, args, JSON.parse(PieChartLayoutOption))
           })
         } else if (panel[j].widget === 'TimeSeries') {
           setWidgetInfo('Time Series')
           const result: any = ChangeTimeSeriesDataArr(TimeSeriesDataOption)
           result.then(function (args: any) {
-            const node: any = document.getElementById(panel[j].id)
+            // const node: any = document.getElementById(panel[j].id)
             DrawGauidWidget(panel[j].widget, node, args, TimeSeriesLayoutOption)
           })
         } else if (panel[j].widget === 'Table') {
-          const node: any = document.getElementById(panel[j].id)
+          // const node: any = document.getElementById(panel[j].id)
           DrawGauidWidget(panel[j].widget, node, TableRows, TableColumns)
         }
       }
@@ -391,16 +393,34 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   }
 
   React.useEffect(() => {
+    console.log(' 옵션 확인 *********************')
+    console.log('[ UseEffect ] >>>>>>>>>>>>>>>>>>>>>>>>>')
+    console.log(WidgetInfo)
+    // console.log(BarChartLayoutOption)
+    // console.log(BarChartDataOption)
+
     if (WidgetInfo === 'Line') {
-      DrawPlotlyChart(LineChartLayoutOption, LineChartDataOption, BoxTargetId)
+      const result: any = ChangeLineDataArr(LineChartDataOption)
+      result.then(function (args: any) {
+        DrawPlotlyChart(LineChartLayoutOption, args, BoxTargetId)
+      })
     } else if (WidgetInfo === 'Pie') {
-      DrawPlotlyChart(PieChartLayoutOption, PieChartDataOption, BoxTargetId)
+      const result: any = ChangePieDataArr(PieChartDataOption)
+      result.then(function (args: any) {
+        DrawPlotlyChart(PieChartLayoutOption, args, BoxTargetId)
+      })
     } else if (WidgetInfo === 'Bar') {
-      DrawPlotlyChart(BarChartLayoutOption, BarChartDataOption, BoxTargetId)
+      const result: any = ChangeBarDataArr(BarChartDataOption)
+      console.log(result)
+      console.log(BarChartDataOption)
+      result.then(function (args: any) {
+        DrawPlotlyChart(BarChartLayoutOption, args, BoxTargetId)
+      })
     } else if (WidgetInfo === 'Time Series') {
-      console.log(TimeSeriesDataOption)
-      console.log(TimeSeriesLayoutOption)
-      DrawPlotlyChart(TimeSeriesLayoutOption, TimeSeriesDataOption, BoxTargetId)
+      const result: any = ChangeTimeSeriesDataArr(TimeSeriesDataOption)
+      result.then(function (args: any) {
+        DrawPlotlyChart(TimeSeriesLayoutOption, args, BoxTargetId)
+      })
     } else if (WidgetInfo === 'Table') {
       // console.log(BoxTargetId)
       if (BoxTargetId !== undefined) {
@@ -416,14 +436,14 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     }
   }, [
     WidgetInfo,
-    LineChartLayoutOption,
-    LineChartDataOption,
-    PieChartLayoutOption,
-    PieChartDataOption,
-    BarChartLayoutOption,
-    BarChartDataOption,
-    TimeSeriesLayoutOption,
-    TimeSeriesDataOption,
+    // LineChartLayoutOption,
+    // LineChartDataOption,
+    // PieChartLayoutOption,
+    // PieChartDataOption,
+    // BarChartLayoutOption,
+    // BarChartDataOption,
+    // TimeSeriesLayoutOption,
+    // TimeSeriesDataOption,
   ])
 
   // /**
@@ -561,7 +581,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             } else if (
               e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.autorange === true
             ) {
-              console.log('TimeSeries!!!!!!!!!!!!!!!')
+              // console.log('TimeSeries!!!!!!!!!!!!!!!')
               setTimeSeriesShowDrawer(true)
               // setWidgetInfo('Time Series')
               setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
@@ -752,6 +772,9 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
       ChartDataObj = new Object()
 
+      console.log(' [ BarChart ] >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+      console.log(ChartDataArr)
+
       setBarChartDataOption(ChartDataArr)
       return ChartDataArr
     }
@@ -785,7 +808,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       },
     ]
   }
-
   const ChangeTimeSeriesDataArr = async (dataOption: any) => {
     let ChartDataObj: any = {}
     const ChartDataArr: any = []
@@ -859,7 +881,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
       //tag list to string
       for (let i = 0, len = TagList.length; i < len; i++) {
-        TagString += '`' + TagList[i] + '`,'
+        TagString += '' + TagList[i] + ','
       }
 
       console.log('[ Tag String ] >>> ')
@@ -912,11 +934,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
     onPanelResize.bind(e)
 
-    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>')
-    // console.log(WidgetInfo)
-    // console.log(BoxTargetId)
-    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>')
-
     if (WidgetInfo === 'Bar') {
       DrawPlotlyChart(BarChartLayoutOption, BarChartDataOption, BoxTargetId)
     } else if (WidgetInfo === 'Line') {
@@ -934,19 +951,105 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     // dispatch({ type: 'LAYOUT_NAME', data: title })
   }
 
+  /**
+   *
+   * 2023-04-18 박윤희
+   * 레이아웃 저장
+   *
+   */
   const getSaveLayoutInfo = (SaveInfo: string) => {
     if (SaveInfo === 'unSave') {
-      setOpenSaveLayout(false)
+      getCloseLayoutModal(false)
     } else {
+      let company_nm: any = window.localStorage.getItem('company_info')
+      company_nm = JSON.parse(company_nm)
+
+      getCloseLayoutModal(false)
+      //capture
       domtoimage.toBlob(document.querySelector('#DashboardBox')).then((blob) => {
-        saveAs(blob, 'dashboard.png')
+        // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        // console.log(blob)
+        saveAs(blob, company_nm.com_nm + '.png')
+        // FileSaver.saveAs("https://httpbin.org/image", "image.jpg");
       })
 
+      //grid layout data loop 후 데이터 값 저장하기
       console.log('[ Save 선택 한 경우 ! ] ')
+      console.log(DashboardObj)
+      console.log(dashboardObj)
+
+      const grid_obj: any = new Object()
+      const grid_arr: any = []
+
+      if (dashboardObj !== undefined) {
+        const data: any = dashboardObj
+        for (let i = 0, len = dashboardObj.element.children.length; i < len; i++) {
+          if (dashboardObj.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0] !== undefined) {
+            console.log(dashboardObj.element.children[i])
+            const node = document.getElementById(dashboardObj.element.children[i].id)
+            console.log('************** node *******************')
+            console.log(node)
+            console.log(data)
+            console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data)
+            console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout)
+            grid_obj.grid_index = dashboardObj.element.children[i].id
+
+            if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout !== undefined) {
+              if (
+                data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis.rangeslider !==
+                undefined
+              ) {
+                if (
+                  data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis.rangeslider
+                    .autorange === true
+                ) {
+                  grid_obj.widget_type = 'TimeSeries'
+                }
+              } else {
+                if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'bar') {
+                  grid_obj.widget_type = 'Bar'
+                } else if (
+                  data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'pie'
+                ) {
+                  grid_obj.widget_type = 'Pie'
+                } else if (
+                  data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'scatter'
+                ) {
+                  grid_obj.widget_type = 'Line'
+                }
+              }
+            } else {
+              grid_obj.widget_type = 'Table'
+            }
+
+            console.log('>>>>>>>>>>>>>>>> grid_obj')
+            console.log(grid_obj)
+          }
+
+          // if (
+          //   dashboardObj.element.children[i].children[0].children[1].children[0].layout.xaxis.rangeslider.autorange ===
+          //   true
+          // ) {
+          //   grid_obj.widget_type = 'TimeSeries'
+          // }
+          // }else if(dashboardObj.element.children[i].children[0].children[1].children[0].data[0].0.mode === 'bar'){
+          //   grid_obj.widget_type = 'Bar'
+          // }else if(dashboardObj.element.children[i].children[0].children[1].children[0].data[0].0.mode === 'pie'){
+          //   grid_obj.widget_type = 'Pie'
+          // }else {
+          //   grid_obj.widget_type 'Table'
+          // }
+
+          // "grid_index": 0,
+          // "widget_type": "string",
+          // "height": 0,
+          // "width": 0,
+          // "tag_list": [
+          //   "string"
+          // ]
+        }
+      }
       console.log(localStorage.getItem('companyId'))
-      console.log(props.CompanyId)
-      console.log(PanelElement)
-      console.log(parseInt(PanelElement.getAttribute('data-id'), 10) - 1)
     }
   }
 
