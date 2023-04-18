@@ -6,25 +6,14 @@ import '../style/styles.css'
 import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
 import axios from 'axios'
-import { ProgressButton } from '@syncfusion/ej2-react-splitbuttons'
-import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
-import { Box } from '@mui/material'
-import UploadModal from './UploadModal'
 
 const TagList = (props: any) => {
   const { syncSelectedTag } = props
-  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), [])
 
+  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), [])
   const gridRef = useRef<AgGridReact<any>>(null)
-  const [uploadModal, setUploadModal] = React.useState(false)
-  const [formModal, setFormModal] = React.useState(false)
-  const [modalType, setModalType] = React.useState('')
   //datagrid row data
   const [rowData, setRowData] = useState<Array<any>>()
-  // const [selectedRowData, setSelectedRowData] = useState({ id: 0, name: '', unit: '', description: '' })
-
-  const [selectedRowId, setSelectedRowId] = useState([])
-
   const [columnDefs] = useState<ColDef[]>([
     {
       headerName: 'TagName',
@@ -37,10 +26,10 @@ const TagList = (props: any) => {
 
   useEffect(() => {
     setRowData([])
-    getData()
+    fetchTaglistData()
   }, [])
 
-  const getData = () => {
+  const fetchTaglistData = () => {
     axios
       .get('http://220.94.157.27:59871/api/tag/list')
       .then((response) => {
@@ -50,82 +39,14 @@ const TagList = (props: any) => {
       .catch((error) => error('Data Load Failed'))
   }
 
-  // const onUploaded = (isUploaded: boolean) => {
-  //   console.log('isupload:', isUploaded)
-  //   if (isUploaded) {
-  //     getData()
-  //   }
-  // }
-
-  const toggleUploadModal = () => {
-    // alert('기능 구현 완료/테스트 중')
-    setUploadModal(!uploadModal)
-  }
-
-  /* Tag Form(Add, Update) Modal */
-  const toggleFormModal = (type: string, e: any) => {
-    e.preventDefault()
-    setModalType(type)
-
-    if (type === 'add') {
-      setFormModal(true)
-    } else {
-      alert('기능 테스트 중입니다')
-    }
-  }
-
-  const onSaveClick = () => {
-    setFormModal(false)
-  }
-
-  const handleSave = () => {
-    axios
-      .post('http://220.94.157.27:59871/createTag', JSON.stringify(rowData))
-      .then((response) => {
-        console.log('resp:', response)
-      })
-      .catch((error) => error('failed'))
-  }
-
-  // const handleDelete = () => {
-  //   // console.log('row:', selectedRowData)
-  //   //////////////////selectedRow 비우기
-
-  //   if (selectedRowData) {
-  //     axios
-  //       .delete('http://220.94.157.27:59871/deleteTag/' + selectedRowData.id)
-  //       .then((response) => {
-  //         console.log('resp:', response)
-
-  //         // const progressBtn: ProgressButton = new ProgressButton({
-  //         //   content: '태그삭제',
-  //         //   spinSettings: { position: 'Right', width: 20, template: '<div class="template"></div>' },
-  //         // })
-  //         // progressBtn.appendTo('#progressbtn')
-
-  //         alert('삭제 완료')
-  //         getData()
-  //       })
-  //       .catch((error) => error('failed'))
-  //   } else {
-  //     alert('삭제할 태그를 선택해 주세요')
-  //   }
-  // }
-
-  // const onRowSelected = (e: any) => {
-  //   // console.log('onRowSelected:', e)
-  //   setSelectedRowData(e.data)
-  // }
-
   const onSelectionChanged = (e: any) => {
-    const selectedRows = gridRef.current!.api.getSelectedRows()
-
+    const selectedRows = gridRef.current.api.getSelectedRows()
     const arr = []
+
     for (let i = 0; i < selectedRows.length; i++) {
       arr.push(selectedRows[i].tag_id)
     }
     // console.log('arr:', arr)
-    setSelectedRowId(arr)
     syncSelectedTag(arr)
   }
 
@@ -148,10 +69,7 @@ const TagList = (props: any) => {
         </Button> */}
         {/* </Stack> */}
       </div>
-      {/* </Box> */}
-      {/* <Box sx={{ m: 2, height: 550 }}> */}
       <div className="ag-theme-alpine" style={gridStyle}>
-        {/* <Title>TagList</Title> */}
         <AgGridReact
           rowHeight={40}
           ref={gridRef}
@@ -175,7 +93,7 @@ const TagList = (props: any) => {
         onSaveClick={onSaveClick}
         onCloseClick={() => setFormModal(false)}
         selectedData={selectedRowData}
-        onRowEditted={onRowEditted}
+        onRowEditted={onRowEditted}`
       /> */}
 
       {/* <UploadModal show={uploadModal} onUploaded={onUploaded} onCloseClick={() => setUploadModal(false)} /> */}

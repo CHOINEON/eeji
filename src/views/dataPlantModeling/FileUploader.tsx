@@ -7,11 +7,6 @@ import axios from 'axios'
 
 const FileUploader = (props: any) => {
   const uploadObj = useRef<UploaderComponent>(null)
-  // const uploadEle: HTMLElement = createElement('span', { className: 'upload e-icons', innerHTML: 'Upload All' })
-  // let uploadEle
-
-  // createElement('span', { className: 'upload e-icons', innerHTML: 'Upload All' })
-
   const [loading, setLoading] = useState(false)
   const { onClickNext, refresh } = props
 
@@ -32,11 +27,7 @@ const FileUploader = (props: any) => {
     args.postRawFile = false
   }
 
-  const onSuccess = (e: any) => {
-    // console.log('onSuccess e:', e)
-  }
-
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     // console.log('uploadObj:', uploadObj.current.getFilesData())
 
     if (uploadObj.current.getFilesData().length > 0) {
@@ -91,16 +82,13 @@ const FileUploader = (props: any) => {
                 type="file"
                 ref={uploadObj}
                 autoUpload={true}
-                // beforeUpload={onBeforeUpload}
-                success={onSuccess}
+                // success={onSuccess}
                 // progress={onFileUpload}
                 allowedExtensions=".xls,.xlsx,.csv"
                 removing={onRemoveFile.bind(this)}
                 asyncSettings={asyncSettings}
                 maxFileSize={100000000} //100MB
-                // buttons={{ upload: uploadEle }}
               ></UploaderComponent>
-              {/* {loading && <CircularProgress size={24} />} */}
               <p>Allowed file extensions : .xls(x), .csv</p>
 
               <div style={{ textAlign: 'right' }}>

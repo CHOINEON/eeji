@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Button, WrapItem } from '@chakra-ui/react'
-import ChartDataSelection from './Chart/ChartDataSelection'
-import EditingData from './Chart/EditingData'
-import SeriesSelectionGrid from './Tag/SeriesSelectionGrid'
+import ChartDataSelection from '../Chart/ChartDataSelection'
+import EditingData from '../Chart/EditingData'
+import SeriesSelectionGrid from '../Tag/SeriesSelectionGrid'
 import axios from 'axios'
 
 // export const chartDiv = (props: any) => {
@@ -34,7 +34,6 @@ const Worksheet = (props: any) => {
 
   const getChartdata = () => {
     console.log('selectedTags:', selectedTags)
-
     ///////////////////Add Spinner ///////////////////
     axios.post('http://220.94.157.27:59871/api/tag/chartData', selectedTags).then(
       (response: any) => {

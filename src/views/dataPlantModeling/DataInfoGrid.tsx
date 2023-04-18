@@ -1,14 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Box, Button, Heading, Stack, StackDivider, Text } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import { List, ListItem, ListIcon, OrderedList, UnorderedList } from '@chakra-ui/react'
 import { MdCheckCircle } from 'react-icons/md'
 
 const DataInfoGrid = (props: any) => {
   const { dataInfo, onClickNext } = props
-
-  useEffect(() => {
-    console.log(dataInfo)
-  }, [dataInfo])
 
   const handleClick = () => {
     onClickNext(2, true) // Move on to Tab 2
