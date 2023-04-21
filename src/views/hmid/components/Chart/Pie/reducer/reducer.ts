@@ -122,6 +122,11 @@ const reducer = (state: any, action: any) => {
         ...state,
         AXIS_Y_TITLE: action.data,
       }
+    case 'DATA_TYPE':
+      return {
+        ...state,
+        DATA_TYPE: action.data,
+      }
     default:
       return state
   }

@@ -8,6 +8,7 @@
 
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'
+import styled from '@emotion/styled'
 import { updateSampleSection } from './base'
 import { DashboardLayoutComponent, PanelModel, ResizeArgs } from '@syncfusion/ej2-react-layouts'
 import axios from 'axios'
@@ -22,12 +23,29 @@ import LayoutModal from '../../hmid/components/Modal/LayoutListModal'
 import Plot from 'react-plotly.js'
 import * as d3 from 'd3'
 
+/**
+ * ag Grid
+ */
+import { AgGridReact } from 'ag-grid-react'
+import {
+  RowValueChangedEvent,
+  CellValueChangedEvent,
+  ColDef,
+  GridApi,
+  GridOptions,
+  GridReadyEvent,
+} from 'ag-grid-community'
+import 'ag-grid-community/styles/ag-grid.css' // Core grid CSS, always needed
+import 'ag-grid-community/styles/ag-theme-alpine.css' // Optional theme CSS
+
 //Data Connection Modal
 import DataConnection from '../../hmid/components/Modal/DataConnection'
 
 import LineChartComponent from '../../hmid/components/Chart/Line/LineChartComponent'
 import PieChartComponent from '../../hmid/components/Chart/Pie/PieChartComponent'
 import BarChartComponent from '../../hmid/components/Chart/Bar/BarChartComponent'
+// import { AgGridReact } from 'ag-grid-react'
+// import { RowValueChangedEvent, CellValueChangedEvent, ColDef } from 'ag-grid-community'
 import TimeSeriesComponents from '../../hmid/components/Chart/TimeSeries/TimeSeriesComponents'
 import WidgetDataTable from '../../hmid/components/DataGrid/DataGrid'
 import { Select, Spin } from 'antd'
@@ -47,6 +65,11 @@ interface GridLayoutProps {
   SaveInfo: string
   setSaveConfirmIsOpen: (isOpen: boolean) => void
 }
+
+const DataGridWrap = styled.div`
+  width: 100%;
+  height: calc(100% - 1.1vw);
+`
 
 export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const [state, dispatch] = React.useReducer(reducer, initialState)
@@ -113,6 +136,73 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   const [render, setRender] = React.useState(null)
 
+  const [arr, setArr] = React.useState<any>([])
+
+  const [PieChartDataType, setPieChartDataType] = React.useState<string>('max')
+
+  /**
+   * DataGrid
+   * **/
+  const gridRef = React.useRef<any>([])
+  const [Theme, setTheme] = React.useState('ag-theme-alpine')
+  const [gridApi, setGridApi] = React.useState<any>()
+
+  const Array: any = []
+
+  const defaultColDef = React.useMemo<ColDef>(() => {
+    return {
+      flex: 1,
+      editable: true,
+    }
+  }, [])
+
+  React.useEffect(() => {
+    // console.log('change GridApi')
+    // console.log(gridApi)
+    // console.log(gridApi?.gridOptionsService.gridOptions.rowData)
+    // console.log(gridApi?.gridOptionsService.gridOptions.columnDefs)
+    let obj: any = new Object()
+
+    obj.rowData = gridApi?.gridOptionsService.gridOptions.rowData
+    obj.columnData = gridApi?.gridOptionsService.gridOptions.columnDefs
+    Array.push(obj)
+    obj = new Object()
+
+    setArr(Array)
+  }, [gridApi])
+
+  React.useEffect(() => {
+    console.log('change arr')
+    console.log(arr)
+  }, [arr])
+
+  // Example of consuming Grid Event
+  const cellClickedListener = React.useCallback((event: any) => {
+    // props.setDataGridData('test')
+    console.log('cellClicked', event)
+  }, [])
+
+  const rowClickedListener = React.useCallback((event: any) => {
+    console.log('rowClicked', event)
+    console.log(event.rowIndex)
+  }, [])
+
+  const onCellValueChanged = React.useCallback((event: CellValueChangedEvent) => {
+    console.log('onCellValueChanged: ' + event.colDef.field + ' = ' + event.newValue)
+  }, [])
+
+  const rowValueChanged = React.useCallback((event: RowValueChangedEvent) => {
+    console.log('rowValueChanged', event)
+    const data = event.data
+    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>')
+    // console.log(data)
+    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>')
+  }, [])
+
+  /**
+   * DataGrid
+   * **/
+
   React.useEffect(() => {
     console.log('------- [ State 변경 ] -------')
     console.log(state)
@@ -157,44 +247,47 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const cellSpacing: number[] = [5, 5]
   let count = 0
 
-  // React.useEffect(() => {
-  //   if (SelectTagInfo !== undefined) {
-  //     const ReDrawData: any = []
-  //     const x: Date[] = []
-  //     const y: any[] = []
+  React.useEffect(() => {
+    if (SelectTagInfo !== undefined) {
+      const ReDrawData: any = []
+      const x: Date[] = []
+      const y: any[] = []
 
-  //     const DataArr = getDataBySelctedCompany('Dongwon', SelectTagInfo)
+      console.log('-------------------------------------------------')
+      console.log('[ Data Connection Widget Info ] >>> ' + WidgetInfo)
+      console.log('-------------------------------------------------')
 
-  //     // console.log(DataArr)
+      const DataArr = getDataBySelctedCompany('Dongwon', SelectTagInfo, WidgetInfo)
+      // console.log(DataArr)
 
-  //     // for (let i = 0, len = SelectTagInfo.length; i < len; i++) {
-  //     //   for (let j = 0, jlen = DataArr.length; j < jlen; j++) {
-  //     //     if (SelectTagInfo[i] === DataArr[j].name) {
-  //     //       ReDrawData.push(DataArr[j])
-  //     //     }
-  //     //   }
-  //     // }
+      // for (let i = 0, len = SelectTagInfo.length; i < len; i++) {
+      //   for (let j = 0, jlen = DataArr.length; j < jlen; j++) {
+      //     if (SelectTagInfo[i] === DataArr[j].name) {
+      //       ReDrawData.push(DataArr[j])
+      //     }
+      //   }
+      // }
 
-  //     // console.log('****************************')
-  //     // console.log(ReDrawData)
-  //     // console.log(BoxTargetId)
-  //     // console.log(TimeSeriesLayoutOption)
-  //     // console.log(TimeSeriesDataOption)
-  //     // console.log('****************************')
+      // console.log('****************************')
+      // console.log(ReDrawData)
+      // console.log(BoxTargetId)
+      // console.log(TimeSeriesLayoutOption)
+      // console.log(TimeSeriesDataOption)
+      // console.log('****************************')
 
-  //     // ReDrawData.forEach(function (datum: { [x: string]: any }, i: any) {
-  //     //   // console.log(datum['x'])
-  //     //   for (let i = 0, len = datum['x'].length; i < len; i++) {
-  //     //     datum['x'][i] = new Date(datum['x'][i])
-  //     //   }
-  //     // })
+      // ReDrawData.forEach(function (datum: { [x: string]: any }, i: any) {
+      //   // console.log(datum['x'])
+      //   for (let i = 0, len = datum['x'].length; i < len; i++) {
+      //     datum['x'][i] = new Date(datum['x'][i])
+      //   }
+      // })
 
-  //     // console.log(ReDrawData)
-  //     // setTimeSeriesDataOption(ReDrawData)
+      // console.log(ReDrawData)
+      // setTimeSeriesDataOption(ReDrawData)
 
-  //     // DrawPlotlyChart(TimeSeriesLayoutOption, ReDrawData, BoxTargetId)
-  //   }
-  // }, [SelectTagInfo])
+      // DrawPlotlyChart(TimeSeriesLayoutOption, ReDrawData, BoxTargetId)
+    }
+  }, [SelectTagInfo])
 
   React.useEffect(() => {
     if (DashboardObj !== undefined) {
@@ -203,6 +296,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       }, 500)
     }
   }, [DashboardObj, idx])
+
+  const ChangeInputValue = React.useCallback((event: any) => {
+    console.log('changeInput Value >>>>>>  ', event)
+  }, [])
 
   //레이아웃 만들 경우 default값 나타내기
   React.useEffect(() => {
@@ -231,7 +328,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         header: `
         <div class="e-header-text">
           <input value=${' '} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." id=${'input' + i.toString()}
-        > 
+          > 
           <button class="widget-setting-btn"></button>
           <button class="grid-setting-btn"></button>
           <button class="connection-chart-data"></button>
@@ -250,6 +347,61 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     setDashboardObj(dashboardObj.panels)
     setIdx(index)
   }, [])
+
+  /**
+   * 2023-04-19 박윤희
+   * grid ref 값 빋기
+   * **/
+
+  // const MyDatGrid = React.forwardRef((props: any, ref: any) => {
+  //   console.log('>>>>>>>>>>>>>>>>>>>>>>>>')
+  //   console.log(props)
+  //   console.log(ref)
+  //   console.log('>>>>>>>>>>>>>>>>>>>>>>>>')
+
+  //   return (
+  //     <DataGridWrap className={Theme}>
+  //       <AgGridReact
+  //         ref={(e: any) => {
+  //           ref.current = props
+  //         }}
+  //         rowData={TableRows}
+  //         columnDefs={TableColumns}
+  //         defaultColDef={defaultColDef}
+  //         enableCellChangeFlash={true}
+  //         editType={'fullRow'}
+  //       />
+  //     </DataGridWrap>
+  //   )
+  // })
+
+  // function WidgetDataTable(props: any) {
+  //   console.log('[ Data Grid Table Props ] : ')
+  //   console.log(props)
+  //   const { myGridRef } = props
+  //   console.log(myGridRef)
+  //   console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+
+  //   return (
+  //     <DataGridWrap className={Theme}>
+  //       <AgGridReact
+  //         ref={(e: any) => {
+  //           myGridRef.current = props
+  //         }}
+  //         rowData={TableRows}
+  //         columnDefs={TableColumns}
+  //         defaultColDef={defaultColDef}
+  //         enableCellChangeFlash={true}
+  //         editType={'fullRow'}
+  //       />
+  //     </DataGridWrap>
+  //   )
+  // }
+
+  const getDataGridData = (e: any) => {
+    console.log('[ 상위에서 넘어온 DataGrid ] : ')
+    console.log(e)
+  }
 
   /**
    * 2023-04-14 박윤희
@@ -279,14 +431,47 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       })
       ReactDOM.render(element, node)
     } else {
-      const data = <WidgetDataTable rows={option1} columns={option2} />
+      const data = (
+        // <WidgetDataTable
+        //   rows={option1}
+        //   columns={option2}
+        //   ref={(el: any) => (GridRef.current = [option1, option2])}
+        //   // setDataGridData={(e: any) => {
+        //   //   getDataGridData(e)
+        //   // }}
+        // />
+        <DataGridWrap className={Theme}>
+          <AgGridReact
+            api={gridApi}
+            // ref={(el: any) => {
+            //   gridRef.current = el
+            // }}
+            onGridReady={(e: GridReadyEvent) => {
+              console.log('grid Ready')
+              console.log(e)
+              setGridApi(e.api)
+            }}
+            rowData={option1}
+            columnDefs={option2}
+            defaultColDef={defaultColDef}
+            enableCellChangeFlash={true}
+            onCellClicked={cellClickedListener}
+            onRowClicked={rowClickedListener}
+            editType={'fullRow'}
+            onCellValueChanged={onCellValueChanged}
+            onRowValueChanged={rowValueChanged}
+            pagination={true}
+            paginationAutoPageSize={true}
+          />
+        </DataGridWrap>
+      )
       // console.log(data)
-      const element = React.createElement(data.type, {
-        rows: data.props.rows,
-        columns: data.props.columns,
-      })
+      // const element = React.createElement(data.type, {
+      //   rows: data.props.rows,
+      //   columns: data.props.columns,
+      // })
 
-      ReactDOM.render(element, node)
+      ReactDOM.render(data, node)
     }
   }
 
@@ -393,9 +578,9 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   }
 
   React.useEffect(() => {
-    console.log(' 옵션 확인 *********************')
-    console.log('[ UseEffect ] >>>>>>>>>>>>>>>>>>>>>>>>>')
-    console.log(WidgetInfo)
+    // console.log(' 옵션 확인 *********************')
+    // console.log('[ UseEffect ] >>>>>>>>>>>>>>>>>>>>>>>>>')
+    // console.log(WidgetInfo)
     // console.log(BarChartLayoutOption)
     // console.log(BarChartDataOption)
 
@@ -411,8 +596,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       })
     } else if (WidgetInfo === 'Bar') {
       const result: any = ChangeBarDataArr(BarChartDataOption)
-      console.log(result)
-      console.log(BarChartDataOption)
       result.then(function (args: any) {
         DrawPlotlyChart(BarChartLayoutOption, args, BoxTargetId)
       })
@@ -427,11 +610,41 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         const node: any = document.getElementById(BoxTargetId)
         // console.log(node)
 
-        const data = <WidgetDataTable rows={TableRows} columns={TableColumns} />
-        const element = React.createElement(data.type, { rows: data.props.rows, columns: data.props.columns })
+        const data = (
+          // <WidgetDataTable
+          //   rows={TableRows}
+          //   columns={TableColumns}
+          //   ref={(el: any) => (GridRef.current = [TableRows, TableColumns])}
+          //   // setDataGridData={(e: any) => {
+          //   //   getDataGridData(e)
+          //   // }}
+          // />
+          <DataGridWrap className={Theme}>
+            <AgGridReact
+              ref={(el: any) => {
+                gridRef.current = el
+              }}
+              rowData={TableRows}
+              columnDefs={TableColumns}
+              defaultColDef={defaultColDef}
+              enableCellChangeFlash={true}
+              //   rowSelection="multiple"
+              // animateRows={true}
+              // loadingCellRenderer={loadingCellRendererListener}
+              onCellClicked={cellClickedListener}
+              onRowClicked={rowClickedListener}
+              editType={'fullRow'}
+              onCellValueChanged={onCellValueChanged}
+              onRowValueChanged={rowValueChanged}
+              pagination={true}
+              paginationAutoPageSize={true}
+            />
+          </DataGridWrap>
+        )
+        //const element = React.createElement(data.type, { rows: data.props.rows, columns: data.props.columns })
 
         // console.log(element)
-        ReactDOM.render(element, node)
+        ReactDOM.render(data, node)
       }
     }
   }, [
@@ -531,8 +744,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       updatePanels.push(panelModelValue)
     }
     dashboardObj.panels = updatePanels
-    // console.log('[ 다시 그리는 dashboardObj ] : ')
-    // console.log(dashboardObj)
     setDashboardObj(dashboardObj.panels)
 
     return dashboardObj
@@ -583,7 +794,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             ) {
               // console.log('TimeSeries!!!!!!!!!!!!!!!')
               setTimeSeriesShowDrawer(true)
-              // setWidgetInfo('Time Series')
+              setWidgetInfo('Time Series')
               setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
             }
           } else {
@@ -598,13 +809,27 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             setAlertVisibility(false)
           }
         } else if (e.target.className.includes('connection-chart-data')) {
-          //console.log(' modal 열기')
-          // console.log(e)
-          // console.log(e.target.offsetParent.offsetParent.children[0].children[1].children[0].className)
           if (e.target.offsetParent.offsetParent.children[0].children[1].children[0].className !== undefined) {
             if (e.target.offsetParent.offsetParent.children[0].children[1].children[0].className !== 'js-plotly-plot') {
               //console.log(' Table 용 모달 창')
+              console.log('--------------------------------------------------------')
+              console.log(e.target.offsetParent.offsetParent.children[0].children[1].id)
+              setBoxTargetId(e.target.offsetParent.offsetParent.children[0].children[1].id)
+              setWidgetInfo('Table')
+              setIsOpenDataConnectionModal(true)
             } else {
+              console.log(
+                e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.autorange
+              )
+              if (
+                e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.autorange ===
+                true
+              ) {
+                setWidgetInfo('Time Series')
+              } else {
+                setWidgetInfo('Line')
+              }
+              setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
               setIsOpenDataConnectionModal(true)
             }
           }
@@ -854,7 +1079,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   //전체 태그 리스트
   const getTagList = () => {
     axios
-      .get('http://192.168.1.27:8000/api/tag/list', {
+      .get('http://220.94.157.27:59871/api/tag/list', {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
@@ -873,50 +1098,212 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       })
   }
 
-  const getDataBySelctedCompany = (company: string, TagList: any) => {
+  // //LayoutInfo
+  // const test = () => {
+  //   axios.get('http://192.168.1.27:8000/api/hmid/layout/info?lay_id=' + 1).then((args: any) => {
+  //     console.log('##########################################')
+  //     console.log(args)
+  //     console.log(JSON.parse(args.data[0].data_option))
+  //     console.log('##########################################')
+  //   })
+  // }
+
+  const getDataBySelctedCompany = (company: string, TagList: any, WidgetInfo: string) => {
     if (company === 'Dongwon') {
-      let TagString = ''
+      const TagString = ''
 
       setShowLoading(true)
 
-      //tag list to string
-      for (let i = 0, len = TagList.length; i < len; i++) {
-        TagString += '' + TagList[i] + ','
+      if (WidgetInfo === 'Table' || WidgetInfo === 'Pie' || WidgetInfo === 'Bar') {
+        console.log('[ get Tag Describe Data ] : ')
+        console.log(TagList)
+        console.log(BoxTargetId)
+
+        // axios.post(url[, data[, config]])   // POST
+        // const fetchStatistic = () => {
+        //   // console.log('selectedTags:', selectedTags)
+        //   axios.post('http://220.94.157.27:59871/api/tag/describe', selectedTags).then(
+        //     (response: any) => {
+        //       // console.log('response:', response)
+        //       setStatistic(response.data)
+        //     },
+        //     (error) => {
+        //       console.log('error:', error)
+        //     }
+        //   )
+        // }
+
+        axios
+          .post('http://220.94.157.27:59871/api/tag/describe', TagList)
+          .then((response) => {
+            console.log('[ Tag Describe data ] : ')
+            console.log(response.data)
+            setShowLoading(false)
+
+            const node = document.getElementById(BoxTargetId)
+
+            if (WidgetInfo === 'Table') {
+              const column: any = [
+                { field: 'TagName', filter: true },
+                { field: 'avg', filter: true },
+                { field: 'min', filter: true },
+                { field: 'max', filter: true },
+              ]
+              const row: any = []
+              let RowObj: any = new Object()
+
+              for (let i = 0, len = response.data.length; i < len; i++) {
+                RowObj.TagName = response.data[i].tagName
+                RowObj.avg = response.data[i].avg
+                RowObj.min = response.data[i].min
+                RowObj.max = response.data[i].max
+                row.push(RowObj)
+                RowObj = new Object()
+              }
+
+              console.log(column)
+              console.log(row)
+
+              DrawGauidWidget('Table', node, row, column)
+
+              setTagListArr([])
+            }
+            if (WidgetInfo === 'Pie') {
+              const labels: any = []
+              const values: any = []
+
+              const data = PieChartDataOption
+              const layout = JSON.parse(PieChartLayoutOption)
+
+              delete layout.title
+
+              for (let i = 0, len = response.data.length; i < len; i++) {
+                labels.push(response.data[i].tagName)
+                if (PieChartDataType === 'max') {
+                  layout.title = '선택한 Tag의 Max 값'
+                  values.push(response.data[i].max)
+                } else if (PieChartDataType === 'min') {
+                  values.push(response.data[i].min)
+                  layout.title = '선택한 Tag의 Min 값'
+                } else {
+                  values.push(response.data[i].avg)
+                  layout.title = '선택한 Tag의 Average 값'
+                }
+              }
+
+              delete data[0].values
+              delete data[0].labels
+
+              data[0].labels = labels
+              data[0].values = values
+
+              DrawGauidWidget('Pie', node, data, layout)
+              console.log(TagListArr)
+              // setTagListArr([])
+            }
+
+            if (WidgetInfo === 'Bar') {
+              // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+              // console.log(BarChartLayoutOption)
+              // console.log(BarChartDataOption)
+              // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+
+              const data: any = []
+              let dataX: any = []
+              let dataY: any = []
+              let dataObj: any = new Object()
+              const layout: any = BarChartLayoutOption
+
+              const dataType: any = ['max', 'min', 'avg']
+
+              layout.title = '선택한 Tag의 [ Min ,  Max , Average ]'
+
+              for (let j = 0, len = dataType.length; j < len; j++) {
+                for (let i = 0, len = response.data.length; i < len; i++) {
+                  dataX.push(response.data[i].tagName)
+                  dataY.push(response.data[i][dataType[j]])
+                  dataObj.name = dataType[j]
+                }
+                dataObj.type = 'bar'
+                dataObj.textposition = 'auto'
+                dataObj.x = dataX
+                dataObj.y = dataY
+
+                data.push(dataObj)
+                dataObj = new Object()
+                dataX = []
+                dataY = []
+              }
+
+              console.log(layout)
+              console.log(data)
+
+              DrawGauidWidget('Bar', node, data, layout)
+              // setTagListArr([])
+            }
+            // return response.data
+          })
+          .catch((error) => {
+            console.log(error)
+
+            alert('Error. 담당자에게 문의 바랍니다.')
+            setShowLoading(false)
+          })
+      } else {
+        // {
+        //   headers: {
+        //     Accept: '*/*',
+        //     'Content-Type': 'application/x-www-form-urlencoded;',
+        //   },
+        //   timeout: 500000,
+        // }
+
+        const node = document.getElementById(BoxTargetId)
+
+        axios
+          .post('http://220.94.157.27:59871/api/hmid/chartData?', TagList)
+          .then((response) => {
+            console.log('[ Chart response data ] : ')
+            console.log(response.data)
+
+            if (WidgetInfo === 'Time Series') {
+              console.log('time series일 경우 ')
+              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+              console.log(TimeSeriesLayoutOption)
+              console.log(TimeSeriesDataOption)
+              console.log(node)
+              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+              const layout: any = TimeSeriesLayoutOption
+              layout.title = '선택한 Tag의 Data'
+              DrawGauidWidget('TimeSeries', node, response.data, layout)
+            } else if (WidgetInfo === 'Line') {
+              console.log('line chart일 경우 ')
+              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+              console.log(LineChartLayoutOption)
+              console.log(LineChartDataOption)
+              console.log(node)
+              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+              const data: any = []
+              const dataX: any = []
+              const dataY: any = []
+              const dataObj: any = new Object()
+              const layout: any = LineChartLayoutOption
+            }
+
+            // setDataArr(response.data)
+            setShowLoading(false)
+          })
+          .catch((error) => {
+            console.log(error)
+
+            alert('Error. 담당자에게 문의 바랍니다.')
+            setShowLoading(false)
+          })
       }
-
-      console.log('[ Tag String ] >>> ')
-      console.log(TagString.slice(0, -1))
-
-      axios
-        .get('http://220.94.157.27:59871/api/hmid/chartData?chart=' + TagString.slice(0, -1), {
-          headers: {
-            Accept: '*/*',
-            'Content-Type': 'application/x-www-form-urlencoded;',
-          },
-          timeout: 500000,
-        })
-        .then((response) => {
-          console.log('[ Chart response data ] : ')
-          console.log(response.data)
-
-          // setDataArr(response.data)
-          setShowLoading(false)
-
-          return response.data
-        })
-        .catch((error) => {
-          console.log(error)
-
-          alert('Error. 담당자에게 문의 바랍니다.')
-          setShowLoading(false)
-        })
     }
   }
 
   const onResizeStop = (e: any) => {
-    //console.log(WidgetInfo)
-    //console.log(e)
-
     // console.log(' resize stop !!!!!!!!!!!!!!!!')
     // // console.log(e)
     // console.log(e.element.children[0].children[1].clientWidth)
@@ -978,20 +1365,21 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       console.log(DashboardObj)
       console.log(dashboardObj)
 
-      const grid_obj: any = new Object()
+      let grid_obj: any = new Object()
       const grid_arr: any = []
 
       if (dashboardObj !== undefined) {
         const data: any = dashboardObj
+
         for (let i = 0, len = dashboardObj.element.children.length; i < len; i++) {
           if (dashboardObj.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0] !== undefined) {
             console.log(dashboardObj.element.children[i])
-            const node = document.getElementById(dashboardObj.element.children[i].id)
-            console.log('************** node *******************')
-            console.log(node)
-            console.log(data)
-            console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data)
-            console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout)
+            // const node = document.getElementById(dashboardObj.element.children[i].id)
+            // console.log('************** node *******************')
+            // // console.log(node)
+            // // console.log(data)
+            // // console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data)
+            // // console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout)
             grid_obj.grid_index = dashboardObj.element.children[i].id
 
             if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout !== undefined) {
@@ -1004,26 +1392,59 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                     .autorange === true
                 ) {
                   grid_obj.widget_type = 'TimeSeries'
+                  const input_element: any = document.querySelector('#input' + i)
+                  grid_obj.title = input_element.value
+                  grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+                  grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+                  grid_obj.dataOption = data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+                  grid_obj.layoutOption = [data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout]
                 }
               } else {
                 if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'bar') {
                   grid_obj.widget_type = 'Bar'
+                  const input_element: any = document.querySelector('#input' + i)
+                  grid_obj.title = input_element.value
+                  grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+                  grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+                  grid_obj.dataOption = data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+                  grid_obj.layoutOption = [data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout]
                 } else if (
                   data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'pie'
                 ) {
                   grid_obj.widget_type = 'Pie'
+                  const input_element: any = document.querySelector('#input' + i)
+                  grid_obj.title = input_element.value
+                  grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+                  grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+                  grid_obj.dataOption = data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+                  grid_obj.layoutOption = [data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout]
                 } else if (
                   data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'scatter'
                 ) {
                   grid_obj.widget_type = 'Line'
+                  const input_element: any = document.querySelector('#input' + i)
+                  grid_obj.title = input_element.value
+                  grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+                  grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+                  grid_obj.dataOption = data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+                  grid_obj.layoutOption = [data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout]
                 }
               }
             } else {
               grid_obj.widget_type = 'Table'
+              const input_element: any = document.querySelector('#input' + i)
+              grid_obj.title = input_element.value
+              grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+              grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+              grid_obj.layoutOption = []
+              console.log('*********************************')
+              console.log(data)
+              // console.log(gridRef)
+              console.log('*********************************')
             }
 
-            console.log('>>>>>>>>>>>>>>>> grid_obj')
-            console.log(grid_obj)
+            grid_arr.push(grid_obj)
+            grid_obj = new Object()
           }
 
           // if (
@@ -1048,15 +1469,23 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           //   "string"
           // ]
         }
+
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        console.log(grid_arr)
       }
       console.log(localStorage.getItem('companyId'))
     }
   }
 
   const getCloseLayoutModal = (IsOpen: boolean) => {
-    // console.log('[ Save Confirm Modal Is Open ] : ', IsOpen)
     props.setSaveConfirmIsOpen(false)
     setOpenSaveLayout(false)
+  }
+
+  const getDataType = (DataType: string) => {
+    console.log('[ 하위 PieChart Component 에서 받은 Pie Chart Data Type ] : ')
+    console.log(DataType)
+    setPieChartDataType(DataType)
   }
 
   return (
@@ -1148,7 +1577,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           }
         }}
         setDataConnectionInfo={(dataInfo: string) => {
-          // getDataBySelctedCompany(dataInfo)
+          console.log('[ Get Data Connection Info ] : ')
+          console.log(dataInfo)
+          console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+          // getDataBySelctedCompany(dataInfo, WidgetInfo)
           getTagList()
         }}
         setTagInfo={(TagInfo: any) => {
@@ -1163,6 +1595,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         setShowDrawer={getLineChartShowDrawer}
       />
       <PieChartComponent
+        DataType={getDataType}
         ChartType={WidgetInfo}
         PieChartLayout={getPieChartLayout}
         PieChartData={getPieChartData}
@@ -1197,9 +1630,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
               // resizeStart={(e: any) => onResizeStart(e)}
               resizeStop={(e: any) => onResizeStop(e)}
               cellSpacing={cellSpacing}
-              allowFloating={true}
-              allowResizing={true}
-              draggableHandle={'.e-panel-header'}
+              allowFloating={false}
+              allowResizing={false}
+              allowDragging={false}
+              // draggableHandle={'.e-panel-header'}
               // created={onCreate.bind(this)}
               onClick={(e: any) => {
                 ClickDashBoardComponent(e)

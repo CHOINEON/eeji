@@ -24,6 +24,9 @@ import {
   SliderThumb,
   SliderMark,
   Switch,
+  Checkbox,
+  CheckboxGroup,
+  Stack,
 } from '@chakra-ui/react'
 import {
   MdArrowDropDown,
@@ -60,6 +63,7 @@ export const ChartOption: React.FC<BarChartProps> = (props: any) => {
   const { onClose } = useDisclosure()
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const btnRef = React.useRef()
+  const [dataType, setDataType] = React.useState<any>()
 
   React.useEffect(() => {
     console.log('[  상위에서 받은 BarChart Props ] : ' + props.ShowBarDrawer)
@@ -209,6 +213,26 @@ export const ChartOption: React.FC<BarChartProps> = (props: any) => {
 
           <DrawerBody>
             <Accordion allowToggle>
+              {/* <AccordionItem>
+                <h2>
+                  <AccordionButton>
+                    <Box as="span" flex="1" textAlign="left">
+                      <MdSsidChart style={{ display: 'inline-block' }} />
+                      <AccordionTitle>DataType</AccordionTitle>
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel pb={4}>
+                  <Margin />
+                  <Stack spacing={5} direction="row">
+                    <Checkbox value={'min'} >Min</Checkbox>
+                    <Checkbox value={'max'}>Max</Checkbox>
+                    <Checkbox value={'average'}>Average</Checkbox>
+                  </Stack>
+                </AccordionPanel>
+              </AccordionItem> */}
+
               <AccordionItem>
                 <h2>
                   <AccordionButton>
