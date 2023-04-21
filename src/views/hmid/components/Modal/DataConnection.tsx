@@ -58,9 +58,10 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
     console.log(props.DataTagList)
     if (props.DataTagList.length !== 0) {
       CreateTagListItems(props.DataTagList)
-    } else {
-      CreateTagListItems('태그를 선택하여 주세요.')
     }
+    // else {
+    //   CreateTagListItems('태그를 선택하여 주세요.')
+    // }
   }, [props.DataTagList])
 
   const CreateDtataListItems = () => {
@@ -81,19 +82,21 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
     const Arr: any = []
     let Obj: any = new Object()
 
-    if (typeof TagData === 'string') {
-      Obj.value = 'default'
-      Obj.label = '태그를 선택 해주세요.'
+    // if (typeof TagData === 'string') {
+    //   Obj.value = 'default'
+    //   Obj.label = '태그를 선택 해주세요.'
+    //   Arr.push(Obj)
+    //   Obj = new Object()
+    // } else {
+    for (let i = 0, len = TagData.length; i < len; i++) {
+      Obj.value = TagData[i].tag_id
+      Obj.label = TagData[i].tag_id
       Arr.push(Obj)
       Obj = new Object()
-    } else {
-      for (let i = 0, len = TagData.length; i < len; i++) {
-        Obj.value = TagData[i]
-        Obj.label = TagData[i]
-        Arr.push(Obj)
-        Obj = new Object()
-      }
     }
+    //}
+
+    console.log(Arr)
 
     setTagNodeData(Arr)
     // return TagList

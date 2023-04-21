@@ -3,15 +3,17 @@ import styled from '@emotion/styled'
 import { AgGridReact } from 'ag-grid-react'
 import { Button, Stack, useColorModeValue } from '@chakra-ui/react'
 import { MdOutlineAdd, MdOutlineRemove, MdSave } from 'react-icons/md'
-import { RowValueChangedEvent, CellValueChangedEvent, ColDef } from 'ag-grid-community'
 import DataGridDeleteModal from '../Modal/DataGridDeleteModal'
+import { RowValueChangedEvent, CellValueChangedEvent, ColDef } from 'ag-grid-community'
 
 import 'ag-grid-community/styles/ag-grid.css' // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css' // Optional theme CSS
 
 interface WidgetDataTableProps {
+  // setDataGridData: (text: any) => void
   rows: any
   columns: any
+  ref?: any
 }
 
 const DataGridWrap = styled.div`
@@ -19,9 +21,9 @@ const DataGridWrap = styled.div`
   height: calc(100% - 1.1vw);
 `
 
-export const WidgetDataTable: React.FC<WidgetDataTableProps> = (args: any) => {
+export const WidgetDataTable: React.FC<WidgetDataTableProps> = (props: any) => {
   const sidebarBg = useColorModeValue('white', 'navy.700')
-  const gridRef = React.useRef<any>()
+  const gridRef: any = React.useRef<any>()
 
   const [TableRows, setTableRows] = React.useState<any>()
   const [TableColumns, setTableColumns] = React.useState<any>()
@@ -49,14 +51,24 @@ export const WidgetDataTable: React.FC<WidgetDataTableProps> = (args: any) => {
   const [AdminInfo, setAdminInfo] = React.useState('block')
 
   React.useEffect(() => {
-    setTableRows(args.rows)
-    setTableColumns(args.columns)
+    setTableRows(props.rows)
+    setTableColumns(props.columns)
 
     console.log('[ props ] : ')
-    console.log(args)
-  }, [args])
+    console.log(props)
+  }, [props])
 
-  //default 수정권한
+  // React.useEffect(() => {
+  //   console.log('------- Change GridRef ---------')
+  //   console.log(gridRef.current.props)
+  //   console.log(gridRef.current.props.rowData)
+  //   console.log(gridRef.current.props.columnDefs)
+  //   console.log('--------------------------------')
+
+  //   // props.setDataGridData(gridRef.current)
+  // }, [gridRef])
+
+  // //default 수정권한
   const defaultColDef = React.useMemo<ColDef>(() => {
     return {
       flex: 1,
@@ -66,6 +78,7 @@ export const WidgetDataTable: React.FC<WidgetDataTableProps> = (args: any) => {
 
   // Example of consuming Grid Event
   const cellClickedListener = React.useCallback((event: any) => {
+    // props.setDataGridData('test')
     console.log('cellClicked', event)
   }, [])
 
@@ -92,40 +105,39 @@ export const WidgetDataTable: React.FC<WidgetDataTableProps> = (args: any) => {
   //       .then((result) => result.json())
   //       .then((rowData) => setTableRows(rowData))
   //   }, [])
+  // const onAddRow = () => {
+  //   console.log('add grid ref')
+  //   console.log(gridRef.current)
+  //   if (gridRef !== undefined) {
+  //     if (gridRef.current !== undefined) {
+  //       gridRef.current.api.gridApi.updateRowData({
+  //         add: [{ make: 'BMW', model: 'S2', price: '63000' }],
+  //       })
+  //     }
+  //   }
+  // }
 
-  const onAddRow = () => {
-    console.log('add grid ref')
-    console.log(gridRef.current)
-    if (gridRef !== undefined) {
-      if (gridRef.current !== undefined) {
-        gridRef.current.api.gridApi.updateRowData({
-          add: [{ make: 'BMW', model: 'S2', price: '63000' }],
-        })
-      }
-    }
-  }
+  // const onDeleteRow = () => {
+  //   console.log('delete Row')
+  //   setDataGridDeleteModalIsOpen(true)
+  // }
 
-  const onDeleteRow = () => {
-    console.log('delete Row')
-    setDataGridDeleteModalIsOpen(true)
-  }
+  // const getCloseDataGridDeleteModal = (CloseDataGridDeleteModal: boolean) => {
+  //   console.log(CloseDataGridDeleteModal)
+  //   setDataGridDeleteModalIsOpen(CloseDataGridDeleteModal)
+  // }
 
-  const getCloseDataGridDeleteModal = (CloseDataGridDeleteModal: boolean) => {
-    console.log(CloseDataGridDeleteModal)
-    setDataGridDeleteModalIsOpen(CloseDataGridDeleteModal)
-  }
-
-  const getDataGridDeleteInfo = (DeleteInfo: string) => {
-    console.log(DeleteInfo)
-  }
+  // const getDataGridDeleteInfo = (DeleteInfo: string) => {
+  //   console.log(DeleteInfo)
+  // }
 
   return (
     <>
-      <DataGridDeleteModal
+      {/* <DataGridDeleteModal
         DataGridDeleteModalisOpen={DataGridDeleteModalisOpen}
         setCloseDataGridDeleteModal={getCloseDataGridDeleteModal}
         setDataGridDeleteInfo={getDataGridDeleteInfo}
-      />
+      /> */}
       {/* <Stack direction="row" spacing={4} pl={3} display={AdminInfo} marginTop={2} marginBottom={2}>
         <Button
           leftIcon={<MdOutlineAdd />}
@@ -153,18 +165,23 @@ export const WidgetDataTable: React.FC<WidgetDataTableProps> = (args: any) => {
       </Stack> */}
       <DataGridWrap className={Theme}>
         <AgGridReact
-          ref={gridRef}
+          ref={(el: any) => {
+            gridRef.current = el
+          }}
           rowData={TableRows}
           columnDefs={TableColumns}
           defaultColDef={defaultColDef}
           enableCellChangeFlash={true}
           //   rowSelection="multiple"
           // animateRows={true}
+          // loadingCellRenderer={loadingCellRendererListener}
           onCellClicked={cellClickedListener}
           onRowClicked={rowClickedListener}
           editType={'fullRow'}
           onCellValueChanged={onCellValueChanged}
           onRowValueChanged={rowValueChanged}
+          pagination={true}
+          paginationAutoPageSize={true}
         />
       </DataGridWrap>
     </>

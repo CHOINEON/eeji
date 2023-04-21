@@ -44,9 +44,15 @@ export const PieChartComponent: React.FC<PieChartProps> = (props: any) => {
     props.setShowDrawer(ShowDrawer)
   }
 
+  const getDataType = (DataType: string) => {
+    console.log('[ 하위에서 받은 Pie Chart Data Type ] : ')
+    console.log(DataType)
+  }
+
   return (
     <>
       <ChartOption
+        DataType={getDataType}
         ChartType={chartType}
         PieChartLayout={getPieChartLayout}
         PieChartData={getPieChartData}

@@ -24,6 +24,8 @@ import {
   SliderThumb,
   SliderMark,
   Switch,
+  Radio,
+  RadioGroup,
 } from '@chakra-ui/react'
 import {
   MdArrowDropDown,
@@ -142,8 +144,8 @@ export const TimeSeriesOption: React.FC<TimeSeriesProps> = (props: any) => {
   // }, [props.ChartType])
 
   React.useEffect(() => {
-    setIsOpen(props.ShowDrawer)
-  }, [props.ShowDrawer])
+    setIsOpen(props.ShowTimeSeriesDrawer)
+  }, [props.ShowTimeSeriesDrawer])
 
   React.useEffect(() => {
     props.ChartData({

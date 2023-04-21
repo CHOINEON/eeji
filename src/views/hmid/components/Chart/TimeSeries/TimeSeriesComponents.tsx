@@ -18,10 +18,6 @@ export const TimeSeriesComponents: React.FC<TimeSeriesProps> = (props: any) => {
   const [TimeSeriesChartData, setTimeSeriesData] = React.useState<any>()
   const [TimeSeriesLayout, setTimeSeriesLayout] = React.useState<any>()
 
-  React.useEffect(() => {
-    setShowDrawer(props.ShowDrawer)
-  }, [props.ShowDrawer])
-
   // React.useEffect(() => {
   //   console.log(props.ChartType)
   //   if (props.ChartType === 'Line') {
@@ -41,6 +37,12 @@ export const TimeSeriesComponents: React.FC<TimeSeriesProps> = (props: any) => {
       props.ChartLayout(TimeSeriesLayout)
     }
   }, [props.ChartType, TimeSeriesChartData, TimeSeriesLayout])
+
+  React.useEffect(() => {
+    if (props.ChartType === 'Time Series') {
+      setShowDrawer(props.ShowTimeSeriesDrawer)
+    }
+  }, [props.ChartType, props.ShowTimeSeriesDrawer])
 
   const getChartLayout = (chartLayout: any) => {
     props.ChartLayout(chartLayout)

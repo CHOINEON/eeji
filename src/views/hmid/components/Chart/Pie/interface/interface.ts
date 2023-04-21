@@ -4,4 +4,5 @@ export interface PieChartProps {
   setShowDrawer: (ShowDrawer: boolean) => void
   ChartType: string
   ShowPieDrawer: boolean
+  DataType: (type: string) => void
 }
