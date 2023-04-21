@@ -138,6 +138,29 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   const [arr, setArr] = React.useState<any>([])
 
+  const [SaveTagDataList, setSaveTagDataList] = React.useState<any>([
+    {
+      type: 'Time Series',
+      tag_list: [],
+    },
+    {
+      type: 'Pie',
+      tag_list: [],
+    },
+    {
+      type: 'Bar',
+      tag_list: [],
+    },
+    {
+      type: 'Line',
+      tag_list: [],
+    },
+    {
+      type: 'Table',
+      tag_list: [],
+    },
+  ])
+
   const [PieChartDataType, setPieChartDataType] = React.useState<string>('max')
 
   /**
@@ -257,7 +280,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       console.log('[ Data Connection Widget Info ] >>> ' + WidgetInfo)
       console.log('-------------------------------------------------')
 
-      const DataArr = getDataBySelctedCompany('Dongwon', SelectTagInfo, WidgetInfo)
+      getDataBySelctedCompany('Dongwon', SelectTagInfo, WidgetInfo)
       // console.log(DataArr)
 
       // for (let i = 0, len = SelectTagInfo.length; i < len; i++) {
@@ -413,6 +436,12 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       displaylogo: false,
       displayModeBar: false,
     }
+
+    console.log('--------------------')
+    console.log(node)
+    console.log(option1)
+    console.log(option2)
+    console.log('--------------------')
 
     if (widget !== 'Table') {
       const layout = {
@@ -812,22 +841,32 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           if (e.target.offsetParent.offsetParent.children[0].children[1].children[0].className !== undefined) {
             if (e.target.offsetParent.offsetParent.children[0].children[1].children[0].className !== 'js-plotly-plot') {
               //console.log(' Table 용 모달 창')
-              console.log('--------------------------------------------------------')
-              console.log(e.target.offsetParent.offsetParent.children[0].children[1].id)
+              // console.log('--------------------------------------------------------')
+              // console.log(e.target.offsetParent.offsetParent.children[0].children[1].id)
               setBoxTargetId(e.target.offsetParent.offsetParent.children[0].children[1].id)
               setWidgetInfo('Table')
               setIsOpenDataConnectionModal(true)
             } else {
-              console.log(
-                e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.autorange
-              )
+              // console.log(
+              //   e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.autorange
+              // )
               if (
                 e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.autorange ===
                 true
               ) {
                 setWidgetInfo('Time Series')
-              } else {
+              } else if (
+                e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.autorange ===
+                false
+              ) {
                 setWidgetInfo('Line')
+              } else if (
+                e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type === 'bar'
+              ) {
+                setWidgetInfo('Bar')
+              } else {
+                setWidgetInfo('Pie')
+                console.log('Pie!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
               }
               setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
               setIsOpenDataConnectionModal(true)
@@ -1078,14 +1117,13 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   //전체 태그 리스트
   const getTagList = () => {
+    const params: any = {
+      com_id: localStorage.getItem('companyId'),
+      search_type: 'process',
+    }
+
     axios
-      .get('http://220.94.157.27:59871/api/tag/list', {
-        headers: {
-          Accept: '*/*',
-          'Content-Type': 'application/x-www-form-urlencoded;',
-        },
-        timeout: 500000,
-      })
+      .post('http://220.94.157.27:59871/api/tag/list', params)
       .then((response) => {
         console.log('[ Tag List Response Data ] : ')
         console.log(response.data)
@@ -1098,21 +1136,45 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       })
   }
 
-  // //LayoutInfo
-  // const test = () => {
-  //   axios.get('http://192.168.1.27:8000/api/hmid/layout/info?lay_id=' + 1).then((args: any) => {
-  //     console.log('##########################################')
-  //     console.log(args)
-  //     console.log(JSON.parse(args.data[0].data_option))
-  //     console.log('##########################################')
-  //   })
-  // }
+  // save시 저장할 tag list parameter
+  const getWidgetSelectTagList = (WidgetType: string) => {
+    console.log(WidgetType)
+    let tag_list_result: any = []
+
+    for (let i = 0, len = SaveTagDataList.length; i < len; i++) {
+      console.log(WidgetInfo)
+      console.log(SaveTagDataList[i].type)
+      if (WidgetInfo === SaveTagDataList[i].type) {
+        tag_list_result = SaveTagDataList[i].tag_list
+      }
+      // setSaveTagDataList
+    }
+
+    return tag_list_result
+  }
 
   const getDataBySelctedCompany = (company: string, TagList: any, WidgetInfo: string) => {
     if (company === 'Dongwon') {
       const TagString = ''
 
       setShowLoading(true)
+
+      console.log(WidgetInfo)
+      const data = SaveTagDataList
+
+      //태그 리스트 저장
+      for (let i = 0, len = SaveTagDataList.length; i < len; i++) {
+        console.log(WidgetInfo)
+        console.log(data[i].type)
+        if (WidgetInfo === data[i].type) {
+          data[i].tag_list = TagList
+        }
+        // setSaveTagDataList
+      }
+
+      console.log('----------- Tag Data -------------')
+      console.log(data)
+      setSaveTagDataList(data)
 
       if (WidgetInfo === 'Table' || WidgetInfo === 'Pie' || WidgetInfo === 'Bar') {
         console.log('[ get Tag Describe Data ] : ')
@@ -1172,8 +1234,14 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
               const labels: any = []
               const values: any = []
 
-              const data = PieChartDataOption
+              let data = PieChartDataOption
               const layout = JSON.parse(PieChartLayoutOption)
+
+              // console.log('------[ Pie Chart ]------')
+              // console.log(node)
+              // console.log(PieChartDataOption)
+              // console.log(PieChartLayoutOption)
+              // console.log('--------------------------')
 
               delete layout.title
 
@@ -1191,11 +1259,53 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                 }
               }
 
-              delete data[0].values
-              delete data[0].labels
+              console.log(typeof data)
+              console.log(data)
+              console.log(data[0])
 
-              data[0].labels = labels
-              data[0].values = values
+              if (typeof data === 'object' && data[0] !== undefined) {
+                console.log(data)
+                if (data[0].values !== undefined && data[0].labels !== undefined) {
+                  delete data[0].values
+                  delete data[0].labels
+                  data[0].labels = labels
+                  data[0].values = values
+                } else {
+                  data[0].labels = labels
+                  data[0].values = values
+                }
+                // else {
+                //   data.values = values
+                //   data.labels = labels
+
+                //   data = [data]
+                // }
+
+                // data = [data]
+
+                console.log(data)
+              } else {
+                console.log(data)
+                if (data.values !== undefined && data.labels !== undefined) {
+                  delete data.values
+                  delete data.labels
+
+                  data.labels = labels
+                  data.values = values
+
+                  data = [data]
+                } else {
+                  data.labels = labels
+                  data.values = values
+
+                  data = [data]
+                }
+              }
+
+              console.log('>>>>>>>>>>>[ Pie Chart ]>>>>>>>>>>')
+              console.log(data)
+              console.log(layout)
+              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 
               DrawGauidWidget('Pie', node, data, layout)
               console.log(TagListArr)
@@ -1203,11 +1313,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             }
 
             if (WidgetInfo === 'Bar') {
-              // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-              // console.log(BarChartLayoutOption)
-              // console.log(BarChartDataOption)
-              // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-
               const data: any = []
               let dataX: any = []
               let dataY: any = []
@@ -1267,27 +1372,29 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             console.log(response.data)
 
             if (WidgetInfo === 'Time Series') {
-              console.log('time series일 경우 ')
-              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-              console.log(TimeSeriesLayoutOption)
-              console.log(TimeSeriesDataOption)
-              console.log(node)
-              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+              // console.log('time series일 경우 ')
+              // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+              // console.log(TimeSeriesLayoutOption)
+              // console.log(TimeSeriesDataOption)
+              // console.log(node)
+              // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
               const layout: any = TimeSeriesLayoutOption
               layout.title = '선택한 Tag의 Data'
               DrawGauidWidget('TimeSeries', node, response.data, layout)
             } else if (WidgetInfo === 'Line') {
-              console.log('line chart일 경우 ')
-              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-              console.log(LineChartLayoutOption)
-              console.log(LineChartDataOption)
-              console.log(node)
-              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-              const data: any = []
-              const dataX: any = []
-              const dataY: any = []
+              // console.log('line chart일 경우 ')
+              // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+              // console.log(LineChartLayoutOption)
+              // console.log(LineChartDataOption)
+              // console.log(node)
+              // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+              // const data: any = []
+              // const dataX: any = []
+              // const dataY: any = []
               const dataObj: any = new Object()
               const layout: any = LineChartLayoutOption
+              layout.title = '선택한 Tag들의 Data'
+              DrawGauidWidget('Line', node, response.data, layout)
             }
 
             // setDataArr(response.data)
@@ -1301,6 +1408,36 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           })
       }
     }
+  }
+
+  /**
+   * 2023-04-21
+   * 박윤희
+   * 대시보드 저장 테스트중
+   */
+
+  const SaveDashboard = (args: any) => {
+    console.log('저장 할 대시보드 Json Parameter')
+    console.log(args)
+    console.log(state)
+
+    const params: any = {
+      com_id: localStorage.getItem('companyId'),
+      lay_id: 1,
+      lay_name: state.LAYOUT_NAME,
+      grid_id: state.GRID_ID.toString(),
+      data: args,
+    }
+
+    axios
+      .put('http://220.94.157.27:59871/api/hmid/layout', params)
+      .then((response) => {
+        console.log('[ SaveDashboard Response Data ] : ')
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   const onResizeStop = (e: any) => {
@@ -1335,7 +1472,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   //SaveLayoutModal
   const getSaveLayoutTitle = (title: string) => {
     console.log('[ Save Layout Title ] : ', title)
-    // dispatch({ type: 'LAYOUT_NAME', data: title })
+    dispatch({ type: 'LAYOUT_NAME', data: title })
   }
 
   /**
@@ -1396,8 +1533,14 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                   grid_obj.title = input_element.value
                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
-                  grid_obj.dataOption = data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
-                  grid_obj.layoutOption = [data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout]
+                  grid_obj.dataOption = JSON.stringify(
+                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+                  )
+                  grid_obj.layoutOption = JSON.stringify([
+                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
+                  ])
+
+                  grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type)
                 }
               } else {
                 if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'bar') {
@@ -1406,8 +1549,14 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                   grid_obj.title = input_element.value
                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
-                  grid_obj.dataOption = data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
-                  grid_obj.layoutOption = [data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout]
+                  grid_obj.dataOption = JSON.stringify(
+                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+                  )
+                  grid_obj.layoutOption = JSON.stringify([
+                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
+                  ])
+
+                  grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type)
                 } else if (
                   data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'pie'
                 ) {
@@ -1416,8 +1565,14 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                   grid_obj.title = input_element.value
                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
-                  grid_obj.dataOption = data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
-                  grid_obj.layoutOption = [data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout]
+                  grid_obj.dataOption = JSON.stringify(
+                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+                  )
+                  grid_obj.layoutOption = JSON.stringify([
+                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
+                  ])
+
+                  grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type)
                 } else if (
                   data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'scatter'
                 ) {
@@ -1426,8 +1581,14 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                   grid_obj.title = input_element.value
                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
-                  grid_obj.dataOption = data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
-                  grid_obj.layoutOption = [data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout]
+                  grid_obj.dataOption = JSON.stringify(
+                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+                  )
+                  grid_obj.layoutOption = JSON.stringify([
+                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
+                  ])
+
+                  grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type)
                 }
               }
             } else {
@@ -1437,9 +1598,11 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
               grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
               grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
               grid_obj.layoutOption = []
+              grid_obj.dataOption = JSON.stringify(arr)
               console.log('*********************************')
               console.log(data)
-              // console.log(gridRef)
+              console.log(arr)
+              console.log(gridRef)
               console.log('*********************************')
             }
 
@@ -1472,6 +1635,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
         console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
         console.log(grid_arr)
+
+        SaveDashboard(grid_arr)
       }
       console.log(localStorage.getItem('companyId'))
     }
@@ -1577,13 +1742,17 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           }
         }}
         setDataConnectionInfo={(dataInfo: string) => {
-          console.log('[ Get Data Connection Info ] : ')
-          console.log(dataInfo)
-          console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+          // console.log('[ Get Data Connection Info ] : ')
+          // console.log(dataInfo)
+          // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
           // getDataBySelctedCompany(dataInfo, WidgetInfo)
           getTagList()
         }}
         setTagInfo={(TagInfo: any) => {
+          // console.log('----------------------------')
+          // console.log('[ Get Tag Info ] : ')
+          // console.log(TagInfo)
+          // console.log('----------------------------')
           setSelectTagInfo(TagInfo)
         }}
       />

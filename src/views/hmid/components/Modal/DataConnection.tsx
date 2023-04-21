@@ -38,7 +38,7 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
   const [SelectDataType, setSelectDataType] = React.useState<any>()
   const [TagNodeData, setTagNodeData] = React.useState<any>()
   const [DataNodeData, setDataNodeData] = React.useState<any>()
-  const [TagInfo, setTagInfo] = React.useState<any>()
+  const [TagInfo, setTagInfo] = React.useState<any>([])
 
   React.useEffect(() => {
     CreateDtataListItems()
@@ -127,6 +127,9 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
         onOk={() => {
           props.setTagInfo(TagInfo)
           props.setCloseDataConnectionModal(true)
+          //value 초기화
+          setTagInfo([])
+          setSelectDataType([])
         }}
         onCancel={() => {
           props.setCloseDataConnectionModal(true)
@@ -136,7 +139,7 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
       >
         <DataListWrap>
           <div>Data .</div>
-          <Select style={{ width: 120 }} onChange={handleDataChange} options={DataNodeData} />
+          <Select style={{ width: 120 }} onChange={handleDataChange} options={DataNodeData} value={SelectDataType} />
           <div>Tag .</div>
           <Select
             mode="tags"
@@ -145,6 +148,7 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
             onChange={handleTagChange}
             style={{ width: '100%' }}
             options={TagNodeData}
+            value={TagInfo}
           />
         </DataListWrap>
       </Modal>
