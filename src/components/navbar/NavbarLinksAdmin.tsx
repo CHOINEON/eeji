@@ -26,6 +26,7 @@ import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md'
 import { IoMdMoon, IoMdSunny } from 'react-icons/io'
 import { FaEthereum } from 'react-icons/fa'
 import routes from 'routes'
+
 export default function HeaderLinks(props: { secondary: boolean }) {
   const { secondary } = props
   const { colorMode, toggleColorMode } = useColorMode()
@@ -246,13 +247,13 @@ export default function HeaderLinks(props: { secondary: boolean }) {
               color={textColor}
             >
               👋&nbsp; {'Hey, ' + UserName}
-              <Text ps="3px" pt="16px" pb="10px" w="100%" fontSize="sm" fontWeight="700" color={textColor}>
+              <Text as="span" ps="3px" pt="16px" pb="10px" w="100%" fontSize="sm" fontWeight="700" color={textColor}>
                 🏬&nbsp; {UserCompany}
               </Text>
-              <Text ps="3px" pt="16px" pb="10px" w="100%" fontSize="sm" fontWeight="700" color={textColor}>
+              <Text as="span" ps="3px" pt="16px" pb="10px" w="100%" fontSize="sm" fontWeight="700" color={textColor}>
                 📧&nbsp; {UserCompanyEmail}
               </Text>
-              <Text ps="3px" pt="16px" pb="10px" w="100%" fontSize="sm" fontWeight="700" color={textColor}>
+              <Text as="span" ps="3px" pt="16px" pb="10px" w="100%" fontSize="sm" fontWeight="700" color={textColor}>
                 📞&nbsp; {UserCompanyTel}
               </Text>
             </Text>
