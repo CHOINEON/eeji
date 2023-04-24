@@ -19,8 +19,8 @@ export const BarChartComponent: React.FC<BarChartProps> = (props: any) => {
   const [BarChartLayout, setBarChartLayout] = React.useState<any>()
 
   React.useEffect(() => {
-    setShowDrawer(props.ShowDrawer)
-  }, [props.ShowDrawer])
+    setShowDrawer(props.ShowBarDrawer)
+  }, [props.ShowBarDrawer])
 
   // React.useEffect(() => {
   //   console.log(props.ChartType)

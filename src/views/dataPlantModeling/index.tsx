@@ -216,14 +216,13 @@ export default function DataPlantModeling() {
         </Box>
         <Box>{activeStep === 1 && <VariableSelection onClickNext={onClickNext} />}</Box>
         <Box>{activeStep === 2 && <DataAnalysis onRefresh={onRefresh} />}</Box>
-        {uploaded === true ||
-          (activeStep > 0 && (
-            <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-              <Button onClick={handleNext} sx={{ mr: 1 }}>
-                Next
-              </Button>
-            </Box>
-          ))}
+        {uploaded === true && (
+          <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
+            <Button onClick={handleNext} sx={{ mr: 1 }}>
+              Next
+            </Button>
+          </Box>
+        )}
       </Box>
     </ThemeProvider>
   )

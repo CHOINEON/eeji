@@ -24,6 +24,9 @@ import {
   SliderThumb,
   SliderMark,
   Switch,
+  Radio,
+  RadioGroup,
+  Stack,
 } from '@chakra-ui/react'
 import {
   MdArrowDropDown,
@@ -33,8 +36,8 @@ import {
   MdGraphicEq,
   MdLabel,
   MdOutlineLegendToggle,
-  MdOutlineLineAxis,
 } from 'react-icons/md'
+import { BsDatabaseFillDown } from 'react-icons/bs'
 import reducer from '../reducer/reducer'
 import initialState from '../reducer/initialState'
 
@@ -59,6 +62,7 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
   const { onClose } = useDisclosure()
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const btnRef = React.useRef()
+  const [DataType, setDataType] = React.useState<string>('min')
   // const [PieChartData, setPieChartData] = React.useState<any>({
   //   textinfo: state.ENABLE_MARKER_LABEL,
   //   textposition: state.TEXT_POSITION,
@@ -94,7 +98,7 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
   }, [props.ShowPieDrawer])
 
   React.useEffect(() => {
-    props.ChartLayout({
+    props.PieChartLayout({
       title: state.TITLE,
       margin: {
         l: state.MARGIN_LEFT,
@@ -109,11 +113,17 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
       yaxis: {
         title: state.AXIS_Y_TITLE,
       },
+    })
+    props.PieChartData({
+      textinfo: state.ENABLE_MARKER_LABEL,
+      textposition: state.TEXT_POSITION,
+      hole: state.HOLE,
+      type: 'pie',
     })
   }, [])
 
   React.useEffect(() => {
-    props.ChartLayout({
+    props.PieChartLayout({
       title: state.TITLE,
       margin: {
         l: state.MARGIN_LEFT,
@@ -130,7 +140,7 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
       },
     })
 
-    props.ChartData({
+    props.PieChartData({
       textinfo: state.ENABLE_MARKER_LABEL,
       textposition: state.TEXT_POSITION,
       hole: state.HOLE,
@@ -149,9 +159,14 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
   ])
 
   React.useEffect(() => {
+    console.log(state.DATA_TYPE)
+    props.DataType(state.DATA_TYPE)
+  }, [state.DATA_TYPE])
+
+  React.useEffect(() => {
     console.log('[ Hole ] : ' + state.HOLE)
 
-    props.ChartData({
+    props.PieChartData({
       textinfo: state.ENABLE_MARKER_LABEL,
       textposition: state.TEXT_POSITION,
       hole: state.HOLE,
@@ -178,6 +193,33 @@ export const ChartOption: React.FC<PieChartProps> = (props: any) => {
 
           <DrawerBody>
             <Accordion allowToggle>
+              <AccordionItem>
+                <h2>
+                  <AccordionButton>
+                    <Box as="span" flex="1" textAlign="left">
+                      <BsDatabaseFillDown style={{ display: 'inline-block' }} />
+                      <AccordionTitle>Data</AccordionTitle>
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel pb={4}>
+                  <Margin />
+                  <RadioGroup
+                    onChange={(e: any) => {
+                      setDataType(e)
+                      dispatch({ type: 'DATA_TYPE', data: e })
+                    }}
+                    value={DataType}
+                  >
+                    <Stack direction="row">
+                      <Radio value="min">Min</Radio>
+                      <Radio value="max">Max</Radio>
+                      <Radio value="average">Average</Radio>
+                    </Stack>
+                  </RadioGroup>
+                </AccordionPanel>
+              </AccordionItem>
               <AccordionItem>
                 <h2>
                   <AccordionButton>

@@ -26,9 +26,8 @@ import { Box, useColorModeValue } from '@chakra-ui/react'
 import React from 'react'
 
 //function
-import GridLayoutBox from './function/GridLayout'
-import LayoutList from './list/LayoutList'
-import PredefinedLayouts from './function/GridLayoutTest'
+// import GridLayoutBox from './function/GridLayout'
+// import PredefinedLayouts from './function/GridLayoutTest'
 
 export default function HMID() {
   const theme = useColorModeValue('navy.700', 'white')
@@ -102,9 +101,9 @@ export default function HMID() {
       {/* <Box>
           <GridLayoutBox gridInfo={GridInfo} />
         </Box> */}
-      <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
+      {/* <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
         <LayoutList company_id={window.localStorage.getItem('companyId')} />
-      </Box>
+      </Box> */}
     </>
   )
 }

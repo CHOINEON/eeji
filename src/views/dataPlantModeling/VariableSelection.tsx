@@ -108,55 +108,55 @@ const VariableSelection = (props: any) => {
             display: 'flex',
             flexWrap: 'wrap',
             '& > :not(style)': {
-              m: 1,
-              width: '100%',
-              height: 100,
+              m: 5,
+              // width: '100%',
+              // height: 100,
             },
           }}
         >
-          <Paper style={{ margin: 10 }}>
-            <div style={{ display: 'block', float: 'left' }}>
-              원인변수 :
-              <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel htmlFor="grouped-native-select">Grouping</InputLabel>
-                <Select native defaultValue="" id="grouped-native-select" label="Grouping">
-                  <option aria-label="None" value="" />
-                  <optgroup label="PULL">
-                    <option value={1}>pull</option>
-                  </optgroup>
-                  <optgroup label="TC">
-                    <option value={3}>Tag-1</option>
-                    <option value={4}>Tag-2</option>
-                  </optgroup>
-                  <optgroup label="POWER">
-                    <option value={3}>single-phase</option>
-                    <option value={4}>three-phase</option>
-                  </optgroup>
-                </Select>
-              </FormControl>
-            </div>
+          {/* <Paper style={{ margin: 10 }}> */}
+          <div style={{ display: 'block', float: 'left' }}>
+            원인변수 :
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+              <InputLabel htmlFor="grouped-native-select">Grouping</InputLabel>
+              <Select native defaultValue="" id="grouped-native-select" label="Grouping">
+                <option aria-label="None" value="" />
+                <optgroup label="PULL">
+                  <option value={1}>pull</option>
+                </optgroup>
+                <optgroup label="TC">
+                  <option value={3}>Tag-1</option>
+                  <option value={4}>Tag-2</option>
+                </optgroup>
+                <optgroup label="POWER">
+                  <option value={3}>single-phase</option>
+                  <option value={4}>three-phase</option>
+                </optgroup>
+              </Select>
+            </FormControl>
+          </div>
 
-            <div style={{ display: 'block', float: 'left' }}>
-              타겟변수 :
-              <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel htmlFor="grouped-native-select">Grouping</InputLabel>
-                <Select native defaultValue="" id="grouped-native-select" label="Grouping">
-                  <option aria-label="None" value="" />
-                  <optgroup label="PULL">
-                    <option value={1}>pull</option>
-                  </optgroup>
-                  <optgroup label="TC">
-                    <option value={3}>Tag-1</option>
-                    <option value={4}>Tag-2</option>
-                  </optgroup>
-                  <optgroup label="POWER">
-                    <option value={3}>single-phase</option>
-                    <option value={4}>three-phase</option>
-                  </optgroup>
-                </Select>
-              </FormControl>
-            </div>
-          </Paper>
+          <div style={{ display: 'block', float: 'left' }}>
+            타겟변수 :
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+              <InputLabel htmlFor="grouped-native-select">Grouping</InputLabel>
+              <Select native defaultValue="" id="grouped-native-select" label="Grouping">
+                <option aria-label="None" value="" />
+                <optgroup label="PULL">
+                  <option value={1}>pull</option>
+                </optgroup>
+                <optgroup label="TC">
+                  <option value={3}>Tag-1</option>
+                  <option value={4}>Tag-2</option>
+                </optgroup>
+                <optgroup label="POWER">
+                  <option value={3}>single-phase</option>
+                  <option value={4}>three-phase</option>
+                </optgroup>
+              </Select>
+            </FormControl>
+          </div>
+          {/* </Paper> */}
         </Box>
       </>
 

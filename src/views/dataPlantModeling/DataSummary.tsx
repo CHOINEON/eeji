@@ -27,22 +27,20 @@ const DataSummary = (props: any) => {
     setData(tempArray)
   }, [dataSource])
 
-  const handleClick = () => {
-    // onClickNext(2, true) // Move on to Tab 2
-  }
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value)
   }
 
   const card = (param: any) => {
-    console.log(param)
+    // console.log(param)
     return (
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             <p>파일명 : {param.value.data}</p>
-            <p>행/열: {param.value.shape}</p>
-            <p>{param.value.date}</p>
+            <p>행/열 : {param.value.shape}</p>
+            <p>시작일 :{param.value.startDate}</p>
+            <p>종료일 :{param.value.endDate}</p>
             <p>결측치 : {param.value.missing.length === 0 ? '없음' : param.value.missing}</p>
           </Typography>
           <Typography variant="body2"></Typography>

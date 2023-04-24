@@ -26,8 +26,8 @@ import { Box, useColorModeValue } from '@chakra-ui/react'
 import React from 'react'
 
 //function
-import GridLayoutBox from './grid/GridLayout'
-import LayoutList from '../hmid/list/LayoutList'
+// import GridLayoutBox from './grid/GridLayout'
+// import LayoutList from '../hmid/list/LayoutList'
 import PredefinedLayouts from './grid/GridLayoutTest'
 
 export default function LayoutConfig() {

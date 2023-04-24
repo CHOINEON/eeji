@@ -13,6 +13,7 @@ import DataPlantModeling from 'views/dataPlantModeling'
 import AIPlantModeling from 'views/AiPlantModeling'
 import Configuration from 'views/configuration'
 import DashboardConfig from 'views/hmid_config'
+import LayoutList from 'views/hmid_list'
 // import LayoutList from 'views/hmid/list/LayoutList'
 
 // Auth Imports
@@ -56,15 +57,22 @@ const routes = [
   {
     name: 'HMID',
     layout: '/admin',
-    path: '/layoutsetting',
+    path: '/maindashboard',
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: MainDashboard,
   },
   {
-    name: 'HMID-Config',
+    name: 'HMID Configuration',
     layout: '/admin',
-    path: '/layoutconfig',
-    icon: <Icon as={MainDashboard} width="20px" height="20px" color="inherit" />,
+    path: '/layout-list',
+    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+    component: LayoutList,
+  },
+  {
+    name: 'HMID Configuration',
+    layout: '/admin',
+    path: '/layout-configuration',
+    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: DashboardConfig,
   },
   {

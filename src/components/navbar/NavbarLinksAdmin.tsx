@@ -56,7 +56,8 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     JSON.parse(window.localStorage.getItem('company_info')).com_tel
   )
 
-  // console.log(JSON.parse(window.localStorage.getItem('userData')).name)
+  console.log('Window LocalStorage ... ')
+  console.log(window.localStorage.getItem('userPosition'))
 
   React.useEffect(() => {
     setUserName(JSON.parse(window.localStorage.getItem('userData'))[0].user_nm)

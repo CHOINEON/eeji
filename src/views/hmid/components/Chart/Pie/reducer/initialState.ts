@@ -17,12 +17,13 @@ export const initialState = {
   LEGEND_TRACEORDER: 'normal',
   LEGEND_ORIENTATION: 'v',
   MARGIN_TOP: 100,
-  MARGIN_RIGHT: 100,
-  MARGIN_LEFT: 100,
-  MARGIN_BOTTOM: 126,
+  MARGIN_RIGHT: 30,
+  MARGIN_LEFT: 10,
+  MARGIN_BOTTOM: 50,
   TEXT_POSITION: 'auto',
   AXIS_X_TITLE: 'x axis',
   AXIS_Y_TITLE: 'y axis',
+  DATA_TYPE: 'min',
 }
 
 export default initialState

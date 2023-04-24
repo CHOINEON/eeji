@@ -29,7 +29,7 @@ const FileUploader = (props: any) => {
 
   useEffect(() => {
     if (uploaded) onUploaded(true)
-  }, [onUploaded, uploaded])
+  }, [onUploaded])
 
   const asyncSettings: object = {
     chunkSize: 100000000, // set chunk size for enable the chunk upload
