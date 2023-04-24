@@ -1119,7 +1119,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const getTagList = () => {
     const params: any = {
       com_id: localStorage.getItem('companyId'),
-      search_type: 'process',
+      search_type: 'proccess',
     }
 
     axios
