@@ -50,7 +50,7 @@ const FileUploader = (props: any) => {
       }
 
       axios
-        .post(process.env.REACT_APP_API_LOCAL_URL + '/api/tag/uploadfile', formData, {
+        .post('http://220.94.157.27:59871' + '/api/tag/uploadfile', formData, {
           headers: {
             'Content-Type': `multipart/form-data;`,
           },

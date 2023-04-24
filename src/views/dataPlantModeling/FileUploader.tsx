@@ -54,7 +54,7 @@ const FileUploader = (props: any) => {
       }
 
       axios
-        .post(process.env.REACT_APP_API_LOCAL_URL + '/api/tag/uploadfile', formData, {
+        .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/uploadfile', formData, {
           headers: {
             'Content-Type': `multipart/form-data;`,
           },

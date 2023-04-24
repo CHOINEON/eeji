@@ -63,7 +63,7 @@ const Worksheet = (props: any) => {
     setProgressActive(true)
 
     if (selectedTags.length > 0) {
-      axios.post(process.env.REACT_APP_API_LOCAL_URL + '/api/tag/chartData', selectedTags).then(
+      axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/chartData', selectedTags).then(
         (response: any) => {
           console.log('getChartdata response:', response.data)
 
