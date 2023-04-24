@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { createElement } from '@syncfusion/ej2-base'
 import { RemovingEventArgs, UploaderComponent } from '@syncfusion/ej2-react-inputs'
-// import { Button } from '@chakra-ui/react'
-import Button from '@mui/material/Button'
+import { Button } from '@chakra-ui/react'
 import { CircularProgress } from '@chakra-ui/react'
 import axios from 'axios'
 import DataInfoGrid from './DataSummary'
@@ -11,8 +10,7 @@ import DataSummary from './DataSummary'
 const FileUploader = (props: any) => {
   const uploadObj = useRef<UploaderComponent>(null)
   const [loading, setLoading] = useState(false)
-  const [uploaded, setUploaded] = useState(false)
-  const { onUploaded, refresh } = props
+  const { onClickNext, refresh } = props
   const [summaryResult, setSummaryResult] = useState([])
 
   let dropContainerEle: HTMLElement = null
@@ -21,15 +19,8 @@ const FileUploader = (props: any) => {
   }
 
   useEffect(() => {
-    if (refresh) {
-      uploadObj.current.clearAll()
-      setUploaded(false)
-    }
+    uploadObj.current.clearAll()
   }, [refresh])
-
-  useEffect(() => {
-    if (uploaded) onUploaded(true)
-  }, [onUploaded])
 
   const asyncSettings: object = {
     chunkSize: 100000000, // set chunk size for enable the chunk upload
@@ -37,6 +28,11 @@ const FileUploader = (props: any) => {
 
   function onRemoveFile(args: RemovingEventArgs): void {
     args.postRawFile = false
+  }
+
+  const handleConfirm = () => {
+    //Tab1로 이동하고 결과값 렌더링
+    onClickNext(1)
   }
 
   const handleUpload = () => {
@@ -63,10 +59,12 @@ const FileUploader = (props: any) => {
           (response) => {
             // console.log('uploadfile RESP:', response)
             setSummaryResult(response.data)
+            console.log('summary data:', response.data)
 
             setLoading(false)
             if (response.status === 200) {
-              setUploaded(true)
+              if (response.data.length > 0) {
+              }
             }
           },
           (error) => {
@@ -104,13 +102,22 @@ const FileUploader = (props: any) => {
                 {loading ? (
                   <CircularProgress isIndeterminate color="green.300" />
                 ) : (
-                  <Button onClick={handleUpload}>Upload</Button>
+                  <Button colorScheme="teal" variant="ghost" onClick={handleUpload}>
+                    Upload
+                  </Button>
                 )}
               </div>
 
               {summaryResult.length > 0 && (
                 <div style={{ marginTop: '100px' }}>
-                  <DataSummary dataSource={summaryResult} />
+                  {summaryResult.length > 0 && <DataSummary dataSource={summaryResult} />}
+
+                  <div style={{ textAlign: 'right' }}>
+                    {' '}
+                    <Button colorScheme="teal" variant="ghost" onClick={handleConfirm}>
+                      Confirm
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
