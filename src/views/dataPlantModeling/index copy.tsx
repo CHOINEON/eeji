@@ -22,7 +22,7 @@
 
 // Chakra imports
 import React, { useState, useEffect } from 'react'
-import { Box, useColorModeValue, Stack, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+import { Box, useColorModeValue, Stack, Button, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
 import FileUploader from './FileUploader'
 import DataInfoGrid from './DataSummary'
@@ -31,12 +31,6 @@ import { refreshVirtualLazyLoadCache } from '@syncfusion/ej2-react-grids'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { green, purple } from '@mui/material/colors'
 import VariableSelection from './VariableSelection'
-
-import Stepper from '@mui/material/Stepper'
-import Step from '@mui/material/Step'
-import StepButton from '@mui/material/StepButton'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
 
 const theme = createTheme({
   palette: {
@@ -67,12 +61,6 @@ export default function DataPlantModeling() {
   const [isDisabled, setIsDisabled] = useState([false, false, false])
   const [dataSummary, setDataSummary] = useState()
   const [tagList, setTagList] = useState(false)
-  const [uploaded, setUploaded] = useState(false)
-
-  const [activeStep, setActiveStep] = React.useState(0)
-  const [completed, setCompleted] = React.useState<{
-    [k: number]: boolean
-  }>({})
 
   // useEffect(() => {
   //   const tempArray: Array<boolean> = new Array<boolean>()
@@ -118,10 +106,11 @@ export default function DataPlantModeling() {
     setTabIndex(index)
   }
 
-  const onClickNext = (step: any) => {
-    // console.log('e:', step)
+  const onClickNext = (tabNumber: any) => {
+    // console.log('e:', tabNumber)
     // console.log('data:', data)
-    // setTabIndex(tabNumber)
+
+    setTabIndex(tabNumber)
     // if (tabNumber === 1 && data) {
     //   setDataSummary(data)
     // }
@@ -139,91 +128,43 @@ export default function DataPlantModeling() {
     setTabIndex(parseInt(event.target.value, 10))
   }
 
-  const onUploaded = (param: boolean) => {
-    setUploaded(param)
-  }
-  const steps = ['Upload Data', 'Select Variables', 'Preprocessing']
-  const totalSteps = () => {
-    return steps.length
-  }
-
-  const completedSteps = () => {
-    return Object.keys(completed).length
-  }
-
-  const isLastStep = () => {
-    return activeStep === totalSteps() - 1
-  }
-
-  const allStepsCompleted = () => {
-    return completedSteps() === totalSteps()
-  }
-
-  const handleNext = () => {
-    const newActiveStep =
-      isLastStep() && !allStepsCompleted()
-        ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
-        : activeStep + 1
-    setActiveStep(newActiveStep)
-  }
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1)
-  }
-
-  const handleStep = (step: number) => () => {
-    setActiveStep(step)
-  }
-
-  const handleComplete = () => {
-    const newCompleted = completed
-    newCompleted[activeStep] = true
-    setCompleted(newCompleted)
-    handleNext()
-  }
-
-  const handleReset = () => {
-    setActiveStep(0)
-    setCompleted({})
-  }
-  // https://mui.com/material-ui/react-stepper/
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
         {/* <Box>{renderGrid(GridInfo)}</Box> */}
         {/* <Box>
           <GridLayoutBox gridInfo={GridInfo} />
         </Box> */}
-        <Box margin={5}>
-          <Stepper nonLinear activeStep={activeStep}>
-            {steps.map((label, index) => (
-              <Step key={label} completed={completed[index]}>
-                <StepButton color="inherit" onClick={handleStep(index)}>
-                  {label}
-                </StepButton>
-              </Step>
-            ))}
-          </Stepper>
-        </Box>
-        <Box>
-          {activeStep === 0 && (
-            <>
-              <FileUploader onUploaded={onUploaded} refresh={refresh} />
-            </>
-          )}
-        </Box>
-        <Box>{activeStep === 1 && <VariableSelection onClickNext={onClickNext} />}</Box>
-        <Box>{activeStep === 2 && <DataAnalysis onRefresh={onRefresh} />}</Box>
-        {uploaded === true && (
-          <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-            <Button onClick={handleNext} sx={{ mr: 1 }}>
-              Next
-            </Button>
-          </Box>
-        )}
+        <input type="range" min="0" max="2" value={tabIndex} onChange={handleSliderChange} />
+
+        <Tabs index={tabIndex} onChange={handleTabsChange}>
+          <TabList>
+            <Tab isDisabled={isDisabled[0]}>Data Upload</Tab>
+            <Tab isDisabled={isDisabled[1]}>Select Variables</Tab>
+            <Tab isDisabled={isDisabled[2]}>Preprocessing</Tab>
+          </TabList>
+          <ThemeProvider theme={theme}>
+            <TabPanels>
+              <TabPanel>
+                <FileUploader onClickNext={onClickNext} refresh={refresh} />
+              </TabPanel>
+              <TabPanel>
+                <VariableSelection onClickNext={onClickNext} />
+              </TabPanel>
+              <TabPanel>
+                <DataAnalysis onRefresh={onRefresh} />
+              </TabPanel>
+            </TabPanels>
+          </ThemeProvider>
+        </Tabs>
       </Box>
-    </ThemeProvider>
+      {/* {tabIndex === 2 && (
+        <div style={{ textAlign: 'right' }}>
+          <Button colorScheme="teal" variant="ghost" onClick={handleNewStart}>
+            NEW START
+          </Button>
+        </div>
+      )} */}
+    </>
   )
 }

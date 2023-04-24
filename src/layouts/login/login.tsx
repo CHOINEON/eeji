@@ -89,7 +89,13 @@ export const Login: React.FC = () => {
     } else {
       axios
         .get(
-          'http://220.94.157.27:59871/api/user/info?com_id=' + company + '&user_id=' + id + '&user_pass=' + password,
+          process.env.REACT_APP_API_LOCAL_URL +
+            '/api/user/info?com_id=' +
+            company +
+            '&user_id=' +
+            id +
+            '&user_pass=' +
+            password,
           {
             headers: {
               Accept: '*/*',
@@ -99,8 +105,8 @@ export const Login: React.FC = () => {
           }
         )
         .then((response) => {
-          console.log('[ axios response data ] : ')
-          console.log(response.data)
+          // console.log('[ axios response data ] : ')
+          // console.log(response.data)
 
           getCompanyInfo(company)
           window.location.href = '/admin/data-plant-modeling'
@@ -109,7 +115,7 @@ export const Login: React.FC = () => {
           window.localStorage.setItem('userPosition', response.data[0].user_position)
         })
         .catch((error) => {
-          console.log(error.response)
+          // console.log(error.response)
           // error('아이디 또는 비밀번호가 틀립니다.')
         })
     }

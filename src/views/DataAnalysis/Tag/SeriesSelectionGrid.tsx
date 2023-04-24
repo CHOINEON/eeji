@@ -7,24 +7,24 @@ import { CheckboxSelectionCallbackParams, ColDef } from '@ag-grid-community/core
 import { ModuleRegistry } from '@ag-grid-community/core'
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model'
 import axios from 'axios'
+import { SelectionChangedEvent } from 'ag-grid-community'
 
 // Register the required feature modules with the Grid
 ModuleRegistry.registerModules([ClientSideRowModelModule])
 
 const SeriesSelectionGrid = (props: any) => {
-  const { selectedTags } = props
+  const { selectedTags, refresh } = props
 
   const gridRef = useRef<AgGridReact<any>>(null)
   const containerStyle = useMemo(() => ({ width: '100%', height: '200px' }), [])
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), [])
-  const [rowData, setRowData] = useState<any[]>()
   const [statistic, setStatistic] = React.useState([])
   const [columnDefs, setColumnDefs] = useState<ColDef[]>([
     {
       field: 'tagName',
       headerCheckboxSelection: true,
       checkboxSelection: (params: CheckboxSelectionCallbackParams<any>) => {
-        return !!params.data && params.data.year === 2012
+        return params.data
       },
       showDisabledCheckboxes: true,
     },
@@ -34,18 +34,27 @@ const SeriesSelectionGrid = (props: any) => {
   ])
 
   useEffect(() => {
-    //한번에 불러서 배열에서 찾게 바꾸기(arr.find())
+    // console.log('taglist refresh:', gridRef.current)
+    //selection 초기화
+    if (refresh) gridRef.current.api.deselectAll()
+  }, [refresh])
+
+  useEffect(() => {
+    // console.log('*********series selection grid')
+    //TODO :한번에 불러서 배열에서 찾게 바꾸기(arr.find())
     const fetchStatistic = () => {
-      // console.log('selectedTags:', selectedTags)
-      axios.post('http://220.94.157.27:59871/api/tag/describe', selectedTags).then(
-        (response: any) => {
-          // console.log('response:', response)
-          setStatistic(response.data)
-        },
-        (error) => {
-          console.log('error:', error)
-        }
-      )
+      if (selectedTags.length > 0) {
+        console.log('selectedTags:', selectedTags)
+        axios.post(process.env.REACT_APP_API_LOCAL_URL + '/api/tag/describe', selectedTags).then(
+          (response: any) => {
+            console.log('response:', response)
+            setStatistic(response.data)
+          },
+          (error) => {
+            console.log('error:', error)
+          }
+        )
+      }
     }
     fetchStatistic()
   }, [selectedTags])
@@ -56,6 +65,10 @@ const SeriesSelectionGrid = (props: any) => {
       minWidth: 100,
     }
   }, [])
+
+  const onSelectionChanged = (e: any) => {
+    // console.log('e:', e)
+  }
 
   // const onGridReady = useCallback((params: GridReadyEvent) => {
   //   // fetch('https://www.ag-grid.com/example-assets/small-olympic-winners.json')
@@ -71,13 +84,15 @@ const SeriesSelectionGrid = (props: any) => {
   return (
     <div style={containerStyle}>
       <div style={gridStyle} className="ag-theme-alpine">
-        <AgGridReact<any>
+        <AgGridReact
           ref={gridRef}
           rowData={statistic}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           rowSelection={'multiple'}
-          suppressRowClickSelection={true}
+          // suppressRowClickSelection={true}
+          rowMultiSelectWithClick={true}
+          onSelectionChanged={onSelectionChanged}
           // onGridReady={onGridReady}
           // onFirstDataRendered={onFirstDataRendered}
         ></AgGridReact>

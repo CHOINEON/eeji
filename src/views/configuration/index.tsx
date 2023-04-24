@@ -31,7 +31,7 @@ export default function Configuration() {
   const [AdminInfo, setAdminInfo] = React.useState('block')
 
   const theme = useColorModeValue('navy.700', 'white')
-  console.log(theme)
+  // console.log(theme)
 
   //새로고침 막기
   // const preventClose = (e: BeforeUnloadEvent) => {

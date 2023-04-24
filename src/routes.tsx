@@ -34,7 +34,7 @@ const routes = [
   //   component: DataConnection,
   // },
   {
-    name: 'Data Plant Modeling',
+    name: 'Data Analysis',
     layout: '/admin',
     path: '/data-plant-modeling',
     icon: <Icon as={BsHammer} width="20px" height="20px" color="inherit" />,
