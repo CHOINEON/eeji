@@ -48,7 +48,8 @@ export const SaveConfirmModal: React.FC<SaveConfirmModalProps> = (props) => {
 
   //reducer dispatch
   const ChangeLayoutName = (LayoutName: any) => {
-    dispatch({ type: 'LAYOUT_NAME', data: LayoutName.target.value })
+    props.setSaveLayoutTitle(LayoutName.target.value)
+    // dispatch({ type: 'LAYOUT_NAME', data: LayoutName.target.value })
   }
 
   return (

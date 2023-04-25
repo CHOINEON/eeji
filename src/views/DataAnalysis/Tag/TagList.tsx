@@ -39,7 +39,7 @@ const TagList = (props: any) => {
     axios
       .post(process.env.REACT_APP_API_LOCAL_URL + '/api/tag/list', {
         com_id: localStorage.getItem('companyId'),
-        search_type: 'proccess',
+        search_type: 'process',
       })
       .then((response) => {
         // console.log('fetchTaglistData:', response)

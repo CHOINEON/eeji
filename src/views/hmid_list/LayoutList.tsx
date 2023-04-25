@@ -104,19 +104,36 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
     console.log(data)
 
     for (let i = 0, len = data.length; i < len; i++) {
-      component.push(
-        <LayoutListBox key={data[i].lay_id}>
-          <LayoutListViewParent
-            ref={(el): any => (testRefs.current[i] = el)}
-            onClick={(e: any) => {
-              addLineBox(e)
-            }}
-          >
-            <LayoutListView id={data[i].lay_id} />
-          </LayoutListViewParent>
-          <LayoutListTitle>{data[i].lay_nm}</LayoutListTitle>
-        </LayoutListBox>
-      )
+      if (data[i].use_yn === 1) {
+        component.push(
+          <LayoutListBox key={data[i].lay_id}>
+            <LayoutListViewParent
+              ref={(el): any => (testRefs.current[i] = el)}
+              onClick={(e: any) => {
+                addLineBox(e)
+              }}
+              style={{ border: '3px solid #00a0e9' }}
+            >
+              <LayoutListView id={data[i].lay_id} />
+            </LayoutListViewParent>
+            <LayoutListTitle>{data[i].lay_nm}</LayoutListTitle>
+          </LayoutListBox>
+        )
+      } else {
+        component.push(
+          <LayoutListBox key={data[i].lay_id}>
+            <LayoutListViewParent
+              ref={(el): any => (testRefs.current[i] = el)}
+              onClick={(e: any) => {
+                addLineBox(e)
+              }}
+            >
+              <LayoutListView id={data[i].lay_id} />
+            </LayoutListViewParent>
+            <LayoutListTitle>{data[i].lay_nm}</LayoutListTitle>
+          </LayoutListBox>
+        )
+      }
     }
 
     component.push(
@@ -128,40 +145,84 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
     setComponent(component)
   }
 
-  const deleteLayout = () => {
-    console.log('선택된 레이아웃 아이디 : ' + LayoutId)
-    console.log('선택된 회사 아이디 : ' + CompanyId)
+  // const deleteLayout = () => {
+  //   console.log('선택된 레이아웃 아이디 : ' + LayoutId)
+  //   console.log('선택된 회사 아이디 : ' + CompanyId)
 
-    const result = confirm('선택한 레이아웃을 삭제하시겠습니까?')
-    if (result) {
-      axios
-        .delete('http://220.94.157.27:59871/api/hmid/layout?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
-          headers: {
-            Accept: '*/*',
-            'Content-Type': 'application/x-www-form-urlencoded;',
-          },
-          timeout: 5000,
-        })
-        .then((response) => {
-          console.log('[ delete Layout axios response data ] : ')
-          console.log(response.data)
-          getLayoutList(CompanyId)
-        })
-        .catch((error) => {
-          console.log(error.response)
-        })
-    } else {
-      for (let i = 0, len = testRefs.current.length; i < len; i++) {
-        testRefs.current[i].children[0].style.border = '0px solid rgba(0,0,0,0)'
-      }
-    }
-  }
+  //   const result = confirm('선택한 레이아웃을 삭제하시겠습니까?')
+  //   if (result) {
+  //     axios
+  //       .delete('http://220.94.157.27:59871/api/hmid/layout?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
+  //         headers: {
+  //           Accept: '*/*',
+  //           'Content-Type': 'application/x-www-form-urlencoded;',
+  //         },
+  //         timeout: 5000,
+  //       })
+  //       .then((response) => {
+  //         console.log('[ delete Layout axios response data ] : ')
+  //         console.log(response.data)
+  //         getLayoutList(CompanyId)
+  //       })
+  //       .catch((error) => {
+  //         console.log(error.response)
+  //       })
+  //   } else {
+  //     for (let i = 0, len = testRefs.current.length; i < len; i++) {
+  //       testRefs.current[i].children[0].style.border = '0px solid rgba(0,0,0,0)'
+  //     }
+  //   }
+  // }
 
   //layoutlist api 연결
   const getLayoutList = (company_id: string) => {
     console.log(company_id)
     axios
-      .get('http://220.94.157.27:59871/api/hmid/layout?company_id=' + company_id, {
+      .get('http:///192.168.1.27:8000/api/hmid/layout?company_id=' + company_id, {
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/x-www-form-urlencoded;',
+        },
+        timeout: 5000,
+      })
+      .then((response) => {
+        console.log('[ get Layout List axios response data ] : ')
+        console.log(response.data)
+
+        renderLayoutList(response.data)
+
+        window.localStorage.setItem('layout_id', response.data[response.data.length - 1].lay_id)
+      })
+      .catch((error) => {
+        console.log(error.response)
+      })
+  }
+
+  //set Default Dashboard Layout
+  const SetDefaultDashboard = () => {
+    axios
+      .put('http://192.168.1.27:8000/api/hmid/layout/default?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/x-www-form-urlencoded;',
+        },
+        timeout: 5000,
+      })
+      .then((response) => {
+        console.log('[ set Default Layout axios response data ] : ')
+        console.log(response.data)
+
+        renderLayoutList(response.data)
+        getLayoutList(CompanyId)
+      })
+      .catch((error) => {
+        console.log(error.response)
+      })
+  }
+  //레이아웃 삭제
+  const deleteLayout = () => {
+    axios
+      .delete('http://192.168.1.27:8000/api/hmid/layout?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
@@ -179,32 +240,11 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
       })
   }
 
-  //레이아웃 삭제
-  // const deleteLayout = () => {
-  //   axios
-  //     .delete('http://192.168.1.27:8000/api/hmid/layout?com_id=' + company_id + '&lay_id', {
-  //       headers: {
-  //         Accept: '*/*',
-  //         'Content-Type': 'application/x-www-form-urlencoded;',
-  //       },
-  //       timeout: 5000,
-  //     })
-  //     .then((response) => {
-  //       console.log('[ get Layout List axios response data ] : ')
-  //       console.log(response.data)
-
-  //       renderLayoutList(response.data)
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.response)
-  //     })
-  // }
-
   return (
     <>
       <Box style={{ position: 'relative', zIndex: 1000 }}>
         <Stack direction="row" spacing={4} pl={3} display={AdminInfo}>
-          <Button leftIcon={<BiSelectMultiple />} variant="brand">
+          <Button leftIcon={<BiSelectMultiple />} variant="brand" onClick={SetDefaultDashboard}>
             선택
           </Button>
           <Button leftIcon={<RiDeleteBinLine />} variant="brand" onClick={deleteLayout}>
