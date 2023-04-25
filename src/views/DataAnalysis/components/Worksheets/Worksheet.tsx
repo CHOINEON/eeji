@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
-import { Button, WrapItem } from '@chakra-ui/react'
+// import { Button, WrapItem } from '@chakra-ui/react'
 import ChartDataSelection from '../Chart/ChartDataSelection'
 import EditingData from '../Chart/EditingData'
-import SeriesSelectionGrid from '../Tag/SeriesSelectionGrid'
+import SeriesSelectionGrid from '../../Tag/SeriesSelectionGrid'
 import axios from 'axios'
+import Button from '@mui/material/Button'
 import ChartSelectionDialog from '../Chart/ChartSelectionDialog'
 import CircularProgress from '@mui/material/CircularProgress'
 import LineSeriesChart from '../Chart/LineSeriesChart'
@@ -16,7 +17,7 @@ const Worksheet = (props: any) => {
   // const { chart } = props
   const { selectedTags, count, createChart, refresh } = props
 
-  const chartType = ['scatterPlot', 'line']
+  // const chartType = ['scatterPlot', 'line']
   const [active, setActive] = useState(false)
   const [clicked, setClicked] = useState(false)
   const [progressActive, setProgressActive] = useState(false)
@@ -63,7 +64,7 @@ const Worksheet = (props: any) => {
     setProgressActive(true)
 
     if (selectedTags.length > 0) {
-      axios.post(process.env.REACT_APP_API_LOCAL_URL + '/api/tag/chartData', selectedTags).then(
+      axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/chartData', selectedTags).then(
         (response: any) => {
           console.log('getChartdata response:', response.data)
 
@@ -121,16 +122,16 @@ const Worksheet = (props: any) => {
       })
       return singleChart
     } else {
-      return (
-        <Button
-          colorScheme="teal"
-          variant="outline"
-          onClick={handleCreateChart}
-          style={{ position: 'relative', top: '200px' }}
-        >
-          CREATE CHART
-        </Button>
-      )
+      // return (
+      //   <Button
+      //     colorScheme="teal"
+      //     variant="outline"
+      //     onClick={handleCreateChart}
+      //     style={{ position: 'relative', top: '200px' }}
+      //   >
+      //     CREATE CHART
+      //   </Button>
+      // )
     }
   }
 
@@ -148,6 +149,15 @@ const Worksheet = (props: any) => {
       >
         {progressActive && <CircularProgress style={{ position: 'relative', top: '200px' }} />}
         {renderItem()}
+      </div>
+      <div style={{ width: '100%', margin: 'auto', textAlign: 'center' }}>
+        <Button
+          variant="contained"
+          onClick={handleCreateChart}
+          style={{ width: '200px', height: '40px', margin: 'auto', marginTop: '5px' }}
+        >
+          CREATE CHART
+        </Button>
       </div>
       {/* <ChartSelectionDialog isOpen={isOpen} onDialogClose={handldDialogClose} onSelectChart={onSelectChart} /> */}
     </>

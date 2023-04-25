@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Button, WrapItem } from '@chakra-ui/react'
 import ChartDataSelection from '../Chart/ChartDataSelection'
 import EditingData from '../Chart/EditingData'
-import SeriesSelectionGrid from '../Tag/SeriesSelectionGrid'
+import SeriesSelectionGrid from '../../Tag/SeriesSelectionGrid'
 import axios from 'axios'
 import ChartSelectionDialog from '../Chart/ChartSelectionDialog'
 

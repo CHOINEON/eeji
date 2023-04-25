@@ -45,7 +45,7 @@ const SeriesSelectionGrid = (props: any) => {
     const fetchStatistic = () => {
       if (selectedTags.length > 0) {
         console.log('selectedTags:', selectedTags)
-        axios.post(process.env.REACT_APP_API_LOCAL_URL + '/api/tag/describe', selectedTags).then(
+        axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/describe', selectedTags).then(
           (response: any) => {
             console.log('response:', response)
             setStatistic(response.data)
