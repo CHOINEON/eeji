@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Dialog from '@mui/material/Dialog'
 import ico_line from 'assets/img/ineeji/ico_line.png'
 import ico_scatter_plot from 'assets/img/ineeji/ico_scatter_plot.png'
-import Image from 'next/image'
+// import Image from 'next/image'
 
 // export const charts = ['Scatter Plot', 'Line Chart']
 

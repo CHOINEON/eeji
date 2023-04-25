@@ -6,6 +6,7 @@ import { RiDeleteBinLine } from 'react-icons/ri'
 import { Box, useColorModeValue, Stack, Button, Checkbox } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import no_image from './img/no-image.jpg'
+import use_yn_check from './img/use_yn_check.png'
 
 interface LayoutListProps {
   company_id: string
@@ -29,6 +30,7 @@ const LayoutListViewParent = styled.div`
   width: 100%;
   height: 80%;
   cursor: pointer;
+  position: relative;
 `
 
 const LayoutListView = styled.div`
@@ -62,6 +64,18 @@ const AddLayoutListBox = styled(LayoutListBox)`
   color: #00a0e9;
 `
 
+const UseYnCheckBox = styled.div`
+  position: absolute;
+  right: 0.5vw;
+  top: 0.5vw;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  width: 2vw;
+  height: 2vw;
+  background-position: center center;
+  background-image: url(${use_yn_check});
+`
+
 export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
   const [OpenLayoutModal, setOpenLayoutModal] = React.useState<boolean>(false)
@@ -81,7 +95,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
 
   const theme = useColorModeValue('navy.700', 'white')
 
-  const testRefs = React.useRef<any>([])
+  const testRefs = React.useRef([])
 
   React.useEffect(() => {
     setCompanyId(props.company_id)
@@ -95,7 +109,31 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
 
   const addLineBox = (e: any) => {
     setLayoutId(e.target.id)
-    e.target.style.border = '3px solid #00a0e9'
+
+    for (let i = 0, len = testRefs.current.length; i < len; i++) {
+      console.log(testRefs.current[i])
+      console.log(testRefs.current[i].children)
+      if (testRefs.current[i].children.length === 2) {
+        if (testRefs.current[i].children[1].id !== e.target.id) {
+          testRefs.current[i].style = 'border:0px solid #fff'
+        } else {
+          testRefs.current[i].style = 'border:3px solid #00a0e9'
+        }
+      } else {
+        if (testRefs.current[i].children[0].id !== e.target.id) {
+          testRefs.current[i].style = 'border:0px solid #fff'
+        } else {
+          testRefs.current[i].style = 'border:3px solid #00a0e9'
+        }
+      }
+    }
+  }
+
+  //개별 대시보드 정보 가져와서 담기
+  const getDashboardInfo = (e: any) => {
+    console.log(' 대시보드 Information ')
+    console.log(e)
+    console.log(e.target.id)
   }
 
   //render LayoutList UI
@@ -104,19 +142,42 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
     console.log(data)
 
     for (let i = 0, len = data.length; i < len; i++) {
-      component.push(
-        <LayoutListBox key={data[i].lay_id}>
-          <LayoutListViewParent
-            ref={(el): any => (testRefs.current[i] = el)}
-            onClick={(e: any) => {
-              addLineBox(e)
-            }}
-          >
-            <LayoutListView id={data[i].lay_id} />
-          </LayoutListViewParent>
-          <LayoutListTitle>{data[i].lay_nm}</LayoutListTitle>
-        </LayoutListBox>
-      )
+      if (data[i].use_yn === 1) {
+        component.push(
+          <LayoutListBox key={data[i].lay_id}>
+            <LayoutListViewParent
+              ref={(el): any => (testRefs.current[i] = el)}
+              onClick={(e: any) => {
+                addLineBox(e)
+              }}
+              onDoubleClick={(e: any) => {
+                getDashboardInfo(e)
+              }}
+            >
+              <UseYnCheckBox />
+              <LayoutListView id={data[i].lay_id} />
+            </LayoutListViewParent>
+            <LayoutListTitle>{data[i].lay_nm}</LayoutListTitle>
+          </LayoutListBox>
+        )
+      } else {
+        component.push(
+          <LayoutListBox key={data[i].lay_id}>
+            <LayoutListViewParent
+              ref={(el): any => (testRefs.current[i] = el)}
+              onClick={(e: any) => {
+                addLineBox(e)
+              }}
+              onDoubleClick={(e: any) => {
+                getDashboardInfo(e)
+              }}
+            >
+              <LayoutListView id={data[i].lay_id} />
+            </LayoutListViewParent>
+            <LayoutListTitle>{data[i].lay_nm}</LayoutListTitle>
+          </LayoutListBox>
+        )
+      }
     }
 
     component.push(
@@ -128,40 +189,84 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
     setComponent(component)
   }
 
-  const deleteLayout = () => {
-    console.log('선택된 레이아웃 아이디 : ' + LayoutId)
-    console.log('선택된 회사 아이디 : ' + CompanyId)
+  // const deleteLayout = () => {
+  //   console.log('선택된 레이아웃 아이디 : ' + LayoutId)
+  //   console.log('선택된 회사 아이디 : ' + CompanyId)
 
-    const result = confirm('선택한 레이아웃을 삭제하시겠습니까?')
-    if (result) {
-      axios
-        .delete('http://220.94.157.27:59871/api/hmid/layout?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
-          headers: {
-            Accept: '*/*',
-            'Content-Type': 'application/x-www-form-urlencoded;',
-          },
-          timeout: 5000,
-        })
-        .then((response) => {
-          console.log('[ delete Layout axios response data ] : ')
-          console.log(response.data)
-          getLayoutList(CompanyId)
-        })
-        .catch((error) => {
-          console.log(error.response)
-        })
-    } else {
-      for (let i = 0, len = testRefs.current.length; i < len; i++) {
-        testRefs.current[i].children[0].style.border = '0px solid rgba(0,0,0,0)'
-      }
-    }
-  }
+  //   const result = confirm('선택한 레이아웃을 삭제하시겠습니까?')
+  //   if (result) {
+  //     axios
+  //       .delete('http://220.94.157.27:59871/api/hmid/layout?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
+  //         headers: {
+  //           Accept: '*/*',
+  //           'Content-Type': 'application/x-www-form-urlencoded;',
+  //         },
+  //         timeout: 5000,
+  //       })
+  //       .then((response) => {
+  //         console.log('[ delete Layout axios response data ] : ')
+  //         console.log(response.data)
+  //         getLayoutList(CompanyId)
+  //       })
+  //       .catch((error) => {
+  //         console.log(error.response)
+  //       })
+  //   } else {
+  //     for (let i = 0, len = testRefs.current.length; i < len; i++) {
+  //       testRefs.current[i].children[0].style.border = '0px solid rgba(0,0,0,0)'
+  //     }
+  //   }
+  // }
 
   //layoutlist api 연결
   const getLayoutList = (company_id: string) => {
     console.log(company_id)
     axios
-      .get('http://220.94.157.27:59871/api/hmid/layout?company_id=' + company_id, {
+      .get('http:///192.168.1.27:8000/api/hmid/layout?company_id=' + company_id, {
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/x-www-form-urlencoded;',
+        },
+        timeout: 5000,
+      })
+      .then((response) => {
+        console.log('[ get Layout List axios response data ] : ')
+        console.log(response.data)
+
+        renderLayoutList(response.data)
+
+        window.localStorage.setItem('layout_id', response.data[response.data.length - 1].lay_id)
+      })
+      .catch((error) => {
+        console.log(error.response)
+      })
+  }
+
+  //set Default Dashboard Layout
+  const SetDefaultDashboard = () => {
+    axios
+      .put('http://192.168.1.27:8000/api/hmid/layout/default?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/x-www-form-urlencoded;',
+        },
+        timeout: 5000,
+      })
+      .then((response) => {
+        console.log('[ set Default Layout axios response data ] : ')
+        console.log(response.data)
+
+        renderLayoutList(response.data)
+        getLayoutList(CompanyId)
+      })
+      .catch((error) => {
+        console.log(error.response)
+      })
+  }
+  //레이아웃 삭제
+  const deleteLayout = () => {
+    axios
+      .delete('http://192.168.1.27:8000/api/hmid/layout?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
@@ -179,32 +284,11 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
       })
   }
 
-  //레이아웃 삭제
-  // const deleteLayout = () => {
-  //   axios
-  //     .delete('http://192.168.1.27:8000/api/hmid/layout?com_id=' + company_id + '&lay_id', {
-  //       headers: {
-  //         Accept: '*/*',
-  //         'Content-Type': 'application/x-www-form-urlencoded;',
-  //       },
-  //       timeout: 5000,
-  //     })
-  //     .then((response) => {
-  //       console.log('[ get Layout List axios response data ] : ')
-  //       console.log(response.data)
-
-  //       renderLayoutList(response.data)
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.response)
-  //     })
-  // }
-
   return (
     <>
       <Box style={{ position: 'relative', zIndex: 1000 }}>
         <Stack direction="row" spacing={4} pl={3} display={AdminInfo}>
-          <Button leftIcon={<BiSelectMultiple />} variant="brand">
+          <Button leftIcon={<BiSelectMultiple />} variant="brand" onClick={SetDefaultDashboard}>
             선택
           </Button>
           <Button leftIcon={<RiDeleteBinLine />} variant="brand" onClick={deleteLayout}>

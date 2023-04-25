@@ -21,16 +21,16 @@ const MenuProps = {
   },
 }
 
-// const names = [
-//   { id: 1, name: 'Tag-1' },
-//   { id: 2, name: 'Tag-2' },
-//   { id: 3, name: 'Tag-3' },
-// ]
+const names = [
+  { id: 1, name: 'Tag-1' },
+  { id: 2, name: 'Tag-2' },
+  { id: 3, name: 'Tag-3' },
+]
 
 const TagSelectList = (props: any) => {
   const [multiple, setMultiple] = useState(true)
   const [tagName, setTagName] = useState<string[]>([])
-  const [names, setNames] = useState<any>()
+  // const [names, setNames] = useState<any>()
 
   useEffect(() => {
     fetchTaglistData()
@@ -55,7 +55,7 @@ const TagSelectList = (props: any) => {
       })
       .then((response) => {
         console.log('fetchTaglistData:', response)
-        setNames(response.data)
+        // setNames(response.data)
       })
       .catch((error) => error('Data Load Failed'))
   }
@@ -73,13 +73,19 @@ const TagSelectList = (props: any) => {
         renderValue={(selected) => selected.join(', ')}
         MenuProps={MenuProps}
       >
-        {names &&
+        {names.map((data: any) => (
+          <MenuItem key={data.name} value={data.name}>
+            <Checkbox checked={tagName.indexOf(data.name) > -1} />
+            <ListItemText primary={data.name} />
+          </MenuItem>
+        ))}
+        {/* {names &&
           names.map((data: any) => (
             <MenuItem key={data.id} value={data.name}>
               <Checkbox checked={tagName.indexOf(data.name) > -1} />
               <ListItemText primary={data.name} />
             </MenuItem>
-          ))}
+          ))} */}
 
         {/* <TreeView
           aria-label="file system navigator"

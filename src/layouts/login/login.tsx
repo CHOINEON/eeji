@@ -89,13 +89,7 @@ export const Login: React.FC = () => {
     } else {
       axios
         .get(
-          process.env.REACT_APP_API_LOCAL_URL +
-            '/api/user/info?com_id=' +
-            company +
-            '&user_id=' +
-            id +
-            '&user_pass=' +
-            password,
+          'http://220.94.157.27:59871/api/user/info?com_id=' + company + '&user_id=' + id + '&user_pass=' + password,
           {
             headers: {
               Accept: '*/*',
@@ -109,10 +103,12 @@ export const Login: React.FC = () => {
           // console.log(response.data)
 
           getCompanyInfo(company)
-          window.location.href = '/admin/data-plant-modeling'
           window.localStorage.setItem('userData', JSON.stringify(response.data))
           window.localStorage.setItem('companyId', company)
           window.localStorage.setItem('userPosition', response.data[0].user_position)
+
+          console.log('tjhis!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+          window.location.href = '/admin/data-analysis'
         })
         .catch((error) => {
           // console.log(error.response)

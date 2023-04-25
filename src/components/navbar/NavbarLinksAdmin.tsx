@@ -248,13 +248,43 @@ export default function HeaderLinks(props: { secondary: boolean }) {
               color={textColor}
             >
               👋&nbsp; {'Hey, ' + UserName}
-              <Text as="span" ps="3px" pt="16px" pb="10px" w="100%" fontSize="sm" fontWeight="700" color={textColor}>
+              <Text
+                style={{ display: 'block' }}
+                as="span"
+                ps="3px"
+                pt="16px"
+                pb="10px"
+                w="100%"
+                fontSize="sm"
+                fontWeight="700"
+                color={textColor}
+              >
                 🏬&nbsp; {UserCompany}
               </Text>
-              <Text as="span" ps="3px" pt="16px" pb="10px" w="100%" fontSize="sm" fontWeight="700" color={textColor}>
+              <Text
+                style={{ display: 'block' }}
+                as="span"
+                ps="3px"
+                pt="16px"
+                pb="10px"
+                w="100%"
+                fontSize="sm"
+                fontWeight="700"
+                color={textColor}
+              >
                 📧&nbsp; {UserCompanyEmail}
               </Text>
-              <Text as="span" ps="3px" pt="16px" pb="10px" w="100%" fontSize="sm" fontWeight="700" color={textColor}>
+              <Text
+                style={{ display: 'block' }}
+                as="span"
+                ps="3px"
+                pt="16px"
+                pb="10px"
+                w="100%"
+                fontSize="sm"
+                fontWeight="700"
+                color={textColor}
+              >
                 📞&nbsp; {UserCompanyTel}
               </Text>
             </Text>
