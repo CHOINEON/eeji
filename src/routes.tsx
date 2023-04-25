@@ -14,6 +14,7 @@ import AIPlantModeling from 'views/AiPlantModeling'
 import Configuration from 'views/configuration'
 import DashboardConfig from 'views/hmid_config'
 import LayoutList from 'views/hmid_list'
+import ModelMaintenance from 'views/ModelMaintenance'
 // import LayoutList from 'views/hmid/list/LayoutList'
 
 // Auth Imports
@@ -36,7 +37,7 @@ const routes = [
   {
     name: 'Data Analysis',
     layout: '/admin',
-    path: '/data-plant-modeling',
+    path: '/data-analysis',
     icon: <Icon as={BsHammer} width="20px" height="20px" color="inherit" />,
     component: DataPlantModeling,
   },
@@ -74,6 +75,13 @@ const routes = [
     path: '/layout-configuration',
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: DashboardConfig,
+  },
+  {
+    name: 'Model Maintenance',
+    layout: '/admin',
+    path: '/model-maintenance',
+    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+    component: ModelMaintenance,
   },
   {
     name: 'Configuration',

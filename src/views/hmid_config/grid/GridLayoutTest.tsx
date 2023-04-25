@@ -163,6 +163,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   const [PieChartDataType, setPieChartDataType] = React.useState<string>('max')
 
+  const [SaveDashboardInfo, setSaveDashboardInfo] = React.useState<any>()
+
   /**
    * DataGrid
    * **/
@@ -230,6 +232,12 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     console.log('------- [ State 변경 ] -------')
     console.log(state)
     console.log('------------------------------')
+    setSaveDashboardInfo({
+      layout_name: state.LAYOUT_NAME,
+      company_id: state.COMPANY_ID,
+      grid_id: state.GRID_ID,
+      grid_data: state.GRID_DATA,
+    })
   }, [state.LAYOUT_NAME, state.COMPANY_ID, state.LAYOUT_ID, state.GRID_ID, state.GRID_DATA])
 
   React.useEffect(() => {
@@ -1119,8 +1127,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const getTagList = () => {
     const params: any = {
       com_id: localStorage.getItem('companyId'),
-      search_type: 'proccess',
+      search_type: 'process',
     }
+
+    console.log(params)
 
     axios
       .post('http://220.94.157.27:59871/api/tag/list', params)
@@ -1418,25 +1428,33 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   const SaveDashboard = (args: any) => {
     console.log('저장 할 대시보드 Json Parameter')
-    console.log(args)
-    console.log(state)
+    // console.log(args)
+    // console.log(state)
+    console.log(SaveDashboardInfo)
 
     const params: any = {
       com_id: localStorage.getItem('companyId'),
-      lay_id: 1,
+      lay_id: Number(window.localStorage.getItem('layout_id')) + 1,
       lay_name: state.LAYOUT_NAME,
       grid_id: state.GRID_ID.toString(),
       data: args,
     }
 
+    console.log(params)
+
     axios
-      .put('http://220.94.157.27:59871/api/hmid/layout', params)
+      .post('http://192.168.1.27:8000/api/hmid/layout', params)
       .then((response) => {
         console.log('[ SaveDashboard Response Data ] : ')
         console.log(response.data)
+
+        if (response.data === 'success') {
+          alert('레이아웃 저장이 완료 되었습니다.')
+        }
       })
       .catch((error) => {
         console.log(error)
+        alert('오류. 관리자에게 문의 바랍니다.')
       })
   }
 
@@ -1471,7 +1489,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   //SaveLayoutModal
   const getSaveLayoutTitle = (title: string) => {
-    console.log('[ Save Layout Title ] : ', title)
     dispatch({ type: 'LAYOUT_NAME', data: title })
   }
 
@@ -1517,7 +1534,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             // // console.log(data)
             // // console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data)
             // // console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout)
-            grid_obj.grid_index = dashboardObj.element.children[i].id
+            grid_obj.grid_index = Number(dashboardObj.element.children[i].id)
 
             if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout !== undefined) {
               if (
@@ -1533,10 +1550,25 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                   grid_obj.title = input_element.value
                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
-                  grid_obj.dataOption = JSON.stringify(
-                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
-                  )
-                  grid_obj.layoutOption = JSON.stringify([
+                  // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+                  // console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data)
+
+                  const ChartDataOption: any = data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+                  delete ChartDataOption[0].x
+                  delete ChartDataOption[0].y
+                  delete ChartDataOption[0].text
+
+                  // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+                  // console.log(ChartDataOption)
+                  // console.log(JSON.stringify(ChartDataOption))
+                  // console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout)
+                  // console.log(
+                  //   JSON.stringify(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout)
+                  // )
+                  // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+
+                  grid_obj.data_option = JSON.stringify(ChartDataOption)
+                  grid_obj.layout_option = JSON.stringify([
                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
                   ])
 
@@ -1549,10 +1581,14 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                   grid_obj.title = input_element.value
                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
-                  grid_obj.dataOption = JSON.stringify(
+
+                  const BarChartDataOption: any =
                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
-                  )
-                  grid_obj.layoutOption = JSON.stringify([
+                  delete BarChartDataOption[0].x
+                  delete BarChartDataOption[0].y
+
+                  grid_obj.data_option = JSON.stringify(BarChartDataOption)
+                  grid_obj.layout_option = JSON.stringify([
                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
                   ])
 
@@ -1565,10 +1601,14 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                   grid_obj.title = input_element.value
                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
-                  grid_obj.dataOption = JSON.stringify(
+
+                  const PieChartDataOption: any =
                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
-                  )
-                  grid_obj.layoutOption = JSON.stringify([
+                  delete PieChartDataOption[0].values
+                  delete PieChartDataOption[0].labels
+
+                  grid_obj.data_option = JSON.stringify(PieChartDataOption)
+                  grid_obj.layout_option = JSON.stringify([
                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
                   ])
 
@@ -1581,10 +1621,14 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                   grid_obj.title = input_element.value
                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
-                  grid_obj.dataOption = JSON.stringify(
+
+                  const LineChartDataOption: any =
                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
-                  )
-                  grid_obj.layoutOption = JSON.stringify([
+                  delete LineChartDataOption[0].x
+                  delete LineChartDataOption[0].y
+
+                  grid_obj.data_option = JSON.stringify(LineChartDataOption)
+                  grid_obj.layout_option = JSON.stringify([
                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
                   ])
 
@@ -1597,13 +1641,16 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
               grid_obj.title = input_element.value
               grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
               grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
-              grid_obj.layoutOption = []
-              grid_obj.dataOption = JSON.stringify(arr)
-              console.log('*********************************')
-              console.log(data)
-              console.log(arr)
-              console.log(gridRef)
-              console.log('*********************************')
+              grid_obj.layout_option = []
+              // grid_obj.data_option = JSON.stringify(arr)
+              grid_obj.data_option = []
+              // grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type)
+              grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type)
+              // console.log('*********************************')
+              // console.log(data)
+              // console.log(arr)
+              // console.log(gridRef)
+              // console.log('*********************************')
             }
 
             grid_arr.push(grid_obj)
@@ -1678,6 +1725,15 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       />
       <Box style={{ position: 'relative', zIndex: 1000 }}>
         <Stack direction="row" spacing={4} pl={3} display={AdminInfo}>
+          <Button
+            leftIcon={<MdOutlineGridView />}
+            variant="brand"
+            onClick={() => {
+              setOpenLayoutModal(true)
+            }}
+          >
+            뒤로가기
+          </Button>
           <Button
             leftIcon={<MdOutlineGridView />}
             variant="brand"
