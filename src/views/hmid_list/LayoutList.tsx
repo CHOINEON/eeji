@@ -69,11 +69,13 @@ const UseYnCheckBox = styled.div`
   right: 0.5vw;
   top: 0.5vw;
   background-repeat: no-repeat;
-  background-size: 100% auto;
-  width: 2vw;
-  height: 2vw;
+  background-size: 80% auto;
+  width: 3vw;
+  height: 3vw;
   background-position: center center;
   background-image: url(${use_yn_check});
+  background-color: #2196f347;
+  border-radius: 100px;
 `
 
 export const LayoutList: React.FC<LayoutListProps> = (props: any) => {

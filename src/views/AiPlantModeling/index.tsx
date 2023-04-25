@@ -24,18 +24,31 @@
 import { Box, useColorModeValue, Stack, Button } from '@chakra-ui/react'
 
 import React from 'react'
-import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
+import ReactLoading from 'react-loading'
+import styled from '@emotion/styled'
+
+const LoadingBox = styled.div<{ toggle: any }>`
+  width: 10vw;
+  height: 10vw;
+  position: absolute;
+  left: 55%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: ${(props: any) => (props.toggle ? 'block' : 'none')};
+`
 
 export default function AIPlantModeling() {
-  const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
-  const [OpenLayoutModal, setOpenLayoutModal] = React.useState<boolean>(false)
-  const [GridInfo, setGridInfo] = React.useState<string>()
-  const [ItemColor, setItemColor] = React.useState('#0044620f')
-
   //권한
   const [AdminInfo, setAdminInfo] = React.useState('block')
 
   const theme = useColorModeValue('navy.700', 'white')
+
+  const [per, setPercent] = React.useState(0)
+  const [DisplayLoading, setDisplayLoading] = React.useState<any>(false)
+
+  const [timerId, setTimerId] = React.useState<any>(0)
+
+  // let timerId = null
   // console.log(theme)
 
   //새로고침 막기
@@ -55,25 +68,67 @@ export default function AIPlantModeling() {
   // }, [])
   //end 새로고침 막기
 
-  // #ffffff0f
+  // React.useEffect(() => {
+  //   if (timerId) {
+  //     clearTimeout(timerId) // HTTP 응답시 timer 해제
+  //     setTimerId(null)
+  //   }
+  // }, [timerId])
 
-  // const NotReload = () => {
-  //   if( (event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) || (event.keyCode == 116) ) {
-  //     event.keyCode = 0;
-  //     event.cancelBubble = true;
-  //     event.returnValue = false;
-  // }
-  // }
+  const timer = () => {
+    //   if (per < 98) {
+    //     const diff = 100 - Percent
+    //     const inc = diff / (10 + Percent * (1 + Percent / 100)) // 증가값
+    //     Percent = Percent + inc
 
-  // document.onkeydown = NotReload()
+    //     console.log(Percent.toFixed(2))
+    //     console.log(inc)
+    //     setPercent(Percent)
+    //   }
+    //   setTimerId(setTimeout(timer, 20)) // 50 ms 단위로 timer 재귀호출
+    if (timerId == 0) {
+      setTimerId(1)
+      const id = setInterval(frame, 10)
+      function frame() {
+        if (per >= 100) {
+          clearInterval(id)
+          setTimerId(0)
+        } else {
+          let a = per
+          a = a++
+          setPercent(a)
+        }
+      }
+    }
+  }
 
   return (
     <>
-      <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
-        {/* <Box>{renderGrid(GridInfo)}</Box> */}
-        {/* <Box>
-          <GridLayoutBox gridInfo={GridInfo} />
-        </Box> */}
+      <Box
+        pt={{ base: '130px', md: '80px', xl: '80px' }}
+        style={{ position: 'relative', zIndex: 1000, width: '82vw', height: '93vh' }}
+      >
+        <Button
+          style={{
+            position: 'absolute',
+            left: '10%',
+            top: '10%',
+            padding: '2vw',
+            backgroundColor: '#00a0e9',
+            color: '#fff',
+            fontSize: '1.1vw',
+          }}
+          onClick={() => {
+            setDisplayLoading(!DisplayLoading)
+            timer()
+          }}
+        >
+          DB Data 불러오기
+        </Button>
+        <LoadingBox toggle={DisplayLoading}>
+          <ReactLoading type={'bars'} color="#00a0e9" width={'10vw'} />
+          <div>{per}</div>
+        </LoadingBox>
       </Box>
     </>
   )
