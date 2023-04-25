@@ -22,63 +22,173 @@
 
 // Chakra imports
 import { Box, useColorModeValue, Stack, Button } from '@chakra-ui/react'
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
-
+import { Input, Select, Radio, InputNumber } from 'antd'
 import React from 'react'
+import styled from '@emotion/styled'
+
+const BoxParent = styled.div`
+  display: flex;
+  margin: 1vw 0;
+  width: 100%;
+  align-items: center;
+`
+
+const BoxParent2 = styled(BoxParent)`
+  align-items: start;
+`
+
+const BoxParentMR = styled(BoxParent)`
+  margin-right: 2vw;
+  width: auto;
+`
+
+const BoxChild2 = styled.div`
+  width: calc(50% - 1vw);
+  margin-right: 0.5vw;
+  background-color: #f4f7fe;
+  border-radius: 10px;
+  height: 31vw;
+  padding: 2vw;
+  border: 1px solid grey;
+  position: relative;
+`
+
+const BoxChild2MR = styled(BoxChild2)`
+  margin-right: 2vw;
+`
+
+const BoxTitle = styled.div`
+  font-weight: bold;
+  font-size: 1.3vw;
+  position: absolute;
+  width: 10vw;
+  height: 3vw;
+  line-height: 3vw;
+  text-align: center;
+  left: 2%;
+  top: -5%;
+  background-color: #f4f7fe;
+`
+
+const TitleLabel = styled.div`
+  margin-right: 1vw;
+  font-size: 1vw;
+  width: 17vw;
+`
+
+const ButtonParentBox = styled(BoxParent)`
+  justify-content: space-between;
+  width: auto;
+`
 
 export default function Configuration() {
   //권한
   const [AdminInfo, setAdminInfo] = React.useState('block')
 
   const theme = useColorModeValue('navy.700', 'white')
-  // console.log(theme)
-
-  //새로고침 막기
-  // const preventClose = (e: BeforeUnloadEvent) => {
-  //   e.preventDefault()
-  //   e.returnValue = '' //Chrome에서 동작하도록; deprecated
-  // }
-
-  // React.useEffect(() => {
-  //   ;(() => {
-  //     window.addEventListener('beforeunload', preventClose)
-  //   })()
-
-  //   return () => {
-  //     window.removeEventListener('beforeunload', preventClose)
-  //   }
-  // }, [])
-  //end 새로고침 막기
-
-  // #ffffff0f
-
-  // const NotReload = () => {
-  //   if( (event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) || (event.keyCode == 116) ) {
-  //     event.keyCode = 0;
-  //     event.cancelBubble = true;
-  //     event.returnValue = false;
-  // }
-  // }
-
-  // document.onkeydown = NotReload()
 
   return (
     <>
-      <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
-        <Tabs variant="unstyled">
-          <TabList>
-            <Tab _selected={{ color: 'white', bg: 'blue.500' }}>Tab 1</Tab>
-            <Tab _selected={{ color: 'white', bg: 'green.400' }}>Tab 2</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <p>기본</p>
-            </TabPanel>
-            <TabPanel>
-              <p>고급</p>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+      <Box
+        pt={{ base: '130px', md: '80px', xl: '72px' }}
+        pl={'50px'}
+        pr={'50px'}
+        style={{ position: 'relative', zIndex: 1000 }}
+      >
+        <BoxParent>
+          <BoxParentMR>
+            <TitleLabel style={{ width: '8vw' }}>HMI Mode</TitleLabel>
+            <Select
+              size={'large'}
+              defaultValue={'Https'}
+              options={[{ value: 'Https', label: 'Https' }]}
+              style={{ margin: '0', width: '10vw !important' }}
+            />
+          </BoxParentMR>
+          <BoxParent>
+            <TitleLabel>Maximum view Connections</TitleLabel>
+            <InputNumber value={2} size={'large'} />
+          </BoxParent>
+        </BoxParent>
+        <BoxParent2>
+          <BoxChild2MR>
+            <BoxTitle>HMI Settings</BoxTitle>
+            <div>
+              <BoxParent>
+                <TitleLabel>HTTP Port</TitleLabel>
+                <InputNumber value={2} size={'large'} />
+              </BoxParent>
+              <BoxParent>
+                <TitleLabel>Inactivity Timeout</TitleLabel>
+                <InputNumber value={2} size={'large'} />
+              </BoxParent>
+              <BoxParent>
+                <TitleLabel>Image Resolution</TitleLabel>
+                <InputNumber value={2} size={'large'} />
+              </BoxParent>
+              <BoxParent>
+                <TitleLabel style={{ width: '18.7vw' }}>Allow Local Storage</TitleLabel>
+                <Radio value={1} defaultChecked />
+              </BoxParent>
+              <BoxParent>
+                <TitleLabel style={{ width: '18.7vw' }}>Allow View Selection</TitleLabel>
+                <Radio value={1} defaultChecked />
+              </BoxParent>
+              <BoxParent>
+                <TitleLabel style={{ width: '18.7vw' }}>Allow Online/Offline</TitleLabel>
+                <Radio value={1} defaultChecked />
+              </BoxParent>
+              <BoxParent>
+                <TitleLabel style={{ width: '18.7vw' }}>Allow Live Video</TitleLabel>
+                <Radio value={1} defaultChecked />
+              </BoxParent>
+              <BoxParent>
+                <TitleLabel style={{ width: '18.7vw' }}>Allow Trigger</TitleLabel>
+                <Radio value={1} defaultChecked />
+              </BoxParent>
+              <BoxParent>
+                <TitleLabel style={{ width: '18.7vw' }}>Allow Adjust Image</TitleLabel>
+                <Radio value={1} defaultChecked />
+              </BoxParent>
+            </div>
+          </BoxChild2MR>
+          <BoxChild2>
+            <BoxTitle>HTTPS</BoxTitle>
+            <div>
+              <BoxParent>
+                <TitleLabel style={{ width: '10.5vw' }}>HTTP Port</TitleLabel>
+                <InputNumber value={8443} size={'large'} />
+              </BoxParent>
+              <BoxParent>
+                <TitleLabel>Cognex Network Sever</TitleLabel>
+                <Input size={'large'} />
+              </BoxParent>
+              <BoxParent>
+                <TitleLabel>Password</TitleLabel>
+                <Input size={'large'} />
+              </BoxParent>
+              <BoxParent>
+                <TitleLabel>Allow Local Storage</TitleLabel>
+                <Radio value={0} />
+              </BoxParent>
+              <BoxParent>
+                <TitleLabel>Allow View Selection</TitleLabel>
+                <Radio value={0} />
+              </BoxParent>
+            </div>
+          </BoxChild2>
+        </BoxParent2>
+        <ButtonParentBox>
+          <div>
+            <Button style={{ padding: '1vw 1.3vw', backgroundColor: '#00a0e9', color: '#fff' }}>Help</Button>
+          </div>
+          <ButtonParentBox>
+            <Button style={{ padding: '1vw 1.3vw', backgroundColor: '#00a0e9', color: '#fff', marginRight: '1vw' }}>
+              Ok
+            </Button>
+            <Button style={{ padding: '1vw 1.3vw', backgroundColor: '#00a0e9', color: '#fff' }}>Cancel</Button>
+          </ButtonParentBox>
+        </ButtonParentBox>
       </Box>
     </>
   )
