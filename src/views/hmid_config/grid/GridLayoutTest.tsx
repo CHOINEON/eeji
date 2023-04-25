@@ -874,7 +874,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                 setWidgetInfo('Bar')
               } else {
                 setWidgetInfo('Pie')
-                console.log('Pie!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
               }
               setBoxTargetId(e.target.offsetParent.offsetParent.children[0].childNodes[1].id)
               setIsOpenDataConnectionModal(true)
@@ -1182,8 +1181,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         // setSaveTagDataList
       }
 
-      console.log('----------- Tag Data -------------')
-      console.log(data)
+      // console.log('----------- Tag Data -------------')
+      // console.log(data)
       setSaveTagDataList(data)
 
       if (WidgetInfo === 'Table' || WidgetInfo === 'Pie' || WidgetInfo === 'Bar') {
@@ -1312,10 +1311,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                 }
               }
 
-              console.log('>>>>>>>>>>>[ Pie Chart ]>>>>>>>>>>')
-              console.log(data)
-              console.log(layout)
-              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+              // console.log('>>>>>>>>>>>[ Pie Chart ]>>>>>>>>>>')
+              // console.log(data)
+              // console.log(layout)
+              // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 
               DrawGauidWidget('Pie', node, data, layout)
               console.log(TagListArr)
@@ -1431,6 +1430,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     // console.log(args)
     // console.log(state)
     console.log(SaveDashboardInfo)
+    console.log(args)
 
     const params: any = {
       com_id: localStorage.getItem('companyId'),
@@ -1443,7 +1443,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     console.log(params)
 
     axios
-      .post('http://192.168.1.27:8000/api/hmid/layout', params)
+      .post('http://220.94.157.27:59871/api/hmid/layout', params)
       .then((response) => {
         console.log('[ SaveDashboard Response Data ] : ')
         console.log(response.data)
@@ -1558,14 +1558,14 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                   delete ChartDataOption[0].y
                   delete ChartDataOption[0].text
 
-                  // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-                  // console.log(ChartDataOption)
-                  // console.log(JSON.stringify(ChartDataOption))
-                  // console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout)
-                  // console.log(
-                  //   JSON.stringify(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout)
-                  // )
-                  // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+                  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+                  console.log(ChartDataOption)
+                  console.log(JSON.stringify(ChartDataOption))
+                  console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout)
+                  console.log(
+                    JSON.stringify(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout)
+                  )
+                  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 
                   grid_obj.data_option = JSON.stringify(ChartDataOption)
                   grid_obj.layout_option = JSON.stringify([
@@ -1606,6 +1606,11 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
                   delete PieChartDataOption[0].values
                   delete PieChartDataOption[0].labels
+
+                  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+                  console.log(PieChartDataOption)
+                  console.log(JSON.stringify(PieChartDataOption))
+                  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 
                   grid_obj.data_option = JSON.stringify(PieChartDataOption)
                   grid_obj.layout_option = JSON.stringify([
@@ -1729,7 +1734,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             leftIcon={<MdOutlineGridView />}
             variant="brand"
             onClick={() => {
-              setOpenLayoutModal(true)
+              window.location.href = '/admin/layout-list'
             }}
           >
             뒤로가기

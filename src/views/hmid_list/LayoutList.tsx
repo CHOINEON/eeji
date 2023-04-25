@@ -134,6 +134,16 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
     console.log(' 대시보드 Information ')
     console.log(e)
     console.log(e.target.id)
+
+    axios.get('http://220.94.157.27:59871/api/hmid/layout/info?lay_id=' + e.target.id).then((response) => {
+      console.log('[ Select Layout Info Response ] :')
+      console.log(response.data)
+
+      //storage 안에 info data
+      window.localStorage.setItem('SelectedDashboardInfo', JSON.stringify(response.data))
+
+      window.location.href = '/admin/layout-configuration'
+    })
   }
 
   //render LayoutList UI
@@ -222,7 +232,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   const getLayoutList = (company_id: string) => {
     console.log(company_id)
     axios
-      .get('http:///192.168.1.27:8000/api/hmid/layout?company_id=' + company_id, {
+      .get('http://220.94.157.27:59871/api/hmid/layout?company_id=' + company_id, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
@@ -245,7 +255,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   //set Default Dashboard Layout
   const SetDefaultDashboard = () => {
     axios
-      .put('http://192.168.1.27:8000/api/hmid/layout/default?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
+      .put('http://220.94.157.27:59871/api/hmid/layout/default?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
@@ -266,7 +276,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   //레이아웃 삭제
   const deleteLayout = () => {
     axios
-      .delete('http://192.168.1.27:8000/api/hmid/layout?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
+      .delete('http://220.94.157.27:59871/api/hmid/layout?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
