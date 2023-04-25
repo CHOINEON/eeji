@@ -6,6 +6,7 @@ import { RiDeleteBinLine } from 'react-icons/ri'
 import { Box, useColorModeValue, Stack, Button, Checkbox } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import no_image from './img/no-image.jpg'
+import use_yn_check from './img/use_yn_check.png'
 
 interface LayoutListProps {
   company_id: string
@@ -29,6 +30,7 @@ const LayoutListViewParent = styled.div`
   width: 100%;
   height: 80%;
   cursor: pointer;
+  position: relative;
 `
 
 const LayoutListView = styled.div`
@@ -62,6 +64,18 @@ const AddLayoutListBox = styled(LayoutListBox)`
   color: #00a0e9;
 `
 
+const UseYnCheckBox = styled.div`
+  position: absolute;
+  right: 0.5vw;
+  top: 0.5vw;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  width: 2vw;
+  height: 2vw;
+  background-position: center center;
+  background-image: url(${use_yn_check});
+`
+
 export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
   const [OpenLayoutModal, setOpenLayoutModal] = React.useState<boolean>(false)
@@ -81,7 +95,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
 
   const theme = useColorModeValue('navy.700', 'white')
 
-  const testRefs = React.useRef<any>([])
+  const testRefs = React.useRef([])
 
   React.useEffect(() => {
     setCompanyId(props.company_id)
@@ -95,7 +109,31 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
 
   const addLineBox = (e: any) => {
     setLayoutId(e.target.id)
-    e.target.style.border = '3px solid #00a0e9'
+
+    for (let i = 0, len = testRefs.current.length; i < len; i++) {
+      console.log(testRefs.current[i])
+      console.log(testRefs.current[i].children)
+      if (testRefs.current[i].children.length === 2) {
+        if (testRefs.current[i].children[1].id !== e.target.id) {
+          testRefs.current[i].style = 'border:0px solid #fff'
+        } else {
+          testRefs.current[i].style = 'border:3px solid #00a0e9'
+        }
+      } else {
+        if (testRefs.current[i].children[0].id !== e.target.id) {
+          testRefs.current[i].style = 'border:0px solid #fff'
+        } else {
+          testRefs.current[i].style = 'border:3px solid #00a0e9'
+        }
+      }
+    }
+  }
+
+  //개별 대시보드 정보 가져와서 담기
+  const getDashboardInfo = (e: any) => {
+    console.log(' 대시보드 Information ')
+    console.log(e)
+    console.log(e.target.id)
   }
 
   //render LayoutList UI
@@ -112,8 +150,11 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
               onClick={(e: any) => {
                 addLineBox(e)
               }}
-              style={{ border: '3px solid #00a0e9' }}
+              onDoubleClick={(e: any) => {
+                getDashboardInfo(e)
+              }}
             >
+              <UseYnCheckBox />
               <LayoutListView id={data[i].lay_id} />
             </LayoutListViewParent>
             <LayoutListTitle>{data[i].lay_nm}</LayoutListTitle>
@@ -126,6 +167,9 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
               ref={(el): any => (testRefs.current[i] = el)}
               onClick={(e: any) => {
                 addLineBox(e)
+              }}
+              onDoubleClick={(e: any) => {
+                getDashboardInfo(e)
               }}
             >
               <LayoutListView id={data[i].lay_id} />
