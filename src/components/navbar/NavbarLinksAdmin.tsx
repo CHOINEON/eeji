@@ -20,12 +20,46 @@ import { SearchBar } from 'components/navbar/searchBar/SearchBar'
 import { SidebarResponsive } from 'components/sidebar/Sidebar'
 import PropTypes from 'prop-types'
 import React from 'react'
+import styled from '@emotion/styled'
 // Assets
 import navImage from 'assets/img/layout/Navbar.png'
-import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md'
+import { MdLanguage } from 'react-icons/md'
 import { IoMdMoon, IoMdSunny } from 'react-icons/io'
 import { FaEthereum } from 'react-icons/fa'
 import routes from 'routes'
+
+import ico_ko from './img/ico_ko.png'
+import ico_jp from './img/ico_jp.png'
+import ico_us from './img/ico_us.png'
+
+const LangParentBox = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const LangBox = styled.div`
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center center;
+  width: 3.5vw;
+  margin: 0 0.5vw;
+  height: 3.5vw;
+  border-radius: 100px;
+  cursor: pointer;
+  &:hover {
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  }
+`
+
+const LangKO = styled(LangBox)`
+  background-image: url(${ico_ko});
+`
+const LangJP = styled(LangBox)`
+  background-image: url(${ico_jp});
+`
+const LangUS = styled(LangBox)`
+  background-image: url(${ico_us});
+`
 
 export default function HeaderLinks(props: { secondary: boolean }) {
   const { secondary } = props
@@ -44,6 +78,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     '14px 17px 40px 4px rgba(112, 144, 176, 0.18)',
     '14px 17px 40px 4px rgba(112, 144, 176, 0.06)'
   )
+  const navbarIconBlue = useColorModeValue('brand.500', 'white')
 
   const [UserName, setUserName] = React.useState<any>(JSON.parse(window.localStorage.getItem('userData'))[0].user_nm)
   const [UserCompany, setUserCompnay] = React.useState<any>(
@@ -169,46 +204,29 @@ export default function HeaderLinks(props: { secondary: boolean }) {
         </MenuList>
       </Menu> */}
 
-      {/* <Menu>
-				<MenuButton p='0px'>
-					<Icon mt='6px' as={MdInfoOutline} color={navbarIcon} w='18px' h='18px' me='10px' />
-				</MenuButton>
-				<MenuList
-					boxShadow={shadow}
-					p='20px'
-					me={{ base: '30px', md: 'unset' }}
-					borderRadius='20px'
-					bg={menuBg}
-					border='none'
-					mt='22px'
-					minW={{ base: 'unset' }}
-					maxW={{ base: '360px', md: 'unset' }}>
-					<Image src={navImage} borderRadius='16px' mb='28px' />
-					<Flex flexDirection='column'>
-						<Link w='100%' href='https://horizon-ui.com/pro'>
-							<Button w='100%' h='44px' mb='10px' variant='brand'>
-								Buy Horizon UI PRO
-							</Button>
-						</Link>
-						<Link w='100%' href='https://horizon-ui.com/documentation/docs/introduction'>
-							<Button
-								w='100%'
-								h='44px'
-								mb='10px'
-								border='1px solid'
-								bg='transparent'
-								borderColor={borderButton}>
-								See Documentation
-							</Button>
-						</Link>
-						<Link w='100%' href='https://github.com/horizon-ui/horizon-ui-chakra-ts'>
-							<Button w='100%' h='44px' variant='no-hover' color={textColor} bg='transparent'>
-								Try Horizon Free
-							</Button>
-						</Link>
-					</Flex>
-				</MenuList>
-			</Menu> */}
+      <Menu>
+        <MenuButton p="0px">
+          <Icon mt="6px" as={MdLanguage} color={navbarIconBlue} w="20px" h="18px" me="10px" />
+        </MenuButton>
+        <MenuList
+          boxShadow={shadow}
+          p="20px"
+          me={{ base: '30px', md: 'unset' }}
+          borderRadius="20px"
+          bg={menuBg}
+          border="none"
+          mt="22px"
+          minW={{ base: 'unset' }}
+          maxW={{ base: '360px', md: 'unset' }}
+        >
+          <LangParentBox>
+            <LangKO />
+            <LangJP />
+            <LangUS />
+          </LangParentBox>
+          <Flex flexDirection="column"></Flex>
+        </MenuList>
+      </Menu>
 
       <Button
         variant="no-hover"

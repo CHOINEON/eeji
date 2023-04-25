@@ -1,6 +1,5 @@
 import { Icon } from '@chakra-ui/react'
-import { MdDashboard, MdDatasetLinked, MdSettings } from 'react-icons/md'
-import { VscSettings } from 'react-icons/vsc'
+import { MdDashboard, MdDatasetLinked, MdSettings, MdOutlineModelTraining } from 'react-icons/md'
 import { ImDatabase } from 'react-icons/im'
 import { BsHammer } from 'react-icons/bs'
 import { FaHourglassHalf } from 'react-icons/fa'
@@ -80,7 +79,7 @@ const routes = [
     name: 'Model Maintenance',
     layout: '/admin',
     path: '/model-maintenance',
-    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={MdOutlineModelTraining} width="20px" height="20px" color="inherit" />,
     component: ModelMaintenance,
   },
   {

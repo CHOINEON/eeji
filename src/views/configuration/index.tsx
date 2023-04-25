@@ -180,13 +180,25 @@ export default function Configuration() {
         </BoxParent2>
         <ButtonParentBox>
           <div>
-            <Button style={{ padding: '1vw 1.3vw', backgroundColor: '#00a0e9', color: '#fff' }}>Help</Button>
+            <Button style={{ padding: '1.3vw 2.3vw', backgroundColor: '#00a0e9', color: '#fff', fontSize: '1.1vw' }}>
+              Help
+            </Button>
           </div>
           <ButtonParentBox>
-            <Button style={{ padding: '1vw 1.3vw', backgroundColor: '#00a0e9', color: '#fff', marginRight: '1vw' }}>
+            <Button
+              style={{
+                padding: '1.3vw 2.3vw',
+                backgroundColor: '#00a0e9',
+                color: '#fff',
+                fontSize: '1.1vw',
+                marginRight: '1vw',
+              }}
+            >
               Ok
             </Button>
-            <Button style={{ padding: '1vw 1.3vw', backgroundColor: '#00a0e9', color: '#fff' }}>Cancel</Button>
+            <Button style={{ padding: '1.3vw 2.3vw', backgroundColor: '#00a0e9', color: '#fff', fontSize: '1.1vw' }}>
+              Cancel
+            </Button>
           </ButtonParentBox>
         </ButtonParentBox>
       </Box>
