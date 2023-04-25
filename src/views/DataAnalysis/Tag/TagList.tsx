@@ -17,7 +17,7 @@ const TagList = (props: any) => {
   const [columnDefs] = useState<ColDef[]>([
     {
       headerName: 'TagName',
-      field: 'tag_id',
+      field: 'name',
       floatingFilter: true,
       filter: 'agTextColumnFilter',
       width: 200,
@@ -39,10 +39,10 @@ const TagList = (props: any) => {
     axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/list', {
         com_id: localStorage.getItem('companyId'),
-        search_type: 'proccess',
+        search_type: 'process',
       })
       .then((response) => {
-        // console.log('fetchTaglistData:', response)
+        console.log('fetchTaglistData/process:', response)
         setRowData(response.data)
       })
       .catch((error) => error('Data Load Failed'))
@@ -53,9 +53,9 @@ const TagList = (props: any) => {
     const arr = []
 
     for (let i = 0; i < selectedRows.length; i++) {
-      arr.push(selectedRows[i].tag_id)
+      arr.push(selectedRows[i].name)
     }
-    // console.log('arr:', arr)
+    console.log('arr:', arr)
     syncSelectedTag(arr)
   }
 

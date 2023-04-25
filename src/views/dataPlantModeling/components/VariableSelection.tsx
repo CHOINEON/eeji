@@ -5,18 +5,15 @@ import { ColDef } from 'ag-grid-community'
 import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
 import axios from 'axios'
-import { Button } from '@chakra-ui/react'
-import { CircularProgress } from '@chakra-ui/react'
 import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import ListSubheader from '@mui/material/ListSubheader'
+import TreeView from '@mui/lab/TreeView'
+import TreeItem from '@mui/lab/TreeItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
-import Paper from '@mui/material/Paper'
 import { Box } from '@mui/material'
+import TagSelectList from './TagSelectList'
 
-const VariableSelection = (props: any) => {
-  const { onClickNext } = props
+const VariableSelection = () => {
   const [loading, setLoading] = useState(false)
   // const gridStyle = useMemo(() => ({ height: '700px', width: '320px' }), [])
   const gridRef = useRef<AgGridReact<any>>(null)
@@ -58,50 +55,64 @@ const VariableSelection = (props: any) => {
   }
 
   const handlePreprocessing = () => {
-    console.log('clicked ')
     setLoading(true)
-    onClickNext(2)
 
-    const testRequest: object = {
-      com_id: '회사 아이디',
+    const Object: object = {
+      com_id: localStorage.getItem('companyId'),
       cause: [
         {
-          table_nm: '변수 데이터',
-          variable: ['선택한 변수'],
+          table_nm: 'tc',
+          variable: ['Tag-2'],
         },
       ],
       target: {
-        table_nm: '변수 데이터',
-        variable: ['선택한 변수'],
+        table_nm: 'tc',
+        variable: ['Tag-1'],
       },
     }
 
+    // console.log('json:', JSON.stringify(Object))
+    // console.log('JSONstr:', JSONstr)
+
     ///////////////NEED TEST ////////////
-    axios.post(process.env.REACT_APP_API_LOCAL_URL + '/api/tag/preprocessing', testRequest).then(
-      (response: any) => {
-        console.log('preprocessing response:', response)
-        setLoading(false)
-      },
-      (error) => {
-        console.log('error:', error)
-      }
-    )
+    axios
+      .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/preprocessing', JSON.stringify(Object), {
+        headers: {
+          'Content-Type': `application/json`,
+        },
+      })
+      .then(
+        (response: any) => {
+          console.log('preprocessing response:', response)
+          setLoading(false)
+        },
+        (error) => {
+          setLoading(false)
+          console.log('error:', error)
+        }
+      )
   }
 
   return (
     <>
-      <div className="ag-theme-alpine" style={{ height: '700px', width: '320px', float: 'left' }}>
-        <AgGridReact
-          rowHeight={40}
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          rowSelection={'multiple'}
-          // getRowId={getRowId}
-          // onRowSelected={onRowSelected}
-          // onSelectionChanged={onSelectionChanged}
-        ></AgGridReact>
-      </div>
+      {/* <div className="ag-theme-alpine" style={{ height: '700px', width: '320px', float: 'left' }}>
+        <TreeView
+          aria-label="file system navigator"
+          // defaultCollapseIcon={<ExpandMoreIcon />}
+          // defaultExpandIcon={<ChevronRightIcon />}
+          sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+        >
+          <TreeItem nodeId="1" label="Applications">
+            <TreeItem nodeId="2" label="Calendar" />
+          </TreeItem>
+          <TreeItem nodeId="5" label="Documents">
+            <TreeItem nodeId="10" label="OSS" />
+            <TreeItem nodeId="6" label="MUI">
+              <TreeItem nodeId="8" label="index.js" />
+            </TreeItem>
+          </TreeItem>
+        </TreeView>
+      </div> */}
       <>
         <Box
           sx={{
@@ -117,30 +128,14 @@ const VariableSelection = (props: any) => {
           {/* <Paper style={{ margin: 10 }}> */}
           <div style={{ display: 'block', float: 'left' }}>
             원인변수 :
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel htmlFor="grouped-native-select">Grouping</InputLabel>
-              <Select native defaultValue="" id="grouped-native-select" label="Grouping">
-                <option aria-label="None" value="" />
-                <optgroup label="PULL">
-                  <option value={1}>pull</option>
-                </optgroup>
-                <optgroup label="TC">
-                  <option value={3}>Tag-1</option>
-                  <option value={4}>Tag-2</option>
-                </optgroup>
-                <optgroup label="POWER">
-                  <option value={3}>single-phase</option>
-                  <option value={4}>three-phase</option>
-                </optgroup>
-              </Select>
-            </FormControl>
+            <TagSelectList multipleSelection={true} />
           </div>
 
           <div style={{ display: 'block', float: 'left' }}>
             타겟변수 :
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel htmlFor="grouped-native-select">Grouping</InputLabel>
-              <Select native defaultValue="" id="grouped-native-select" label="Grouping">
+            <FormControl sx={{ m: 1, width: 300 }}>
+              <InputLabel htmlFor="grouped-native-select">Target Variable...</InputLabel>
+              <Select native defaultValue="" id="grouped-native-select" label="Target Variable">
                 <option aria-label="None" value="" />
                 <optgroup label="PULL">
                   <option value={1}>pull</option>
@@ -162,7 +157,7 @@ const VariableSelection = (props: any) => {
 
       {/* <div style={{ textAlign: 'right' }}>
         <Button colorScheme="teal" variant="ghost" onClick={handlePreprocessing}>
-          Preprocessing
+          NEXT
         </Button>
 
         {loading && <CircularProgress isIndeterminate color="green.300" />}

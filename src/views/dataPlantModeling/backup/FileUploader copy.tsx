@@ -4,8 +4,8 @@ import { RemovingEventArgs, UploaderComponent } from '@syncfusion/ej2-react-inpu
 import { Button } from '@chakra-ui/react'
 import { CircularProgress } from '@chakra-ui/react'
 import axios from 'axios'
-import DataInfoGrid from './DataSummary'
-import DataSummary from './DataSummary'
+import DataInfoGrid from '../components/DataSummary'
+import DataSummary from '../components/DataSummary'
 
 const FileUploader = (props: any) => {
   const uploadObj = useRef<UploaderComponent>(null)

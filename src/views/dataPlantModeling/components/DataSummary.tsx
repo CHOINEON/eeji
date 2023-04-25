@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 import Pagination from '@mui/material/Pagination'
 import { Box } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import { theme } from './theme'
+import { theme } from '../theme'
 
 const DataSummary = (props: any) => {
   const [page, setPage] = React.useState(1)
@@ -36,13 +36,13 @@ const DataSummary = (props: any) => {
     return (
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+          <div style={{ fontSize: 14 }} color="text.secondary">
             <p>파일명 : {param.value.data}</p>
             <p>행/열 : {param.value.shape}</p>
-            <p>시작일 :{param.value.startDate}</p>
-            <p>종료일 :{param.value.endDate}</p>
+            <p>시작일 : {param.value.startDate}</p>
+            <p>종료일 : {param.value.endDate}</p>
             <p>결측치 : {param.value.missing.length === 0 ? '없음' : param.value.missing}</p>
-          </Typography>
+          </div>
           <Typography variant="body2"></Typography>
         </CardContent>
         {/* <CardActions>

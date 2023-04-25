@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useReducer } from 'react'
 import { Box, Grid, GridItem, Button } from '@chakra-ui/react'
 import TagList from './Tag/TagList'
-import Worksheet from './Worksheets/Worksheet'
+import Worksheet from './components/Worksheets/Worksheet'
 import './style/uploader.css'
 import SeriesSelectionGrid from './Tag/SeriesSelectionGrid'
-import ChartSelectionDialog from './Chart/ChartSelectionDialog'
+import ChartSelectionDialog from './components/Chart/ChartSelectionDialog'
 
 export const DataAnalysis = (props: any) => {
   const { onRefresh } = props
@@ -51,11 +51,11 @@ export const DataAnalysis = (props: any) => {
           </GridItem>
         </GridItem>
       </Grid>
-      <div style={{ textAlign: 'right' }}>
+      {/* <div style={{ textAlign: 'right' }}>
         <Button colorScheme="teal" variant="ghost" onClick={handleSave}>
           SAVE
         </Button>
-      </div>
+      </div> */}
       {/* <ChartSelectionDialog isOpen={dialogOpen} onDialogClose={dialogClose} onSelectChart={onSelectChart} /> */}
     </Box>
   )

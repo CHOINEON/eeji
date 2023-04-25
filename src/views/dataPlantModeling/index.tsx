@@ -24,30 +24,21 @@
 import React, { useState, useEffect } from 'react'
 import { Box, useColorModeValue, Stack, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
-import FileUploader from './FileUploader'
-import DataInfoGrid from './DataSummary'
+import FileUploader from './components/FileUploader'
+import DataInfoGrid from './components/DataSummary'
 import DataAnalysis from 'views/DataAnalysis'
 import { refreshVirtualLazyLoadCache } from '@syncfusion/ej2-react-grids'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { green, purple } from '@mui/material/colors'
-import VariableSelection from './VariableSelection'
-
+import VariableSelection from './components/VariableSelection'
+import CircularProgress from '@mui/material/CircularProgress'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
 import StepButton from '@mui/material/StepButton'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: purple[500],
-    },
-    secondary: {
-      main: green[500],
-    },
-  },
-})
+import { theme } from './theme'
+import axios from 'axios'
 
 export default function DataPlantModeling() {
   // const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
@@ -62,13 +53,8 @@ export default function DataPlantModeling() {
   // console.log(theme)
 
   const [refresh, setRefresh] = useState(false)
-
-  const [tabIndex, setTabIndex] = useState(0)
-  const [isDisabled, setIsDisabled] = useState([false, false, false])
-  const [dataSummary, setDataSummary] = useState()
-  const [tagList, setTagList] = useState(false)
   const [uploaded, setUploaded] = useState(false)
-
+  const [loading, setLoading] = useState(false)
   const [activeStep, setActiveStep] = React.useState(0)
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean
@@ -114,10 +100,6 @@ export default function DataPlantModeling() {
 
   // document.onkeydown = NotReload()
 
-  const handleTabsChange = (index: number) => {
-    setTabIndex(index)
-  }
-
   const onClickNext = (step: any) => {
     // console.log('e:', step)
     // console.log('data:', data)
@@ -128,15 +110,11 @@ export default function DataPlantModeling() {
   }
 
   const onRefresh = () => {
-    setTabIndex(0)
     refreshAll()
   }
 
   const refreshAll = () => {
     setRefresh(true)
-  }
-  const handleSliderChange = (event: any) => {
-    setTabIndex(parseInt(event.target.value, 10))
   }
 
   const onUploaded = (param: boolean) => {
@@ -160,13 +138,67 @@ export default function DataPlantModeling() {
   }
 
   const handleNext = () => {
-    const newActiveStep =
-      isLastStep() && !allStepsCompleted()
-        ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
-        : activeStep + 1
-    setActiveStep(newActiveStep)
+    console.log('active step:', activeStep)
+
+    if (activeStep === 0) {
+      const newActiveStep =
+        isLastStep() && !allStepsCompleted()
+          ? // It's the last step, but not all steps have been completed,
+            // find the first step that has been completed
+            steps.findIndex((step, i) => !(i in completed))
+          : activeStep + 1
+      setActiveStep(newActiveStep)
+    } else if (activeStep === 1) {
+      // onPreprocessing
+      const handlePreprocessing = () => {
+        setLoading(true)
+
+        const Object: object = {
+          com_id: localStorage.getItem('companyId'),
+          cause: [
+            {
+              table_nm: 'tc',
+              variable: ['Tag-2'],
+            },
+          ],
+          target: {
+            table_nm: 'tc',
+            variable: ['Tag-1'],
+          },
+        }
+
+        axios
+          .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/preprocessing', JSON.stringify(Object), {
+            headers: {
+              'Content-Type': `application/json`,
+            },
+          })
+          .then(
+            (response: any) => {
+              console.log('preprocessing response:', response)
+              if (response.data.message == 'success') {
+                const newActiveStep =
+                  isLastStep() && !allStepsCompleted()
+                    ? // It's the last step, but not all steps have been completed,
+                      // find the first step that has been completed
+                      steps.findIndex((step, i) => !(i in completed))
+                    : activeStep + 1
+                !loading && setActiveStep(newActiveStep)
+
+                setLoading(false)
+              }
+            },
+            (error) => {
+              setLoading(false)
+              console.log('error:', error)
+            }
+          )
+      }
+
+      handlePreprocessing()
+    } else if (activeStep === 2) {
+      // the last step
+    }
   }
 
   const handleBack = () => {
@@ -192,10 +224,6 @@ export default function DataPlantModeling() {
   return (
     <ThemeProvider theme={theme}>
       <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
-        {/* <Box>{renderGrid(GridInfo)}</Box> */}
-        {/* <Box>
-          <GridLayoutBox gridInfo={GridInfo} />
-        </Box> */}
         <Box margin={5}>
           <Stepper nonLinear activeStep={activeStep}>
             {steps.map((label, index) => (
@@ -214,15 +242,17 @@ export default function DataPlantModeling() {
             </>
           )}
         </Box>
-        <Box>{activeStep === 1 && <VariableSelection onClickNext={onClickNext} />}</Box>
+        <Box>{activeStep === 1 && <VariableSelection />}</Box>
         <Box>{activeStep === 2 && <DataAnalysis onRefresh={onRefresh} />}</Box>
-        {uploaded === true && (
+        <div style={{ width: '400px', float: 'right' }}>
           <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-            <Button onClick={handleNext} sx={{ mr: 1 }}>
-              Next
-            </Button>
+            {loading ? (
+              <CircularProgress style={{ position: 'relative', top: '200px' }} />
+            ) : (
+              <Button onClick={handleNext}>Next</Button>
+            )}
           </Box>
-        )}
+        </div>
       </Box>
     </ThemeProvider>
   )

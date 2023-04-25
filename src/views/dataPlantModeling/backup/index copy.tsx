@@ -24,13 +24,13 @@
 import React, { useState, useEffect } from 'react'
 import { Box, useColorModeValue, Stack, Button, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
-import FileUploader from './FileUploader'
-import DataInfoGrid from './DataSummary'
+import FileUploader from '../components/FileUploader'
+import DataInfoGrid from '../components/DataSummary'
 import DataAnalysis from 'views/DataAnalysis'
 import { refreshVirtualLazyLoadCache } from '@syncfusion/ej2-react-grids'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { green, purple } from '@mui/material/colors'
-import VariableSelection from './VariableSelection'
+import VariableSelection from '../components/VariableSelection'
 
 const theme = createTheme({
   palette: {
@@ -148,9 +148,7 @@ export default function DataPlantModeling() {
               <TabPanel>
                 <FileUploader onClickNext={onClickNext} refresh={refresh} />
               </TabPanel>
-              <TabPanel>
-                <VariableSelection onClickNext={onClickNext} />
-              </TabPanel>
+              <TabPanel>{/* <VariableSelection onClickNext={onClickNext} /> */}</TabPanel>
               <TabPanel>
                 <DataAnalysis onRefresh={onRefresh} />
               </TabPanel>

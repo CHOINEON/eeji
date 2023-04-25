@@ -63,8 +63,8 @@ const FileUploader = (props: any) => {
           (response) => {
             // console.log('uploadfile RESP:', response)
             setSummaryResult(response.data)
-
             setLoading(false)
+
             if (response.status === 200) {
               setUploaded(true)
             }
@@ -104,7 +104,7 @@ const FileUploader = (props: any) => {
                 {loading ? (
                   <CircularProgress isIndeterminate color="green.300" />
                 ) : (
-                  <Button onClick={handleUpload}>Upload</Button>
+                  !uploaded && <Button onClick={handleUpload}>Upload</Button>
                 )}
               </div>
 

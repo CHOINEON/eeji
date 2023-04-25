@@ -141,7 +141,7 @@ export const UploadModal: React.FC<UploadModalProps> = (props) => {
     }
 
     axios
-      .post('http://220.94.157.27:59871/api/tag/uploadfile', formData, {
+      .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/uploadfile', formData, {
         headers: {
           'Content-Type': `multipart/form-data;`,
         },
