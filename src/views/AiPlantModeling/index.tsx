@@ -46,9 +46,9 @@ export default function AIPlantModeling() {
   const [per, setPercent] = React.useState(0)
   const [DisplayLoading, setDisplayLoading] = React.useState<any>(false)
 
-  const [timerId, setTimerId] = React.useState<any>(0)
+  const [timerId, setTimerId] = React.useState<any>(null)
 
-  // let timerId = null
+  let tId = null
   // console.log(theme)
 
   //새로고침 막기
@@ -68,38 +68,36 @@ export default function AIPlantModeling() {
   // }, [])
   //end 새로고침 막기
 
-  // React.useEffect(() => {
-  //   if (timerId) {
-  //     clearTimeout(timerId) // HTTP 응답시 timer 해제
-  //     setTimerId(null)
-  //   }
-  // }, [timerId])
+  React.useEffect(() => {
+    if (timerId) {
+      tId = setInterval(timer, 10)
+      setTimerId(tId)
+    } else {
+      setTimerId(null)
+      // clearInterval(tId)
+    }
+  }, [timerId])
 
   const timer = () => {
-    //   if (per < 98) {
-    //     const diff = 100 - Percent
-    //     const inc = diff / (10 + Percent * (1 + Percent / 100)) // 증가값
-    //     Percent = Percent + inc
+    if (per < 98) {
+      const diff = 100 - per
+      const inc = diff / (10 + per * (1 + per / 100)) // 증가값
+      const percent = per + inc
 
-    //     console.log(Percent.toFixed(2))
-    //     console.log(inc)
-    //     setPercent(Percent)
-    //   }
-    //   setTimerId(setTimeout(timer, 20)) // 50 ms 단위로 timer 재귀호출
-    if (timerId == 0) {
-      setTimerId(1)
-      const id = setInterval(frame, 10)
-      function frame() {
-        if (per >= 100) {
-          clearInterval(id)
-          setTimerId(0)
-        } else {
-          let a = per
-          a = a++
-          setPercent(a)
-        }
-      }
+      console.log(percent.toFixed(2))
+      console.log(inc)
+      setPercent(percent)
     }
+    setTimerId(setTimeout(timer, 20)) // 50 ms 단위로 timer 재귀호출
+    // if (per >= 100) {
+    //   clearInterval(id)
+    //   setTimerId(0)
+    // } else {
+    //   let a = per
+    //   a = a++
+    //   console.log(a)
+    //   setPercent(a)
+    // }
   }
 
   return (
