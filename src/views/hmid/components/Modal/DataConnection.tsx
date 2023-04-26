@@ -89,8 +89,8 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
     //   Obj = new Object()
     // } else {
     for (let i = 0, len = TagData.length; i < len; i++) {
-      Obj.value = TagData[i].tag_id
-      Obj.label = TagData[i].tag_id
+      Obj.value = TagData[i].name
+      Obj.label = TagData[i].name
       Arr.push(Obj)
       Obj = new Object()
     }

@@ -51,7 +51,6 @@ const LayoutListTitle = styled.div`
   line-height: 2vw;
   width: 100%;
   font-size: 0.8vw;
-  // background-color: rgba(143, 155, 186, 0.2);
 `
 
 const AddLayoutListBox = styled(LayoutListBox)`
@@ -70,8 +69,8 @@ const UseYnCheckBox = styled.div`
   top: 0.5vw;
   background-repeat: no-repeat;
   background-size: 80% auto;
-  width: 3vw;
-  height: 3vw;
+  width: 2.5vw;
+  height: 2.5vw;
   background-position: center center;
   background-image: url(${use_yn_check});
   background-color: #2196f347;
@@ -137,7 +136,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
     console.log(e)
     console.log(e.target.id)
 
-    axios.get('http://220.94.157.27:59871/api/hmid/layout/info?lay_id=' + e.target.id).then((response) => {
+    axios.get('http://192.168.1.27:8000/api/hmid/layout/info?lay_id=' + e.target.id).then((response) => {
       console.log('[ Select Layout Info Response ] :')
       console.log(response.data)
 
@@ -234,7 +233,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   const getLayoutList = (company_id: string) => {
     console.log(company_id)
     axios
-      .get('http://220.94.157.27:59871/api/hmid/layout?company_id=' + company_id, {
+      .get('http://192.168.1.27:8000/api/hmid/layout?company_id=' + company_id, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
@@ -257,7 +256,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   //set Default Dashboard Layout
   const SetDefaultDashboard = () => {
     axios
-      .put('http://220.94.157.27:59871/api/hmid/layout/default?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
+      .put('http://192.168.1.27:8000/api/hmid/layout/default?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',

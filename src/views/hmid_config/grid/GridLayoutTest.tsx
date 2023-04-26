@@ -1371,11 +1371,14 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         //   },
         //   timeout: 500000,
         // }
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        console.log(TagList)
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 
         const node = document.getElementById(BoxTargetId)
 
         axios
-          .post('http://220.94.157.27:59871/api/hmid/chartData?', TagList)
+          .post('http://192.168.1.27:8000/api/hmid/chartData?', TagList)
           .then((response) => {
             console.log('[ Chart response data ] : ')
             console.log(response.data)
@@ -1443,7 +1446,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     console.log(params)
 
     axios
-      .post('http://220.94.157.27:59871/api/hmid/layout', params)
+      .post('http://192.168.1.27:8000/api/hmid/layout', params)
       .then((response) => {
         console.log('[ SaveDashboard Response Data ] : ')
         console.log(response.data)
@@ -1554,9 +1557,21 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                   // console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data)
 
                   const ChartDataOption: any = data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
-                  delete ChartDataOption[0].x
-                  delete ChartDataOption[0].y
-                  delete ChartDataOption[0].text
+
+                  for (const i in ChartDataOption) {
+                    for (const j in ChartDataOption[i]) {
+                      if (j === 'x') {
+                        delete ChartDataOption[i].x
+                      } else if (j === 'y') {
+                        delete ChartDataOption[i].y
+                      } else if (j === 'text') {
+                        delete ChartDataOption[i].text
+                      }
+                    }
+                  }
+                  // delete ChartDataOption[1].x
+                  // delete ChartDataOption[1].y
+                  // delete ChartDataOption[0].text
 
                   console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
                   console.log(ChartDataOption)
