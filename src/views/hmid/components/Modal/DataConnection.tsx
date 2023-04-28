@@ -44,18 +44,18 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
     CreateDtataListItems()
   }, [])
 
-  React.useEffect(() => {
-    console.log(DataNodeData)
-  }, [DataNodeData])
+  // React.useEffect(() => {
+  //   console.log(DataNodeData)
+  // }, [DataNodeData])
 
   React.useEffect(() => {
-    console.log('[ 상위로 보낼 SelectDataType ] : ' + SelectDataType)
+    // console.log('[ 상위로 보낼 SelectDataType ] : ' + SelectDataType)
     props.setDataConnectionInfo(SelectDataType)
   }, [SelectDataType])
 
   React.useEffect(() => {
-    console.log('[ 상위에서 받은 TagList ] : ')
-    console.log(props.DataTagList)
+    //console.log('[ 상위에서 받은 TagList ] : ')
+    //console.log(props.DataTagList)
     if (props.DataTagList.length !== 0) {
       CreateTagListItems(props.DataTagList)
     }
@@ -96,7 +96,7 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
     }
     //}
 
-    console.log(Arr)
+    // console.log(Arr)
 
     setTagNodeData(Arr)
     // return TagList

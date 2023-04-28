@@ -329,8 +329,8 @@ export const MainDashboard: React.FC = () => {
             data[0].labels = labels
             data[0].values = values
 
-            console.log(data)
-            console.log('##########################')
+            // console.log(data)
+            // console.log('##########################')
 
             DrawGauidWidget(WidgetInfo, node, data, layout)
           }
