@@ -7,6 +7,8 @@ import { Box, useColorModeValue, Stack, Button, Checkbox } from '@chakra-ui/reac
 import styled from '@emotion/styled'
 import no_image from './img/no-image.jpg'
 import use_yn_check from './img/use_yn_check.png'
+import preview_icon from './img/preview_icon.png'
+import layout_add_btn from './img/layout_add_btn.png'
 
 interface LayoutListProps {
   company_id: string
@@ -15,16 +17,20 @@ interface LayoutListProps {
 
 const LayoutListWrap = styled.div`
   width: 100%;
-  height: 85vh;
+  height: 74vh;
   display: flex;
   overflow-y: scroll;
   flex-wrap: wrap;
 `
 
 const LayoutListBox = styled.div`
-  width: calc(25% - 1vw);
+  width: calc(33.3% - 2vw);
   height: 13vw;
-  margin: 0.5vw;
+  margin: 1vw;
+  box-shadow: 0px 0px 20px #0000001a;
+  border-radius: 18px;
+  background-color: #fff;
+  padding: 1vw;
 `
 
 const LayoutListViewParent = styled.div`
@@ -44,24 +50,45 @@ const LayoutListView = styled.div`
   background-repeat: no-repeat;
 `
 
+const TitleParentBox = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 0.3vw;
+`
+
+const IconBox = styled.div`
+  margin-right: 1vw;
+  border-radius: 100px;
+  width: 2vw;
+  height: 2vw;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center center;
+  background-image: url(${preview_icon});
+`
+
 const LayoutListTitle = styled.div`
-  text-align: center;
+  text-align: left;
   padding: 0.3vw 0;
   font-weight: bold;
-  height: 20%;
-  line-height: 2vw;
+  height: auto;
+  line-height: 1vw;
   width: 100%;
-  font-size: 0.8vw;
+  font-size: 0.9vw;
+  color: #1c264a;
+`
+
+const SubTitleBox = styled.div`
+  font-size: 0.5vw;
+  color: gray;
+  text-align: left;
 `
 
 const AddLayoutListBox = styled(LayoutListBox)`
-  background-color: #fff;
   height: 10.5vw;
-  text-align: center;
-  line-height: 10.5vw;
-  font-size: 4vw;
-  cursor: pointer;
-  color: #00a0e9;
+  position: relative;
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0);
 `
 
 const UseYnCheckBox = styled.div`
@@ -74,7 +101,7 @@ const UseYnCheckBox = styled.div`
   height: 2.5vw;
   background-position: center center;
   background-image: url(${use_yn_check});
-  background-color: #2196f347;
+  background-color: #4338f74a;
   border-radius: 100px;
   z-index: 999;
 `
@@ -88,6 +115,24 @@ const DashboardImage = styled.img`
   top: 0;
   bottom: 0;
   display: block;
+  box-shadow: 0px 0px 20px #00000021;
+`
+
+const AddLayoutBoChild = styled.div`
+  position: absolute;
+  width: 8vw;
+  height: 8vw;
+  border-radius: 100px;
+  background-color: #fff;
+  cursor: pointer;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0px 0px 20px #0000001a;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 38% auto;
+  background-image: url(${layout_add_btn});
 `
 
 export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
@@ -127,14 +172,9 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
     console.log(testRefs)
 
     for (let i = 0, len = testRefs.current.length; i < len; i++) {
-      // console.log(testRefs.current[i])
-      // console.log(testRefs.current[i].children[0])
-      // console.log(testRefs)
       if (testRefs.current[i] !== null) {
-        // console.log(testRefs.current[i])
         if (testRefs.current[i].children.length === 3) {
           setLayoutId(e.target.offsetParent.children[1].id)
-          // console.log(testRefs.current[i].children[1].id)
           if (testRefs.current[i].children[1].id !== e.target.offsetParent.children[1].id) {
             testRefs.current[i].children[2].style = 'border:0px solid #fff'
           } else {
@@ -200,7 +240,13 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
                 }}
               />
             </LayoutListViewParent>
-            <LayoutListTitle>{data[i].lay_nm}</LayoutListTitle>
+            <TitleParentBox>
+              <IconBox />
+              <div>
+                <SubTitleBox>Main Dashboard</SubTitleBox>
+                <LayoutListTitle>{data[i].lay_nm}</LayoutListTitle>
+              </div>
+            </TitleParentBox>
           </LayoutListBox>
         )
       } else {
@@ -218,7 +264,13 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
                 }}
               />
             </LayoutListViewParent>
-            <LayoutListTitle>{data[i].lay_nm}</LayoutListTitle>
+            <TitleParentBox>
+              <IconBox />
+              <div>
+                <SubTitleBox>Main Dashboard</SubTitleBox>
+                <LayoutListTitle>{data[i].lay_nm}</LayoutListTitle>
+              </div>
+            </TitleParentBox>
           </LayoutListBox>
         )
       }
@@ -226,7 +278,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
 
     component.push(
       <AddLayoutListBox key={'add'} id="add" onDoubleClick={NewDashboard}>
-        +
+        <AddLayoutBoChild />
       </AddLayoutListBox>
     )
 
@@ -306,10 +358,20 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
     <>
       <Box style={{ position: 'relative', zIndex: 1000 }}>
         <Stack direction="row" spacing={4} pl={3} display={AdminInfo}>
-          <Button leftIcon={<BiSelectMultiple />} variant="brand" onClick={SetDefaultDashboard}>
+          <Button
+            id="design_button"
+            leftIcon={<BiSelectMultiple />}
+            onClick={SetDefaultDashboard}
+            style={{ backgroundColor: '#4338F7', color: '#fff', borderRadius: '100px' }}
+          >
             선택
           </Button>
-          <Button leftIcon={<RiDeleteBinLine />} variant="brand" onClick={deleteLayout}>
+          <Button
+            id="design_button"
+            leftIcon={<RiDeleteBinLine />}
+            onClick={deleteLayout}
+            style={{ backgroundColor: '#4338F7', color: '#fff', borderRadius: '100px' }}
+          >
             삭제
           </Button>
         </Stack>

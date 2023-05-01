@@ -1,18 +1,5 @@
 import React from 'react'
-import {
-  Button,
-  // Modal,
-  // ModalOverlay,
-  // ModalContent,
-  // ModalHeader,
-  // ModalFooter,
-  // ModalBody,
-  // ModalCloseButton,
-  // useDisclosure,
-  // Select,
-} from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import type { SelectProps } from 'antd'
 import { Select, Modal } from 'antd'
 import './style/style.css'
 
@@ -44,24 +31,14 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
     CreateDtataListItems()
   }, [])
 
-  // React.useEffect(() => {
-  //   console.log(DataNodeData)
-  // }, [DataNodeData])
-
   React.useEffect(() => {
-    // console.log('[ 상위로 보낼 SelectDataType ] : ' + SelectDataType)
     props.setDataConnectionInfo(SelectDataType)
   }, [SelectDataType])
 
   React.useEffect(() => {
-    //console.log('[ 상위에서 받은 TagList ] : ')
-    //console.log(props.DataTagList)
     if (props.DataTagList.length !== 0) {
       CreateTagListItems(props.DataTagList)
     }
-    // else {
-    //   CreateTagListItems('태그를 선택하여 주세요.')
-    // }
   }, [props.DataTagList])
 
   const CreateDtataListItems = () => {
@@ -82,24 +59,14 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
     const Arr: any = []
     let Obj: any = new Object()
 
-    // if (typeof TagData === 'string') {
-    //   Obj.value = 'default'
-    //   Obj.label = '태그를 선택 해주세요.'
-    //   Arr.push(Obj)
-    //   Obj = new Object()
-    // } else {
     for (let i = 0, len = TagData.length; i < len; i++) {
       Obj.value = TagData[i].name
       Obj.label = TagData[i].name
       Arr.push(Obj)
       Obj = new Object()
     }
-    //}
-
-    // console.log(Arr)
 
     setTagNodeData(Arr)
-    // return TagList
   }
 
   const handleDataChange = (value: string | string[]) => {
@@ -112,12 +79,6 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
     console.log(value)
     setTagInfo(value)
   }
-
-  // const SelectedDataType = () => {
-  //   if (SelectDataType !== undefined) {
-  //     props.setDataConnectionInfo(SelectDataType)
-  //   }
-  // }
 
   return (
     <>

@@ -33,10 +33,6 @@ export const LineChartComponent: React.FC<LineChartProps> = (props: any) => {
 
   React.useEffect(() => {
     if (props.ChartType === 'Line') {
-      console.log('[ 하위 LineChart 에서 받은 props ] : ')
-      console.log(LineChartData)
-      console.log(LineChartLayout)
-
       props.ChartData(LineChartData)
       props.ChartLayout(LineChartLayout)
     }

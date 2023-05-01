@@ -63,23 +63,33 @@ export const SaveConfirmModal: React.FC<SaveConfirmModalProps> = (props) => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>레이아웃 저장</ModalHeader>
+          <ModalHeader>Save your Layout</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text fontWeight="bold" mb="1rem">
-              레이아웃 이름
-            </Text>
             <Input
+              placeholder="Layout Name"
               onChange={(e: any) => {
                 ChangeLayoutName(e)
               }}
+              style={{ backgroundColor: '#F4F7FE' }}
             />
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="brand" mr={3} onClick={SaveLayout}>
+            <Button
+              id="design_button"
+              colorScheme="brand"
+              mr={3}
+              onClick={SaveLayout}
+              style={{ backgroundColor: '#4338F7', color: '#fff' }}
+            >
               저장
             </Button>
-            <Button variant="ghost" onClick={unSaveLayout}>
+            <Button
+              id="design_button"
+              variant="ghost"
+              onClick={unSaveLayout}
+              style={{ backgroundColor: '#4338F7', color: '#fff' }}
+            >
               취소
             </Button>
           </ModalFooter>

@@ -56,10 +56,10 @@ export const DataGridDeleteModal: React.FC<DataGridDeleteModalProps> = (props) =
             </Text>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="brand" mr={3} onClick={DeleteDataGridRow}>
+            <Button id="design_button" colorScheme="brand" mr={3} onClick={DeleteDataGridRow}>
               네
             </Button>
-            <Button variant="ghost" onClick={unDeleteDataGridRow}>
+            <Button id="design_button" variant="ghost" onClick={unDeleteDataGridRow}>
               아니오
             </Button>
           </ModalFooter>
