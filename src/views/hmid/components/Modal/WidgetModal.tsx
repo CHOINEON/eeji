@@ -176,7 +176,7 @@ export const WidgetModal: React.FC<WidgetModalProps> = (props) => {
             <WidgetListWrap>{CreateTabItems(WidgetType)}</WidgetListWrap>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="brand" mr={3} onClick={onClose}>
+            <Button id="design_button" colorScheme="brand" mr={3} onClick={onClose}>
               닫기
             </Button>
           </ModalFooter>

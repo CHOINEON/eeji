@@ -28,8 +28,8 @@ import React from 'react'
 
 const FormBox = styled.div`
   background-color: #fff;
-  border: 1px solid #a7a9ac;
-  birder-radius: 3px;
+  border-radius: 15px;
+  box-shadow: 0px 5px 10px #4338f733;
   padding: 1.3vw;
 `
 
@@ -71,16 +71,31 @@ export default function LayoutConfig() {
           <FormTitle>Stacked Form</FormTitle>
           <Form labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} layout="horizontal" style={{ maxWidth: 600 }}>
             <Form.Item label="Email Address">
-              <Input value="" />
+              <Input value="" style={{ backgroundColor: '#F4F7FE', border: '1px solid #A3AFCF', width: '27vw' }} />
             </Form.Item>
             <Form.Item label="Password">
-              <Input type="password" value="" />
+              <Input
+                type="password"
+                value=""
+                style={{ backgroundColor: '#F4F7FE', border: '1px solid #A3AFCF', width: '27vw' }}
+              />
             </Form.Item>
             <Form.Item valuePropName="Password">
               <Checkbox>Password</Checkbox>
             </Form.Item>
             <Form.Item>
-              <Button style={{ backgroundColor: '#00AFFF', color: '#fff', border: '0' }}>SUBMIT</Button>
+              <Button
+                id="design_button"
+                style={{
+                  backgroundColor: '#4338F7',
+                  color: '#fff',
+                  border: '0',
+                  borderRadius: '100px',
+                  width: '10vw',
+                }}
+              >
+                SUBMIT
+              </Button>
             </Form.Item>
           </Form>
         </SBox>
@@ -88,16 +103,27 @@ export default function LayoutConfig() {
           <FormTitle>Horizontal Form</FormTitle>
           <Form labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} layout="horizontal" style={{ maxWidth: 600 }}>
             <Form.Item label="UserName">
-              <Input value="" />
+              <Input value="" style={{ backgroundColor: '#F4F7FE', border: '1px solid #A3AFCF', width: '27vw' }} />
             </Form.Item>
             <Form.Item label="Email">
-              <Input value="" />
+              <Input value="" style={{ backgroundColor: '#F4F7FE', border: '1px solid #A3AFCF', width: '27vw' }} />
             </Form.Item>
             <Form.Item valuePropName="RememberMe">
               <Checkbox>RememberMe</Checkbox>
             </Form.Item>
             <Form.Item>
-              <Button style={{ backgroundColor: '#00AFFF', color: '#fff', border: '0' }}>SUGN IN</Button>
+              <Button
+                id="design_button"
+                style={{
+                  backgroundColor: '#4338F7',
+                  color: '#fff',
+                  border: '0',
+                  borderRadius: '100px',
+                  width: '10vw',
+                }}
+              >
+                SUGN IN
+              </Button>
             </Form.Item>
           </Form>
         </SBox>
@@ -106,16 +132,23 @@ export default function LayoutConfig() {
         <FormTitle>Form Elements</FormTitle>
         <Form labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} layout="horizontal" style={{ maxWidth: 600 }}>
           <Form.Item label="Email Address">
-            <Input value="" />
+            <Input value="" style={{ backgroundColor: '#f4f7fe', border: '1px solid #a3afcf', width: '64vw' }} />
           </Form.Item>
           <Form.Item label="Password">
-            <Input type="password" value="" />
+            <Input
+              type="password"
+              value=""
+              style={{ backgroundColor: '#F4F7FE', border: '1px solid #A3AFCF', width: '64vw' }}
+            />
           </Form.Item>
           <Form.Item label="Placeholder">
-            <Input />
+            <Input style={{ backgroundColor: '#F4F7FE', border: '1px solid #A3AFCF', width: '64vw' }} />
           </Form.Item>
           <Form.Item label="Disabled">
-            <Input placeholder="Disabled input here" />
+            <Input
+              placeholder="Disabled input here"
+              style={{ backgroundColor: '#F4F7FE', border: '1px solid #A3AFCF', width: '64vw' }}
+            />
           </Form.Item>
           <Form.Item>
             <div>Static control hello@smartlements.com</div>

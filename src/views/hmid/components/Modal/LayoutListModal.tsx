@@ -109,7 +109,13 @@ export const LayoutModal: React.FC<LayoutModalProps> = (props) => {
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="brand" mr={3} onClick={onClose}>
+            <Button
+              id="design_button"
+              colorScheme="brand"
+              mr={3}
+              onClick={onClose}
+              style={{ backgroundColor: '#4338F7' }}
+            >
               닫기
             </Button>
           </ModalFooter>

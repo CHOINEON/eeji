@@ -266,11 +266,15 @@ export const MainDashboard: React.FC = () => {
       TagData.push(TagList[i].tag)
     }
 
-    console.log(TagData)
+    const set = new Set(TagData)
+
+    const uniqueArr = [...set]
+
+    console.log(uniqueArr)
 
     if (WidgetInfo === 'Table' || WidgetInfo === 'Pie' || WidgetInfo === 'Bar') {
       axios
-        .post('http://220.94.157.27:59871/api/tag/describe', TagData)
+        .post('http://220.94.157.27:59871/api/tag/describe', uniqueArr)
         .then((response) => {
           console.log('[ Tag Describe data ] : ')
           console.log(response.data)
@@ -375,7 +379,7 @@ export const MainDashboard: React.FC = () => {
       // const node = document.getElementById(BoxTargetId)
 
       axios
-        .post('http://192.168.1.27:8000/api/hmid/chartData?', TagData)
+        .post('http://192.168.1.27:8000/api/hmid/chartData?', uniqueArr)
         .then((response) => {
           console.log('[ Chart response data ] : ')
           console.log(response.data)

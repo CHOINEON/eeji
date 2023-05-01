@@ -32,6 +32,8 @@ import ico_ko from './img/ico_ko.png'
 import ico_jp from './img/ico_jp.png'
 import ico_us from './img/ico_us.png'
 
+import BarBg from './img/side_bar_bg.png'
+
 const LangParentBox = styled.div`
   display: flex;
   align-items: center;
@@ -75,7 +77,8 @@ export default function HeaderLinks(props: { secondary: boolean }) {
   const ethBox = useColorModeValue('white', 'navy.800')
   const userBg = useColorModeValue('#00a0e9', '#676a68')
   const shadow = useColorModeValue(
-    '14px 17px 40px 4px rgba(112, 144, 176, 0.18)',
+    // '14px 17px 40px 4px rgba(112, 144, 176, 0.18)',
+    '0px 5px 10px #4338F733',
     '14px 17px 40px 4px rgba(112, 144, 176, 0.06)'
   )
   const navbarIconBlue = useColorModeValue('brand.500', 'white')
@@ -112,6 +115,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
       p="10px"
       borderRadius="30px"
       boxShadow={shadow}
+      style={{ backgroundColor: 'rgba(0,0,0,0)', color: '#002D65' }}
     >
       {/* <SearchBar
       

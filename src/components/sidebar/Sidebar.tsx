@@ -16,6 +16,7 @@ import {
 import Content from 'components/sidebar/components/Content'
 import { renderThumb, renderTrack, renderView } from 'components/scrollbar/Scrollbar'
 import { Scrollbars } from 'react-custom-scrollbars-2'
+import './components/style.css'
 
 // Assets
 import { IoMenuOutline } from 'react-icons/io5'
@@ -33,7 +34,8 @@ function Sidebar(props: { routes: RoutesType[]; [x: string]: any }) {
   return (
     <Box display={{ sm: 'none', xl: 'block' }} position="fixed" minH="100%">
       <Box
-        bg={sidebarBg}
+        id="test_yunhee"
+        // bg={sidebarBg}
         transition={variantChange}
         w="300px"
         h="100vh"
