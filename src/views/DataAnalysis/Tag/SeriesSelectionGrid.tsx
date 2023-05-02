@@ -44,10 +44,10 @@ const SeriesSelectionGrid = (props: any) => {
     //TODO :한번에 불러서 배열에서 찾게 바꾸기(arr.find())
     const fetchStatistic = () => {
       if (selectedTags.length > 0) {
-        console.log('selectedTags:', selectedTags)
+        // console.log('selectedTags:', selectedTags)
         axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/describe', selectedTags).then(
           (response: any) => {
-            console.log('response:', response)
+            // console.log('response:', response)
             setStatistic(response.data)
           },
           (error) => {

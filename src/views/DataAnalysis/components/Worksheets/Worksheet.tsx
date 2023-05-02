@@ -38,13 +38,14 @@ const Worksheet = (props: any) => {
   useEffect(() => {
     // console.log('chartWrapper:', chartWrapper)
 
-    if (clicked && chartWrapper.current !== undefined) {
+    if (clicked && chartWrapper.current !== undefined && chartWrapper.current !== null) {
       const height = Math.floor(100 / count)
       if (height < 33) {
         setChartHeight('33%') // minimum height : 33%
       } else {
         setChartHeight(height + '%')
       }
+      // console.log('chartWrapper.current:', chartWrapper.current)
       chartWrapper.current.style.height = height + '%'
     }
 
@@ -103,6 +104,7 @@ const Worksheet = (props: any) => {
     if (clicked && chartData) {
       //리턴할 차트들 여러개 만들기
       const singleChart = chartData.map((value, index) => {
+        console.log('value:', value)
         return (
           <div
             ref={chartWrapper}

@@ -16,6 +16,7 @@ import {
   Crosshair,
   ZoomSettingsModel,
   ScrollBar,
+  IScrollEventArgs,
 } from '@syncfusion/ej2-react-charts'
 import { Browser } from '@syncfusion/ej2-base'
 
@@ -58,6 +59,22 @@ const LineSeriesChart = (props: any) => {
   const { chartInputData, chartHeight } = props
 
   useEffect(() => {
+    const series1: object[] = []
+    console.log('chartInputData:', chartInputData)
+
+    for (let i = 0; i < chartInputData.data.length; i++) {
+      console.log('Math.ceil(chartInputData.data.y):', chartInputData.data[i].y)
+      if (Math.ceil(chartInputData.data[i].y) > 0.5) {
+        // chartInputData. += Math.random()
+      } else {
+        // value -= Math.random()
+      }
+      // point1 = { x: chartInputData.x, y: Math.round(value) }
+      // series1.push(point1)
+    }
+  }, [chartInputData])
+
+  useEffect(() => {
     // console.log('chartHeight:', chartHeight)
   }, [chartHeight])
 
@@ -74,6 +91,11 @@ const LineSeriesChart = (props: any) => {
     ) as ChartTheme
   }
 
+  const scrollEnd = (args: IScrollEventArgs) => {
+    // https://stackblitz.com/run?file=index.ts
+    // console.log('args:', args)
+  }
+
   return (
     <div className="control-pane">
       <style>{SAMPLE_CSS}</style>
@@ -86,7 +108,7 @@ const LineSeriesChart = (props: any) => {
             valueType: 'DateTime',
             edgeLabelPlacement: 'Shift',
             majorGridLines: { width: 0 },
-            labelFormat: 'M/dd hh:mm',
+            labelFormat: 'M/dd',
             interval: 1,
             labelIntersectAction: 'Rotate45',
           }}
@@ -95,7 +117,8 @@ const LineSeriesChart = (props: any) => {
             // crosshairTooltip: { enable: true },
             title: '',
             rangePadding: 'None',
-            // minimum: 0,
+            labelStyle: { color: 'red' },
+            minimum: 0,
             // maximum: 20,
             // interval: 4,
             // lineStyle: { width: 0 },
@@ -104,13 +127,14 @@ const LineSeriesChart = (props: any) => {
           }}
           chartArea={{ border: { width: 0 } }}
           tooltip={{ enable: false }}
-          legendSettings={{ position: 'Left', enableHighlight: true }}
+          legendSettings={{ position: 'Top', enableHighlight: true }}
           width="100%"
           height={chartHeight}
           // height="20%"
           // width={Browser.isDevice ? '100%' : '75%'}
           title=" "
           // loaded={onChartLoad.bind(this)}
+          scrollEnd={scrollEnd}
         >
           <Inject services={[LineSeries, DateTime, Legend, Tooltip, Highlight, Zoom, ScrollBar]} />
 

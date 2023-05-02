@@ -42,7 +42,7 @@ const TagList = (props: any) => {
         search_type: 'process',
       })
       .then((response) => {
-        console.log('fetchTaglistData/process:', response)
+        // console.log('fetchTaglistData/process:', response)
         setRowData(response.data)
       })
       .catch((error) => error('Data Load Failed'))
@@ -55,7 +55,7 @@ const TagList = (props: any) => {
     for (let i = 0; i < selectedRows.length; i++) {
       arr.push(selectedRows[i].name)
     }
-    console.log('arr:', arr)
+    // console.log('arr:', arr)
     syncSelectedTag(arr)
   }
 

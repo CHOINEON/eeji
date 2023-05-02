@@ -1,57 +1,53 @@
-import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react'
-// import Button from '@mui/material/Button';
-import { AgGridReact } from 'ag-grid-react'
-import { ColDef } from 'ag-grid-community'
-import 'ag-grid-community/styles/ag-grid.css'
-import 'ag-grid-community/styles/ag-theme-alpine.css'
+import React, { useState, useMemo, useRef, useEffect, useReducer, useCallback, createContext, Dispatch } from 'react'
 import axios from 'axios'
-import InputLabel from '@mui/material/InputLabel'
-import TreeView from '@mui/lab/TreeView'
-import TreeItem from '@mui/lab/TreeItem'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
 import { Box } from '@mui/material'
-import TagSelectList from './TagSelectList'
+import TagSelectList from './TagTree/TagSelectList'
+import TagTreeList from '../backup/TagTreeList'
+import TagSelectReducer from './TagTree/reducer'
+import initialState from './TagTree/initialState'
+import { VariableProvider } from './VariableContext'
+import CircularProgress from '@mui/material/CircularProgress'
+import Button from '@mui/material/Button'
+import { slideFadeConfig } from '@chakra-ui/react'
+import { readJsonConfigFile } from 'typescript'
 
-const VariableSelection = () => {
+const VariableSelection = (props: any) => {
+  const { onClickNext } = props
   const [loading, setLoading] = useState(false)
-  // const gridStyle = useMemo(() => ({ height: '700px', width: '320px' }), [])
-  const gridRef = useRef<AgGridReact<any>>(null)
-  //datagrid row data
-  const [rowData, setRowData] = useState<Array<any>>()
-  const [columnDefs] = useState<ColDef[]>([
-    {
-      headerName: 'TagName',
-      field: 'tag_id',
-      floatingFilter: true,
-      filter: 'agTextColumnFilter',
-      width: 150,
-    },
-    {
-      headerName: 'TableName',
-      field: 'table_nm',
-      floatingFilter: true,
-      filter: 'agTextColumnFilter',
-      width: 150,
-    },
-  ])
+  // const [rowData, setRowData] = useState<Array<any>>()
+  const [targetVar, setTargetVar] = useState()
+  const [explanatoryVar, setExplanatoryVar] = useState()
+  // let object
 
   useEffect(() => {
-    setRowData([])
-    fetchTaglistData()
+    // setRowData([])
+    // fetchTaglistData()
   }, [])
 
-  const fetchTaglistData = () => {
-    axios
-      .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/list', {
-        com_id: localStorage.getItem('companyId'),
-        search_type: 'all',
-      })
-      .then((response) => {
-        // console.log('fetchTaglistData:', response)
-        setRowData(response.data)
-      })
-      .catch((error) => error('Data Load Failed'))
+  // const fetchTaglistData = () => {
+  //   axios
+  //     .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/list', {
+  //       com_id: localStorage.getItem('companyId'),
+  //       search_type: 'all',
+  //     })
+  //     .then((response) => {
+  //       // console.log('fetchTaglistData:', response)
+  //       setRowData(response.data)
+  //     })
+  //     .catch((error) => error('Data Load Failed'))
+  // }
+
+  const onSelectionChanged = (type: any, payload: any) => {
+    // console.log('type:', type)
+    // console.log('payload:', payload)
+
+    // object = {
+    //   com_id: localStorage.getItem('companyId'),
+    //   cause: [{}],
+    //   target: [{}],
+    // }
+    if (type === 'EXPLANATORY_VARIABLE') setExplanatoryVar(payload)
+    if (type === 'TARGET_VARIABLE') setTargetVar(payload)
   }
 
   const handlePreprocessing = () => {
@@ -59,22 +55,10 @@ const VariableSelection = () => {
 
     const Object: object = {
       com_id: localStorage.getItem('companyId'),
-      cause: [
-        {
-          table_nm: 'tc',
-          variable: ['Tag-2'],
-        },
-      ],
-      target: {
-        table_nm: 'tc',
-        variable: ['Tag-1'],
-      },
+      cause: explanatoryVar,
+      target: targetVar && targetVar[0],
     }
 
-    // console.log('json:', JSON.stringify(Object))
-    // console.log('JSONstr:', JSONstr)
-
-    ///////////////NEED TEST ////////////
     axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/preprocessing', JSON.stringify(Object), {
         headers: {
@@ -83,8 +67,11 @@ const VariableSelection = () => {
       })
       .then(
         (response: any) => {
-          console.log('preprocessing response:', response)
-          setLoading(false)
+          // console.log('preprocessing response:', response)
+          if (response.status === 200) {
+            onClickNext(true)
+            setLoading(false)
+          }
         },
         (error) => {
           setLoading(false)
@@ -95,73 +82,41 @@ const VariableSelection = () => {
 
   return (
     <>
-      {/* <div className="ag-theme-alpine" style={{ height: '700px', width: '320px', float: 'left' }}>
-        <TreeView
-          aria-label="file system navigator"
-          // defaultCollapseIcon={<ExpandMoreIcon />}
-          // defaultExpandIcon={<ChevronRightIcon />}
-          sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-        >
-          <TreeItem nodeId="1" label="Applications">
-            <TreeItem nodeId="2" label="Calendar" />
-          </TreeItem>
-          <TreeItem nodeId="5" label="Documents">
-            <TreeItem nodeId="10" label="OSS" />
-            <TreeItem nodeId="6" label="MUI">
-              <TreeItem nodeId="8" label="index.js" />
-            </TreeItem>
-          </TreeItem>
-        </TreeView>
-      </div> */}
-      <>
-        <Box
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            '& > :not(style)': {
-              m: 5,
-              // width: '100%',
-              // height: 100,
-            },
-          }}
-        >
-          {/* <Paper style={{ margin: 10 }}> */}
-          <div style={{ display: 'block', float: 'left' }}>
-            원인변수 :
-            <TagSelectList multipleSelection={true} />
-          </div>
+      {/* <VariableProvider> */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          '& > :not(style)': {
+            m: 5,
+            // width: '100%',
+            // height: 100,
+          },
+        }}
+      >
+        {/* <Paper style={{ margin: 10 }}> */}
+        <div style={{ display: 'block', float: 'left' }}>
+          원인변수 :
+          <TagSelectList multipleSelection={true} type="EXPLANATORY_VARIABLE" onSelection={onSelectionChanged} />
+        </div>
 
-          <div style={{ display: 'block', float: 'left' }}>
-            타겟변수 :
-            <FormControl sx={{ m: 1, width: 300 }}>
-              <InputLabel htmlFor="grouped-native-select">Target Variable...</InputLabel>
-              <Select native defaultValue="" id="grouped-native-select" label="Target Variable">
-                <option aria-label="None" value="" />
-                <optgroup label="PULL">
-                  <option value={1}>pull</option>
-                </optgroup>
-                <optgroup label="TC">
-                  <option value={3}>Tag-1</option>
-                  <option value={4}>Tag-2</option>
-                </optgroup>
-                <optgroup label="POWER">
-                  <option value={3}>single-phase</option>
-                  <option value={4}>three-phase</option>
-                </optgroup>
-              </Select>
-            </FormControl>
-          </div>
-          {/* </Paper> */}
-        </Box>
-      </>
+        <div style={{ display: 'block', float: 'left' }}>
+          타겟변수 :{/* <TagTreeList /> */}
+          <TagSelectList multipleSelection={false} type="TARGET_VARIABLE" onSelection={onSelectionChanged} />
+        </div>
 
-      {/* <div style={{ textAlign: 'right' }}>
-        <Button colorScheme="teal" variant="ghost" onClick={handlePreprocessing}>
-          NEXT
-        </Button>
-
-        {loading && <CircularProgress isIndeterminate color="green.300" />}
-      </div> */}
+        <div style={{ width: '100%', float: 'right' }}>
+          <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
+            {loading ? (
+              <CircularProgress style={{ position: 'relative', top: '200px' }} />
+            ) : (
+              <Button onClick={handlePreprocessing}>Next</Button>
+            )}
+          </Box>
+        </div>
+        {/* </Paper> */}
+      </Box>
+      {/* </VariableProvider> */}
     </>
   )
 }

@@ -29,7 +29,7 @@ const FileUploader = (props: any) => {
 
   useEffect(() => {
     if (uploaded) onUploaded(true)
-  }, [onUploaded])
+  }, [uploaded])
 
   const asyncSettings: object = {
     chunkSize: 100000000, // set chunk size for enable the chunk upload
@@ -50,6 +50,7 @@ const FileUploader = (props: any) => {
       const uploadFiles = uploadObj.current.getFilesData()
 
       for (const i in uploadFiles) {
+        formData.append('com_id', localStorage.getItem('companyId'))
         formData.append('files', uploadFiles[i].rawFile)
       }
 
@@ -70,7 +71,7 @@ const FileUploader = (props: any) => {
             }
           },
           (error) => {
-            console.log('error:', error)
+            // console.log('error:', error)
             setLoading(false)
             alert(error)
           }

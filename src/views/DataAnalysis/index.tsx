@@ -5,6 +5,7 @@ import Worksheet from './components/Worksheets/Worksheet'
 import './style/uploader.css'
 import SeriesSelectionGrid from './Tag/SeriesSelectionGrid'
 import ChartSelectionDialog from './components/Chart/ChartSelectionDialog'
+import TagListView from './Tag/TagListView'
 
 export const DataAnalysis = (props: any) => {
   const { onRefresh } = props
@@ -28,7 +29,7 @@ export const DataAnalysis = (props: any) => {
   }
 
   return (
-    <Box
+    <div
       id="targetElement"
       // pt={{ base: '130px', md: '80px', xl: '80px' }}
       style={{ position: 'relative', zIndex: 1000 }}
@@ -40,6 +41,7 @@ export const DataAnalysis = (props: any) => {
           </GridItem> */}
           <GridItem bg="tomato" colSpan={4} h={700}>
             <TagList syncSelectedTag={onClickTag} refresh={refresh} />
+            {/* <TagListView /> */}
           </GridItem>
         </GridItem>
         <GridItem rowSpan={2} colSpan={4} h={700}>
@@ -57,7 +59,7 @@ export const DataAnalysis = (props: any) => {
         </Button>
       </div> */}
       {/* <ChartSelectionDialog isOpen={dialogOpen} onDialogClose={dialogClose} onSelectChart={onSelectChart} /> */}
-    </Box>
+    </div>
   )
 }
 
