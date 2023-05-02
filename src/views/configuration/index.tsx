@@ -25,10 +25,11 @@ import { Box, useColorModeValue, Stack, Button } from '@chakra-ui/react'
 import { Input, Select, Radio, InputNumber } from 'antd'
 import React from 'react'
 import styled from '@emotion/styled'
+import './style.css'
 
 const BoxParent = styled.div`
   display: flex;
-  margin: 1vw 0;
+  margin: 0.5vw 0;
   width: 100%;
   align-items: center;
 `
@@ -45,12 +46,11 @@ const BoxParentMR = styled(BoxParent)`
 const BoxChild2 = styled.div`
   width: calc(50% - 1vw);
   margin-right: 0.5vw;
-  background-color: #f4f7fe;
-  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0px 5px 10px #4338f733;
+  border-radius: 20px;
   height: 31vw;
   padding: 2vw;
-  border: 1px solid grey;
-  position: relative;
 `
 
 const BoxChild2MR = styled(BoxChild2)`
@@ -59,15 +59,11 @@ const BoxChild2MR = styled(BoxChild2)`
 
 const BoxTitle = styled.div`
   font-weight: bold;
-  font-size: 1.3vw;
-  position: absolute;
+  font-size: 1.2vw;
   width: 10vw;
   height: 3vw;
   line-height: 3vw;
-  text-align: center;
-  left: 2%;
-  top: -5%;
-  background-color: #f4f7fe;
+  text-align: left;
 `
 
 const TitleLabel = styled.div`
@@ -102,12 +98,12 @@ export default function Configuration() {
               size={'large'}
               defaultValue={'Https'}
               options={[{ value: 'Https', label: 'Https' }]}
-              style={{ margin: '0', width: '10vw !important' }}
+              style={{ margin: '0', width: '10vw !important', border: '1px solid #4338F7', borderRadius: '10px' }}
             />
           </BoxParentMR>
           <BoxParent>
             <TitleLabel>Maximum view Connections</TitleLabel>
-            <InputNumber value={2} size={'large'} />
+            <InputNumber value={2} size={'large'} style={{ backgroundColor: '#fff', border: '1px solid #4338F7' }} />
           </BoxParent>
         </BoxParent>
         <BoxParent2>
@@ -116,15 +112,27 @@ export default function Configuration() {
             <div>
               <BoxParent>
                 <TitleLabel>HTTP Port</TitleLabel>
-                <InputNumber value={2} size={'large'} />
+                <InputNumber
+                  value={2}
+                  size={'large'}
+                  style={{ backgroundColor: '#fff', border: '1px solid #4338F7' }}
+                />
               </BoxParent>
               <BoxParent>
                 <TitleLabel>Inactivity Timeout</TitleLabel>
-                <InputNumber value={2} size={'large'} />
+                <InputNumber
+                  value={2}
+                  size={'large'}
+                  style={{ backgroundColor: '#fff', border: '1px solid #4338F7' }}
+                />
               </BoxParent>
               <BoxParent>
                 <TitleLabel>Image Resolution</TitleLabel>
-                <InputNumber value={2} size={'large'} />
+                <InputNumber
+                  value={2}
+                  size={'large'}
+                  style={{ backgroundColor: '#fff', border: '1px solid #4338F7' }}
+                />
               </BoxParent>
               <BoxParent>
                 <TitleLabel style={{ width: '18.7vw' }}>Allow Local Storage</TitleLabel>
@@ -157,15 +165,19 @@ export default function Configuration() {
             <div>
               <BoxParent>
                 <TitleLabel style={{ width: '10.5vw' }}>HTTP Port</TitleLabel>
-                <InputNumber value={8443} size={'large'} />
+                <InputNumber
+                  value={8443}
+                  size={'large'}
+                  style={{ backgroundColor: '#fff', border: '1px solid #4338F7' }}
+                />
               </BoxParent>
               <BoxParent>
                 <TitleLabel>Cognex Network Sever</TitleLabel>
-                <Input size={'large'} />
+                <Input size={'large'} style={{ backgroundColor: '#fff', border: '1px solid #4338F7' }} />
               </BoxParent>
               <BoxParent>
                 <TitleLabel>Password</TitleLabel>
-                <Input size={'large'} />
+                <Input size={'large'} style={{ backgroundColor: '#fff', border: '1px solid #4338F7' }} />
               </BoxParent>
               <BoxParent>
                 <TitleLabel>Allow Local Storage</TitleLabel>
@@ -180,23 +192,44 @@ export default function Configuration() {
         </BoxParent2>
         <ButtonParentBox>
           <div>
-            <Button style={{ padding: '1.3vw 2.3vw', backgroundColor: '#00a0e9', color: '#fff', fontSize: '1.1vw' }}>
+            <Button
+              id="design_button"
+              style={{
+                padding: '1vw 2.3vw',
+                backgroundColor: '#4338F7',
+                color: '#fff',
+                fontSize: '1vw',
+                marginRight: '1vw',
+                borderRadius: '100px',
+              }}
+            >
               Help
             </Button>
           </div>
           <ButtonParentBox>
             <Button
+              id="design_button"
               style={{
-                padding: '1.3vw 2.3vw',
-                backgroundColor: '#00a0e9',
+                padding: '1vw 2.3vw',
+                backgroundColor: '#4338F7',
                 color: '#fff',
-                fontSize: '1.1vw',
+                fontSize: '1vw',
                 marginRight: '1vw',
+                borderRadius: '100px',
               }}
             >
               Ok
             </Button>
-            <Button style={{ padding: '1.3vw 2.3vw', backgroundColor: '#00a0e9', color: '#fff', fontSize: '1.1vw' }}>
+            <Button
+              id="design_button"
+              style={{
+                padding: '1vw 2.3vw',
+                backgroundColor: '#4338F7',
+                color: '#fff',
+                fontSize: '1vw',
+                borderRadius: '100px',
+              }}
+            >
               Cancel
             </Button>
           </ButtonParentBox>

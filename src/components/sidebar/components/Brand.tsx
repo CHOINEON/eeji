@@ -3,13 +3,13 @@ import { Flex, useColorModeValue } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 
 // Custom components
-import ineeji from 'components/sidebar/components/ineeji_logo.png'
-import ineeji_bl from 'components/sidebar/components/ineeji_logo_bl.png'
+import ineeji from 'components/sidebar/components/nav_bar_logo.png'
+import ineeji_bl from 'components/sidebar/components/nav_bar_logo.png'
 
 const Logo = styled.div<{ colorMode: string }>`
   width: 100%;
   height: 4vw;
-  background-position: left 5vw top;
+  background-position: left 3.3vw bottom 1.3vw;
   background-repeat: no-repeat;
   background-size: auto 65%;
   cursor: pointer;
