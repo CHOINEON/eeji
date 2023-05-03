@@ -271,10 +271,12 @@ export const MainDashboard: React.FC = () => {
     const uniqueArr = [...set]
 
     console.log(uniqueArr)
+    console.log('>>>>>>>>>>>>>>>>>>>>>>')
+    console.log(WidgetInfo)
 
     if (WidgetInfo === 'Table' || WidgetInfo === 'Pie' || WidgetInfo === 'Bar') {
       axios
-        .post('http://220.94.157.27:59871/api/tag/describe', uniqueArr)
+        .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/describe', uniqueArr)
         .then((response) => {
           console.log('[ Tag Describe data ] : ')
           console.log(response.data)
@@ -379,7 +381,7 @@ export const MainDashboard: React.FC = () => {
       // const node = document.getElementById(BoxTargetId)
 
       axios
-        .post('http://192.168.1.27:8000/api/hmid/chartData?', uniqueArr)
+        .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData?', uniqueArr)
         .then((response) => {
           console.log('[ Chart response data ] : ')
           console.log(response.data)
@@ -405,7 +407,7 @@ export const MainDashboard: React.FC = () => {
   }
 
   const getCompanyMainDashboardList = (com_id: string) => {
-    axios.get('http://192.168.1.27:8000/api/hmid/layout?company_id=' + com_id).then((response) => {
+    axios.get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout?company_id=' + com_id).then((response) => {
       console.log('[ Select Layout Info Response ] :')
       console.log(response.data)
 
@@ -418,11 +420,11 @@ export const MainDashboard: React.FC = () => {
   }
 
   const getCompanyMainDashboardInfo = (lay_id: number) => {
-    axios.get('http://192.168.1.27:8000/api/hmid/layout/info?lay_id=' + lay_id).then((response) => {
+    axios.get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout/info?lay_id=' + lay_id).then((response) => {
       console.log('[ Select Layout Info Response ] :')
       console.log(response.data)
       // dashboard info 넣기
-      setDashboardData(response.data)
+      // setDashboardData(response.data)
     })
   }
 
