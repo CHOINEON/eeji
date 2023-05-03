@@ -84,8 +84,8 @@ export default function AIPlantModeling() {
       const inc = diff / (10 + per * (1 + per / 100)) // 증가값
       const percent = per + inc
 
-      console.log(percent.toFixed(2))
-      console.log(inc)
+      // console.log(percent.toFixed(2))
+      // console.log(inc)
       setPercent(percent)
     }
     setTimerId(setTimeout(timer, 20)) // 50 ms 단위로 timer 재귀호출
