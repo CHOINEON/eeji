@@ -22,7 +22,6 @@ import SaveConfirmModal from '../../hmid/components/Modal/SaveConfirm'
 import LayoutModal from '../../hmid/components/Modal/LayoutListModal'
 import Plot from 'react-plotly.js'
 import * as d3 from 'd3'
-
 /**
  * ag Grid
  */
@@ -54,6 +53,7 @@ import domtoimage from 'dom-to-image'
 
 import reducer from '../reducer/reducer'
 import initialState from '../reducer/initialState'
+import { Alert } from '../../hmid/components/Modal/Alert'
 
 interface GridLayoutProps {
   // target: any
@@ -162,6 +162,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const [PieChartDataType, setPieChartDataType] = React.useState<string>('max')
 
   const [SaveDashboardInfo, setSaveDashboardInfo] = React.useState<any>()
+
+  /** Alert */
+  const [message, setMessage] = React.useState<string>('')
+  const [showAlertModal, setShowAlertModal] = React.useState<boolean>(false)
 
   /**
    * DataGrid
@@ -344,6 +348,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           }
         }
 
+        const inputElement: any = document.getElementById('input' + i)
+        inputElement.value = Layoutdata[i].grid_nm
+        // console.log(inputElement)
+
         /**
          * 20230502
          * 추후 주석 해제
@@ -351,49 +359,56 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
         // setTimeout(function () {
         //   const header: any = document.getElementById(panel[j].id).parentElement.children[0].children[0]
-        //   let data: any
-        //   if (Layoutdata[i].grid_nm === null) {
-        //     data = (
-        //       <div className="e-header-text">
-        //         <input
-        //           ref={(el: any) => {
-        //             console.log(el)
-        //             inputRef.current = el
-        //           }}
-        //           type={'text'}
-        //           value={defaultTitle}
-        //           placeholder="타이틀을 입력 해주세요."
-        //           id={'input' + i.toString()}
-        //           style={{ lineHeight: '0', fontWeight: 'bold' }}
-        //         />
-        //         <button className="widget-setting-btn"></button>
-        //         <button className="grid-setting-btn"></button>
-        //         <button className="connection-chart-data"></button>
-        //       </div>
-        //     )
-        //     //{
-        //     /* data = <div style={{ lineHeight: '0', fontWeight: 'bold' }}>{'타이틀'}</div> */
-        //     //}
-        //   } else {
-        //     // data = <div>{Layoutdata[i].grid_nm}</div>
-        //     data = (
-        //       <div className="e-header-text">
-        //         <input
-        //           ref={(el: any) => {
-        //             inputRef.current = el
-        //           }}
-        //           type={'text'}
-        //           value={Layoutdata[i].grid_nm}
-        //           placeholder="타이틀을 입력 해주세요."
-        //           id={'input' + i.toString()}
-        //           style={{ lineHeight: '0', fontWeight: 'bold' }}
-        //         />
-        //         <button className="widget-setting-btn"></button>
-        //         <button className="grid-setting-btn"></button>
-        //         <button className="connection-chart-data"></button>
-        //       </div>
-        //     )
-        //   }
+        //   let data: any = null
+        // if (Layoutdata[i].grid_nm === null) {
+        //   data = (
+        //     <div className="e-header-text">
+        //       <input
+        //         ref={(el: any) => {
+        //           console.log(el)
+        //           inputRef.current = el
+        //         }}
+        //         type={'text'}
+        //         value={defaultTitle}
+        //         placeholder="타이틀을 입력 해주세요."
+        //         id={'input' + i.toString()}
+        //         style={{ lineHeight: '0', fontWeight: 'bold' }}
+        //       />
+        //       <button className="widget-setting-btn"></button>
+        //       <button className="grid-setting-btn"></button>
+        //       <button className="connection-chart-data"></button>
+        //     </div>
+        //   )
+        //   //{
+        //   /* data = <div style={{ lineHeight: '0', fontWeight: 'bold' }}>{'타이틀'}</div> */
+        //   //}
+        // } else {
+        //   // data = <div>{Layoutdata[i].grid_nm}</div>
+
+        //   setDefaultTitle(Layoutdata[i].grid_nm)
+
+        //   data = (
+        //     <div className="e-header-text">
+        //       <input
+        //         ref={(el: any) => {
+        //           inputRef.current = el
+        //         }}
+        //         type={'text'}
+        //         value={defaultTitle}
+        //         placeholder="타이틀을 입력 해주세요."
+        //         id={'input' + i.toString()}
+        //         style={{ lineHeight: '0', fontWeight: 'bold' }}
+        //         onChange={(e: any) => {
+        //           console.log(e)
+        //           setDefaultTitle(e.target.value)
+        //         }}
+        //       />
+        //       <button className="widget-setting-btn"></button>
+        //       <button className="grid-setting-btn"></button>
+        //       <button className="connection-chart-data"></button>
+        //     </div>
+        //   )
+        //   //}
         //   ReactDOM.render(data, header)
         // }, 500)
         //주석 해제 끝
@@ -588,7 +603,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         .catch((error) => {
           console.log(error)
 
-          alert('Error. 담당자에게 문의 바랍니다.')
+          setMessage('Error. 담당자에게 문의 바랍니다.')
+          setShowAlertModal(true)
         })
     } else {
       console.log('>>>>>>>>>>>>>>> Widget Info >>>>>>>>>>>>>>>>>>>')
@@ -614,15 +630,12 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         .catch((error) => {
           console.log(error)
 
-          alert('Error. 담당자에게 문의 바랍니다.')
+          setMessage('Error. 담당자에게 문의 바랍니다.')
+          setShowAlertModal(true)
           // setShowLoading(false)
         })
     }
   }
-
-  const ChangeInputValue = React.useCallback((event: any) => {
-    console.log('changeInput Value >>>>>>  ', event)
-  }, [])
 
   //레이아웃 만들 경우 default값 나타내기
   React.useEffect(() => {
@@ -836,19 +849,28 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
       console.log(result)
       console.log(BarChartLayoutOption)
       result.then(function (args: any) {
-        delete args[0].x
-        delete args[0].y
+        console.log(' [ Bar ] : ')
+        console.log(JSON.stringify(args))
+        // delete args[0].x
+        // delete args[0].y
 
-        const newArray = args.reduce(function (prev: any, next: any) {
-          return prev.concat(next)
-        })
+        // delete args[0][0].x
+        // delete args[0][0].y
 
-        for (const i in newArray) {
-          console.log(newArray[i])
-          bar_data.push(newArray[i])
-        }
+        // const newArray = args.reduce(function (prev: any, next: any) {
+        //   return prev.concat(next)
+        // })
 
-        DrawPlotlyChart(BarChartLayoutOption, bar_data, BoxTargetId)
+        // for (const i in newArray) {
+        //   console.log(newArray[i])
+        //   bar_data.push(newArray[i])
+        // }
+
+        // console.log('[ bar Data ] ')
+        // console.log(bar_data)
+        // console.log(JSON.stringify(bar_data))
+
+        DrawPlotlyChart(BarChartLayoutOption, args, BoxTargetId)
       })
     }
     if (WidgetInfo === 'Time Series') {
@@ -1238,32 +1260,62 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
    * BarData 가공 함수로 분리
    */
   const ChangeBarDataArr = async (dataOption: any) => {
+    console.log(dataOption)
+    console.log(typeof dataOption)
+    console.log(dataOption[0])
     let ChartDataObj: any = {}
     const ChartDataArr: any = []
 
     const data = [
       {
-        x: ['A', 'B', 'C', 'D', 'E'],
+        x: ['A', 'B', 'C', 'D', 'E', 'F'],
         y: [20, 14, 23, 35, 40, 56],
         name: 'data A',
         type: 'bar',
       },
     ]
 
-    for (let i = 0, len = data.length; i < len; i++) {
-      ChartDataObj = {
-        ...dataOption,
-        x: data[i].x,
-        y: data[i].y,
+    if (dataOption[0] !== undefined) {
+      const resetData = dataOption[0]
+      delete resetData.x
+      delete resetData.y
+
+      for (let i = 0, len = data.length; i < len; i++) {
+        ChartDataObj = {
+          ...resetData,
+          x: data[i].x,
+          y: data[i].y,
+        }
+
+        ChartDataArr.push(ChartDataObj)
+
+        ChartDataObj = new Object()
+
+        console.log('[ Bar Chart 재가공 중 ... ] >>>>> ')
+        console.log(ChartDataArr)
+
+        setBarChartDataOption(ChartDataArr)
       }
+    } else {
+      for (let i = 0, len = data.length; i < len; i++) {
+        ChartDataObj = {
+          ...dataOption,
+          x: data[i].x,
+          y: data[i].y,
+        }
 
-      ChartDataArr.push(ChartDataObj)
+        ChartDataArr.push(ChartDataObj)
 
-      ChartDataObj = new Object()
+        ChartDataObj = new Object()
 
-      setBarChartDataOption(ChartDataArr)
-      return ChartDataArr
+        console.log('[ Bar Chart 새로 가공 중 ... ] >>>>> ')
+        console.log(ChartDataArr)
+
+        setBarChartDataOption(ChartDataArr)
+      }
     }
+
+    return ChartDataArr
   }
 
   const getBarChartData = (props: any) => {
@@ -1779,14 +1831,16 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           console.log(response.data)
 
           if (response.data.detail === 'success') {
-            alert('레이아웃 저장이 완료 되었습니다.')
+            setMessage('레이아웃 저장이 완료 되었습니다.')
+            setShowAlertModal(true)
 
             getLayoutList()
           }
         })
         .catch((error) => {
           console.log(error)
-          alert('오류. 관리자에게 문의 바랍니다.')
+          setMessage('저장 오류. 관리자에게 문의 바랍니다.')
+          setShowAlertModal(true)
         })
     } else {
       console.log('기존 대시보드 update')
@@ -1807,14 +1861,16 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           console.log(response.data)
 
           if (response.data.detail === 'success') {
-            alert('레이아웃 업데이트가 완료 되었습니다.')
+            setMessage('레이아웃 업데이트가 완료 되었습니다.')
+            setShowAlertModal(true)
 
             SaveLayoutImage(localStorage.getItem('companyId'), Number(window.localStorage.getItem('layout_id')))
           }
         })
         .catch((error) => {
           console.log(error)
-          alert('업데이트 오류. 관리자에게 문의 바랍니다.')
+          setMessage('업데이트 오류. 관리자에게 문의바랍니다.')
+          setShowAlertModal(true)
         })
     }
 
@@ -1880,10 +1936,13 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         .then((response) => {
           console.log('[ Save Dashboard Image Response Data ] : ')
           console.log(response.data)
+          setMessage('레이아웃 이미지 저장이 완료 되었습니다.')
+          setShowAlertModal(true)
         })
         .catch((error) => {
           console.log(error)
-          alert('이미지 저장 오류. 관리자에게 문의 바랍니다.')
+          setMessage('이미지 저장 오류. 관리자에게 문의 바랍니다.')
+          setShowAlertModal(true)
         })
     })
   }
@@ -2220,6 +2279,40 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
                 // grid_arr.push(grid_obj)
                 // grid_obj = new Object()
+              } else {
+                console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+                console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout)
+                console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type)
+                console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis)
+                console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+                if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'pie') {
+                  grid_obj.widget_type = 'Pie'
+                  const input_element: any = document.querySelector('#input' + i)
+                  grid_obj.grid_nm = input_element.value
+                  grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+                  grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+                  console.log('[ Pie !!!!!!!!!!!!! ]')
+
+                  const PieChartDataOption: any =
+                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+
+                  let tag_arr: any = []
+                  for (let i = 0, len = PieChartDataOption.length; i < len; i++) {
+                    tag_arr = PieChartDataOption[i].labels
+                  }
+                  console.log(tag_arr)
+                  grid_obj.tag_list = tag_arr
+
+                  delete PieChartDataOption[0].values
+                  delete PieChartDataOption[0].labels
+
+                  grid_obj.data_option = JSON.stringify(PieChartDataOption)
+                  grid_obj.layout_option = JSON.stringify([
+                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
+                  ])
+
+                  //grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
+                }
               }
             } else {
               grid_obj.widget_type = 'Table'
@@ -2238,8 +2331,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
               console.log(grid_obj)
               console.log('###############################################################')
-              grid_arr.push(grid_obj)
-              grid_obj = new Object()
+              // grid_arr.push(grid_obj)
+              // grid_obj = new Object()
             }
 
             console.log(grid_obj)
@@ -2280,6 +2373,11 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
     console.log('[ 하위 PieChart Component 에서 받은 Pie Chart Data Type ] : ')
     console.log(DataType)
     setPieChartDataType(DataType)
+  }
+
+  /**ALert */
+  const getCloseAlertModal = (e: boolean) => {
+    setShowAlertModal(false)
   }
 
   return (
@@ -2499,6 +2597,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           </div>
         </div>
       </div>
+      <Alert ShowModal={showAlertModal} message={message} getCloseModal={getCloseAlertModal} />
     </>
   )
 }

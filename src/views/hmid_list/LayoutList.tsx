@@ -26,7 +26,7 @@ const LayoutListWrap = styled.div`
 
 const LayoutListBox = styled.div`
   width: calc(33.3% - 2vw);
-  height: 13vw;
+  height: 14vw;
   margin: 1vw;
   box-shadow: 0px 0px 20px #b2b2b24f;
   border-radius: 18px;
