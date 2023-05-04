@@ -82,7 +82,7 @@ export const MainDashboard: React.FC = () => {
       // console.log('[ 업데이트 판넬 데이터 ] : ')
       // console.log(dashboardObj.panels)
       dashboardObj.panels = updatePanels
-      console.log(dashboardObj)
+      // console.log(dashboardObj)
       setTimeout(function () {
         setGridWidgetComponent(dashboardData)
       }, 500)
@@ -423,8 +423,8 @@ export const MainDashboard: React.FC = () => {
     axios.get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout/info?lay_id=' + lay_id).then((response) => {
       console.log('[ Select Layout Info Response ] :')
       console.log(response.data)
-      // dashboard info 넣기
-      // setDashboardData(response.data)
+      //dashboard info 넣기
+      setDashboardData(response.data)
     })
   }
 

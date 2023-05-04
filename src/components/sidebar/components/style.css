@@ -1,8 +1,9 @@
 #test_yunhee{
-    background-image:url('./side_bar_bg.png');
-    box-shadow:inset 0 0 0 2000px rgb(4 0 121 / 71%);
+    background-image:url('./side_bar_bg.jpg');
+    /* box-shadow:inset 0 0 0 2000px rgb(4 0 121 / 71%); */
     /* filter: brightness(56%); */
     background-size: cover;
     background-position: left top;
     background-repeat: no-repeat;
+    width:280px;
 }

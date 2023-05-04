@@ -9,7 +9,7 @@ const BlackBox = styled.div<{ view: boolean }>`
   top: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
+  z-index: 9998;
   display: ${(props: any) => (props.view ? 'block' : 'none')};
 `
 

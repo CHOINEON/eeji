@@ -109,12 +109,12 @@ export default function AIPlantModeling() {
         <Button
           style={{
             position: 'absolute',
-            left: '10%',
+            left: '0%',
             top: '10%',
-            padding: '2vw',
-            backgroundColor: '#00a0e9',
+            padding: '1vw',
+            backgroundColor: '#4338f7',
             color: '#fff',
-            fontSize: '1.1vw',
+            fontSize: '1vw',
           }}
           onClick={() => {
             setDisplayLoading(!DisplayLoading)
