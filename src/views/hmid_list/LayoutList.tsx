@@ -168,8 +168,8 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   }
 
   const addLineBox = (e: any) => {
-    console.log(e)
-    console.log(testRefs)
+    // console.log(e)
+    // console.log(testRefs)
 
     for (let i = 0, len = testRefs.current.length; i < len; i++) {
       if (testRefs.current[i] !== null) {

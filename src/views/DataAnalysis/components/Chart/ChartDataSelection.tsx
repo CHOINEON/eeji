@@ -17,6 +17,7 @@ import {
 } from '@syncfusion/ej2-react-charts'
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
 // import { PropertyPane } from './property-pane'
+
 export const data = [
   { x: 1971, y: 50 },
   { x: 1972, y: 20 },

@@ -1,6 +1,6 @@
 import React, { createContext, Dispatch, useContext, useEffect, useReducer } from 'react'
-import initialState from './TagTree/initialState'
-import TagSelectReducer from './TagTree/reducer'
+import initialState from './components/TagTree/initialState'
+import TagSelectReducer from './components/TagTree/reducer'
 
 type State = {
   targetTag: []

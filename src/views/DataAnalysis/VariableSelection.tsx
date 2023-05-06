@@ -1,10 +1,7 @@
-import React, { useState, useMemo, useRef, useEffect, useReducer, useCallback, createContext, Dispatch } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import { Box } from '@mui/material'
-import TagSelectList from './TagTree/TagSelectList'
-import TagTreeList from '../backup/TagTreeList'
-import TagSelectReducer from './TagTree/reducer'
-import initialState from './TagTree/initialState'
+import TagSelectList from './components/TagTree/TagSelectList'
 import { VariableProvider } from './VariableContext'
 import CircularProgress from '@mui/material/CircularProgress'
 import Button from '@mui/material/Button'
@@ -14,38 +11,10 @@ import { readJsonConfigFile } from 'typescript'
 const VariableSelection = (props: any) => {
   const { onClickNext } = props
   const [loading, setLoading] = useState(false)
-  // const [rowData, setRowData] = useState<Array<any>>()
   const [targetVar, setTargetVar] = useState()
   const [explanatoryVar, setExplanatoryVar] = useState()
-  // let object
-
-  useEffect(() => {
-    // setRowData([])
-    // fetchTaglistData()
-  }, [])
-
-  // const fetchTaglistData = () => {
-  //   axios
-  //     .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/list', {
-  //       com_id: localStorage.getItem('companyId'),
-  //       search_type: 'all',
-  //     })
-  //     .then((response) => {
-  //       // console.log('fetchTaglistData:', response)
-  //       setRowData(response.data)
-  //     })
-  //     .catch((error) => error('Data Load Failed'))
-  // }
 
   const onSelectionChanged = (type: any, payload: any) => {
-    // console.log('type:', type)
-    // console.log('payload:', payload)
-
-    // object = {
-    //   com_id: localStorage.getItem('companyId'),
-    //   cause: [{}],
-    //   target: [{}],
-    // }
     if (type === 'EXPLANATORY_VARIABLE') setExplanatoryVar(payload)
     if (type === 'TARGET_VARIABLE') setTargetVar(payload)
   }
@@ -67,10 +36,10 @@ const VariableSelection = (props: any) => {
       })
       .then(
         (response: any) => {
-          // console.log('preprocessing response:', response)
+          console.log('preprocessing response:', response)
           if (response.status === 200) {
-            onClickNext(true)
             setLoading(false)
+            onClickNext(true)
           }
         },
         (error) => {
@@ -101,7 +70,7 @@ const VariableSelection = (props: any) => {
         </div>
 
         <div style={{ display: 'block', float: 'left' }}>
-          타겟변수 :{/* <TagTreeList /> */}
+          타겟변수 :
           <TagSelectList multipleSelection={false} type="TARGET_VARIABLE" onSelection={onSelectionChanged} />
         </div>
 

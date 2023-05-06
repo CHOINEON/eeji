@@ -9,7 +9,6 @@ import axios from 'axios'
 
 const TagList = (props: any) => {
   const { syncSelectedTag, refresh } = props
-
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), [])
   const gridRef = useRef<AgGridReact<any>>(null)
   //datagrid row data
@@ -31,7 +30,7 @@ const TagList = (props: any) => {
   }, [refresh])
 
   useEffect(() => {
-    setRowData([])
+    // setRowData([])
     fetchTaglistData()
   }, [])
 
@@ -84,7 +83,7 @@ const TagList = (props: any) => {
           ref={gridRef}
           rowData={rowData}
           columnDefs={columnDefs}
-          rowSelection={'multiple'}
+          rowSelection={'single'} //multiple
           // getRowId={getRowId}
           // onRowSelected={onRowSelected}
           onSelectionChanged={onSelectionChanged}

@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 import Pagination from '@mui/material/Pagination'
 import { Box } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import { theme } from '../theme'
+import { theme } from './theme'
 
 const DataSummary = (props: any) => {
   const [page, setPage] = React.useState(1)
