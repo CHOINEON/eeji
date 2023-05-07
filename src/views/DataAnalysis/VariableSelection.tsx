@@ -53,6 +53,7 @@ const VariableSelection = (props: any) => {
     <>
       {/* <VariableProvider> */}
       <Box
+        className="rounded-box"
         sx={{
           display: 'flex',
           flexWrap: 'wrap',
@@ -65,12 +66,12 @@ const VariableSelection = (props: any) => {
       >
         {/* <Paper style={{ margin: 10 }}> */}
         <div style={{ display: 'block', float: 'left' }}>
-          원인변수 :
+          <p className="title-md">원인변수</p>
           <TagSelectList multipleSelection={true} type="EXPLANATORY_VARIABLE" onSelection={onSelectionChanged} />
         </div>
 
         <div style={{ display: 'block', float: 'left' }}>
-          타겟변수 :
+          <p className="title-md">타겟변수</p>
           <TagSelectList multipleSelection={false} type="TARGET_VARIABLE" onSelection={onSelectionChanged} />
         </div>
 

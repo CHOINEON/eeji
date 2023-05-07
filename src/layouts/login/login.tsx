@@ -9,18 +9,20 @@
 import React from 'react'
 import styled from '@emotion/styled'
 // import bg_vedio from '../../assets/img/ineeji/ineeji_video.gif'
-import main_bg from './img/bg.png'
-import main_font from './img/main_font.png'
-import logo from './img/logo.png'
-import circle from './img/circle.png'
+import main_bg from './img/bg.jpg'
+import main_font from './img/main_font.svg'
+import logo from './img/logo.svg'
+import circle from './img/package.png'
 import notice from './img/notice.png'
 import bottom_title from './img/bottom_title.png'
+import login_icon from './img/login_icon.png'
 import date from './img/date.png'
 import axios from 'axios'
 import { FormControl, FormLabel, Button, Input } from '@chakra-ui/react'
 import type { SelectProps } from 'antd'
 import { Select } from 'antd'
 import './style/style.css'
+import { Alert } from 'views/hmid/components/Modal/Alert'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -43,14 +45,11 @@ const Home_Bg = styled(BgStyle)`
   background-image: url(${main_bg});
   position: fixed;
   opacity: 1;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
   filter: brightness(56%);
-  box-shadow: inset 0 0 0 2000px rgb(15 0 244 / 37%);
 `
 
 const FormWrap = styled.div`
@@ -59,7 +58,7 @@ const FormWrap = styled.div`
   padding: 2vw;
   position: fixed;
   right: 10%;
-  top: 50%;
+  top: 52%;
   z-index: 999;
   background-color: #fff;
   border-radius: 15px;
@@ -102,10 +101,11 @@ const BottomBox = styled.div`
 `
 
 const Circle = styled(BgStyle)`
-  background-position: center center;
   background-image: url(${circle});
+  background-size: 88% auto;
+  background-position: center top 2vw;
   width: 7vw;
-  height: 7vw;
+  height: 7.5vw;
 `
 
 const TopBox = styled.div`
@@ -118,12 +118,6 @@ const TopBox = styled.div`
 const BottomTitleParent = styled.div`
   width: 45vw;
   margin-left: 3vw;
-`
-
-const Notice = styled(BgStyle)`
-  background-image: url(${notice});
-  width: 2vw;
-  height: 1vw;
 `
 
 const Date = styled(BgStyle)`
@@ -166,7 +160,18 @@ const LoginSubTitle = styled.div`
   font-size: 0.5vw;
   color: #afafaf;
   letter-spacing: 0.05vw;
-  margin-bottom: 1.5vw;
+  margin-bottom: 1vw;
+`
+
+const LoginIcon = styled.div`
+  background-position: center center;
+  background-image: url(${login_icon});
+  width: 8vw;
+  height: 7vw;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  margin: 0 auto;
+  margin-bottom: 0.5vw;
 `
 
 export const Login: React.FC = () => {
@@ -174,6 +179,10 @@ export const Login: React.FC = () => {
   const [password, setPassword] = React.useState()
   const [company, setCompany] = React.useState<any>('')
   const [companyList, setCompanyList] = React.useState<any>()
+
+  /** Alert */
+  const [message, setMessage] = React.useState<string>('')
+  const [showAlertModal, setShowAlertModal] = React.useState<boolean>(false)
   //   const [messageApi, contextHolder] = message.useMessage();
 
   React.useEffect(() => {
@@ -188,17 +197,28 @@ export const Login: React.FC = () => {
   }
 
   const setLogin = (id: string, password: string) => {
+    console.log(company)
     if (company.length === 0 || company === undefined) {
-      alert('회사를 선택 해주세요.')
+      setMessage('회사를 선택 해주세요.')
+      setShowAlertModal(true)
     } else {
       axios
-        .get('http://192.168.1.27:8000/api/user/info?com_id=' + company + '&user_id=' + id + '&user_pass=' + password, {
-          headers: {
-            Accept: '*/*',
-            'Content-Type': 'application/x-www-form-urlencoded;',
-          },
-          timeout: 5000,
-        })
+        .get(
+          process.env.REACT_APP_API_SERVER_URL +
+            '/api/user/info?com_id=' +
+            company +
+            '&user_id=' +
+            id +
+            '&user_pass=' +
+            password,
+          {
+            headers: {
+              Accept: '*/*',
+              'Content-Type': 'application/x-www-form-urlencoded;',
+            },
+            timeout: 5000,
+          }
+        )
         .then((response) => {
           // console.log('[ axios response data ] : ')
           // console.log(response.data)
@@ -207,8 +227,6 @@ export const Login: React.FC = () => {
           window.localStorage.setItem('userData', JSON.stringify(response.data))
           window.localStorage.setItem('companyId', company)
           window.localStorage.setItem('userPosition', response.data[0].user_position)
-
-          window.location.href = '/admin/data-analysis'
         })
         .catch((error) => {
           // console.log(error.response)
@@ -226,6 +244,7 @@ export const Login: React.FC = () => {
   }
 
   const onEnterLogin = (e: any) => {
+    console.log(e.keyCode)
     if (e.keyCode === 13) {
       setLogin(id, password)
     }
@@ -233,7 +252,8 @@ export const Login: React.FC = () => {
 
   const onEnterId = (e: any) => {
     if (e.keyCode === 13) {
-      error('패스워드를 입력해주세요.')
+      setMessage('패스워드를 입력해주세요.')
+      setShowAlertModal(true)
     }
   }
 
@@ -243,7 +263,7 @@ export const Login: React.FC = () => {
     let Obj: any = new Object()
 
     axios
-      .get('http://192.168.1.27:8000/api/hmid/company', {
+      .get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/company', {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
@@ -277,7 +297,7 @@ export const Login: React.FC = () => {
   const getCompanyInfo = (companyId: string) => {
     console.log(companyId)
     axios
-      .get('http://192.168.1.27:8000/api/hmid/company/info?company_id=' + companyId, {
+      .get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/company/info?company_id=' + companyId, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
@@ -289,10 +309,17 @@ export const Login: React.FC = () => {
         console.log(response.data)
 
         window.localStorage.setItem('company_info', JSON.stringify(response.data[0]))
+
+        window.location.href = '/admin/data-analysis'
       })
       .catch((error) => {
         console.log(error.response)
       })
+  }
+
+  /**ALert */
+  const getCloseAlertModal = (e: boolean) => {
+    setShowAlertModal(false)
   }
 
   return (
@@ -310,20 +337,21 @@ export const Login: React.FC = () => {
         <Circle />
         <BottomTitleParent>
           <TopBox>
-            <Notice />
+            <div></div>
             <Date />
           </TopBox>
           <BottomTitle />
           <BottomCotents>
-            This Webinar will discuss the key trends seen in the Chemical industry and discuss how the Process Digital
-            Twin is allowing companies to advance their Digital Transformation journey in terms of developing new
-            circular economy products and processes more efficiently and with lower environmental impact.
+            is Prediction solution for ENERGY SAVING based on time series data that enables companies to realize
+            productivity improvement, production energy cost reduction, and quality improvement through process
+            optimization of industrial processes.
           </BottomCotents>
         </BottomTitleParent>
       </BottomBox>
       <FormWrap>
         <LoginTitle>LOGIN</LoginTitle>
         <LoginSubTitle>Enter Your ID and password to sign in.</LoginSubTitle>
+        <LoginIcon />
         <FormControl id="text">
           <Select
             size={'large'}
@@ -333,7 +361,7 @@ export const Login: React.FC = () => {
             options={companyList}
           />
           <Input
-            color={'white'}
+            color={'black'}
             type="text"
             placeholder={'ID'}
             onChange={(e: any) => ChangeId(e)}
@@ -341,7 +369,7 @@ export const Login: React.FC = () => {
             style={{ width: '100%', marginBottom: '1vw', backgroundColor: '#f4f7fe', border: 0 }}
           />
           <Input
-            color={'white'}
+            color={'black'}
             type="password"
             placeholder={'Password'}
             onChange={(e: any) => ChangePassword(e)}
@@ -358,6 +386,7 @@ export const Login: React.FC = () => {
           Login
         </Button>
       </FormWrap>
+      <Alert ShowModal={showAlertModal} message={message} getCloseModal={getCloseAlertModal} />
     </>
   )
 }

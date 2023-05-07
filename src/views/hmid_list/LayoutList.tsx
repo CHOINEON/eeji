@@ -9,6 +9,7 @@ import no_image from './img/no-image.jpg'
 import use_yn_check from './img/use_yn_check.png'
 import preview_icon from './img/preview_icon.png'
 import layout_add_btn from './img/layout_add_btn.png'
+import { Alert } from 'views/hmid/components/Modal/Alert'
 
 interface LayoutListProps {
   company_id: string
@@ -25,9 +26,9 @@ const LayoutListWrap = styled.div`
 
 const LayoutListBox = styled.div`
   width: calc(33.3% - 2vw);
-  height: 13vw;
+  height: 14vw;
   margin: 1vw;
-  box-shadow: 0px 0px 20px #0000001a;
+  box-shadow: 0px 0px 20px #b2b2b24f;
   border-radius: 18px;
   background-color: #fff;
   padding: 1vw;
@@ -120,8 +121,8 @@ const DashboardImage = styled.img`
 
 const AddLayoutBoChild = styled.div`
   position: absolute;
-  width: 8vw;
-  height: 8vw;
+  width: 7vw;
+  height: 7vw;
   border-radius: 100px;
   background-color: #fff;
   cursor: pointer;
@@ -152,6 +153,10 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   //layout id
   const [LayoutId, setLayoutId] = React.useState<any>()
 
+  /** alert */
+  const [showModal, setShowModal] = React.useState(false)
+  const [message, setMessage] = React.useState('')
+
   const theme = useColorModeValue('navy.700', 'white')
 
   const testRefs = React.useRef([])
@@ -161,6 +166,10 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
     getLayoutList(props.company_id)
   }, [props.comapny_id])
 
+  React.useEffect(() => {
+    console.log(LayoutId)
+  }, [LayoutId])
+
   //새로운 대시보드 만들기
   const NewDashboard = () => {
     window.localStorage.setItem('SelectedDashboardInfo', 'new')
@@ -168,20 +177,28 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   }
 
   const addLineBox = (e: any) => {
-    // console.log(e)
-    // console.log(testRefs)
+    console.log(e)
+    console.log(testRefs)
+    console.log('[ 클릭한 e id ] ')
+
+    if (e.target.offsetParent.children[0].id.length === 0) {
+      setLayoutId(e.target.offsetParent.children[1].id)
+    } else {
+      setLayoutId(e.target.offsetParent.children[0].id)
+    }
+
+    // setLayoutId(e.target.offsetParent.children[0].id)
 
     for (let i = 0, len = testRefs.current.length; i < len; i++) {
       if (testRefs.current[i] !== null) {
-        if (testRefs.current[i].children.length === 3) {
-          setLayoutId(e.target.offsetParent.children[1].id)
+        console.log(testRefs.current[i].children[2])
+        if (testRefs.current[i].children[2] !== undefined) {
           if (testRefs.current[i].children[1].id !== e.target.offsetParent.children[1].id) {
             testRefs.current[i].children[2].style = 'border:0px solid #fff'
           } else {
             testRefs.current[i].children[2].style = 'border:3px solid #00a0e9'
           }
         } else {
-          setLayoutId(e.target.offsetParent.children[0].id)
           if (testRefs.current[i].children[0].id !== e.target.offsetParent.children[0].id) {
             testRefs.current[i].children[1].style = 'border:0px solid #fff'
           } else {
@@ -197,11 +214,12 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
    * 대시보드 아이디에 따라 info값 가져오기
    */
   const getClickDashboardInfo = (DashboardId: string) => {
-    axios.get('http://192.168.1.27:8000/api/hmid/layout/info?lay_id=' + DashboardId).then((response) => {
+    axios.get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout/info?lay_id=' + DashboardId).then((response) => {
       console.log('[ Select Layout Info Response ] :')
       console.log(response.data)
 
       //storage 안에 info data
+      window.localStorage.setItem('layout_id', DashboardId)
       window.localStorage.setItem('SelectedDashboardInfo', JSON.stringify(response.data))
       window.location.href = '/admin/layout-configuration'
     })
@@ -289,20 +307,18 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   const getLayoutList = (company_id: string) => {
     console.log(company_id)
     axios
-      .get('http://192.168.1.27:8000/api/hmid/layout?company_id=' + company_id, {
+      .get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout?company_id=' + company_id, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
         },
-        timeout: 5000,
+        timeout: 500000,
       })
       .then((response) => {
         console.log('[ get Layout List axios response data ] : ')
         console.log(response.data)
 
         renderLayoutList(response.data)
-
-        window.localStorage.setItem('layout_id', response.data[response.data.length - 1].lay_id)
       })
       .catch((error) => {
         console.log(error)
@@ -312,13 +328,16 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   //set Default Dashboard Layout
   const SetDefaultDashboard = () => {
     axios
-      .put('http://192.168.1.27:8000/api/hmid/layout/default?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
-        headers: {
-          Accept: '*/*',
-          'Content-Type': 'application/x-www-form-urlencoded;',
-        },
-        timeout: 5000,
-      })
+      .put(
+        process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout/default?com_id=' + CompanyId + '&lay_id=' + LayoutId,
+        {
+          headers: {
+            Accept: '*/*',
+            'Content-Type': 'application/x-www-form-urlencoded;',
+          },
+          timeout: 5000,
+        }
+      )
       .then((response) => {
         console.log('[ set Default Layout axios response data ] : ')
         console.log(response.data)
@@ -333,7 +352,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   //레이아웃 삭제
   const deleteLayout = () => {
     axios
-      .delete('http://192.168.1.27:8000/api/hmid/layout?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
+      .delete(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
@@ -345,13 +364,20 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
         console.log(response.data)
 
         if (response.data.detail === 'success') {
-          alert('레이아웃 삭제가 되었습니다.')
+          setShowModal(true)
+          setMessage('레이아웃 삭제가 완료 되었습니다.')
+
           getLayoutList(localStorage.getItem('companyId'))
         }
       })
       .catch((error) => {
         console.log(error.response)
       })
+  }
+
+  const getCloseModal = (e: boolean) => {
+    console.log(e)
+    setShowModal(false)
   }
 
   return (
@@ -379,6 +405,8 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
       <Box mt={10}>
         <LayoutListWrap>{Component}</LayoutListWrap>
       </Box>
+
+      <Alert ShowModal={showModal} message={message} getCloseModal={getCloseModal} />
     </>
   )
 }

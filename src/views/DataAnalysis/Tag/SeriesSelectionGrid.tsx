@@ -16,7 +16,7 @@ const SeriesSelectionGrid = (props: any) => {
   const { selectedTags, refresh } = props
 
   const gridRef = useRef<AgGridReact<any>>(null)
-  const containerStyle = useMemo(() => ({ width: '100%', height: '200px' }), [])
+  const containerStyle = useMemo(() => ({ width: '90%', height: '200px', display: 'block', float: 'left' }), [])
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), [])
   const [statistic, setStatistic] = React.useState([])
   const [columnDefs, setColumnDefs] = useState<ColDef[]>([
@@ -82,7 +82,7 @@ const SeriesSelectionGrid = (props: any) => {
   // }, [])
 
   return (
-    <div style={containerStyle}>
+    <div style={{ width: '90%', height: '200px', display: 'block', float: 'left' }}>
       <div style={gridStyle} className="ag-theme-alpine">
         <AgGridReact
           ref={gridRef}

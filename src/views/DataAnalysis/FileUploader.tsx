@@ -7,6 +7,7 @@ import { CircularProgress } from '@chakra-ui/react'
 import axios from 'axios'
 import DataInfoGrid from './DataSummary'
 import DataSummary from './DataSummary'
+import { Alert } from 'views/hmid/components/Modal/Alert'
 
 const FileUploader = (props: any) => {
   const uploadObj = useRef<UploaderComponent>(null)
@@ -14,6 +15,16 @@ const FileUploader = (props: any) => {
   const [uploaded, setUploaded] = useState(false)
   const { onUploaded, refresh } = props
   const [summaryResult, setSummaryResult] = useState([])
+
+  /** Alert */
+  const [message, setMessage] = React.useState<string>('')
+  const [showAlertModal, setShowAlertModal] = React.useState<boolean>(false)
+  //   const [messageApi, contextHolder] = message.useMessage();
+
+  /**ALert */
+  const getCloseAlertModal = (e: boolean) => {
+    setShowAlertModal(false)
+  }
 
   let dropContainerEle: HTMLElement = null
   const dropContainerRef = (element: HTMLElement) => {
@@ -77,7 +88,9 @@ const FileUploader = (props: any) => {
           }
         )
     } else {
-      alert('업로드할 파일이 없습니다')
+      // alert('업로드할 파일이 없습니다')
+      setMessage('업로드할 파일이 없습니다')
+      setShowAlertModal(true)
     }
   }
 
@@ -118,6 +131,7 @@ const FileUploader = (props: any) => {
           </div>
         </div>
       </div>
+      <Alert ShowModal={showAlertModal} message={message} getCloseModal={getCloseAlertModal} />
     </div>
   )
 }

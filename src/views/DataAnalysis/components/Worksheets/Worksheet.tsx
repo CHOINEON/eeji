@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import LineSeriesChart from '../Chart/LineSeriesChart'
 
 export const chartDiv = (props: any) => {
-  return <div style={{ width: '100px', height: '30px', backgroundColor: 'pink' }}>{props.chart}</div>
+  return <div style={{ width: '100px', height: '30px' }}>{props.chart}</div>
 }
 
 // export const Child = forwardRef((props, ref) => {
@@ -35,7 +35,7 @@ const Worksheet = (props: any) => {
   const [clicked, setClicked] = useState(false)
   const [progressActive, setProgressActive] = useState(false)
   const [chartData, setChartData] = useState([])
-  const [chartHeight, setChartHeight] = useState('100%')
+  const [chartHeight, setChartHeight] = useState('97%')
 
   useEffect(() => {
     setChartData([])
@@ -106,6 +106,7 @@ const Worksheet = (props: any) => {
             style={{
               width: '100%',
               height: chartHeight,
+              maxHeight: '97%',
               float: 'left',
               // border: '1px solid red',
               // backgroundColor: 'pink',
@@ -123,13 +124,14 @@ const Worksheet = (props: any) => {
   return (
     <>
       <div
+        className="rounded-box"
         style={{
-          // border: '1px solid red',
           width: '100%',
           height: '100%',
           textAlign: 'center',
           display: 'block',
-          overflow: 'scroll',
+          overflow: 'auto',
+          zIndex: 0,
         }}
       >
         {progressActive && <CircularProgress style={{ position: 'relative', top: '200px' }} />}
@@ -139,7 +141,7 @@ const Worksheet = (props: any) => {
         <Button
           variant="contained"
           onClick={handleCreateChart}
-          style={{ width: '200px', height: '40px', margin: 'auto', marginTop: '5px' }}
+          style={{ width: '200px', height: '40px', margin: 'auto', marginTop: '5px', borderRadius: '10px' }}
         >
           CREATE CHART
         </Button>

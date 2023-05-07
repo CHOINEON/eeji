@@ -9,6 +9,7 @@ import Checkbox from '@mui/material/Checkbox'
 import axios from 'axios'
 import TagSelect from './reducer'
 import initialState from './initialState'
+import { Text } from '@chakra-ui/react'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -142,7 +143,21 @@ const TagSelectList = (props: any) => {
             ))}
         </Select>
       </FormControl>
-      {tagName.length > 0 ? `selectedTags : ` + tagName.join(', ') : ''}
+      <div style={{ marginTop: '20px' }}>
+        {tagName.length > 0 && (
+          <div>
+            <Text fontSize="md" color="secondaryGray.600" fontWeight="700" mb="5px" marginLeft={2}>
+              선택된 태그
+            </Text>
+            <Text fontSize="md" color="secondaryGray.600" fontWeight="300" mb="5px" marginLeft={2}>
+              {tagName.join(', ')}
+            </Text>
+          </div>
+        )}
+
+        {/* {tagName.length > 0 && <p className="title-md">선택된 태그</p>}
+        {tagName.length > 0 ? <p className="contents">{tagName.join(', ')}</p> : ''} */}
+      </div>
     </>
   )
 }

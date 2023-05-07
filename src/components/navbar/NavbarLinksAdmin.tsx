@@ -43,9 +43,9 @@ const LangBox = styled.div`
   background-repeat: no-repeat;
   background-size: 100% auto;
   background-position: center center;
-  width: 3.5vw;
+  width: 3vw;
   margin: 0 0.5vw;
-  height: 3.5vw;
+  height: 3vw;
   border-radius: 100px;
   cursor: pointer;
   &:hover {
@@ -75,7 +75,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
   const borderColor = useColorModeValue('#E6ECFA', 'rgba(135, 140, 189, 0.3)')
   const ethBg = useColorModeValue('secondaryGray.300', 'navy.900')
   const ethBox = useColorModeValue('white', 'navy.800')
-  const userBg = useColorModeValue('#00a0e9', '#676a68')
+  const userBg = useColorModeValue('#4338f7', '#676a68')
   const shadow = useColorModeValue(
     // '14px 17px 40px 4px rgba(112, 144, 176, 0.18)',
     '0px 5px 10px #4338F733',
@@ -214,7 +214,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
         </MenuButton>
         <MenuList
           boxShadow={shadow}
-          p="20px"
+          p="1 vw"
           me={{ base: '30px', md: 'unset' }}
           borderRadius="20px"
           bg={menuBg}

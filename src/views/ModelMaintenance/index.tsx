@@ -61,7 +61,7 @@ export default function LayoutConfig() {
 
   return (
     <Box
-      pt={{ base: '130px', md: '80px', xl: '150px' }}
+      pt={{ base: '130px', md: '80px', xl: '100px' }}
       style={{ position: 'relative', zIndex: 1000 }}
       pl={'50px'}
       pr={'50px'}

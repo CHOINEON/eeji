@@ -19,7 +19,7 @@ const TagList = (props: any) => {
       field: 'name',
       floatingFilter: true,
       filter: 'agTextColumnFilter',
-      width: 200,
+      width: 290,
     },
   ])
 

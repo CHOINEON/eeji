@@ -1,7 +1,7 @@
 // reducer function
 const reducer = (state: any, action: any) => {
   // console.log(action.data)
-  console.log(state)
+  console.log(state.GRID_ID)
   switch (action.type) {
     case 'COMPANY_ID':
       return {

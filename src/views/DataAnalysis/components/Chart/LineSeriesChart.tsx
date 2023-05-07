@@ -69,7 +69,8 @@ const LineSeriesChart = (props: any) => {
   const { chartInputData, chartHeight, onExport } = props
   const [selectedData, setSelectedData] = useState([])
   const [dataSource, setDataSource] = useState([])
-  const btnRef = useRef(null)
+  const ExcludeBtnRef = useRef(null)
+  const AddThresholdBtnRef = useRef(null)
   const csvLinkRef = useRef(null)
 
   let chartInstance: ChartComponent
@@ -211,6 +212,10 @@ const LineSeriesChart = (props: any) => {
     }
   }
 
+  const handleAddThreshold = (e: any) => {
+    //
+  }
+
   const handleCSVExport = () => {
     console.log('csvLinkRef?.current:', csvLinkRef?.current)
     csvLinkRef?.current?.handleClick()
@@ -241,7 +246,7 @@ const LineSeriesChart = (props: any) => {
   }
 
   const handleItemClick = () => {
-    if (selectedData && selectedData.length > 0) btnRef.current.click()
+    if (selectedData && selectedData.length > 0) ExcludeBtnRef.current.click()
   }
 
   const columns = [
@@ -268,10 +273,11 @@ const LineSeriesChart = (props: any) => {
           primaryYAxis={primaryyAxis}
           load={load.bind(this)}
           chartArea={{ border: { width: 0 } }}
-          height={chartHeight}
           title=" "
           loaded={onChartLoad}
-          max-height={'190px'}
+          max-height="190px"
+          height="97%"
+          // height={chartHeight}
           // chartMouseClick={handleChartMouseClick}
           // onClick={handleChartClick}
           // tooltip={{ enable: true }}
@@ -299,8 +305,11 @@ const LineSeriesChart = (props: any) => {
       </div>
 
       <ChartContextMenu onItemClicked={handleItemClick} />
-      <Button ref={btnRef} style={{ display: 'none' }} onClick={handleExcludeData}>
+      <Button ref={ExcludeBtnRef} style={{ display: 'none' }} onClick={handleExcludeData}>
         Exclude data
+      </Button>
+      <Button ref={AddThresholdBtnRef} style={{ display: 'none' }} onClick={handleAddThreshold}>
+        Add threshold
       </Button>
       <div id="btn-control" style={{ marginLeft: '60px' }}>
         {/* <ButtonComponent onClick={handleCSVExport} iconCss="e-icons e-export-icon" cssClass="e-flat" isPrimary={true}>

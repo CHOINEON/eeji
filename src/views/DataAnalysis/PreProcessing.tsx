@@ -27,7 +27,7 @@ export const PreProcessing = (props: any) => {
   return (
     <div id="targetElement" style={{ position: 'relative', zIndex: 1000 }}>
       <Grid h="700px" templateRows="repeat(2, 1fr)" templateColumns="repeat(5, 1fr)" gap={4}>
-        <GridItem rowSpan={2} colSpan={1} bg="lightpink" h={700}>
+        <GridItem rowSpan={2} colSpan={1} h={700}>
           {/* <GridItem colSpan={4} borderColor={'white'} h={200}>
             <DatabaseNavigator />
           </GridItem> */}
@@ -37,7 +37,7 @@ export const PreProcessing = (props: any) => {
           </GridItem>
         </GridItem>
         <GridItem rowSpan={2} colSpan={4} h={700}>
-          <GridItem rowSpan={1} h={450} border={'1px solid lightgray'} mb={50}>
+          <GridItem rowSpan={1} h={450} mb={50}>
             <Worksheet
               // ref={WorksheetRef}
               selectedTags={selectedTags}
@@ -50,16 +50,32 @@ export const PreProcessing = (props: any) => {
           </GridItem>
           <GridItem rowSpan={1}>
             <SeriesSelectionGrid selectedTags={selectedTags} refresh={refresh} />
+            <Button
+              variant="contained"
+              onClick={handleExport}
+              style={{
+                width: '8%',
+                height: '200px',
+                display: 'block',
+                float: 'left',
+                borderRadius: '18px',
+                marginLeft: '20px',
+              }}
+              // style={{ width: '200px', height: '40px', margin: 'auto', marginTop: '5px' }}
+            >
+              SAVE
+            </Button>
           </GridItem>
+          <div>
+            {/* <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
+              <Button onClick={handleExport}>SAVE & CSV EXPORT</Button>
+            </Box> */}
+
+            {/* <CircularProgress style={{ position: 'relative', top: '200px' }} /> */}
+          </div>
         </GridItem>
       </Grid>
 
-      <div style={{ width: '400px', float: 'right' }}>
-        <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-          <Button onClick={handleExport}>SAVE & CSV EXPORT</Button>
-          {/* <CircularProgress style={{ position: 'relative', top: '200px' }} /> */}
-        </Box>
-      </div>
       {/* <ChartSelectionDialog isOpen={dialogOpen} onDialogClose={dialogClose} onSelectChart={onSelectChart} /> */}
     </div>
   )

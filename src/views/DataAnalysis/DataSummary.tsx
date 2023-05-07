@@ -58,9 +58,9 @@ const DataSummary = (props: any) => {
         <div>
           {data.length > 0 && (
             <>
-              <Box m={1}>{page == 1 && card(data[0])}</Box>
-              <Box m={1}>{page == 2 && card(data[1])}</Box>
-              <Box m={1}>{page == 3 && card(data[2])}</Box>
+              <Box className="rounded-box">{page == 1 && card(data[0])}</Box>
+              <Box className="rounded-box">{page == 2 && card(data[1])}</Box>
+              <Box className="rounded-box">{page == 3 && card(data[2])}</Box>
 
               <Pagination count={count} page={page} onChange={handleChange} />
             </>
