@@ -171,13 +171,13 @@ export const TimeSeriesOption: React.FC<TimeSeriesProps> = (props: any) => {
       },
       showlegend: state.ENABLE_LEGEND,
       xaxis: {
-        title: state.AXIS_X_TITLE,
+        // title: state.AXIS_X_TITLE,
         rangeselector: selectorOptions,
         rangeslider: {},
         autorange: true,
       },
       yaxis: {
-        title: state.AXIS_Y_TITLE,
+        // title: state.AXIS_Y_TITLE,
         autorange: true,
         // fixedrange: true,
       },
@@ -218,13 +218,13 @@ export const TimeSeriesOption: React.FC<TimeSeriesProps> = (props: any) => {
       },
       showlegend: state.ENABLE_LEGEND,
       xaxis: {
-        title: state.AXIS_X_TITLE,
+        // title: state.AXIS_X_TITLE,
         rangeselector: selectorOptions,
         rangeslider: {},
         autorange: true,
       },
       yaxis: {
-        title: state.AXIS_Y_TITLE,
+        // title: state.AXIS_Y_TITLE,
         autorange: true,
         // fixedrange: true,
       },

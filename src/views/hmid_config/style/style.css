@@ -21,7 +21,7 @@
   text-align:center;
   padding:0 0.5vw;
   position:absolute;
-  right:4vw;
+  right:3vw;
   top:55%;
   transform:translateY(-50%);
   background-image: url('./grid.png');
@@ -58,7 +58,7 @@
   text-align:center;
   padding:0 0.5vw;
   position:absolute;
-  right:2vw;
+  right:1vw;
   top:55%;
   transform:translateY(-50%);
   background-image: url('./data.png');
@@ -230,33 +230,70 @@ body{
 }
 
 #templateContainer  .image-pattern-style:hover {
-  /* background-color:#8bc7f899; */
-  border:1px solid #4338F7;
-  border-radius:10px;
+  background-color:#8b85fa36;
+  /* border:1px solid #4338F7;
+  border-radius:10px; */
 }
 
-#templateContainer  .image-pattern-style#template1::before {
-  content: "\e700";
+#templateContainer  .image-pattern-style#template1{
+  /* content: "\e700"; */
+  background-image:url('./lay01.png');
+  width: calc(33.3% - 1vw);
+  height: 5vw;
+  margin: 0 0.5vw;
+  background-size: 76% auto;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
-#templateContainer  .image-pattern-style#template2::before {
-  content: "\e701";
+#templateContainer  .image-pattern-style#template2 {
+  background-image:url('./lay02.png');
+  width: calc(33.3% - 1vw);
+  height: 5vw;
+  margin: 0.5vw;
+  background-size: 76% auto;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
-#templateContainer  .image-pattern-style#template3::before {
-  content: "\e702";
+#templateContainer  .image-pattern-style#template3 {
+  background-image:url('./lay03.png');
+  width: calc(33.3% - 1vw);
+  height: 5vw;
+  margin: 0.5vw;
+  background-size: 76% auto;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
-#templateContainer  .image-pattern-style#template4::before {
-  content: "\e703";
+#templateContainer  .image-pattern-style#template4 {
+  background-image:url('./lay04.png');
+  width: calc(33.3% - 1vw);
+  height: 5vw;
+  margin: 0.5vw;
+  background-size: 76% auto;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
-#templateContainer  .image-pattern-style#template5::before {
-  content: "\e704";
+#templateContainer  .image-pattern-style#template5 {
+  background-image:url('./lay05.png');
+  width: calc(33.3% - 1vw);
+  height: 5vw;
+  margin: 0.5vw;
+  background-size: 76% auto;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
-#templateContainer  .image-pattern-style#template6::before {
-  content: "\e705";
+#templateContainer  .image-pattern-style#template6 {
+  background-image:url('./lay06.png');
+  width: calc(33.3% - 1vw);
+  height: 5vw;
+  margin: 0.5vw;
+  background-size: 76% auto;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
 div#predefine_control {

@@ -26,6 +26,7 @@ import { Box, useColorModeValue, Stack, Button } from '@chakra-ui/react'
 import React from 'react'
 import ReactLoading from 'react-loading'
 import styled from '@emotion/styled'
+import thumb from '/img/thumbnail_01.png'
 
 const LoadingBox = styled.div<{ toggle: any }>`
   width: 10vw;
@@ -35,6 +36,23 @@ const LoadingBox = styled.div<{ toggle: any }>`
   top: 50%;
   transform: translate(-50%, -50%);
   display: ${(props: any) => (props.toggle ? 'block' : 'none')};
+`
+
+const ModelingParentBox = styled.div`
+  width: 100%;
+  background-color: #fff;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justifycontent: space-between;
+  padding: 1vw;
+`
+
+const ModelingTitle = styled.div`
+  font-size: 2vw;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 1vw;
 `
 
 export default function AIPlantModeling() {
@@ -106,7 +124,17 @@ export default function AIPlantModeling() {
         pt={{ base: '130px', md: '80px', xl: '80px' }}
         style={{ position: 'relative', zIndex: 1000, width: '82vw', height: '93vh' }}
       >
-        <Button
+        <div>
+          <div>
+            <div>
+              <div>AI Plant Modeling</div>
+              <div>AI Plant Modeling</div>
+            </div>
+            <div>Company Name</div>
+          </div>
+          <div></div>
+        </div>
+        {/* <Button
           style={{
             position: 'absolute',
             left: '0%',
@@ -122,7 +150,7 @@ export default function AIPlantModeling() {
           }}
         >
           DB Data 불러오기
-        </Button>
+        </Button> */}
         <LoadingBox toggle={DisplayLoading}>
           <ReactLoading type={'bars'} color="#00a0e9" width={'10vw'} />
           <div>{per}</div>
