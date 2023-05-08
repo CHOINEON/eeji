@@ -147,7 +147,7 @@ const TagSelectList = (props: any) => {
         {tagName.length > 0 && (
           <div>
             <Text fontSize="md" color="secondaryGray.600" fontWeight="700" mb="5px" marginLeft={2}>
-              선택된 태그
+              選択したTag
             </Text>
             <Text fontSize="md" color="secondaryGray.600" fontWeight="300" mb="5px" marginLeft={2}>
               {tagName.join(', ')}
