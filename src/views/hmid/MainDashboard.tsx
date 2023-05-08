@@ -166,6 +166,9 @@ export const MainDashboard: React.FC = () => {
       return panels[index][panelIndex]
     })
 
+    console.log('[ LayoutData ] : ')
+    console.log(LayoutData)
+
     console.log(panel)
     // 그려지고 난 후 실행하기
     for (let i = 0, len = LayoutData.length; i < len; i++) {
