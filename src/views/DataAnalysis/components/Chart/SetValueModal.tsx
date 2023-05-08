@@ -7,7 +7,7 @@ const SetValueModal = (props: any) => {
   const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
-    // console.log('visible::', visible)
+    console.log('visible::', visible)
     setIsModalOpen(visible)
   }, [visible])
 
@@ -19,6 +19,7 @@ const SetValueModal = (props: any) => {
     onGetValue(inputValue)
     setIsModalOpen(false)
     setInputValue('')
+    onClose(false)
   }
 
   const handleCancel = () => {
@@ -41,7 +42,7 @@ const SetValueModal = (props: any) => {
       <Modal title="Set Threshold" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <Space direction="vertical" size="middle">
           <Space.Compact style={{ width: '100%' }}>
-            <Input defaultValue="" type="number" onChange={onChange} />
+            <Input defaultValue="" type="number" onChange={onChange} value={inputValue} />
             {/* <Button type="primary">Save</Button> */}
           </Space.Compact>
         </Space>

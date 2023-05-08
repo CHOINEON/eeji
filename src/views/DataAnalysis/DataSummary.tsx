@@ -37,11 +37,19 @@ const DataSummary = (props: any) => {
       <Card sx={{ minWidth: 275 }} className="rounded-box">
         <CardContent>
           <div style={{ fontSize: 14 }} color="text.secondary">
-            <p>파일명 : {param.value.data}</p>
+            <p>ファイル名 : {param.value.data}</p>
+            <p>
+              行/列 : {param.value.row_count}行/{param.value.col_count}列
+            </p>
+            <p>開始日 : {param.value.startDate}</p>
+            <p>終了日 : {param.value.endDate}</p>
+            <p>欠測値 : {param.value.missing.length === 0 ? 'なし' : param.value.missing}</p>
+
+            {/* <p>파일명 : {param.value.data}</p>
             <p>행/열 : {param.value.shape}</p>
             <p>시작일 : {param.value.startDate}</p>
             <p>종료일 : {param.value.endDate}</p>
-            <p>결측치 : {param.value.missing.length === 0 ? '없음' : param.value.missing}</p>
+            <p>결측치 : {param.value.missing.length === 0 ? '없음' : param.value.missing}</p> */}
           </div>
           <Typography variant="body2"></Typography>
         </CardContent>

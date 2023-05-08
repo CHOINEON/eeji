@@ -74,6 +74,7 @@ const LineSeriesChart = (props: any) => {
   const [selectedData, setSelectedData] = useState([])
   const [dataSource, setDataSource] = useState([])
   const [modalOpen, setModalOpen] = useState(false)
+  const [threshold, setThreshold] = useState(0)
   const ExcludeBtnRef = useRef(null)
   const AddThresholdBtnRef = useRef(null)
   const csvLinkRef = useRef(null)
@@ -240,7 +241,7 @@ const LineSeriesChart = (props: any) => {
     // crosshairTooltip: { enable: true },
     title: '',
     rangePadding: 'None',
-    stripLines: [{ start: 200, end: 500, color: '#ff512f', visible: true }],
+    stripLines: [{ start: threshold, end: threshold + 0.01, color: '#CCDCFF', visible: true }],
     // labelFormat: '000',
     // labelStyle: { color: 'red' },
     // minimum: 0,
@@ -252,9 +253,9 @@ const LineSeriesChart = (props: any) => {
   }
 
   const handleItemClick = (param: any) => {
-    console.log('param:', param)
+    console.log('handleItemClick:', param)
     if (param === 'menuitem_2') ExcludeBtnRef.current.click()
-    // if (param === 'menuitem_4') setModalOpen(true)
+    if (param === 'menuitem_4') setModalOpen(true)
   }
 
   const handleModalClose = (param: any) => {
@@ -264,6 +265,7 @@ const LineSeriesChart = (props: any) => {
 
   const handleGetValue = (param: any) => {
     console.log('param:', param)
+    setThreshold(param)
   }
 
   const columns = [
