@@ -134,6 +134,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
   const [defaultTitle, setDefaultTitle] = React.useState('타이틀')
 
+  const [settingChartType, setSettingChartType] = React.useState<any>()
+
   const [SaveTagDataList, setSaveTagDataList] = React.useState<any>([
     {
       type: 'Time Series',
@@ -166,6 +168,8 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   /** Alert */
   const [message, setMessage] = React.useState<string>('')
   const [showAlertModal, setShowAlertModal] = React.useState<boolean>(false)
+
+  const [ModeInfo, setSelectModeInfo] = React.useState<any>()
 
   /**
    * DataGrid
@@ -471,7 +475,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
               <input value=${' '} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." id=${'input' + i.toString()}
               > 
               <button class="widget-setting-btn"></button>
-              <button class="grid-setting-btn"></button>
               <button class="connection-chart-data"></button>
             </div>
             <div class="header-border"></div>`,
@@ -548,7 +551,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             for (let i = 0, len = response.data.length; i < len; i++) {
               labels.push(response.data[i].tagName)
               if (PieChartDataType === 'max') {
-                layout.title = '선택한 Tag의 Max 값'
+                layout.title = '선택한 Tag 데이터의 비율'
                 values.push(response.data[i].max)
               } else if (PieChartDataType === 'min') {
                 values.push(response.data[i].min)
@@ -560,6 +563,9 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             }
             data[0].labels = labels
             data[0].values = values
+
+            console.log('Pie Data ~~!!!')
+            console.log(data)
 
             setPieChartDataOption(data)
             setPieChartLayoutOption(layout)
@@ -663,7 +669,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           <input value=${' '} ${BoxTitleDisabled} placeholder="타이틀을 입력 해주세요." id=${'input' + i.toString()}
           > 
           <button class="widget-setting-btn"></button>
-          <button class="grid-setting-btn"></button>
           <button class="connection-chart-data"></button>
         </div>
         <div class="header-border"></div>`,
@@ -763,6 +768,9 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         } else if (panel[j].widget === 'Pie') {
           setWidgetInfo('Pie')
           const result: any = ChangePieDataArr(PieChartDataOption)
+          console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+          console.log(PieChartDataOption)
+          console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
           result.then(function (args: any) {
             DrawGauidWidget(panel[j].widget, node, args, JSON.parse(PieChartLayoutOption))
           })
@@ -1022,7 +1030,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         }
         > 
           <button class="widget-setting-btn"></button>
-          <button class="grid-setting-btn"></button>
           <button class="connection-chart-data"></button>
         </div>
         <div class="header-border"></div>`,
@@ -1087,6 +1094,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             const box_target_id = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
             setBoxTargetId(box_target_id)
             setWidgetInfo('Table')
+            // setSettingChartType('Table')
             setIsOpenDataConnectionModal(true)
           } else {
             const chart_type = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type
@@ -1100,9 +1108,11 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
             console.log(e)
             if (chart_type === 'bar') {
               setWidgetInfo('Bar')
+              // setSettingChartType('Bar')
             }
             if (chart_type === 'pie') {
               setWidgetInfo('Pie')
+              // setSettingChartType('Pie')
             }
             if (chart_type === 'scatter' || chart_type2 === 'scatter') {
               const rangeSlider =
@@ -1116,8 +1126,10 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
 
               if (rangeSlider === undefined) {
                 setWidgetInfo('Line')
+                // setSettingChartType('Line')?
               } else {
                 setWidgetInfo('Time Series')
+                // setSettingChartType('Time Series')
               }
             }
 
@@ -1393,7 +1405,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
   const getTagList = () => {
     const params: any = {
       com_id: localStorage.getItem('companyId'),
-      search_type: 'process',
+      search_type: 'hmid',
     }
 
     console.log(params)
@@ -1456,6 +1468,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         if (WidgetType === SaveTagDataList[i].type) {
           for (let k = 0, len = SaveTagDataList[i].tag_data.length; k < len; k++) {
             if (SaveTagDataList[i].tag_data[k].length != 0) {
+              console.log(SaveTagDataList[i].tag_data[k][0])
               if (SaveTagDataList[i].tag_data[k][0].id.split('_')[0] === id) {
                 console.log('[ Element 요소 ] >> ')
                 console.log(SaveTagDataList[i].tag_data[k][0].id)
@@ -1629,7 +1642,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
               for (let i = 0, len = response.data.length; i < len; i++) {
                 labels.push(response.data[i].tagName)
                 if (PieChartDataType === 'max') {
-                  layout.title = '선택한 Tag의 Max 값'
+                  layout.title = '선택한 Tag 데이터의 비율'
                   values.push(response.data[i].max)
                 } else if (PieChartDataType === 'min') {
                   values.push(response.data[i].min)
@@ -2285,34 +2298,6 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
                 console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type)
                 console.log(data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis)
                 console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
-                if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'pie') {
-                  grid_obj.widget_type = 'Pie'
-                  const input_element: any = document.querySelector('#input' + i)
-                  grid_obj.grid_nm = input_element.value
-                  grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
-                  grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
-                  console.log('[ Pie !!!!!!!!!!!!! ]')
-
-                  const PieChartDataOption: any =
-                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
-
-                  let tag_arr: any = []
-                  for (let i = 0, len = PieChartDataOption.length; i < len; i++) {
-                    tag_arr = PieChartDataOption[i].labels
-                  }
-                  console.log(tag_arr)
-                  grid_obj.tag_list = tag_arr
-
-                  delete PieChartDataOption[0].values
-                  delete PieChartDataOption[0].labels
-
-                  grid_obj.data_option = JSON.stringify(PieChartDataOption)
-                  grid_obj.layout_option = JSON.stringify([
-                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
-                  ])
-
-                  //grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
-                }
               }
             } else {
               grid_obj.widget_type = 'Table'
@@ -2479,6 +2464,7 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
         }}
       />
       <DataConnection
+        // ChartType={settingChartType}
         DataTagList={TagListArr}
         DataConnectionModalisOpen={isOpenDataConnectionModal}
         setCloseDataConnectionModal={(isClose: boolean) => {
@@ -2500,6 +2486,9 @@ export const PredefinedLayouts: React.FC<GridLayoutProps> = (props: any) => {
           // console.log('----------------------------')
           setSelectTagInfo(TagInfo)
         }}
+        // setModeInfo={(ModeInfo: any) => {
+        //   setSelectModeInfo(ModeInfo)
+        // }}
       />
       <LineChartComponent
         ChartType={WidgetInfo}

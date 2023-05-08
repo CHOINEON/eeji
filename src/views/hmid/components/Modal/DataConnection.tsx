@@ -12,12 +12,16 @@ const DataListWrap = styled.div`
   flex-wrap: wrap;
 `
 
+// const SelectWrap = styled()
+
 interface DataConnectionModalProps {
   DataTagList: any
   DataConnectionModalisOpen: boolean
   setCloseDataConnectionModal: (isClose: boolean) => void
   setDataConnectionInfo: (DataType: string) => void
   setTagInfo: (TagInfo: any) => void
+  // setModeInfo: (ModeInfo: any) => void
+  // ChartType: string
 }
 
 export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
@@ -26,10 +30,36 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
   const [TagNodeData, setTagNodeData] = React.useState<any>()
   const [DataNodeData, setDataNodeData] = React.useState<any>()
   const [TagInfo, setTagInfo] = React.useState<any>([])
+  const [ModeInfo, setModeInfo] = React.useState<any>([])
+
+  const [showPieSetting, setShowPieSetting] = React.useState(false)
+
+  const DataType: any = [
+    {
+      value: 'min',
+      label: 'Min',
+    },
+    {
+      value: 'max',
+      label: 'Max',
+    },
+    {
+      value: 'avg',
+      label: 'Average',
+    },
+  ]
 
   React.useEffect(() => {
     CreateDtataListItems()
   }, [])
+
+  // React.useEffect(() => {
+  //   if (props.ChartType === 'Pie' || props.ChartType === 'pie') {
+  //     setShowPieSetting(true)
+  //   } else {
+  //     setShowPieSetting(false)
+  //   }
+  // }, [props.ChartType])
 
   React.useEffect(() => {
     props.setDataConnectionInfo(SelectDataType)
@@ -84,6 +114,11 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
     setTagInfo(value)
   }
 
+  const handleModeChange = (value: string | string[]) => {
+    console.log(' Mode Change Value')
+    setModeInfo(value)
+  }
+
   return (
     <>
       <Modal
@@ -91,9 +126,11 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
         open={props.DataConnectionModalisOpen}
         onOk={() => {
           props.setTagInfo(TagInfo)
+          // props.setModeInfo(ModeInfo)
           props.setCloseDataConnectionModal(true)
           //value 초기화
           setTagInfo([])
+          setModeInfo([])
           setSelectDataType([])
         }}
         onCancel={() => {
@@ -115,6 +152,16 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
             options={TagNodeData}
             value={TagInfo}
           />
+          {/* <div>
+            <Select
+              size={'large'}
+              placeholder={'Select Data Type'}
+              onChange={handleModeChange}
+              style={{ width: '100%' }}
+              options={DataType}
+              value={'min'}
+            />
+          </div> */}
         </DataListWrap>
       </Modal>
     </>
