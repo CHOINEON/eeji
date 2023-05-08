@@ -89,7 +89,7 @@ export default function DataAnalysis() {
   }
 
   const handleNext = () => {
-    console.log('handleNext')
+    // console.log('handleNext')
     // console.log('active step:', activeStep)
 
     if (activeStep < 2) {

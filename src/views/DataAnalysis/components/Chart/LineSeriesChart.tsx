@@ -16,12 +16,16 @@ import {
   IScrollEventArgs,
   Selection,
   AxisModel,
+  StripLine,
+  StripLinesDirective,
+  StripLineDirective,
 } from '@syncfusion/ej2-react-charts'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import Button from '@mui/material/Button'
 import ChartContextMenu from '../ContextMenu/ChartContextMenu'
 // import { CSVLink, CSVDownload } from 'react-csv'
 import CsvDownloader from 'react-csv-downloader'
+import SetValueModal from './SetValueModal'
 
 const SAMPLE_CSS = `
      .control-fluid {
@@ -69,6 +73,7 @@ const LineSeriesChart = (props: any) => {
   const { chartInputData, chartHeight, onExport } = props
   const [selectedData, setSelectedData] = useState([])
   const [dataSource, setDataSource] = useState([])
+  const [modalOpen, setModalOpen] = useState(false)
   const ExcludeBtnRef = useRef(null)
   const AddThresholdBtnRef = useRef(null)
   const csvLinkRef = useRef(null)
@@ -235,6 +240,7 @@ const LineSeriesChart = (props: any) => {
     // crosshairTooltip: { enable: true },
     title: '',
     rangePadding: 'None',
+    stripLines: [{ start: 200, end: 500, color: '#ff512f', visible: true }],
     // labelFormat: '000',
     // labelStyle: { color: 'red' },
     // minimum: 0,
@@ -245,8 +251,19 @@ const LineSeriesChart = (props: any) => {
     // minorTickLines: { width: 0 },
   }
 
-  const handleItemClick = () => {
-    if (selectedData && selectedData.length > 0) ExcludeBtnRef.current.click()
+  const handleItemClick = (param: any) => {
+    console.log('param:', param)
+    if (param === 'menuitem_2') ExcludeBtnRef.current.click()
+    // if (param === 'menuitem_4') setModalOpen(true)
+  }
+
+  const handleModalClose = (param: any) => {
+    // console.log('param:', param)
+    setModalOpen(false)
+  }
+
+  const handleGetValue = (param: any) => {
+    console.log('param:', param)
   }
 
   const columns = [
@@ -289,7 +306,7 @@ const LineSeriesChart = (props: any) => {
           // chartMouseDown={chartMouseDown}
           enableExport={true}
         >
-          <Inject services={[Selection, ScatterSeries, DateTime, Legend]} />
+          <Inject services={[Selection, ScatterSeries, DateTime, Legend, StripLine]} />
           <SeriesCollectionDirective>
             <SeriesDirective
               dataSource={dataSource}
@@ -308,14 +325,11 @@ const LineSeriesChart = (props: any) => {
       <Button ref={ExcludeBtnRef} style={{ display: 'none' }} onClick={handleExcludeData}>
         Exclude data
       </Button>
-      <Button ref={AddThresholdBtnRef} style={{ display: 'none' }} onClick={handleAddThreshold}>
+      {/* <Button ref={AddThresholdBtnRef} style={{ display: 'none' }} onClick={() => setModalOpen(true)}>
         Add threshold
-      </Button>
+      </Button> */}
+      <SetValueModal visible={modalOpen} onClose={handleModalClose} onGetValue={handleGetValue} />
       <div id="btn-control" style={{ marginLeft: '60px' }}>
-        {/* <ButtonComponent onClick={handleCSVExport} iconCss="e-icons e-export-icon" cssClass="e-flat" isPrimary={true}>
-          Export as CSV
-        </ButtonComponent> */}
-
         <CsvDownloader
           style={{ display: 'none' }}
           ref={csvLinkRef}

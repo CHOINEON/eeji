@@ -7,7 +7,7 @@ import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Pagination from '@mui/material/Pagination'
-import { Box } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { theme } from './theme'
 
@@ -34,7 +34,7 @@ const DataSummary = (props: any) => {
   const card = (param: any) => {
     // console.log(param)
     return (
-      <Card sx={{ minWidth: 275 }}>
+      <Card sx={{ minWidth: 275 }} className="rounded-box">
         <CardContent>
           <div style={{ fontSize: 14 }} color="text.secondary">
             <p>파일명 : {param.value.data}</p>
@@ -58,11 +58,12 @@ const DataSummary = (props: any) => {
         <div>
           {data.length > 0 && (
             <>
-              <Box className="rounded-box">{page == 1 && card(data[0])}</Box>
-              <Box className="rounded-box">{page == 2 && card(data[1])}</Box>
-              <Box className="rounded-box">{page == 3 && card(data[2])}</Box>
-
-              <Pagination count={count} page={page} onChange={handleChange} />
+              <Box>{page == 1 && card(data[0])}</Box>
+              <Box>{page == 2 && card(data[1])}</Box>
+              <Box>{page == 3 && card(data[2])}</Box>
+              <Stack alignItems="center" sx={{ mt: 3 }}>
+                <Pagination count={count} page={page} onChange={handleChange} />
+              </Stack>
             </>
           )}
         </div>

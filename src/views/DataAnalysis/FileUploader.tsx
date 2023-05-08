@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { createElement } from '@syncfusion/ej2-base'
 import { RemovingEventArgs, UploaderComponent } from '@syncfusion/ej2-react-inputs'
 // import { Button } from '@chakra-ui/react'
 import Button from '@mui/material/Button'
@@ -73,7 +72,7 @@ const FileUploader = (props: any) => {
         })
         .then(
           (response) => {
-            // console.log('uploadfile RESP:', response)
+            console.log('uploadfile RESP:', response)
             setSummaryResult(response.data)
             setLoading(false)
 
@@ -121,7 +120,6 @@ const FileUploader = (props: any) => {
                   !uploaded && <Button onClick={handleUpload}>Upload</Button>
                 )}
               </div>
-
               {summaryResult.length > 0 && (
                 <div style={{ marginTop: '100px' }}>
                   <DataSummary dataSource={summaryResult} />

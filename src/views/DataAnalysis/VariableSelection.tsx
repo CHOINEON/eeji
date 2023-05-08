@@ -36,7 +36,7 @@ const VariableSelection = (props: any) => {
       })
       .then(
         (response: any) => {
-          console.log('preprocessing response:', response)
+          // console.log('preprocessing response:', response)
           if (response.status === 200) {
             setLoading(false)
             onClickNext(true)
@@ -77,11 +77,7 @@ const VariableSelection = (props: any) => {
 
         <div style={{ width: '100%', float: 'right' }}>
           <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-            {loading ? (
-              <CircularProgress style={{ position: 'relative', top: '200px' }} />
-            ) : (
-              <Button onClick={handlePreprocessing}>Next</Button>
-            )}
+            {loading ? <CircularProgress /> : <Button onClick={handlePreprocessing}>Next</Button>}
           </Box>
         </div>
         {/* </Paper> */}

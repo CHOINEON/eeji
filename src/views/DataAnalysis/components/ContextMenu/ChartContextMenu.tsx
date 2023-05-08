@@ -12,15 +12,24 @@ const ChartContextMenu = (props: any) => {
       iconCss: 'e-cm-icons e-cut',
     },
     {
+      text: 'Replace data',
+      iconCss: 'e-cm-icons e-cut',
+    },
+    {
       text: 'Add threshold',
+      iconCss: 'e-cm-icons e-cut',
+    },
+    {
+      text: 'Add Series',
       iconCss: 'e-cm-icons e-cut',
     },
   ]
 
   const onSelectItem = (e: any) => {
-    if (e.item.id === 'menuitem_2') {
-      onItemClicked(true)
-    }
+    // console.log('e.item', e.item)
+    // if (e.item.id === 'menuitem_2') {
+    onItemClicked(e.item.id, true)
+    // }
   }
   return (
     <ContextMenuComponent
