@@ -9,7 +9,6 @@ import axios from 'axios'
 
 const TagList = (props: any) => {
   const { syncSelectedTag, refresh } = props
-
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), [])
   const gridRef = useRef<AgGridReact<any>>(null)
   //datagrid row data
@@ -20,7 +19,7 @@ const TagList = (props: any) => {
       field: 'name',
       floatingFilter: true,
       filter: 'agTextColumnFilter',
-      width: 200,
+      width: 290,
     },
   ])
 
@@ -31,7 +30,7 @@ const TagList = (props: any) => {
   }, [refresh])
 
   useEffect(() => {
-    setRowData([])
+    // setRowData([])
     fetchTaglistData()
   }, [])
 
@@ -42,7 +41,7 @@ const TagList = (props: any) => {
         search_type: 'process',
       })
       .then((response) => {
-        console.log('fetchTaglistData/process:', response)
+        // console.log('fetchTaglistData/process:', response)
         setRowData(response.data)
       })
       .catch((error) => error('Data Load Failed'))
@@ -55,7 +54,7 @@ const TagList = (props: any) => {
     for (let i = 0; i < selectedRows.length; i++) {
       arr.push(selectedRows[i].name)
     }
-    console.log('arr:', arr)
+    // console.log('arr:', arr)
     syncSelectedTag(arr)
   }
 
@@ -84,7 +83,7 @@ const TagList = (props: any) => {
           ref={gridRef}
           rowData={rowData}
           columnDefs={columnDefs}
-          rowSelection={'multiple'}
+          rowSelection={'single'} //multiple
           // getRowId={getRowId}
           // onRowSelected={onRowSelected}
           onSelectionChanged={onSelectionChanged}

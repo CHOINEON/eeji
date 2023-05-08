@@ -1,82 +1,77 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import React, { useEffect, useState, useRef, useCallback, forwardRef, useImperativeHandle } from 'react'
 // import { Button, WrapItem } from '@chakra-ui/react'
-import ChartDataSelection from '../Chart/ChartDataSelection'
-import EditingData from '../Chart/EditingData'
-import SeriesSelectionGrid from '../../Tag/SeriesSelectionGrid'
 import axios from 'axios'
 import Button from '@mui/material/Button'
-import ChartSelectionDialog from '../Chart/ChartSelectionDialog'
 import CircularProgress from '@mui/material/CircularProgress'
 import LineSeriesChart from '../Chart/LineSeriesChart'
 
 export const chartDiv = (props: any) => {
-  return <div style={{ width: '100px', height: '30px', backgroundColor: 'pink' }}>{props.chart}</div>
+  return <div style={{ width: '100px', height: '30px' }}>{props.chart}</div>
 }
+
+// export const Child = forwardRef((props, ref) => {
+//   useImperativeHandle(ref, () => ({
+//     childFunction1() {
+//       return Worksheet
+//     },
+//     childFunction2() {
+//       alert('child function 2 called')
+//     },
+//   }))
+
+//   return (
+//     <div>
+//       <h2>child content</h2>
+//     </div>
+//   )
+// })
 
 const Worksheet = (props: any) => {
   // const { chart } = props
-  const { selectedTags, count, createChart, refresh } = props
+  const { selectedTags, refresh, onExport } = props
 
   // const chartType = ['scatterPlot', 'line']
-  const [active, setActive] = useState(false)
+  const chartWrapper = useRef<HTMLDivElement>()
   const [clicked, setClicked] = useState(false)
   const [progressActive, setProgressActive] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
-
   const [chartData, setChartData] = useState([])
-  const [tagList, setTagList] = useState([])
-
-  const chartWrapper = useRef<HTMLDivElement>()
-  const [chartHeight, setChartHeight] = useState('100%')
-  // let chartArray: Array<number> = []
+  const [chartHeight, setChartHeight] = useState('97%')
 
   useEffect(() => {
-    // console.log('refresh:', refresh)
     setChartData([])
   }, [refresh])
 
   useEffect(() => {
-    // console.log('chartWrapper:', chartWrapper)
+    // console.log('chartWrapper.current:', chartWrapper.current)
 
-    if (clicked && chartWrapper.current !== undefined) {
-      const height = Math.floor(100 / count)
+    if (selectedTags.length > 0 && clicked) {
+      const height = Math.floor(100 / selectedTags.length)
+
       if (height < 33) {
-        setChartHeight('33%') // minimum height : 33%
+        setChartHeight('32%') // minimum height : 33%
+        // console.log('min   :', height)
       } else {
         setChartHeight(height + '%')
+        // console.log('   height:', height)
       }
-      chartWrapper.current.style.height = height + '%'
+      // chartWrapper.current.style.height = height + '%'
     }
-
-    // if (chartWrapper.current !== undefined) chartWrapper.current.style.height = Math.floor(100 / count) + '%'
-    // console.log('chartWrapper:', chartWrapper)
-  }, [chartWrapper, clicked, count])
+  }, [clicked, selectedTags])
 
   const handleCreateChart = () => {
     setClicked(true)
     getChartdata()
-    // setIsOpen(true)
     // setActive(true)
   }
 
   const getChartdata = () => {
-    // console.log('getChartdata:', selectedTags)
     setProgressActive(true)
 
     if (selectedTags.length > 0) {
       axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/chartData', selectedTags).then(
         (response: any) => {
-          console.log('getChartdata response:', response.data)
-
-          //response is like this:
-          // [{
-          //   name: "Tag-n",
-          //   data : [{ x: datetime , y: value }]
-          // }]
-
           setChartData(response.data)
-
-          //progess circle 안보이게
+          renderItem()
           setProgressActive(false)
         },
         (error) => {
@@ -87,19 +82,20 @@ const Worksheet = (props: any) => {
     }
   }
 
-  const handldDialogClose = () => {
-    setIsOpen(false)
-  }
-
   const onSelectChart = (chartType: string) => {
     alert(chartType)
   }
 
-  useEffect(() => {
-    renderItem()
-  }, [clicked, chartData])
+  // useEffect(() => {
+  //   // console.log('clicked:', clicked)
+  //   // console.log('chartData:', chartData)
+
+  //   if (clicked && chartData.length > 0) renderItem()
+  // }, [clicked, chartData])
 
   const renderItem = () => {
+    // console.log('chartHeight:', chartHeight)
+
     if (clicked && chartData) {
       //리턴할 차트들 여러개 만들기
       const singleChart = chartData.map((value, index) => {
@@ -110,41 +106,32 @@ const Worksheet = (props: any) => {
             style={{
               width: '100%',
               height: chartHeight,
+              maxHeight: '97%',
               float: 'left',
               // border: '1px solid red',
               // backgroundColor: 'pink',
               marginBottom: '10px',
             }}
           >
-            <LineSeriesChart chartInputData={value} chartHeight={chartHeight} />
+            <LineSeriesChart onExport={onExport} chartInputData={value} chartHeight={chartHeight} />
           </div>
         )
       })
       return singleChart
-    } else {
-      // return (
-      //   <Button
-      //     colorScheme="teal"
-      //     variant="outline"
-      //     onClick={handleCreateChart}
-      //     style={{ position: 'relative', top: '200px' }}
-      //   >
-      //     CREATE CHART
-      //   </Button>
-      // )
     }
   }
 
   return (
     <>
       <div
+        className="rounded-box"
         style={{
-          // border: '1px solid red',
           width: '100%',
           height: '100%',
           textAlign: 'center',
           display: 'block',
-          overflow: 'scroll',
+          overflow: 'auto',
+          zIndex: 0,
         }}
       >
         {progressActive && <CircularProgress style={{ position: 'relative', top: '200px' }} />}
@@ -154,7 +141,7 @@ const Worksheet = (props: any) => {
         <Button
           variant="contained"
           onClick={handleCreateChart}
-          style={{ width: '200px', height: '40px', margin: 'auto', marginTop: '5px' }}
+          style={{ width: '200px', height: '40px', margin: 'auto', marginTop: '5px', borderRadius: '10px' }}
         >
           CREATE CHART
         </Button>

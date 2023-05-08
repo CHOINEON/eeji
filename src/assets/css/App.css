@@ -14,6 +14,14 @@ option {
   color: black;
 }
 
+.ag-root-wrapper {
+  background-color: white;
+  box-shadow: 0px 5px 20px #4338F733;
+  border-radius: 18px;
+  opacity: 1;
+  --ag-borders:none;
+}
+
 
 /* .js-plotly-plot .plotly .modebar{
   display:none;

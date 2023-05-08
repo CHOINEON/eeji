@@ -47,3 +47,57 @@ template {
   -webkit-animation: custom-rolling 1.3s linear infinite;
   animation: custom-rolling 1.3s linear infinite;
 }
+
+.rounded-box{
+  background-color: white;
+  box-shadow: 0px 5px 20px #4338F733;
+  border-radius: 18px;
+  opacity: 1;
+}
+
+.title-md{
+  font-size:medium; 
+  font-weight:bold;
+  margin-left:10px;
+}
+
+.title-sm{
+  font-size:small; 
+  font-weight:bold;
+  margin-top: '20px' 
+}
+
+
+.contents{
+  margin-left:12px;
+}
+
+
+/*ag grid*/
+.ag-theme-alpine {
+
+  /* --ag-header-height: 30px; */
+  /* --ag-header-foreground-color: white; */
+  /* --ag-header-background-color: black; */
+  /* --ag-header-cell-hover-background-color: rgb(80, 40, 140);
+  --ag-header-cell-moving-background-color: rgb(80, 40, 140);  */
+  
+}
+
+/* .ag-theme-alpine .ag-header-group-cell {
+  font-weight: normal;
+  font-size: 22px;
+  color:#ABB6D3;
+} */
+
+/* .ag-theme-alpine .ag-header-cell {
+  font-size: 18px;
+} */
+
+.ag-root-wrapper {
+  background-color: white;
+  box-shadow: 0px 5px 20px #4338F733;
+  border-radius: 18px;
+  opacity: 1;
+  --ag-borders:none;
+}

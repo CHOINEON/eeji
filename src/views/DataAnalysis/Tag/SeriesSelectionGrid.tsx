@@ -16,7 +16,7 @@ const SeriesSelectionGrid = (props: any) => {
   const { selectedTags, refresh } = props
 
   const gridRef = useRef<AgGridReact<any>>(null)
-  const containerStyle = useMemo(() => ({ width: '100%', height: '200px' }), [])
+  const containerStyle = useMemo(() => ({ width: '90%', height: '200px', display: 'block', float: 'left' }), [])
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), [])
   const [statistic, setStatistic] = React.useState([])
   const [columnDefs, setColumnDefs] = useState<ColDef[]>([
@@ -44,10 +44,10 @@ const SeriesSelectionGrid = (props: any) => {
     //TODO :한번에 불러서 배열에서 찾게 바꾸기(arr.find())
     const fetchStatistic = () => {
       if (selectedTags.length > 0) {
-        console.log('selectedTags:', selectedTags)
+        // console.log('selectedTags:', selectedTags)
         axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/describe', selectedTags).then(
           (response: any) => {
-            console.log('response:', response)
+            // console.log('response:', response)
             setStatistic(response.data)
           },
           (error) => {
@@ -82,7 +82,7 @@ const SeriesSelectionGrid = (props: any) => {
   // }, [])
 
   return (
-    <div style={containerStyle}>
+    <div style={{ width: '90%', height: '200px', display: 'block', float: 'left' }}>
       <div style={gridStyle} className="ag-theme-alpine">
         <AgGridReact
           ref={gridRef}
