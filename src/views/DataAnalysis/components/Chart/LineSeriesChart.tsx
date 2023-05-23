@@ -264,7 +264,7 @@ const LineSeriesChart = (props: any) => {
   }
 
   const handleGetValue = (param: any) => {
-    console.log('param:', param)
+    // console.log('param:', param)
     // setThreshold(param)
   }
 
