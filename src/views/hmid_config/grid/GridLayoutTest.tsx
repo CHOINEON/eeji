@@ -14,7 +14,6 @@ import { DashboardLayoutComponent, PanelModel, ResizeArgs } from '@syncfusion/ej
 import axios from 'axios'
 import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
 import { Box, useColorModeValue, Stack, Button, Checkbox } from '@chakra-ui/react'
-import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { panelData } from '../data/panel-data'
 import '../style/style.css'
 import WidgetModal from '../../hmid/components/Modal/WidgetModal'

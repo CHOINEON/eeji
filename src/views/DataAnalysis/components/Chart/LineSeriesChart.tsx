@@ -20,7 +20,7 @@ import {
   StripLinesDirective,
   StripLineDirective,
 } from '@syncfusion/ej2-react-charts'
-import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
+// import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import Button from '@mui/material/Button'
 import ChartContextMenu from '../ContextMenu/ChartContextMenu'
 // import { CSVLink, CSVDownload } from 'react-csv'
@@ -80,7 +80,7 @@ const LineSeriesChart = (props: any) => {
   const csvLinkRef = useRef(null)
 
   let chartInstance: ChartComponent
-  let buttonInstance: ButtonComponent
+  // let buttonInstance: ButtonComponent
 
   const zoomsettings: ZoomSettingsModel = {
     enableMouseWheelZooming: true,
@@ -241,7 +241,7 @@ const LineSeriesChart = (props: any) => {
     // crosshairTooltip: { enable: true },
     title: '',
     rangePadding: 'None',
-    stripLines: [{ start: threshold, end: threshold + 0.01, color: '#CCDCFF', visible: true }],
+    //stripLines: [{ start: threshold, end: threshold + 0.01, color: '#CCDCFF', visible: true }],
     // labelFormat: '000',
     // labelStyle: { color: 'red' },
     // minimum: 0,
@@ -265,7 +265,7 @@ const LineSeriesChart = (props: any) => {
 
   const handleGetValue = (param: any) => {
     console.log('param:', param)
-    setThreshold(param)
+    // setThreshold(param)
   }
 
   const columns = [
