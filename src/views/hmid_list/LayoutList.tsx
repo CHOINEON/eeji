@@ -1,6 +1,5 @@
 import React from 'react'
 import axios from 'axios'
-import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
 import { BiSelectMultiple } from 'react-icons/bi'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { Box, useColorModeValue, Stack, Button, Checkbox } from '@chakra-ui/react'
@@ -13,7 +12,6 @@ import { Alert } from 'views/hmid/components/Modal/Alert'
 
 interface LayoutListProps {
   company_id: string
-  // setLayoutId: (layout_id: string) => void
 }
 
 const LayoutListWrap = styled.div`
@@ -137,23 +135,10 @@ const AddLayoutBoChild = styled.div`
 `
 
 export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
-  const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
-  const [OpenLayoutModal, setOpenLayoutModal] = React.useState<boolean>(false)
-  const [GridInfo, setGridInfo] = React.useState<string>()
-  const [ItemColor, setItemColor] = React.useState('#0044620f')
-
   const [Component, setComponent] = React.useState<any>()
-
-  //권한
   const [AdminInfo, setAdminInfo] = React.useState('block')
-
-  //company_id
   const [CompanyId, setCompanyId] = React.useState()
-
-  //layout id
   const [LayoutId, setLayoutId] = React.useState<any>()
-
-  /** alert */
   const [showModal, setShowModal] = React.useState(false)
   const [message, setMessage] = React.useState('')
 
@@ -177,10 +162,6 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   }
 
   const addLineBox = (e: any) => {
-    console.log(e)
-    console.log(testRefs)
-    console.log('[ 클릭한 e id ] ')
-
     if (e.target.offsetParent.children[0].id.length === 0) {
       setLayoutId(e.target.offsetParent.children[1].id)
     } else {
@@ -228,10 +209,8 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   //개별 대시보드 정보 가져와서 담기
   const getDashboardInfo = (e: any) => {
     if (e.target.offsetParent.children.length === 3) {
-      console.log(e.target.offsetParent.children[1].id)
       getClickDashboardInfo(e.target.offsetParent.children[1].id)
     } else {
-      console.log(e.target.offsetParent.children[0].id)
       getClickDashboardInfo(e.target.offsetParent.children[0].id)
     }
   }

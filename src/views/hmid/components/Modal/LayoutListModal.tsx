@@ -12,8 +12,6 @@ import {
 } from '@chakra-ui/react'
 import '../../../hmid_config/style/style.css'
 
-import LayoutList from '../data/layout_list'
-
 interface LayoutModalProps {
   isOpen: boolean
   setClose: (isClose: boolean) => void
