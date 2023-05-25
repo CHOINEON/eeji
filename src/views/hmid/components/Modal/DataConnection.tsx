@@ -12,16 +12,12 @@ const DataListWrap = styled.div`
   flex-wrap: wrap;
 `
 
-// const SelectWrap = styled()
-
 interface DataConnectionModalProps {
   DataTagList: any
   DataConnectionModalisOpen: boolean
   setCloseDataConnectionModal: (isClose: boolean) => void
   setDataConnectionInfo: (DataType: string) => void
   setTagInfo: (TagInfo: any) => void
-  // setModeInfo: (ModeInfo: any) => void
-  // ChartType: string
 }
 
 export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
@@ -31,8 +27,6 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
   const [DataNodeData, setDataNodeData] = React.useState<any>()
   const [TagInfo, setTagInfo] = React.useState<any>([])
   const [ModeInfo, setModeInfo] = React.useState<any>([])
-
-  const [showPieSetting, setShowPieSetting] = React.useState(false)
 
   const DataType: any = [
     {
@@ -52,14 +46,6 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
   React.useEffect(() => {
     CreateDtataListItems()
   }, [])
-
-  // React.useEffect(() => {
-  //   if (props.ChartType === 'Pie' || props.ChartType === 'pie') {
-  //     setShowPieSetting(true)
-  //   } else {
-  //     setShowPieSetting(false)
-  //   }
-  // }, [props.ChartType])
 
   React.useEffect(() => {
     props.setDataConnectionInfo(SelectDataType)
@@ -89,10 +75,6 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
     const Arr: any = []
     let Obj: any = new Object()
 
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-    console.log(TagData)
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-
     for (let i = 0, len = TagData.length; i < len; i++) {
       Obj.value = TagData[i].name
       Obj.label = TagData[i].name
@@ -110,13 +92,7 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
   }
 
   const handleTagChange = (value: string | string[]) => {
-    console.log(value)
     setTagInfo(value)
-  }
-
-  const handleModeChange = (value: string | string[]) => {
-    console.log(' Mode Change Value')
-    setModeInfo(value)
   }
 
   return (
