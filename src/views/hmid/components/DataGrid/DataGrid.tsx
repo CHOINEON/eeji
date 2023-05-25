@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import { AgGridReact } from 'ag-grid-react'
 import { Button, Stack, useColorModeValue } from '@chakra-ui/react'
 import { MdOutlineAdd, MdOutlineRemove, MdSave } from 'react-icons/md'
-import DataGridDeleteModal from '../Modal/DataGridDeleteModal'
 import { RowValueChangedEvent, CellValueChangedEvent, ColDef } from 'ag-grid-community'
 
 import 'ag-grid-community/styles/ag-grid.css' // Core grid CSS, always needed

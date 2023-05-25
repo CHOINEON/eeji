@@ -385,7 +385,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
         <LayoutListWrap>{Component}</LayoutListWrap>
       </Box>
 
-      <Alert ShowModal={showModal} message={message} getCloseModal={getCloseModal} />
+      <Alert />
     </>
   )
 }

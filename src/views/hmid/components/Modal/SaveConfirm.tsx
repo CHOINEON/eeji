@@ -1,80 +1,55 @@
 import React from 'react'
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Button,
-  useDisclosure,
-  Input,
-} from '@chakra-ui/react'
+import * as Chakra from '@chakra-ui/react'
 
-interface SaveConfirmModalProps {
-  SaveGridisOpen: boolean
-  setSaveLayoutTitle: (Title: string) => void
-  setSaveLayoutInfo: (isSave: string) => void
-  setCloseSaveLayoutModal: (isClose: boolean) => void
-}
+import { useRecoilState, useSetRecoilState } from 'recoil'
+import { OpenSaveLayoutModalState, SaveLayoutInformationState } from '../../../hmid_config/recoil/config/atoms'
+import { LayoutTitle } from '../../../hmid_config/recoil/base/atoms'
 
-import reducer from '../../../hmid_config/reducer/reducer'
-import initialState from '../../../hmid_config/reducer/initialState'
+export const SaveConfirmModal: React.FC = () => {
+  const [saveLayoutModal, setSaveLayoutModal] = useRecoilState(OpenSaveLayoutModalState)
+  const setSaveLayoutInformation = useSetRecoilState(SaveLayoutInformationState)
+  const setLayoutTitle = useSetRecoilState(LayoutTitle)
 
-export const SaveConfirmModal: React.FC<SaveConfirmModalProps> = (props) => {
-  //state...
-  const [state, dispatch] = React.useReducer(reducer, initialState)
-
-  const [SaveModalIsOpen, setSaveModalIsOpen] = React.useState(false)
-
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  React.useEffect(() => {
-    setSaveModalIsOpen(props.SaveGridisOpen)
-    console.log(SaveModalIsOpen)
-  }, [props.SaveGridisOpen])
+  const { onClose } = Chakra.useDisclosure()
 
   const SaveLayout = () => {
-    props.setSaveLayoutInfo('save')
+    setSaveLayoutInformation('save')
     onClose()
   }
 
   const unSaveLayout = () => {
-    props.setSaveLayoutInfo('unSave')
+    setSaveLayoutInformation('unSave')
     onClose()
   }
 
-  //reducer dispatch
   const ChangeLayoutName = (LayoutName: any) => {
-    props.setSaveLayoutTitle(LayoutName.target.value)
-    // dispatch({ type: 'LAYOUT_NAME', data: LayoutName.target.value })
+    setLayoutTitle(LayoutName.target.value)
   }
 
   return (
     <>
-      <Modal
+      <Chakra.Modal
         blockScrollOnMount={false}
-        isOpen={SaveModalIsOpen}
+        isOpen={saveLayoutModal}
         onClose={() => {
-          props.setCloseSaveLayoutModal(true)
+          setSaveLayoutModal(false)
         }}
       >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Save your Layout</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Input
+        <Chakra.ModalOverlay />
+        <Chakra.ModalContent>
+          <Chakra.ModalHeader>Save your Layout</Chakra.ModalHeader>
+          <Chakra.ModalCloseButton />
+          <Chakra.ModalBody>
+            <Chakra.Input
               placeholder="Layout Name"
               onChange={(e: any) => {
                 ChangeLayoutName(e)
               }}
               style={{ backgroundColor: '#F4F7FE' }}
             />
-          </ModalBody>
-          <ModalFooter>
-            <Button
+          </Chakra.ModalBody>
+          <Chakra.ModalFooter>
+            <Chakra.Button
               id="design_button"
               colorScheme="brand"
               mr={3}
@@ -82,18 +57,18 @@ export const SaveConfirmModal: React.FC<SaveConfirmModalProps> = (props) => {
               style={{ backgroundColor: '#4338F7', color: '#fff' }}
             >
               저장
-            </Button>
-            <Button
+            </Chakra.Button>
+            <Chakra.Button
               id="design_button"
               variant="ghost"
               onClick={unSaveLayout}
               style={{ backgroundColor: '#4338F7', color: '#fff' }}
             >
               취소
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+            </Chakra.Button>
+          </Chakra.ModalFooter>
+        </Chakra.ModalContent>
+      </Chakra.Modal>
     </>
   )
 }
