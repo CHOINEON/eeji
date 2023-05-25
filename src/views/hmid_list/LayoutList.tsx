@@ -142,7 +142,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   const [showModal, setShowModal] = React.useState(false)
   const [message, setMessage] = React.useState('')
 
-  const theme = useColorModeValue('navy.700', 'white')
+  // const theme = useColorModeValue('navy.700', 'white')
 
   const testRefs = React.useRef([])
 

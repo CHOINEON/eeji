@@ -1,54 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Modal, Row, Button, Typography, Upload, message } from 'antd'
-import * as XLSX from 'xlsx'
+import { Modal, Typography } from 'antd'
 import axios from 'axios'
-import { ProgressButton } from '@syncfusion/ej2-react-splitbuttons'
 import { UploaderComponent, UploadingEventArgs } from '@syncfusion/ej2-react-inputs'
 import { FileInfo, SelectedEventArgs, RemovingEventArgs } from '@syncfusion/ej2-inputs'
-import { CircularProgress, Theme, createStyles } from '@mui/material'
-// import { makeStyles } from '@mui/styles'
-
-// import { green } from '@material-ui/core/colors'
 
 interface UploadModalProps {
   show: boolean
   onUploaded: (isUploaded: boolean) => void
   onCloseClick: () => void
 }
-
-// const useStyles = makeStyles((theme: Theme) =>
-//   createStyles({
-//     root: {
-//       display: 'flex',
-//       alignItems: 'center',
-//     },
-//     wrapper: {
-//       margin: theme.spacing(1),
-//       position: 'relative',
-//     },
-//     // buttonSuccess: {
-//     //   backgroundColor: green[500],
-//     //   '&:hover': {
-//     //     backgroundColor: green[700],
-//     //   },
-//     // },
-//     // fabProgress: {
-//     //   color: green[500],
-//     //   position: 'absolute',
-//     //   top: -6,
-//     //   left: -6,
-//     //   zIndex: 1,
-//     // },
-//     // buttonProgress: {
-//     //   color: green[500],
-//     //   position: 'absolute',
-//     //   top: '50%',
-//     //   left: '50%',
-//     //   marginTop: -12,
-//     //   marginLeft: -12,
-//     // },
-//   })
-// )
 
 export const UploadModal: React.FC<UploadModalProps> = (props) => {
   // const classes = useStyles()
@@ -77,43 +37,6 @@ export const UploadModal: React.FC<UploadModalProps> = (props) => {
   useEffect(() => {
     setVisible(show)
   }, [show])
-
-  // const progressButton: ProgressButton = new ProgressButton({
-  //   content: 'SAVE',
-  //   enableProgress: true,
-  //   animationSettings: { effect: 'SlideRight' },
-  //   spinSettings: { position: 'Center' },
-  //   cssClass: 'e-outline e-success',
-  // })
-  // progressButton.appendTo('#progressSaveBtn')
-
-  // excel file parsing
-  // const handleChange = async (e: any) => {
-  //   // console.log('e:', e)
-  //   const file = e.target.files[0]
-  //   const data = await file.arrayBuffer()
-  //   const extension = file.name.slice(-4)
-  //   const allowedExtensions = ['xlsx', '.xls', '.csv']
-
-  //   if (allowedExtensions.indexOf(extension) === -1) {
-  //     alert('.xls(x), .csv 파일만 가능합니다')
-  //   } else {
-  //     setFileName(file.name)
-  //     const wb = XLSX.read(data)
-  //     const ws = wb.Sheets[wb.SheetNames[0]]
-
-  //     if (extension === 'xlsx' || extension === '.xls') {
-  //       const EXCEL_JSON = XLSX.utils.sheet_to_json(wb.Sheets['tag_description'], {
-  //         raw: false,
-  //         blankrows: false,
-  //       })
-  //       setData(EXCEL_JSON)
-  //     } else if (extension === '.csv') {
-  //       const CSV_JSON = XLSX.utils.sheet_to_json(ws)
-  //       setData(CSV_JSON)
-  //     }
-  //   }
-  // }
 
   function renderComplete(): void {
     //useEffect에서 호출 시 DOM rendering 전임..이유 모름..

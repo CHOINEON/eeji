@@ -1,5 +1,3 @@
-import { createRoot } from 'react-dom/client'
-
 /**
  * Sample for Range Selection in chart
  */
@@ -15,8 +13,6 @@ import {
   Category,
   ScatterSeries,
 } from '@syncfusion/ej2-react-charts'
-import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
-// import { PropertyPane } from './property-pane'
 
 export const data = [
   { x: 1971, y: 50 },

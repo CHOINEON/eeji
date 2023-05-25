@@ -36,7 +36,7 @@ const DataSummary = (props: any) => {
     return (
       <Card sx={{ minWidth: 275 }} className="rounded-box">
         <CardContent>
-          <div style={{ fontSize: 14 }} color="text.secondary">   
+          <div style={{ fontSize: 14 }} color="text.secondary">
             <p>파일명 : {param.value.data}</p>
             <p>행/열 : {param.value.shape}</p>
             <p>시작일 : {param.value.startDate}</p>
