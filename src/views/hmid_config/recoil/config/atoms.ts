@@ -5,136 +5,138 @@
 
 // atoms.ts
 import { atom } from 'recoil'
+import { v1 } from 'uuid'
 
 //state
 export const BarChartLayoutOptionState = atom({
-  key: 'BarLayoutOption',
+  key: `BarLayoutOption/${v1()}`,
   default: [],
 })
 
 export const BarChartDataOptionState = atom({
-  key: 'BarDataOption',
+  key: `BarDataOption/${v1()}`,
   default: [],
 })
 
 export const PieChartLayoutOptionState = atom({
-  key: 'PieLayoutOption',
+  key: `PieLayoutOption/${v1()}`,
   default: [],
 })
 
 export const PieChartDataOptionState = atom({
-  key: 'PieDataOption',
+  key: `PieDataOption/${v1()}`,
   default: [],
 })
 
 export const TimeSeriesChartLayoutOptionState = atom({
-  key: 'TimeSeriesLayoutOption',
+  key: `TimeSeriesLayoutOption/${v1()}`,
   default: [],
 })
 
 export const TimeSeriesChartDataOptionState = atom({
-  key: 'TimeSeriesDataOption',
+  key: `TimeSeriesDataOption/${v1()}`,
   default: [],
 })
 
 export const DataTableRowState = atom({
-  key: 'DataTableRows',
+  key: `DataTableRows/${v1()}`,
   default: [],
 })
 
 export const DataTableColumnsState = atom({
-  key: 'DataTableColumns',
+  key: `DataTableColumns/${v1()}`,
   default: [],
 })
 
 export const WidgetInformationState = atom({
-  key: 'WidgetInfo',
+  key: `WidgetInfo/${v1()}`,
   default: '',
 })
 
 export const AlertMessageState = atom({
-  key: 'Message',
+  key: `Message/${v1()}`,
   default: '',
 })
 
 export const AlertModalState = atom({
-  key: 'AlertModal',
+  key: `AlertModal/${v1()}`,
   default: false,
 })
 
 export const ShowLoadingState = atom({
-  key: 'LoadingShow',
+  key: `LoadingShow/${v1()}`,
   default: false,
 })
 
 export const ShowGridModalState = atom({
-  key: 'GridModal',
+  key: `GridModal/${v1()}`,
   default: false,
 })
 
 export const ShowWidgetModalState = atom({
-  key: 'WidgetModal',
+  key: `WidgetModal/${v1()}`,
   default: false,
 })
 
 export const ShowConnectionDataState = atom({
-  key: 'ConnectionData',
+  key: `ConnectionData/${v1()}`,
   default: false,
 })
 
 export const ShowDeleteGridModalState = atom({
-  key: 'DeleteGridModal',
+  key: `DeleteGridModal/${v1()}`,
   default: false,
 })
 
 export const TagListByTagDataState = atom({
-  key: 'TagListByTagData',
+  key: `TagListByTagData/${v1()}`,
   default: [],
 })
 
 //필요성 확인
 export const TagListArrState = atom({
-  key: 'TagListArr',
+  key: `TagListArr/${v1()}`,
   default: [],
 })
 
 export const SelectTagInfoState = atom({
-  key: 'SelectTagInfo',
+  key: `SelectTagInfo/${v1()}`,
   default: [],
 })
 
 export const OpenSaveLayoutModalState = atom({
-  key: 'SaveLaytoutModal',
+  key: `SaveLaytoutModal/${v1()}`,
   default: false,
 })
 
 export const SaveLayoutInformationState = atom({
-  key: 'SaveLayoutInformation',
+  key: `SaveLayoutInformation/${v1()}`,
   default: '',
 })
 
 export const GridInformationState = atom({
-  key: 'gridInformation',
+  key: `gridInformation/${v1()}`,
   default: null,
 })
 
+//함수 확인
 export const GridDataObjState = atom({
-  key: 'gridDataObj',
+  key: `gridDataObj/${v1()}`,
   default: [],
 })
 
 export const BoxTargetIdState = atom({
-  key: 'boxTargetId',
+  key: `boxTargetId/${v1()}`,
   default: '',
 })
 
 export const WidgetInfoState = atom({
-  key: 'WidgetInfo',
+  key: `WidgetInfo/${v1()}`,
   default: '',
 })
 
 export const PanelIdxState = atom({
-  key: 'PanelIndex',
+  key: `PanelIndex/${v1()}`,
   default: 0,
 })
 

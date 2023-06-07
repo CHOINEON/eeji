@@ -6,6 +6,7 @@
 import {
   BarChartDataOptionState,
   BarChartLayoutOptionState,
+  GridDataObjState,
   PieChartDataOptionState,
   PieChartLayoutOptionState,
   DataTableColumnsState,
@@ -72,6 +73,24 @@ export const TagListArrSelector = selector({
   key: 'TagListArrSelector',
   get: ({ get }) => get(TagListArrState),
   set: ({ set }, newValue) => set(TagListArrState, newValue),
+})
+
+export const GridDataObjSelector = selector({
+  key: 'GridDataObjSelector',
+  get: ({ get }) => {
+    const gridObj = get(GridDataObjState)
+    return gridObj
+  },
+  set: ({ set, get }, newValue = []) => {
+    console.log('[ GridDataObj Selector ] >> ')
+    console.log(newValue)
+    const obj = get(GridDataObjState)
+    console.log(obj)
+
+    const test: any = newValue
+    console.log(test)
+    // set(GridDataObjState, test)
+  },
 })
 
 export const AlertMessageSelector = selector({

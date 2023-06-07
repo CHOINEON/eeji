@@ -2,10 +2,10 @@ export interface DTIME {
   mode?: string
   text?: boolean
   textposition?: string
-  line: {
-    shape?: string
-    width?: number
-  }
+  // line: {
+  //   shape?: string
+  //   width?: number
+  // }
   type?: string
 }
 

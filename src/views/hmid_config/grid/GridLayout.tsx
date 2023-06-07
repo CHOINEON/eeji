@@ -219,7 +219,7 @@ export const GridLayoutBox: React.FC<GridInfoProps> = (props) => {
 
   return (
     <>
-      <WidgetModal
+      {/* <WidgetModal
         WidgetModalisOpen={isOpenWidgetModal}
         setCloseWidgetModal={(isClose: boolean) => {
           if (isClose) {
@@ -231,7 +231,7 @@ export const GridLayoutBox: React.FC<GridInfoProps> = (props) => {
             setWidgetInfo(WidgetInfo)
           }
         }}
-      />
+      /> */}
       <Grid h="40vw" pt={8} templateRows={rows} templateColumns={cols} gap={4}>
         {render()}
       </Grid>

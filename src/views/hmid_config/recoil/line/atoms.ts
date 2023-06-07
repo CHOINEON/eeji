@@ -6,9 +6,10 @@
 // atoms.ts
 import { atom } from 'recoil'
 import { DLINE, LLINE } from './interface'
+import { v1 } from 'uuid'
 
 export const LineChartLayoutOptionState = atom<LLINE>({
-  key: 'LineLayoutOption',
+  key: `LineLayoutOption/${v1()}`,
   default: {
     title: 'Line',
     margin: {
@@ -27,8 +28,8 @@ export const LineChartLayoutOptionState = atom<LLINE>({
   },
 })
 
-export const LineChartDataOptionState = atom<DLINE>({
-  key: 'LineDataOption',
+export const LineChartDataOptionState = atom<any>({
+  key: `LineDataOption/${v1()}`,
   default: {
     mode: 'lines+markers',
     text: false,
@@ -42,7 +43,7 @@ export const LineChartDataOptionState = atom<DLINE>({
 })
 
 export const LineDrawerState = atom({
-  key: 'LineDrawer',
+  key: `LineDrawer/${v1()}`,
   default: false,
 })
 

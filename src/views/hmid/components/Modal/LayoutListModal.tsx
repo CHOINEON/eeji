@@ -2,11 +2,12 @@ import React from 'react'
 import * as Chakra from '@chakra-ui/react'
 import '../../../hmid_config/style/style.css'
 
-import { useRecoilState } from 'recoil'
-import { ShowGridModalState } from '../../../hmid_config/recoil/config/atoms'
+import { useRecoilState, useSetRecoilState } from 'recoil'
+import { ShowGridModalState, GridInformationState } from '../../../hmid_config/recoil/config/atoms'
 
 export const LayoutModal: React.FC = () => {
   const [showGridModal, setShowGridModal] = useRecoilState(ShowGridModalState)
+  const setDashboardArgs = useSetRecoilState(GridInformationState)
 
   const ClickLayoutContainer = (args: any) => {
     const target: any = args.target
@@ -16,8 +17,8 @@ export const LayoutModal: React.FC = () => {
     }
     target.classList.add('e-selected-style')
     console.log(target)
-    // props.setGridInfo(target)
-    // props.setClose(true)
+
+    setDashboardArgs(target)
   }
 
   return (
@@ -44,13 +45,13 @@ export const LayoutModal: React.FC = () => {
               <div className="row" style={{ paddingTop: '3px' }}>
                 <div className="image-pattern-style" id="template1" data-id="1" />
                 <div className="image-pattern-style" id="template2" data-id="2" />
-                <div className="image-pattern-style" id="template3" data-id="3" />
+                {/* <div className="image-pattern-style" id="template3" data-id="3" /> */}
               </div>
-              <div className="row" style={{ paddingTop: '3px' }}>
+              {/* <div className="row" style={{ paddingTop: '3px' }}>
                 <div className="image-pattern-style" id="template4" data-id="4" />
                 <div className="image-pattern-style" id="template5" data-id="5" />
                 <div className="image-pattern-style" id="template6" data-id="6" />
-              </div>
+              </div> */}
             </div>
           </Chakra.ModalBody>
           <Chakra.ModalFooter>

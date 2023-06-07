@@ -10,40 +10,40 @@ import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 import axios from 'axios'
 import styled from '@emotion/styled'
-import '../style/style.css'
+import '../hmid_config/style/style.css'
 import 'ag-grid-community/styles/ag-grid.css'
 import { Spin } from 'antd'
-import '../../hmid/components/Modal/style/style.css'
+import '../hmid/components/Modal/style/style.css'
 
 import { AgGridReact } from 'ag-grid-react'
 import { ColDef } from 'ag-grid-community'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
-import { panelData } from '../data/panel-data'
+import { panelData } from '../hmid_config/data/panel-data'
 import Plot from 'react-plotly.js'
 import * as d3 from 'd3'
 
-import WidgetModal from '../../hmid/components/Modal/WidgetModal'
-import SaveConfirmModal from '../../hmid/components/Modal/SaveConfirm'
-import LayoutModal from '../../hmid/components/Modal/LayoutListModal'
-import DataConnection from '../../hmid/components/Modal/DataConnection'
-import { Alert } from '../../hmid/components/Modal/Alert'
+import WidgetModal from '../hmid/components/Modal/WidgetModal'
+import SaveConfirmModal from '../hmid/components/Modal/SaveConfirm'
+import LayoutModal from '../hmid/components/Modal/LayoutListModal'
+import DataConnection from '../hmid/components/Modal/DataConnection'
+import { Alert } from '../hmid/components/Modal/Alert'
 
 import * as ReactIcon from 'react-icons/md'
 import * as Chakra from '@chakra-ui/react'
 import * as ej2 from '@syncfusion/ej2-react-layouts'
-import * as 그리기함수 from './function/차트그리기함수'
-import * as 가공함수 from './function/차트데이터가공함수'
-import * as 이미지저장함수 from './function/캡쳐이미지저장함수'
+import * as 그리기함수 from '../hmid_config/grid/function/차트그리기함수'
+import * as 가공함수 from '../hmid_config/grid/function/차트데이터가공함수'
+import * as 이미지저장함수 from '../hmid_config/grid/function/캡쳐이미지저장함수'
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import * as RecoilAtoms from '../recoil/config/atoms'
-import * as RecoilLineAtoms from '../recoil/line/atoms'
-import * as RecoilTimeSeriesAtoms from '../recoil/timeseries/atoms'
+import * as RecoilAtoms from '../hmid_config/recoil/config/atoms'
+import * as RecoilLineAtoms from '../hmid_config/recoil/line/atoms'
+import * as RecoilTimeSeriesAtoms from '../hmid_config/recoil/timeseries/atoms'
 // import { GridDataObjSelector } from '../recoil/config/selector'
-import { CompanyId, LayoutTitle, NowDate } from '../recoil/base/atoms'
+import { CompanyId, LayoutTitle, NowDate } from '../hmid_config/recoil/base/atoms'
 
-import D3LineChart from './function/drawD3Chart'
-import RealTimeDataTable from './function/drawRealTimeDataTable'
+import D3LineChart from '../hmid_config/grid/function/drawD3Chart'
+import RealTimeDataTable from '../hmid_config/grid/function/drawRealTimeDataTable'
 
 const DataGridWrap = styled.div`
   width: 100%;
@@ -72,7 +72,7 @@ const CurrentIcon = styled.div`
   color: rgb(67, 56, 247);
 `
 
-export const PredefinedLayouts: React.FC = () => {
+export const PredefinedLayoutsInterval: React.FC = () => {
   //atom
   const setShowWidgetModal = useSetRecoilState(RecoilAtoms.ShowWidgetModalState)
   const [LineDataOption, setLineDataOption] = useRecoilState(RecoilLineAtoms.LineChartDataOptionState)
@@ -438,7 +438,7 @@ export const PredefinedLayouts: React.FC = () => {
             <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              Calltype={'WS'}
+              Calltype={'Interval'}
               CallData={'TradePrice'}
               Color={'steelblue'}
             />
@@ -457,7 +457,7 @@ export const PredefinedLayouts: React.FC = () => {
             <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              Calltype={'WS'}
+              Calltype={'Interval'}
               CallData={'OpeningPrice'}
               Color={'green'}
             />
@@ -476,7 +476,7 @@ export const PredefinedLayouts: React.FC = () => {
             <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              Calltype={'WS'}
+              Calltype={'Interval'}
               CallData={'LowPrice'}
               Color={'orange'}
             />
@@ -495,7 +495,7 @@ export const PredefinedLayouts: React.FC = () => {
             <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              Calltype={'WS'}
+              Calltype={'Interval'}
               CallData={'HighPrice'}
               Color={'purple'}
             />
@@ -1642,4 +1642,4 @@ export const PredefinedLayouts: React.FC = () => {
     </>
   )
 }
-export default PredefinedLayouts
+export default PredefinedLayoutsInterval

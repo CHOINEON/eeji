@@ -5,16 +5,27 @@
 
 // atoms.ts
 import { atom } from 'recoil'
+import { v1 } from 'uuid'
 
 //state
 export const CompanyId = atom({
-  key: 'CompanyId',
+  key: `CompanyId/${v1()}`,
   default: window.localStorage.getItem('companyId'),
 })
 
 export const LayoutTitle = atom({
-  key: 'LayoutTitle',
+  key: `LayoutTitle/${v1()}`,
   default: '',
 })
 
-export default { CompanyId, LayoutTitle }
+export const LineChartData = atom({
+  key: `LineChartData/${v1()}`,
+  default: [],
+})
+
+export const NowDate = atom({
+  key: `NowDate/${v1()}`,
+  default: '',
+})
+
+export default { CompanyId, LayoutTitle, LineChartData, NowDate }
