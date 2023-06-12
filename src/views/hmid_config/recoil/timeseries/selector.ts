@@ -20,10 +20,10 @@ export const TimeSeriesChartDataOptionSelector = selector<inter.DTIME>({
       mode: (newValue as inter.DTIME).mode || defaultResult.mode,
       text: (newValue as inter.DTIME).text || defaultResult.text,
       textposition: (newValue as inter.DTIME).textposition || defaultResult.textposition,
-      line: {
-        shape: (newValue as inter.DTIME).line.shape || defaultResult.line.shape,
-        width: (newValue as inter.DTIME).line.width || defaultResult.line.width,
-      },
+      // line: {
+      //   shape: (newValue as inter.DTIME).line.shape || defaultResult.line.shape,
+      //   width: (newValue as inter.DTIME).line.width || defaultResult.line.width,
+      // },
       type: 'scatter',
     }
     set(TimeSeriesChartDataOptionState, newResult)

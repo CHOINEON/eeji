@@ -6,6 +6,7 @@
 // atoms.ts
 import { atom } from 'recoil'
 import { DTIME, LTIME } from './interface'
+import { v1 } from 'uuid'
 
 const selectorOptions: any = {
   buttons: [
@@ -46,7 +47,7 @@ const selectorOptions: any = {
 }
 
 export const TimeSeriesChartLayoutOptionState = atom<LTIME>({
-  key: 'TimeSeriesLayoutOption',
+  key: `TimeSeriesLayoutOption/${v1()}`,
   default: {
     title: 'TimeSeries',
     margin: {
@@ -68,21 +69,21 @@ export const TimeSeriesChartLayoutOptionState = atom<LTIME>({
 })
 
 export const TimeSeriesChartDataOptionState = atom<DTIME>({
-  key: 'TimeSeriesDataOption',
+  key: `TimeSeriesDataOption/${v1()}`,
   default: {
     mode: 'lines',
     text: false,
     textposition: 'auto',
-    line: {
-      shape: 'linear',
-      width: 2,
-    },
+    // line: {
+    //   shape: 'linear',
+    //   width: 2,
+    // },
     type: 'scatter',
   },
 })
 
 export const TimeSeriesDrawerState = atom({
-  key: 'TimeSeriesDrawer',
+  key: `TimeSeriesDrawer/${v1()}`,
   default: false,
 })
 

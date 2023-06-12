@@ -7,11 +7,13 @@ import AdminLayout from './layouts/admin'
 import Login from './layouts/login/login'
 import { ChakraProvider } from '@chakra-ui/react'
 import theme from './theme/theme'
+import D3LineChart from 'views/hmid_config/grid/function/drawD3Chart'
 import PredefinedLayouts from 'views/hmid_config/grid/GridLayoutTest'
+import { RecoilRoot } from 'recoil'
 
 ReactDOM.render(
-  <ChakraProvider theme={theme}>
-    <React.StrictMode>
+  <RecoilRoot>
+    <ChakraProvider theme={theme}>
       <BrowserRouter>
         <Switch>
           <Route path={`/auth`} component={AuthLayout} />
@@ -21,7 +23,7 @@ ReactDOM.render(
           <Redirect from="/" to="/login" />
         </Switch>
       </BrowserRouter>
-    </React.StrictMode>
-  </ChakraProvider>,
+    </ChakraProvider>
+  </RecoilRoot>,
   document.getElementById('root')
 )

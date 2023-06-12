@@ -8,12 +8,10 @@
 
 import React from 'react'
 import styled from '@emotion/styled'
-// import bg_vedio from '../../assets/img/ineeji/ineeji_video.gif'
 import main_bg from './img/bg.jpg'
 import main_font from './img/main_font.svg'
 import logo from './img/logo.svg'
 import circle from './img/package.png'
-import notice from './img/notice.png'
 import bottom_title from './img/bottom_title.png'
 import login_icon from './img/login_icon.png'
 import date from './img/date.png'
@@ -23,6 +21,9 @@ import type { SelectProps } from 'antd'
 import { Select } from 'antd'
 import './style/style.css'
 import { Alert } from 'views/hmid/components/Modal/Alert'
+
+import { useRecoilState, useSetRecoilState } from 'recoil'
+import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -181,25 +182,21 @@ export const Login: React.FC = () => {
   const [companyList, setCompanyList] = React.useState<any>()
 
   /** Alert */
-  const [message, setMessage] = React.useState<string>('')
-  const [showAlertModal, setShowAlertModal] = React.useState<boolean>(false)
+  // const [message, setMessage] = React.useState<string>('')
+  // const [showAlertModal, setShowAlertModal] = React.useState<boolean>(false)
   //   const [messageApi, contextHolder] = message.useMessage();
+
+  const [showAlarmModal, setShowAlertModal] = useRecoilState(AlertRecoil.AlertModalState)
+  const setAlarmMessage = useSetRecoilState(AlertRecoil.AlertMessageState)
 
   React.useEffect(() => {
     RenderCompanyList()
   }, [])
-  //select field
-
-  const options: SelectProps['options'] = []
-
-  const error = (e: string) => {
-    alert(e)
-  }
 
   const setLogin = (id: string, password: string) => {
     console.log(company)
     if (company.length === 0 || company === undefined) {
-      setMessage('회사를 선택 해주세요.')
+      setAlarmMessage('회사를 선택 해주세요.')
       setShowAlertModal(true)
     } else {
       axios
@@ -252,7 +249,7 @@ export const Login: React.FC = () => {
 
   const onEnterId = (e: any) => {
     if (e.keyCode === 13) {
-      setMessage('패스워드를 입력해주세요.')
+      setAlarmMessage('패스워드를 입력해주세요.')
       setShowAlertModal(true)
     }
   }
@@ -315,11 +312,6 @@ export const Login: React.FC = () => {
       .catch((error) => {
         console.log(error.response)
       })
-  }
-
-  /**ALert */
-  const getCloseAlertModal = (e: boolean) => {
-    setShowAlertModal(false)
   }
 
   return (
@@ -386,7 +378,7 @@ export const Login: React.FC = () => {
           Login
         </Button>
       </FormWrap>
-      <Alert ShowModal={showAlertModal} message={message} getCloseModal={getCloseAlertModal} />
+      <Alert />
     </>
   )
 }

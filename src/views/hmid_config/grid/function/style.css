@@ -1,0 +1,22 @@
+.x.axis line {
+  shape-rendering: auto;
+}
+/* 
+.line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1.5px;
+} */
+
+.grid-lines line {
+  stroke: gray;
+  stroke-opacity: 0.1;
+}
+#tooltip {
+  border: 1px solid #ccc;
+  position: absolute;
+  padding: 10px;
+  background-color: #fff;
+  display: none;
+  pointer-events: none;
+}

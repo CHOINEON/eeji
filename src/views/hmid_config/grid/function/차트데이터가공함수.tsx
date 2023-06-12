@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 //recoil
-import { useSetRecoilState } from 'recoil'
+import { useSetRecoilState, useRecoilState } from 'recoil'
 import { LineChartDataOptionState } from '../../recoil/line/atoms'
 import { TimeSeriesChartDataOptionState } from '../../recoil/timeseries/atoms'
 
@@ -9,7 +9,6 @@ export const ChangeLineDataArr = (dataOption: any) => {
   const ChartDataArr: any = []
 
   const setLineData = useSetRecoilState(LineChartDataOptionState)
-  const setTimeSeriesData = useSetRecoilState(TimeSeriesChartDataOptionState)
 
   const data = [
     {
@@ -139,16 +138,18 @@ const prepData = (rawData: any[]) => {
   ]
 }
 
-export const ChangeTimeSeriesDataArr = async (dataOption: any) => {
+export const ChangeTimeSeriesDataArr = async () => {
   let ChartDataObj: any = {}
   const ChartDataArr: any = []
+
+  const [timeSeriesData, setTimeSeriesData] = useRecoilState(TimeSeriesChartDataOptionState)
 
   const data = await d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2016-weather-data-seattle.csv')
   const trace1 = prepData(data)
 
   for (let i = 0, len = trace1.length; i < len; i++) {
     ChartDataObj = {
-      ...dataOption,
+      ...timeSeriesData,
       x: trace1[i].x,
       y: trace1[i].y,
     }
@@ -156,7 +157,7 @@ export const ChangeTimeSeriesDataArr = async (dataOption: any) => {
     ChartDataObj = new Object()
   }
 
-  setTimeSeriesData(ChartDataArr)
+  // setTimeSeriesData(ChartDataArr)
 
   return ChartDataArr
 }

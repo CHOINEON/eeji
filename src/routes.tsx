@@ -6,15 +6,17 @@ import { FaHourglassHalf } from 'react-icons/fa'
 
 // Admin Imports
 import MainDashboard from 'views/hmid'
-import FoundationStructureAnalysis from 'views/DataAnalysis/PreProcessing'
-import DataConnection from 'views/dataConnection'
-// import DataPlantModeling from 'views/dataPlantModeling'
-import AIPlantModeling from 'views/AiPlantModeling'
 import Configuration from 'views/configuration'
 import DashboardConfig from 'views/hmid_config'
 import LayoutList from 'views/hmid_list'
 import ModelMaintenance from 'views/ModelMaintenance'
 import DataAnalysis from 'views/DataAnalysis'
+
+import HmidInterval from 'views/hmid_interval'
+// import FoundationStructureAnalysis from 'views/DataAnalysis/PreProcessing'
+// import DataConnection from 'views/dataConnection'
+// import DataPlantModeling from 'views/dataPlantModeling'
+// import AIPlantModeling from 'views/AiPlantModeling'
 // import LayoutList from 'views/hmid/list/LayoutList'
 
 // Auth Imports
@@ -62,19 +64,33 @@ const routes = [
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: MainDashboard,
   },
+  // {
+  //   name: 'ChartTest',
+  //   layout: '/admin',
+  //   path: '/chartTest',
+  //   icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+  //   component: ChartTest,
+  // },
   {
-    name: 'HMID Configuration',
+    name: 'HMID-WS',
     layout: '/admin',
     path: '/layout-list',
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: LayoutList,
   },
   {
-    name: 'HMID Configuration',
+    name: 'HMID-WS',
     layout: '/admin',
     path: '/layout-configuration',
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: DashboardConfig,
+  },
+  {
+    name: 'HMID-Interval',
+    layout: '/admin',
+    path: '/hmid-interval',
+    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+    component: HmidInterval,
   },
   {
     name: 'Model Maintenance',

@@ -6,7 +6,7 @@ import './style/style.css'
 // import * as 태그함수 from '../../../hmid_config/grid/function/태그데이터함수'
 // import DataConnection from '../data/data_connection_list'
 
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import * as RecoilAtoms from '../../../hmid_config/recoil/config/atoms'
 
 const DataListWrap = styled.div`
@@ -20,7 +20,7 @@ export const WidgetModal: React.FC = () => {
   const [showDataConnectionModal, setShowDataConnectionModal] = useRecoilState(RecoilAtoms.ShowConnectionDataState)
   const [TagInfo, setSelectTagInfo] = useRecoilState(RecoilAtoms.SelectTagInfoState)
   const [TagListArr, setTagListArr] = useRecoilState(RecoilAtoms.TagListArrState)
-  const TagListByTagData = useRecoilValue(RecoilAtom.TagListByTagDataState)
+  const TagListByTagData = useRecoilValue(RecoilAtoms.TagListByTagDataState)
 
   //rendering시 함수 호출
   React.useEffect(() => {

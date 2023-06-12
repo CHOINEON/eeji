@@ -398,7 +398,7 @@ export const TimeSeriesOption: React.FC = () => {
                 </Chakra.AccordionPanel>
               </Chakra.AccordionItem>
 
-              <Chakra.AccordionItem>
+              {/* <Chakra.AccordionItem>
                 <h2>
                   <Chakra.AccordionButton>
                     <Chakra.Box as="span" flex="1" textAlign="left">
@@ -444,7 +444,7 @@ export const TimeSeriesOption: React.FC = () => {
                     </Chakra.SliderThumb>
                   </Chakra.Slider>
                 </Chakra.AccordionPanel>
-              </Chakra.AccordionItem>
+              </Chakra.AccordionItem> */}
 
               {/* <Chakra.AccordionItem>
                 <h2>
