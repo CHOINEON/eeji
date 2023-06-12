@@ -22,10 +22,11 @@ const DataGridWrap = styled.div<{ TableShow: boolean }>`
 export interface LineChartPorps {
   widthSize: any
   heightSize: any
-  CallData: 'TradePrice' | 'HighPrice' | 'LowPrice' | 'OpeningPrice' | 'DataTable'
+  CallData: 'TradePrice' | 'HighPrice' | 'LowPrice' | 'OpeningPrice' | 'DataTable' | 'Opening & High & Low'
   Color: string
   ChartShow: boolean
   TableShow: boolean
+  Multiple: boolean
 }
 
 export const D3LineChart: React.FC<LineChartPorps> = (props) => {
@@ -50,6 +51,10 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
   const [HighPricePrevData, setHighPricePrevData] = React.useState<any>([])
   const [HighTestData, setHighTestData] = React.useState<any>([])
 
+  //multiple series
+  const [MultiplePrevData, setMultiplePrevData] = React.useState<any>([])
+  const [MultipleTestData, setMultipleTestData] = React.useState<any>([])
+
   //datatable
   const [WSTableRowData, setWSTableRowData] = React.useState<any>([])
   const [WSTableRowDataClean, setWSTableRowDataClean] = React.useState<any>([])
@@ -62,7 +67,8 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     { field: 'openingprice', headerName: 'OpeningPrice', editable: false },
   ])
 
-  const webSocketUrl = `ws://192.168.1.27:8001/api/ws`
+  const webSocketUrl = `ws://192.168.1.27:8000/api/ws`
+  // const webSocketUrl = `ws://192.168.1.27:8000/api/ws`
   const ws = React.useRef(null)
 
   React.useEffect(() => {
@@ -70,10 +76,10 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     getsocketChartData()
   }, [])
 
-  React.useEffect(() => {
-    console.log(props.ChartShow)
-    console.log(props.TableShow)
-  }, [props])
+  // React.useEffect(() => {
+  //   console.log(props.ChartShow)
+  //   console.log(props.TableShow)
+  // }, [props])
 
   React.useEffect(() => {
     // console.log('changeWsData')
@@ -150,7 +156,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
           setHighPricePrevData(highTest)
           setHighTestData(highTest)
         }
-      } else {
+      } else if (props.CallData === 'DataTable') {
         let TableRowTest: any = []
         //console.log(WSTableRowDataPrev)
         if (WSTableRowDataPrev !== undefined) {
@@ -170,6 +176,42 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
           TableRowTest.push(WsData)
           setWSTableRowDataPrev(TableRowTest)
           setWSTableRowData(TableRowTest)
+        }
+      } else {
+        let multipleTest: any = []
+        if (MultiplePrevData !== undefined) {
+          if (MultiplePrevData.length !== 0) {
+            multipleTest = [...MultiplePrevData]
+          }
+        }
+        // console.log('[ Multiple Price Prev ---->>>>>> ]')
+        // console.log(MultiplePrevData)
+        // console.log(multipleTest)
+        // console.log(multipleTest.length)
+        if (multipleTest.length === 0) {
+          for (const i in WsData) {
+            multipleTest.unshift(WsData[i])
+          }
+
+          setMultiplePrevData(multipleTest)
+          setMultipleTestData(multipleTest)
+        } else {
+          // console.log(WsData)
+          for (const j in WsData) {
+            if (multipleTest.length < 200) {
+              // console.log('100보다 작음')
+              multipleTest.unshift(WsData[j])
+              setMultiplePrevData(multipleTest)
+              setMultipleTestData(multipleTest)
+            } else {
+              if (multipleTest.name === WsData[j]) {
+                multipleTest.unshift(WsData[j])
+                multipleTest.pop()
+                setMultiplePrevData(multipleTest)
+                setMultipleTestData(multipleTest)
+              }
+            }
+          }
         }
       }
     }
@@ -200,6 +242,12 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
   }, [HighTestData])
 
   React.useEffect(() => {
+    if (MultipleTestData.length !== 0) {
+      SocketChangeData(MultipleTestData)
+    }
+  }, [MultipleTestData])
+
+  React.useEffect(() => {
     const newArray = WSTableRowData.filter((item: any, i: any) => {
       return (
         WSTableRowData.findIndex((item2: any, j: any) => {
@@ -211,8 +259,16 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
   }, [WSTableRowData])
 
   const SocketChangeData = (t: any) => {
-    if (t[0].date !== undefined && t[0].value !== undefined) {
-      DrawD3LineChart(t)
+    if (props.CallData !== 'Opening & High & Low') {
+      if (t[0].date !== undefined && t[0].value !== undefined) {
+        DrawD3LineChart(t)
+      }
+    } else {
+      if (t[0].name !== undefined) {
+        console.log('draw chart data')
+        console.log(t)
+        DrawD3MultipleSeriesLineChart(t)
+      }
     }
   }
 
@@ -226,32 +282,56 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       console.log('[ ws Return Data ]')
       console.log(JSON.parse(event.data))
 
-      const parseData = JSON.parse(event.data)
-      const wsObj: any = new Object()
+      const parseData = JSON.parse(event.data)[0]
+      let wsObj: any = new Object()
+      const wsArr: any = []
+      const multipleKey = ['openingPrice', 'highPrice', 'lowPrice']
+      // const resultObj: any = new Object()
+      // const resultArr: any = []
 
-      console.log('[ call data type ] : ' + props.CallData)
+      // console.log('[ call data type ] : ' + props.CallData)
 
       if (props.CallData === 'TradePrice') {
-        wsObj.date = new Date(parseData[0].candleDateTimeKst)
-        wsObj.value = parseData[0].tradePrice
+        wsObj.date = new Date(parseData.candleDateTimeKst)
+        wsObj.value = parseData.tradePrice
       } else if (props.CallData === 'HighPrice') {
-        wsObj.date = new Date(parseData[0].candleDateTimeKst)
-        wsObj.value = parseData[0].highPrice
+        wsObj.date = new Date(parseData.candleDateTimeKst)
+        wsObj.value = parseData.highPrice
       } else if (props.CallData === 'LowPrice') {
-        wsObj.date = new Date(parseData[0].candleDateTimeKst)
-        wsObj.value = parseData[0].lowPrice
+        wsObj.date = new Date(parseData.candleDateTimeKst)
+        wsObj.value = parseData.lowPrice
       } else if (props.CallData === 'OpeningPrice') {
-        wsObj.date = new Date(parseData[0].candleDateTimeKst)
-        wsObj.value = parseData[0].openingPrice
+        wsObj.date = new Date(parseData.candleDateTimeKst)
+        wsObj.value = parseData.openingPrice
+      } else if (props.CallData === 'DataTable') {
+        wsObj.date = parseData.candleDateTimeKst.split('-')[2].substr(3, 8)
+        wsObj.tradeprice = parseData.tradePrice
+        wsObj.lowprice = parseData.lowPrice
+        wsObj.highprice = parseData.highPrice
+        wsObj.openingprice = parseData.openingPrice
       } else {
-        wsObj.date = parseData[0].candleDateTimeKst.split('-')[2].substr(3, 8)
-        wsObj.tradeprice = parseData[0].tradePrice
-        wsObj.lowprice = parseData[0].lowPrice
-        wsObj.highprice = parseData[0].highPrice
-        wsObj.openingprice = parseData[0].openingPrice
+        for (const j in multipleKey) {
+          wsObj.name = multipleKey[j]
+          wsObj.date = new Date(parseData['candleDateTimeKst'])
+          wsObj.value = parseData[multipleKey[j]]
+          wsArr.push(wsObj)
+          wsObj = new Object()
+        }
+
+        // for (const i in multipleKey) {
+        //   resultObj.name = multipleKey[i]
+        //   resultObj.value = wsArr[i]
+        //   resultArr.push(resultObj)
+        //   resultObj = new Object()
+        // }
       }
 
-      setWsData(wsObj)
+      if (props.CallData !== 'Opening & High & Low') {
+        setWsData(wsObj)
+      } else {
+        console.log(wsArr)
+        setWsData(wsArr)
+      }
     }
     ws.current.onclose = function () {
       console.log('ws close... ')
@@ -324,10 +404,11 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     let rtnData = data
 
     if (props.CallData !== 'TradePrice') {
+      rtnData = data
       rtnData.splice(rtnData.length - 300, rtnData.length - 100)
       // console.log('------------------------------')
       // console.log(rtnData)
-    } else {
+    } else if (props.CallData !== 'TradePrice' && props.CallData !== 'Opening & High & Low') {
       rtnData = data
     }
 
@@ -644,11 +725,200 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     // }
   }
 
+  const DrawD3MultipleSeriesLineChart = (data: any) => {
+    if (props.CallData === 'Opening & High & Low') {
+      const svg2 = d3.select(svgRef2.current)
+
+      const parseTime = d3.timeFormat('%H:%M:%S')
+      const parseDate = d3.timeParse('%H:%M:%S')
+
+      //redraw
+      svg2.selectAll('g').remove()
+      data.forEach((d: any) => {
+        d.date = parseDate(parseTime(d.date))
+        d.value = d.value
+      })
+
+      const Value = data.map((v: any) => {
+        return v.value
+      })
+
+      const max = Math.max.apply(null, Value)
+      const min = Math.min.apply(null, Value)
+
+      const margin = { top: 20, right: 50, bottom: 50, left: 70 },
+        width = props.widthSize - margin.left - margin.right,
+        height = props.heightSize - margin.top - margin.bottom
+
+      // append the svg object to the body of the page
+      svg2
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+        .append('g')
+        .attr('stroke', '#ffc709')
+        .attr('stroke-width', 1.5)
+        .attr('fill', 'none')
+
+      const sumstat = Array.from(
+        d3.group(data, (d: any) => d.name),
+        ([key, values]) => ({ key, values })
+      )
+      console.log('ArrayData :', sumstat)
+
+      // Add X axis --> it is a date format
+      const x: any = d3.scaleTime().range([0, width])
+      x.domain(
+        d3.extent(data, (d: any) => {
+          return d.date
+        })
+      )
+
+      // Add Y axis
+      const y: any = d3
+        .scaleLinear()
+        // .domain([
+        //   0,
+        //   d3.max(data, function (d: any) {
+        //     return +d
+        //   }),
+        // ])
+        .domain([min - 20, max + 20])
+        .range([height, 0])
+
+      //grid line 속성 style은 css
+      const xGrid = (g: any) =>
+        g
+          .attr('class', 'grid-lines')
+          .selectAll('line')
+          .data(x.ticks())
+          .join('line')
+          .attr('y1', 0)
+          .attr('y2', height)
+          .attr('x1', (d: any) => x(d) + 50)
+          .attr('x2', (d: any) => x(d) + 50)
+
+      const yGrid = (g: any) =>
+        g
+          .attr('class', 'grid-lines')
+          .selectAll('line')
+          .data(y.ticks())
+          .join('line')
+          .attr('x1', margin.top + 20)
+          .attr('x2', width + margin.left - 20)
+          .attr('y1', (d: any) => y(d - 0.1))
+          .attr('y2', (d: any) => y(d - 0.1))
+
+      const newArray = data.filter((item: any, i: any) => {
+        return (
+          data.findIndex((item2: any, j: any) => {
+            return item.date.toString() === item2.date.toString()
+          }) === i
+        )
+      })
+
+      const arr: any = []
+      for (let i = 0, len = newArray.length; i < len; i++) {
+        arr.push(newArray[i].date)
+      }
+
+      svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x).tickValues(arr))
+      svg2.append('g').attr('transform', `translate(40,3)`).call(d3.axisLeft(y))
+
+      //grid 그리기
+      svg2.append('g').call(xGrid)
+      svg2.append('g').call(yGrid)
+      svg2
+        .append('g')
+        .append('rect')
+        .attr('x', width / 4)
+        .attr('y', height + 40)
+        .attr('width', 4)
+        .attr('height', 2)
+        .style('fill', 'orange')
+      svg2
+        .append('g')
+        .append('text')
+        .attr('x', width / 4 + 8)
+        .attr('y', height + 40)
+        .text('low')
+        .style('font-size', '14px')
+        .attr('alignment-baseline', 'middle')
+      svg2
+        .append('g')
+        .append('rect')
+        .attr('x', width / 2)
+        .attr('y', height + 40)
+        .attr('width', 4)
+        .attr('height', 2)
+        .style('fill', 'purple')
+      svg2
+        .append('g')
+        .append('text')
+        .attr('x', width / 2 + 8)
+        .attr('y', height + 40)
+        .text('high')
+        .style('font-size', '14px')
+        .attr('alignment-baseline', 'middle')
+      svg2
+        .append('g')
+        .append('rect')
+        .attr('x', width / 1.5 + 15)
+        .attr('y', height + 40)
+        .attr('width', 4)
+        .attr('height', 2)
+        .style('fill', 'green')
+      svg2
+        .append('g')
+        .append('text')
+        .attr('x', width / 1.5 + 23)
+        .attr('y', height + 40)
+        .text('opening')
+        .style('font-size', '14px')
+        .attr('alignment-baseline', 'middle')
+
+      // color palette
+      const res: any = sumstat.map(function (d: any) {
+        return d.key
+      }) // list of group names
+
+      const color: any = d3.scaleOrdinal().domain(res).range(['orange', 'purple', 'green'])
+      // Draw the line
+      // console.log(sumstat)
+      svg2
+        .append('g')
+        .attr('clip-path', 'url(#clip)')
+        // .append('path')
+        .selectAll('.line')
+        .data(sumstat)
+        .enter()
+        .append('path')
+        .attr('transform', 'translate(50,0)')
+        .attr('fill', 'none')
+        .attr('stroke-width', 1.5)
+        .attr('stroke', function (d: any) {
+          return color(d.key)
+        })
+        .attr('stroke-width', 1.5)
+        .attr('d', function (d: any) {
+          return d3
+            .line()
+            .x(function (d: any) {
+              return x(d.date)
+            })
+            .y(function (d: any) {
+              return y(d.value)
+            })(d.values)
+        })
+    }
+  }
+
   //d3 line chart
   const getChartData = async () => {
     const data: any = await axios
       // .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData3?', ['Tag-34'])
-      .get('http://192.168.1.27:8001/api/websocket/data')
+      .get(process.env.REACT_APP_API_SERVER_URL + '/api/websocket/data')
       .then((response) => {
         // console.log('[ Chart response data ] : ')
         // console.log(response.data)
@@ -662,8 +932,11 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         } else if (props.CallData === 'LowPrice') {
           setLowPricePrevData([])
           DrawD3LineChartPrev()
-        } else {
+        } else if (props.CallData === 'HighPrice') {
           setHighPricePrevData([])
+          DrawD3LineChartPrev()
+        } else if (props.CallData === 'Opening & High & Low') {
+          setMultiplePrevData([])
           DrawD3LineChartPrev()
         }
 

@@ -1,5 +1,5 @@
 import { Icon } from '@chakra-ui/react'
-import { MdDashboard, MdDatasetLinked, MdSettings, MdOutlineModelTraining } from 'react-icons/md'
+import { MdDashboard, MdDatasetLinked, MdSettings, MdOutlineModelTraining, MdDisplaySettings } from 'react-icons/md'
 import { ImDatabase } from 'react-icons/im'
 import { BsHammer } from 'react-icons/bs'
 import { FaHourglassHalf } from 'react-icons/fa'
@@ -57,13 +57,14 @@ const routes = [
   //   icon: <Icon as={MdDatasetLinked} width="20px" height="20px" color="inherit" />,
   //   component: FoundationStructureAnalysis,
   // },
-  {
-    name: 'HMID',
-    layout: '/admin',
-    path: '/maindashboard',
-    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
-    component: MainDashboard,
-  },
+  //잠시 주석
+  // {
+  //   name: 'HMID',
+  //   layout: '/admin',
+  //   path: '/maindashboard',
+  //   icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+  //   component: MainDashboard,
+  // },
   // {
   //   name: 'ChartTest',
   //   layout: '/admin',
@@ -71,26 +72,34 @@ const routes = [
   //   icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
   //   component: ChartTest,
   // },
+  // 잠시 주석
   {
-    name: 'HMID-WS',
+    name: 'MainDashboard-WS',
     layout: '/admin',
-    path: '/layout-list',
+    path: '/hmid-ws',
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
-    component: LayoutList,
+    component: MainDashboard,
   },
   {
-    name: 'HMID-WS',
-    layout: '/admin',
-    path: '/layout-configuration',
-    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
-    component: DashboardConfig,
-  },
-  {
-    name: 'HMID-Interval',
+    name: 'MainDashboard-Interval',
     layout: '/admin',
     path: '/hmid-interval',
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: HmidInterval,
+  },
+  {
+    name: 'HMID Configuration',
+    layout: '/admin',
+    path: '/layout-list',
+    icon: <Icon as={MdDisplaySettings} width="20px" height="20px" color="white" />,
+    component: LayoutList,
+  },
+  {
+    name: 'HMID Configuration',
+    layout: '/admin',
+    path: '/layout-configuration',
+    icon: <Icon as={MdDisplaySettings} width="20px" height="20px" color="white" />,
+    component: DashboardConfig,
   },
   {
     name: 'Model Maintenance',
