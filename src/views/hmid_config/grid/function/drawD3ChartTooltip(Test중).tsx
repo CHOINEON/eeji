@@ -62,7 +62,7 @@ export const D3LineChartTooltip: React.FC<LineChartPorps> = (props) => {
     { field: 'openingprice', headerName: 'OpeningPrice', editable: false },
   ])
 
-  const webSocketUrl = `ws://192.168.1.27:8001/api/ws`
+  const webSocketUrl = `ws://192.168.1.27:8000/api/ws`
   const ws = React.useRef(null)
 
   React.useEffect(() => {
@@ -681,7 +681,7 @@ export const D3LineChartTooltip: React.FC<LineChartPorps> = (props) => {
   const getChartData = async () => {
     const data: any = await axios
       // .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData3?', ['Tag-34'])
-      .get('http://192.168.1.27:8001/api/websocket/data')
+      .get('http://192.168.1.27:8000/api/websocket/data')
       .then((response) => {
         // console.log('[ Chart response data ] : ')
         // console.log(response.data)

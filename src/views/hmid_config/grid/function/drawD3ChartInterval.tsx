@@ -122,7 +122,7 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
 
   //Interval Data
   const getIntervalData = (date: string) => {
-    axios.get('http://192.168.1.27:8001/api/websocket/interval?from_date=' + date).then((response) => {
+    axios.get(process.env.REACT_APP_API_SERVER_URL + '/api/websocket/interval?from_date=' + date).then((response) => {
       console.log('Interval Chart Data')
       console.log(response.data)
 
@@ -370,7 +370,7 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
   const getChartData = async () => {
     const data: any = await axios
       // .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData3?', ['Tag-34'])
-      .get('http://192.168.1.27:8001/api/websocket/data')
+      .get(process.env.REACT_APP_API_SERVER_URL + '/api/websocket/data')
       .then((response) => {
         console.log('[ Chart response data ] : ')
         console.log(response.data)

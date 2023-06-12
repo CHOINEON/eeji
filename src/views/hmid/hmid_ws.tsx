@@ -10,40 +10,40 @@ import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 import axios from 'axios'
 import styled from '@emotion/styled'
-import '../style/style.css'
+import '../hmid_config/style/style.css'
 import 'ag-grid-community/styles/ag-grid.css'
 import { Spin } from 'antd'
-import '../../hmid/components/Modal/style/style.css'
+import './components/Modal/style/style.css'
 
 import { AgGridReact } from 'ag-grid-react'
 import { ColDef } from 'ag-grid-community'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
-import { panelData } from '../data/panel-data'
+import { panelData } from '../hmid_config/data/panel-data'
 import Plot from 'react-plotly.js'
 import * as d3 from 'd3'
 
-import WidgetModal from '../../hmid/components/Modal/WidgetModal'
-import SaveConfirmModal from '../../hmid/components/Modal/SaveConfirm'
-import LayoutModal from '../../hmid/components/Modal/LayoutListModal'
-import DataConnection from '../../hmid/components/Modal/DataConnection'
-import { Alert } from '../../hmid/components/Modal/Alert'
+import WidgetModal from './components/Modal/WidgetModal'
+import SaveConfirmModal from './components/Modal/SaveConfirm'
+import LayoutModal from './components/Modal/LayoutListModal'
+import DataConnection from './components/Modal/DataConnection'
+import { Alert } from './components/Modal/Alert'
 
 import * as ReactIcon from 'react-icons/md'
 import * as Chakra from '@chakra-ui/react'
 import * as ej2 from '@syncfusion/ej2-react-layouts'
-import * as 그리기함수 from './function/차트그리기함수'
-import * as 가공함수 from './function/차트데이터가공함수'
-import * as 이미지저장함수 from './function/캡쳐이미지저장함수'
+import * as 그리기함수 from '../hmid_config/grid/function/차트그리기함수'
+// import * as 가공함수 from '../hmid_config/function/차트데이터가공함수'
+// import * as 이미지저장함수 from '../hmid_config/function/캡쳐이미지저장함수'
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import * as RecoilAtoms from '../recoil/config/atoms'
-import * as RecoilLineAtoms from '../recoil/line/atoms'
-import * as RecoilTimeSeriesAtoms from '../recoil/timeseries/atoms'
+import * as RecoilAtoms from '../hmid_config/recoil/config/atoms'
+import * as RecoilLineAtoms from '../hmid_config/recoil/line/atoms'
+import * as RecoilTimeSeriesAtoms from '../hmid_config/recoil/timeseries/atoms'
 // import { GridDataObjSelector } from '../recoil/config/selector'
-import { CompanyId, LayoutTitle, NowDate, WsDataTest } from '../recoil/base/atoms'
+import { CompanyId, LayoutTitle, NowDate, WsDataTest } from '../hmid_config/recoil/base/atoms'
 
-import D3LineChart from './function/drawD3Chart'
-import D3LineChartTooltip from './function/drawD3ChartTooltip(Test중)'
+import D3LineChart from '../hmid_config/grid/function/drawD3Chart'
+import D3LineChartTooltip from '../hmid_config/grid/function/drawD3ChartTooltip(Test중)'
 
 const DataGridWrap = styled.div`
   width: 100%;
@@ -63,6 +63,7 @@ const CurrentText = styled.div`
   font-size: 1vw;
   font-weight: 500;
   padding-right: 1vw;
+  margin-bottom: 1vw;
 `
 
 const CurrentIcon = styled.div`
@@ -72,7 +73,7 @@ const CurrentIcon = styled.div`
   color: rgb(67, 56, 247);
 `
 
-export const PredefinedLayouts: React.FC = () => {
+export const MainDashboardWS: React.FC = () => {
   //atom
   const setShowWidgetModal = useSetRecoilState(RecoilAtoms.ShowWidgetModalState)
   const [LineDataOption, setLineDataOption] = useRecoilState(RecoilLineAtoms.LineChartDataOptionState)
@@ -437,13 +438,22 @@ export const PredefinedLayouts: React.FC = () => {
         const data = (
           <>
             <BoxTitle>Trade Price</BoxTitle>
-            <D3LineChartTooltip
+            {/* <D3LineChartTooltip
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'TradePrice'}
               Color={'steelblue'}
               ChartShow={true}
               TableShow={false}
+            /> */}
+            <D3LineChart
+              widthSize={node.clientWidth}
+              heightSize={node.clientHeight}
+              CallData={'TradePrice'}
+              Color={'steelblue'}
+              ChartShow={true}
+              TableShow={false}
+              Multiple={false}
             />
           </>
         )
@@ -457,14 +467,15 @@ export const PredefinedLayouts: React.FC = () => {
         const data = (
           <>
             <BoxTitle>Opening Price</BoxTitle>
-            {/* <D3LineChart
+            <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'OpeningPrice'}
               Color={'green'}
               ChartShow={true}
               TableShow={false}
-            /> */}
+              Multiple={false}
+            />
           </>
         )
         ReactDOM.render(data, node)
@@ -477,14 +488,15 @@ export const PredefinedLayouts: React.FC = () => {
         const data = (
           <>
             <BoxTitle>Low Price</BoxTitle>
-            {/* <D3LineChart
+            <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'LowPrice'}
               Color={'orange'}
               ChartShow={true}
               TableShow={false}
-            /> */}
+              Multiple={false}
+            />
           </>
         )
         ReactDOM.render(data, node)
@@ -497,14 +509,15 @@ export const PredefinedLayouts: React.FC = () => {
         const data = (
           <>
             <BoxTitle>High Price</BoxTitle>
-            {/* <D3LineChart
+            <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'HighPrice'}
               Color={'purple'}
               ChartShow={true}
               TableShow={false}
-            /> */}
+              Multiple={false}
+            />
           </>
         )
         ReactDOM.render(data, node)
@@ -514,6 +527,20 @@ export const PredefinedLayouts: React.FC = () => {
         //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.BarChartLayoutOptionState))
         // })
       } else if (panel[j].widget === 'Line5') {
+        const data = (
+          <>
+            <BoxTitle>Opening & High & Low</BoxTitle>
+            <D3LineChart
+              widthSize={node.clientWidth}
+              heightSize={node.clientHeight}
+              CallData={'Opening & High & Low'}
+              Color={'purple'}
+              ChartShow={true}
+              TableShow={false}
+              Multiple={true}
+            />
+          </>
+        )
         // const data = (
         //   <D3LineChart
         //     widthSize={node.clientWidth}
@@ -522,7 +549,7 @@ export const PredefinedLayouts: React.FC = () => {
         //     CallData={'candleAccTradePriceVolume'}
         //   />
         // )
-        // ReactDOM.render(data, node)
+        ReactDOM.render(data, node)
         //setWidgetInfo('Bar')
         // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
         // result.then(function (args: any) {
@@ -562,14 +589,15 @@ export const PredefinedLayouts: React.FC = () => {
         const data = (
           <>
             <BoxTitle>All Data</BoxTitle>
-            {/* <D3LineChart
+            <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'DataTable'}
               Color={'none'}
               ChartShow={false}
               TableShow={true}
-            /> */}
+              Multiple={false}
+            />
             {/* <RealTimeDataTable Calltype={'WS'} /> */}
           </>
         )
@@ -711,10 +739,7 @@ export const PredefinedLayouts: React.FC = () => {
         sizeX: panel[i].sizeX,
         sizeY: panel[i].sizeY,
         header: `
-        <div class="e-header-text">
-          <button class="widget-setting-btn"></button>
-          <button class="connection-chart-data"></button>
-        </div>
+        <div class="e-header-text"></div>
         <div class="header-border"></div>`,
         content: '<div class="panel-content ${dashboardBoxColor}">Content Area</div>',
       }
@@ -836,44 +861,44 @@ export const PredefinedLayouts: React.FC = () => {
   }
 
   // save시 저장할 tag list parameter
-  const getWidgetSelectTagList = (WidgetType: string, id: string) => {
-    let tag_list_result: any = []
+  // const getWidgetSelectTagList = (WidgetType: string, id: string) => {
+  //   let tag_list_result: any = []
 
-    if (window.localStorage.getItem('SelectedDashboardInfo') !== 'new') {
-      for (let i = 0, len = SaveTagDataList.length; i < len; i++) {
-        if (WidgetType === SaveTagDataList[i].type) {
-          for (let k = 0, len = SaveTagDataList[i].tag_data.length; k < len; k++) {
-            if (SaveTagDataList[i].tag_data[k].length != 0) {
-              if (SaveTagDataList[i].tag_data[k][0].id.split('_')[0] === id) {
-                tag_list_result = SaveTagDataList[i].tag_data[k][0].tag_list
-              } else {
-                const prev_data: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
-                for (let j = 0, len = prev_data.data.length; j < len; j++) {
-                  if (prev_data.data[j].grid_index === id) {
-                    tag_list_result = prev_data.data[j]
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    } else {
-      for (let i = 0, len = SaveTagDataList.length; i < len; i++) {
-        if (WidgetType === SaveTagDataList[i].type) {
-          for (let k = 0, len = SaveTagDataList[i].tag_data.length; k < len; k++) {
-            if (SaveTagDataList[i].tag_data[k].length != 0) {
-              if (SaveTagDataList[i].tag_data[k][0].id.split('_')[0] === id) {
-                tag_list_result = SaveTagDataList[i].tag_data[k][0].tag_list
-              }
-            }
-          }
-        }
-      }
-    }
+  //   if (window.localStorage.getItem('SelectedDashboardInfo') !== 'new') {
+  //     for (let i = 0, len = SaveTagDataList.length; i < len; i++) {
+  //       if (WidgetType === SaveTagDataList[i].type) {
+  //         for (let k = 0, len = SaveTagDataList[i].tag_data.length; k < len; k++) {
+  //           if (SaveTagDataList[i].tag_data[k].length != 0) {
+  //             if (SaveTagDataList[i].tag_data[k][0].id.split('_')[0] === id) {
+  //               tag_list_result = SaveTagDataList[i].tag_data[k][0].tag_list
+  //             } else {
+  //               const prev_data: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
+  //               for (let j = 0, len = prev_data.data.length; j < len; j++) {
+  //                 if (prev_data.data[j].grid_index === id) {
+  //                   tag_list_result = prev_data.data[j]
+  //                 }
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   } else {
+  //     for (let i = 0, len = SaveTagDataList.length; i < len; i++) {
+  //       if (WidgetType === SaveTagDataList[i].type) {
+  //         for (let k = 0, len = SaveTagDataList[i].tag_data.length; k < len; k++) {
+  //           if (SaveTagDataList[i].tag_data[k].length != 0) {
+  //             if (SaveTagDataList[i].tag_data[k][0].id.split('_')[0] === id) {
+  //               tag_list_result = SaveTagDataList[i].tag_data[k][0].tag_list
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
 
-    return tag_list_result
-  }
+  //   return tag_list_result
+  // }
 
   const getDataBySelctedCompany = (company: string, TagList: any, WidgetInfo: string, BoxTargetId: string) => {
     if (company === 'Dongwon') {
@@ -1108,95 +1133,95 @@ export const PredefinedLayouts: React.FC = () => {
   }
 
   //layoutlist api 연결
-  const getLayoutList = () => {
-    axios
-      .get(
-        process.env.REACT_APP_API_SERVER_URL +
-          '/api/hmid/layout?company_id=' +
-          window.localStorage.getItem('companyId'),
-        {
-          headers: {
-            Accept: '*/*',
-            'Content-Type': 'application/x-www-form-urlencoded;',
-          },
-          timeout: 500000,
-        }
-      )
-      .then((response) => {
-        console.log('[ get Layout List axios response data ] : ')
-        console.log(response.data)
+  // const getLayoutList = () => {
+  //   axios
+  //     .get(
+  //       process.env.REACT_APP_API_SERVER_URL +
+  //         '/api/hmid/layout?company_id=' +
+  //         window.localStorage.getItem('companyId'),
+  //       {
+  //         headers: {
+  //           Accept: '*/*',
+  //           'Content-Type': 'application/x-www-form-urlencoded;',
+  //         },
+  //         timeout: 500000,
+  //       }
+  //     )
+  //     .then((response) => {
+  //       console.log('[ get Layout List axios response data ] : ')
+  //       console.log(response.data)
 
-        이미지저장함수.SaveLayoutImage(response.data[Number(response.data.length) - 1].lay_id)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
+  //       이미지저장함수.SaveLayoutImage(response.data[Number(response.data.length) - 1].lay_id)
+  //     })
+  //     .catch((error) => {
+  //       console.log(error)
+  //     })
+  // }
 
   /**
    * 2023-04-21
    * 박윤희
    * 대시보드 저장
    */
-  const SaveDashboard = (args: any) => {
-    let params: any = new Object()
+  // const SaveDashboard = (args: any) => {
+  //   let params: any = new Object()
 
-    if (window.localStorage.getItem('SelectedDashboardInfo') === 'new') {
-      params = {
-        com_id: localStorage.getItem('companyId'),
-        // lay_id: Number(window.localStorage.getItem('layout_id')) + 1,
-        lay_name: layoutTitle,
-        grid_id: panelIdx.toString(),
-        data: args,
-      }
+  //   if (window.localStorage.getItem('SelectedDashboardInfo') === 'new') {
+  //     params = {
+  //       com_id: localStorage.getItem('companyId'),
+  //       // lay_id: Number(window.localStorage.getItem('layout_id')) + 1,
+  //       lay_name: layoutTitle,
+  //       grid_id: panelIdx.toString(),
+  //       data: args,
+  //     }
 
-      axios
-        .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout', params)
-        .then((response) => {
-          console.log('[ SaveDashboard Response Data ] : ')
-          console.log(response.data)
+  //     axios
+  //       .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout', params)
+  //       .then((response) => {
+  //         console.log('[ SaveDashboard Response Data ] : ')
+  //         console.log(response.data)
 
-          if (response.data.detail === 'success') {
-            setAlertMessage('레이아웃 저장이 완료 되었습니다.')
-            setShowAlertModal(true)
+  //         if (response.data.detail === 'success') {
+  //           setAlertMessage('레이아웃 저장이 완료 되었습니다.')
+  //           setShowAlertModal(true)
 
-            getLayoutList()
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-          setAlertMessage('저장 오류. 관리자에게 문의 바랍니다.')
-          setShowAlertModal(true)
-        })
-    } else {
-      params = {
-        com_id: localStorage.getItem('companyId'),
-        lay_id: Number(window.localStorage.getItem('layout_id')),
-        lay_name: layoutTitle,
-        grid_id: panelIdx.toString(),
-        data: args,
-      }
+  //           getLayoutList()
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.log(error)
+  //         setAlertMessage('저장 오류. 관리자에게 문의 바랍니다.')
+  //         setShowAlertModal(true)
+  //       })
+  //   } else {
+  //     params = {
+  //       com_id: localStorage.getItem('companyId'),
+  //       lay_id: Number(window.localStorage.getItem('layout_id')),
+  //       lay_name: layoutTitle,
+  //       grid_id: panelIdx.toString(),
+  //       data: args,
+  //     }
 
-      axios
-        .put(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout', params)
-        .then((response) => {
-          console.log('[ Update Dashboard Response Data ] : ')
-          console.log(response.data)
+  //     axios
+  //       .put(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout', params)
+  //       .then((response) => {
+  //         console.log('[ Update Dashboard Response Data ] : ')
+  //         console.log(response.data)
 
-          if (response.data.detail === 'success') {
-            setAlertMessage('레이아웃 업데이트가 완료 되었습니다.')
-            setShowAlertModal(true)
+  //         if (response.data.detail === 'success') {
+  //           setAlertMessage('레이아웃 업데이트가 완료 되었습니다.')
+  //           setShowAlertModal(true)
 
-            이미지저장함수.SaveLayoutImage(Number(window.localStorage.getItem('layout_id')))
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-          setAlertMessage('업데이트 오류. 관리자에게 문의바랍니다.')
-          setShowAlertModal(true)
-        })
-    }
-  }
+  //           이미지저장함수.SaveLayoutImage(Number(window.localStorage.getItem('layout_id')))
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.log(error)
+  //         setAlertMessage('업데이트 오류. 관리자에게 문의바랍니다.')
+  //         setShowAlertModal(true)
+  //       })
+  //   }
+  // }
 
   /**
    *
@@ -1204,338 +1229,338 @@ export const PredefinedLayouts: React.FC = () => {
    * 레이아웃 저장
    *
    */
-  const getSaveLayoutInfo = (SaveInfo: string) => {
-    if (SaveInfo === 'unSave') {
-      setOpenSaveLayoutModal(false)
-    } else {
-      if (window.localStorage.getItem('SelectedDashboardInfo') === 'new') {
-        let company_nm: any = window.localStorage.getItem('company_info')
-        company_nm = JSON.parse(company_nm)
+  // const getSaveLayoutInfo = (SaveInfo: string) => {
+  //   if (SaveInfo === 'unSave') {
+  //     setOpenSaveLayoutModal(false)
+  //   } else {
+  //     if (window.localStorage.getItem('SelectedDashboardInfo') === 'new') {
+  //       let company_nm: any = window.localStorage.getItem('company_info')
+  //       company_nm = JSON.parse(company_nm)
 
-        setOpenSaveLayoutModal(false)
-        //capture
+  //       setOpenSaveLayoutModal(false)
+  //       //capture
 
-        let grid_obj: any = new Object()
-        const grid_arr: any = []
+  //       let grid_obj: any = new Object()
+  //       const grid_arr: any = []
 
-        if (dashboardObj !== undefined) {
-          const data: any = dashboardObj
+  //       if (dashboardObj !== undefined) {
+  //         const data: any = dashboardObj
 
-          for (let i = 0, len = dashboardObj.element.children.length; i < len; i++) {
-            if (dashboardObj.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0] !== undefined) {
-              grid_obj.grid_index = Number(dashboardObj.element.children[i].id)
+  //         for (let i = 0, len = dashboardObj.element.children.length; i < len; i++) {
+  //           if (dashboardObj.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0] !== undefined) {
+  //             grid_obj.grid_index = Number(dashboardObj.element.children[i].id)
 
-              if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout !== undefined) {
-                if (
-                  data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis.rangeslider !==
-                  undefined
-                ) {
-                  if (
-                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis.rangeslider
-                      .autorange === true
-                  ) {
-                    grid_obj.widget_type = 'TimeSeries'
-                    const input_element: any = document.querySelector('#input' + i)
-                    grid_obj.grid_nm = input_element.value
-                    grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
-                    grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+  //             if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout !== undefined) {
+  //               if (
+  //                 data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis.rangeslider !==
+  //                 undefined
+  //               ) {
+  //                 if (
+  //                   data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis.rangeslider
+  //                     .autorange === true
+  //                 ) {
+  //                   grid_obj.widget_type = 'TimeSeries'
+  //                   const input_element: any = document.querySelector('#input' + i)
+  //                   grid_obj.grid_nm = input_element.value
+  //                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+  //                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
 
-                    const ChartDataOption: any =
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+  //                   const ChartDataOption: any =
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
 
-                    for (const i in ChartDataOption) {
-                      for (const j in ChartDataOption[i]) {
-                        if (j === 'x') {
-                          delete ChartDataOption[i].x
-                        }
-                        if (j === 'y') {
-                          delete ChartDataOption[i].y
-                        }
-                        if (j === 'text') {
-                          delete ChartDataOption[i].text
-                        }
-                      }
-                    }
+  //                   for (const i in ChartDataOption) {
+  //                     for (const j in ChartDataOption[i]) {
+  //                       if (j === 'x') {
+  //                         delete ChartDataOption[i].x
+  //                       }
+  //                       if (j === 'y') {
+  //                         delete ChartDataOption[i].y
+  //                       }
+  //                       if (j === 'text') {
+  //                         delete ChartDataOption[i].text
+  //                       }
+  //                     }
+  //                   }
 
-                    grid_obj.data_option = JSON.stringify(ChartDataOption)
-                    grid_obj.layout_option = JSON.stringify([
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
-                    ])
+  //                   grid_obj.data_option = JSON.stringify(ChartDataOption)
+  //                   grid_obj.layout_option = JSON.stringify([
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
+  //                   ])
 
-                    grid_obj.tag_list = getWidgetSelectTagList('Time Series', data.element.childNodes[i].id)
-                  }
-                } else {
-                  if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'bar') {
-                    grid_obj.widget_type = 'Bar'
-                    const input_element: any = document.querySelector('#input' + i)
-                    grid_obj.grid_nm = input_element.value
-                    grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
-                    grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+  //                   grid_obj.tag_list = getWidgetSelectTagList('Time Series', data.element.childNodes[i].id)
+  //                 }
+  //               } else {
+  //                 if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'bar') {
+  //                   grid_obj.widget_type = 'Bar'
+  //                   const input_element: any = document.querySelector('#input' + i)
+  //                   grid_obj.grid_nm = input_element.value
+  //                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+  //                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
 
-                    const BarChartDataOption: any =
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+  //                   const BarChartDataOption: any =
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
 
-                    for (let i = 0, len = BarChartDataOption.length; i < len; i++) {
-                      delete BarChartDataOption[i].x
-                      delete BarChartDataOption[i].y
-                    }
+  //                   for (let i = 0, len = BarChartDataOption.length; i < len; i++) {
+  //                     delete BarChartDataOption[i].x
+  //                     delete BarChartDataOption[i].y
+  //                   }
 
-                    grid_obj.data_option = JSON.stringify(BarChartDataOption)
-                    grid_obj.layout_option = JSON.stringify([
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
-                    ])
+  //                   grid_obj.data_option = JSON.stringify(BarChartDataOption)
+  //                   grid_obj.layout_option = JSON.stringify([
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
+  //                   ])
 
-                    grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
-                  } else if (
-                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'pie'
-                  ) {
-                    grid_obj.widget_type = 'Pie'
-                    const input_element: any = document.querySelector('#input' + i)
-                    grid_obj.grid_nm = input_element.value
-                    grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
-                    grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+  //                   grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
+  //                 } else if (
+  //                   data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'pie'
+  //                 ) {
+  //                   grid_obj.widget_type = 'Pie'
+  //                   const input_element: any = document.querySelector('#input' + i)
+  //                   grid_obj.grid_nm = input_element.value
+  //                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+  //                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
 
-                    const PieChartDataOption: any =
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
-                    delete PieChartDataOption[0].values
-                    delete PieChartDataOption[0].labels
+  //                   const PieChartDataOption: any =
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+  //                   delete PieChartDataOption[0].values
+  //                   delete PieChartDataOption[0].labels
 
-                    grid_obj.data_option = JSON.stringify(PieChartDataOption)
-                    grid_obj.layout_option = JSON.stringify([
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
-                    ])
+  //                   grid_obj.data_option = JSON.stringify(PieChartDataOption)
+  //                   grid_obj.layout_option = JSON.stringify([
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
+  //                   ])
 
-                    grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
-                  } else if (
-                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'scatter'
-                  ) {
-                    grid_obj.widget_type = 'Line'
-                    const input_element: any = document.querySelector('#input' + i)
-                    grid_obj.grid_nm = input_element.value
-                    grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
-                    grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+  //                   grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
+  //                 } else if (
+  //                   data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'scatter'
+  //                 ) {
+  //                   grid_obj.widget_type = 'Line'
+  //                   const input_element: any = document.querySelector('#input' + i)
+  //                   grid_obj.grid_nm = input_element.value
+  //                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+  //                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
 
-                    const LineChartDataOption: any =
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+  //                   const LineChartDataOption: any =
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
 
-                    for (let i = 0, len = LineChartDataOption.length; i < len; i++) {
-                      delete LineChartDataOption[i].x
-                      delete LineChartDataOption[i].y
-                    }
+  //                   for (let i = 0, len = LineChartDataOption.length; i < len; i++) {
+  //                     delete LineChartDataOption[i].x
+  //                     delete LineChartDataOption[i].y
+  //                   }
 
-                    grid_obj.data_option = JSON.stringify(LineChartDataOption)
-                    grid_obj.layout_option = JSON.stringify([
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
-                    ])
+  //                   grid_obj.data_option = JSON.stringify(LineChartDataOption)
+  //                   grid_obj.layout_option = JSON.stringify([
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
+  //                   ])
 
-                    grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
-                  }
-                }
-              } else {
-                grid_obj.widget_type = 'Table'
-                const input_element: any = document.querySelector('#input' + i)
-                grid_obj.grid_nm = input_element.value
-                grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
-                grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
-                grid_obj.layout_option = []
-                grid_obj.data_option = []
-                grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
-              }
+  //                   grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
+  //                 }
+  //               }
+  //             } else {
+  //               grid_obj.widget_type = 'Table'
+  //               const input_element: any = document.querySelector('#input' + i)
+  //               grid_obj.grid_nm = input_element.value
+  //               grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+  //               grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+  //               grid_obj.layout_option = []
+  //               grid_obj.data_option = []
+  //               grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
+  //             }
 
-              grid_arr.push(grid_obj)
-              grid_obj = new Object()
-            }
-          }
-          setOpenSaveLayoutModal(false)
+  //             grid_arr.push(grid_obj)
+  //             grid_obj = new Object()
+  //           }
+  //         }
+  //         setOpenSaveLayoutModal(false)
 
-          SaveDashboard(grid_arr)
-        }
-      } else {
-        let grid_obj: any = new Object()
-        const grid_arr: any = []
-        const data: any = dashboardObj
+  //         SaveDashboard(grid_arr)
+  //       }
+  //     } else {
+  //       let grid_obj: any = new Object()
+  //       const grid_arr: any = []
+  //       const data: any = dashboardObj
 
-        for (let i = 0, len = dashboardObj.element.children.length; i < len; i++) {
-          if (dashboardObj.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0] !== undefined) {
-            grid_obj.grid_index = Number(dashboardObj.element.children[i].id)
+  //       for (let i = 0, len = dashboardObj.element.children.length; i < len; i++) {
+  //         if (dashboardObj.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0] !== undefined) {
+  //           grid_obj.grid_index = Number(dashboardObj.element.children[i].id)
 
-            if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout !== undefined) {
-              if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis !== undefined) {
-                if (
-                  data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis.rangeslider !==
-                  undefined
-                ) {
-                  if (
-                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis.rangeslider
-                      .autorange === true
-                  ) {
-                    grid_obj.widget_type = 'TimeSeries'
-                    const input_element: any = document.querySelector('#input' + i)
-                    grid_obj.grid_nm = input_element.value
-                    grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
-                    grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+  //           if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout !== undefined) {
+  //             if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis !== undefined) {
+  //               if (
+  //                 data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis.rangeslider !==
+  //                 undefined
+  //               ) {
+  //                 if (
+  //                   data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout.xaxis.rangeslider
+  //                     .autorange === true
+  //                 ) {
+  //                   grid_obj.widget_type = 'TimeSeries'
+  //                   const input_element: any = document.querySelector('#input' + i)
+  //                   grid_obj.grid_nm = input_element.value
+  //                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+  //                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
 
-                    const ChartDataOption: any =
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+  //                   const ChartDataOption: any =
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
 
-                    for (const i in ChartDataOption) {
-                      for (const j in ChartDataOption[i]) {
-                        if (j === 'x') {
-                          delete ChartDataOption[i].x
-                        }
-                        if (j === 'y') {
-                          delete ChartDataOption[i].y
-                        }
-                        if (j === 'text') {
-                          delete ChartDataOption[i].text
-                        }
-                      }
-                    }
+  //                   for (const i in ChartDataOption) {
+  //                     for (const j in ChartDataOption[i]) {
+  //                       if (j === 'x') {
+  //                         delete ChartDataOption[i].x
+  //                       }
+  //                       if (j === 'y') {
+  //                         delete ChartDataOption[i].y
+  //                       }
+  //                       if (j === 'text') {
+  //                         delete ChartDataOption[i].text
+  //                       }
+  //                     }
+  //                   }
 
-                    grid_obj.data_option = JSON.stringify(ChartDataOption)
-                    grid_obj.layout_option = JSON.stringify([
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
-                    ])
+  //                   grid_obj.data_option = JSON.stringify(ChartDataOption)
+  //                   grid_obj.layout_option = JSON.stringify([
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
+  //                   ])
 
-                    const tag_arr: any = []
-                    for (let i = 0, len = ChartDataOption.length; i < len; i++) {
-                      tag_arr.push(ChartDataOption[i].name)
-                    }
+  //                   const tag_arr: any = []
+  //                   for (let i = 0, len = ChartDataOption.length; i < len; i++) {
+  //                     tag_arr.push(ChartDataOption[i].name)
+  //                   }
 
-                    grid_obj.tag_list = tag_arr
-                    // grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
-                  }
-                } else {
-                  if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'bar') {
-                    grid_obj.widget_type = 'Bar'
-                    const input_element: any = document.querySelector('#input' + i)
-                    grid_obj.grid_nm = input_element.value
-                    grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
-                    grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+  //                   grid_obj.tag_list = tag_arr
+  //                   // grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
+  //                 }
+  //               } else {
+  //                 if (data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'bar') {
+  //                   grid_obj.widget_type = 'Bar'
+  //                   const input_element: any = document.querySelector('#input' + i)
+  //                   grid_obj.grid_nm = input_element.value
+  //                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+  //                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
 
-                    const BarChartDataOption: any =
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+  //                   const BarChartDataOption: any =
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
 
-                    const tag_arr: any = []
-                    for (let i = 0, len = BarChartDataOption.length; i < len; i++) {
-                      for (let j = 0, len = BarChartDataOption[i].x.length; j < len; j++) {
-                        tag_arr.push(BarChartDataOption[i].x[j])
-                      }
-                    }
-                    grid_obj.tag_list = tag_arr
+  //                   const tag_arr: any = []
+  //                   for (let i = 0, len = BarChartDataOption.length; i < len; i++) {
+  //                     for (let j = 0, len = BarChartDataOption[i].x.length; j < len; j++) {
+  //                       tag_arr.push(BarChartDataOption[i].x[j])
+  //                     }
+  //                   }
+  //                   grid_obj.tag_list = tag_arr
 
-                    for (let i = 0, len = BarChartDataOption.length; i < len; i++) {
-                      delete BarChartDataOption[i].x
-                      delete BarChartDataOption[i].y
-                    }
+  //                   for (let i = 0, len = BarChartDataOption.length; i < len; i++) {
+  //                     delete BarChartDataOption[i].x
+  //                     delete BarChartDataOption[i].y
+  //                   }
 
-                    grid_obj.data_option = JSON.stringify(BarChartDataOption)
-                    grid_obj.layout_option = JSON.stringify([
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
-                    ])
+  //                   grid_obj.data_option = JSON.stringify(BarChartDataOption)
+  //                   grid_obj.layout_option = JSON.stringify([
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
+  //                   ])
 
-                    // grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
-                  } else if (
-                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'pie'
-                  ) {
-                    grid_obj.widget_type = 'Pie'
-                    const input_element: any = document.querySelector('#input' + i)
-                    grid_obj.grid_nm = input_element.value
-                    grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
-                    grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+  //                   // grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
+  //                 } else if (
+  //                   data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'pie'
+  //                 ) {
+  //                   grid_obj.widget_type = 'Pie'
+  //                   const input_element: any = document.querySelector('#input' + i)
+  //                   grid_obj.grid_nm = input_element.value
+  //                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+  //                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
 
-                    const PieChartDataOption: any =
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+  //                   const PieChartDataOption: any =
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
 
-                    let tag_arr: any = []
-                    for (let i = 0, len = PieChartDataOption.length; i < len; i++) {
-                      tag_arr = PieChartDataOption[i].labels
-                    }
+  //                   let tag_arr: any = []
+  //                   for (let i = 0, len = PieChartDataOption.length; i < len; i++) {
+  //                     tag_arr = PieChartDataOption[i].labels
+  //                   }
 
-                    grid_obj.tag_list = tag_arr
+  //                   grid_obj.tag_list = tag_arr
 
-                    delete PieChartDataOption[0].values
-                    delete PieChartDataOption[0].labels
+  //                   delete PieChartDataOption[0].values
+  //                   delete PieChartDataOption[0].labels
 
-                    grid_obj.data_option = JSON.stringify(PieChartDataOption)
-                    grid_obj.layout_option = JSON.stringify([
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
-                    ])
+  //                   grid_obj.data_option = JSON.stringify(PieChartDataOption)
+  //                   grid_obj.layout_option = JSON.stringify([
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
+  //                   ])
 
-                    //grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
-                  } else if (
-                    data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'scatter'
-                  ) {
-                    grid_obj.widget_type = 'Line'
-                    const input_element: any = document.querySelector('#input' + i)
-                    grid_obj.grid_nm = input_element.value
-                    grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
-                    grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+  //                   //grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
+  //                 } else if (
+  //                   data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'scatter'
+  //                 ) {
+  //                   grid_obj.widget_type = 'Line'
+  //                   const input_element: any = document.querySelector('#input' + i)
+  //                   grid_obj.grid_nm = input_element.value
+  //                   grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+  //                   grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
 
-                    const LineChartDataOption: any =
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
+  //                   const LineChartDataOption: any =
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data
 
-                    const tag_arr: any = []
-                    for (let i = 0, len = LineChartDataOption.length; i < len; i++) {
-                      tag_arr.push(LineChartDataOption[i].name)
-                    }
+  //                   const tag_arr: any = []
+  //                   for (let i = 0, len = LineChartDataOption.length; i < len; i++) {
+  //                     tag_arr.push(LineChartDataOption[i].name)
+  //                   }
 
-                    grid_obj.tag_list = tag_arr
+  //                   grid_obj.tag_list = tag_arr
 
-                    for (let i = 0, len = LineChartDataOption.length; i < len; i++) {
-                      delete LineChartDataOption[i].x
-                      delete LineChartDataOption[i].y
-                    }
+  //                   for (let i = 0, len = LineChartDataOption.length; i < len; i++) {
+  //                     delete LineChartDataOption[i].x
+  //                     delete LineChartDataOption[i].y
+  //                   }
 
-                    grid_obj.data_option = JSON.stringify(LineChartDataOption)
-                    grid_obj.layout_option = JSON.stringify([
-                      data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
-                    ])
+  //                   grid_obj.data_option = JSON.stringify(LineChartDataOption)
+  //                   grid_obj.layout_option = JSON.stringify([
+  //                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
+  //                   ])
 
-                    // grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
-                  }
-                }
+  //                   // grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
+  //                 }
+  //               }
 
-                // grid_arr.push(grid_obj)
-                // grid_obj = new Object()
-              }
-            } else {
-              grid_obj.widget_type = 'Table'
-              const input_element: any = document.querySelector('#input' + i)
-              grid_obj.grid_nm = input_element.value
-              grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
-              grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
-              grid_obj.layout_option = []
-              grid_obj.data_option = []
+  //               // grid_arr.push(grid_obj)
+  //               // grid_obj = new Object()
+  //             }
+  //           } else {
+  //             grid_obj.widget_type = 'Table'
+  //             const input_element: any = document.querySelector('#input' + i)
+  //             grid_obj.grid_nm = input_element.value
+  //             grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
+  //             grid_obj.height = data.element.childNodes[i].childNodes[0].childNodes[1].offsetHeight
+  //             grid_obj.layout_option = []
+  //             grid_obj.data_option = []
 
-              grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
+  //             grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
 
-              // grid_arr.push(grid_obj)
-              // grid_obj = new Object()
-            }
+  //             // grid_arr.push(grid_obj)
+  //             // grid_obj = new Object()
+  //           }
 
-            grid_arr.push(grid_obj)
-            grid_obj = new Object()
-          }
-        }
+  //           grid_arr.push(grid_obj)
+  //           grid_obj = new Object()
+  //         }
+  //       }
 
-        setOpenSaveLayoutModal(false)
+  //       setOpenSaveLayoutModal(false)
 
-        // const prev_data: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
-        // const state_data = SaveTagDataList
-        // for (let i = 0, len = prev_data.data.length; i < len; i++) {
-        //   if (prev_data.data[i].widget_type === prev_data.data[i].widget_type) {
-        //     for (let j = 0, len = SaveTagDataList.length; j < len; j++) {
-        //       if (SaveTagDataList[j].type === prev_data[i].widget_type) {
-        //         state_data[i].tag_list = prev_data.data[i].tag_list
-        //       }
-        //     }
-        //   }
-        // }
-        SaveDashboard(grid_arr)
-      }
-    }
-  }
+  //       // const prev_data: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
+  //       // const state_data = SaveTagDataList
+  //       // for (let i = 0, len = prev_data.data.length; i < len; i++) {
+  //       //   if (prev_data.data[i].widget_type === prev_data.data[i].widget_type) {
+  //       //     for (let j = 0, len = SaveTagDataList.length; j < len; j++) {
+  //       //       if (SaveTagDataList[j].type === prev_data[i].widget_type) {
+  //       //         state_data[i].tag_list = prev_data.data[i].tag_list
+  //       //       }
+  //       //     }
+  //       //   }
+  //       // }
+  //       SaveDashboard(grid_arr)
+  //     }
+  //   }
+  // }
 
   const currentDate = () => {
     let Now = ''
@@ -1565,9 +1590,9 @@ export const PredefinedLayouts: React.FC = () => {
       <WidgetModal />
       <DataConnection />
       <Alert />
-      <Chakra.Box style={{ position: 'relative', zIndex: 1000 }}>
-        {/* <Chakra.Stack direction="row" spacing={4} pl={3} display={'block'}>
-          <Chakra.Button
+      <Chakra.Box style={{ position: 'relative', zIndex: 1000, height: '1vw' }}>
+        {/* <Chakra.Stack direction="row" spacing={1} pl={3} display={'block'}> */}
+        {/* <Chakra.Button
             id="design_button"
             leftIcon={<ReactIcon.MdOutlineGridView />}
             variant="brand"
@@ -1610,12 +1635,12 @@ export const PredefinedLayouts: React.FC = () => {
             style={{ backgroundColor: '#4338F7', borderRadius: '100px' }}
           >
             Save
-          </Chakra.Button>
-          <CurrentText>{NowDateText}</CurrentText>
-          <CurrentIcon>
-            <ReactIcon.MdAccessTime />
-          </CurrentIcon>
-        </Chakra.Stack> */}
+          </Chakra.Button> */}
+        <CurrentText>{NowDateText}</CurrentText>
+        <CurrentIcon>
+          <ReactIcon.MdAccessTime />
+        </CurrentIcon>
+        {/* </Chakra.Stack> */}
       </Chakra.Box>
       <Spin tip="Loading" size="large" spinning={showLoading}>
         <div className="content" />
@@ -1647,4 +1672,4 @@ export const PredefinedLayouts: React.FC = () => {
     </>
   )
 }
-export default PredefinedLayouts
+export default MainDashboardWS
