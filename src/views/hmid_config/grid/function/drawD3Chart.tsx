@@ -67,7 +67,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     { field: 'openingprice', headerName: 'OpeningPrice', editable: false },
   ])
 
-  const webSocketUrl = `ws://192.168.1.27:8000/api/ws`
+  const webSocketUrl = `ws://demo.ineeji.com/ws`
   // const webSocketUrl = `ws://192.168.1.27:8000/api/ws`
   const ws = React.useRef(null)
 
@@ -104,7 +104,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         // console.log('[ Opening Price Prev ---->>>>>> ]')
         // console.log(openingTest)
         // console.log(WsData)
-        if (openingTest.length < 100) {
+        if (openingTest.length < 10) {
           openingTest.unshift(WsData)
           setOpeningPricePrevData(openingTest)
           setOpeningTestData(openingTest)
@@ -125,7 +125,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         // console.log('[ Low Price Prev ---->>>>>> ]')
         // console.log(lowTest)
         // console.log(WsData)
-        if (lowTest.length < 100) {
+        if (lowTest.length < 10) {
           lowTest.unshift(WsData)
           setLowPricePrevData(lowTest)
           setLowTestData(lowTest)
@@ -146,7 +146,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         // console.log('[ High Price Prev ---->>>>>> ]')
         // console.log(highTest)
         // console.log(WsData)
-        if (highTest.length < 100) {
+        if (highTest.length < 10) {
           highTest.unshift(WsData)
           setHighPricePrevData(highTest)
           setHighTestData(highTest)
@@ -198,7 +198,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         } else {
           // console.log(WsData)
           for (const j in WsData) {
-            if (multipleTest.length < 200) {
+            if (multipleTest.length < 20) {
               // console.log('100보다 작음')
               multipleTest.unshift(WsData[j])
               setMultiplePrevData(multipleTest)
