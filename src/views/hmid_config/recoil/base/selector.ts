@@ -1,4 +1,4 @@
-import { CompanyId, LayoutTitle } from './atoms'
+import { CompanyId, LayoutTitle, WsDataTest } from './atoms'
 
 import { selector } from 'recoil'
 
@@ -12,4 +12,10 @@ export const LayoutTitleSelector = selector({
   key: 'LayoutTitleSelector',
   get: ({ get }) => get(LayoutTitle),
   set: ({ set }, newValue) => set(LayoutTitle, newValue),
+})
+
+export const WsDataSelector = selector({
+  key: 'WsDataSelector',
+  get: ({ get }) => get(WsDataTest),
+  set: ({ set }, newValue) => set(WsDataTest, newValue),
 })

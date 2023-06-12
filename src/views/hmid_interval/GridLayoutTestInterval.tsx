@@ -42,8 +42,8 @@ import * as RecoilTimeSeriesAtoms from '../hmid_config/recoil/timeseries/atoms'
 // import { GridDataObjSelector } from '../recoil/config/selector'
 import { CompanyId, LayoutTitle, NowDate } from '../hmid_config/recoil/base/atoms'
 
+import D3LineChartInterval from '../hmid_config/grid/function/drawD3ChartInterval'
 import D3LineChart from '../hmid_config/grid/function/drawD3Chart'
-import RealTimeDataTable from '../hmid_config/grid/function/drawRealTimeDataTable'
 
 const DataGridWrap = styled.div`
   width: 100%;
@@ -435,12 +435,13 @@ export const PredefinedLayoutsInterval: React.FC = () => {
         const data = (
           <>
             <BoxTitle>Trade Price</BoxTitle>
-            <D3LineChart
+            <D3LineChartInterval
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              Calltype={'Interval'}
               CallData={'TradePrice'}
-              Color={'steelblue'}
+              Color={'skyblue'}
+              ChartShow={false}
+              TableShow={false}
             />
           </>
         )
@@ -454,13 +455,14 @@ export const PredefinedLayoutsInterval: React.FC = () => {
         const data = (
           <>
             <BoxTitle>Opening Price</BoxTitle>
-            <D3LineChart
+            {/* <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              Calltype={'Interval'}
               CallData={'OpeningPrice'}
               Color={'green'}
-            />
+              ChartShow={true}
+              TableShow={false}
+            /> */}
           </>
         )
         ReactDOM.render(data, node)
@@ -473,13 +475,14 @@ export const PredefinedLayoutsInterval: React.FC = () => {
         const data = (
           <>
             <BoxTitle>Low Price</BoxTitle>
-            <D3LineChart
+            {/* <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              Calltype={'Interval'}
               CallData={'LowPrice'}
               Color={'orange'}
-            />
+              ChartShow={true}
+              TableShow={false}
+            /> */}
           </>
         )
         ReactDOM.render(data, node)
@@ -492,13 +495,14 @@ export const PredefinedLayoutsInterval: React.FC = () => {
         const data = (
           <>
             <BoxTitle>High Price</BoxTitle>
-            <D3LineChart
+            {/* <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              Calltype={'Interval'}
               CallData={'HighPrice'}
               Color={'purple'}
-            />
+              ChartShow={true}
+              TableShow={false}
+            /> */}
           </>
         )
         ReactDOM.render(data, node)
@@ -556,7 +560,14 @@ export const PredefinedLayoutsInterval: React.FC = () => {
         const data = (
           <>
             <BoxTitle>All Data</BoxTitle>
-            <RealTimeDataTable />
+            {/* <D3LineChart
+              widthSize={node.clientWidth}
+              heightSize={node.clientHeight}
+              CallData={'DataTable'}
+              Color={'none'}
+              ChartShow={false}
+              TableShow={true}
+            /> */}
           </>
         )
         ReactDOM.render(data, node)

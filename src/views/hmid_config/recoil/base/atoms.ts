@@ -28,4 +28,9 @@ export const NowDate = atom({
   default: '',
 })
 
-export default { CompanyId, LayoutTitle, LineChartData, NowDate }
+export const WsDataTest = atom({
+  key: `WsDataTest/${v1()}`,
+  default: {},
+})
+
+export default { CompanyId, LayoutTitle, LineChartData, NowDate, WsDataTest }

@@ -28,7 +28,7 @@ export interface LineChartPorps {
   TableShow: boolean
 }
 
-export const D3LineChart: React.FC<LineChartPorps> = (props) => {
+export const D3LineChartTooltip: React.FC<LineChartPorps> = (props) => {
   const svgRef = React.useRef()
   const svgRef2 = React.useRef()
 
@@ -306,10 +306,13 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     // Add X axis and Y axis
     const x: any = d3.scaleTime().range([0, width])
 
-    const y: any = d3.scaleLinear().range([height, 0])
+    const y: any = d3.scaleLinear().range([height, 0]).nice()
 
-    const xAxis = svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x))
-    svg2.append('g').attr('transform', `translate(40,3)`).call(d3.axisLeft(y))
+    const Yposition = d3.axisLeft(y)
+    const Xposition = d3.axisBottom(x)
+
+    const xAxis = svg2.append('g').attr('transform', `translate(50, ${height})`).call(Xposition)
+    svg2.append('g').attr('transform', `translate(40,3)`).call(Yposition)
     svg2.append('g').call(xGrid)
     svg2.append('g').call(yGrid)
   }
@@ -381,14 +384,20 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         .scaleLinear()
         .domain([max - 20, max + 20])
         .range([height, 0])
+        .nice()
     } else {
-      y = d3.scaleLinear().domain([min, max]).range([height, 0])
+      y = d3.scaleLinear().domain([min, max]).range([height, 0]).nice()
     }
     x.domain(
       d3.extent(rtnData, (d: any) => {
         return d.date
       })
     )
+
+    // Accessors
+    const parseDate2 = d3.timeParse('%Y-%m-%d')
+    const xAccessor = (d: any) => parseDate2(d.date)
+    const yAccessor = (d: any) => parseInt(d.close)
 
     //grid line 속성 style은 css
     const xGrid = (g: any) =>
@@ -420,6 +429,9 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     //   }),
     // ])
 
+    const Yposition = d3.axisLeft(y)
+    const Xposition = d3.axisBottom(x)
+
     let xAxis: any
 
     if (props.CallData === 'OpeningPrice' || props.CallData === 'HighPrice' || props.CallData === 'LowPrice') {
@@ -436,11 +448,11 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         arr.push(newArray[i].date)
       }
 
-      xAxis = svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x).tickValues(arr))
+      xAxis = svg2.append('g').attr('transform', `translate(50, ${height})`).call(Xposition.tickValues(arr))
     } else {
-      xAxis = svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x))
+      xAxis = svg2.append('g').attr('transform', `translate(50, ${height})`).call(Xposition)
     }
-    svg2.append('g').attr('transform', `translate(40,3)`).call(d3.axisLeft(y))
+    svg2.append('g').attr('transform', `translate(40,3)`).call(Yposition)
     //grid 그리기
     svg2.append('g').call(xGrid)
     svg2.append('g').call(yGrid)
@@ -469,7 +481,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     // .text('Trade Price')
 
     // Y axis label 추가
-
     // Add brushing
     /**
      * 2023.06.08 주석 처리
@@ -511,6 +522,18 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     //       )
     //   })
 
+    const tooltip = d3.select('#tooltip')
+    const tooltipDot = svg2
+      .append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`)
+      .append('circle')
+      .attr('r', 5)
+      .attr('fill', '#fc8781')
+      .attr('stroke', 'black')
+      .attr('stroke-width', 2)
+      .style('opacity', 0)
+      .style('pointer-events', 'none')
+
     // add the Line
     const valueLine: any = d3
       .line()
@@ -523,6 +546,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
 
     svg2
       .append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`)
       .attr('clip-path', 'url(#clip)')
       .append('path')
       .data([rtnData])
@@ -532,35 +556,44 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       .attr('stroke', props.Color)
       .attr('stroke-width', 1.5)
       .attr('d', valueLine)
+      .on('touchmouse mousemove', function (event) {
+        const mousePos = d3.pointer(event, this)
 
-    // const tooltip = d3.select('#tooltip')
-    // const tooltipDot = svg2
-    //   .append('g')
-    //   .append('circle')
-    //   .attr('r', 5)
-    //   .attr('fill', '#fc8781')
-    //   .attr('stroke', 'black')
-    //   .attr('stroke-width', 2)
-    //   .style('opacity', 0)
-    //   .style('pointer-events', 'none')
+        // x coordinate stored in mousePos index 0
+        const date = x.invert(mousePos[0])
+        console.log(date)
+      })
+      .on('mouseleave', function (event) {
+        const a = event
+      })
 
-    // svg2
-    //   .append('g')
-    //   .append('rect')
-    //   .attr('class', 'dotted')
-    //   .attr('stroke-width', '1px')
-    //   .attr('width', '.5px')
-    //   .attr('height', height)
-
-    const tooltip = d3.select('#tooltip')
-    const tooltipCircle = svg2
-      .append('circle')
-      .attr('class', 'tooltip-circle')
-      .attr('r', 4)
-      .attr('stroke', '#af9358')
-      .attr('fill', 'white')
-      .attr('stroke-width', 2)
+    //tooltip
+    svg2
+      .append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`)
+      .append('rect')
+      .attr('width', width)
+      .attr('height', height)
       .style('opacity', 0)
+      .on('touchmouse mousemove', function (event) {
+        const mousePos = d3.pointer(event, this)
+        // x coordinate stored in mousePos index 0
+        const date = x.invert(mousePos[0])
+
+        // Custom Bisector - left, center, right
+        const dateBisector = d3.bisector(xAccessor).left
+        const bisectionIndex = dateBisector(data, date)
+        const hoveredIndexData = data[bisectionIndex - 1]
+
+        // Update Image
+        tooltipDot
+          .style('opacity', 1)
+          .attr('cx', x(xAccessor(hoveredIndexData)))
+          .attr('cy', y(yAccessor(hoveredIndexData)))
+      })
+      .on('mouseleave', function (event) {
+        const a = event
+      })
 
     // svg2.append('rect').attr('width', width).attr('height', height).style('opacity', 0)
     // .on('touchmouse mousemove', function (event) {
@@ -600,7 +633,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     //   tooltip.select('.date').text(`${dateFormatter(xAccessor(hoveredIndexData))}`)
     // })
 
-    // .on('mouseleave', function (event) {
+    // .on('mouseleave', function (event) {[-[]]
     //   const mousePos = d3.pointer(event, this)
     // })
 
@@ -979,4 +1012,4 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
   )
 }
 
-export default D3LineChart
+export default D3LineChartTooltip

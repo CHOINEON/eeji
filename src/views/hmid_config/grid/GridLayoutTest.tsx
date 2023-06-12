@@ -40,10 +40,10 @@ import * as RecoilAtoms from '../recoil/config/atoms'
 import * as RecoilLineAtoms from '../recoil/line/atoms'
 import * as RecoilTimeSeriesAtoms from '../recoil/timeseries/atoms'
 // import { GridDataObjSelector } from '../recoil/config/selector'
-import { CompanyId, LayoutTitle, NowDate } from '../recoil/base/atoms'
+import { CompanyId, LayoutTitle, NowDate, WsDataTest } from '../recoil/base/atoms'
 
 import D3LineChart from './function/drawD3Chart'
-import RealTimeDataTable from './function/drawRealTimeDataTable'
+import D3LineChartTooltip from './function/drawD3ChartTooltip'
 
 const DataGridWrap = styled.div`
   width: 100%;
@@ -101,6 +101,8 @@ export const PredefinedLayouts: React.FC = () => {
   const layoutTitle = useRecoilValue(LayoutTitle)
 
   const [NowDateText, setNowDateText] = useRecoilState(NowDate)
+
+  const [WsRtnDataSet, setWsRtnDataSet] = React.useState<any>()
 
   //보류
   const [SaveTagDataList, setSaveTagDataList] = React.useState<any>([
@@ -435,12 +437,13 @@ export const PredefinedLayouts: React.FC = () => {
         const data = (
           <>
             <BoxTitle>Trade Price</BoxTitle>
-            <D3LineChart
+            <D3LineChartTooltip
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              Calltype={'WS'}
               CallData={'TradePrice'}
               Color={'steelblue'}
+              ChartShow={true}
+              TableShow={false}
             />
           </>
         )
@@ -454,13 +457,14 @@ export const PredefinedLayouts: React.FC = () => {
         const data = (
           <>
             <BoxTitle>Opening Price</BoxTitle>
-            <D3LineChart
+            {/* <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              Calltype={'WS'}
               CallData={'OpeningPrice'}
               Color={'green'}
-            />
+              ChartShow={true}
+              TableShow={false}
+            /> */}
           </>
         )
         ReactDOM.render(data, node)
@@ -473,13 +477,14 @@ export const PredefinedLayouts: React.FC = () => {
         const data = (
           <>
             <BoxTitle>Low Price</BoxTitle>
-            <D3LineChart
+            {/* <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              Calltype={'WS'}
               CallData={'LowPrice'}
               Color={'orange'}
-            />
+              ChartShow={true}
+              TableShow={false}
+            /> */}
           </>
         )
         ReactDOM.render(data, node)
@@ -492,13 +497,14 @@ export const PredefinedLayouts: React.FC = () => {
         const data = (
           <>
             <BoxTitle>High Price</BoxTitle>
-            <D3LineChart
+            {/* <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              Calltype={'WS'}
               CallData={'HighPrice'}
               Color={'purple'}
-            />
+              ChartShow={true}
+              TableShow={false}
+            /> */}
           </>
         )
         ReactDOM.render(data, node)
@@ -556,7 +562,15 @@ export const PredefinedLayouts: React.FC = () => {
         const data = (
           <>
             <BoxTitle>All Data</BoxTitle>
-            <RealTimeDataTable />
+            {/* <D3LineChart
+              widthSize={node.clientWidth}
+              heightSize={node.clientHeight}
+              CallData={'DataTable'}
+              Color={'none'}
+              ChartShow={false}
+              TableShow={true}
+            /> */}
+            {/* <RealTimeDataTable Calltype={'WS'} /> */}
           </>
         )
         ReactDOM.render(data, node)
