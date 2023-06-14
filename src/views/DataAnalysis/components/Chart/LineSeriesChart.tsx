@@ -102,15 +102,6 @@ const LineSeriesChart = (props: any) => {
 
   const [primaryxAxis, setPrimaryxAxis] = useState<AxisModel>(defaultXAxis)
 
-  let chartInstance: ChartComponent
-  // let buttonInstance: ButtonComponent
-
-  // const zoomsettings: ZoomSettingsModel = {
-  //   enableSelectionZooming: false, //selection should be used for data selection
-  //   enableMouseWheelZooming: true,
-  //   enableScrollbar: true,
-  // }
-
   useEffect(() => {
     // console.log('useref:', chartRef)
 
