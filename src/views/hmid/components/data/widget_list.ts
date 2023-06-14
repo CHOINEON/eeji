@@ -5,18 +5,18 @@ export const WidgetData = [
       {
         name: 'Time Series',
       },
-      {
-        name: 'Line',
-      },
-      {
-        name: 'Bar',
-      },
-      {
-        name: 'Pie',
-      },
       // {
-      //   name: 'Scatter Plot',
+      //   name: 'Line',
       // },
+      // {
+      //   name: 'Bar',
+      // },
+      // {
+      //   name: 'Pie',
+      // },
+      {
+        name: 'Scatter Plot',
+      },
       // {
       //   name: 'Box Plot',
       // },

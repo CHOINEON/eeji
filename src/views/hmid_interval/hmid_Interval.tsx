@@ -153,6 +153,7 @@ export const MainDashboardInterval: React.FC = () => {
 
   React.useEffect(() => {
     getNowDateTime()
+    window.localStorage.setItem('SelectedDashboardInfo', 'new')
   }, [])
 
   React.useEffect(() => {

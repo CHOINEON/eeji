@@ -15,7 +15,6 @@ import {
   AlertMessageState,
   ShowLoadingState,
   SelectTagInfoState,
-  WidgetInformationState,
   DataTableRowState,
   ShowWidgetModalState,
   ShowGridModalState,
@@ -23,6 +22,7 @@ import {
   OpenSaveLayoutModalState,
   SaveLayoutInformationState,
   ShowDeleteGridModalState,
+  WidgetInfoState,
 } from './atoms'
 
 import { selector } from 'recoil'
@@ -149,6 +149,6 @@ export const ShowLoadingSelector = selector({
 
 export const WidgetInformationSelector = selector({
   key: 'WidgetInformationSelector',
-  get: ({ get }) => get(WidgetInformationState),
-  set: ({ set }, newValue) => set(WidgetInformationState, newValue),
+  get: ({ get }) => get(WidgetInfoState),
+  set: ({ set }, newValue) => set(WidgetInfoState, newValue),
 })

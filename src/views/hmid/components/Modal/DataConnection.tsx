@@ -6,7 +6,7 @@ import './style/style.css'
 // import * as 태그함수 from '../../../hmid_config/grid/function/태그데이터함수'
 // import DataConnection from '../data/data_connection_list'
 
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import * as RecoilAtoms from '../../../hmid_config/recoil/config/atoms'
 
 const DataListWrap = styled.div`
@@ -18,13 +18,19 @@ const DataListWrap = styled.div`
 
 export const WidgetModal: React.FC = () => {
   const [showDataConnectionModal, setShowDataConnectionModal] = useRecoilState(RecoilAtoms.ShowConnectionDataState)
-  const [TagInfo, setSelectTagInfo] = useRecoilState(RecoilAtoms.SelectTagInfoState)
-  const [TagListArr, setTagListArr] = useRecoilState(RecoilAtoms.TagListArrState)
+
+  //Tag에서 선택한 데이터 Array
+  const setSelectTagInfo = useSetRecoilState(RecoilAtoms.SelectTagInfoState)
+  //Ant에 맞춘 TagList Array
+  const setTagListArr = useSetRecoilState(RecoilAtoms.TagListArrState)
+  //상위에서 넘어온 API TagDataList
   const TagListByTagData = useRecoilValue(RecoilAtoms.TagListByTagDataState)
+
+  const [changeTagData, setChangeTagData] = React.useState<any>([])
 
   //rendering시 함수 호출
   React.useEffect(() => {
-    CreateTagListItems(TagListByTagData)
+    //CreateTagListItems(TagListByTagData)
   }, [])
 
   const CreateTagListItems = (TagData: any) => {
@@ -42,7 +48,9 @@ export const WidgetModal: React.FC = () => {
   }
 
   const handleTagChange = (value: any | any[]) => {
-    setSelectTagInfo(value)
+    console.log(value)
+    setChangeTagData(value)
+    // setSelectTagInfo(value)
   }
 
   return (
@@ -52,7 +60,8 @@ export const WidgetModal: React.FC = () => {
         open={showDataConnectionModal}
         onOk={() => {
           setShowDataConnectionModal(false)
-          setSelectTagInfo([])
+          setSelectTagInfo(changeTagData)
+          setChangeTagData([])
         }}
         onCancel={() => {
           setShowDataConnectionModal(false)
@@ -68,8 +77,12 @@ export const WidgetModal: React.FC = () => {
             placeholder={'Tag Select'}
             onChange={handleTagChange}
             style={{ width: '100%' }}
-            options={TagListArr}
-            value={TagInfo}
+            // options={TagListArr}
+            options={[
+              { value: 'TestData1', label: '테스트 데이터1' },
+              { value: 'TestData2', label: '테스트 데이터2' },
+            ]}
+            value={changeTagData}
           />
         </DataListWrap>
       </Modal>
