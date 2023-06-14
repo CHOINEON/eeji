@@ -175,7 +175,16 @@ export const D3LineChart: React.FC<D3LineProps> = (props) => {
       .attr('y', height + 40)
       .text(props.DataName)
       .style('font-size', '14px')
+      // .style('cursor', 'pointer')
       .attr('alignment-baseline', 'middle')
+    // .on('click', function (d) {
+    //   // is the element currently visible ?
+    //   const currentOpacity: any = d3.selectAll('.' + props.DataName).style('opacity')
+    //   // Change the opacity: from 0 to 1 or from 1 to 0
+    //   d3.selectAll('.' + props.DataName)
+    //     .transition()
+    //     .style('opacity', currentOpacity == 1 ? 0 : 1)
+    // })
     // .append('text')
     // .attr('x', width / 2)
     // .attr('y', 0 - margin.top / 2)
@@ -244,6 +253,7 @@ export const D3LineChart: React.FC<D3LineProps> = (props) => {
       .data([rtnData])
       .attr('transform', 'translate(50,0)')
       .attr('class', 'line')
+      // .attr('class', props.DataName)
       .attr('fill', 'none')
       .attr('stroke', props.Color)
       .attr('stroke-width', 1.5)

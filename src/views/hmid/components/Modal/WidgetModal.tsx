@@ -134,8 +134,6 @@ export const WidgetModal: React.FC = () => {
   }
 
   const WidgetClick = (widgetType: any) => {
-    console.log(widgetType)
-
     setWidgetInfo(widgetType)
     setShowWidgetModal(false)
   }
