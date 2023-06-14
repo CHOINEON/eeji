@@ -4,6 +4,7 @@ import axios from 'axios'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import LineSeriesChart from '../Chart/LineSeriesChart'
+import LineChart from '../Chart/LineChart'
 
 export const chartDiv = (props: any) => {
   return <div style={{ width: '100px', height: '30px' }}>{props.chart}</div>
@@ -27,52 +28,66 @@ export const chartDiv = (props: any) => {
 // })
 
 const Worksheet = (props: any) => {
-  // const { chart } = props
-  const { selectedTags, refresh, onExport } = props
+  const { selectedTags, refresh, onExport, onSave } = props
 
   // const chartType = ['scatterPlot', 'line']
   const chartWrapper = useRef<HTMLDivElement>()
-  const [clicked, setClicked] = useState(false)
+  // const [clicked, setClicked] = useState(false)
   const [progressActive, setProgressActive] = useState(false)
   const [chartData, setChartData] = useState([])
   const [chartHeight, setChartHeight] = useState('97%')
 
+  //ResizeObserver loop limit exceeded 에러 방지
   useEffect(() => {
-    setChartData([])
-  }, [refresh])
-
-  useEffect(() => {
-    // console.log('chartWrapper.current:', chartWrapper.current)
-
-    if (selectedTags.length > 0 && clicked) {
-      const height = Math.floor(100 / selectedTags.length)
-
-      if (height < 33) {
-        setChartHeight('32%') // minimum height : 33%
-        // console.log('min   :', height)
-      } else {
-        setChartHeight(height + '%')
-        // console.log('   height:', height)
+    window.addEventListener('error', (e) => {
+      if (e.message === 'ResizeObserver loop limit exceeded') {
+        const resizeObserverErrDiv = document.getElementById('webpack-dev-server-client-overlay-div')
+        const resizeObserverErr = document.getElementById('webpack-dev-server-client-overlay')
+        if (resizeObserverErr) {
+          resizeObserverErr.setAttribute('style', 'display: none')
+        }
+        if (resizeObserverErrDiv) {
+          resizeObserverErrDiv.setAttribute('style', 'display: none')
+        }
       }
-      // chartWrapper.current.style.height = height + '%'
-    }
-  }, [clicked, selectedTags])
+    })
+  }, [])
+
+  // useEffect(() => {
+  //   setChartData([])
+  // }, [refresh])
+
+  // useEffect(() => {
+  //   if (selectedTags.length > 0) {
+  //     const height = Math.floor(100 / selectedTags.length)
+  //     if (height < 33) {
+  //       setChartHeight('32%') // minimum height : 33%
+  //     } else {
+  //       setChartHeight(height + '%')
+  //     }
+  //      chartWrapper.current.style.height = height + '%'
+  //   }
+  // }, [selectedTags])
 
   const handleCreateChart = () => {
-    setClicked(true)
+    // setClicked(true)
     getChartdata()
     // setActive(true)
   }
 
   const getChartdata = () => {
+    // console.log('----------- getChartdata:', selectedTags)
     setProgressActive(true)
 
     if (selectedTags.length > 0) {
-      axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/chartData', selectedTags).then(
+      axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/chartData1', selectedTags).then(
         (response: any) => {
-          setChartData(response.data)
-          renderItem()
-          setProgressActive(false)
+          if (response.status === 200) {
+            // console.log('chartData response: ', response.data)
+            setChartData(response.data)
+            // renderItem()
+            setProgressActive(false)
+          }
         },
         (error) => {
           console.log('error:', error)
@@ -86,43 +101,43 @@ const Worksheet = (props: any) => {
     alert(chartType)
   }
 
-  // useEffect(() => {
-  //   // console.log('clicked:', clicked)
-  //   // console.log('chartData:', chartData)
-
-  //   if (clicked && chartData.length > 0) renderItem()
-  // }, [clicked, chartData])
-
   const renderItem = () => {
-    // console.log('chartHeight:', chartHeight)
+    // console.log('renderItem:', chartData)
 
-    if (clicked && chartData) {
-      //리턴할 차트들 여러개 만들기
-      const singleChart = chartData.map((value, index) => {
-        return (
-          <div
-            ref={chartWrapper}
-            key={index}
-            style={{
-              width: '100%',
-              height: chartHeight,
-              maxHeight: '97%',
-              float: 'left',
-              // border: '1px solid red',
-              // backgroundColor: 'pink',
-              marginBottom: '10px',
-            }}
-          >
-            <LineSeriesChart onExport={onExport} chartInputData={value} chartHeight={chartHeight} />
-          </div>
-        )
-      })
+    if (chartData.length > 0) {
+      const singleChart = (
+        <LineSeriesChart onExport={onExport} chartInputData={chartData} chartHeight={chartHeight} onSave={onSave} />
+      )
+
       return singleChart
+
+      //리턴할 차트들 여러개 만들기
+      // const singleChart = chartData.map((value, index) => {
+      //   return (
+      //     <div
+      //       ref={chartWrapper}
+      //       key={index}
+      //       style={{
+      //         width: '100%',
+      //         height: chartHeight,
+      //         maxHeight: '97%',
+      //         float: 'left',
+      //         // border: '1px solid red',
+      //         // backgroundColor: 'pink',
+      //         marginBottom: '10px',
+      //       }}
+      //     >
+      //       <LineSeriesChart onExport={onExport} chartInputData={value} chartHeight={chartHeight} onSave={onSave} />
+      //     </div>
+      //   )
+      // })
+      // return singleChart
     }
   }
 
   return (
     <>
+      {/* <LineChart /> */}
       <div
         className="rounded-box"
         style={{

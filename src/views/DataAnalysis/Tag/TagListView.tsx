@@ -37,7 +37,7 @@ const TagListView = () => {
         search_type: 'all',
       })
       .then((response) => {
-        console.log('fetchTaglistData/process:', response)
+        // console.log('fetchTaglistData/process:', response)
         setRowData(response.data)
       })
       .catch((error) => error('Data Load Failed'))

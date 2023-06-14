@@ -5,23 +5,35 @@ import TagList from './Tag/TagList'
 import Worksheet from './components/Worksheets/Worksheet'
 import './style/uploader.css'
 import SeriesSelectionGrid from './Tag/SeriesSelectionGrid'
+import { stepCountStore } from './atom'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 
 export const PreProcessing = (props: any) => {
-  const { onRefresh } = props
+  const { onPreprocessed } = props
   const [refresh] = useState(false)
-  const [selectedTags, setSelectedTags] = React.useState([])
   const [chartType] = React.useState('')
-  // const WorksheetRef = useRef(null)
-  const [exported, setExported] = useState(false)
+  const [selectedTags, setSelectedTags] = React.useState([])
+  const setActiveStep = useSetRecoilState(stepCountStore)
 
   const onClickTag = (e: any) => {
     // console.log('onClickTag:', e)
     setSelectedTags(e)
   }
 
-  const handleExport = () => {
-    setExported(true)
-    setTimeout(() => setExported(false), 3000)
+  // AI EXPO 데모용 csv export function
+  // const handleExport = () => {
+  //   setExported(true)
+  //   setTimeout(() => setExported(false), 3000)
+  // }
+
+  const handleSaveAndNext = () => {
+    setActiveStep(3)
+  }
+
+  const onClickSave = (e: any) => {
+    if (e.length > 0) {
+      onPreprocessed(e)
+    }
   }
 
   return (
@@ -33,18 +45,16 @@ export const PreProcessing = (props: any) => {
           </GridItem> */}
           <GridItem colSpan={4} h={700}>
             <TagList syncSelectedTag={onClickTag} refresh={refresh} />
-            {/* <TagListView /> */}
           </GridItem>
         </GridItem>
         <GridItem rowSpan={2} colSpan={4} h={700}>
           <GridItem rowSpan={1} h={450} mb={50}>
             <Worksheet
-              // ref={WorksheetRef}
               selectedTags={selectedTags}
               count={selectedTags.length}
               chart={chartType}
               refresh={refresh}
-              onExport={exported}
+              onSave={onClickSave}
             />
             {/* <Child ref={WorksheetRef}></Child> */}
           </GridItem>
@@ -52,7 +62,7 @@ export const PreProcessing = (props: any) => {
             <SeriesSelectionGrid selectedTags={selectedTags} refresh={refresh} />
             <Button
               variant="contained"
-              onClick={handleExport}
+              onClick={handleSaveAndNext}
               style={{
                 width: '8%',
                 height: '200px',
@@ -61,22 +71,15 @@ export const PreProcessing = (props: any) => {
                 borderRadius: '18px',
                 marginLeft: '20px',
               }}
-              // style={{ width: '200px', height: '40px', margin: 'auto', marginTop: '5px' }}
             >
-              SAVE
+              SAVE AND NEXT
             </Button>
           </GridItem>
-          <div>
-            {/* <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-              <Button onClick={handleExport}>SAVE & CSV EXPORT</Button>
-            </Box> */}
-
-            {/* <CircularProgress style={{ position: 'relative', top: '200px' }} /> */}
-          </div>
+          {/* <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
+            <Button onClick={handleExport}>SAVE & CSV EXPORT</Button>
+          </Box> */}
         </GridItem>
       </Grid>
-
-      {/* <ChartSelectionDialog isOpen={dialogOpen} onDialogClose={dialogClose} onSelectChart={onSelectChart} /> */}
     </div>
   )
 }

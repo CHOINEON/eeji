@@ -15,6 +15,7 @@ import DashboardConfig from 'views/hmid_config'
 import LayoutList from 'views/hmid_list'
 import ModelMaintenance from 'views/ModelMaintenance'
 import DataAnalysis from 'views/DataAnalysis'
+import AIModeling from 'views/AIModeling'
 // import LayoutList from 'views/hmid/list/LayoutList'
 
 // Auth Imports
@@ -40,6 +41,13 @@ const routes = [
     path: '/data-analysis',
     icon: <Icon as={BsHammer} width="20px" height="20px" color="inherit" />,
     component: DataAnalysis,
+  },
+  {
+    name: 'Chart Test',
+    layout: '/admin',
+    path: '/ai-modeling',
+    icon: <Icon as={BsHammer} width="20px" height="20px" color="inherit" />,
+    component: AIModeling,
   },
   // {
   //   name: 'AI Plant Modeling',

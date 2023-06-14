@@ -32,13 +32,14 @@ const DataSummary = (props: any) => {
   }
 
   const card = (param: any) => {
-    // console.log(param)
     return (
       <Card sx={{ minWidth: 275 }} className="rounded-box">
         <CardContent>
           <div style={{ fontSize: 14 }} color="text.secondary">
             <p>파일명 : {param.value.data}</p>
-            <p>행/열 : {param.value.shape}</p>
+            <p>
+              행/열 : {param.value.row_count}/{param.value.col_count}
+            </p>
             <p>시작일 : {param.value.startDate}</p>
             <p>종료일 : {param.value.endDate}</p>
             <p>결측치 : {param.value.missing.length === 0 ? '없음' : param.value.missing}</p>

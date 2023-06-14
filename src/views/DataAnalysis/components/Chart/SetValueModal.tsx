@@ -7,7 +7,6 @@ const SetValueModal = (props: any) => {
   const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
-    console.log('visible::', visible)
     setIsModalOpen(visible)
   }, [visible])
 
