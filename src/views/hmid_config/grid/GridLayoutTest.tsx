@@ -304,9 +304,13 @@ export const PredefinedLayouts: React.FC = () => {
   const DrawGauidWidget = (widget: string, node: any, option1: any, option2: any) => {
     //설정 값
     const config = {
-      displaylogo: false,
-      displayModeBar: false,
+      displaylogo: true,
+      displayModeBar: true,
     }
+
+    console.log('>>>>>>>>>>>>> Test')
+    console.log(option1)
+    console.log(node)
 
     if (widget !== 'Table') {
       const layout = {
@@ -1309,7 +1313,7 @@ export const PredefinedLayouts: React.FC = () => {
                   } else if (
                     data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].data[0].type === 'scatter'
                   ) {
-                    grid_obj.widget_type = 'Line'
+                    grid_obj.widget_type = 'TimeSeries'
                     const input_element: any = document.querySelector('#input' + i)
                     grid_obj.grid_nm = input_element.value
                     grid_obj.width = data.element.childNodes[i].childNodes[0].childNodes[1].offsetWidth
@@ -1328,7 +1332,7 @@ export const PredefinedLayouts: React.FC = () => {
                       data.element.childNodes[i].childNodes[0].childNodes[1].childNodes[0].layout,
                     ])
 
-                    grid_obj.tag_list = getWidgetSelectTagList(grid_obj.widget_type, data.element.childNodes[i].id)
+                    grid_obj.tag_list = getWidgetSelectTagList('Time Series', data.element.childNodes[i].id)
                   }
                 }
               } else {

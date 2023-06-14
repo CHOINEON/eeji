@@ -7,6 +7,9 @@ import axios from 'axios'
 import DataInfoGrid from './DataSummary'
 import DataSummary from './DataSummary'
 import { Alert } from 'views/hmid/components/Modal/Alert'
+import { Box } from '@mui/material'
+import { stepCountStore } from './atom'
+import { useRecoilState } from 'recoil'
 
 const FileUploader = (props: any) => {
   const uploadObj = useRef<UploaderComponent>(null)
@@ -14,6 +17,7 @@ const FileUploader = (props: any) => {
   const [uploaded, setUploaded] = useState(false)
   const { onUploaded, refresh } = props
   const [summaryResult, setSummaryResult] = useState([])
+  const [activeStep, setActiveStep] = useRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
 
   /** Alert */
   const [message, setMessage] = React.useState<string>('')
@@ -37,9 +41,9 @@ const FileUploader = (props: any) => {
     }
   }, [refresh])
 
-  useEffect(() => {
-    if (uploaded) onUploaded(true)
-  }, [uploaded])
+  // useEffect(() => {
+  //   if (uploaded) onUploaded(true)
+  // }, [uploaded])
 
   const asyncSettings: object = {
     chunkSize: 100000000, // set chunk size for enable the chunk upload
@@ -93,6 +97,10 @@ const FileUploader = (props: any) => {
     }
   }
 
+  const handleNext = () => {
+    setActiveStep(activeStep + 1)
+  }
+
   return (
     <div className="control-section col-lg-12 defaultDialog dialog-target">
       <div className="control-pane" ref={dropContainerRef}>
@@ -125,6 +133,15 @@ const FileUploader = (props: any) => {
                   <DataSummary dataSource={summaryResult} />
                 </div>
               )}
+              <div style={{ width: '400px', float: 'right', marginTop: '10px' }}>
+                <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
+                  {loading ? (
+                    <CircularProgress style={{ position: 'relative', top: '200px' }} />
+                  ) : (
+                    uploaded && <Button onClick={handleNext}>Next</Button>
+                  )}
+                </Box>
+              </div>
             </div>
           </div>
         </div>

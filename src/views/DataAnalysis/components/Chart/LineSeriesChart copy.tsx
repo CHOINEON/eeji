@@ -19,8 +19,6 @@ import {
   StripLine,
   StripLinesDirective,
   StripLineDirective,
-  minMax,
-  Trendline,
 } from '@syncfusion/ej2-react-charts'
 // import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import Button from '@mui/material/Button'
@@ -28,8 +26,6 @@ import ChartContextMenu from '../ContextMenu/ChartContextMenu'
 // import { CSVLink, CSVDownload } from 'react-csv'
 import CsvDownloader from 'react-csv-downloader'
 import SetValueModal from './SetValueModal'
-import { useRecoilValue } from 'recoil'
-import { indexColumnStore } from 'views/DataAnalysis/atom'
 
 const SAMPLE_CSS = `
      .control-fluid {
@@ -39,27 +35,27 @@ const SAMPLE_CSS = `
          width: 100%;
          text-align: center;
      }
-
+ 
      .e-export-icon::before {
          content: '\\e728';
      }
-
+     
      .e-view.fabric .e-export-icon::before, .e-view.fabric-dark .e-export-icon::before  {
          content: '\\e710';
      }
-
+     
      .e-view.bootstrap4 .e-export-icon::before {
          content: '\\e780';
      }
-
+     
      .e-view.tailwind-dark .e-export-icon::before, .e-view.tailwind .e-export-icon::before {
          content: '\\e7bf';
      }
-
+     
      .e-view.highcontrast .e-export-icon::before {
          content: '\\e710';
      }
-
+     
      .e-view.bootstrap5 .e-export-icon::before, .e-view.bootstrap5-dark .e-export-icon::before {
          content: '\\e72e';
      }
@@ -72,32 +68,17 @@ const SAMPLE_CSS = `
           align :center
       }
   `
-const defaultXAxis: AxisModel = {
-  // crosshairTooltip: { enable: true },
-  valueType: 'DateTime',
-  labelFormat: 'M/d hh:mm',
-  // valueType: 'Double',
-  interval: 5,
-  edgeLabelPlacement: 'Shift',
-  majorGridLines: { width: 0 },
-  labelIntersectAction: 'Rotate45',
-}
 
 const LineSeriesChart = (props: any) => {
   const { chartInputData, chartHeight, onExport, onSave } = props
   const [selectedData, setSelectedData] = useState([])
   const [dataSource, setDataSource] = useState([])
-
   const [modalOpen, setModalOpen] = useState(false)
   const [threshold, setThreshold] = useState(0)
   const ExcludeBtnRef = useRef(null)
   const AddThresholdBtnRef = useRef(null)
   const csvLinkRef = useRef(null)
-  const [xAxisValueType, setXAxisValueType] = useState('DateTime')
   const [selectedDatetime, setSelectedDatetime] = useState([])
-  const indexColumn = useRecoilValue(indexColumnStore)
-
-  const [primaryxAxis, setPrimaryxAxis] = useState(defaultXAxis)
 
   let chartInstance: ChartComponent
   // let buttonInstance: ButtonComponent
@@ -107,18 +88,6 @@ const LineSeriesChart = (props: any) => {
   //   enableMouseWheelZooming: true,
   //   enableScrollbar: true,
   // }
-
-  useEffect(() => {
-    if (indexColumn == '') {
-      setPrimaryxAxis({
-        valueType: 'Double',
-        interval: 5,
-        edgeLabelPlacement: 'Shift',
-        majorGridLines: { width: 0 },
-        labelIntersectAction: 'Rotate45',
-      })
-    }
-  }, [])
 
   useEffect(() => {
     setDataSource(chartInputData)
@@ -174,30 +143,28 @@ const LineSeriesChart = (props: any) => {
   }
 
   const dragComplete = (args: any) => {
-    //가장 넓은 범위의 start/end datetime 선택하기 위해 loop 처리
+    //가장 넓은 범위의 start/end datetime 선택
     const data: Array<any> = args.selectedDataValues
-    let minDatetime = 0
-    let maxDatetime = 0
+    // let selectedIndex = 0
+    //const length = data[0].length
+    let maximumIndex = 0
 
+    // console.log('data:', data)
     for (let i = 0; i < data.length; i++) {
-      if (i === 0) {
-        minDatetime = data[i][0].x
-        maxDatetime = data[i][data[0].length - 1].x
-      } else {
-        const min = data[i][0].x
-        const max = data[i][data[i].length - 1].x
-
-        if (min < minDatetime) {
-          minDatetime = min
-        }
-        if (max > maxDatetime) {
-          maxDatetime = max
-        }
+      if (data[i].length > maximumIndex) {
+        maximumIndex = i
       }
     }
 
-    setSelectedDatetime([minDatetime, maxDatetime])
+    // console.log('maximumIndex:', maximumIndex)
+    const lengthOfLargestData = data[maximumIndex].length
+    // console.log('data[maximumIndex]:', data[maximumIndex].length)
+
+    setSelectedDatetime([data[maximumIndex][0].x, data[maximumIndex][lengthOfLargestData - 1].x])
     // console.log('selectedDatetime:', selectedDatetime)
+
+    // setSelectedDatetime()
+    // setSelectedData(args.selectedDataValues[0])
   }
 
   const handleExport = (e: any) => {
@@ -229,48 +196,31 @@ const LineSeriesChart = (props: any) => {
   }
 
   const handleExcludeData = (e: any) => {
-    // console.log('original:', dataSource)
+    /* selectedData = 
+    [{x: Thu Apr 13 2023 08:44:00 GMT+0900 (GMT+09:00), y: 99.59999847}
+    {x: Thu Apr 13 2023 09:20:30 GMT+0900 (GMT+09:00), y: 100} ]
+    */
 
-    //선택된 구간의 시작/종료 시각
-    const selected_start = new Date(Date.parse(selectedDatetime[0]))
-    const selected_end = new Date(Date.parse(selectedDatetime[1]))
+    //이벤트 발생 시 selectedDataValues 의 x값이 자동으로 Date.toString()처리됨
+    //Tue Apr 25 2023 03:30:00 GMT+0900 (GMT+09:00) datetime형식
+    //원본 dataSource의 x값 형태인 {x: '2023-04-04 09:30:00' , y:n }형태로 변환해야 됨
 
-    // console.log('시작::', selected_start)
-    // console.log('종료::', selected_end)
+    if (selectedData.length > 0) {
+      const tempArr: Array<any> = []
+      const rawData = [...dataSource]
+      const indexArr = []
 
-    const newDataArr = []
-    for (let i = 0; i < dataSource.length; i++) {
-      const tagData: Array<any> = dataSource[i].data
-      const tagName = dataSource[i].name
+      for (let i = 0; i < selectedData.length; i++) {
+        const convertedDate = dateTimeToString(selectedData[i].x)
+        const indexToRemove = dataSource.findIndex((value: any) => value.x == convertedDate)
+        indexArr.push(indexToRemove)
 
-      //실제 각 태그 데이터에서 해당 구간의 시작/종료 인덱스 찾기
-      let startIdx = 0
-      let endIdx = 0
-      let stopYN = 0 //1: yes, stop , 0: no, keep doing this
-
-      // console.log('tagData:', tagData)
-      // console.log('tagName:', tagName)
-
-      for (let j = 0; j < tagData.length; j++) {
-        const x = new Date(Date.parse(tagData[j].x))
-
-        if (x >= selected_start) {
-          if (stopYN === 0) {
-            startIdx = j
-            stopYN = 1 //최초 한 번만 돌도록 flag 설정
-          } else if (x >= selected_end) {
-            endIdx = j // 최대값 초과하면 멈추고 인덱스 저장
-            break
-          }
+        if (indexToRemove != -1) {
+          tempArr.push(dataSource.splice(indexToRemove, 1)[0])
         }
       }
-      // console.log('idx:', startIdx, endIdx)
-
-      const arrayToRemove = tagData.slice(startIdx, endIdx) // 삭제할 구간 데이터 담은 변수
-      newDataArr.push({ data: tagData.filter((item) => !arrayToRemove.includes(item)), name: tagName })
+      setDataSource(rawData.filter((item) => !tempArr.includes(item)))
     }
-    setDataSource(newDataArr)
-    // console.log('dataSource:', dataSource)
   }
 
   const handleAddThreshold = (e: any) => {
@@ -281,16 +231,15 @@ const LineSeriesChart = (props: any) => {
     csvLinkRef?.current?.handleClick()
   }
 
-  // const primaryxAxis: AxisModel = {
-  //   // crosshairTooltip: { enable: true },
-  //   valueType: 'DateTime',
-  //   labelFormat: 'M/d hh:mm',
-  //   // valueType: 'Double',
-  //   interval: 5,
-  //   edgeLabelPlacement: 'Shift',
-  //   majorGridLines: { width: 0 },
-  //   labelIntersectAction: 'Rotate45',
-  // }
+  const primaryxAxis: AxisModel = {
+    // crosshairTooltip: { enable: true },
+    valueType: 'DateTime',
+    labelFormat: 'M/d hh:mm',
+    edgeLabelPlacement: 'Shift',
+    majorGridLines: { width: 0 },
+    interval: 1,
+    labelIntersectAction: 'Rotate45',
+  }
 
   const primaryyAxis: AxisModel = {
     // crosshairTooltip: { enable: true },
@@ -333,11 +282,10 @@ const LineSeriesChart = (props: any) => {
 
   const renderMultiSeries = () => {
     if (dataSource && dataSource.length > 0) {
-      const multiSeries = dataSource.map((item, idx) => {
+      const multiSeries = dataSource.map((item) => {
         return (
           <SeriesDirective
             dataSource={item.data}
-            key={item.name + '_key'}
             xName="x"
             yName="y"
             name={item.name}
@@ -390,7 +338,7 @@ const LineSeriesChart = (props: any) => {
         Exclude data
       </Button>
       {/* <Button ref={AddThresholdBtnRef} style={{ display: 'none' }} onClick={() => setModalOpen(true)}>
-        Add threshold
+        Add threshold   
       </Button> */}
       <SetValueModal visible={modalOpen} onClose={handleModalClose} onGetValue={handleGetValue} />
       <div id="btn-control" style={{ marginLeft: '60px' }}>

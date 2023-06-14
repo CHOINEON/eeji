@@ -43,6 +43,13 @@ const routes = [
     icon: <Icon as={BsHammer} width="20px" height="20px" color="inherit" />,
     component: DataAnalysis,
   },
+  {
+    name: 'Chart Test',
+    layout: '/admin',
+    path: '/ai-modeling',
+    icon: <Icon as={BsHammer} width="20px" height="20px" color="inherit" />,
+    component: AIModeling,
+  },
   // {
   //   name: 'AI Plant Modeling',
   //   layout: '/admin',

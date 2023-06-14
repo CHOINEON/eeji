@@ -4,7 +4,6 @@ import { ContextMenuComponent, MenuItemModel } from '@syncfusion/ej2-react-navig
 
 const ChartContextMenu = (props: any) => {
   const { onItemClicked } = props
-  const [clicked, setClicked] = useState(false)
 
   const menuItems: MenuItemModel[] = [
     {

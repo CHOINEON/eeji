@@ -48,6 +48,8 @@ const TagList = (props: any) => {
   }
 
   const onSelectionChanged = (e: any) => {
+    // console.log('onSelectionChanged:', e)
+
     const selectedRows = gridRef.current.api.getSelectedRows()
     const arr = []
 
@@ -83,7 +85,7 @@ const TagList = (props: any) => {
           ref={gridRef}
           rowData={rowData}
           columnDefs={columnDefs}
-          rowSelection={'single'} //multiple
+          rowSelection={'multiple'} //multiple
           // getRowId={getRowId}
           // onRowSelected={onRowSelected}
           onSelectionChanged={onSelectionChanged}
