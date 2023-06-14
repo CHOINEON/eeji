@@ -146,7 +146,7 @@ const FileUploader = (props: any) => {
           </div>
         </div>
       </div>
-      <Alert ShowModal={showAlertModal} message={message} getCloseModal={getCloseAlertModal} />
+      {/* <Alert ShowModal={showAlertModal} message={message} getCloseModal={getCloseAlertModal} /> */}
     </div>
   )
 }

@@ -3,7 +3,11 @@ import styled from '@emotion/styled'
 import { Select, Modal } from 'antd'
 import './style/style.css'
 
-import DataConnection from '../data/data_connection_list'
+// import * as 태그함수 from '../../../hmid_config/grid/function/태그데이터함수'
+// import DataConnection from '../data/data_connection_list'
+
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import * as RecoilAtoms from '../../../hmid_config/recoil/config/atoms'
 
 const DataListWrap = styled.div`
   width: 100%;
@@ -12,86 +16,26 @@ const DataListWrap = styled.div`
   flex-wrap: wrap;
 `
 
-// const SelectWrap = styled()
+export const WidgetModal: React.FC = () => {
+  const [showDataConnectionModal, setShowDataConnectionModal] = useRecoilState(RecoilAtoms.ShowConnectionDataState)
 
-interface DataConnectionModalProps {
-  DataTagList: any
-  DataConnectionModalisOpen: boolean
-  setCloseDataConnectionModal: (isClose: boolean) => void
-  setDataConnectionInfo: (DataType: string) => void
-  setTagInfo: (TagInfo: any) => void
-  // setModeInfo: (ModeInfo: any) => void
-  // ChartType: string
-}
+  //Tag에서 선택한 데이터 Array
+  const setSelectTagInfo = useSetRecoilState(RecoilAtoms.SelectTagInfoState)
+  //Ant에 맞춘 TagList Array
+  const setTagListArr = useSetRecoilState(RecoilAtoms.TagListArrState)
+  //상위에서 넘어온 API TagDataList
+  const TagListByTagData = useRecoilValue(RecoilAtoms.TagListByTagDataState)
 
-export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
-  // const { onClose } = useDisclosure()
-  const [SelectDataType, setSelectDataType] = React.useState<any>()
-  const [TagNodeData, setTagNodeData] = React.useState<any>()
-  const [DataNodeData, setDataNodeData] = React.useState<any>()
-  const [TagInfo, setTagInfo] = React.useState<any>([])
-  const [ModeInfo, setModeInfo] = React.useState<any>([])
+  const [changeTagData, setChangeTagData] = React.useState<any>([])
 
-  const [showPieSetting, setShowPieSetting] = React.useState(false)
-
-  const DataType: any = [
-    {
-      value: 'min',
-      label: 'Min',
-    },
-    {
-      value: 'max',
-      label: 'Max',
-    },
-    {
-      value: 'avg',
-      label: 'Average',
-    },
-  ]
-
+  //rendering시 함수 호출
   React.useEffect(() => {
-    CreateDtataListItems()
+    //CreateTagListItems(TagListByTagData)
   }, [])
-
-  // React.useEffect(() => {
-  //   if (props.ChartType === 'Pie' || props.ChartType === 'pie') {
-  //     setShowPieSetting(true)
-  //   } else {
-  //     setShowPieSetting(false)
-  //   }
-  // }, [props.ChartType])
-
-  React.useEffect(() => {
-    props.setDataConnectionInfo(SelectDataType)
-  }, [SelectDataType])
-
-  React.useEffect(() => {
-    if (props.DataTagList.length !== 0) {
-      CreateTagListItems(props.DataTagList)
-    }
-  }, [props.DataTagList])
-
-  const CreateDtataListItems = () => {
-    const Arr: any = []
-    let Obj: any = new Object()
-
-    for (let i = 0, len = DataConnection.length; i < len; i++) {
-      Obj.value = DataConnection[i].value
-      Obj.label = DataConnection[i].label
-      Arr.push(Obj)
-      Obj = new Object()
-    }
-
-    setDataNodeData(Arr)
-  }
 
   const CreateTagListItems = (TagData: any) => {
     const Arr: any = []
     let Obj: any = new Object()
-
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-    console.log(TagData)
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 
     for (let i = 0, len = TagData.length; i < len; i++) {
       Obj.value = TagData[i].name
@@ -100,68 +44,46 @@ export const WidgetModal: React.FC<DataConnectionModalProps> = (props) => {
       Obj = new Object()
     }
 
-    setTagNodeData(Arr)
+    setTagListArr(Arr)
   }
 
-  const handleDataChange = (value: string | string[]) => {
-    if (value !== undefined) {
-      setSelectDataType(value)
-    }
-  }
-
-  const handleTagChange = (value: string | string[]) => {
+  const handleTagChange = (value: any | any[]) => {
     console.log(value)
-    setTagInfo(value)
-  }
-
-  const handleModeChange = (value: string | string[]) => {
-    console.log(' Mode Change Value')
-    setModeInfo(value)
+    setChangeTagData(value)
+    // setSelectTagInfo(value)
   }
 
   return (
     <>
       <Modal
         title="Modal"
-        open={props.DataConnectionModalisOpen}
+        open={showDataConnectionModal}
         onOk={() => {
-          props.setTagInfo(TagInfo)
-          // props.setModeInfo(ModeInfo)
-          props.setCloseDataConnectionModal(true)
-          //value 초기화
-          setTagInfo([])
-          setModeInfo([])
-          setSelectDataType([])
+          setShowDataConnectionModal(false)
+          setSelectTagInfo(changeTagData)
+          setChangeTagData([])
         }}
         onCancel={() => {
-          props.setCloseDataConnectionModal(true)
+          setShowDataConnectionModal(false)
         }}
         okText="Connect"
         cancelText="Cancel"
       >
         <DataListWrap>
-          <div>Data .</div>
-          <Select style={{ width: 120 }} onChange={handleDataChange} options={DataNodeData} value={SelectDataType} />
-          <div>Tag .</div>
+          <div>Tag</div>
           <Select
             mode="tags"
             size={'large'}
             placeholder={'Tag Select'}
             onChange={handleTagChange}
             style={{ width: '100%' }}
-            options={TagNodeData}
-            value={TagInfo}
+            // options={TagListArr}
+            options={[
+              { value: 'TestData1', label: '테스트 데이터1' },
+              // { value: 'TestData2', label: '테스트 데이터2' },
+            ]}
+            value={changeTagData}
           />
-          {/* <div>
-            <Select
-              size={'large'}
-              placeholder={'Select Data Type'}
-              onChange={handleModeChange}
-              style={{ width: '100%' }}
-              options={DataType}
-              value={'min'}
-            />
-          </div> */}
         </DataListWrap>
       </Modal>
     </>

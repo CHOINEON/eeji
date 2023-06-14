@@ -1,16 +1,15 @@
 import React from 'react'
 import { Box, useColorModeValue } from '@chakra-ui/react'
-import PredefinedLayoutsConfiguration from './grid/GridLayoutConfiguration'
-import { RecoilRoot } from 'recoil'
+import MainDashboardInterval from './hmid_Interval'
 
-export default function LayoutConfig() {
+export default function HmidInterval() {
   const theme = useColorModeValue('navy.700', 'white')
 
   return (
-    <RecoilRoot>
+    <>
       <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
-        <PredefinedLayoutsConfiguration />
+        <MainDashboardInterval />
       </Box>
-    </RecoilRoot>
+    </>
   )
 }

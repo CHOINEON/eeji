@@ -4,21 +4,19 @@
 export const panelData: any = [
   //0
   {
-    panel1: { sizeX: 5, sizeY: 2, row: 0, col: 0, widget: 'Line1', id: '0_body' },
+    panel1: { sizeX: 5, sizeY: 2, row: 0, col: 0, widget: 'Time Series', id: '0_body' },
     panel2: { sizeX: 3, sizeY: 2, row: 0, col: 8, widget: 'Table', id: '1_body' },
-    panel3: { sizeX: 2, sizeY: 2, row: 2, col: 0, widget: 'Line2', id: '2_body' },
-    panel4: { sizeX: 2, sizeY: 2, row: 2, col: 2, widget: 'Line3', id: '3_body' },
-    panel5: { sizeX: 2, sizeY: 2, row: 2, col: 4, widget: 'Line4', id: '4_body' },
-    panel6: { sizeX: 2, sizeY: 2, row: 2, col: 8, widget: 'Line5', id: '5_body' },
+    panel3: { sizeX: 2, sizeY: 2, row: 2, col: 0, widget: 'Time Series', id: '2_body' },
+    panel4: { sizeX: 2, sizeY: 2, row: 2, col: 2, widget: 'Time Series', id: '3_body' },
+    panel5: { sizeX: 2, sizeY: 2, row: 2, col: 4, widget: 'Time Series', id: '4_body' },
+    panel6: { sizeX: 2, sizeY: 2, row: 2, col: 8, widget: 'Scatter Plot', id: '5_body' },
   },
   //1
   {
-    panel1: { sizeX: 3, sizeY: 2, row: 2, col: 0, widget: 'Bar', id: '0_body' },
-    panel2: { sizeX: 2, sizeY: 2, row: 2, col: 3, widget: 'Pie', id: '1_body' },
-    panel3: { sizeX: 3, sizeY: 2, row: 2, col: 8, widget: 'Line', id: '2_body' },
-    panel4: { sizeX: 3, sizeY: 2, row: 2, col: 0, widget: 'Table', id: '3_body' },
-    panel5: { sizeX: 5, sizeY: 2, row: 2, col: 8, widget: 'TimeSeries', id: '4_body' },
-    panel6: { sizeX: 8, sizeY: 3, row: 4, col: 0, widget: 'Table', id: '5_body' },
+    panel1: { sizeX: 4, sizeY: 2, row: 0, col: 0, widget: 'Time Series', id: '0_body' },
+    panel2: { sizeX: 4, sizeY: 2, row: 0, col: 4, widget: 'Scatter Plot', id: '1_body' },
+    panel3: { sizeX: 5, sizeY: 2, row: 2, col: 0, widget: 'Time Series', id: '2_body' },
+    panel4: { sizeX: 3, sizeY: 2, row: 2, col: 5, widget: 'Table', id: '3_body' },
   },
   //2
   // {

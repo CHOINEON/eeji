@@ -1,29 +1,21 @@
 import React from 'react'
-import {
-  Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  Grid,
-} from '@chakra-ui/react'
+import * as Chakra from '@chakra-ui/react'
 import styled from '@emotion/styled'
 
 import ico_line from '../../../../assets/img/ineeji/ico_line.png'
 import ico_bar from '../../../../assets/img/ineeji/ico_bar.png'
 import ico_pie from '../../../../assets/img/ineeji/ico_pie.png'
 import ico_heatmap from '../../../../assets/img/ineeji/ico_heatmap.png'
-import ico_scatter_plot from '../../../../assets/img/ineeji/ico_scatter_plot.png'
 import ico_waterfall from '../../../../assets/img/ineeji/ico_waterfall.png'
 import ico_box_plot from '../../../../assets/img/ineeji/ico_box_plot.png'
 import ico_table from '../../../../assets/img/ineeji/ico_table.png'
+import ico_scatter_plot from '../../../../assets/img/ineeji/ico_scatter_plot.png'
 import ico_time_series_chart from '../../../../assets/img/ineeji/ico_time_series_chart.png'
 
 import WidgetData from '../data/widget_list'
+
+import { useRecoilState, useSetRecoilState } from 'recoil'
+import { ShowWidgetModalState, WidgetInfoState } from '../../../hmid_config/recoil/config/atoms'
 
 const WidgetListWrap = styled.div`
   width: 100%;
@@ -72,9 +64,9 @@ const WidgetIcon = styled.li<{ Type: string }>`
       return `
       background-image: url(${ico_box_plot});
       `
-    } else if (props.Type === 'Heatmap') {
+    } else if (props.Type === 'Scatter Plot') {
       return `
-      background-image: url(${ico_heatmap});
+      background-image: url(${ico_scatter_plot});
       `
     } else if (props.Type === 'Table') {
       return `
@@ -89,15 +81,12 @@ const WidgetText = styled.div`
   margin-top: 0.5vw;
 `
 
-interface WidgetModalProps {
-  WidgetModalisOpen: boolean
-  setCloseWidgetModal: (isClose: boolean) => void
-  setWidgetInfo: (gridInfo: string) => void
-}
-
-export const WidgetModal: React.FC<WidgetModalProps> = (props) => {
-  const { onClose } = useDisclosure()
+export const WidgetModal: React.FC = () => {
+  const { onClose } = Chakra.useDisclosure()
   const [WidgetType, setWidgetType] = React.useState<string>('chart')
+
+  const [showWidgetModal, setShowWidgetModal] = useRecoilState(ShowWidgetModalState)
+  const setWidgetInfo = useSetRecoilState(WidgetInfoState)
 
   const CreateTabItems = (type: string) => {
     const chart: any = []
@@ -145,43 +134,42 @@ export const WidgetModal: React.FC<WidgetModalProps> = (props) => {
   }
 
   const WidgetClick = (widgetType: any) => {
-    console.log(widgetType)
-    props.setWidgetInfo(widgetType)
-    props.setCloseWidgetModal(true)
+    setWidgetInfo(widgetType)
+    setShowWidgetModal(false)
   }
 
   return (
     <>
-      <Modal
+      <Chakra.Modal
         isCentered
         onClose={() => {
-          props.setCloseWidgetModal(true)
+          setShowWidgetModal(false)
         }}
-        isOpen={props.WidgetModalisOpen}
+        isOpen={showWidgetModal}
         motionPreset="slideInBottom"
       >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Widget 선택</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Grid templateColumns="repeat(2, 1fr)" gap={3}>
-              <Button colorScheme="brand" mr={3} onClick={() => setWidgetType('chart')}>
+        <Chakra.ModalOverlay />
+        <Chakra.ModalContent>
+          <Chakra.ModalHeader>Widget 선택</Chakra.ModalHeader>
+          <Chakra.ModalCloseButton />
+          <Chakra.ModalBody>
+            <Chakra.Grid templateColumns="repeat(2, 1fr)" gap={3}>
+              <Chakra.Button colorScheme="brand" mr={3} onClick={() => setWidgetType('chart')}>
                 Chart
-              </Button>
-              <Button colorScheme="brand" mr={3} onClick={() => setWidgetType('component')}>
+              </Chakra.Button>
+              <Chakra.Button colorScheme="brand" mr={3} onClick={() => setWidgetType('component')}>
                 Component
-              </Button>
-            </Grid>
+              </Chakra.Button>
+            </Chakra.Grid>
             <WidgetListWrap>{CreateTabItems(WidgetType)}</WidgetListWrap>
-          </ModalBody>
-          <ModalFooter>
-            <Button id="design_button" colorScheme="brand" mr={3} onClick={onClose}>
+          </Chakra.ModalBody>
+          <Chakra.ModalFooter>
+            <Chakra.Button id="design_button" colorScheme="brand" mr={3} onClick={onClose}>
               닫기
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+            </Chakra.Button>
+          </Chakra.ModalFooter>
+        </Chakra.ModalContent>
+      </Chakra.Modal>
     </>
   )
 }

@@ -13,43 +13,31 @@ const BlackBox = styled.div<{ view: boolean }>`
   display: ${(props: any) => (props.view ? 'block' : 'none')};
 `
 
-interface AlertProps {
-  message: string
-  ShowModal: boolean
-  getCloseModal: (e: boolean) => void
-}
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { AlertModalState, AlertMessageState } from 'views/hmid_config/recoil/config/atoms'
 
-export const Alert: React.FC<AlertProps> = (props: any) => {
-  const [showModal, setShowModal] = React.useState(false)
-  const [message, setMessage] = React.useState<string>('')
-
-  React.useEffect(() => {
-    setShowModal(props.ShowModal)
-  }, [props.ShowModal])
-
-  React.useEffect(() => {
-    setMessage(props.message)
-  }, [props.message])
+export const Alert: React.FC = () => {
+  const [showAlertModal, setShowAlertModal] = useRecoilState(AlertModalState)
+  const alertMessage = useRecoilValue(AlertMessageState)
 
   const hideModal = () => {
-    setShowModal(false)
-    props.getCloseModal(false)
+    setShowAlertModal(false)
   }
 
   return (
     <div>
-      <BlackBox id="yunhee" view={showModal} />
+      <BlackBox id="yunhee" view={showAlertModal} />
       <Modal
         style={{ top: '6vw' }}
         title="알람"
-        open={showModal}
+        open={showAlertModal}
         footer={[
           <Button key="OK" onClick={hideModal} style={{ backgroundColor: '#4338f7', color: 'white' }}>
             OK
           </Button>,
         ]}
       >
-        <p>{message}</p>
+        <p>{alertMessage}</p>
       </Modal>
     </div>
   )

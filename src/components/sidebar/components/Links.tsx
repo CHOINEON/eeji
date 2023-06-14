@@ -33,6 +33,7 @@ export function SidebarLinks(props: { routes: RoutesType[] }) {
       // if (route.layout === '/admin' || route.layout === '/rtl') {
       if (window.localStorage.getItem('userPosition') === 'admin') {
         if (route.path !== '/maindashboard' && route.path !== '/layout-configuration') {
+          // if (route.path !== '/maindashboard') {
           return (
             <NavLink key={index + route.path} to={route.layout + route.path}>
               {route.icon ? (
@@ -77,6 +78,7 @@ export function SidebarLinks(props: { routes: RoutesType[] }) {
         }
       } else {
         if (route.path !== '/layout-list' && route.path !== '/layout-configuration') {
+          // if (route.path === '/layout-configuration') {
           return (
             <NavLink key={index + route.path} to={route.layout + route.path}>
               {route.icon ? (

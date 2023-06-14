@@ -25,7 +25,7 @@ import { Box, useColorModeValue } from '@chakra-ui/react'
 
 import React from 'react'
 
-import { MainDashboard } from './MainDashboard'
+import { MainDashboardWS } from './hmid_ws'
 
 //function
 // import GridLayoutBox from './function/GridLayout'
@@ -52,7 +52,7 @@ export default function HMID() {
   //end 새로고침 막기
   return (
     <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
-      <MainDashboard />
+      <MainDashboardWS />
     </Box>
   )
 }
