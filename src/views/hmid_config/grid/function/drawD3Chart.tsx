@@ -32,6 +32,7 @@ export interface LineChartPorps {
 export const D3LineChart: React.FC<LineChartPorps> = (props) => {
   const svgRef = React.useRef()
   const svgRef2 = React.useRef()
+  const svgContainer = React.useRef(null)
 
   const [WsData, setWsData] = React.useState<any>([])
 
@@ -67,14 +68,36 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     { field: 'openingprice', headerName: 'OpeningPrice', editable: false },
   ])
 
+  const [widthState, setWidth] = React.useState()
+  const [heightState, setHeight] = React.useState()
+
   const webSocketUrl = `ws://demo.ineeji.com/ws`
   // const webSocketUrl = `ws://192.168.1.27:8000/api/ws`
   const ws = React.useRef(null)
 
+  // This function calculates width and height of the container
+  const getSvgContainerSize = () => {
+    const newWidth = svgContainer.current.clientWidth
+    setWidth(newWidth)
+
+    const newHeight = svgContainer.current.clientHeight
+    setHeight(newHeight)
+  }
+
   React.useEffect(() => {
+    getSvgContainerSize()
     getChartData()
     getsocketChartData()
+
+    window.addEventListener('resize', getSvgContainerSize)
+    return () => window.removeEventListener('resize', getSvgContainerSize)
   }, [])
+
+  // React.useEffect(() => {
+  //   if (widthState !== undefined && heightState !== undefined) {
+  //     console.log('[ width , height ] ', widthState, ' , ', heightState)
+  //   }
+  // }, [widthState, heightState])
 
   // React.useEffect(() => {
   //   console.log(props.ChartShow)
@@ -350,6 +373,8 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     const margin = { top: 25, right: 50, bottom: 50, left: 70 },
       width = props.widthSize - margin.left - margin.right,
       height = props.heightSize - margin.top - margin.bottom
+    // width = widthState - margin.left - margin.right,
+    // height = heightState - margin.top - margin.bottom
 
     //grid line 속성 style은 css
     const xGrid = (g: any) =>
@@ -1224,13 +1249,15 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       <Chakra.Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
         {/*d3 line chart*/}
         {/* <div>Websocket</div> */}
-        <Wrapper ref={svgRef2} ChartShow={props.ChartShow} />
-        <div id="tooltip" className="tooltip">
-          <div className="tooltip-date">
-            <span id="date"></span>
-          </div>
-          <div className="tooltip-Value">
-            Value : <span id="value"></span>
+        <div ref={svgContainer}>
+          <Wrapper ref={svgRef2} ChartShow={props.ChartShow} />
+          <div id="tooltip" className="tooltip">
+            <div className="tooltip-date">
+              <span id="date"></span>
+            </div>
+            <div className="tooltip-Value">
+              Value : <span id="value"></span>
+            </div>
           </div>
         </div>
         {/* <Plot data={chartData} layout={layoutOption} /> */}
