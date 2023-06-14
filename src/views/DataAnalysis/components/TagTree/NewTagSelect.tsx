@@ -60,8 +60,6 @@ const NewTagSelect = (props: any) => {
 
   const [indexColumn, setIndexColumn] = useRecoilState(indexColumnStore)
 
-  const selectRef = useRef()
-
   useEffect(() => {
     fetchTaglistData()
   }, [])
