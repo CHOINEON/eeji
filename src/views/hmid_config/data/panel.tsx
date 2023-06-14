@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid' // Grid version 1
-import panelData from '../data/panel-data_copy'
+import panelData from './panel-data_config'
 
 import { useRecoilState, useRecoilValue } from 'recoil'
 import * as RecoilAtoms from '../recoil/config/atoms'

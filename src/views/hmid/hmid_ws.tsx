@@ -156,6 +156,7 @@ export const MainDashboardWS: React.FC = () => {
 
   React.useEffect(() => {
     getNowDateTime()
+    window.localStorage.setItem('SelectedDashboardInfo', 'new')
   }, [])
 
   React.useEffect(() => {
@@ -260,31 +261,31 @@ export const MainDashboardWS: React.FC = () => {
    * 코드 필요성 확인
    */
   React.useEffect(() => {
-    if (window.localStorage.getItem('SelectedDashboardInfo') !== 'new') {
-      const Layoutdata: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
-      const panel: any = Object.keys(panels[Number(Layoutdata[0].grid_id)]).map((panelIndex: string) => {
-        return panels[Number(Layoutdata[0].grid_id)][panelIndex]
-      })
+    // if (window.localStorage.getItem('SelectedDashboardInfo') !== 'new') {
+    //   const Layoutdata: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
+    //   const panel: any = Object.keys(panels[Number(Layoutdata[0].grid_id)]).map((panelIndex: string) => {
+    //     return panels[Number(Layoutdata[0].grid_id)][panelIndex]
+    //   })
 
-      initializeTemplate(Layoutdata[0].grid_id, dashboardObj).then(function () {
-        SelectedDashboardWidgetData(Layoutdata, panel)
-      })
+    //   initializeTemplate(Layoutdata[0].grid_id, dashboardObj).then(function () {
+    //     SelectedDashboardWidgetData(Layoutdata, panel)
+    //   })
 
-      // setTimeout(function () {
-      //   SelectedDashboardWidgetData(Layoutdata, panel)
-      // }, 500)
-      // SelectedDashboardWidgetData(Layoutdata)
-    } else {
-      const dashboardData = initializeTemplate(null, dashboardObj)
-      dashboardData.then(function (args: any) {
-        setTimeout(function () {
-          AddGridGauid(args, 0)
-        }, 1000)
-      })
-      // setTimeout(function () {
-      //   그리기함수.AddGridGauid(gridDataObj, 0)
-      // }, 500)
-    }
+    //   // setTimeout(function () {
+    //   //   SelectedDashboardWidgetData(Layoutdata, panel)
+    //   // }, 500)
+    //   // SelectedDashboardWidgetData(Layoutdata)
+    // } else {
+    const dashboardData = initializeTemplate(null, dashboardObj)
+    dashboardData.then(function (args: any) {
+      setTimeout(function () {
+        AddGridGauid(args, 0)
+      }, 1000)
+    })
+    // setTimeout(function () {
+    //   그리기함수.AddGridGauid(gridDataObj, 0)
+    // }, 500)
+    //}
   }, [panelIdx])
 
   //레이아웃 만들 경우 default값 나타내기

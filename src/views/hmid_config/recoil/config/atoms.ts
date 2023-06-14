@@ -48,11 +48,6 @@ export const DataTableColumnsState = atom({
   default: [],
 })
 
-export const WidgetInformationState = atom({
-  key: `WidgetInfo/${v1()}`,
-  default: '',
-})
-
 export const AlertMessageState = atom({
   key: `Message/${v1()}`,
   default: '',
@@ -149,7 +144,6 @@ export default {
   TimeSeriesChartLayoutOptionState,
   DataTableRowState,
   DataTableColumnsState,
-  WidgetInformationState,
   AlertMessageState,
   AlertModalState,
   ShowLoadingState,

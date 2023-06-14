@@ -18,7 +18,7 @@ import '../../hmid/components/Modal/style/style.css'
 import { AgGridReact } from 'ag-grid-react'
 import { ColDef } from 'ag-grid-community'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
-import { panelData } from '../data/panel-data_copy'
+import { panelData } from '../data/panel-data_config'
 import Plot from 'react-plotly.js'
 import * as d3 from 'd3'
 

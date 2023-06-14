@@ -2,7 +2,7 @@
  * INFINITE OPTIMAL
  * 메뉴 : HMI Designer - GridLayout
  * 시작 날짜 : 2023-03-10
- * 최종 수정 날짜 : 2023-04-06
+ * 최종 수정 날짜 : 2023-06-13
  * 개발자 : 박윤희 (BAK YUN HEE)
  */
 
@@ -18,8 +18,7 @@ import '../../hmid/components/Modal/style/style.css'
 import { AgGridReact } from 'ag-grid-react'
 import { ColDef } from 'ag-grid-community'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
-import { panelData } from '../data/panel-data'
-import Plot from 'react-plotly.js'
+import { panelData } from '../data/panel-data_config'
 import * as d3 from 'd3'
 
 import WidgetModal from '../../hmid/components/Modal/WidgetModal'
@@ -37,13 +36,16 @@ import * as 이미지저장함수 from './function/캡쳐이미지저장함수'
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import * as RecoilAtoms from '../recoil/config/atoms'
-import * as RecoilLineAtoms from '../recoil/line/atoms'
-import * as RecoilTimeSeriesAtoms from '../recoil/timeseries/atoms'
-// import { GridDataObjSelector } from '../recoil/config/selector'
 import { CompanyId, LayoutTitle, NowDate, WsDataTest } from '../recoil/base/atoms'
+// import * as RecoilLineAtoms from '../recoil/line/atoms'
+// import * as RecoilTimeSeriesAtoms from '../recoil/timeseries/atoms'
+// import { GridDataObjSelector } from '../recoil/config/selector'
 
-import D3LineChart from './function/drawD3Chart'
+// import D3LineChart from './function/drawD3Chart'
 import D3LineChartTooltip from './function/drawD3ChartTooltip(Test중)'
+import D3ChartDefaultGrid from './function/drawD3ChartDefaultGrid'
+import D3LineChart from '../../hmid/components/d3/D3LineChart'
+import D3ScatterPlotChart from '../../hmid/components/d3/D3ScatterPlotChart'
 
 const DataGridWrap = styled.div`
   width: 100%;
@@ -74,68 +76,64 @@ const CurrentIcon = styled.div`
 
 export const PredefinedLayoutsConfiguration: React.FC = () => {
   //atom
-  const setShowWidgetModal = useSetRecoilState(RecoilAtoms.ShowWidgetModalState)
-  const [LineDataOption, setLineDataOption] = useRecoilState(RecoilLineAtoms.LineChartDataOptionState)
-  const [LineLayoutOption, setLineLayoutOption] = useRecoilState(RecoilLineAtoms.LineChartLayoutOptionState)
-  const [TimeSeriesDataOption, setTimeSeriesDataOption] = useRecoilState(
-    RecoilTimeSeriesAtoms.TimeSeriesChartDataOptionState
-  )
-  const [TimeSeriesLayoutOption, setTimeSeriesLayoutOption] = useRecoilState(
-    RecoilTimeSeriesAtoms.TimeSeriesChartLayoutOptionState
-  )
+  //옵션 삭제
+  // const [LineDataOption, setLineDataOption] = useRecoilState(RecoilLineAtoms.LineChartDataOptionState)
+  // const [LineLayoutOption, setLineLayoutOption] = useRecoilState(RecoilLineAtoms.LineChartLayoutOptionState)
+  // const [TimeSeriesDataOption, setTimeSeriesDataOption] = useRecoilState(
+  //   RecoilTimeSeriesAtoms.TimeSeriesChartDataOptionState
+  // )
+  // const [TimeSeriesLayoutOption, setTimeSeriesLayoutOption] = useRecoilState(
+  //   RecoilTimeSeriesAtoms.TimeSeriesChartLayoutOptionState
+  // )
   const [gridInformation, setGridInformation] = useRecoilState(RecoilAtoms.GridInformationState)
   // const [gridDataObj, setGridDataObj] = useRecoilState(RecoilAtoms.GridDataObjState)
   const [showLoading, setShowLoading] = useRecoilState(RecoilAtoms.ShowLoadingState)
-  const [tagListArr, setTagListArr] = useRecoilState(RecoilAtoms.TagListArrState)
   const [widgetInfo, setWidgetInfo] = useRecoilState(RecoilAtoms.WidgetInfoState)
   const [boxTargetId, setBoxTargetId] = useRecoilState(RecoilAtoms.BoxTargetIdState)
   const [panelIdx, setPanelIdx] = useRecoilState(RecoilAtoms.PanelIdxState)
+  const [NowDateText, setNowDateText] = useRecoilState(NowDate)
 
-  const setOpenGridMoal = useSetRecoilState(RecoilAtoms.ShowGridModalState)
+  const setOpenGridModal = useSetRecoilState(RecoilAtoms.ShowGridModalState)
   const setOpenSaveLayoutModal = useSetRecoilState(RecoilAtoms.OpenSaveLayoutModalState)
+  const setshowWidgetModalState = useSetRecoilState(RecoilAtoms.ShowWidgetModalState)
   const setDataConnectionModal = useSetRecoilState(RecoilAtoms.ShowConnectionDataState)
   const setAlertMessage = useSetRecoilState(RecoilAtoms.AlertMessageState)
   const setShowAlertModal = useSetRecoilState(RecoilAtoms.AlertModalState)
+
+  //모달에서 선택한 Tag Array
   const SelectTagInfo = useRecoilValue(RecoilAtoms.SelectTagInfoState)
   const companyId = useRecoilValue(CompanyId)
   const layoutTitle = useRecoilValue(LayoutTitle)
 
-  const [NowDateText, setNowDateText] = useRecoilState(NowDate)
-
-  const [WsRtnDataSet, setWsRtnDataSet] = React.useState<any>()
-
   //보류
-  const [SaveTagDataList, setSaveTagDataList] = React.useState<any>([
-    {
-      type: 'Time Series',
-      tag_data: [],
-    },
-    {
-      type: 'Pie',
-      tag_data: [],
-    },
-    {
-      type: 'Bar',
-      tag_data: [],
-    },
-    {
-      type: 'Line',
-      tag_data: [],
-    },
-    {
-      type: 'Table',
-      tag_data: [],
-    },
-  ])
+  // const [SaveTagDataList, setSaveTagDataList] = React.useState<any>([
+  //   {
+  //     type: 'Time Series',
+  //     tag_data: [],
+  //   },
+  //   {
+  //     type: 'Pie',
+  //     tag_data: [],
+  //   },
+  //   {
+  //     type: 'Bar',
+  //     tag_data: [],
+  //   },
+  //   {
+  //     type: 'Line',
+  //     tag_data: [],
+  //   },
+  //   {
+  //     type: 'Table',
+  //     tag_data: [],
+  //   },
+  // ])
 
-  const gridRef = React.useRef<any>([])
-  const defaultColDef = React.useMemo<ColDef>(() => {
-    return {
-      flex: 1,
-      editable: true,
-    }
-  }, [])
+  const panels: any = panelData
+  let dashboardObj: ej2.DashboardLayoutComponent
+  const cellSpacing: number[] = [5, 5]
 
+  //현재시간 계산하기
   const getNowDateTime = () => {
     const now = new Date()
     const year = now.getFullYear()
@@ -155,6 +153,26 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
 
   React.useEffect(() => {
     getNowDateTime()
+
+    //리스트에 있는 대시보드 데이터 인지, 새로 생성하는 대시보드인지 확인
+    if (window.localStorage.getItem('SelectedDashboardInfo') !== 'new') {
+      const Layoutdata: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
+      const panel: any = Object.keys(panels[Number(Layoutdata[0].grid_id)]).map((panelIndex: string) => {
+        return panels[Number(Layoutdata[0].grid_id)][panelIndex]
+      })
+
+      initializeTemplate(dashboardObj, Number(Layoutdata[0].grid_id)).then(function () {
+        SelectedDashboardWidgetData(Layoutdata, panel)
+      })
+    } else {
+      const dashboardData = initializeTemplate(dashboardObj, 0)
+      //가이드 필요한 경우
+      dashboardData.then(function (args: any) {
+        setTimeout(function () {
+          AddGridGauid(0)
+        }, 1000)
+      })
+    }
   }, [])
 
   React.useEffect(() => {
@@ -166,29 +184,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   //theme color mode
   const dashboardBoxColor = Chakra.useColorModeValue('white', 'dark')
 
-  let TableRows: any = [
-    { make: 'Porsche', model: 'Boxter', price: 72000 },
-    { make: 'Ford', model: 'Mondeo', price: 32000 },
-    { make: 'Ford', model: 'Mondeo', price: 32000 },
-    { make: 'Toyota', model: 'Celica', price: 35000 },
-    { make: 'Toyota', model: 'Celica', price: 35000 },
-    { make: 'Porsche', model: 'Boxter', price: 72000 },
-    { make: 'Toyota', model: 'Celica', price: 35000 },
-    { make: 'Toyota', model: 'Celica', price: 35000 },
-    { make: 'Porsche', model: 'Boxter', price: 72000 },
-    { make: 'Porsche', model: 'Boxter', price: 72000 },
-    { make: 'Porsche', model: 'Boxter', price: 72000 },
-    { make: 'Toyota', model: 'Celica', price: 35000 },
-    { make: 'Porsche', model: 'Boxter', price: 72000 },
-    { make: 'Ford', model: 'Mondeo', price: 32000 },
-    { make: 'Ford', model: 'Mondeo', price: 32000 },
-  ]
-  let TableColumns: any = [{ field: 'make', filter: true }, { field: 'model', filter: true }, { field: 'price' }]
-
-  const panels: any = panelData
-  let dashboardObj: ej2.DashboardLayoutComponent
-  const cellSpacing: number[] = [5, 5]
-
+  //리스트에 있던 대시보드 불러와서 위젯을 그리는 경우
   const SelectedDashboardWidgetData = (Layoutdata: any, panel: any) => {
     for (let i = 0, len = Layoutdata.length; i < len; i++) {
       for (let j = 0, len = panel.length; j < len; j++) {
@@ -245,91 +241,71 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
     }
   }
 
-  //??? 굳이 tag 선택 방법 변경해서 다시
-  // React.useEffect(() => {
-  //   console.log('Change Tag Info >>>>> ')
-  //   console.log(SelectTagInfo)
-  //   if (SelectTagInfo !== undefined) {
-  //     // getDataBySelctedCompany('Dongwon', SelectTagInfo, widgetInfo, boxTargetId)
-  //   }
-  // }, [SelectTagInfo])
-
-  /**
-   * 2023-05-25 박윤희
-   * 코드 필요성 확인
-   */
-  React.useEffect(() => {
-    if (window.localStorage.getItem('SelectedDashboardInfo') !== 'new') {
-      const Layoutdata: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
-      const panel: any = Object.keys(panels[Number(Layoutdata[0].grid_id)]).map((panelIndex: string) => {
-        return panels[Number(Layoutdata[0].grid_id)][panelIndex]
-      })
-
-      initializeTemplate(Layoutdata[0].grid_id, dashboardObj).then(function () {
-        SelectedDashboardWidgetData(Layoutdata, panel)
-      })
-
-      // setTimeout(function () {
-      //   SelectedDashboardWidgetData(Layoutdata, panel)
-      // }, 500)
-      // SelectedDashboardWidgetData(Layoutdata)
-    } else {
-      const dashboardData = initializeTemplate(null, dashboardObj)
-      dashboardData.then(function (args: any) {
-        setTimeout(function () {
-          AddGridGauid(args, 0)
-        }, 1000)
-      })
-      // setTimeout(function () {
-      //   그리기함수.AddGridGauid(gridDataObj, 0)
-      // }, 500)
-    }
-  }, [panelIdx])
-
-  //레이아웃 만들 경우 default값 나타내기
-  // default???? 생각해보기 initializeTemplate 있음
-  React.useEffect(() => {
-    initializeTemplate(null, dashboardObj)
-  }, [])
-
-  //grid 선택해서 레이아웃 변경 한 경우
+  //grid 선택해서 레이아웃 변경 한 경우 모달의 target을 인수로 넘기는 grid render 함수를 call
   React.useEffect(() => {
     if (gridInformation !== undefined && gridInformation !== null) {
-      // updateSampleSection()
       rendereComplete(gridInformation)
     }
-  }, [dashboardObj, gridInformation])
+  }, [gridInformation])
 
-  /**위젯 그리기  */
-  const DrawGauidWidget = (widget: string, node: any, option1: any, option2: any) => {
-    //설정 값
-    const config = {
-      displaylogo: false,
-      displayModeBar: false,
+  // 새로 그리는 대시보드인 경우, 가이드 형식 그려주는 함수
+  const AddGridGauid = async (idx: number) => {
+    const panels: any = panelData
+    const index = idx
+    const panel: any = Object.keys(panels[index]).map((panelIndex: string) => {
+      return panels[index][panelIndex]
+    })
+
+    for (let j = 0, len = panel.length; j < len; j++) {
+      const node: any = document.getElementById(panel[j].id)
+      node.className = panel[j].widget
+      console.log('[ Draw Dashboard Gauid ]')
+      console.log(node)
+      console.log(node.className)
+      let data: any = []
+      data = await d3.csv(
+        'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv'
+      )
+
+      DrawD3ChartWithData(node, data)
     }
+  }
 
-    if (widget !== 'Table') {
-      const layout = {
-        ...option2,
-        width: node.clientWidth,
-        height: node.clientHeight,
-        plot_bgcolor: 'rgba(255,255,255,0)',
-        paper_bgcolor: 'rgba(255,255,255,0)',
-      }
-
-      const data = <Plot data={option1} layout={layout} config={config} />
-      const element = React.createElement(data.type, {
-        data: data.props.data,
-        layout: data.props.layout,
-        config: data.props.config,
-      })
-      ReactDOM.render(element, node)
+  //TagList에 따른 데이터를 받아와서 d3 chart 그리기.
+  const DrawD3ChartWithData = (node: any, data: any) => {
+    if (node.className === 'Time Series') {
+      const elementData = (
+        <>
+          <D3LineChart
+            widthSize={node.clientWidth}
+            heightSize={node.clientHeight}
+            Data={data}
+            DataName={'TestData'}
+            Color={'orange'}
+          />
+        </>
+      )
+      ReactDOM.render(elementData, node)
+    } else if (node.className === 'Scatter Plot') {
+      const elementData = (
+        <>
+          <D3ScatterPlotChart
+            widthSize={node.clientWidth}
+            heightSize={node.clientHeight}
+            Data={data}
+            DataName={'TestData'}
+            Color={'#69b3a294'}
+          />
+        </>
+      )
+      ReactDOM.render(elementData, node)
     } else {
-      const data = (
+      const elementData = (
         <DataGridWrap className={'ag-theme-alpine'}>
-          <AgGridReact
-            rowData={option1}
-            columnDefs={option2}
+          <div>Data Table 작업 중 ... </div>
+          {/* <AgGridReact
+            rowData={data[1]}
+            columnDefs={data[0]}
             defaultColDef={{
               flex: 1,
               editable: true,
@@ -338,369 +314,128 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
             editType={'fullRow'}
             pagination={true}
             paginationAutoPageSize={true}
-          />
+          /> */}
         </DataGridWrap>
       )
+      ReactDOM.render(elementData, node)
+    }
+  }
 
+  const getDataBySelectTagInfo = async (TagArr: any, node: any) => {
+    console.log('[ Tag Arr ] : ', TagArr)
+    console.log('[ Box Target Id ] ', boxTargetId)
+
+    //일단 Table인 경우 조건 걸기 chart를 그려야 하기 때문
+    if (node.className !== 'Table') {
+      //Test Data
+      if (TagArr[0] === 'TestData1') {
+        const data = await d3.csv(
+          'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv'
+        )
+
+        DrawD3ChartWithData(node, data)
+      } else {
+        axios
+          .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData?', TagArr)
+          .then((response) => {
+            console.log('[ Chart response data ] : ')
+            console.log(response.data)
+
+            if (node.className === 'Time Series') {
+              // layout.title = '선택한 Tag의 Data'
+
+              //2023-06-13
+              //Title or 범례 인수 check
+              DrawD3ChartWithData(node, response.data)
+            }
+            setShowLoading(false)
+          })
+          .catch((error) => {
+            console.log(error)
+
+            alert('Error. 담당자에게 문의 바랍니다.')
+            setShowLoading(false)
+          })
+      }
+    } else {
+      axios
+        .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/describe', TagArr)
+        .then((response) => {
+          console.log('[ Tag Describe data ] : ')
+          console.log(response.data)
+          setShowLoading(false)
+
+          const column: any = [
+            { field: 'TagName', filter: true },
+            { field: 'avg', filter: true },
+            { field: 'min', filter: true },
+            { field: 'max', filter: true },
+          ]
+          const row: any = []
+          let RowObj: any = new Object()
+
+          for (let i = 0, len = response.data.length; i < len; i++) {
+            RowObj.TagName = response.data[i].tagName
+            RowObj.avg = response.data[i].avg
+            RowObj.min = response.data[i].min
+            RowObj.max = response.data[i].max
+            row.push(RowObj)
+            RowObj = new Object()
+          }
+
+          const TableData: any = [column, row]
+          DrawD3ChartWithData(node, TableData)
+        })
+        .catch((error) => {
+          console.log(error)
+
+          alert('Error. 담당자에게 문의 바랍니다.')
+          setShowLoading(false)
+        })
+    }
+  }
+
+  //위젯이 변경 되었을 때,
+  //d3 grid clientWidth값 만큼 그려주기
+  React.useEffect(() => {
+    if (widgetInfo.length !== 0) {
+      const node: any = document.getElementById(boxTargetId)
+      node.className = widgetInfo
+      setWidgetInfo('')
+      const data = (
+        <>
+          <D3ChartDefaultGrid widthSize={node.clientWidth} heightSize={node.clientHeight} />
+        </>
+      )
       ReactDOM.render(data, node)
     }
-  }
+  }, [widgetInfo])
 
-  /** TimeSeries Chart */
-  const prepData = (rawData: any[]) => {
-    const xField = 'Date'
-    const yField = 'Mean_TemperatureC'
+  //모달에서 선택한 TagInfoArr
+  React.useEffect(() => {
+    if (SelectTagInfo.length !== 0) {
+      console.log('[ 모달에서 선택한 Tag Array ] ', SelectTagInfo)
+      console.log('[ boxTargetId ] ', boxTargetId)
+      const node: any = document.getElementById(boxTargetId)
 
-    const x: Date[] = []
-    const y: any[] = []
-
-    rawData.forEach(function (datum: { [x: string]: any }, i: any) {
-      x.push(new Date(datum[xField]))
-      y.push(datum[yField])
-    })
-
-    return [
-      {
-        mode: 'lines',
-        x: x,
-        y: y,
-      },
-    ]
-  }
-
-  const ChangeTimeSeriesDataArr = async () => {
-    let ChartDataObj: any = {}
-    const ChartDataArr: any = []
-
-    const data = await d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2016-weather-data-seattle.csv')
-    const trace1 = prepData(data)
-
-    for (let i = 0, len = trace1.length; i < len; i++) {
-      ChartDataObj = {
-        ...TimeSeriesDataOption,
-        x: trace1[i].x,
-        y: trace1[i].y,
-      }
-      ChartDataArr.push(ChartDataObj)
-      ChartDataObj = new Object()
+      getDataBySelectTagInfo(SelectTagInfo, node)
     }
-    return ChartDataArr
-  }
+  }, [SelectTagInfo])
 
-  const ChangeLineDataArr = (dataOption: any) => {
-    let ChartDataObj: any = {}
-    const ChartDataArr: any = []
-
-    const setLineData = useSetRecoilState(LineDataOption)
-
-    const data = [
-      {
-        x: [1, 2, 3, 4, 5, 6, 7, 8],
-        y: [10, 15, null, 17, 14, 12, 10, null, 15],
-      },
-      {
-        x: [1, 2, 3, 4, 5, 6, 7, 8],
-        y: [16, null, 13, 10, 8, null, 11, 12],
-      },
-    ]
-
-    for (let i = 0, len = data.length; i < len; i++) {
-      ChartDataObj = {
-        ...dataOption,
-        x: data[i].x,
-        y: data[i].y,
-      }
-
-      ChartDataArr.push(ChartDataObj)
-
-      ChartDataObj = new Object()
-    }
-
-    setLineData(ChartDataArr)
-    return ChartDataArr
-  }
-
-  /**
-   * Gauid 그리기
-   * 2023.05.30. 작업중
-   */
-  const AddGridGauid = (args: any, idx: number) => {
-    const panels: any = panelData
-    const index = idx
-    const panel: any = Object.keys(panels[index]).map((panelIndex: string) => {
-      return panels[index][panelIndex]
-    })
-    // 그려지고 난 후 실행하기
-    for (let j = 0, len = panel.length; j < len; j++) {
-      const node: any = document.getElementById(panel[j].id)
-      if (panel[j].widget === 'Line1') {
-        const data = (
-          <>
-            <BoxTitle>Trade Price</BoxTitle>
-            <D3LineChartTooltip
-              widthSize={node.clientWidth}
-              heightSize={node.clientHeight}
-              CallData={'TradePrice'}
-              Color={'steelblue'}
-              ChartShow={true}
-              TableShow={false}
-            />
-          </>
-        )
-        ReactDOM.render(data, node)
-        //   setWidgetInfo('Line')
-        // const result: any = ChangeLineDataArr(useRecoilValue(RecoilLineAtoms.LineChartDataOptionState))
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilLineAtoms.LineChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'Line2') {
-        const data = (
-          <>
-            <BoxTitle>Opening Price</BoxTitle>
-            {/* <D3LineChart
-              widthSize={node.clientWidth}
-              heightSize={node.clientHeight}
-              CallData={'OpeningPrice'}
-              Color={'green'}
-              ChartShow={true}
-              TableShow={false}
-            /> */}
-          </>
-        )
-        ReactDOM.render(data, node)
-        //setWidgetInfo('Bar')
-        // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.BarChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'Line3') {
-        const data = (
-          <>
-            <BoxTitle>Low Price</BoxTitle>
-            {/* <D3LineChart
-              widthSize={node.clientWidth}
-              heightSize={node.clientHeight}
-              CallData={'LowPrice'}
-              Color={'orange'}
-              ChartShow={true}
-              TableShow={false}
-            /> */}
-          </>
-        )
-        ReactDOM.render(data, node)
-        //setWidgetInfo('Bar')
-        // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.BarChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'Line4') {
-        const data = (
-          <>
-            <BoxTitle>High Price</BoxTitle>
-            {/* <D3LineChart
-              widthSize={node.clientWidth}
-              heightSize={node.clientHeight}
-              CallData={'HighPrice'}
-              Color={'purple'}
-              ChartShow={true}
-              TableShow={false}
-            /> */}
-          </>
-        )
-        ReactDOM.render(data, node)
-        //setWidgetInfo('Bar')
-        // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.BarChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'Line5') {
-        // const data = (
-        //   <D3LineChart
-        //     widthSize={node.clientWidth}
-        //     heightSize={node.clientHeight}
-        //     Calltype={'WS'}
-        //     CallData={'candleAccTradePriceVolume'}
-        //   />
-        // )
-        // ReactDOM.render(data, node)
-        //setWidgetInfo('Bar')
-        // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.BarChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'Pie') {
-        //setWidgetInfo('Pie')
-        // const result: any = 가공함수.ChangePieDataArr(useRecoilValue(RecoilAtoms.PieChartLayoutOptionState))
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.PieChartLayoutOptionState))
-        // })
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.PieChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'TimeSeries') {
-        //setWidgetInfo('Time Series')
-        // const result: any = ChangeTimeSeriesDataArr()
-        // result.then(function (args: any) {
-        //   setTimeSeriesDataOption(args)
-        //   const config = {
-        //     displaylogo: true,
-        //     displayModeBar: true,
-        //   }
-        //   const data = <Plot data={args} layout={TimeSeriesLayoutOption} config={config} />
-        //   const element = React.createElement(data.type, {
-        //     data: data.props.data,
-        //     layout: data.props.layout,
-        //     config: data.props.config,
-        //   })
-        //   ReactDOM.render(element, node)
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.TimeSeriesChartLayoutOptionState))
-        // })
-
-        const firstDraw = true
-        // drawGraph(firstDraw)
-      } else if (panel[j].widget === 'Table') {
-        const data = (
-          <>
-            <BoxTitle>All Data</BoxTitle>
-            {/* <D3LineChart
-              widthSize={node.clientWidth}
-              heightSize={node.clientHeight}
-              CallData={'DataTable'}
-              Color={'none'}
-              ChartShow={false}
-              TableShow={true}
-            /> */}
-            {/* <RealTimeDataTable Calltype={'WS'} /> */}
-          </>
-        )
-        ReactDOM.render(data, node)
-        // DrawGauidWidget(
-        //   panel[j].widget,
-        //   node,
-        //   useRecoilValue(RecoilAtoms.DataTableRowState),
-        //   useRecoilValue(RecoilAtoms.DataTableColumnsState)
-        // )
-      }
-    }
-  }
-
-  /**
-   * 위젯이 변경되는 경우 PlotlyChart Draw하기
-   */
-  const DrawPlotlyChart = (ChartLayoutOption: any, ChartDataOption: any, BoxTargetId: any) => {
-    if (BoxTargetId !== undefined) {
-      if (ChartLayoutOption.length !== 0 && ChartDataOption.length !== 0) {
-        const node: any = document.getElementById(BoxTargetId)
-        const config = {
-          displaylogo: false,
-          displayModeBar: false,
-        }
-
-        const Layout: any = {
-          ...ChartLayoutOption,
-          width: node.clientWidth,
-          height: node.clientHeight,
-          plot_bgcolor: 'rgba(255,255,255,0)',
-          paper_bgcolor: 'rgba(255,255,255,0)',
-        }
-        const data = <Plot data={ChartDataOption} layout={Layout} config={config} />
-        const element = React.createElement(data.type, {
-          data: data.props.data,
-          layout: data.props.layout,
-          config: data.props.config,
-        })
-        ReactDOM.render(element, node)
-      }
-    }
-  }
-
-  //굳이??????????????
-  //위젯이 변경되는 경우 확인
-  // React.useEffect(() => {
-  //   if (widgetInfo === 'Line') {
-  //     const result: any = 가공함수.ChangeLineDataArr(LineDataOption)
-  //     result.then(function (args: any) {
-  //       DrawPlotlyChart(LineDataOption, args, boxTargetId)
-  //     })
-  //   }
-  //   /**
-  //    * 박윤희
-  //    * 2023-05-25 삭제 검토 중
-  //    * */
-  //   // if (widgetInfo === 'Pie') {
-  //   //   const result: any = 가공함수.ChangePieDataArr(PieChartDataOption)
-  //   //   result.then(function (args: any) {
-  //   //     DrawPlotlyChart(PieChartLayoutOption, args, BoxTargetId)
-  //   //   })
-  //   // }
-  //   // if (widgetInfo === 'Bar') {
-  //   //   const result: any = 가공함수.ChangeBarDataArr(BarChartDataOption)
-  //   //   const bar_data: any = []
-
-  //   //   result.then(function (args: any) {
-  //   //     DrawPlotlyChart(BarChartLayoutOption, args, BoxTargetId)
-  //   //   })
-  //   // }
-  //   if (widgetInfo === 'Time Series') {
-  //     const result: any = 가공함수.ChangeTimeSeriesDataArr(TimeSeriesDataOption)
-  //     result.then(function (args: any) {
-  //       DrawPlotlyChart(TimeSeriesLayoutOption, args, boxTargetId)
-  //     })
-  //   }
-
-  //   if (widgetInfo === 'Table') {
-  //     if (boxTargetId !== undefined) {
-  //       const node: any = document.getElementById(boxTargetId)
-
-  //       const data = (
-  //         <DataGridWrap className={'ag-theme-alpine'}>
-  //           <AgGridReact
-  //             ref={(el: any) => {
-  //               gridRef.current = el
-  //             }}
-  //             rowData={TableRows}
-  //             columnDefs={TableColumns}
-  //             defaultColDef={defaultColDef}
-  //             enableCellChangeFlash={true}
-  //             editType={'fullRow'}
-  //             pagination={true}
-  //             paginationAutoPageSize={true}
-  //           />
-  //         </DataGridWrap>
-  //       )
-  //       ReactDOM.render(data, node)
-  //     }
-  //   }
-  // }, [widgetInfo])
-
-  /**
-   * Reset 버튼 클릭
-   */
+  //Reset 버튼 클릭
   function reset(): void {
     dashboardObj.removeAll()
   }
 
-  // 그리드 레이아웃 선택 시 그리드 다시 그림
-  async function initializeTemplate(element: any, dashboardObj: any) {
+  // 그리드 레이아웃 모달에서 그리드 선택 시 다시 그림
+  async function initializeTemplate(dashboardObj: any, indexNumber: number) {
     let panelModelValue: ej2.PanelModel = {}
     const updatePanels: ej2.PanelModel[] = []
-    let index: number
+    console.log('[ Index Number ] ', indexNumber)
+    setPanelIdx(indexNumber)
 
-    if (element === null && dashboardObj !== null) {
-      index = 0
-      setPanelIdx(index)
-    } else {
-      if (typeof element === 'string') {
-        const index = Number(element)
-        setPanelIdx(index)
-      } else {
-        index = parseInt(element.getAttribute('data-id'), 10) - 1
-        setPanelIdx(index)
-      }
-    }
-
-    const panel: any = Object.keys(panels[index]).map((panelIndex: string) => {
-      return panels[index][panelIndex]
+    const panel: any = Object.keys(panels[indexNumber]).map((panelIndex: string) => {
+      return panels[indexNumber][panelIndex]
     })
 
     for (let i = 0; i < panel.length; i++) {
@@ -721,390 +456,135 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
       updatePanels.push(panelModelValue)
     }
     dashboardObj.panels = updatePanels
-
-    // window.localStorage.setItem('updatePanels', JSON.stringify(updatePanels))
-    // console.log(window.localStorage.getItem('updatePanels'))
-
     return dashboardObj.panels
   }
 
   /**
-   * 2023-04-28 박윤희
-   * 대시보드 버튼 Click Evt
-   * 코드 최적화 작업 중 ...
+   * 2023-06-13 박윤희
+   * 위젯 셋팅 drawer 연결 작업 중 ...
    */
   const ClickDashBoardComponent = (e: any) => {
-    if (e.target.id.length === 0 && typeof e.target.className !== 'object') {
-      if (e.target.className.includes('grid-setting-btn')) {
-        const data = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data
-        let autoRange: any = null
-        if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis !== undefined) {
-          autoRange = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.autorange
-        }
-        const id = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
-        const type = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type
-        if (data !== undefined) {
-          if (autoRange === false) {
-            // setLineChartShowDrawer(true)
-            setWidgetInfo('Line')
-            setBoxTargetId(id)
-          } else if (type === 'pie') {
-            // setPieChartShowDrawer(true)
-            setWidgetInfo('Pie')
-            setBoxTargetId(id)
-          } else if (type === 'bar') {
-            // setBarChartShowDrawer(true)
-            setWidgetInfo('Bar')
-            setBoxTargetId(id)
-          } else if (autoRange === true) {
-            // setTimeSeriesShowDrawer(true)
-            setWidgetInfo('Time Series')
-            setBoxTargetId(id)
-          }
-        } else {
-          const className = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[1].className
-          const id = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
-          if (className !== undefined) {
-            if (className.includes('ag')) {
-              setWidgetInfo('Table')
-              setBoxTargetId(id)
-            }
-          }
-        }
-      } else if (e.target.className.includes('connection-chart-data')) {
-        const className = e.target.offsetParent.offsetParent.children[0].children[1].children[0].className
-        if (className !== undefined) {
-          if (className !== 'js-plotly-plot') {
-            const box_target_id = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
-            setBoxTargetId(box_target_id)
-            setWidgetInfo('Table')
-            // setSettingChartType('Table')
-            setDataConnectionModal(true)
-          } else {
-            const chart_type = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type
-            let chart_type2: any = null
-            if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0][0] !== undefined) {
-              chart_type2 = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0][0].type
-            }
-            const box_target_id = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
+    console.log(e.target.className)
+    // if (e.target.className.includes('widget-setting-btn')) {
+    //   const boxTargetId = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
+    //   console.log('----------------------------')
+    //   console.log(boxTargetId)
+    //   console.log('----------------------------')
+    //   setBoxTargetId(boxTargetId)
 
-            if (chart_type === 'bar') {
-              setWidgetInfo('Bar')
-              // setSettingChartType('Bar')
-            }
-            if (chart_type === 'pie') {
-              setWidgetInfo('Pie')
-              // setSettingChartType('Pie')
-            }
-            if (chart_type === 'scatter' || chart_type2 === 'scatter') {
-              const rangeSlider =
-                e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.rangeslider
-
-              if (rangeSlider === undefined) {
-                setWidgetInfo('Line')
-                // setSettingChartType('Line')
-              } else {
-                setWidgetInfo('Time Series')
-                // setSettingChartType('Time Series')
-              }
-            }
-
-            setBoxTargetId(box_target_id)
-            setDataConnectionModal(true)
-          }
-        }
-      } else if (e.target.className.includes('widget-setting-btn')) {
-        const box_target_id = e.target.offsetParent.offsetParent.children[0].children[1].id
+    //   const data = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data
+    //   console.log(data)
+    //   let autoRange: any = null
+    //   if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis !== undefined) {
+    //     autoRange = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.autorange
+    //   }
+    //   const id = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
+    //   const type = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type
+    //   if (data !== undefined) {
+    //     if (autoRange === false) {
+    //       // setLineChartShowDrawer(true)
+    //       setWidgetInfo('Line')
+    //       setBoxTargetId(id)
+    //     } else if (type === 'pie') {
+    //       // setPieChartShowDrawer(true)
+    //       setWidgetInfo('Pie')
+    //       setBoxTargetId(id)
+    //     } else if (type === 'bar') {
+    //       // setBarChartShowDrawer(true)
+    //       setWidgetInfo('Bar')
+    //       setBoxTargetId(id)
+    //     } else if (autoRange === true) {
+    //       // setTimeSeriesShowDrawer(true)
+    //       setWidgetInfo('Time Series')
+    //       setBoxTargetId(id)
+    //     }
+    //   } else {
+    //     const className = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[1].className
+    //     const id = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
+    //     if (className !== undefined) {
+    //       if (className.includes('ag')) {
+    //         setWidgetInfo('Table')
+    //         setBoxTargetId(id)
+    //       }
+    //     }
+    //   }
+    // } else
+    /**2023-06-13
+     * 윤희 수정 작업 중
+     */
+    //Data Connection 버튼 클릭한 경우
+    if (e.target.className.includes('connection-chart-data')) {
+      const className = e.target.offsetParent.offsetParent.children[0].children[1].className
+      console.log('[ Connection Chart Data] : ', className)
+      if (className !== undefined) {
         setDataConnectionModal(true)
-        //box target id 값 가져오기
-        setBoxTargetId(box_target_id)
       }
+      //Widget 버튼 클릭한 경우
+    } else if (e.target.className.includes('widget-setting-btn')) {
+      const box_target_id = e.target.offsetParent.offsetParent.children[0].children[1].id
+      setshowWidgetModalState(true)
+      setBoxTargetId(box_target_id)
     }
   }
 
-  //다시 그리드 rendering
-  //기존 dashboardObj 지우고, 다시 init 함
+  //그리드 rendering
   const rendereComplete = (args: any) => {
     if (args !== 'reset') {
       if (args.className.includes('image-pattern-style')) {
+        //그리드 선택 모달창 닫기
+        setOpenGridModal(false)
+        const id = args.id
         dashboardObj.removeAll()
-        initializeTemplate(args, dashboardObj)
+        initializeTemplate(dashboardObj, Number(id.charAt(id.length - 1)) - 1)
       }
     } else {
       reset()
     }
   }
 
+  /**
+   *
+   * 2023-06-13 박윤희
+   * SaveLayout시 수정 작업 진행
+   */
   // save시 저장할 tag list parameter
   const getWidgetSelectTagList = (WidgetType: string, id: string) => {
-    let tag_list_result: any = []
+    const tag_list_result: any = []
 
-    if (window.localStorage.getItem('SelectedDashboardInfo') !== 'new') {
-      for (let i = 0, len = SaveTagDataList.length; i < len; i++) {
-        if (WidgetType === SaveTagDataList[i].type) {
-          for (let k = 0, len = SaveTagDataList[i].tag_data.length; k < len; k++) {
-            if (SaveTagDataList[i].tag_data[k].length != 0) {
-              if (SaveTagDataList[i].tag_data[k][0].id.split('_')[0] === id) {
-                tag_list_result = SaveTagDataList[i].tag_data[k][0].tag_list
-              } else {
-                const prev_data: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
-                for (let j = 0, len = prev_data.data.length; j < len; j++) {
-                  if (prev_data.data[j].grid_index === id) {
-                    tag_list_result = prev_data.data[j]
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    } else {
-      for (let i = 0, len = SaveTagDataList.length; i < len; i++) {
-        if (WidgetType === SaveTagDataList[i].type) {
-          for (let k = 0, len = SaveTagDataList[i].tag_data.length; k < len; k++) {
-            if (SaveTagDataList[i].tag_data[k].length != 0) {
-              if (SaveTagDataList[i].tag_data[k][0].id.split('_')[0] === id) {
-                tag_list_result = SaveTagDataList[i].tag_data[k][0].tag_list
-              }
-            }
-          }
-        }
-      }
-    }
+    // if (window.localStorage.getItem('SelectedDashboardInfo') !== 'new') {
+    //   for (let i = 0, len = SaveTagDataList.length; i < len; i++) {
+    //     if (WidgetType === SaveTagDataList[i].type) {
+    //       for (let k = 0, len = SaveTagDataList[i].tag_data.length; k < len; k++) {
+    //         if (SaveTagDataList[i].tag_data[k].length != 0) {
+    //           if (SaveTagDataList[i].tag_data[k][0].id.split('_')[0] === id) {
+    //             tag_list_result = SaveTagDataList[i].tag_data[k][0].tag_list
+    //           } else {
+    //             const prev_data: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
+    //             for (let j = 0, len = prev_data.data.length; j < len; j++) {
+    //               if (prev_data.data[j].grid_index === id) {
+    //                 tag_list_result = prev_data.data[j]
+    //               }
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // } else {
+    //   for (let i = 0, len = SaveTagDataList.length; i < len; i++) {
+    //     if (WidgetType === SaveTagDataList[i].type) {
+    //       for (let k = 0, len = SaveTagDataList[i].tag_data.length; k < len; k++) {
+    //         if (SaveTagDataList[i].tag_data[k].length != 0) {
+    //           if (SaveTagDataList[i].tag_data[k][0].id.split('_')[0] === id) {
+    //             tag_list_result = SaveTagDataList[i].tag_data[k][0].tag_list
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
 
     return tag_list_result
-  }
-
-  const getDataBySelctedCompany = (company: string, TagList: any, WidgetInfo: string, BoxTargetId: string) => {
-    if (company === 'Dongwon') {
-      setShowLoading(true)
-
-      const panel: any = Object.keys(panels[panelIdx]).map((panelIndex: string) => {
-        return panels[panelIdx][panelIndex]
-      })
-
-      const obj_test: any = new Object()
-      const arr_test: any = []
-
-      for (let i = 0, len = panel.length; i < len; i++) {
-        if (i === Number(BoxTargetId.split('_')[0])) {
-          obj_test.widget = WidgetInfo
-          obj_test.tag_list = TagList
-          obj_test.id = BoxTargetId
-          arr_test.push(obj_test)
-        }
-      }
-
-      const data = SaveTagDataList
-      setSaveTagDataList([
-        {
-          type: 'Time Series',
-          tag_data: [],
-        },
-        {
-          type: 'Pie',
-          tag_data: [],
-        },
-        {
-          type: 'Bar',
-          tag_data: [],
-        },
-        {
-          type: 'Line',
-          tag_data: [],
-        },
-        {
-          type: 'Table',
-          tag_data: [],
-        },
-      ])
-
-      //태그 리스트 저장
-      for (let i = 0, len = SaveTagDataList.length; i < len; i++) {
-        if (WidgetInfo === data[i].type) {
-          if (data[i].tag_data.length !== 0) {
-            for (let j = 0, len = data[i].tag_data.length; j < len; j++) {
-              if (data[i].tag_data[j][0].id === BoxTargetId) {
-                data[i].tag_data[j][0] = arr_test
-              } else {
-                data[i].tag_data.push(arr_test)
-              }
-            }
-          } else {
-            data[i].tag_data.push(arr_test)
-          }
-        } else {
-          for (let j = 0, len = data[i].tag_data.length; j < len; j++) {
-            if (data[i].tag_data[j][0].id === BoxTargetId) {
-              data[i].tag_data[j] = []
-            }
-          }
-        }
-      }
-
-      setSaveTagDataList(data)
-
-      if (WidgetInfo === 'Table' || WidgetInfo === 'Pie' || WidgetInfo === 'Bar') {
-        axios
-          .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/describe', TagList)
-          .then((response) => {
-            console.log('[ Tag Describe data ] : ')
-            console.log(response.data)
-            setShowLoading(false)
-
-            const node = document.getElementById(BoxTargetId)
-
-            if (WidgetInfo === 'Table') {
-              const column: any = [
-                { field: 'TagName', filter: true },
-                { field: 'avg', filter: true },
-                { field: 'min', filter: true },
-                { field: 'max', filter: true },
-              ]
-              const row: any = []
-              let RowObj: any = new Object()
-
-              for (let i = 0, len = response.data.length; i < len; i++) {
-                RowObj.TagName = response.data[i].tagName
-                RowObj.avg = response.data[i].avg
-                RowObj.min = response.data[i].min
-                RowObj.max = response.data[i].max
-                row.push(RowObj)
-                RowObj = new Object()
-              }
-
-              TableRows = row
-              TableColumns = column
-
-              DrawGauidWidget('Table', node, row, column)
-
-              setTagListArr([])
-            }
-            //20230525 박윤희
-            //추후 추가 예정
-            // if (WidgetInfo === 'Pie') {
-            //   const labels: any = []
-            //   const values: any = []
-
-            //   let data:any = PieDataOption
-            //   const layout = JSON.parse(PieLayoutOption)
-
-            //   delete layout.title
-
-            //   if (typeof data === 'object' && data[0] !== undefined) {
-            //     if (data[0].values !== undefined && data[0].labels !== undefined) {
-            //       delete data[0].values
-            //       delete data[0].labels
-            //       data[0].labels = labels
-            //       data[0].values = values
-            //     } else {
-            //       data[0].labels = labels
-            //       data[0].values = values
-            //     }
-            //   } else {
-            //     if (data.values !== undefined && data.labels !== undefined) {
-            //       delete data.values
-            //       delete data.labels
-
-            //       data.labels = labels
-            //       data.values = values
-
-            //       data = [data]
-            //     } else {
-            //       data.labels = labels
-            //       data.values = values
-
-            //       data = [data]
-            //     }
-            //   }
-
-            //   setPieLayoutOption(layout)
-            //   setPieDataOption(data)
-
-            //   그리기함수.DrawGauidWidget('Pie', node, data, layout)
-            //   setTagListArr([])
-            // }
-
-            // if (WidgetInfo === 'Bar') {
-            //   const data: any = []
-            //   let dataX: any = []
-            //   let dataY: any = []
-            //   let dataObj: any = new Object()
-            //   const layout: any = BarLayoutOption
-
-            //   const dataType: any = ['max', 'min', 'avg']
-
-            //   layout.title = '선택한 Tag의 [ Min ,  Max , Average ]'
-
-            //   for (let j = 0, len = dataType.length; j < len; j++) {
-            //     for (let i = 0, len = response.data.length; i < len; i++) {
-            //       dataX.push(response.data[i].tagName)
-            //       dataY.push(response.data[i][dataType[j]])
-            //       dataObj.name = dataType[j]
-            //     }
-
-            //     dataObj.type = 'bar'
-            //     dataObj.textposition = 'auto'
-            //     dataObj.x = dataX
-            //     dataObj.y = dataY
-
-            //     data.push(dataObj)
-            //     dataObj = new Object()
-            //     dataX = []
-            //     dataY = []
-            //   }
-
-            //   setBarLayoutOption(layout)
-            //   setBarDataOption(data)
-
-            //   그리기함수.DrawGauidWidget('Bar', node, data, layout)
-            //   setTagListArr([])
-            // }
-          })
-          .catch((error) => {
-            console.log(error)
-
-            alert('Error. 담당자에게 문의 바랍니다.')
-            setShowLoading(false)
-          })
-      } else {
-        const node = document.getElementById(BoxTargetId)
-
-        axios
-          .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData?', TagList)
-          .then((response) => {
-            console.log('[ Chart response data ] : ')
-            console.log(response.data)
-
-            if (WidgetInfo === 'Time Series') {
-              const layout: any = TimeSeriesLayoutOption
-              layout.title = '선택한 Tag의 Data'
-
-              setTimeSeriesDataOption(response.data)
-              setTimeSeriesLayoutOption(layout)
-
-              DrawGauidWidget('TimeSeries', node, response.data, layout)
-            } else if (WidgetInfo === 'Line') {
-              const dataObj: any = new Object()
-              const layout: any = LineLayoutOption
-              layout.title = '선택한 Tag들의 Data'
-
-              setLineLayoutOption(layout)
-              setLineDataOption(response.data)
-
-              DrawGauidWidget('Line', node, response.data, layout)
-            }
-            setShowLoading(false)
-            setTagListArr([])
-          })
-          .catch((error) => {
-            console.log(error)
-
-            alert('Error. 담당자에게 문의 바랍니다.')
-            setShowLoading(false)
-          })
-      }
-    }
   }
 
   //layoutlist api 연결
@@ -1134,9 +614,9 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   }
 
   /**
-   * 2023-04-21
+   * 2023-06-13
    * 박윤희
-   * 대시보드 저장
+   * 대시보드 저장 코드 수정 작업
    */
   const SaveDashboard = (args: any) => {
     let params: any = new Object()
@@ -1144,7 +624,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
     if (window.localStorage.getItem('SelectedDashboardInfo') === 'new') {
       params = {
         com_id: localStorage.getItem('companyId'),
-        // lay_id: Number(window.localStorage.getItem('layout_id')) + 1,
         lay_name: layoutTitle,
         grid_id: panelIdx.toString(),
         data: args,
@@ -1537,27 +1016,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
     }
   }
 
-  const currentDate = () => {
-    let Now = ''
-
-    setInterval(function () {
-      const DateT = new Date()
-      let Month: any = DateT.getMonth() + 1
-      if (Month.toString().length === 1) Month = '0' + Month
-      let Day: any = DateT.getDate()
-      if (Day.toString().length === 1) Day = '0' + Day
-      let Hour: any = DateT.getHours()
-      if (Hour.toString().length === 1) Hour = '0' + Hour
-      let Minute: any = DateT.getMinutes()
-      if (Minute.toString().length === 1) Minute = '0' + Minute
-      let Second: any = DateT.getSeconds()
-      if (Second.toString().length === 1) Second = '0' + Second
-      Now = DateT.getFullYear() + '/' + Month + '/' + Day + ' ' + Hour + ':' + Minute + ':' + Second
-
-      console.log(Now)
-    }, 1000)
-  }
-
   return (
     <>
       <LayoutModal />
@@ -1569,7 +1027,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
         <Chakra.Stack direction="row" spacing={4} pl={3} display={'block'}>
           <Chakra.Button
             id="design_button"
-            leftIcon={<ReactIcon.MdOutlineGridView />}
+            leftIcon={<ReactIcon.MdBackspace />}
             variant="brand"
             onClick={() => {
               window.location.href = '/admin/layout-list'
@@ -1583,7 +1041,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
             leftIcon={<ReactIcon.MdOutlineGridView />}
             variant="brand"
             onClick={() => {
-              setOpenGridMoal(true)
+              setOpenGridModal(true)
             }}
             style={{ backgroundColor: '#4338F7', borderRadius: '100px' }}
           >
@@ -1611,15 +1069,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
           >
             Save
           </Chakra.Button>
-          {/* <Button
-            leftIcon={<MdOutlineRestartAlt />}
-            style={{ backgroundColor: realTimeBtnColor, color: realTimeBtnFont }}
-            onClick={() => {
-              setRealTimeBtnColor('#00ae2f')
-            }}
-          >
-            실시간 데이터
-          </Button> */}
           <CurrentText>{NowDateText}</CurrentText>
           <CurrentIcon>
             <ReactIcon.MdAccessTime />
@@ -1629,10 +1078,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
       <Spin tip="Loading" size="large" spinning={showLoading}>
         <div className="content" />
       </Spin>
-      {/* <LineChartComponent />
-      <PieChartComponent />
-      <BarChartComponent />
-      <TimeSeriesComponent /> */}
       <div id="DashboardBox" style={{ position: 'relative' }}>
         <div className="col-lg-8 control-section" id="control_dash">
           <div className="content-wrapper" style={{ maxWidth: '100%' }}>

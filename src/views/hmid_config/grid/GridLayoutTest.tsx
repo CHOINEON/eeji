@@ -434,20 +434,20 @@ export const PredefinedLayouts: React.FC = () => {
     for (let j = 0, len = panel.length; j < len; j++) {
       const node: any = document.getElementById(panel[j].id)
       if (panel[j].widget === 'Line1') {
-        const data = (
-          <>
-            <BoxTitle>Trade Price</BoxTitle>
-            <D3LineChartTooltip
-              widthSize={node.clientWidth}
-              heightSize={node.clientHeight}
-              CallData={'TradePrice'}
-              Color={'steelblue'}
-              ChartShow={true}
-              TableShow={false}
-            />
-          </>
-        )
-        ReactDOM.render(data, node)
+        //const data = (
+        // <>
+        //   <BoxTitle>Trade Price</BoxTitle>
+        //   <D3LineChartTooltip
+        //     widthSize={node.clientWidth}
+        //     heightSize={node.clientHeight}
+        //     CallData={'TradePrice'}
+        //     Color={'steelblue'}
+        //     ChartShow={true}
+        //     TableShow={false}
+        //   />
+        // </>
+        //)
+        //ReactDOM.render(data, node)
         //   setWidgetInfo('Line')
         // const result: any = ChangeLineDataArr(useRecoilValue(RecoilLineAtoms.LineChartDataOptionState))
         // result.then(function (args: any) {
@@ -456,8 +456,8 @@ export const PredefinedLayouts: React.FC = () => {
       } else if (panel[j].widget === 'Line2') {
         const data = (
           <>
-            <BoxTitle>Opening Price</BoxTitle>
-            {/* <D3LineChart
+            {/* <BoxTitle>Opening Price</BoxTitle>
+            <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'OpeningPrice'}
@@ -467,7 +467,7 @@ export const PredefinedLayouts: React.FC = () => {
             /> */}
           </>
         )
-        ReactDOM.render(data, node)
+        //ReactDOM.render(data, node)
         //setWidgetInfo('Bar')
         // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
         // result.then(function (args: any) {
@@ -476,8 +476,8 @@ export const PredefinedLayouts: React.FC = () => {
       } else if (panel[j].widget === 'Line3') {
         const data = (
           <>
-            <BoxTitle>Low Price</BoxTitle>
-            {/* <D3LineChart
+            {/* <BoxTitle>Low Price</BoxTitle>
+            <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'LowPrice'}
@@ -487,7 +487,7 @@ export const PredefinedLayouts: React.FC = () => {
             /> */}
           </>
         )
-        ReactDOM.render(data, node)
+        //ReactDOM.render(data, node)
         //setWidgetInfo('Bar')
         // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
         // result.then(function (args: any) {
@@ -496,8 +496,8 @@ export const PredefinedLayouts: React.FC = () => {
       } else if (panel[j].widget === 'Line4') {
         const data = (
           <>
-            <BoxTitle>High Price</BoxTitle>
-            {/* <D3LineChart
+            {/* <BoxTitle>High Price</BoxTitle>
+            <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'HighPrice'}
@@ -507,7 +507,7 @@ export const PredefinedLayouts: React.FC = () => {
             /> */}
           </>
         )
-        ReactDOM.render(data, node)
+        //ReactDOM.render(data, node)
         //setWidgetInfo('Bar')
         // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
         // result.then(function (args: any) {
@@ -561,8 +561,8 @@ export const PredefinedLayouts: React.FC = () => {
       } else if (panel[j].widget === 'Table') {
         const data = (
           <>
-            <BoxTitle>All Data</BoxTitle>
-            {/* <D3LineChart
+            {/* <BoxTitle>All Data</BoxTitle>
+            <D3LineChart
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'DataTable'}
@@ -573,7 +573,7 @@ export const PredefinedLayouts: React.FC = () => {
             {/* <RealTimeDataTable Calltype={'WS'} /> */}
           </>
         )
-        ReactDOM.render(data, node)
+        //ReactDOM.render(data, node)
         // DrawGauidWidget(
         //   panel[j].widget,
         //   node,

@@ -198,18 +198,20 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         } else {
           // console.log(WsData)
           for (const j in WsData) {
-            if (multipleTest.length < 20) {
+            if (multipleTest.length < 30) {
               // console.log('100보다 작음')
               multipleTest.unshift(WsData[j])
               setMultiplePrevData(multipleTest)
               setMultipleTestData(multipleTest)
             } else {
-              if (multipleTest.name === WsData[j]) {
-                multipleTest.unshift(WsData[j])
-                multipleTest.pop()
-                setMultiplePrevData(multipleTest)
-                setMultipleTestData(multipleTest)
-              }
+              multipleTest.unshift(WsData[j])
+              multipleTest.pop()
+              multipleTest.pop()
+              multipleTest.pop()
+
+              console.log(multipleTest)
+              setMultiplePrevData(multipleTest)
+              setMultipleTestData(multipleTest)
             }
           }
         }

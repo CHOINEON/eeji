@@ -16,8 +16,6 @@ export const LayoutModal: React.FC = () => {
       selectedElement[0].classList.remove('e-selected-style')
     }
     target.classList.add('e-selected-style')
-    console.log(target)
-
     setDashboardArgs(target)
   }
 
