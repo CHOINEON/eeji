@@ -72,16 +72,6 @@ const SAMPLE_CSS = `
           align :center
       }
   `
-const defaultXAxis: AxisModel = {
-  // crosshairTooltip: { enable: true },
-  valueType: 'DateTime',
-  labelFormat: 'M/d hh:mm',
-  // valueType: 'Double',
-  interval: 5,
-  edgeLabelPlacement: 'Shift',
-  majorGridLines: { width: 0 },
-  labelIntersectAction: 'Rotate45',
-}
 
 const LineSeriesChart = (props: any) => {
   const { chartInputData, chartHeight, onExport, onSave } = props
@@ -97,7 +87,20 @@ const LineSeriesChart = (props: any) => {
   const [selectedDatetime, setSelectedDatetime] = useState([])
   const indexColumn = useRecoilValue(indexColumnStore)
 
-  const [primaryxAxis, setPrimaryxAxis] = useState(defaultXAxis)
+  const chartRef: any = useRef()
+
+  const defaultXAxis: AxisModel = {
+    // crosshairTooltip: { enable: true },
+    valueType: 'DateTime',
+    // labelFormat: 'M/d hh:mm', ----------------------------------------------------
+    // valueType: 'Double',
+    interval: 5,
+    edgeLabelPlacement: 'Shift',
+    majorGridLines: { width: 0 },
+    labelIntersectAction: 'Rotate45',
+  }
+
+  const [primaryxAxis, setPrimaryxAxis] = useState<AxisModel>(defaultXAxis)
 
   let chartInstance: ChartComponent
   // let buttonInstance: ButtonComponent
@@ -109,18 +112,24 @@ const LineSeriesChart = (props: any) => {
   // }
 
   useEffect(() => {
+    // console.log('useref:', chartRef)
+
     if (indexColumn == '') {
+      chartRef.current.properties.labelformat = ''
       setPrimaryxAxis({
         valueType: 'Double',
         interval: 5,
-        edgeLabelPlacement: 'Shift',
+        // edgeLabelPlacement: 'Shift',
         majorGridLines: { width: 0 },
-        labelIntersectAction: 'Rotate45',
+        // labelIntersectAction: 'Rotate45',
       })
+    } else {
+      chartRef.current.properties.labelformat = 'M/d hh:mm'
     }
   }, [])
 
   useEffect(() => {
+    console.log('chartInputData-------------', chartInputData)
     setDataSource(chartInputData)
   }, [chartInputData])
 
@@ -153,11 +162,6 @@ const LineSeriesChart = (props: any) => {
   // series1.push(point1)
   // }, [chartInputData])
 
-  useEffect(() => {
-    // buttonInstance.addEventListener('contextmenu', (e: any) => {
-    // })
-  })
-
   function load(args: ILoadedEventArgs): void {
     setDataSource(chartInputData.data)
 
@@ -167,10 +171,6 @@ const LineSeriesChart = (props: any) => {
       /-dark/i,
       'Dark'
     ) as ChartTheme
-  }
-
-  const scrollEnd = (args: IScrollEventArgs) => {
-    // https://stackblitz.com/run?file=index.ts
   }
 
   const dragComplete = (args: any) => {
@@ -332,6 +332,7 @@ const LineSeriesChart = (props: any) => {
   ]
 
   const renderMultiSeries = () => {
+    console.log('renderMultiSeries')
     if (dataSource && dataSource.length > 0) {
       const multiSeries = dataSource.map((item, idx) => {
         return (
@@ -358,7 +359,7 @@ const LineSeriesChart = (props: any) => {
       <div id="chartSection" className="control-section">
         <ChartComponent
           id="contextmenutarget"
-          ref={(chart) => (chartInstance = chart)}
+          ref={chartRef}
           // zoomSettings={zoomsettings}
           zoomSettings={{
             enableMouseWheelZooming: true,

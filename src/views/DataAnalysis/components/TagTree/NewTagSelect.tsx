@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useReducer, ChangeEvent } from 'react'
-
+import React, { useState, useEffect, useReducer, ChangeEvent, useRef } from 'react'
 import axios from 'axios'
 import { Typography } from '@mui/material'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -61,6 +60,8 @@ const NewTagSelect = (props: any) => {
 
   const [indexColumn, setIndexColumn] = useRecoilState(indexColumnStore)
 
+  const selectRef = useRef()
+
   useEffect(() => {
     fetchTaglistData()
   }, [])
@@ -118,20 +119,20 @@ const NewTagSelect = (props: any) => {
     }
   }
 
-  const handleAllSelect = () => {
-    // 타겟변수 제외한 모든 변수를 원인변수의 디폴트로 선택
-    const X_defaultValue = rawDataX[0].options.filter((x: any) => x.value !== value).map((row: any) => row.value)
+  // const handleAllSelect = () => {
+  //   // 타겟변수 제외한 모든 변수를 원인변수의 디폴트로 선택
+  //   const X_defaultValue = rawDataX[0].options.filter((x: any) => x.value !== value).map((row: any) => row.value)
 
-    ////////////TEST/////////////
-    //원인변수 세팅 위해서 props 넘기기
-    onSelectionChanged({ type, X_defaultValue })
+  //   ////////////TEST/////////////
+  //   //원인변수 세팅 위해서 props 넘기기
+  //   onSelectionChanged({ type, X_defaultValue })
 
-    //formatting FOR VARIABLE X
-    const result = []
-    result.push({ table_nm: rawDataX[0].label, variable: X_defaultValue })
+  //   //formatting FOR VARIABLE X
+  //   const result = []
+  //   result.push({ table_nm: rawDataX[0].label, variable: X_defaultValue })
 
-    setSelectedVarX(result)
-  }
+  //   setSelectedVarX(result)
+  // }
 
   const fetchTaglistData = () => {
     axios

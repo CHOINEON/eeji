@@ -10,18 +10,18 @@ const ChartContextMenu = (props: any) => {
       text: 'Exclude data',
       iconCss: 'e-cm-icons e-cut',
     },
-    {
-      text: 'Replace data',
-      iconCss: 'e-cm-icons e-cut',
-    },
-    {
-      text: 'Add threshold',
-      iconCss: 'e-cm-icons e-cut',
-    },
-    {
-      text: 'Add Series',
-      iconCss: 'e-cm-icons e-cut',
-    },
+    // {
+    //   text: 'Replace data',
+    //   iconCss: 'e-cm-icons e-cut',
+    // },
+    // {
+    //   text: 'Add threshold',
+    //   iconCss: 'e-cm-icons e-cut',
+    // },
+    // {
+    //   text: 'Add Series',
+    //   iconCss: 'e-cm-icons e-cut',
+    // },
   ]
 
   const onSelectItem = (e: any) => {

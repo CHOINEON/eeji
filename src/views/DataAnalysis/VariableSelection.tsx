@@ -15,7 +15,6 @@ const VariableSelection = () => {
 
   const [selectedVarX, setSelectedVarX] = useRecoilState(selectedVarStoreX)
   const [selectedVarY, setSelectedVarY] = useRecoilState(selectedVarStoreY)
-  const [inputValue, setInputValue] = useState('')
 
   const indexColumn = useRecoilValue(indexColumnStore)
 
@@ -23,6 +22,7 @@ const VariableSelection = () => {
   const [open, setOpen] = useState(false)
 
   const onSelectionChanged = (param: any) => {
+    console.log('variable selection onSelectionChanged----')
     console.log('param: ', param)
     if (param.type === 'TARGET_VARIABLE') setSelectedArr(param)
   }
@@ -80,11 +80,6 @@ const VariableSelection = () => {
           console.log('error:', error)
         }
       )
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log('ctest:', e.target.value)
-    setInputValue(e.target.value)
   }
 
   return (

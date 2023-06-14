@@ -13,6 +13,7 @@ import ModelMaintenance from 'views/ModelMaintenance'
 import DataAnalysis from 'views/DataAnalysis'
 
 import HmidInterval from 'views/hmid_interval'
+import AIModeling from 'views/AIModeling'
 // import FoundationStructureAnalysis from 'views/DataAnalysis/PreProcessing'
 // import DataConnection from 'views/dataConnection'
 // import DataPlantModeling from 'views/dataPlantModeling'
