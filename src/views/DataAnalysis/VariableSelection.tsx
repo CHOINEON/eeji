@@ -54,7 +54,7 @@ const VariableSelection = () => {
       cause: selectedVarX,
       target: selectedVarY[0],
     }
-    // console.log('Object:', Object)
+    console.log('Object:', Object)
 
     if (indexColumn !== '') {
       Object['data_index'] = indexColumn

@@ -56,7 +56,7 @@ const FileUploader = (props: any) => {
   }
 
   const handleUpload = () => {
-    // console.log('uploadObj:', uploadObj.current.getFilesData())
+    console.log('uploadObj:', uploadObj.current.getFilesData())
 
     if (uploadObj.current.getFilesData().length > 0) {
       //Progress show
@@ -78,7 +78,7 @@ const FileUploader = (props: any) => {
         })
         .then(
           (response) => {
-            console.log('uploadfile RESP:', response)
+            console.log(' RESP :', response)
             setSummaryResult(response.data)
             setLoading(false)
 
