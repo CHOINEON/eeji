@@ -3,7 +3,8 @@
   "version": "1.1.0",
   "private": true,
   "scripts": {
-    "start": "set PORT=9871 && react-scripts start",
+    "postinstall": "npx syncfusion-license activate",
+    "start": "set PORT=9870 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
