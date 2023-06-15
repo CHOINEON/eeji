@@ -366,18 +366,31 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   const getDataBySelectTagInfo = async (TagArr: any, node: any) => {
     console.log('[ Tag Arr ] : ', TagArr)
     console.log('[ Box Target Id ] ', boxTargetId)
+    console.log(node.className)
 
     DrawDefaultGrid(node)
 
     //일단 Table인 경우 조건 걸기 chart를 그려야 하기 때문
     if (node.className !== 'Table') {
       //Test Data
-      if (TagArr[0] === 'TestData1') {
-        const data = await d3.csv(
-          'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv'
-        )
+      if (TagArr.length === 1) {
+        if (TagArr[0] === 'TestData1') {
+          const data = await d3.csv(
+            'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv'
+          )
 
-        DrawD3ChartWithData(node, data)
+          DrawD3ChartWithData(node, data)
+        } else {
+          const data = await d3.csv(
+            'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv'
+          )
+          console.log('multiSeries Data : ', data)
+        }
+      } else if (TagArr.length === 2) {
+        const data = await d3.csv(
+          'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv'
+        )
+        console.log('multiSeries Data 222 : ', data)
       } else {
         axios
           .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData?', TagArr)
