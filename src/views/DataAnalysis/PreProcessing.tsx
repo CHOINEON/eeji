@@ -6,7 +6,7 @@ import Worksheet from './components/Worksheets/Worksheet'
 import './style/uploader.css'
 import SeriesSelectionGrid from './Tag/SeriesSelectionGrid'
 import { stepCountStore } from './atom'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useSetRecoilState } from 'recoil'
 
 export const PreProcessing = (props: any) => {
   const { onPreprocessed } = props

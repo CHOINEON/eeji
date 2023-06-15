@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import './style.css'
 import { ContextMenuComponent, MenuItemModel } from '@syncfusion/ej2-react-navigations'
+import { useRecoilValue } from 'recoil'
+import { indexColumnStore } from 'views/DataAnalysis/atom'
 
 const ChartContextMenu = (props: any) => {
   const { onItemClicked } = props
+  const indexColumn = useRecoilValue(indexColumnStore)
 
   const menuItems: MenuItemModel[] = [
     {
@@ -33,7 +36,7 @@ const ChartContextMenu = (props: any) => {
   return (
     <ContextMenuComponent
       target="#contextmenutarget"
-      items={menuItems}
+      items={indexColumn !== '' ? menuItems : []}
       select={onSelectItem}
       // animationSettings={animationSettings}
       // beforeItemRender={addDisabled}

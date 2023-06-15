@@ -42,7 +42,7 @@ const ModelSetting = (props: any) => {
   const [loading, setLoading] = useState(false)
 
   const fetchChartData = () => {
-    const ChartDataArr: any = []
+    // const ChartDataArr: any = []
 
     if (selectedVarX.length > 0 && selectedVarY !== undefined) {
       setLoading(true)
@@ -51,7 +51,7 @@ const ModelSetting = (props: any) => {
         x_value: selectedVarX[0].variable,
         y_value: selectedVarY[0].variable[0],
       }
-      console.log(param)
+      // console.log(param)
 
       axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/predict/chartData?', param).then((response) => {
         console.log('response:', response.data)
@@ -108,7 +108,7 @@ const ModelSetting = (props: any) => {
           display: 'flex',
           flexWrap: 'wrap',
           '& > :not(style)': {
-            m: 5,
+            m: 3,
             // width: '100%',
             // height: 100,
           },
@@ -179,7 +179,7 @@ const ModelSetting = (props: any) => {
           display: 'flex',
           flexWrap: 'wrap',
           '& > :not(style)': {
-            m: 5,
+            m: 3,
             // width: '100%',
             // height: 100,
           },
