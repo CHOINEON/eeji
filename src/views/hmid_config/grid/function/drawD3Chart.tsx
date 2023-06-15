@@ -35,6 +35,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
   const svgContainer = React.useRef(null)
 
   const [WsData, setWsData] = React.useState<any>([])
+  const [reWsData, setReWsData] = React.useState<any>([])
 
   //trade
   const [PrevChartData, setPrevChartData] = React.useState<any>([])
@@ -68,47 +69,37 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     { field: 'openingprice', headerName: 'OpeningPrice', editable: false },
   ])
 
-  const [widthState, setWidth] = React.useState()
-  const [heightState, setHeight] = React.useState()
+  const [widthState, setWidth] = React.useState<any>(props.widthSize)
+  const [heightState, setHeight] = React.useState<any>(props.heightSize)
 
-  const webSocketUrl = `ws://demo.ineeji.com/ws`
-  // const webSocketUrl = `ws://192.168.1.27:8000/api/ws`
+  // const webSocketUrl = `ws://demo.ineeji.com/ws`
+  const webSocketUrl = `ws://192.168.1.27:8000/api/ws`
   const ws = React.useRef(null)
 
-  // This function calculates width and height of the container
-  const getSvgContainerSize = () => {
-    const newWidth = svgContainer.current.clientWidth
-    setWidth(newWidth)
-
-    const newHeight = svgContainer.current.clientHeight
-    setHeight(newHeight)
-  }
-
   React.useEffect(() => {
-    getSvgContainerSize()
     getChartData()
     getsocketChartData()
-
-    window.addEventListener('resize', getSvgContainerSize)
-    return () => window.removeEventListener('resize', getSvgContainerSize)
   }, [])
 
-  // React.useEffect(() => {
-  //   if (widthState !== undefined && heightState !== undefined) {
-  //     console.log('[ width , height ] ', widthState, ' , ', heightState)
-  //   }
-  // }, [widthState, heightState])
-
-  // React.useEffect(() => {
-  //   console.log(props.ChartShow)
-  //   console.log(props.TableShow)
-  // }, [props])
-
   React.useEffect(() => {
-    // console.log('changeWsData')
-    // console.log(WsData)
-    // console.log(PrevChartData)
-    // console.log(TestData)
+    console.log('[ Props Width, Height ] : ', props.widthSize + ' , ' + props.heightSize)
+    setWidth(props.widthSize)
+    setHeight(props.heightSize)
+    if (WsData.length === 0) {
+      console.log('ws data lengt zero !!')
+      console.log(WsData)
+      if (props.CallData === 'TradePrice') {
+        getChartData()
+      } else {
+        DrawD3LineChartPrev()
+      }
+    } else {
+      console.log('ws data lengt is not zoro !!!!')
+      DataFactory(WsData)
+    }
+  }, [props.widthSize, props.heightSize])
+
+  const DataFactory = (WsData: any) => {
     if (WsData.length !== 0) {
       if (props.CallData === 'TradePrice') {
         const test = [...PrevChartData]
@@ -124,9 +115,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
             openingTest = [...OpeningPricePrevData]
           }
         }
-        // console.log('[ Opening Price Prev ---->>>>>> ]')
-        // console.log(openingTest)
-        // console.log(WsData)
         if (openingTest.length < 10) {
           openingTest.unshift(WsData)
           setOpeningPricePrevData(openingTest)
@@ -145,9 +133,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
             lowTest = [...LowPricePrevData]
           }
         }
-        // console.log('[ Low Price Prev ---->>>>>> ]')
-        // console.log(lowTest)
-        // console.log(WsData)
         if (lowTest.length < 10) {
           lowTest.unshift(WsData)
           setLowPricePrevData(lowTest)
@@ -166,9 +151,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
             highTest = [...HighPricePrevData]
           }
         }
-        // console.log('[ High Price Prev ---->>>>>> ]')
-        // console.log(highTest)
-        // console.log(WsData)
         if (highTest.length < 10) {
           highTest.unshift(WsData)
           setHighPricePrevData(highTest)
@@ -187,9 +169,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
             TableRowTest = [...WSTableRowDataPrev]
           }
         }
-        // console.log('[ Table Row Price Prev ---->>>>>> ]')
-        // console.log(TableRowTest)
-        // console.log(WsData)
         if (TableRowTest.length < 10) {
           TableRowTest.push(WsData)
           setWSTableRowDataPrev(TableRowTest)
@@ -207,10 +186,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
             multipleTest = [...MultiplePrevData]
           }
         }
-        // console.log('[ Multiple Price Prev ---->>>>>> ]')
-        // console.log(MultiplePrevData)
-        // console.log(multipleTest)
-        // console.log(multipleTest.length)
         if (multipleTest.length === 0) {
           for (const i in WsData) {
             multipleTest.unshift(WsData[i])
@@ -219,10 +194,8 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
           setMultiplePrevData(multipleTest)
           setMultipleTestData(multipleTest)
         } else {
-          // console.log(WsData)
           for (const j in WsData) {
             if (multipleTest.length < 30) {
-              // console.log('100보다 작음')
               multipleTest.unshift(WsData[j])
               setMultiplePrevData(multipleTest)
               setMultipleTestData(multipleTest)
@@ -240,7 +213,11 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         }
       }
     }
-  }, [WsData])
+  }
+
+  React.useEffect(() => {
+    DataFactory(WsData)
+  }, [WsData, reWsData])
 
   React.useEffect(() => {
     if (TestData.length !== 0) {
@@ -370,11 +347,17 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
   const DrawD3LineChartPrev = () => {
     const svg2 = d3.select(svgRef2.current)
 
-    const margin = { top: 25, right: 50, bottom: 50, left: 70 },
-      width = props.widthSize - margin.left - margin.right,
-      height = props.heightSize - margin.top - margin.bottom
-    // width = widthState - margin.left - margin.right,
-    // height = heightState - margin.top - margin.bottom
+    const margin = { top: 25, right: 50, bottom: 50, left: 70 }
+    // width = props.widthSize - margin.left - margin.right,
+    // height = props.heightSize - margin.top - margin.bottom
+    let width: any = 0,
+      height: any = 0
+    if (widthState !== undefined && heightState !== undefined) {
+      width = widthState - margin.left - margin.right
+      height = heightState - margin.top - margin.bottom
+    }
+
+    svg2.selectAll('g').remove()
 
     //grid line 속성 style은 css
     const xGrid = (g: any) =>
@@ -440,6 +423,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     }
 
     if (rtnData[0].x !== undefined && rtnData[0].y !== undefined) {
+      svg2.selectAll('g').remove()
       rtnData.forEach((d: any) => {
         d.date = parseDate(parseTime(new Date(d.x)))
         d.value = d.y
@@ -466,9 +450,17 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     const max = Math.max.apply(null, Value)
     const min = Math.min.apply(null, Value)
 
-    const margin = { top: 20, right: 50, bottom: 50, left: 70 },
-      width = props.widthSize - margin.left - margin.right,
-      height = props.heightSize - margin.top - margin.bottom
+    const margin = { top: 20, right: 50, bottom: 50, left: 70 }
+    // width = props.widthSize - margin.left - margin.right,
+    // height = props.heightSize - margin.top - margin.bottom
+    // width = widthState - margin.left - margin.right,
+    // height = heightState - margin.top - margin.bottom
+    let width: any = 0,
+      height: any = 0
+    if (widthState !== undefined && heightState !== undefined) {
+      width = widthState - margin.left - margin.right
+      height = heightState - margin.top - margin.bottom
+    }
 
     // append the svg object to the body of the page
     svg2
@@ -773,9 +765,17 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       const max = Math.max.apply(null, Value)
       const min = Math.min.apply(null, Value)
 
-      const margin = { top: 20, right: 50, bottom: 50, left: 70 },
-        width = props.widthSize - margin.left - margin.right,
-        height = props.heightSize - margin.top - margin.bottom
+      const margin = { top: 20, right: 50, bottom: 50, left: 70 }
+      // width = widthState - margin.left - margin.right,
+      // height = heightState - margin.top - margin.bottom
+      // width = props.widthSize - margin.left - margin.right,
+      // height = props.heightSize - margin.top - margin.bottom
+      let width: any = 0,
+        height: any = 0
+      if (widthState !== undefined && heightState !== undefined) {
+        width = widthState - margin.left - margin.right
+        height = heightState - margin.top - margin.bottom
+      }
 
       // append the svg object to the body of the page
       svg2
