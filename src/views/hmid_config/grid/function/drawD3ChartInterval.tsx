@@ -28,12 +28,31 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
   const [IntervalTestData, setIntervalTestData] = React.useState<any>([])
   const [lastDate, setLastDate] = React.useState<any>()
 
+  const [widthState, setWidth] = React.useState<any>(props.widthSize)
+  const [heightState, setHeight] = React.useState<any>(props.heightSize)
+
   React.useEffect(() => {
     getChartData()
   }, [])
 
-  // interval
   React.useEffect(() => {
+    console.log('[ Props Width, Height ] : ', props.widthSize + ' , ' + props.heightSize)
+    setWidth(props.widthSize)
+    setHeight(props.heightSize)
+    if (IntervalData.length === 0) {
+      console.log('interval data lengt zero !!')
+      console.log(IntervalData)
+      console.log(props.CallData)
+      if (props.CallData === 'TradePrice') {
+        getChartData()
+      }
+    } else {
+      console.log('ws data lengt is not zoro !!!!')
+      DataFactory(IntervalData)
+    }
+  }, [props.widthSize, props.heightSize])
+
+  const DataFactory = (IntervalData: any) => {
     if (IntervalData.length !== 0) {
       if (PrevIntervalData !== undefined) {
         // console.log(PrevIntervalData)
@@ -47,6 +66,11 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
         setIntervalTestData(interval_test)
       }
     }
+  }
+
+  // interval
+  React.useEffect(() => {
+    DataFactory(IntervalData)
   }, [IntervalData])
 
   // interval
@@ -152,7 +176,7 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
 
     if (data[0].x !== undefined && data[0].y !== undefined) {
       // console.log('first data !!!')
-
+      svg.selectAll('g').remove()
       data.forEach((d: any) => {
         d.date = parseDate(parseTime(new Date(d.x)))
         d.value = d.y
@@ -180,9 +204,15 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     const max = Math.max.apply(null, Value)
     const min = Math.min.apply(null, Value)
 
-    const margin = { top: 20, right: 50, bottom: 50, left: 70 },
-      width = props.widthSize - margin.left - margin.right,
-      height = props.heightSize - margin.top - margin.bottom
+    const margin = { top: 20, right: 50, bottom: 50, left: 70 }
+    // width = props.widthSize - margin.left - margin.right,
+    // height = props.heightSize - margin.top - margin.bottom
+    let width: any = 0,
+      height: any = 0
+    if (widthState !== undefined && heightState !== undefined) {
+      width = widthState - margin.left - margin.right
+      height = heightState - margin.top - margin.bottom
+    }
 
     // append the svg object to the body of the page
     svg
