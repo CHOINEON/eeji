@@ -32,7 +32,6 @@ const Worksheet = (props: any) => {
 
   // const chartType = ['scatterPlot', 'line']
   const chartWrapper = useRef<HTMLDivElement>()
-  // const [clicked, setClicked] = useState(false)
   const [progressActive, setProgressActive] = useState(false)
   const [chartData, setChartData] = useState([])
   const [chartHeight, setChartHeight] = useState('97%')
@@ -76,14 +75,13 @@ const Worksheet = (props: any) => {
   }
 
   const getChartdata = () => {
-    console.log('----------- getChartdata:', selectedTags)
     setProgressActive(true)
 
     if (selectedTags.length > 0) {
       axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/chartData1', selectedTags).then(
         (response: any) => {
           if (response.status === 200) {
-            console.log('chartData response: ', response.data)
+            // console.log('chartData response: ', response.data)
             setChartData(response.data)
             // renderItem()
             setProgressActive(false)
@@ -95,10 +93,6 @@ const Worksheet = (props: any) => {
         }
       )
     }
-  }
-
-  const onSelectChart = (chartType: string) => {
-    alert(chartType)
   }
 
   const renderItem = () => {

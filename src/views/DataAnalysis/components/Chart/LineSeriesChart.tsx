@@ -120,7 +120,6 @@ const LineSeriesChart = (props: any) => {
   }, [])
 
   useEffect(() => {
-    console.log('chartInputData-------------', chartInputData)
     setDataSource(chartInputData)
   }, [chartInputData])
 
@@ -220,14 +219,15 @@ const LineSeriesChart = (props: any) => {
   }
 
   const handleExcludeData = (e: any) => {
-    // console.log('original:', dataSource)
+    console.log('-----------------handleExcludeData---------------------')
+    console.log('original:', dataSource)
 
     //선택된 구간의 시작/종료 시각
     const selected_start = new Date(Date.parse(selectedDatetime[0]))
     const selected_end = new Date(Date.parse(selectedDatetime[1]))
 
-    // console.log('시작::', selected_start)
-    // console.log('종료::', selected_end)
+    console.log('시작::', selected_start)
+    console.log('종료::', selected_end)
 
     const newDataArr = []
     for (let i = 0; i < dataSource.length; i++) {
@@ -300,7 +300,7 @@ const LineSeriesChart = (props: any) => {
 
   const handleItemClick = (param: any) => {
     if (param === 'menuitem_2') ExcludeBtnRef.current.click()
-    if (param === 'menuitem_4') setModalOpen(true)
+    // if (param === 'menuitem_4') setModalOpen(true)
   }
 
   const handleModalClose = (param: any) => {
@@ -323,7 +323,7 @@ const LineSeriesChart = (props: any) => {
   ]
 
   const renderMultiSeries = () => {
-    console.log('renderMultiSeries')
+    // console.log('renderMultiSeries')
     if (dataSource && dataSource.length > 0) {
       const multiSeries = dataSource.map((item, idx) => {
         return (
@@ -346,7 +346,7 @@ const LineSeriesChart = (props: any) => {
 
   return (
     <div className="control-pane">
-      <style>{SAMPLE_CSS}</style>
+      {/* <style>{SAMPLE_CSS}</style> */}
       <div id="chartSection" className="control-section">
         <ChartComponent
           id="contextmenutarget"
@@ -362,7 +362,7 @@ const LineSeriesChart = (props: any) => {
           style={{ textAlign: 'center' }}
           primaryXAxis={primaryxAxis}
           primaryYAxis={primaryyAxis}
-          load={load.bind(this)}
+          // load={load.bind(this)}
           chartArea={{ border: { width: 0 } }}
           title=" "
           max-height="190px"

@@ -40,8 +40,8 @@ const DataSummary = (props: any) => {
             <p>
               행/열 : {param.value.row_count}/{param.value.col_count}
             </p>
-            <p>시작일 : {param.value.startDate}</p>
-            <p>종료일 : {param.value.endDate}</p>
+            <p>시작(일) : {param.value.startDate}</p>
+            <p>종료(일) : {param.value.endDate}</p>
             <p>결측치 : {param.value.missing.length === 0 ? '없음' : param.value.missing}</p>
           </div>
           <Typography variant="body2"></Typography>

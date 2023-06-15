@@ -10,6 +10,12 @@ import { Alert } from 'views/hmid/components/Modal/Alert'
 import { Box } from '@mui/material'
 import { stepCountStore } from './atom'
 import { useRecoilState } from 'recoil'
+import styled from '@emotion/styled'
+
+const DataSummaryDiv = styled.div<{ toggle: any }>`
+  border: 1px solid red
+  display: ${(props: any) => (props.toggle ? 'block' : 'none')};
+`
 
 const FileUploader = (props: any) => {
   const uploadObj = useRef<UploaderComponent>(null)
@@ -124,20 +130,22 @@ const FileUploader = (props: any) => {
                   !uploaded && <Button onClick={handleUpload}>Upload</Button>
                 )}
               </div>
-              {summaryResult.length > 0 && (
-                <div style={{ marginTop: '100px' }}>
-                  <DataSummary dataSource={summaryResult} />
-                </div>
-              )}
-              <div style={{ width: '400px', float: 'right', marginTop: '10px' }}>
-                <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-                  {loading ? (
-                    <CircularProgress style={{ position: 'relative', top: '200px' }} />
-                  ) : (
-                    uploaded && <Button onClick={handleNext}>Next</Button>
-                  )}
-                </Box>
-              </div>
+              <DataSummaryDiv toggle={summaryResult.length > 0 ? true : false}>
+                <>
+                  <div style={{ marginTop: '100px' }}>
+                    <DataSummary dataSource={summaryResult} />
+                  </div>
+                  <div style={{ width: '400px', float: 'right', marginTop: '10px' }}>
+                    <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
+                      {loading ? (
+                        <CircularProgress style={{ position: 'relative', top: '200px' }} />
+                      ) : (
+                        uploaded && <Button onClick={handleNext}>Next</Button>
+                      )}
+                    </Box>
+                  </div>
+                </>
+              </DataSummaryDiv>
             </div>
           </div>
         </div>

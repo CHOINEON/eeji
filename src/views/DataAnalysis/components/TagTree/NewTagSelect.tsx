@@ -64,13 +64,13 @@ const NewTagSelect = (props: any) => {
     fetchTaglistData()
   }, [])
 
-  useEffect(() => {
-    if (defaultValue !== undefined && defaultValue.length > 0) {
-      console.log('new tag select:', 'useEffect')
-      //타겟변수를 선택한 경우에 원인변수에서 호출되는 부분
-      setValue(defaultValue)
-    }
-  }, [defaultValue])
+  // useEffect(() => {
+  //   console.log('defaultValue useeffect-------::', defaultValue)
+  //   if (defaultValue !== undefined && defaultValue.length > 0) {
+  //     //타겟변수를 선택한 경우에 원인변수에서 호출되는 부분
+  //     setValue(defaultValue)
+  //   }
+  // }, [defaultValue])
 
   const handleClick = (e: any) => {
     if (type === 'EXPLANATORY_VARIABLE') {
@@ -88,11 +88,14 @@ const NewTagSelect = (props: any) => {
     // console.log('handleChange:: ', selectedValue)
     setValue(selectedValue)
 
+    const result = []
+    result.push({ table_nm: rawDataX[0].label, variable: selectedValue })
+
     if (type === 'TARGET_VARIABLE') {
       //formatting FOR VARIABLE Y
-      const formattedObj = { table_nm: rawDataY[0].label, variable: [selectedValue] }
+      // const formattedObj = { table_nm: rawDataY[0].label, variable: [selectedValue] }
 
-      setSelectedVarY([formattedObj])
+      setSelectedVarY(result)
 
       ////////////TEST////////////////////////////////////
       // 타겟변수 제외한 모든 변수를 원인변수의 디폴트로 선택
@@ -106,8 +109,6 @@ const NewTagSelect = (props: any) => {
     }
     if (type === 'EXPLANATORY_VARIABLE') {
       //formatting FOR VARIABLE X
-      const result = []
-      result.push({ table_nm: rawDataX[0].label, variable: selectedValue })
 
       setSelectedVarX(result)
     }
@@ -172,7 +173,7 @@ const NewTagSelect = (props: any) => {
         maxTagCount="responsive"
         // onSelect={handleSelect}
         // onDropdownVisibleChange={handleDropdownVisibleChange}
-        defaultActiveFirstOption={true}
+        // defaultActiveFirstOption={true}
       ></Select>
       {/* {type === 'EXPLANATORY_VARIABLE' && <button onClick={handleAllSelect}>All select</button>} */}
     </div>

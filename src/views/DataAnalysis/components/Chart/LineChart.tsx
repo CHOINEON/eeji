@@ -1,4 +1,3 @@
-import { Row } from 'antd'
 import React, { useState, useEffect } from 'react'
 import Plot from 'react-plotly.js'
 
@@ -14,8 +13,8 @@ function LineChart(props: any) {
   const layout: any = {
     hovermode: 'closest',
     title: 'PLS regression result',
-    width: '1450',
-    height: '500',
+    // width: '1450',
+    // height: '500',
     plot_bgcolor: 'rgba(255,255,255,0)',
     // paper_bgcolor: 'lightpink',
     xaxis: {
@@ -39,8 +38,14 @@ function LineChart(props: any) {
   }
 
   return (
-    <div style={{ display: 'block', width: '100%' }}>
-      <Plot data={data} layout={layout} config={config} />
+    <div id="plotlydiv" style={{ display: 'block', width: '100%', height: '360px' }}>
+      <Plot
+        data={data}
+        layout={layout}
+        config={config}
+        useResizeHandler={true}
+        style={{ width: '100%', height: '340px' }}
+      />
       {/* <Plot data={data2} layout={layout} config={config} /> */}
     </div>
   )

@@ -22,8 +22,6 @@ const VariableSelection = () => {
   const [open, setOpen] = useState(false)
 
   const onSelectionChanged = (param: any) => {
-    console.log('variable selection onSelectionChanged----')
-    console.log('param: ', param)
     if (param.type === 'TARGET_VARIABLE') setSelectedArr(param)
   }
 
@@ -49,13 +47,14 @@ const VariableSelection = () => {
 
   const handlePreprocessing = () => {
     setLoading(true)
+    hideModal()
 
     const Object: any = {
       com_id: localStorage.getItem('companyId'),
       cause: selectedVarX,
       target: selectedVarY[0],
     }
-    console.log('Object:', Object)
+    // console.log('Object:', Object)
 
     if (indexColumn !== '') {
       Object['data_index'] = indexColumn
@@ -102,7 +101,7 @@ const VariableSelection = () => {
           <Col span="8">
             <NewTagSelect
               style={{ width: '60%', margin: 'auto', minWidth: '150px' }}
-              selectionType=""
+              selectionType="multiple"
               type="TARGET_VARIABLE"
               title="타겟변수(Y)"
               onSelectionChanged={onSelectionChanged}
@@ -114,26 +113,21 @@ const VariableSelection = () => {
               selectionType="multiple"
               type="EXPLANATORY_VARIABLE"
               title="원인변수(X)"
-              // onSelectionChanged={onSelectionChanged}
               defaultValue={selectedArr}
             />
           </Col>
           <Col span="8">
             <div style={{ width: '60%', margin: 'auto', minWidth: '150px' }}>
-              {/* <Typography variant="subtitle1" gutterBottom marginLeft={1}>
-                인덱스 컬럼명
-              </Typography> */}
               <NewTagSelect
                 style={{ width: '60%', margin: 'auto', minWidth: '150px' }}
                 selectionType=""
                 type="INDEX_COLUMN"
-                title="인덱스 컬럼명"
-                // onSelectionChanged={onSelectionChanged}
+                title="인덱스 컬럼"
               />
-              {/* <Input defaultValue="" onChange={handleChange} /> */}
             </div>
           </Col>
         </Row>
+
         {/* <div style={{ display: 'block', float: 'left', margin: '10px 40px' }}>
           <Typography variant="subtitle1" gutterBottom marginLeft={1}>
             원인변수
