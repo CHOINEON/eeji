@@ -291,9 +291,10 @@ export const MainDashboardInterval: React.FC = () => {
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'TradePrice'}
-              Color={'skyblue'}
-              ChartShow={false}
+              Color={'steelblue'}
+              ChartShow={true}
               TableShow={false}
+              Multiple={false}
             />
           </>
         )
@@ -307,7 +308,7 @@ export const MainDashboardInterval: React.FC = () => {
         const data = (
           <>
             <BoxTitle>Opening Price</BoxTitle>
-            <D3LineChart
+            <D3LineChartInterval
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'OpeningPrice'}
@@ -328,7 +329,7 @@ export const MainDashboardInterval: React.FC = () => {
         const data = (
           <>
             <BoxTitle>Low Price</BoxTitle>
-            <D3LineChart
+            <D3LineChartInterval
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'LowPrice'}
@@ -349,7 +350,7 @@ export const MainDashboardInterval: React.FC = () => {
         const data = (
           <>
             <BoxTitle>High Price</BoxTitle>
-            <D3LineChart
+            <D3LineChartInterval
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'HighPrice'}
@@ -370,7 +371,7 @@ export const MainDashboardInterval: React.FC = () => {
         const data = (
           <>
             <BoxTitle>Opening & High & Low</BoxTitle>
-            <D3LineChart
+            <D3LineChartInterval
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'Opening & High & Low'}
@@ -429,7 +430,7 @@ export const MainDashboardInterval: React.FC = () => {
         const data = (
           <>
             <BoxTitle>All Data</BoxTitle>
-            <D3LineChart
+            <D3LineChartInterval
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'DataTable'}
