@@ -80,7 +80,7 @@ export const WidgetModal: React.FC = () => {
             // options={TagListArr}
             options={[
               { value: 'TestData1', label: '테스트 데이터1' },
-              // { value: 'TestData2', label: 'multiSeries 테스트 데이터' },
+              { value: 'TestData2', label: 'multiSeries 테스트 데이터' },
             ]}
             value={changeTagData}
           />

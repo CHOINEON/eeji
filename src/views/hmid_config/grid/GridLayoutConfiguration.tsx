@@ -384,13 +384,15 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
           const data = await d3.csv(
             'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv'
           )
-          console.log('multiSeries Data : ', data)
+          // console.log('multiSeries Data : ', data)
+          DrawD3ChartWithData(node, data)
         }
       } else if (TagArr.length === 2) {
         const data = await d3.csv(
           'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv'
         )
-        console.log('multiSeries Data 222 : ', data)
+        // console.log('multiSeries Data 222 : ', data)
+        DrawD3ChartWithData(node, data)
       } else {
         axios
           .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData?', TagArr)

@@ -765,6 +765,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       const max = Math.max.apply(null, Value)
       const min = Math.min.apply(null, Value)
 
+      /** resize Chart Size */
       const margin = { top: 20, right: 50, bottom: 50, left: 70 }
       // width = widthState - margin.left - margin.right,
       // height = heightState - margin.top - margin.bottom
