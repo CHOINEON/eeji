@@ -114,7 +114,7 @@ const ModelSetting = (props: any) => {
       >
         <Grid item width="100%" style={{ textAlign: 'left' }}>
           {/* <Divider orientation="left"></Divider> */}
-          <Row justify="space-evenly" align="top" style={{ marginTop: '10px' }}>
+          <Row justify="space-evenly" align="top" style={{ marginTop: '20px' }}>
             <Col span="8">
               <div style={{ width: '70%', margin: 'auto', minWidth: '150px' }}>
                 <Typography variant="subtitle2" gutterBottom marginLeft={1}>

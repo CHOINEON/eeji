@@ -52,37 +52,37 @@ function LineChart(props: any) {
 
   useEffect(() => {
     if (chartData) {
-      console.log(chartData)
-      setData(chartData)
+      // console.log(chartData)
+      // setData(chartData)
 
-      // const newArray = []
-      // for (let i = 0; i < data.length; i++) {
-      //   if (data[i].name === 'Predict') {
-      //     const newObj = {
-      //       // mode: 'markers',
-      //       // marker: { size: 2 },
-      //       name: data[i].name,
-      //       type: data[i].type,
-      //       line: { color: data[i].line.color, dash: 'dot', width: 3 },
-      //       x: data[i].x,
-      //       y: data[i].y,
-      //     }
-      //     newArray.push(newObj)
-      //   } else {
-      //     const newObj = {
-      //       // mode: 'markers',
-      //       // marker: { size: 2 },
-      //       name: data[i].name,
-      //       type: data[i].type,
-      //       line: { color: 'rgb(255,127,14)', dash: 'dot', width: 3 },
-      //       x: data[i].x,
-      //       y: data[i].y,
-      //     }
-      //     newArray.push(newObj)
-      //   }
-      // }
+      const newArray = []
+      for (let i = 0; i < chartData.length; i++) {
+        if (chartData[i].name === 'Predict') {
+          const newObj = {
+            mode: 'lines',
+            // marker: { size: 2 },
+            name: chartData[i].name,
+            type: chartData[i].type,
+            line: { color: chartData[i].line.color, dash: 'dot', width: 3 },
+            x: chartData[i].x,
+            y: chartData[i].y,
+          }
+          newArray.push(newObj)
+        } else {
+          const newObj = {
+            mode: 'lines',
+            // marker: { size: 2 },
+            name: chartData[i].name,
+            type: chartData[i].type,
+            line: { color: 'rgb(255,127,14)', dash: 'dot', width: 3 },
+            x: chartData[i].x,
+            y: chartData[i].y,
+          }
+          newArray.push(newObj)
+        }
+      }
       // console.log('newArray:', newArray)
-      // setData(newArray)
+      setData(newArray)
     }
   }, [chartData])
 

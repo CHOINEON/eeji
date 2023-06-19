@@ -195,7 +195,7 @@ const VariableSelection = () => {
       >
         <p>X : {selectedVarX.length > 0 && selectedVarX[0].variable.join(' / ')}</p>
         <p>Y : {selectedVarY.length > 0 && selectedVarY[0].variable.join(' / ')}</p>
-        <p>INDEX : {indexColumn === '' ? '없음' : indexColumn}</p>
+        <p>날짜 : {indexColumn === '' ? '없음' : indexColumn}</p>
       </Modal>
       {/* </VariableProvider> */}
     </>
