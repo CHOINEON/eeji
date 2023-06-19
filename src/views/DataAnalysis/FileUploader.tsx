@@ -11,10 +11,19 @@ import { Box } from '@mui/material'
 import { stepCountStore } from './atom'
 import { useRecoilState } from 'recoil'
 import styled from '@emotion/styled'
+import ArrowDownward from 'assets/img/dataAnalysis/arrow_downward.png'
 
 const DataSummaryDiv = styled.div<{ toggle: any }>`
   border: 1px solid red
   display: ${(props: any) => (props.toggle ? 'block' : 'none')};
+`
+
+const UploadWrapperDiv = styled.div<{ uploaded: any }>`
+  float: right
+  maxWidth: 400px
+  margin: auto
+  border:1px solid red
+  display: ${(props: any) => (props.uploaded ? 'block' : 'none')} 
 `
 
 const FileUploader = (props: any) => {
@@ -47,6 +56,10 @@ const FileUploader = (props: any) => {
     }
   }, [refresh])
 
+  useEffect(() => {
+    console.log('uploaded:', uploaded)
+  }, [uploaded])
+
   const asyncSettings: object = {
     chunkSize: 100000000, // set chunk size for enable the chunk upload
   }
@@ -56,7 +69,7 @@ const FileUploader = (props: any) => {
   }
 
   const handleUpload = () => {
-    console.log('uploadObj:', uploadObj.current.getFilesData())
+    // console.log('uploadObj:', uploadObj.current.getFilesData())
 
     if (uploadObj.current.getFilesData().length > 0) {
       //Progress show
@@ -130,22 +143,24 @@ const FileUploader = (props: any) => {
                   !uploaded && <Button onClick={handleUpload}>Upload</Button>
                 )}
               </div>
+              {/* <div style={{ display: uploaded ? 'block' : 'none', margin: 'auto', padding: '10px' }}>
+                <img src={ArrowDownward} style={{ margin: 'auto' }} />
+              </div> */}
               <DataSummaryDiv toggle={summaryResult.length > 0 ? true : false}>
                 <>
                   <div style={{ marginTop: '100px' }}>
                     <DataSummary dataSource={summaryResult} />
                   </div>
-                  <div style={{ width: '400px', float: 'right', marginTop: '10px' }}>
-                    <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-                      {loading ? (
-                        <CircularProgress style={{ position: 'relative', top: '200px' }} />
-                      ) : (
-                        uploaded && <Button onClick={handleNext}>Next</Button>
-                      )}
-                    </Box>
-                  </div>
                 </>
               </DataSummaryDiv>
+              <UploadWrapperDiv uploaded={uploaded}>
+                <Button
+                  onClick={handleNext}
+                  style={{ float: 'right', maxWidth: '400px', margin: 'auto', display: uploaded ? 'block' : 'none' }}
+                >
+                  Next
+                </Button>
+              </UploadWrapperDiv>
             </div>
           </div>
         </div>

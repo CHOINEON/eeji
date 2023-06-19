@@ -6,8 +6,10 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Button from '@mui/material/Button'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { indexColumnStore, selectedVarStoreX, selectedVarStoreY, stepCountStore } from './atom'
-import { Col, Row, DatePicker, Select, Space, Divider, Input, Modal } from 'antd'
+import { Col, Row, DatePicker, Select, Space, Divider, Input, Modal, Switch } from 'antd'
 import NewTagSelect from './components/TagTree/NewTagSelect'
+import AssistantOutlinedIcon from '@mui/icons-material/AssistantOutlined'
+import SendIcon from '@mui/icons-material/Send'
 
 const VariableSelection = () => {
   const setActiveStep = useSetRecoilState(stepCountStore)
@@ -20,6 +22,7 @@ const VariableSelection = () => {
 
   const [selectedArr, setSelectedArr] = useState([])
   const [open, setOpen] = useState(false)
+  const [checked, setChecked] = useState(false)
 
   const onSelectionChanged = (param: any) => {
     if (param.type === 'TARGET_VARIABLE') setSelectedArr(param)
@@ -81,6 +84,14 @@ const VariableSelection = () => {
       )
   }
 
+  const onChangeSwitch = (param: any) => {
+    // console.log('onChangeSwitch:', param)
+    setChecked(param)
+  }
+
+  const handleFeatureSuggest = (param: any) => {
+    console.log('handleFeatureSuggest:', param)
+  }
   return (
     <>
       {/* <VariableProvider> */}
@@ -90,43 +101,70 @@ const VariableSelection = () => {
           display: 'flex',
           flexWrap: 'wrap',
           '& > :not(style)': {
-            m: 3,
+            m: 1,
             width: '100%',
             // height: 100,
           },
         }}
       >
-        <Divider orientation="left">Variables</Divider>
-        <Row justify="space-evenly" align="top">
-          <Col span="8">
+        <Row justify="space-evenly" align="top"></Row>
+        <Row style={{ width: '100%', marginLeft: '70px' }} justify={'start'}>
+          <Col span="5">
+            <div style={{ marginTop: '30px' }}>
+              <Typography
+                variant="subtitle2"
+                gutterBottom
+                marginLeft={0}
+                style={{ display: 'inline-block', float: 'left' }}
+              >
+                시계열 데이터
+              </Typography>
+              <Switch onChange={onChangeSwitch} checked={checked} style={{ margin: '0 10px' }} />
+            </div>
+          </Col>
+          <Col span="6">
             <NewTagSelect
-              style={{ width: '60%', margin: 'auto', minWidth: '150px' }}
+              style={{ width: '70%', margin: 'auto', minWidth: '150px' }}
               selectionType="multiple"
               type="TARGET_VARIABLE"
               title="타겟변수(Y)"
               onSelectionChanged={onSelectionChanged}
             />
           </Col>
-          <Col span="8">
+          <Col span="6">
             <NewTagSelect
-              style={{ width: '60%', margin: 'auto', minWidth: '150px' }}
+              style={{ width: '70%', margin: 'auto', minWidth: '150px' }}
               selectionType="multiple"
               type="EXPLANATORY_VARIABLE"
               title="원인변수(X)"
               defaultValue={selectedArr}
             />
-          </Col>
-          <Col span="8">
-            <div style={{ width: '60%', margin: 'auto', minWidth: '150px' }}>
-              <NewTagSelect
-                style={{ width: '60%', margin: 'auto', minWidth: '150px' }}
-                selectionType=""
-                type="INDEX_COLUMN"
-                title="인덱스 컬럼"
-              />
+            <div style={{ width: '70%', margin: 'auto', minWidth: '150px', textAlign: 'center' }}>
+              <Button
+                style={{ width: '100%' }}
+                variant="outlined"
+                size="small"
+                onClick={handleFeatureSuggest}
+                endIcon={<AssistantOutlinedIcon />}
+              >
+                Suggestion
+              </Button>
             </div>
           </Col>
+          <Col span="6">
+            {checked && (
+              <NewTagSelect
+                style={{ width: '70%', margin: 'auto', minWidth: '150px' }}
+                selectionType=""
+                type="INDEX_COLUMN"
+                title="날짜 컬럼"
+                subtext="시계열 데이터의 경우만 선택"
+              />
+            )}
+          </Col>
         </Row>
+        {/* <Divider orientation="left">Variables</Divider> */}
+        <Row justify="space-evenly" align="top"></Row>
 
         {/* <div style={{ display: 'block', float: 'left', margin: '10px 40px' }}>
           <Typography variant="subtitle1" gutterBottom marginLeft={1}>
@@ -157,7 +195,7 @@ const VariableSelection = () => {
       >
         <p>X : {selectedVarX.length > 0 && selectedVarX[0].variable.join(' / ')}</p>
         <p>Y : {selectedVarY.length > 0 && selectedVarY[0].variable.join(' / ')}</p>
-        <p>INDEX : {indexColumn === '' ? '없음' : indexColumn}</p>
+        <p>날짜 : {indexColumn === '' ? '없음' : indexColumn}</p>
       </Modal>
       {/* </VariableProvider> */}
     </>

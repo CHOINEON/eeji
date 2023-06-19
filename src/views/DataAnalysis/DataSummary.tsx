@@ -1,16 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { List, ListItem, ListIcon, OrderedList, UnorderedList } from '@chakra-ui/react'
-import { MdCheckCircle } from 'react-icons/md'
-import Card from '@mui/material/Card'
-import CardActions from '@mui/material/CardActions'
-import CardContent from '@mui/material/CardContent'
+
+// import Card from '@mui/material/Card'
+// import CardActions from '@mui/material/CardActions'
+// import CardContent from '@mui/material/CardContent'
+import { Card } from 'antd'
 import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import Pagination from '@mui/material/Pagination'
 import { Box, Stack } from '@mui/material'
+import Pagination from '@mui/material/Pagination'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { theme } from './theme'
 import { AgGridReact } from 'ag-grid-react'
+import { Typography } from 'antd'
+
+const { Title } = Typography
 
 const DataGrid = (props: any) => {
   const [rowData, setRowData] = useState([])
@@ -56,29 +58,31 @@ const DataSummary = (props: any) => {
 
   const card = (param: any) => {
     return (
-      <Card sx={{ minWidth: 275 }} className="rounded-box">
-        <CardContent>
-          <div style={{ fontSize: 14 }} color="text.secondary">
-            <p>파일명 : {param.value.data}</p>
-            <p>
-              행/열 : {param.value.row_count}/{param.value.col_count}
-            </p>
-            <p>시작(일) : {param.value.startDate}</p>
-            <p>종료(일) : {param.value.endDate}</p>
-            <div>
-              결측치 : {param.value.missing.length === 0 ? '없음' : param.value.missing.length + '개'}
-              {param.value.missing.length > 0 && <DataGrid data={param.value.missing}></DataGrid>}
+      <>
+        <Box display="block">
+          <Title level={3} style={{ color: '#002D65' }}>
+            Data Summary
+          </Title>
+        </Box>
+        <Box display="block">
+          <Card style={{ width: 400 }} className="rounded-box">
+            <div style={{ fontSize: 14 }} color="text.secondary">
+              <p>파일명 : {param.value.data}</p>
+              <p>
+                행/열 : {param.value.row_count}/{param.value.col_count}
+              </p>
+              <p>시작(일) : {param.value.startDate}</p>
+              <p>종료(일) : {param.value.endDate}</p>
+              <div>
+                결측치 : {param.value.missing.length === 0 ? '없음' : param.value.missing.length + '개'}
+                {param.value.missing.length > 0 && <DataGrid data={param.value.missing}></DataGrid>}
+              </div>
             </div>
-          </div>
-          <Typography variant="body2"></Typography>
-        </CardContent>
-        {/* <CardActions>
-          <Button size="small">View details</Button>
-        </CardActions> */}
-      </Card>
+          </Card>
+        </Box>
+      </>
     )
   }
-
   return (
     <>
       <ThemeProvider theme={theme}>
