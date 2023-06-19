@@ -150,7 +150,7 @@ const NewTagSelect = (props: any) => {
 
   return (
     <div style={style}>
-      <Typography variant="subtitle1" gutterBottom marginLeft={1}>
+      <Typography variant="subtitle2" gutterBottom marginLeft={1}>
         {title}
       </Typography>
 

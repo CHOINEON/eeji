@@ -4,7 +4,7 @@ import Button from '@mui/material/Button'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+
 import {
   Checkbox,
   CircularProgress,
@@ -22,13 +22,8 @@ import axios from 'axios'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { stepCountStore, variableStoreX, variableStoreY, selectedVarStoreX, selectedVarStoreY } from './atom'
 import TagSelectList from './components/TagTree/TagSelectList'
-import { Row } from 'antd'
-
-const ariaLabel = { 'aria-label': 'description' }
-
-// const SettingBox = styled.div`
-//   border: 1px solid red;
-// `
+import { Col, Divider, Row, Select } from 'antd'
+import NewTagSelect from './components/TagTree/NewTagSelect'
 
 const ModelSetting = (props: any) => {
   const varListX = useRecoilValue(variableStoreX)
@@ -40,6 +35,8 @@ const ModelSetting = (props: any) => {
   const [model, setModel] = useState('PLS')
   const [resultText, setResultText] = useState({ mae: '', r2: '', rmse: '' })
   const [loading, setLoading] = useState(false)
+
+  const [options, setOptions] = useState([{ value: 'PLS', label: 'PLS' }])
 
   const fetchChartData = () => {
     // const ChartDataArr: any = []
@@ -87,10 +84,6 @@ const ModelSetting = (props: any) => {
     }
   }
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setModel(event.target.value as string)
-  }
-
   const handleRun = (event: any) => {
     fetchChartData()
   }
@@ -98,6 +91,11 @@ const ModelSetting = (props: any) => {
   const onSelectionChanged = (type: any, payload: any) => {
     // if (type === 'EXPLANATORY_VARIABLE') setExplanatoryVar(payload)
     // if (type === 'TARGET_VARIABLE') setTargetVar(payload)
+  }
+
+  const handleChange = (value: string | string[]) => {
+    console.log('test:', value)
+    // setModel(value)
   }
 
   return (
@@ -108,68 +106,50 @@ const ModelSetting = (props: any) => {
           display: 'flex',
           flexWrap: 'wrap',
           '& > :not(style)': {
-            m: 3,
+            m: 1,
             // width: '100%',
             // height: 100,
           },
         }}
       >
-        <Grid container spacing={0}>
-          {/* <Grid item width="100%">
-            <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-              <Typography variant="subtitle1" gutterBottom>
-                Dataset
-              </Typography>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={model}
-                label="Model"
-                autoWidth
-                onChange={handleChange}
-                defaultValue="pls"
-              >
-                {' '}
-                <MenuItem value="pls">TC_20230602</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid> */}
-          <Grid item width="100%">
-            <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-              <Typography variant="subtitle1" gutterBottom>
-                AI Model
-              </Typography>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                // value={model}
-                label="Model"
-                autoWidth
-                onChange={handleChange}
-                defaultValue="pls"
-              >
-                {' '}
-                <MenuItem value="pls">PLS</MenuItem>
-              </Select>
-            </FormControl>
-            {/* <FormControl size="small">
-              <Typography variant="subtitle1" gutterBottom marginLeft={2}>
-                X
-              </Typography>
-              <TagSelectList multipleSelection={true} type="EXPLANATORY_VARIABLE" onSelection={onSelectionChanged} />
-            </FormControl>
-            <FormControl size="small">
-              <Typography variant="subtitle1" gutterBottom marginLeft={2}>
-                Y
-              </Typography>
-              <TagSelectList multipleSelection={false} type="TARGET_VARIABLE" onSelection={onSelectionChanged} />
-            </FormControl> */}
-          </Grid>
-          <Grid item width="100%" style={{ textAlign: 'right' }}>
-            <Button onClick={handleRun} style={{ textAlign: 'right' }}>
-              RUN
-            </Button>
-          </Grid>
+        <Grid item width="100%" style={{ textAlign: 'left' }}>
+          {/* <Divider orientation="left"></Divider> */}
+          <Row justify="space-evenly" align="top" style={{ marginTop: '10px' }}>
+            <Col span="8">
+              <div style={{ width: '70%', margin: 'auto', minWidth: '150px' }}>
+                <Typography variant="subtitle2" gutterBottom marginLeft={1}>
+                  AI Model
+                </Typography>
+                <Select
+                  value="PLS"
+                  options={options}
+                  onChange={handleChange}
+                  // defaultValue={selectedArr}
+                />
+              </div>
+            </Col>
+            <Col span="8">
+              {/* <NewTagSelect
+                style={{ width: '70%', margin: 'auto', minWidth: '150px' }}
+                selectionType="multiple"
+                type="TARGET_VARIABLE"
+                title="타겟변수(Y)"
+                onSelectionChanged={onSelectionChanged}
+              /> */}
+            </Col>
+            <Col span="8">
+              {/* <NewTagSelect
+                style={{ width: '70%', margin: 'auto', minWidth: '150px' }}
+                selectionType="multiple"
+                type="EXPLANATORY_VARIABLE"
+                title="원인변수(X)"
+                // defaultValue={selectedArr}
+              /> */}
+            </Col>
+          </Row>
+          <Button onClick={handleRun} style={{ float: 'right', textAlign: 'right' }}>
+            RUN
+          </Button>
         </Grid>
       </Box>
       <Box

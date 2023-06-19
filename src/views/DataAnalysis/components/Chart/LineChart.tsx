@@ -10,6 +10,30 @@ function LineChart(props: any) {
     responsive: true,
   }
 
+  const updatemenus = [
+    {
+      buttons: [
+        {
+          args: [{ 'contours.showlines': false, type: 'contour' }],
+          label: 'Hide lines',
+          method: 'restyle',
+        },
+        {
+          args: [{ 'contours.showlines': true, type: 'contour' }],
+          label: 'Show lines',
+          method: 'restyle',
+        },
+      ],
+      direction: 'down',
+      pad: { r: 10, t: 10 },
+      showactive: true,
+      type: 'dropdown',
+      x: 0.78,
+      xanchor: 'left',
+      // y: button_layer_2_height,
+      yanchor: 'auto',
+    },
+  ]
   const layout: any = {
     hovermode: 'closest',
     title: 'PLS regression result',
@@ -23,10 +47,43 @@ function LineChart(props: any) {
     yaxis: {
       fixedrange: true,
     },
+    // updatemenus: updatemenus,
   }
 
   useEffect(() => {
-    if (chartData) setData(chartData)
+    if (chartData) {
+      console.log(chartData)
+      setData(chartData)
+
+      // const newArray = []
+      // for (let i = 0; i < data.length; i++) {
+      //   if (data[i].name === 'Predict') {
+      //     const newObj = {
+      //       // mode: 'markers',
+      //       // marker: { size: 2 },
+      //       name: data[i].name,
+      //       type: data[i].type,
+      //       line: { color: data[i].line.color, dash: 'dot', width: 3 },
+      //       x: data[i].x,
+      //       y: data[i].y,
+      //     }
+      //     newArray.push(newObj)
+      //   } else {
+      //     const newObj = {
+      //       // mode: 'markers',
+      //       // marker: { size: 2 },
+      //       name: data[i].name,
+      //       type: data[i].type,
+      //       line: { color: 'rgb(255,127,14)', dash: 'dot', width: 3 },
+      //       x: data[i].x,
+      //       y: data[i].y,
+      //     }
+      //     newArray.push(newObj)
+      //   }
+      // }
+      // console.log('newArray:', newArray)
+      // setData(newArray)
+    }
   }, [chartData])
 
   function gaussianRand() {
