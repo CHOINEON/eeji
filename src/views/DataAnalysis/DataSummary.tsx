@@ -93,7 +93,7 @@ const DataSummary = (props: any) => {
               <Box>{page == 2 && card(data[1])}</Box>
               <Box>{page == 3 && card(data[2])}</Box>
               <Stack alignItems="center" sx={{ mt: 3 }}>
-                <Pagination count={count} page={page} onChange={handleChange} />
+                {count > 1 && <Pagination count={count} page={page} onChange={handleChange} />}
               </Stack>
             </>
           )}

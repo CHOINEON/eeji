@@ -92,7 +92,7 @@ const LineSeriesChart = (props: any) => {
   const defaultXAxis: AxisModel = {
     // crosshairTooltip: { enable: true },
     valueType: 'DateTime',
-    // labelFormat: 'M/d hh:mm', ----------------------------------------------------
+    // labelFormat: 'M/d hh:mm',
     // valueType: 'Double',
     interval: 5,
     edgeLabelPlacement: 'Shift',
@@ -120,6 +120,7 @@ const LineSeriesChart = (props: any) => {
   }, [])
 
   useEffect(() => {
+    // console.log('chartInputData:', chartInputData)
     setDataSource(chartInputData)
   }, [chartInputData])
 
@@ -299,7 +300,9 @@ const LineSeriesChart = (props: any) => {
   }
 
   const handleItemClick = (param: any) => {
-    if (param === 'menuitem_2') ExcludeBtnRef.current.click()
+    console.log('handleItemClick:', param)
+    ExcludeBtnRef.current.click()
+    // if (param === 'menuitem_2')
     // if (param === 'menuitem_4') setModalOpen(true)
   }
 

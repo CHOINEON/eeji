@@ -36,7 +36,7 @@ const ModelSetting = (props: any) => {
   const [resultText, setResultText] = useState({ mae: '', r2: '', rmse: '' })
   const [loading, setLoading] = useState(false)
 
-  const [options, setOptions] = useState([{ value: 'PLS', label: 'PLS' }])
+  const [options, setOptions] = useState([{ value: '예측1', label: '예측1' }])
 
   const fetchChartData = () => {
     // const ChartDataArr: any = []
@@ -121,7 +121,7 @@ const ModelSetting = (props: any) => {
                   AI Model
                 </Typography>
                 <Select
-                  value="PLS"
+                  value="예측1"
                   options={options}
                   onChange={handleChange}
                   // defaultValue={selectedArr}

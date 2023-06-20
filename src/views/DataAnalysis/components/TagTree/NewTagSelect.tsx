@@ -73,11 +73,9 @@ const NewTagSelect = (props: any) => {
   // }, [defaultValue])
 
   const handleClick = (e: any) => {
-    if (type === 'EXPLANATORY_VARIABLE') {
-      // console.log('before: ', options)
-      // console.log('rawDataX:', rawDataX)
-      // console.log('selected Y:', selectedVarY)
+    // console.log('selectedVarY: ', selectedVarY)
 
+    if (type === 'EXPLANATORY_VARIABLE') {
       if (selectedVarY.length > 0) {
         setOptions(rawDataX[0].options.filter((x: any) => x.value !== selectedVarY[0].variable[0]))
       }

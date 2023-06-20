@@ -90,7 +90,8 @@ const VariableSelection = () => {
   }
 
   const handleFeatureSuggest = (param: any) => {
-    console.log('handleFeatureSuggest:', param)
+    // alert('테스트중입니다')
+    // console.log('handleFeatureSuggest:', param)
   }
   return (
     <>
