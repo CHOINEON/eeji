@@ -26,107 +26,64 @@ import {
 import Button from '@mui/material/Button'
 import ChartContextMenu from '../ContextMenu/ChartContextMenu'
 // import { CSVLink, CSVDownload } from 'react-csv'
-import CsvDownloader from 'react-csv-downloader'
+// import CsvDownloader from 'react-csv-downloader'
 import SetValueModal from './SetValueModal'
-import { useRecoilValue } from 'recoil'
-import { indexColumnStore } from 'views/DataAnalysis/atom'
-
-const SAMPLE_CSS = `
-     .control-fluid {
-         padding: 0px !important;
-     }
-     #btn-control {
-         width: 100%;
-         text-align: center;
-     }
-
-     .e-export-icon::before {
-         content: '\\e728';
-     }
-
-     .e-view.fabric .e-export-icon::before, .e-view.fabric-dark .e-export-icon::before  {
-         content: '\\e710';
-     }
-
-     .e-view.bootstrap4 .e-export-icon::before {
-         content: '\\e780';
-     }
-
-     .e-view.tailwind-dark .e-export-icon::before, .e-view.tailwind .e-export-icon::before {
-         content: '\\e7bf';
-     }
-
-     .e-view.highcontrast .e-export-icon::before {
-         content: '\\e710';
-     }
-
-     .e-view.bootstrap5 .e-export-icon::before, .e-view.bootstrap5-dark .e-export-icon::before {
-         content: '\\e72e';
-     }
-
-     .control-fluid {
-      padding: 0px !important;
-      }
-
-      .charts {
-          align :center
-      }
-  `
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { excludeHistoryStore, indexColumnStore } from 'views/DataAnalysis/atom'
+import HistoryModal from './HistoryModal'
 
 const LineSeriesChart = (props: any) => {
   const { chartInputData, chartHeight, onExport, onSave } = props
-  const [selectedData, setSelectedData] = useState([])
   const [dataSource, setDataSource] = useState([])
 
   const [modalOpen, setModalOpen] = useState(false)
-  const [threshold, setThreshold] = useState(0)
   const ExcludeBtnRef = useRef(null)
-  const AddThresholdBtnRef = useRef(null)
   const csvLinkRef = useRef(null)
-  const [xAxisValueType, setXAxisValueType] = useState('DateTime')
   const [selectedDatetime, setSelectedDatetime] = useState([])
+
   const indexColumn = useRecoilValue(indexColumnStore)
+  const [excludedData, setExcludedData] = useRecoilState(excludeHistoryStore)
+
+  // For threshold
+  // const [threshold, setThreshold] = useState(0)
+  // const AddThresholdBtnRef = useRef(null)
 
   const chartRef: any = useRef()
 
-  const defaultXAxis: AxisModel = {
+  const primaryxAxis: AxisModel = {
     // crosshairTooltip: { enable: true },
     valueType: 'DateTime',
-    // labelFormat: 'M/d hh:mm',
-    // valueType: 'Double',
+    labelFormat: 'M/d hh:mm',
     interval: 5,
     edgeLabelPlacement: 'Shift',
     majorGridLines: { width: 0 },
     labelIntersectAction: 'Rotate45',
   }
 
-  const [primaryxAxis, setPrimaryxAxis] = useState<AxisModel>(defaultXAxis)
+  // const [primaryxAxis, setPrimaryxAxis] = useState<AxisModel>(defaultXAxis)
+  useEffect(() => setExcludedData([]), [])
 
   useEffect(() => {
     // console.log('useref:', chartRef)
 
     if (indexColumn == '') {
       chartRef.current.properties.labelformat = ''
-      setPrimaryxAxis({
-        valueType: 'Double',
-        interval: 5,
-        // edgeLabelPlacement: 'Shift',
-        majorGridLines: { width: 0 },
-        // labelIntersectAction: 'Rotate45',
-      })
+      chartRef.current.properties.valueType = 'Double'
     } else {
+      chartRef.current.properties.valueType = 'DateTime'
       chartRef.current.properties.labelformat = 'M/d hh:mm'
     }
-  }, [])
+  }, [chartRef])
 
   useEffect(() => {
     // console.log('chartInputData:', chartInputData)
     setDataSource(chartInputData)
+    setExcludedData([]) //제거된 데이터 배열 초기화
   }, [chartInputData])
 
-  useEffect(() => {
-    if (onExport) csvLinkRef?.current?.handleClick()
-  }, [onExport])
+  // useEffect(() => {
+  //   if (onExport) csvLinkRef?.current?.handleClick()
+  // }, [onExport])
 
   // useEffect(() => {
   // if (onSave) {
@@ -188,7 +145,7 @@ const LineSeriesChart = (props: any) => {
     }
 
     setSelectedDatetime([minDatetime, maxDatetime])
-    // console.log('selectedDatetime:', selectedDatetime)
+    console.log('selectedDatetime:', selectedDatetime)
   }
 
   const handleExport = (e: any) => {
@@ -219,9 +176,11 @@ const LineSeriesChart = (props: any) => {
     return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
   }
 
+  useEffect(() => console.log('excludedData:', excludedData), [excludedData])
+
   const handleExcludeData = (e: any) => {
     console.log('-----------------handleExcludeData---------------------')
-    console.log('original:', dataSource)
+    // console.log('original:', dataSource)
 
     //선택된 구간의 시작/종료 시각
     const selected_start = new Date(Date.parse(selectedDatetime[0]))
@@ -229,6 +188,17 @@ const LineSeriesChart = (props: any) => {
 
     console.log('시작::', selected_start)
     console.log('종료::', selected_end)
+
+    //recoil state update
+    const historyRow = {
+      start: dateTimeToString(selected_start),
+      end: dateTimeToString(selected_end),
+      datetime: dateTimeToString(new Date()),
+    }
+    console.log('historyRow-', historyRow)
+
+    console.log('------------------------', excludedData)
+    setExcludedData((prep) => [...prep, historyRow])
 
     const newDataArr = []
     for (let i = 0; i < dataSource.length; i++) {
@@ -301,9 +271,9 @@ const LineSeriesChart = (props: any) => {
 
   const handleItemClick = (param: any) => {
     console.log('handleItemClick:', param)
-    ExcludeBtnRef.current.click()
-    // if (param === 'menuitem_2')
-    // if (param === 'menuitem_4') setModalOpen(true)
+
+    if (param === 'item1') ExcludeBtnRef.current.click()
+    if (param === 'item2') setModalOpen(true)
   }
 
   const handleModalClose = (param: any) => {
@@ -387,8 +357,8 @@ const LineSeriesChart = (props: any) => {
       {/* <Button ref={AddThresholdBtnRef} style={{ display: 'none' }} onClick={() => setModalOpen(true)}>
         Add threshold
       </Button> */}
-      <SetValueModal visible={modalOpen} onClose={handleModalClose} onGetValue={handleGetValue} />
-      <div id="btn-control" style={{ marginLeft: '60px' }}>
+      <HistoryModal visible={modalOpen} onClose={handleModalClose} onGetValue={handleGetValue} />
+      {/* <div id="btn-control" style={{ marginLeft: '60px' }}>
         <CsvDownloader
           style={{ display: 'none' }}
           ref={csvLinkRef}
@@ -400,7 +370,7 @@ const LineSeriesChart = (props: any) => {
           datas={dataSource}
           text="Export as CSV"
         />
-      </div>
+      </div> */}
     </div>
   )
 }

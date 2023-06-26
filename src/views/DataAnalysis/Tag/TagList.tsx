@@ -19,7 +19,7 @@ const TagList = (props: any) => {
       field: 'name',
       floatingFilter: true,
       filter: 'agTextColumnFilter',
-      width: 290,
+      width: 250,
     },
   ])
 
@@ -62,23 +62,6 @@ const TagList = (props: any) => {
 
   return (
     <>
-      {/* <Box sx={{ m: 2, height: 30 }}> */}
-      <div style={{ height: '0%', width: '100%' }}>
-        {/* <Stack spacing={1} direction="row" justifyContent="flex-end"> */}
-        {/* <Button type="primary" onClick={toggleUploadModal}>
-          업로드
-        </Button>
-        <Button type="primary" onClick={(e) => toggleFormModal('add', e)}>
-          태그 등록
-        </Button>
-        <Button type="primary" onClick={(e) => toggleFormModal('update', e)}>
-          태그 수정
-        </Button>
-        <Button type="primary" onClick={handleDelete}>
-          태그 삭제
-        </Button> */}
-        {/* </Stack> */}
-      </div>
       <div className="ag-theme-alpine" style={gridStyle}>
         <AgGridReact
           rowHeight={40}
@@ -91,22 +74,6 @@ const TagList = (props: any) => {
           onSelectionChanged={onSelectionChanged}
         ></AgGridReact>
       </div>
-      {/* <Box style={{ height: '40px', textAlign: 'center', marginTop: '10px' }}>
-        <ButtonComponent cssClass="e-info" onClick={toggleUploadModal}>
-          Load Data
-        </ButtonComponent>
-      </Box> */}
-      {/* </Box> */}
-      {/* <FormModal
-        show={formModal}
-        type={modalType}
-        onSaveClick={onSaveClick}
-        onCloseClick={() => setFormModal(false)}
-        selectedData={selectedRowData}
-        onRowEditted={onRowEditted}`
-      /> */}
-
-      {/* <UploadModal show={uploadModal} onUploaded={onUploaded} onCloseClick={() => setUploadModal(false)} /> */}
     </>
   )
 }

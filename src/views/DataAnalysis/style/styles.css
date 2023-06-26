@@ -101,3 +101,16 @@ template {
   opacity: 1;
   --ag-borders:none;
 }
+
+.ant-tag-checkable-checked{
+  background-color:#4338f7
+}
+
+.example {
+  margin: 20px 0;
+  margin-bottom: 20px;
+  padding: 30px 50px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}

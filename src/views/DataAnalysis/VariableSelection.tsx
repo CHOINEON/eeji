@@ -1,32 +1,82 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Box, Typography } from '@mui/material'
-import TagSelectList from './components/TagTree/TagSelectList'
 import CircularProgress from '@mui/material/CircularProgress'
 import Button from '@mui/material/Button'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { indexColumnStore, selectedVarStoreX, selectedVarStoreY, stepCountStore } from './atom'
+import { selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { indexColumnStore, selectedVarStoreX, selectedVarStoreY, stepCountStore, variableStore } from './atom'
 import { Col, Row, DatePicker, Select, Space, Divider, Input, Modal, Switch } from 'antd'
 import NewTagSelect from './components/TagTree/NewTagSelect'
 import AssistantOutlinedIcon from '@mui/icons-material/AssistantOutlined'
-import SendIcon from '@mui/icons-material/Send'
+import './style/styles.css'
 
 const VariableSelection = () => {
   const setActiveStep = useSetRecoilState(stepCountStore)
   const [loading, setLoading] = useState(false)
 
+  //최초 리스트
+  const [variableList, setVariableList] = useRecoilState(variableStore)
+
+  // const tagList = useRecoilValue(currentTagListQuery)
   const [selectedVarX, setSelectedVarX] = useRecoilState(selectedVarStoreX)
   const [selectedVarY, setSelectedVarY] = useRecoilState(selectedVarStoreY)
 
   const indexColumn = useRecoilValue(indexColumnStore)
 
-  const [selectedArr, setSelectedArr] = useState([])
   const [open, setOpen] = useState(false)
   const [checked, setChecked] = useState(false)
 
-  const onSelectionChanged = (param: any) => {
-    if (param.type === 'TARGET_VARIABLE') setSelectedArr(param)
+  const [filteredList, setFilteredList] = useState([])
+
+  useEffect(() => {
+    const cancelSource = axios.CancelToken.source()
+    fetchTaglistData()
+    // console.log('tagList:', tagList)
+
+    return () => {
+      console.log('variable selection cleanup')
+      // cancelSource.cancel()
+    }
+  }, [])
+
+  useEffect(() => {
+    console.log('useEffect selectedVarY：', selectedVarY)
+    if (selectedVarY.length > 0 && filteredList.length > 0) {
+      for (let i = 0; i < selectedVarY.length; i++) {
+        const options = filteredList[0].options.filter((x: any) => x.value !== selectedVarY[i])
+        const result = []
+
+        result.push({
+          label: filteredList[0].label,
+          options: options,
+        })
+        setFilteredList(result)
+      }
+    }
+    // console.log('----------', result)
+  }, [selectedVarY])
+
+  const fetchTaglistData = () => {
+    axios
+      .post(
+        process.env.REACT_APP_API_SERVER_URL + '/api/tag/list',
+        {
+          com_id: localStorage.getItem('companyId'),
+          search_type: 'tree',
+        }
+        // { cancelToken: cancelSource }
+      )
+      .then((response) => {
+        // console.log('fetchTaglistData:', response.data)
+        setVariableList(response.data)
+        setFilteredList(response.data)
+      })
+      .catch((error) => error('Data Load Failed'))
   }
+
+  // const onSelectionChanged = (param: any) => {
+  //   if (param.type === 'TARGET_VARIABLE') setSelectedArr(param)
+  // }
 
   const handleClick = () => {
     if (selectedVarX.length === 0) {
@@ -52,10 +102,18 @@ const VariableSelection = () => {
     setLoading(true)
     hideModal()
 
+    const causeArray = []
+    const targetArray = []
+    // console.log('selectedX:', selectedVarX)
+    // console.log('selectedY:', selectedVarY)
+
+    causeArray.push({ table_nm: variableList[0].label, variable: selectedVarX })
+    targetArray.push({ table_nm: variableList[0].label, variable: selectedVarY })
+
     const Object: any = {
       com_id: localStorage.getItem('companyId'),
-      cause: selectedVarX,
-      target: selectedVarY[0],
+      cause: causeArray,
+      target: targetArray[0],
     }
     console.log('Object:', Object)
 
@@ -63,25 +121,39 @@ const VariableSelection = () => {
       Object['data_index'] = indexColumn
     }
 
-    axios
-      .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/preprocessing', JSON.stringify(Object), {
-        headers: {
-          'Content-Type': `application/json`,
-        },
-      })
-      .then(
-        (response: any) => {
-          // console.log('preprocessing response:', response)
-          if (response.status === 200) {
-            setLoading(false)
-            setActiveStep(2)
-          }
-        },
-        (error) => {
-          setLoading(false)
-          console.log('error:', error)
+    const abortController = new AbortController()
+
+    const fetchData = async () => {
+      try {
+        axios
+          .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/preprocessing', JSON.stringify(Object), {
+            headers: {
+              'Content-Type': `application/json`,
+            },
+          })
+          .then(
+            (response: any) => {
+              console.log('preprocessing response:', response)
+              if (response.status === 200) {
+                setLoading(false)
+                setActiveStep(2)
+              }
+            },
+            (error) => {
+              setLoading(false)
+              console.log('error:', error)
+            }
+          )
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          //
         }
-      )
+      }
+    }
+    fetchData()
+    return () => {
+      abortController.abort()
+    }
   }
 
   const onChangeSwitch = (param: any) => {
@@ -89,10 +161,6 @@ const VariableSelection = () => {
     setChecked(param)
   }
 
-  const handleFeatureSuggest = (param: any) => {
-    // alert('테스트중입니다')
-    // console.log('handleFeatureSuggest:', param)
-  }
   return (
     <>
       {/* <VariableProvider> */}
@@ -129,7 +197,7 @@ const VariableSelection = () => {
               selectionType="multiple"
               type="TARGET_VARIABLE"
               title="타겟변수(Y)"
-              onSelectionChanged={onSelectionChanged}
+              defaultOptions={variableList}
             />
           </Col>
           <Col span="6">
@@ -138,19 +206,9 @@ const VariableSelection = () => {
               selectionType="multiple"
               type="EXPLANATORY_VARIABLE"
               title="원인변수(X)"
-              defaultValue={selectedArr}
+              defaultOptions={variableList}
+              filteredOptions={filteredList}
             />
-            <div style={{ width: '70%', margin: 'auto', minWidth: '150px', textAlign: 'center' }}>
-              <Button
-                style={{ width: '100%' }}
-                variant="outlined"
-                size="small"
-                onClick={handleFeatureSuggest}
-                endIcon={<AssistantOutlinedIcon />}
-              >
-                Suggestion
-              </Button>
-            </div>
           </Col>
           <Col span="6">
             {checked && (
@@ -160,6 +218,7 @@ const VariableSelection = () => {
                 type="INDEX_COLUMN"
                 title="날짜 컬럼"
                 subtext="시계열 데이터의 경우만 선택"
+                defaultOptions={variableList}
               />
             )}
           </Col>
@@ -194,8 +253,8 @@ const VariableSelection = () => {
         okText="저장"
         cancelText="취소"
       >
-        <p>X : {selectedVarX.length > 0 && selectedVarX[0].variable.join(' / ')}</p>
-        <p>Y : {selectedVarY.length > 0 && selectedVarY[0].variable.join(' / ')}</p>
+        <p>X : {selectedVarX.length > 0 && selectedVarX.join(' / ')}</p>
+        <p>Y : {selectedVarY.length > 0 && selectedVarY.join(' / ')}</p>
         <p>날짜 : {indexColumn === '' ? '없음' : indexColumn}</p>
       </Modal>
       {/* </VariableProvider> */}

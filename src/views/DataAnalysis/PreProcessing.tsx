@@ -40,12 +40,7 @@ export const PreProcessing = (props: any) => {
     <div id="targetElement" style={{ position: 'relative', zIndex: 1000 }}>
       <Grid h="700px" templateRows="repeat(2, 1fr)" templateColumns="repeat(5, 1fr)" gap={4}>
         <GridItem rowSpan={2} colSpan={1} h={700}>
-          {/* <GridItem colSpan={4} borderColor={'white'} h={200}>
-            <DatabaseNavigator />
-          </GridItem> */}
-          <GridItem colSpan={4} h={700}>
-            <TagList syncSelectedTag={onClickTag} refresh={refresh} />
-          </GridItem>
+          <TagList syncSelectedTag={onClickTag} refresh={refresh} />
         </GridItem>
         <GridItem rowSpan={2} colSpan={4} h={700}>
           <GridItem rowSpan={1} h={450} mb={50}>
@@ -56,7 +51,6 @@ export const PreProcessing = (props: any) => {
               refresh={refresh}
               onSave={onClickSave}
             />
-            {/* <Child ref={WorksheetRef}></Child> */}
           </GridItem>
           <GridItem rowSpan={1}>
             <SeriesSelectionGrid selectedTags={selectedTags} refresh={refresh} />
@@ -75,9 +69,6 @@ export const PreProcessing = (props: any) => {
               SAVE AND NEXT
             </Button>
           </GridItem>
-          {/* <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-            <Button onClick={handleExport}>SAVE & CSV EXPORT</Button>
-          </Box> */}
         </GridItem>
       </Grid>
     </div>
