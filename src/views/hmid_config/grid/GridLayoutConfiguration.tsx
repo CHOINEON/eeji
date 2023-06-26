@@ -37,10 +37,6 @@ import * as 이미지저장함수 from './function/캡쳐이미지저장함수'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import * as RecoilAtoms from '../recoil/config/atoms'
 import { CompanyId, LayoutTitle, NowDate, WsDataTest } from '../recoil/base/atoms'
-// import * as RecoilLineAtoms from '../recoil/line/atoms'
-// import * as RecoilTimeSeriesAtoms from '../recoil/timeseries/atoms'
-// import { GridDataObjSelector } from '../recoil/config/selector'
-
 // import D3LineChart from './function/drawD3Chart'
 import D3LineChartTooltip from './function/drawD3ChartTooltip(Test중)'
 import D3ChartDefaultGrid from './function/drawD3ChartDefaultGrid'
@@ -86,7 +82,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   //   RecoilTimeSeriesAtoms.TimeSeriesChartLayoutOptionState
   // )
   const [gridInformation, setGridInformation] = useRecoilState(RecoilAtoms.GridInformationState)
-  // const [gridDataObj, setGridDataObj] = useRecoilState(RecoilAtoms.GridDataObjState)
   const [showLoading, setShowLoading] = useRecoilState(RecoilAtoms.ShowLoadingState)
   const [widgetInfo, setWidgetInfo] = useRecoilState(RecoilAtoms.WidgetInfoState)
   const [boxTargetId, setBoxTargetId] = useRecoilState(RecoilAtoms.BoxTargetIdState)
