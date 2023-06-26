@@ -5,6 +5,11 @@ export const stepCountStore = atom({
   default: 0,
 })
 
+export const variableStore = atom({
+  key: 'variableList',
+  default: [],
+})
+
 export const variableStoreX = atom({
   key: 'variableX',
   default: [],
@@ -39,3 +44,14 @@ export const indexColumnStore = atom({
   key: 'indexColumnStore',
   default: '',
 })
+
+export const excludeHistoryStore = atom<Array<TEST> | undefined>({
+  key: 'excludeHistoryStore',
+  default: [],
+})
+
+export interface TEST {
+  start?: string
+  end?: string
+  datetime: string
+}

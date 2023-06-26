@@ -17,9 +17,9 @@ const { Title } = Typography
 const DataGrid = (props: any) => {
   const [rowData, setRowData] = useState([])
   const [columnDefs] = useState([
-    { field: 'Tag', width: 100 },
-    { field: 'Total', width: 100 },
-    { field: 'Percent', width: 140 },
+    { field: 'Tag', width: 160 },
+    { field: 'Total', width: 80 },
+    { field: 'Percent', width: 100 },
   ])
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const DataGrid = (props: any) => {
 
   return (
     <>
-      <div className="ag-theme-alpine" style={{ height: 200, width: 360, margin: '10px' }}>
+      <div className="ag-theme-alpine" style={{ height: 200, width: 340, margin: '10px' }}>
         <AgGridReact rowData={rowData} columnDefs={columnDefs}></AgGridReact>
       </div>
     </>
@@ -65,7 +65,7 @@ const DataSummary = (props: any) => {
           </Title>
         </Box>
         <Box display="block">
-          <Card style={{ width: 400 }} className="rounded-box">
+          <Card style={{ width: 410 }} className="rounded-box">
             <div style={{ fontSize: 14 }} color="text.secondary">
               <p>파일명 : {param.value.data}</p>
               <p>
@@ -93,7 +93,7 @@ const DataSummary = (props: any) => {
               <Box>{page == 2 && card(data[1])}</Box>
               <Box>{page == 3 && card(data[2])}</Box>
               <Stack alignItems="center" sx={{ mt: 3 }}>
-                <Pagination count={count} page={page} onChange={handleChange} />
+                {count > 1 && <Pagination count={count} page={page} onChange={handleChange} />}
               </Stack>
             </>
           )}

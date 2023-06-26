@@ -9,22 +9,23 @@ import {
   selectedVarStoreX,
   selectedVarStoreY,
   indexColumnStore,
+  variableStore,
 } from '../../atom'
 import { cloneDeep, eachRight } from 'lodash'
 import { Col, Row, DatePicker, Select, Space, Divider, Tag } from 'antd'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import type { SelectProps } from 'antd'
 
-const options: SelectProps['options'] = []
-const testOption = [
-  { value: 'yoga_train_0_426', label: 'x427' },
-  { value: 'yoga_train_0_425', label: 'x426' },
-  { value: 'yoga_train_0_424', label: 'x425' },
-]
+// const options: SelectProps['options'] = []
+// const testOption = [
+//   { value: 'yoga_train_0_426', label: 'x427' },
+//   { value: 'yoga_train_0_425', label: 'x426' },
+//   { value: 'yoga_train_0_424', label: 'x425' },
+// ]
 
-for (let i = 0; i < testOption.length; i++) {
-  options.push(testOption[i])
-}
+// for (let i = 0; i < testOption.length; i++) {
+//   options.push(testOption[i])
+// }
 
 const tagRender = (props: CustomTagProps) => {
   const { label, value, closable, onClose } = props
@@ -46,56 +47,68 @@ const tagRender = (props: CustomTagProps) => {
 }
 
 const NewTagSelect = (props: any) => {
-  const { selectionType, onSelectionChanged, type, title, style, defaultValue } = props
+  const { selectionType, type, title, style, filteredOptions, defaultOptions } = props
 
   const [options, setOptions] = useState([])
   const [value, setValue] = useState()
 
   //최초 리스트
-  const [rawDataX, setRawDataX] = useRecoilState(variableStoreX)
-  const [rawDataY, setRawDataY] = useRecoilState(variableStoreY)
+  const [variableList, setVariableList] = useRecoilState(variableStore)
+  // const [rawDataX, setRawDataX] = useRecoilState(variableStoreX)
+  // const [rawDataY, setRawDataY] = useRecoilState(variableStoreY)
 
+  const [filteredData, setFilteredData] = useState([])
   const [selectedVarX, setSelectedVarX] = useRecoilState(selectedVarStoreX)
   const [selectedVarY, setSelectedVarY] = useRecoilState(selectedVarStoreY)
 
   const [indexColumn, setIndexColumn] = useRecoilState(indexColumnStore)
 
+  useEffect(() => setOptions(defaultOptions), [defaultOptions])
   useEffect(() => {
-    fetchTaglistData()
+    if (filteredOptions && filteredOptions.length > 0) setOptions(filteredOptions)
+  }, [filteredOptions])
+
+  useEffect(() => {
+    return console.log('newtagselect cleanup!')
   }, [])
 
-  // useEffect(() => {
-  //   console.log('defaultValue useeffect-------::', defaultValue)
-  //   if (defaultValue !== undefined && defaultValue.length > 0) {
-  //     //타겟변수를 선택한 경우에 원인변수에서 호출되는 부분
-  //     setValue(defaultValue)
-  //   }
-  // }, [defaultValue])
-
   const handleClick = (e: any) => {
-    if (type === 'EXPLANATORY_VARIABLE') {
-      // console.log('before: ', options)
-      // console.log('rawDataX:', rawDataX)
-      // console.log('selected Y:', selectedVarY)
-
-      if (selectedVarY.length > 0) {
-        setOptions(rawDataX[0].options.filter((x: any) => x.value !== selectedVarY[0].variable[0]))
-      }
-    }
+    // console.log('selectedVarY: ', selectedVarY)
+    // if (type === 'EXPLANATORY_VARIABLE') {
+    //   if (selectedVarY.length > 0) {
+    //     const array = selectedVarY[0].variable //['x1','x2']
+    //     for (let i = 0; i < array.length; i++) {
+    //       // console.log('options:', options)
+    //       // console.log('array[i]:', array[i])
+    //       // console.log(
+    //       //   'options[0].variable.filter((x: any) => x.value !== array[i]):',
+    //       //   options[0].options.filter((x: any) => x.value !== array[i])
+    //       // )
+    //       const result = []
+    //       result.push({
+    //         label: rawDataX[0].label,
+    //         options: options[0].options.filter((x: any) => x.value !== array[i]),
+    //       })
+    //       // console.log('---------------------result:', result)
+    //       setOptions(result)
+    //     }
+    //   }
+    // }
   }
 
   const handleChange = (selectedValue: any) => {
     // console.log('handleChange:: ', selectedValue)
     setValue(selectedValue)
 
-    const result = []
-    result.push({ table_nm: rawDataX[0].label, variable: selectedValue })
+    //formatting 을 request 직전으로 옮기자...
+    // const result = []
+    // result.push({ table_nm: variableList[0].label, variable: selectedValue })
 
     if (type === 'TARGET_VARIABLE') {
       //formatting FOR VARIABLE Y
       // const formattedObj = { table_nm: rawDataY[0].label, variable: [selectedValue] }
 
-      setSelectedVarY(result)
+      setSelectedVarY(selectedValue)
 
       ////////////TEST////////////////////////////////////
       // 타겟변수 제외한 모든 변수를 원인변수의 디폴트로 선택
@@ -108,44 +121,12 @@ const NewTagSelect = (props: any) => {
       ////////////TEST////////////////////////////////////
     }
     if (type === 'EXPLANATORY_VARIABLE') {
-      //formatting FOR VARIABLE X
-
-      setSelectedVarX(result)
+      setSelectedVarX(selectedValue)
     }
 
     if (type === 'INDEX_COLUMN') {
       setIndexColumn(selectedValue)
     }
-  }
-
-  // const handleAllSelect = () => {
-  //   // 타겟변수 제외한 모든 변수를 원인변수의 디폴트로 선택
-  //   const X_defaultValue = rawDataX[0].options.filter((x: any) => x.value !== value).map((row: any) => row.value)
-
-  //   ////////////TEST/////////////
-  //   //원인변수 세팅 위해서 props 넘기기
-  //   onSelectionChanged({ type, X_defaultValue })
-
-  //   //formatting FOR VARIABLE X
-  //   const result = []
-  //   result.push({ table_nm: rawDataX[0].label, variable: X_defaultValue })
-
-  //   setSelectedVarX(result)
-  // }
-
-  const fetchTaglistData = () => {
-    axios
-      .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/list', {
-        com_id: localStorage.getItem('companyId'),
-        search_type: 'tree',
-      })
-      .then((response) => {
-        // console.log('--------------:', response.data)
-        setRawDataX(response.data)
-        setRawDataY(response.data)
-        setOptions(response.data)
-      })
-      .catch((error) => error('Data Load Failed'))
   }
 
   return (

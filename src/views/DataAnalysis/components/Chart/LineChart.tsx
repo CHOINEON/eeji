@@ -36,7 +36,7 @@ function LineChart(props: any) {
   ]
   const layout: any = {
     hovermode: 'closest',
-    title: 'PLS regression result',
+    title: 'Result',
     // width: '1450',
     // height: '500',
     plot_bgcolor: 'rgba(255,255,255,0)',

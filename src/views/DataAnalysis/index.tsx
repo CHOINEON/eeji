@@ -107,7 +107,7 @@ export default function DataAnalysis() {
         </Box>
         <Box>{activeStep === 0 && <FileUploader refresh={refresh} />}</Box>
         <Box>{activeStep === 1 && <VariableSelection />}</Box>
-        <Box>{activeStep === 2 && <PreProcessing onRefresh={onRefresh} onPreprocessed={onPreprocessed} />}</Box>
+        <Box>{activeStep === 2 && <PreProcessing onPreprocessed={onPreprocessed} />}</Box>
         <Box>{activeStep === 3 && <ModelSetting dataSource={dataSource} />}</Box>
       </Box>
     </ThemeProvider>

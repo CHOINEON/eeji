@@ -10,8 +10,14 @@ const ChartContextMenu = (props: any) => {
 
   const menuItems: MenuItemModel[] = [
     {
+      id: 'item1',
       text: 'Exclude data',
-      iconCss: 'e-cm-icons e-cut',
+      // iconCss: 'e-cm-icons e-cut',
+    },
+    {
+      id: 'item2',
+      text: 'View history',
+      // iconCss: 'e-cm-icons e-cut',
     },
     // {
     //   text: 'Replace data',
@@ -28,7 +34,7 @@ const ChartContextMenu = (props: any) => {
   ]
 
   const onSelectItem = (e: any) => {
-    // console.log('e.item', e.item)
+    // console.log('e.item', e)
     // if (e.item.id === 'menuitem_2') {
     onItemClicked(e.item.id, true)
     // }
@@ -36,8 +42,10 @@ const ChartContextMenu = (props: any) => {
   return (
     <ContextMenuComponent
       target="#contextmenutarget"
-      items={indexColumn !== '' ? menuItems : []}
+      items={menuItems}
       select={onSelectItem}
+
+      // items={indexColumn !== '' ? menuItems : []}
       // animationSettings={animationSettings}
       // beforeItemRender={addDisabled}
     />

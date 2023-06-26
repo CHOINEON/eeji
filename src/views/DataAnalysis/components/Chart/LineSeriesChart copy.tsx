@@ -257,8 +257,10 @@ const LineSeriesChart = (props: any) => {
   }
 
   const handleItemClick = (param: any) => {
-    if (param === 'menuitem_2') ExcludeBtnRef.current.click()
-    if (param === 'menuitem_4') setModalOpen(true)
+    //계속바뀜...뭐지??????????
+    // if (param === 'menuitem_2')
+    ExcludeBtnRef.current.click()
+    // if (param === 'menuitem_4') setModalOpen(true)
   }
 
   const handleModalClose = (param: any) => {
