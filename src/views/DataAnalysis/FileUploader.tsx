@@ -4,33 +4,28 @@ import { RemovingEventArgs, UploaderComponent } from '@syncfusion/ej2-react-inpu
 import Button from '@mui/material/Button'
 import { CircularProgress } from '@chakra-ui/react'
 import axios from 'axios'
-import DataInfoGrid from './DataSummary'
 import DataSummary from './DataSummary'
-import { Alert } from 'views/hmid/components/Modal/Alert'
-import { Box } from '@mui/material'
 import { stepCountStore } from './atom'
 import { useRecoilState } from 'recoil'
 import styled from '@emotion/styled'
 import ArrowDownward from 'assets/img/dataAnalysis/arrow_downward.png'
 
 const DataSummaryDiv = styled.div<{ toggle: any }>`
-  border: 1px solid red
   display: ${(props: any) => (props.toggle ? 'block' : 'none')};
 `
 
 const UploadWrapperDiv = styled.div<{ uploaded: any }>`
-  float: right
-  maxWidth: 400px
-  margin: auto
-  border:1px solid red
-  display: ${(props: any) => (props.uploaded ? 'block' : 'none')} 
+  width: 100%;
+  float: left;
+  margin: auto;
+  display: ${(props: any) => (props.uploaded ? 'block' : 'none')};
 `
 
 const FileUploader = (props: any) => {
   const uploadObj = useRef<UploaderComponent>(null)
   const [loading, setLoading] = useState(false)
   const [uploaded, setUploaded] = useState(false)
-  const { onUploaded, refresh } = props
+  const { onUploaded, refresh, onSave } = props
   const [summaryResult, setSummaryResult] = useState([])
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
 
@@ -108,8 +103,9 @@ const FileUploader = (props: any) => {
     }
   }
 
-  const handleNext = () => {
-    setActiveStep(activeStep + 1)
+  const handleSave = () => {
+    onSave(summaryResult[0])
+    // setActiveStep(activeStep + 1)
   }
 
   return (
@@ -142,21 +138,23 @@ const FileUploader = (props: any) => {
               {/* <div style={{ display: uploaded ? 'block' : 'none', margin: 'auto', padding: '10px' }}>
                 <img src={ArrowDownward} style={{ margin: 'auto' }} />
               </div> */}
-              <DataSummaryDiv toggle={summaryResult.length > 0 ? true : false}>
-                <>
-                  <div style={{ marginTop: '100px' }}>
-                    <DataSummary dataSource={summaryResult} />
-                  </div>
-                </>
-              </DataSummaryDiv>
-              <UploadWrapperDiv uploaded={uploaded}>
-                <Button
-                  onClick={handleNext}
-                  style={{ float: 'right', maxWidth: '400px', margin: 'auto', display: uploaded ? 'block' : 'none' }}
-                >
-                  Next
-                </Button>
-              </UploadWrapperDiv>
+              <div style={{ marginBottom: '30px' }}>
+                <DataSummaryDiv toggle={summaryResult.length > 0 ? true : false}>
+                  <>
+                    <div style={{ marginTop: '30px' }}>
+                      <DataSummary dataSource={summaryResult} />
+                    </div>
+                  </>
+                </DataSummaryDiv>
+                <UploadWrapperDiv uploaded={uploaded}>
+                  <Button
+                    onClick={handleSave}
+                    style={{ float: 'right', maxWidth: '400px', margin: 'auto', display: uploaded ? 'block' : 'none' }}
+                  >
+                    Save
+                  </Button>
+                </UploadWrapperDiv>
+              </div>
             </div>
           </div>
         </div>

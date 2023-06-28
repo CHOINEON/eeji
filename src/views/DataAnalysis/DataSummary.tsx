@@ -60,12 +60,12 @@ const DataSummary = (props: any) => {
     return (
       <>
         <Box display="block">
-          <Title level={3} style={{ color: '#002D65' }}>
+          <Title level={5} style={{ color: '#002D65' }}>
             Data Summary
           </Title>
         </Box>
         <Box display="block">
-          <Card style={{ width: 410 }} className="rounded-box">
+          <div style={{ width: 410 }}>
             <div style={{ fontSize: 14 }} color="text.secondary">
               <p>파일명 : {param.value.data}</p>
               <p>
@@ -78,7 +78,7 @@ const DataSummary = (props: any) => {
                 {param.value.missing.length > 0 && <DataGrid data={param.value.missing}></DataGrid>}
               </div>
             </div>
-          </Card>
+          </div>
         </Box>
       </>
     )

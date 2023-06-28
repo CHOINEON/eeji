@@ -11,6 +11,7 @@ import StepButton from '@mui/material/StepButton'
 import { theme } from './theme'
 import { useRecoilState } from 'recoil'
 import { stepCountStore } from './atom'
+import DataImport from './DataImport'
 
 export default function DataAnalysis() {
   // const activeStep = useRecoilValue(stepCountStore)
@@ -105,7 +106,8 @@ export default function DataAnalysis() {
             ))}
           </Stepper>
         </Box>
-        <Box>{activeStep === 0 && <FileUploader refresh={refresh} />}</Box>
+        {/* <Box>{activeStep === 0 && <FileUploader refresh={refresh} />}</Box> */}
+        <Box>{activeStep === 0 && <DataImport />}</Box>
         <Box>{activeStep === 1 && <VariableSelection />}</Box>
         <Box>{activeStep === 2 && <PreProcessing onPreprocessed={onPreprocessed} />}</Box>
         <Box>{activeStep === 3 && <ModelSetting dataSource={dataSource} />}</Box>
