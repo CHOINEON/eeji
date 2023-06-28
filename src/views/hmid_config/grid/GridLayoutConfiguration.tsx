@@ -37,10 +37,6 @@ import * as 이미지저장함수 from './function/캡쳐이미지저장함수'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import * as RecoilAtoms from '../recoil/config/atoms'
 import { CompanyId, LayoutTitle, NowDate, WsDataTest } from '../recoil/base/atoms'
-// import * as RecoilLineAtoms from '../recoil/line/atoms'
-// import * as RecoilTimeSeriesAtoms from '../recoil/timeseries/atoms'
-// import { GridDataObjSelector } from '../recoil/config/selector'
-
 // import D3LineChart from './function/drawD3Chart'
 import D3LineChartTooltip from './function/drawD3ChartTooltip(Test중)'
 import D3ChartDefaultGrid from './function/drawD3ChartDefaultGrid'
@@ -86,7 +82,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   //   RecoilTimeSeriesAtoms.TimeSeriesChartLayoutOptionState
   // )
   const [gridInformation, setGridInformation] = useRecoilState(RecoilAtoms.GridInformationState)
-  // const [gridDataObj, setGridDataObj] = useRecoilState(RecoilAtoms.GridDataObjState)
   const [showLoading, setShowLoading] = useRecoilState(RecoilAtoms.ShowLoadingState)
   const [widgetInfo, setWidgetInfo] = useRecoilState(RecoilAtoms.WidgetInfoState)
   const [boxTargetId, setBoxTargetId] = useRecoilState(RecoilAtoms.BoxTargetIdState)
@@ -366,17 +361,32 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   const getDataBySelectTagInfo = async (TagArr: any, node: any) => {
     console.log('[ Tag Arr ] : ', TagArr)
     console.log('[ Box Target Id ] ', boxTargetId)
+    console.log(node.className)
 
     DrawDefaultGrid(node)
 
     //일단 Table인 경우 조건 걸기 chart를 그려야 하기 때문
     if (node.className !== 'Table') {
       //Test Data
-      if (TagArr[0] === 'TestData1') {
-        const data = await d3.csv(
-          'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv'
-        )
+      if (TagArr.length === 1) {
+        if (TagArr[0] === 'TestData1') {
+          const data = await d3.csv(
+            'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv'
+          )
 
+          DrawD3ChartWithData(node, data)
+        } else {
+          const data = await d3.csv(
+            'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv'
+          )
+          // console.log('multiSeries Data : ', data)
+          DrawD3ChartWithData(node, data)
+        }
+      } else if (TagArr.length === 2) {
+        const data = await d3.csv(
+          'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv'
+        )
+        // console.log('multiSeries Data 222 : ', data)
         DrawD3ChartWithData(node, data)
       } else {
         axios

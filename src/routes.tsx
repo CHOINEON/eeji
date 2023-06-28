@@ -81,27 +81,27 @@ const routes = [
   //   component: ChartTest,
   // },
   // 잠시 주석
+  // {
+  //   name: 'MainDashboard-WS',
+  //   layout: '/admin',
+  //   path: '/hmid-ws',
+  //   icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+  //   component: MainDashboard,
+  // },
   {
-    name: 'MainDashboard-WS',
-    layout: '/admin',
-    path: '/hmid-ws',
-    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
-    component: MainDashboard,
-  },
-  {
-    name: 'MainDashboard-Interval',
+    name: 'MainDashboard',
     layout: '/admin',
     path: '/hmid-interval',
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: HmidInterval,
   },
-  {
-    name: 'HMID Configuration',
-    layout: '/admin',
-    path: '/layout-list',
-    icon: <Icon as={MdDisplaySettings} width="20px" height="20px" color="white" />,
-    component: LayoutList,
-  },
+  // {
+  //   name: 'HMID Configuration',
+  //   layout: '/admin',
+  //   path: '/layout-list',
+  //   icon: <Icon as={MdDisplaySettings} width="20px" height="20px" color="white" />,
+  //   component: LayoutList,
+  // },
   {
     name: 'HMID Configuration',
     layout: '/admin',
