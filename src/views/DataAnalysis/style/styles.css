@@ -114,3 +114,18 @@ template {
   background: rgba(0, 0, 0, 0.05);
   border-radius: 4px;
 }
+
+
+
+.ant-modal-root .ant-modal-mask {
+  display:block;  /*hmid에 none처리 되어있음*/
+  position: fixed;
+  top: 0;
+  inset-inline-end: 0;
+  bottom: 0;
+  inset-inline-start: 0;
+  z-index: 1000;
+  height: 100%;
+  background-color: rgba(0,0,0,.45);
+}
+

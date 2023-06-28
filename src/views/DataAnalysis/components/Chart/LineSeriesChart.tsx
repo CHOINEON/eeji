@@ -176,7 +176,7 @@ const LineSeriesChart = (props: any) => {
     return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
   }
 
-  useEffect(() => console.log('excludedData:', excludedData), [excludedData])
+  // useEffect(() => console.log('excludedData:', excludedData), [excludedData])
 
   const handleExcludeData = (e: any) => {
     console.log('-----------------handleExcludeData---------------------')

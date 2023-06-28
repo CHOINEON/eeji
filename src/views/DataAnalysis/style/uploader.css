@@ -62,3 +62,9 @@
     background-image:url('../../../assets/img/dataAnalysis/upload.png') !important
 
 }
+
+
+.contents {
+    font-size: small;
+    color:gray
+}
