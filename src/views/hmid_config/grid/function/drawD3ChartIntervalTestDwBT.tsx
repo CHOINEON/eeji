@@ -6,6 +6,7 @@ import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
 import axios from 'axios'
 import './style.css'
+import { TestBtData } from './test_data'
 
 const Wrapper = styled.svg<{ ChartShow: boolean }>`
   margin: 0 1vw;
@@ -22,14 +23,14 @@ const DataGridWrap = styled.div<{ TableShow: boolean }>`
 export interface LineChartPorps {
   widthSize: any
   heightSize: any
-  CallData: 'TradePrice' | 'HighPrice' | 'LowPrice' | 'OpeningPrice' | 'DataTable' | 'Opening & High & Low'
+  CallData: 'TestData' | 'Bottom' | 'LowPrice' | 'OpeningPrice' | 'DataTable' | 'Opening & High & Low'
   Color: string
   ChartShow: boolean
   TableShow: boolean
   Multiple: boolean
 }
 
-export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
+export const D3LineChartIntervalBT: React.FC<LineChartPorps> = (props) => {
   const svgRef = React.useRef()
   const svgContainer = React.useRef(null)
 
@@ -59,6 +60,10 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
   const [MultiplePrevData, setMultiplePrevData] = React.useState<any>([])
   const [MultipleTestData, setMultipleTestData] = React.useState<any>([])
 
+  //multiple Test Series DW
+  const [MultipleDwPrevData, setMultipleDwPrevData] = React.useState<any>([])
+  const [MultipleDwTestData, setMultipleDwTestData] = React.useState<any>([])
+
   //datatable
   const [WSTableRowData, setWSTableRowData] = React.useState<any>([])
   const [WSTableRowDataClean, setWSTableRowDataClean] = React.useState<any>([])
@@ -75,31 +80,92 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
   const [heightState, setHeight] = React.useState<any>(props.heightSize)
 
   React.useEffect(() => {
-    getChartData()
+    //getChartData()
+    //DrawD3MultipleSeriesLineChart()
+    getTestData()
+    //drawTestData(TestArchData)
+    // DrawD3MultipleSeriesLineChart()
   }, [])
 
-  React.useEffect(() => {
-    console.log('[ Props Width, Height ] : ', props.widthSize + ' , ' + props.heightSize)
-    setWidth(props.widthSize)
-    setHeight(props.heightSize)
-    if (IntervalData.length === 0) {
-      console.log('interval data lengt zero !!')
-      console.log(IntervalData)
-      console.log(props.CallData)
-      if (props.CallData === 'TradePrice') {
-        getChartData()
-      } else {
-        DrawD3LineChartPrev()
+  // React.useEffect(() => {
+  //   console.log('[ Props Width, Height ] : ', props.widthSize + ' , ' + props.heightSize)
+  //   setWidth(props.widthSize)
+  //   setHeight(props.heightSize)
+  //   if (IntervalData.length === 0) {
+  //     //console.log('interval data lengt zero !!')
+  //     //console.log(IntervalData)
+  //     //console.log(props.CallData)
+  //     if (props.CallData === 'TestData') {
+  //       getTestData()
+  //     } else {
+  //       //DrawD3LineChartPrev()
+  //     }
+  //   } else {
+  //     //console.log('ws data lengt is not zoro !!!!')
+  //     //DataFactory(IntervalData)
+  //   }
+  // }, [props.widthSize, props.heightSize])
+
+  const getTestData = () => {
+    drawTestData(TestBtData)
+    //console.log(window.localStorage.getItem('ChartData'))
+    const data = window.localStorage.getItem('ChartBTData')
+
+    RealDrawMultipleLineChart(data)
+
+    //return argument
+  }
+
+  const drawTestData = async (data: any) => {
+    //const data: any = TestArchData
+    console.log('[ Test Bt Data ] : ', data)
+
+    let OriginalDataObjChild: any = new Object()
+    const OriginalDataArrChild: any = []
+    let PredictDataObjChild: any = new Object()
+    const PredictDataObjChildArr: any = []
+    const default_data: any = data
+    //let result_data: any = []
+
+    console.log(default_data)
+
+    //OriginalDataObj.key = 'original'
+
+    for (let i = 0, len = default_data.values.length; i < len; i++) {
+      if (default_data.values[i] !== undefined) {
+        //console.log(typeof default_data.values[i]['Tag-34'])
+        if (typeof default_data.values[i]['Tag-42'] === 'string') {
+          default_data.values.splice(i, 1)
+        }
       }
-    } else {
-      console.log('ws data lengt is not zoro !!!!')
-      DataFactory(IntervalData)
     }
-  }, [props.widthSize, props.heightSize])
+
+    console.log('[ result_data ] : ', default_data)
+
+    for (let j = 0, len = default_data.values.length; j < len; j++) {
+      if (typeof default_data.values[j]['Tag-42'] !== 'string') {
+        OriginalDataObjChild.name = 'original_BT'
+        OriginalDataObjChild.date = data.values[j].Date
+        OriginalDataObjChild.value = data.values[j]['Tag-42']
+        OriginalDataArrChild.push(OriginalDataObjChild)
+        OriginalDataObjChild = new Object()
+
+        PredictDataObjChild.name = 'predict'
+        PredictDataObjChild.date = data.values[j].Date
+        PredictDataObjChild.value = data.values[j].bt_pred_1
+        PredictDataObjChildArr.push(PredictDataObjChild)
+        PredictDataObjChild = new Object()
+      }
+    }
+
+    const ResultData = OriginalDataArrChild.concat(PredictDataObjChildArr)
+    console.log(OriginalDataArrChild.concat(PredictDataObjChildArr))
+    window.localStorage.setItem('ChartBTData', JSON.stringify(ResultData))
+  }
 
   const DataFactory = (IntervalData: any) => {
     if (IntervalData.length !== 0) {
-      if (props.CallData === 'TradePrice') {
+      if (props.CallData === 'TestData') {
         changeDate(IntervalData.date)
         const test = [...PrevChartData]
         test.unshift(IntervalData)
@@ -144,7 +210,7 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
           setLowPricePrevData(lowTest)
           setLowTestData(lowTest)
         }
-      } else if (props.CallData === 'HighPrice') {
+      } else if (props.CallData === 'Bottom') {
         changeDate(IntervalData.date)
         let highTest: any = []
         // console.log(HighPricePrevData)
@@ -295,6 +361,12 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     }
   }, [lastDate])
 
+  React.useEffect(() => {
+    if (MultipleDwPrevData !== undefined && MultipleDwPrevData.length !== 0) {
+      //DrawD3MultipleSeriesLineChart(MultipleDwPrevData)
+    }
+  }, [MultipleDwPrevData])
+
   const IntervalChangeData = (t: any) => {
     if (props.CallData !== 'Opening & High & Low') {
       if (t[0].date !== undefined && t[0].value !== undefined) {
@@ -304,7 +376,7 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       if (t[0].name !== undefined) {
         console.log('draw chart data')
         console.log(t)
-        DrawD3MultipleSeriesLineChart(t)
+        //DrawD3MultipleSeriesLineChart(t)
       }
     }
   }
@@ -342,8 +414,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       return year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second
     } else {
       const trn_date = date_args
-      console.log('############################')
-      console.log(trn_date)
       const year = trn_date.getFullYear()
       let month: any = trn_date.getMonth() + 1
       if (month < 10) month = '0' + month
@@ -371,7 +441,7 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       const parseData = response.data[0]
       let wsObj: any = new Object()
       const wsArr: any = []
-      const multipleKey = ['openingPrice', 'highPrice', 'lowPrice']
+      const multipleKey = ['openingPrice', 'Bottom', 'lowPrice']
       console.log(props.CallData)
 
       // wsObj.y = parseData[0].tradePrice
@@ -380,10 +450,10 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       // ItObj.date = new Date(response.data.x)
       // ItObj.value = response.data.y
 
-      if (props.CallData === 'TradePrice') {
+      if (props.CallData === 'TestData') {
         wsObj.date = new Date(parseData.candleDateTimeKst)
         wsObj.value = parseData.tradePrice
-      } else if (props.CallData === 'HighPrice') {
+      } else if (props.CallData === 'Bottom') {
         wsObj.date = new Date(parseData.candleDateTimeKst)
         wsObj.value = parseData.highPrice
       } else if (props.CallData === 'LowPrice') {
@@ -393,7 +463,7 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
         wsObj.date = new Date(parseData.candleDateTimeKst)
         wsObj.value = parseData.openingPrice
       } else if (props.CallData === 'DataTable') {
-        console.log('$$$$$$$$$$$$$$$$$$$ Data Table !!!!!!!!!!!!!!!')
+        // console.log('$$$$$$$$$$$$$$$$$$$ Data Table !!!!!!!!!!!!!!!')
         wsObj.date = new Date(parseData.candleDateTimeKst)
         wsObj.tradeprice = parseData.tradePrice
         wsObj.lowprice = parseData.lowPrice
@@ -489,202 +559,211 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     svg2.append('g').call(yGrid)
   }
 
-  const DrawD3MultipleSeriesLineChart = (data: any) => {
-    if (props.CallData === 'Opening & High & Low') {
-      const svg2 = d3.select(svgRef.current)
+  const RealDrawMultipleLineChart = (test: any) => {
+    const data: any = JSON.parse(window.localStorage.getItem('ChartBTData'))
+    console.log('[ Draw Rst ] :')
+    console.log(data)
+    // console.log(JSON.parse(window.localStorage.getItem('ChartData')))
 
-      const parseTime = d3.timeFormat('%H:%M:%S')
-      const parseDate = d3.timeParse('%H:%M:%S')
+    const svg2 = d3.select(svgRef.current)
 
-      //redraw
-      svg2.selectAll('g').remove()
-      data.forEach((d: any) => {
-        d.date = parseDate(parseTime(d.date))
-        d.value = d.value
-      })
+    const parseTime = d3.timeFormat('%H:%M:%S')
+    const parseDate = d3.timeParse('%H:%M:%S')
 
-      const Value = data.map((v: any) => {
-        return v.value
-      })
+    //redraw
+    svg2.selectAll('g').remove()
+    data.forEach((d: any) => {
+      d.date = parseDate(parseTime(new Date(d.date)))
+      d.value = d.value
+    })
 
-      const max = Math.max.apply(null, Value)
-      const min = Math.min.apply(null, Value)
+    console.log('[ Multiple Chart Data ] : ', data)
 
-      /** resize Chart Size */
-      const margin = { top: 20, right: 50, bottom: 50, left: 70 }
-      // width = widthState - margin.left - margin.right,
-      // height = heightState - margin.top - margin.bottom
-      // width = props.widthSize - margin.left - margin.right,
-      // height = props.heightSize - margin.top - margin.bottom
-      let width: any = 0,
-        height: any = 0
-      if (widthState !== undefined && heightState !== undefined) {
-        width = widthState - margin.left - margin.right
-        height = heightState - margin.top - margin.bottom
-      }
+    const Value = data.map((v: any) => {
+      return v.value
+    })
 
-      // append the svg object to the body of the page
-      svg2
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
-        .append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`)
-        .append('g')
-        .attr('stroke', '#ffc709')
-        .attr('stroke-width', 1.5)
-        .attr('fill', 'none')
+    const max = Math.max.apply(null, Value)
+    const min = Math.min.apply(null, Value)
 
-      const sumstat = Array.from(
-        d3.group(data, (d: any) => d.name),
-        ([key, values]) => ({ key, values })
-      )
-      console.log('ArrayData :', sumstat)
+    console.log('[ min & max ] : ', min + ' , ' + max)
 
-      // Add X axis --> it is a date format
-      const x: any = d3.scaleTime().range([0, width])
-      x.domain(
-        d3.extent(data, (d: any) => {
-          return d.date
-        })
-      )
-
-      // Add Y axis
-      const y: any = d3
-        .scaleLinear()
-        // .domain([
-        //   0,
-        //   d3.max(data, function (d: any) {
-        //     return +d
-        //   }),
-        // ])
-        .domain([min - 20, max + 20])
-        .range([height, 0])
-
-      //grid line 속성 style은 css
-      const xGrid = (g: any) =>
-        g
-          .attr('class', 'grid-lines')
-          .selectAll('line')
-          .data(x.ticks())
-          .join('line')
-          .attr('y1', 0)
-          .attr('y2', height)
-          .attr('x1', (d: any) => x(d) + 50)
-          .attr('x2', (d: any) => x(d) + 50)
-
-      const yGrid = (g: any) =>
-        g
-          .attr('class', 'grid-lines')
-          .selectAll('line')
-          .data(y.ticks())
-          .join('line')
-          .attr('x1', margin.top + 20)
-          .attr('x2', width + margin.left - 20)
-          .attr('y1', (d: any) => y(d - 0.1))
-          .attr('y2', (d: any) => y(d - 0.1))
-
-      const newArray = data.filter((item: any, i: any) => {
-        return (
-          data.findIndex((item2: any, j: any) => {
-            return item.date.toString() === item2.date.toString()
-          }) === i
-        )
-      })
-
-      const arr: any = []
-      for (let i = 0, len = newArray.length; i < len; i++) {
-        arr.push(newArray[i].date)
-      }
-
-      svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x).tickValues(arr))
-      svg2.append('g').attr('transform', `translate(40,3)`).call(d3.axisLeft(y))
-
-      //grid 그리기
-      svg2.append('g').call(xGrid)
-      svg2.append('g').call(yGrid)
-      svg2
-        .append('g')
-        .append('rect')
-        .attr('x', width / 4)
-        .attr('y', height + 40)
-        .attr('width', 4)
-        .attr('height', 2)
-        .style('fill', 'orange')
-      svg2
-        .append('g')
-        .append('text')
-        .attr('x', width / 4 + 8)
-        .attr('y', height + 40)
-        .text('low')
-        .style('font-size', '14px')
-        .attr('alignment-baseline', 'middle')
-      svg2
-        .append('g')
-        .append('rect')
-        .attr('x', width / 2)
-        .attr('y', height + 40)
-        .attr('width', 4)
-        .attr('height', 2)
-        .style('fill', 'purple')
-      svg2
-        .append('g')
-        .append('text')
-        .attr('x', width / 2 + 8)
-        .attr('y', height + 40)
-        .text('high')
-        .style('font-size', '14px')
-        .attr('alignment-baseline', 'middle')
-      svg2
-        .append('g')
-        .append('rect')
-        .attr('x', width / 1.5 + 15)
-        .attr('y', height + 40)
-        .attr('width', 4)
-        .attr('height', 2)
-        .style('fill', 'green')
-      svg2
-        .append('g')
-        .append('text')
-        .attr('x', width / 1.5 + 23)
-        .attr('y', height + 40)
-        .text('opening')
-        .style('font-size', '14px')
-        .attr('alignment-baseline', 'middle')
-
-      // color palette
-      const res: any = sumstat.map(function (d: any) {
-        return d.key
-      }) // list of group names
-
-      const color: any = d3.scaleOrdinal().domain(res).range(['orange', 'purple', 'green'])
-      // Draw the line
-      // console.log(sumstat)
-      svg2
-        .append('g')
-        .attr('clip-path', 'url(#clip)')
-        // .append('path')
-        .selectAll('.line')
-        .data(sumstat)
-        .enter()
-        .append('path')
-        .attr('transform', 'translate(50,0)')
-        .attr('fill', 'none')
-        .attr('stroke-width', 1.5)
-        .attr('stroke', function (d: any) {
-          return color(d.key)
-        })
-        .attr('stroke-width', 1.5)
-        .attr('d', function (d: any) {
-          return d3
-            .line()
-            .x(function (d: any) {
-              return x(d.date)
-            })
-            .y(function (d: any) {
-              return y(d.value)
-            })(d.values)
-        })
+    /** resize Chart Size */
+    const margin = { top: 20, right: 50, bottom: 50, left: 70 }
+    // width = widthState - margin.left - margin.right,
+    // height = heightState - margin.top - margin.bottom
+    // width = props.widthSize - margin.left - margin.right,
+    // height = props.heightSize - margin.top - margin.bottom
+    let width: any = 0,
+      height: any = 0
+    if (widthState !== undefined && heightState !== undefined) {
+      width = widthState - margin.left - margin.right
+      height = heightState - margin.top - margin.bottom
     }
+
+    // append the svg object to the body of the page
+    svg2
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`)
+      .append('g')
+      .attr('stroke', '#ffc709')
+      .attr('stroke-width', 1.5)
+      .attr('fill', 'none')
+
+    const sumstat = Array.from(
+      d3.group(data, (d: any) => d.name),
+      ([key, values]) => ({ key, values })
+    )
+    console.log('ArrayData :', sumstat)
+
+    // Add X axis --> it is a date format
+    const x: any = d3.scaleTime().range([0, width])
+    x.domain(
+      d3.extent(data, (d: any) => {
+        return parseDate(parseTime(new Date(d.date)))
+      })
+    )
+
+    // Add Y axis
+    const y: any = d3
+      .scaleLinear()
+      // .domain([
+      //   0,
+      //   d3.max(data, function (d: any) {
+      //     return +d
+      //   }),
+      // ])
+      .domain([min - 50, max + 100])
+      .range([height, 0])
+
+    //grid line 속성 style은 css
+    const xGrid = (g: any) =>
+      g
+        .attr('class', 'grid-lines')
+        .selectAll('line')
+        .data(x.ticks())
+        .join('line')
+        .attr('y1', 0)
+        .attr('y2', height)
+        .attr('x1', (d: any) => x(d))
+        .attr('x2', (d: any) => x(d))
+
+    const yGrid = (g: any) =>
+      g
+        .attr('class', 'grid-lines')
+        .selectAll('line')
+        .data(y.ticks())
+        .join('line')
+        .attr('x1', margin.top + 20)
+        .attr('x2', width + margin.left - 20)
+        .attr('y1', (d: any) => y(d - 0.1))
+        .attr('y2', (d: any) => y(d - 0.1))
+
+    // const newArray = JSON.parse(window.localStorage.getItem('ChartData')).filter((item: any, i: any) => {
+    //   return (
+    //     JSON.parse(window.localStorage.getItem('ChartData')).findIndex((item2: any, j: any) => {
+    //       return item.date === item2.date
+    //     }) === i
+    //   )
+    // })
+
+    // const arr: any = []
+    // for (let i = 0, len = data.length; i < len; i++) {
+    //   // const a = parseDate(parseTime(new Date(JSON.parse(window.localStorage.getItem('ChartData'))[i].date)))
+    //   arr.push(data[i].date)
+    // }
+
+    svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x))
+    svg2.append('g').attr('transform', `translate(40,3)`).call(d3.axisLeft(y))
+
+    //grid 그리기
+    svg2.append('g').call(xGrid)
+    svg2.append('g').call(yGrid)
+    svg2
+      .append('g')
+      .append('rect')
+      .attr('x', width / 4)
+      .attr('y', height + 40)
+      .attr('width', 4)
+      .attr('height', 2)
+      .style('fill', 'pink')
+    svg2
+      .append('g')
+      .append('text')
+      .attr('x', width / 4 + 8)
+      .attr('y', height + 40)
+      .text('Original_BT')
+      .style('font-size', '14px')
+      .attr('alignment-baseline', 'middle')
+    // svg2
+    //   .append('g')
+    //   .append('rect')
+    //   .attr('x', width / 2)
+    //   .attr('y', height + 40)
+    //   .attr('width', 4)
+    //   .attr('height', 2)
+    //   .style('fill', 'purple')
+    // svg2
+    //   .append('g')
+    //   .append('text')
+    //   .attr('x', width / 2 + 8)
+    //   .attr('y', height + 40)
+    //   .text('high')
+    //   .style('font-size', '14px')
+    //   .attr('alignment-baseline', 'middle')
+    svg2
+      .append('g')
+      .append('rect')
+      .attr('x', width / 1.5 + 15)
+      .attr('y', height + 40)
+      .attr('width', 4)
+      .attr('height', 2)
+      .style('fill', 'blue')
+    svg2
+      .append('g')
+      .append('text')
+      .attr('x', width / 1.5 + 23)
+      .attr('y', height + 40)
+      .text('Predict_BT')
+      .style('font-size', '14px')
+      .attr('alignment-baseline', 'middle')
+
+    // color palette
+    const res: any = sumstat.map(function (d: any) {
+      return d.key
+    }) // list of group names
+
+    const color: any = d3.scaleOrdinal().domain(res).range(['pink', 'blue'])
+    // Draw the line
+    // console.log(sumstat)
+    svg2
+      .append('g')
+      .attr('clip-path', 'url(#clip)')
+      // .append('path')
+      .selectAll('.line')
+      .data(sumstat)
+      .enter()
+      .append('path')
+      .attr('transform', 'translate(50,0)')
+      .attr('fill', 'none')
+      .attr('stroke-width', 1.5)
+      .attr('stroke', function (d: any) {
+        return color(d.key)
+      })
+      .attr('stroke-width', 1.5)
+      .attr('d', function (d: any) {
+        return d3
+          .line()
+          .x(function (d: any) {
+            return x(d.date)
+          })
+          .y(function (d: any) {
+            //console.log(d.value)
+            return y(+d.value)
+          })(d.values)
+      })
   }
 
   const DrawD3LineChartInterval = (data: any) => {
@@ -696,12 +775,12 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
 
     let rtnData = data
 
-    if (props.CallData !== 'TradePrice') {
+    if (props.CallData !== 'TestData') {
       rtnData = data
       rtnData.splice(rtnData.length - 300, rtnData.length - 100)
       // console.log('------------------------------')
       // console.log(rtnData)
-    } else if (props.CallData !== 'TradePrice' && props.CallData !== 'Opening & High & Low') {
+    } else if (props.CallData !== 'TestData' && props.CallData !== 'Opening & High & Low') {
       rtnData = data
     }
 
@@ -759,7 +838,7 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     // Add X axis and Y axis
     const x: any = d3.scaleTime().range([0, width])
     let y: any
-    if (props.CallData === 'OpeningPrice' || props.CallData === 'HighPrice' || props.CallData === 'LowPrice') {
+    if (props.CallData === 'OpeningPrice' || props.CallData === 'Bottom' || props.CallData === 'LowPrice') {
       y = d3
         .scaleLinear()
         .domain([max - 20, max + 20])
@@ -805,7 +884,7 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
 
     let xAxis: any
 
-    if (props.CallData === 'OpeningPrice' || props.CallData === 'HighPrice' || props.CallData === 'LowPrice') {
+    if (props.CallData === 'OpeningPrice' || props.CallData === 'Bottom' || props.CallData === 'LowPrice') {
       const newArray = data.filter((item: any, i: any) => {
         return (
           data.findIndex((item2: any, j: any) => {
@@ -857,42 +936,42 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     /**
      * 2023.06.08 주석 처리
      */
-    // const brush: any = d3
-    //   .brushX() // Add the brush feature using the d3.brush function
-    //   .extent([
-    //     [0, 0],
-    //     [width, height],
-    //   ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-    //   .on('end', function (event, d) {
-    //     const extent: any = event.selection
+    const brush: any = d3
+      .brushX() // Add the brush feature using the d3.brush function
+      .extent([
+        [0, 0],
+        [width, height],
+      ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      .on('end', function (event, d) {
+        const extent: any = event.selection
 
-    //     // If no selection, back to initial coordinate. Otherwise, update X axis domain
-    //     if (!extent) {
-    //       if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)) // This allows to wait a little bit
-    //       x.domain([4, 8])
-    //     } else {
-    //       x.domain([x.invert(extent[0]), x.invert(extent[1])])
-    //       svg2.select('.brush').call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
-    //     }
+        // If no selection, back to initial coordinate. Otherwise, update X axis domain
+        if (!extent) {
+          if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)) // This allows to wait a little bit
+          x.domain([4, 8])
+        } else {
+          x.domain([x.invert(extent[0]), x.invert(extent[1])])
+          svg2.select('.brush').call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+        }
 
-    //     // Update axis and line position
-    //     xAxis.transition().duration(1000).call(d3.axisBottom(x))
-    //     svg2
-    //       .select('.line')
-    //       .transition()
-    //       .duration(1000)
-    //       .attr(
-    //         'd',
-    //         d3
-    //           .line()
-    //           .x((d: any) => {
-    //             return x(d.date)
-    //           })
-    //           .y((d: any) => {
-    //             return y(d.value)
-    //           })
-    //       )
-    //   })
+        // Update axis and line position
+        xAxis.transition().duration(1000).call(d3.axisBottom(x))
+        svg2
+          .select('.line')
+          .transition()
+          .duration(1000)
+          .attr(
+            'd',
+            d3
+              .line()
+              .x((d: any) => {
+                return x(d.date)
+              })
+              .y((d: any) => {
+                return y(d.value)
+              })
+          )
+      })
 
     // add the Line
     const valueLine: any = d3
@@ -994,37 +1073,37 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     /**
      * 2023.06.08 주석 처리
      */
-    //svg2.append('g').attr('class', 'brush').attr('transform', 'translate(50,0)').call(brush)
-    //
-    // If user double click, reinitialize the chart
-    // svg2.on('dblclick', () => {
-    //   x.domain(
-    //     d3.extent(rtnData, (d: any) => {
-    //       return d.date
-    //     })
-    //   )
-    //   xAxis.transition().call(d3.axisBottom(x))
-    //   svg2
-    //     .select('.line')
-    //     .transition()
-    //     .attr(
-    //       'd',
-    //       d3
-    //         .line()
-    //         .x((d: any) => {
-    //           return x(d.date)
-    //         })
-    //         .y((d: any) => {
-    //           return y(d.value)
-    //         })
-    //     )
-    // })
+    svg2.append('g').attr('class', 'brush').attr('transform', 'translate(50,0)').call(brush)
+
+    //If user double click, reinitialize the chart
+    svg2.on('dblclick', () => {
+      x.domain(
+        d3.extent(rtnData, (d: any) => {
+          return d.date
+        })
+      )
+      xAxis.transition().call(d3.axisBottom(x))
+      svg2
+        .select('.line')
+        .transition()
+        .attr(
+          'd',
+          d3
+            .line()
+            .x((d: any) => {
+              return x(d.date)
+            })
+            .y((d: any) => {
+              return y(d.value)
+            })
+        )
+    })
 
     // // A function that set idleTimeOut to null
-    // let idleTimeout: any
-    // function idled() {
-    //   idleTimeout = null
-    // }
+    let idleTimeout: any
+    function idled() {
+      idleTimeout = null
+    }
   }
 
   //d3 line chart
@@ -1033,21 +1112,21 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       // .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData3?', ['Tag-34'])
       .get(process.env.REACT_APP_API_SERVER_URL + '/api/websocket/data')
       .then((response) => {
-        console.log('[ Chart response data ] : ')
-        console.log(response.data)
+        // console.log('[ Chart response data ] : ')
+        // console.log(response.data)
 
         const date = changeDate(response.data[0].x)
         // getIntervalData(date)
-        if (props.CallData === 'TradePrice') {
-          setPrevChartData(response.data)
-          DrawD3LineChartInterval(response.data)
+        if (props.CallData === 'TestData') {
+          // setPrevChartData(response.data)
+          // DrawD3LineChartInterval(response.data)
         } else if (props.CallData === 'OpeningPrice') {
           setOpeningPricePrevData([])
           DrawD3LineChartPrev()
         } else if (props.CallData === 'LowPrice') {
           setLowPricePrevData([])
           DrawD3LineChartPrev()
-        } else if (props.CallData === 'HighPrice') {
+        } else if (props.CallData === 'Bottom') {
           setHighPricePrevData([])
           DrawD3LineChartPrev()
         } else if (props.CallData === 'Opening & High & Low') {
@@ -1102,4 +1181,4 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
   )
 }
 
-export default D3LineChartInterval
+export default D3LineChartIntervalBT

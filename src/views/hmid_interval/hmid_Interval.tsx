@@ -42,7 +42,8 @@ import * as RecoilTimeSeriesAtoms from '../hmid_config/recoil/timeseries/atoms'
 // import { GridDataObjSelector } from '../recoil/config/selector'
 import { CompanyId, LayoutTitle, NowDate } from '../hmid_config/recoil/base/atoms'
 
-import D3LineChartInterval from '../hmid_config/grid/function/drawD3ChartInterval'
+import D3LineChartInterval from '../hmid_config/grid/function/drawD3ChartIntervalTestDw'
+import D3LineChartIntervalBT from '../hmid_config/grid/function/drawD3ChartIntervalTestDwBT'
 import D3LineChart from '../hmid_config/grid/function/drawD3Chart'
 
 const DataGridWrap = styled.div`
@@ -286,11 +287,11 @@ export const MainDashboardInterval: React.FC = () => {
       if (panel[j].widget === 'Line1') {
         const data = (
           <>
-            <BoxTitle>Trade Price</BoxTitle>
+            <BoxTitle>Arch</BoxTitle>
             <D3LineChartInterval
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              CallData={'TradePrice'}
+              CallData={'TestData'}
               Color={'steelblue'}
               ChartShow={true}
               TableShow={false}
@@ -307,11 +308,11 @@ export const MainDashboardInterval: React.FC = () => {
       } else if (panel[j].widget === 'Line2') {
         const data = (
           <>
-            <BoxTitle>Opening Price</BoxTitle>
-            <D3LineChartInterval
+            <BoxTitle>BT</BoxTitle>
+            <D3LineChartIntervalBT
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
-              CallData={'OpeningPrice'}
+              CallData={'Bottom'}
               Color={'green'}
               ChartShow={true}
               TableShow={false}
@@ -340,7 +341,7 @@ export const MainDashboardInterval: React.FC = () => {
             />
           </>
         )
-        ReactDOM.render(data, node)
+        //ReactDOM.render(data, node)
         //setWidgetInfo('Bar')
         // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
         // result.then(function (args: any) {
@@ -361,7 +362,7 @@ export const MainDashboardInterval: React.FC = () => {
             />
           </>
         )
-        ReactDOM.render(data, node)
+        //ReactDOM.render(data, node)
         //setWidgetInfo('Bar')
         // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
         // result.then(function (args: any) {
@@ -390,7 +391,7 @@ export const MainDashboardInterval: React.FC = () => {
         //     CallData={'candleAccTradePriceVolume'}
         //   />
         // )
-        ReactDOM.render(data, node)
+        //ReactDOM.render(data, node)
         //setWidgetInfo('Bar')
         // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
         // result.then(function (args: any) {
@@ -441,7 +442,7 @@ export const MainDashboardInterval: React.FC = () => {
             />
           </>
         )
-        ReactDOM.render(data, node)
+        //ReactDOM.render(data, node)
         // DrawGauidWidget(
         //   panel[j].widget,
         //   node,
