@@ -34,6 +34,10 @@ function LineChart(props: any) {
       yanchor: 'auto',
     },
   ]
+
+  //Tickformatstops to customize for different zoom levels
+  //https://plotly.com/javascript/tick-formatting/#tickformatstops-to-customize-for-different-zoom-levels
+
   const layout: any = {
     // automargin: true,
     autoresize: true,
@@ -44,6 +48,9 @@ function LineChart(props: any) {
     plot_bgcolor: 'rgba(255,255,255,0)',
     // paper_bgcolor: 'lightpink',
     xaxis: {
+      type: 'date',
+      tickformat: '%d %b\n %H:%M',
+      // tickangle: 90,
       rangeslider: {},
     },
     yaxis: {

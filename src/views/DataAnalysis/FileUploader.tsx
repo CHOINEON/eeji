@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { RemovingEventArgs, UploaderComponent } from '@syncfusion/ej2-react-inputs'
 // import { Button } from '@chakra-ui/react'
-import Button from '@mui/material/Button'
-import { CircularProgress } from '@chakra-ui/react'
+// import Button from '@mui/material/Button'
+import { readFileSync } from 'fs'
 import axios from 'axios'
 import DataSummary from './DataSummary'
 import { stepCountStore } from './atom'
 import { useRecoilState } from 'recoil'
 import styled from '@emotion/styled'
 import ArrowDownward from 'assets/img/dataAnalysis/arrow_downward.png'
+import { Button } from 'antd'
 
 const DataSummaryDiv = styled.div<{ toggle: any }>`
   display: ${(props: any) => (props.toggle ? 'block' : 'none')};
@@ -24,30 +25,16 @@ const UploadWrapperDiv = styled.div<{ uploaded: any }>`
 const FileUploader = (props: any) => {
   const uploadObj = useRef<UploaderComponent>(null)
   const [loading, setLoading] = useState(false)
-  const [uploaded, setUploaded] = useState(false)
-  const { onUploaded, refresh, onSave } = props
+  // const [uploaded, setUploaded] = useState(false)
+  const [selected, setSelected] = useState(false)
+  const { onUploaded, refresh, onSaved } = props
   const [summaryResult, setSummaryResult] = useState([])
-  const [activeStep, setActiveStep] = useRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
-
-  /** Alert */
-  const [message, setMessage] = React.useState<string>('')
-  const [showAlertModal, setShowAlertModal] = React.useState<boolean>(false)
-  //   const [messageApi, contextHolder] = message.useMessage();
-
-  /**ALert */
-  const getCloseAlertModal = (e: boolean) => {
-    setShowAlertModal(false)
-  }
-
-  let dropContainerEle: HTMLElement = null
-  const dropContainerRef = (element: HTMLElement) => {
-    dropContainerEle = element
-  }
 
   useEffect(() => {
     if (refresh) {
       uploadObj.current.clearAll()
-      setUploaded(false)
+      setSelected(false)
+      setSummaryResult([])
     }
   }, [refresh])
 
@@ -59,11 +46,93 @@ const FileUploader = (props: any) => {
     args.postRawFile = false
   }
 
-  const handleUpload = () => {
-    // console.log('uploadObj:', uploadObj.current.getFilesData())
+  const handleSelect = (event: any) => {
+    // console.log('handleSelect:', event.filesData[0].rawFile)
 
+    const readFile = (file: any) => {
+      const fileReader = new FileReader()
+
+      if (file) {
+        fileReader.onload = function (event: any) {
+          const text = event.target.result
+          csvFileToArray(file.name, file.size, text)
+        }
+
+        fileReader.readAsText(file)
+      }
+    }
+
+    readFile(event.filesData[0].rawFile)
+  }
+
+  const csvFileToArray = (name: string, size: number, string: string) => {
+    const csvHeader = string.slice(0, string.indexOf('\n')).split(',')
+    const csvRows = string.slice(string.indexOf('\n') + 1).split('\n')
+
+    // console.log('csvRows:', csvRows)
+
+    const array = csvRows.map((item) => {
+      if (item != '') {
+        const values = item.split(',')
+        const obj = csvHeader.reduce((object: any, header, index) => {
+          object[header] = values[index]
+          return object
+        }, {})
+        return obj
+      }
+    })
+
+    //split하면서 마지막 행에 빈 값 들어있어서 자름
+    array.splice(array.length - 1)
+
+    //min & max datetime 찾기
+    const dateColumnName = Object.keys(array[0])[0]
+    const newArr = array.map((obj) => {
+      return { ...obj, dateTime: new Date(obj[dateColumnName]) } //0번째 컬럼 : 날짜
+    })
+
+    // console.log('newArr:', newArr)
+
+    //Sort in Ascending order(low to high)
+    //https://bobbyhadz.com/blog/javascript-sort-array-of-objects-by-date-property
+    const sortedAsc = newArr.sort((a, b) => Number(a.dateTime) - Number(b.dateTime))
+    // console.log('sortedAsc:', sortedAsc)
+
+    const summary = []
+    const lengthOfArray = array.length
+
+    summary.push({
+      name: name,
+      size: Math.round(size / 1024),
+      rowCount: sortedAsc.length,
+      colCount: Object.keys(sortedAsc[0]).length,
+      startDate: dateTimeToString(sortedAsc[0].dateTime),
+      endDate: dateTimeToString(sortedAsc[lengthOfArray - 1].dateTime),
+    })
+
+    // console.log('summary:', summary)
+    setSummaryResult(summary)
+    setSelected(true)
+  }
+
+  const dateTimeToString = (date: any) => {
+    let month = date.getMonth() + 1
+    let day = date.getDate()
+    let hour = date.getHours()
+    let minute = date.getMinutes()
+    let second = date.getSeconds()
+
+    month = month >= 10 ? month : '0' + month
+    day = day >= 10 ? day : '0' + day
+    hour = hour >= 10 ? hour : '0' + hour
+    minute = minute >= 10 ? minute : '0' + minute
+    second = second >= 10 ? second : '0' + second
+
+    return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+  }
+
+  const handleSave = () => {
     if (uploadObj.current.getFilesData().length > 0) {
-      //Progress show
       setLoading(true)
 
       const formData = new FormData()
@@ -82,12 +151,11 @@ const FileUploader = (props: any) => {
         })
         .then(
           (response) => {
-            console.log(' RESP :', response)
-            setSummaryResult(response.data)
+            // console.log(' uploadfile RESP :', response)
             setLoading(false)
 
             if (response.status === 200) {
-              setUploaded(true)
+              onSaved(summaryResult)
             }
           },
           (error) => {
@@ -97,20 +165,15 @@ const FileUploader = (props: any) => {
           }
         )
     } else {
-      // alert('업로드할 파일이 없습니다')
-      setMessage('업로드할 파일이 없습니다')
-      setShowAlertModal(true)
+      alert('업로드할 파일이 없습니다')
+      // setMessage('업로드할 파일이 없습니다')
+      // setShowAlertModal(true)
     }
-  }
-
-  const handleSave = () => {
-    onSave(summaryResult[0])
-    // setActiveStep(activeStep + 1)
   }
 
   return (
     <div className="control-section col-lg-12 defaultDialog dialog-target">
-      <div className="control-pane" ref={dropContainerRef}>
+      <div className="control-pane">
         <div className="control-section row uploadpreview">
           <div className="col-lg-9">
             <div className="upload_wrapper">
@@ -126,15 +189,14 @@ const FileUploader = (props: any) => {
                 removing={onRemoveFile.bind(this)}
                 asyncSettings={asyncSettings}
                 maxFileSize={100000000} //100MB
+                selected={handleSelect}
               ></UploaderComponent>
               <p>Allowed file extensions : .xls(x), .csv</p>
-              <div style={{ textAlign: 'right' }}>
-                {loading ? (
-                  <CircularProgress isIndeterminate color="green.300" />
-                ) : (
-                  !uploaded && <Button onClick={handleUpload}>Upload</Button>
-                )}
-              </div>
+              {/* <div style={{ textAlign: 'right' }}>
+                <Button loading={loading} onClick={handleUpload}>
+                  Save
+                </Button>
+              </div> */}
               {/* <div style={{ display: uploaded ? 'block' : 'none', margin: 'auto', padding: '10px' }}>
                 <img src={ArrowDownward} style={{ margin: 'auto' }} />
               </div> */}
@@ -142,18 +204,19 @@ const FileUploader = (props: any) => {
                 <DataSummaryDiv toggle={summaryResult.length > 0 ? true : false}>
                   <>
                     <div style={{ marginTop: '30px' }}>
-                      <DataSummary dataSource={summaryResult} />
+                      <DataSummary data={summaryResult} />
                     </div>
                   </>
                 </DataSummaryDiv>
-                <UploadWrapperDiv uploaded={uploaded}>
+                <div>
                   <Button
+                    type="primary"
                     onClick={handleSave}
-                    style={{ float: 'right', maxWidth: '400px', margin: 'auto', display: uploaded ? 'block' : 'none' }}
+                    style={{ float: 'right', maxWidth: '400px', margin: 'auto', display: selected ? 'block' : 'none' }}
                   >
                     Save
                   </Button>
-                </UploadWrapperDiv>
+                </div>
               </div>
             </div>
           </div>

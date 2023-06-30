@@ -29,7 +29,7 @@ const TitleWrapper = styled.div`
 
 export interface DescriptionBoxProps {
   name: string
-  totalSize: string
+  size: number
   create: string
   update: string
 }
@@ -40,7 +40,7 @@ export interface IDescriptionBox {
 
 const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
   const setActiveStep = useSetRecoilState(stepCountStore)
-  const { name, totalSize, create, update } = props.data
+  const { name, size, create, update } = props.data
 
   const handleClick = () => {
     setActiveStep(1)
@@ -64,7 +64,7 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
         >
           <Content>
             <div>Total Size</div>
-            <div>{totalSize}</div>
+            <div>{size} MB</div>
           </Content>
           <Content>
             {' '}

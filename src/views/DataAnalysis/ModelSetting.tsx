@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
-// import Button from '@mui/material/Button'
 import { CircularProgress, FormControlLabel, Grid, Typography } from '@mui/material'
 import LineChart from './components/Chart/LineChart'
 import styled from '@emotion/styled'
 import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { stepCountStore, variableStoreX, variableStoreY, selectedVarStoreX, selectedVarStoreY } from './atom'
-import TagSelectList from './components/TagTree/TagSelectList'
 import { Col, Divider, Row, Select, Space, Spin, Button, Popover } from 'antd'
-import NewTagSelect from './components/TagTree/NewTagSelect'
 import CheckableTag from 'antd/es/tag/CheckableTag'
 import AssistantOutlinedIcon from '@mui/icons-material/AssistantOutlined'
 import './style/styles.css'
@@ -73,7 +70,7 @@ const ModelSetting = (props: any) => {
       axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/predict/chartData?', param).then((response) => {
         setLoading(true)
         if (response.status === 200) {
-          console.log('chartData response:', response.data)
+          // console.log('chartData response:', response.data)
           const result = response.data
 
           const dataArray = []
@@ -98,11 +95,6 @@ const ModelSetting = (props: any) => {
 
   const handleRun = (event: any) => {
     fetchChartData()
-  }
-
-  const onSelectionChanged = (type: any, payload: any) => {
-    // if (type === 'EXPLANATORY_VARIABLE') setExplanatoryVar(payload)
-    // if (type === 'TARGET_VARIABLE') setTargetVar(payload)
   }
 
   const handleChange = (value: string) => {
@@ -250,7 +242,7 @@ const ModelSetting = (props: any) => {
               /> */}
             </Col>
           </Row>
-          <Button type="text" onClick={handleRun} style={{ float: 'right', textAlign: 'right' }} loading={loading}>
+          <Button type="primary" onClick={handleRun} style={{ float: 'right', textAlign: 'right' }} loading={loading}>
             RUN
           </Button>
         </Grid>
