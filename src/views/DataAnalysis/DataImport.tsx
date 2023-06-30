@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
-import DescriptionBox, { DescriptionBoxProps } from './components/DataDesc/DescriptionBox'
+import DescriptionBox, { DescriptionBoxProps } from './components/DataInfo/DescriptionBox'
 import { Button, Col, Row } from 'antd'
-import DataImportModal from './components/DataDesc/DataImportModal'
+import DataImportModal from './components/DataInfo/DataImportModal'
 import './style/styles.css'
 
 const tempData: Array<DescriptionBoxProps> = [
-  { name: 'Dataset-1', totalSize: '40MB', create: '2 weeks ago', update: '1 week ago' },
-  { name: 'Dataset-2', totalSize: '23MB', create: '1 month ago', update: '2 week ago' },
+  { name: 'Dataset-1', size: 40, create: '2 weeks ago', update: '1 week ago' },
+  { name: 'Dataset-2', size: 23, create: '1 month ago', update: '2 week ago' },
 ]
 
 const DataImport = () => {
@@ -23,8 +23,9 @@ const DataImport = () => {
   }
 
   const handleSave = (param: any) => {
-    // console.log(' 데이터:', param)
-    const newData = { name: param.data, totalSize: '? MB', create: 'just now', update: '-' }
+    console.log(param)
+    const newData = { name: param[0].name, size: param[0].size, create: 'just now', update: '-' }
+    // console.log('newData:', newData)
     setDataSet([...dataSet, newData])
   }
 
@@ -35,19 +36,11 @@ const DataImport = () => {
           + NEW DATASET
         </Button>
         <Row gutter={[16, 32]}>
-          {dataSet.map((item) => (
-            <Col span={12}>
+          {dataSet.map((item, index) => (
+            <Col span={12} key={index}>
               <DescriptionBox data={item} />
             </Col>
           ))}
-          {/* <Col span={12}>
-            {' '}
-            <DescriptionBox data={dataSet[0]} />
-          </Col>
-          <Col span={12}>
-            {' '}
-            <DescriptionBox data={dataSet[1]} />
-          </Col> */}
         </Row>
       </div>
 

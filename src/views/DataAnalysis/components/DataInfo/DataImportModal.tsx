@@ -6,6 +6,7 @@ const DataImportModal = (props: any) => {
   const { modalOpen, onClose, onSaveData } = props
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
+  const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
     setOpen(modalOpen)
@@ -18,17 +19,21 @@ const DataImportModal = (props: any) => {
   const handleOk = () => {
     setOpen(false)
     onClose()
+    setRefresh(true)
   }
 
   const handleCancel = () => {
     setOpen(false)
     onClose()
+    setRefresh(true)
   }
 
-  const handleSave = (param: any) => {
+  const handleSaved = (param: any) => {
+    // console.log(param)
     onSaveData(param)
     setOpen(false)
     onClose()
+    setRefresh(true)
   }
 
   return (
@@ -58,7 +63,7 @@ const DataImportModal = (props: any) => {
           ]
         }
       >
-        <FileUploader onSave={handleSave} />
+        <FileUploader onSaved={handleSaved} refresh={refresh} />
       </Modal>
     </div>
   )
