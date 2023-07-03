@@ -25,7 +25,7 @@ function LineChart(props: any) {
         },
       ],
       direction: 'down',
-      pad: { r: 10, t: 10 },
+      // pad: { r: 10, t: 10 },
       showactive: true,
       type: 'dropdown',
       x: 0.78,
@@ -34,27 +34,35 @@ function LineChart(props: any) {
       yanchor: 'auto',
     },
   ]
+
+  //Tickformatstops to customize for different zoom levels
+  //https://plotly.com/javascript/tick-formatting/#tickformatstops-to-customize-for-different-zoom-levels
+
   const layout: any = {
+    // automargin: true,
+    autoresize: true,
     hovermode: 'closest',
     title: 'Result',
-    // width: '1450',
-    // height: '500',
+    // width: '1000',
+    height: '420',
     plot_bgcolor: 'rgba(255,255,255,0)',
     // paper_bgcolor: 'lightpink',
     xaxis: {
+      type: 'date',
+      tickformat: '%d %b\n %H:%M',
+      // tickangle: 90,
       rangeslider: {},
     },
     yaxis: {
       fixedrange: true,
     },
+    pad: { r: 10, b: 10 },
+    // margin: { top: 0 },
     // updatemenus: updatemenus,
   }
 
   useEffect(() => {
     if (chartData) {
-      // console.log(chartData)
-      // setData(chartData)
-
       const newArray = []
       for (let i = 0; i < chartData.length; i++) {
         if (chartData[i].name === 'Predict') {
@@ -94,18 +102,7 @@ function LineChart(props: any) {
     return rand / 6 - 0.5
   }
 
-  return (
-    <div id="plotlydiv" style={{ display: 'block', width: '100%', height: '360px' }}>
-      <Plot
-        data={data}
-        layout={layout}
-        config={config}
-        useResizeHandler={true}
-        style={{ width: '100%', height: '340px' }}
-      />
-      {/* <Plot data={data2} layout={layout} config={config} /> */}
-    </div>
-  )
+  return <Plot data={data} layout={layout} config={config} useResizeHandler={true} style={{ width: '100%' }} />
 }
 
 export default LineChart

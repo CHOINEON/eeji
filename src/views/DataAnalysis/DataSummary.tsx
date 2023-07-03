@@ -37,20 +37,14 @@ const DataGrid = (props: any) => {
 
 const DataSummary = (props: any) => {
   const [page, setPage] = React.useState(1)
-  const [data, setData] = useState([])
+  const [summaryData, setSummaryData] = useState([])
   const [count, setCount] = useState(1)
-  const { dataSource } = props
+  const { data } = props
 
   useEffect(() => {
-    // console.log('---summay:', dataSource)
-    setCount(dataSource.length)
-
-    const tempArray = []
-    for (let i = 0; i < dataSource.length; i++) {
-      tempArray.push({ index: i, value: dataSource[i] })
-    }
-    setData(tempArray)
-  }, [dataSource])
+    // console.log('---summay:', data)
+    if (data) setSummaryData(data)
+  }, [data])
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value)
@@ -60,25 +54,25 @@ const DataSummary = (props: any) => {
     return (
       <>
         <Box display="block">
-          <Title level={3} style={{ color: '#002D65' }}>
+          <Title level={5} style={{ color: '#002D65' }}>
             Data Summary
           </Title>
         </Box>
         <Box display="block">
-          <Card style={{ width: 410 }} className="rounded-box">
+          <div style={{ width: 410 }}>
             <div style={{ fontSize: 14 }} color="text.secondary">
-              <p>파일명 : {param.value.data}</p>
+              <p>파일명 : {param.name}</p>
               <p>
-                행/열 : {param.value.row_count}/{param.value.col_count}
+                행/열 : {param.rowCount}/{param.colCount}
               </p>
-              <p>시작(일) : {param.value.startDate}</p>
-              <p>종료(일) : {param.value.endDate}</p>
-              <div>
+              <p>시작(일) : {param.startDate}</p>
+              <p>종료(일) : {param.endDate}</p>
+              {/* <div>
                 결측치 : {param.value.missing.length === 0 ? '없음' : param.value.missing.length + '개'}
                 {param.value.missing.length > 0 && <DataGrid data={param.value.missing}></DataGrid>}
-              </div>
+              </div> */}
             </div>
-          </Card>
+          </div>
         </Box>
       </>
     )
@@ -87,11 +81,11 @@ const DataSummary = (props: any) => {
     <>
       <ThemeProvider theme={theme}>
         <div>
-          {data.length > 0 && (
+          {summaryData.length > 0 && (
             <>
-              <Box>{page == 1 && card(data[0])}</Box>
-              <Box>{page == 2 && card(data[1])}</Box>
-              <Box>{page == 3 && card(data[2])}</Box>
+              <Box>{page == 1 && card(summaryData[0])}</Box>
+              <Box>{page == 2 && card(summaryData[1])}</Box>
+              <Box>{page == 3 && card(summaryData[2])}</Box>
               <Stack alignItems="center" sx={{ mt: 3 }}>
                 {count > 1 && <Pagination count={count} page={page} onChange={handleChange} />}
               </Stack>

@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
-// import Button from '@mui/material/Button'
 import { CircularProgress, FormControlLabel, Grid, Typography } from '@mui/material'
 import LineChart from './components/Chart/LineChart'
 import styled from '@emotion/styled'
 import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { stepCountStore, variableStoreX, variableStoreY, selectedVarStoreX, selectedVarStoreY } from './atom'
-import TagSelectList from './components/TagTree/TagSelectList'
-import { Col, Divider, Row, Select, Space, Spin, Button } from 'antd'
-import NewTagSelect from './components/TagTree/NewTagSelect'
+import { Col, Divider, Row, Select, Space, Spin, Button, Popover } from 'antd'
 import CheckableTag from 'antd/es/tag/CheckableTag'
 import AssistantOutlinedIcon from '@mui/icons-material/AssistantOutlined'
 import './style/styles.css'
@@ -27,11 +24,28 @@ const ModelSetting = (props: any) => {
   const [btnLoading, setBtnLoading] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const [options, setOptions] = useState([{ value: '예측1', label: '예측1' }])
+  const [options, setOptions] = useState([
+    { value: 'plsr', label: 'PLS' },
+    { value: 'rfr', label: 'Random Forest' },
+  ])
 
   //step4에서 선택된 변수
   const [selectedTagsX, setSelectedTagsX] = useState([])
   const [selectedTagsY, setSelectedTagsY] = useState([])
+
+  const text = <span>Title</span>
+  const content = (
+    <div>
+      <p>MAE : {resultText.mae}</p>
+      <p>R² : {resultText.r2}</p>
+      <p>RMSE : {resultText.rmse}</p>
+    </div>
+  )
+
+  // const mergedArrow = useMemo(() => {
+  //   if (arrowAtCenter) return { pointAtCenter: true };
+  //   return showArrow;
+  // }, [showArrow, arrowAtCenter]);
 
   useEffect(() => {
     // console.log('selectedVarX:', selectedVarX)
@@ -49,18 +63,20 @@ const ModelSetting = (props: any) => {
       const param = {
         x_value: selectedTagsX,
         y_value: selectedTagsY[0],
+        predict_type: model,
       }
       console.log(param)
 
       axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/predict/chartData?', param).then((response) => {
         setLoading(true)
         if (response.status === 200) {
-          console.log('chartData response:', response.data)
+          // console.log('chartData response:', response.data)
           const result = response.data
 
           const dataArray = []
+          setResultText({ mae: '', r2: '', rmse: '' })
           for (let i = 0; i < result.length; i++) {
-            if (i == result.length - 1) {
+            if (result[i].name === 'evaluation') {
               setResultText(result[i])
             } else {
               dataArray.push(result[i])
@@ -81,21 +97,14 @@ const ModelSetting = (props: any) => {
     fetchChartData()
   }
 
-  const onSelectionChanged = (type: any, payload: any) => {
-    // if (type === 'EXPLANATORY_VARIABLE') setExplanatoryVar(payload)
-    // if (type === 'TARGET_VARIABLE') setTargetVar(payload)
-  }
-
-  const handleChange = (value: string | string[]) => {
-    // console.log('test:', value)
-    // setModel(value)
+  const handleChange = (value: string) => {
+    setModel(value)
   }
 
   const handleChangeTag = (type: string, tag: string, checked: boolean) => {
     if (type === 'y') {
       if (checked && selectedTagsY.length > 0) {
         const nextSelectedTags = checked ? [tag] : selectedVarY.filter((t) => t !== tag)
-        console.log('nextSelectedTags:', nextSelectedTags)
         setSelectedTagsY(nextSelectedTags)
       }
     } else if (type === 'x') {
@@ -118,20 +127,14 @@ const ModelSetting = (props: any) => {
   }
 
   const handleFeatureSuggest = () => {
-    console.log('selectedTagsX:', selectedTagsY)
     if (selectedTagsY && selectedTagsY.length > 0) {
       fetchFeatureSuggest(selectedTagsY[0])
     } else {
       alert('타겟변수를 선택해주세요')
     }
-
-    // alert('테스트중입니다')
-    // console.log('handleFeatureSuggest:', param)
   }
 
   const fetchFeatureSuggest = (y: any) => {
-    console.log('y:', y)
-
     setBtnLoading(true)
     axios.get(process.env.REACT_APP_API_SERVER_URL + '/api/predict/boruta?value=' + y).then((response) => {
       setBtnLoading(false)
@@ -170,16 +173,16 @@ const ModelSetting = (props: any) => {
       >
         <Grid item width="100%" style={{ textAlign: 'left' }}>
           {/* <Divider orientation="left"></Divider> */}
-          <Row justify="space-evenly" align="top" style={{ marginTop: '20px' }}>
+          <Row justify="space-evenly" align="top" style={{ marginTop: '15px' }}>
             <Col span="8">
               <div style={{ width: '70%', margin: 'auto', minWidth: '150px' }}>
                 <Typography variant="subtitle2" gutterBottom marginLeft={1}>
                   AI Model
                 </Typography>
                 <Select
-                  value="예측1"
+                  value={model}
                   options={options}
-                  // onChange={handleChange}
+                  onChange={handleChange}
                   // defaultValue={selectedArr}
                 />
               </div>
@@ -239,13 +242,14 @@ const ModelSetting = (props: any) => {
               /> */}
             </Col>
           </Row>
-          <Button type="text" onClick={handleRun} style={{ float: 'right', textAlign: 'right' }} loading={loading}>
+          <Button type="primary" onClick={handleRun} style={{ float: 'right', textAlign: 'right' }} loading={loading}>
             RUN
           </Button>
         </Grid>
       </Box>
       <Box
-        marginTop={5}
+        marginTop={2}
+        paddingBottom={2}
         className="rounded-box"
         sx={{
           display: 'flex',
@@ -258,12 +262,14 @@ const ModelSetting = (props: any) => {
         }}
       >
         {/* </Paper> */}
-        <div style={{ display: 'block', width: '100%' }}>
-          <p>MAE : {resultText.mae}</p>
-          <p>R2 : {resultText.r2}</p>
-          <p>RMSE : {resultText.rmse}</p>
+        <div style={{ display: 'block' }}>
+          <Popover placement="rightTop" title="평가 지표" content={content}>
+            <Button>평가 지표</Button>
+          </Popover>
         </div>
-        <LineChart chartData={chartData} />
+        <div style={{ display: 'block', width: '100%', margin: 'auto' }}>
+          <LineChart chartData={chartData} />
+        </div>
       </Box>
       {/* <div style={{ width: '100%', float: 'right', marginTop: '30px' }}>
         <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>

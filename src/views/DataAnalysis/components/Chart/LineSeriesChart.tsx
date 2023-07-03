@@ -50,7 +50,7 @@ const LineSeriesChart = (props: any) => {
 
   const chartRef: any = useRef()
 
-  const primaryxAxis: AxisModel = {
+  const defaultXAxis: AxisModel = {
     // crosshairTooltip: { enable: true },
     valueType: 'DateTime',
     labelFormat: 'M/d hh:mm',
@@ -60,11 +60,11 @@ const LineSeriesChart = (props: any) => {
     labelIntersectAction: 'Rotate45',
   }
 
-  // const [primaryxAxis, setPrimaryxAxis] = useState<AxisModel>(defaultXAxis)
+  const [primaryxAxis, setPrimaryxAxis] = useState<AxisModel>(defaultXAxis)
   useEffect(() => setExcludedData([]), [])
 
   useEffect(() => {
-    // console.log('useref:', chartRef)
+    console.log('useref:', chartRef)
 
     if (indexColumn == '') {
       chartRef.current.properties.labelformat = ''
@@ -176,7 +176,7 @@ const LineSeriesChart = (props: any) => {
     return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
   }
 
-  useEffect(() => console.log('excludedData:', excludedData), [excludedData])
+  // useEffect(() => console.log('excludedData:', excludedData), [excludedData])
 
   const handleExcludeData = (e: any) => {
     console.log('-----------------handleExcludeData---------------------')
@@ -195,9 +195,9 @@ const LineSeriesChart = (props: any) => {
       end: dateTimeToString(selected_end),
       datetime: dateTimeToString(new Date()),
     }
-    console.log('historyRow-', historyRow)
+    // console.log('historyRow-', historyRow)
 
-    console.log('------------------------', excludedData)
+    // console.log('------------------------', excludedData)
     setExcludedData((prep) => [...prep, historyRow])
 
     const newDataArr = []
@@ -345,7 +345,7 @@ const LineSeriesChart = (props: any) => {
           selectionMode="DragX"
           enableExport={true}
         >
-          <Inject services={[Selection, ScatterSeries, DateTime, Legend, StripLine]} />
+          <Inject services={[Zoom, Selection, ScatterSeries, DateTime, Legend, StripLine]} />
           <SeriesCollectionDirective>{renderMultiSeries()}</SeriesCollectionDirective>
         </ChartComponent>
       </div>

@@ -40,7 +40,6 @@ const VariableSelection = () => {
   }, [])
 
   useEffect(() => {
-    console.log('useEffect selectedVarY：', selectedVarY)
     if (selectedVarY.length > 0 && filteredList.length > 0) {
       for (let i = 0; i < selectedVarY.length; i++) {
         const options = filteredList[0].options.filter((x: any) => x.value !== selectedVarY[i])
