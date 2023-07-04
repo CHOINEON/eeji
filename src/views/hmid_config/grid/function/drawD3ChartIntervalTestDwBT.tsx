@@ -6,7 +6,7 @@ import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
 import axios from 'axios'
 import './style.css'
-import { TestBtData } from './test_data'
+import { TestBtData } from './test_data_dongwon'
 
 const Wrapper = styled.svg<{ ChartShow: boolean }>`
   margin: 0 1vw;
@@ -994,25 +994,6 @@ export const D3LineChartIntervalBT: React.FC<LineChartPorps> = (props) => {
       .attr('stroke', props.Color)
       .attr('stroke-width', 1.5)
       .attr('d', valueLine)
-
-    // const tooltip = d3.select('#tooltip')
-    // const tooltipDot = svg2
-    //   .append('g')
-    //   .append('circle')
-    //   .attr('r', 5)
-    //   .attr('fill', '#fc8781')
-    //   .attr('stroke', 'black')
-    //   .attr('stroke-width', 2)
-    //   .style('opacity', 0)
-    //   .style('pointer-events', 'none')
-
-    // svg2
-    //   .append('g')
-    //   .append('rect')
-    //   .attr('class', 'dotted')
-    //   .attr('stroke-width', '1px')
-    //   .attr('width', '.5px')
-    //   .attr('height', height)
 
     const tooltip = d3.select('#tooltip')
     const tooltipCircle = svg2

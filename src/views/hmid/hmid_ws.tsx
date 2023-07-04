@@ -1,24 +1,18 @@
 /**
  * INFINITE OPTIMAL
- * 메뉴 : HMI Designer - GridLayout
+ * 메뉴 : Websocket Dashboard
  * 시작 날짜 : 2023-03-10
- * 최종 수정 날짜 : 2023-04-06
+ * 최종 수정 날짜 : 2023-07-04 (코드 정리)
  * 개발자 : 박윤희 (BAK YUN HEE)
  */
 
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'
-import axios from 'axios'
 import styled from '@emotion/styled'
 import '../hmid_config/style/style.css'
 import 'ag-grid-community/styles/ag-grid.css'
-import { Spin } from 'antd'
 import './components/Modal/style/style.css'
-
-import { AgGridReact } from 'ag-grid-react'
-import 'ag-grid-community/styles/ag-theme-alpine.css'
 import { panelData } from '../hmid_config/data/panel-data'
-import Plot from 'react-plotly.js'
 
 import WidgetModal from './components/Modal/WidgetModal'
 import SaveConfirmModal from './components/Modal/SaveConfirm'
@@ -30,17 +24,12 @@ import * as ReactIcon from 'react-icons/md'
 import * as Chakra from '@chakra-ui/react'
 import * as ej2 from '@syncfusion/ej2-react-layouts'
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 import * as RecoilAtoms from '../hmid_config/recoil/config/atoms'
-import { CompanyId, LayoutTitle, NowDate, WsDataTest } from '../hmid_config/recoil/base/atoms'
+import { NowDate } from '../hmid_config/recoil/base/atoms'
 
 import D3LineChart from '../hmid_config/grid/function/drawD3Chart'
 import D3LineChartTooltip from '../hmid_config/grid/function/drawD3ChartTooltip(Test중)'
-
-const DataGridWrap = styled.div`
-  width: 100%;
-  height: calc(100% - 1.1vw);
-`
 
 const BoxTitle = styled.div`
   position: absolute;
@@ -67,7 +56,6 @@ const CurrentIcon = styled.div`
 
 export const MainDashboardWS: React.FC = () => {
   const [gridInformation, setGridInformation] = useRecoilState(RecoilAtoms.GridInformationState)
-  // const [gridDataObj, setGridDataObj] = useRecoilState(RecoilAtoms.GridDataObjState)
   const [showLoading, setShowLoading] = useRecoilState(RecoilAtoms.ShowLoadingState)
   const [panelIdx, setPanelIdx] = useRecoilState(RecoilAtoms.PanelIdxState)
 
@@ -148,7 +136,6 @@ export const MainDashboardWS: React.FC = () => {
   }, [panelIdx])
 
   //레이아웃 만들 경우 default값 나타내기
-  // default???? 생각해보기 initializeTemplate 있음
   React.useEffect(() => {
     initializeTemplate(null, dashboardObj)
   }, [])
@@ -160,52 +147,6 @@ export const MainDashboardWS: React.FC = () => {
       rendereComplete(gridInformation)
     }
   }, [dashboardObj, gridInformation])
-
-  /**위젯 그리기  */
-  const DrawGauidWidget = (widget: string, node: any, option1: any, option2: any) => {
-    //설정 값
-    const config = {
-      displaylogo: false,
-      displayModeBar: false,
-    }
-
-    if (widget !== 'Table') {
-      const layout = {
-        ...option2,
-        width: node.clientWidth,
-        height: node.clientHeight,
-        plot_bgcolor: 'rgba(255,255,255,0)',
-        paper_bgcolor: 'rgba(255,255,255,0)',
-      }
-
-      const data = <Plot data={option1} layout={layout} config={config} />
-      const element = React.createElement(data.type, {
-        data: data.props.data,
-        layout: data.props.layout,
-        config: data.props.config,
-      })
-      ReactDOM.render(element, node)
-    } else {
-      const data = (
-        <DataGridWrap className={'ag-theme-alpine'}>
-          <AgGridReact
-            rowData={option1}
-            columnDefs={option2}
-            defaultColDef={{
-              flex: 1,
-              editable: true,
-            }}
-            enableCellChangeFlash={true}
-            editType={'fullRow'}
-            pagination={true}
-            paginationAutoPageSize={true}
-          />
-        </DataGridWrap>
-      )
-
-      ReactDOM.render(data, node)
-    }
-  }
 
   /**
    * Gauid 그리기
@@ -399,36 +340,6 @@ export const MainDashboardWS: React.FC = () => {
   }
 
   /**
-   * 위젯이 변경되는 경우 PlotlyChart Draw하기
-   */
-  const DrawPlotlyChart = (ChartLayoutOption: any, ChartDataOption: any, BoxTargetId: any) => {
-    if (BoxTargetId !== undefined) {
-      if (ChartLayoutOption.length !== 0 && ChartDataOption.length !== 0) {
-        const node: any = document.getElementById(BoxTargetId)
-        const config = {
-          displaylogo: false,
-          displayModeBar: false,
-        }
-
-        const Layout: any = {
-          ...ChartLayoutOption,
-          width: node.clientWidth,
-          height: node.clientHeight,
-          plot_bgcolor: 'rgba(255,255,255,0)',
-          paper_bgcolor: 'rgba(255,255,255,0)',
-        }
-        const data = <Plot data={ChartDataOption} layout={Layout} config={config} />
-        const element = React.createElement(data.type, {
-          data: data.props.data,
-          layout: data.props.layout,
-          config: data.props.config,
-        })
-        ReactDOM.render(element, node)
-      }
-    }
-  }
-
-  /**
    * Reset 버튼 클릭
    */
   function reset(): void {
@@ -473,9 +384,6 @@ export const MainDashboardWS: React.FC = () => {
       updatePanels.push(panelModelValue)
     }
     dashboardObj.panels = updatePanels
-
-    // window.localStorage.setItem('updatePanels', JSON.stringify(updatePanels))
-    // console.log(window.localStorage.getItem('updatePanels'))
 
     return dashboardObj.panels
   }
@@ -526,15 +434,7 @@ export const MainDashboardWS: React.FC = () => {
         <CurrentIcon>
           <ReactIcon.MdAccessTime />
         </CurrentIcon>
-        {/* </Chakra.Stack> */}
       </Chakra.Box>
-      <Spin tip="Loading" size="large" spinning={showLoading}>
-        <div className="content" />
-      </Spin>
-      {/* <LineChartComponent />
-      <PieChartComponent />
-      <BarChartComponent />
-      <TimeSeriesComponent /> */}
       <div id="DashboardBox" style={{ position: 'relative' }}>
         <div className="col-lg-8 control-section" id="control_dash">
           <div className="content-wrapper" style={{ maxWidth: '100%' }}>

@@ -4,7 +4,7 @@ import * as Chakra from '@chakra-ui/react'
 import * as ReactIcons from 'react-icons/md'
 
 import { useRecoilState } from 'recoil'
-import * as LineAtoms from 'views/hmid_config/recoil/line/atoms'
+import * as LineAtoms from 'views/hmid_config/recoil/line_사용보류/atoms'
 
 const AccordionTitle = styled.div`
   display: inline-block;

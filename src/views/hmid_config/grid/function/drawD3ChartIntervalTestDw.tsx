@@ -6,7 +6,8 @@ import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
 import axios from 'axios'
 import './style.css'
-import { TestArchData } from './test_data'
+import { TestArchData } from './test_data_dongwon'
+import TableData from './table_data_dongwon'
 
 const Wrapper = styled.svg<{ ChartShow: boolean }>`
   margin: 0 1vw;
@@ -83,9 +84,37 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     //getChartData()
     //DrawD3MultipleSeriesLineChart()
     getTestData()
+    TableDataFunc()
     //drawTestData(TestArchData)
     // DrawD3MultipleSeriesLineChart()
   }, [])
+
+  const TableDataFunc = () => {
+    const data: any = TableData[1]
+    console.log('[ Table Data ] : ', data)
+
+    const DataType: any = ['current', 'predict']
+    let DataObj: any = new Object()
+    const DataArr: any = []
+
+    for (let i = 0, len = DataType.length; i < len; i++) {
+      DataObj.type = DataType[i]
+      for (const j in data) {
+        console.log(j)
+        if (j.includes('OIL') === true) {
+          console.log('[ Data Type ] : ', DataType[i])
+          console.log('[ JSON Data ] : ', data[j])
+          DataObj[j] = data[j]
+        }
+      }
+      DataArr.push(DataObj)
+      DataObj = new Object()
+    }
+
+    console.log('---------------------------')
+    console.log('[ Data Arr ] : ', DataArr)
+    console.log('---------------------------')
+  }
 
   // React.useEffect(() => {
   //   console.log('[ Props Width, Height ] : ', props.widthSize + ' , ' + props.heightSize)
@@ -672,7 +701,7 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
 
     // console.log('new arr : ', arr)
 
-    svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x))
+    const xAxis = svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x))
     svg2.append('g').attr('transform', `translate(40,3)`).call(d3.axisLeft(y))
 
     //grid 그리기
@@ -761,6 +790,79 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
             return y(+d.value)
           })(d.values)
       })
+
+    // Add brushing
+    /**
+     * 2023.06.08 주석 처리
+     */
+    const brush: any = d3
+      .brushX() // Add the brush feature using the d3.brush function
+      .extent([
+        [0, 0],
+        [width, height],
+      ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      .on('end', function (event, d) {
+        const extent: any = event.selection
+
+        // If no selection, back to initial coordinate. Otherwise, update X axis domain
+        if (!extent) {
+          if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)) // This allows to wait a little bit
+          x.domain([4, 8])
+        } else {
+          x.domain([x.invert(extent[0]), x.invert(extent[1])])
+          svg2.select('.brush').call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+        }
+
+        // Update axis and line position
+        xAxis
+          .transition()
+          .duration(1000)
+          .call(d3.axisBottom(x))
+
+          .select('.line')
+          .transition()
+          .duration(1000)
+          .attr('d', function (d: any) {
+            return d3
+              .line()
+              .x(function (d: any) {
+                return x(d.date)
+              })
+              .y(function (d: any) {
+                //console.log(d.value)
+                return y(+d.value)
+              })(d.values)
+          })
+      })
+
+    // Add the brushing
+    svg2.append('g').attr('class', 'brush').call(brush)
+
+    // // A function that set idleTimeOut to null
+    let idleTimeout: any
+    function idled() {
+      idleTimeout = null
+    }
+
+    svg2.on('dblclick', function () {
+      x.domain(
+        d3.extent(data, function (d: any) {
+          return x(d.date)
+        })
+      )
+      xAxis.transition().call(d3.axisBottom(x))
+      svg2.transition().attr('d', function (d: any) {
+        return d3
+          .line()
+          .x(function (d: any) {
+            return x(d.date)
+          })
+          .y(function (d: any) {
+            //console.log(d.value)
+            return y(+d.value)
+          })(d.values)
+      })
+    })
   }
 
   const DrawD3LineChartInterval = (data: any) => {
@@ -1109,14 +1211,8 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       // .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData3?', ['Tag-34'])
       .get(process.env.REACT_APP_API_SERVER_URL + '/api/websocket/data')
       .then((response) => {
-        // console.log('[ Chart response data ] : ')
-        // console.log(response.data)
-
         const date = changeDate(response.data[0].x)
-        // getIntervalData(date)
         if (props.CallData === 'TestData') {
-          // setPrevChartData(response.data)
-          // DrawD3LineChartInterval(response.data)
         } else if (props.CallData === 'OpeningPrice') {
           setOpeningPricePrevData([])
           DrawD3LineChartPrev()

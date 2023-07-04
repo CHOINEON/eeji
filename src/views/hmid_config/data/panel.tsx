@@ -30,11 +30,6 @@ export const GridLayoutTest: React.FC = () => {
 
   return (
     <>
-      {/* <Box>
-        <Grid container spacing={2}>
-          {renderGrid}
-        </Grid>
-      </Box> */}
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
           <Grid xs={8}></Grid>

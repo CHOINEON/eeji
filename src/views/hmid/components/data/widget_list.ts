@@ -1,3 +1,8 @@
+/**
+ * 2023-07-04 박윤희
+ * 위젯 모달을 그리기위한 데이터
+ */
+
 export const WidgetData = [
   {
     type: 'chart',
