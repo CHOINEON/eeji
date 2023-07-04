@@ -3,7 +3,7 @@ import React from 'react'
 import axios from 'axios'
 import styled from '@emotion/styled'
 import { panelData } from '../hmid_config/data/panel-data'
-import { DashboardLayoutComponent, PanelModel, ResizeArgs } from '@syncfusion/ej2-react-layouts'
+import { DashboardLayoutComponent, PanelModel } from '@syncfusion/ej2-react-layouts'
 import { Box } from '@chakra-ui/react'
 /**
  * ag Grid

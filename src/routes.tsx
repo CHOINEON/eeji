@@ -95,13 +95,13 @@ const routes = [
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: HmidInterval,
   },
-  // {
-  //   name: 'HMID Configuration',
-  //   layout: '/admin',
-  //   path: '/layout-list',
-  //   icon: <Icon as={MdDisplaySettings} width="20px" height="20px" color="white" />,
-  //   component: LayoutList,
-  // },
+  {
+    name: 'HMID Configuration',
+    layout: '/admin',
+    path: '/layout-list',
+    icon: <Icon as={MdDisplaySettings} width="20px" height="20px" color="white" />,
+    component: LayoutList,
+  },
   {
     name: 'HMID Configuration',
     layout: '/admin',

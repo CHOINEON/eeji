@@ -1,35 +1,12 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
+/**
+ * 2023-07-04 박윤희
+ * Main Dashboard 화면(user 권한)
+ * 권한 설정은 router에서 적용해야합니다.
+ */
 
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// Chakra imports
 import { Box, useColorModeValue } from '@chakra-ui/react'
-
 import React from 'react'
-
 import { MainDashboardWS } from './hmid_ws'
-
-//function
-// import GridLayoutBox from './function/GridLayout'
-// import PredefinedLayouts from './function/GridLayoutTest'
 
 export default function HMID() {
   const theme = useColorModeValue('navy.700', 'white')
@@ -50,6 +27,7 @@ export default function HMID() {
   //   }
   // }, [])
   //end 새로고침 막기
+
   return (
     <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
       <MainDashboardWS />

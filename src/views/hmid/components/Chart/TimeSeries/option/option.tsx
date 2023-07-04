@@ -7,7 +7,7 @@ import * as ReactIcon from 'react-icons/md'
 // import initialState from '../reducer/initialState'
 
 import { useRecoilState } from 'recoil'
-import * as TimeSeriesAtoms from 'views/hmid_config/recoil/timeseries/atoms'
+import * as TimeSeriesAtoms from 'views/hmid_config/recoil/timeseries_사용보류/atoms'
 
 const AccordionTitle = styled.div`
   display: inline-block;

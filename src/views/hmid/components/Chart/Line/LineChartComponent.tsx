@@ -10,7 +10,7 @@ import React from 'react'
 import ChartOption from './option/option'
 
 import { useRecoilState } from 'recoil'
-import * as LineAtom from 'views/hmid_config/recoil/line/atoms'
+import * as LineAtom from 'views/hmid_config/recoil/line_사용보류/atoms'
 
 export const LineChartComponent: React.FC = () => {
   // const [chartType, setChartType] = React.useState()
