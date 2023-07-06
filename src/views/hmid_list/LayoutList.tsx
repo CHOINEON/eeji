@@ -1,3 +1,10 @@
+/**
+ * INFINITE OPTIMAL
+ * 메뉴 : HMI Designer - LayoutList
+ * 최종 수정 날짜 : 2023-07-06
+ * 개발자 : 박윤희 (BAK YUN HEE)
+ */
+
 import React from 'react'
 import axios from 'axios'
 import { BiSelectMultiple } from 'react-icons/bi'
@@ -153,6 +160,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   React.useEffect(() => {
     setCompanyId(props.company_id)
     getLayoutList(props.company_id)
+    //getLayoutListByUseQuer(props.company_id)
   }, [props.comapny_id])
 
   //새로운 대시보드 만들기
@@ -282,7 +290,6 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
 
   //layoutlist api 연결
   const getLayoutList = (company_id: string) => {
-    //console.log(company_id)
     renderLayoutList([])
     axios
       .get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout?company_id=' + company_id, {
@@ -295,6 +302,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
       .then((response) => {
         console.log('[ get Layout List axios response data ] : ')
         console.log(response.data)
+        window.localStorage.setItem('img_path', response.data[Number(response.data.length) - 1].img_path)
 
         renderLayoutList(response.data)
       })

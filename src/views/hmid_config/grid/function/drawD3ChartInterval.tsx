@@ -34,9 +34,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
   const svgContainer = React.useRef(null)
 
   const [IntervalData, setIntervalData] = React.useState<any>([])
-
-  const [PrevIntervalData, setPrevIntervalData] = React.useState<any>([])
-  const [IntervalTestData, setIntervalTestData] = React.useState<any>([])
   const [lastDate, setLastDate] = React.useState<any>()
 
   //trade
@@ -83,9 +80,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     setWidth(props.widthSize)
     setHeight(props.heightSize)
     if (IntervalData.length === 0) {
-      console.log('interval data lengt zero !!')
-      console.log(IntervalData)
-      console.log(props.CallData)
       if (props.CallData === 'TradePrice') {
         getChartData()
       } else {
@@ -109,7 +103,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       } else if (props.CallData === 'OpeningPrice') {
         changeDate(IntervalData.date)
         let openingTest: any = []
-        //console.log(OpeningPricePrevData)
         if (OpeningPricePrevData !== undefined) {
           if (OpeningPricePrevData.length !== 0) {
             openingTest = [...OpeningPricePrevData]
@@ -128,7 +121,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       } else if (props.CallData === 'LowPrice') {
         changeDate(IntervalData.date)
         let lowTest: any = []
-        //console.log(LowPricePrevData)
         if (LowPricePrevData !== undefined) {
           if (LowPricePrevData.length !== 0) {
             lowTest = [...LowPricePrevData]
@@ -147,7 +139,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       } else if (props.CallData === 'HighPrice') {
         changeDate(IntervalData.date)
         let highTest: any = []
-        // console.log(HighPricePrevData)
         if (HighPricePrevData !== undefined) {
           if (HighPricePrevData.length !== 0) {
             highTest = [...HighPricePrevData]
@@ -165,7 +156,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
         }
       } else if (props.CallData === 'DataTable') {
         let TableRowTest: any = []
-        //console.log(WSTableRowDataPrev)
         if (WSTableRowDataPrev !== undefined) {
           changeDate(IntervalData.date)
           if (WSTableRowDataPrev.length !== 0) {
@@ -219,18 +209,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
           }
         }
       }
-
-      // if (PrevIntervalData !== undefined) {
-      //   // console.log(PrevIntervalData)
-      //   console.log('Effect Interval!!!!!!!!!!')
-      //   console.log(IntervalData)
-      //   changeDate(IntervalData.date)
-      //   const interval_test = [...PrevIntervalData]
-      //   interval_test.unshift(IntervalData)
-      //   interval_test.pop()
-      //   setPrevIntervalData(interval_test)
-      //   setIntervalTestData(interval_test)
-      // }
     }
   }
 
@@ -290,8 +268,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       setTimeout(function () {
         getIntervalData(lastDate)
       }, 60000)
-
-      // clearTimeout(time)
     }
   }, [lastDate])
 
@@ -309,20 +285,7 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     }
   }
 
-  // // interval
-  // const IntervalChangeData = (t: any) => {
-  //   if (t[0].date !== undefined && t[0].value !== undefined) {
-  //     console.log('useEffect get Data')
-  //     console.log(t)
-  //     console.log('-------------------')
-
-  //     DrawD3LineChartInterval(t)
-  //   }
-  // }
-
   const changeDate = (date_args: any) => {
-    // console.log(date_args)
-    // console.log(typeof date_args)
     if (typeof date_args === 'string') {
       console.log('this!!!')
       const trn_date = new Date(date_args)
@@ -342,8 +305,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       return year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second
     } else {
       const trn_date = date_args
-      console.log('############################')
-      console.log(trn_date)
       const year = trn_date.getFullYear()
       let month: any = trn_date.getMonth() + 1
       if (month < 10) month = '0' + month
@@ -393,7 +354,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
         wsObj.date = new Date(parseData.candleDateTimeKst)
         wsObj.value = parseData.openingPrice
       } else if (props.CallData === 'DataTable') {
-        console.log('$$$$$$$$$$$$$$$$$$$ Data Table !!!!!!!!!!!!!!!')
         wsObj.date = new Date(parseData.candleDateTimeKst)
         wsObj.tradeprice = parseData.tradePrice
         wsObj.lowprice = parseData.lowPrice
@@ -407,13 +367,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
           wsArr.push(wsObj)
           wsObj = new Object()
         }
-
-        // for (const i in multipleKey) {
-        //   resultObj.name = multipleKey[i]
-        //   resultObj.value = wsArr[i]
-        //   resultArr.push(resultObj)
-        //   resultObj = new Object()
-        // }
       }
 
       if (props.CallData !== 'Opening & High & Low') {
@@ -423,8 +376,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
         setIntervalData(wsArr)
       }
 
-      // setIntervalData(ItObj)
-
       return ItObj
     })
   }
@@ -433,8 +384,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     const svg2 = d3.select(svgRef.current)
 
     const margin = { top: 25, right: 50, bottom: 50, left: 70 }
-    // width = props.widthSize - margin.left - margin.right,
-    // height = props.heightSize - margin.top - margin.bottom
     let width: any = 0,
       height: any = 0
     if (widthState !== undefined && heightState !== undefined) {
@@ -512,10 +461,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
 
       /** resize Chart Size */
       const margin = { top: 20, right: 50, bottom: 50, left: 70 }
-      // width = widthState - margin.left - margin.right,
-      // height = heightState - margin.top - margin.bottom
-      // width = props.widthSize - margin.left - margin.right,
-      // height = props.heightSize - margin.top - margin.bottom
       let width: any = 0,
         height: any = 0
       if (widthState !== undefined && heightState !== undefined) {
@@ -721,11 +666,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       })
     }
 
-    // console.log('[ chart draw get Data ]')
-    // console.log(data)
-    // console.log('[ Chart Draw Data ]')
-    // console.log(data)
-
     const Value = rtnData.map((v: any) => {
       return v.value
     })
@@ -734,10 +674,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     const min = Math.min.apply(null, Value)
 
     const margin = { top: 20, right: 50, bottom: 50, left: 70 }
-    // width = props.widthSize - margin.left - margin.right,
-    // height = props.heightSize - margin.top - margin.bottom
-    // width = widthState - margin.left - margin.right,
-    // height = heightState - margin.top - margin.bottom
     let width: any = 0,
       height: any = 0
     if (widthState !== undefined && heightState !== undefined) {
@@ -795,13 +731,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
         .attr('x2', width + margin.left - 20)
         .attr('y1', (d: any) => y(d - 0.1))
         .attr('y2', (d: any) => y(d - 0.1))
-    //기본 y축 데이터 넣을 때
-    // y.domain([
-    //   0,
-    //   d3.max(data, (d: any) => {
-    //     return d.value
-    //   }),
-    // ])
 
     let xAxis: any
 
@@ -843,15 +772,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       .text(props.CallData)
       .style('font-size', '14px')
       .attr('alignment-baseline', 'middle')
-    // .append('text')
-    // .attr('x', width / 2)
-    // .attr('y', 0 - margin.top / 2)
-    // .attr('text-anchor', 'middle')
-    // .style('font-size', '16px')
-    // // .style("text-decoration", "underline")
-    // .text('Trade Price')
-
-    // Y axis label 추가
 
     // Add brushing
     /**
@@ -916,81 +836,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       .attr('stroke-width', 1.5)
       .attr('d', valueLine)
 
-    // const tooltip = d3.select('#tooltip')
-    // const tooltipDot = svg2
-    //   .append('g')
-    //   .append('circle')
-    //   .attr('r', 5)
-    //   .attr('fill', '#fc8781')
-    //   .attr('stroke', 'black')
-    //   .attr('stroke-width', 2)
-    //   .style('opacity', 0)
-    //   .style('pointer-events', 'none')
-
-    // svg2
-    //   .append('g')
-    //   .append('rect')
-    //   .attr('class', 'dotted')
-    //   .attr('stroke-width', '1px')
-    //   .attr('width', '.5px')
-    //   .attr('height', height)
-
-    const tooltip = d3.select('#tooltip')
-    const tooltipCircle = svg2
-      .append('circle')
-      .attr('class', 'tooltip-circle')
-      .attr('r', 4)
-      .attr('stroke', '#af9358')
-      .attr('fill', 'white')
-      .attr('stroke-width', 2)
-      .style('opacity', 0)
-
-    // svg2.append('rect').attr('width', width).attr('height', height).style('opacity', 0)
-    // .on('touchmouse mousemove', function (event) {
-    //   const mousePos = d3.pointer(event, this)
-    //   // x coordinate stored in mousePos index 0
-    //   const date = x.invert(mousePos[0])
-
-    //   const xAccessor = (d: any) => parseDate(parseTime(d.date))
-    //   const yAccessor = (d: any) => parseInt(d.value)
-
-    //   // Custom Bisector - left, center, right <= bisector options
-    //   const dateBisector = d3.bisector(xAccessor).center
-    //   const bisectionIndex = dateBisector(data, date)
-    //   const hoveredIndexData = data[bisectionIndex - 1]
-
-    //   // console.log(hoveredIndexData)
-    //   // console.log(yAccessor(hoveredIndexData))
-    //   // console.log(hoveredIndexData)
-    //   // console.log(xAccessor(hoveredIndexData))
-    //   tooltipDot
-    //     .style('opacity', 1)
-    //     // .attr('cx', x(xAccessor(hoveredIndexData)))
-    //     .attr('cx', x(xAccessor(hoveredIndexData)))
-    //     .attr('cy', y(yAccessor(hoveredIndexData)))
-
-    //   // console.log(hoveredIndexData)
-
-    //   tooltip
-    //     .style('display', 'block')
-    //     .style('top', `${y(yAccessor(hoveredIndexData)) - 50}px`)
-    //     .style('left', `${x(xAccessor(hoveredIndexData))}px`)
-
-    //   tooltip.select('.price').text(`${yAccessor(hoveredIndexData)}`)
-
-    //   const dateFormatter = d3.timeFormat('%B %-d, %Y')
-
-    //   tooltip.select('.date').text(`${dateFormatter(xAccessor(hoveredIndexData))}`)
-    // })
-
-    // .on('mouseleave', function (event) {
-    //   const mousePos = d3.pointer(event, this)
-    // })
-
-    //select all path fill 지정
-    // svg2.selectAll('path').attr('fill', 'none')
-    // svg2.selectAll('line').attr('fill', 'none')
-
     /**
      * 2023.06.08 주석 처리
      */
@@ -1037,7 +882,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
         console.log(response.data)
 
         const date = changeDate(response.data[0].x)
-        // getIntervalData(date)
         if (props.CallData === 'TradePrice') {
           setPrevChartData(response.data)
           DrawD3LineChartInterval(response.data)
@@ -1054,11 +898,8 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
           setMultiplePrevData([])
           DrawD3LineChartPrev()
         }
-        // getIntervalData()
-        // return response.data
 
         return response.data
-        // setData(response.data[0].y)
       })
       .catch((error) => {
         console.log(error)
@@ -1068,8 +909,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
   return (
     <>
       <Chakra.Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
-        {/*d3 line chart*/}
-        {/* <div>Websocket</div> */}
         <div ref={svgContainer}>
           <Wrapper ref={svgRef} ChartShow={props.ChartShow} />
           <div id="tooltip" className="tooltip">
@@ -1081,7 +920,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
             </div>
           </div>
         </div>
-        {/* <Plot data={chartData} layout={layoutOption} /> */}
       </Chakra.Box>
 
       <DataGridWrap className={'ag-theme-alpine'} TableShow={props.TableShow}>

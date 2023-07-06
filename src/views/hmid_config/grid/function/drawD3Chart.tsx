@@ -632,82 +632,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       .attr('stroke', props.Color)
       .attr('stroke-width', 1.5)
       .attr('d', valueLine)
-
-    // const tooltip = d3.select('#tooltip')
-    // const tooltipDot = svg2
-    //   .append('g')
-    //   .append('circle')
-    //   .attr('r', 5)
-    //   .attr('fill', '#fc8781')
-    //   .attr('stroke', 'black')
-    //   .attr('stroke-width', 2)
-    //   .style('opacity', 0)
-    //   .style('pointer-events', 'none')
-
-    // svg2
-    //   .append('g')
-    //   .append('rect')
-    //   .attr('class', 'dotted')
-    //   .attr('stroke-width', '1px')
-    //   .attr('width', '.5px')
-    //   .attr('height', height)
-
-    const tooltip = d3.select('#tooltip')
-    const tooltipCircle = svg2
-      .append('circle')
-      .attr('class', 'tooltip-circle')
-      .attr('r', 4)
-      .attr('stroke', '#af9358')
-      .attr('fill', 'white')
-      .attr('stroke-width', 2)
-      .style('opacity', 0)
-
-    // svg2.append('rect').attr('width', width).attr('height', height).style('opacity', 0)
-    // .on('touchmouse mousemove', function (event) {
-    //   const mousePos = d3.pointer(event, this)
-    //   // x coordinate stored in mousePos index 0
-    //   const date = x.invert(mousePos[0])
-
-    //   const xAccessor = (d: any) => parseDate(parseTime(d.date))
-    //   const yAccessor = (d: any) => parseInt(d.value)
-
-    //   // Custom Bisector - left, center, right <= bisector options
-    //   const dateBisector = d3.bisector(xAccessor).center
-    //   const bisectionIndex = dateBisector(data, date)
-    //   const hoveredIndexData = data[bisectionIndex - 1]
-
-    //   // console.log(hoveredIndexData)
-    //   // console.log(yAccessor(hoveredIndexData))
-    //   // console.log(hoveredIndexData)
-    //   // console.log(xAccessor(hoveredIndexData))
-    //   tooltipDot
-    //     .style('opacity', 1)
-    //     // .attr('cx', x(xAccessor(hoveredIndexData)))
-    //     .attr('cx', x(xAccessor(hoveredIndexData)))
-    //     .attr('cy', y(yAccessor(hoveredIndexData)))
-
-    //   // console.log(hoveredIndexData)
-
-    //   tooltip
-    //     .style('display', 'block')
-    //     .style('top', `${y(yAccessor(hoveredIndexData)) - 50}px`)
-    //     .style('left', `${x(xAccessor(hoveredIndexData))}px`)
-
-    //   tooltip.select('.price').text(`${yAccessor(hoveredIndexData)}`)
-
-    //   const dateFormatter = d3.timeFormat('%B %-d, %Y')
-
-    //   tooltip.select('.date').text(`${dateFormatter(xAccessor(hoveredIndexData))}`)
-    // })
-
-    // .on('mouseleave', function (event) {
-    //   const mousePos = d3.pointer(event, this)
-    // })
-
-    //select all path fill 지정
-    // svg2.selectAll('path').attr('fill', 'none')
-    // svg2.selectAll('line').attr('fill', 'none')
-
     /**
      * 2023.06.08 주석 처리
      */
@@ -767,10 +691,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
 
       /** resize Chart Size */
       const margin = { top: 20, right: 50, bottom: 50, left: 70 }
-      // width = widthState - margin.left - margin.right,
-      // height = heightState - margin.top - margin.bottom
-      // width = props.widthSize - margin.left - margin.right,
-      // height = props.heightSize - margin.top - margin.bottom
       let width: any = 0,
         height: any = 0
       if (widthState !== undefined && heightState !== undefined) {
@@ -1256,12 +1176,8 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
             <div className="tooltip-date">
               <span id="date"></span>
             </div>
-            <div className="tooltip-Value">
-              Value : <span id="value"></span>
-            </div>
           </div>
         </div>
-        {/* <Plot data={chartData} layout={layoutOption} /> */}
       </Chakra.Box>
 
       <DataGridWrap className={'ag-theme-alpine'} TableShow={props.TableShow}>
