@@ -16,7 +16,6 @@ import { Spin } from 'antd'
 import '../../hmid/components/Modal/style/style.css'
 
 import { AgGridReact } from 'ag-grid-react'
-import { ColDef } from 'ag-grid-community'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
 import { panelData } from '../data/panel-data_config'
 import * as d3 from 'd3'
@@ -35,9 +34,8 @@ import * as ej2 from '@syncfusion/ej2-react-layouts'
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import * as RecoilAtoms from '../recoil/config/atoms'
-import { CompanyId, LayoutTitle, NowDate, WsDataTest } from '../recoil/base/atoms'
-// import D3LineChart from './function/drawD3Chart'
-import D3LineChartTooltip from './function/drawD3ChartTooltip(Test중)'
+import { LayoutTitle, NowDate } from '../recoil/base/atoms'
+
 import D3ChartDefaultGrid from './function/drawD3ChartDefaultGrid'
 import D3LineChart from '../../hmid/components/d3/D3LineChart'
 import D3ScatterPlotChart from '../../hmid/components/d3/D3ScatterPlotChart'
@@ -45,14 +43,6 @@ import D3ScatterPlotChart from '../../hmid/components/d3/D3ScatterPlotChart'
 const DataGridWrap = styled.div`
   width: 100%;
   height: calc(100% - 1.1vw);
-`
-
-const BoxTitle = styled.div`
-  position: absolute;
-  left: 1vw;
-  top: 1vw;
-  font-size: 0.8vw;
-  font-weight: bold;
 `
 
 const CurrentText = styled.div`
@@ -87,7 +77,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
 
   //모달에서 선택한 Tag Array
   const SelectTagInfo = useRecoilValue(RecoilAtoms.SelectTagInfoState)
-  const companyId = useRecoilValue(CompanyId)
   const layoutTitle = useRecoilValue(LayoutTitle)
 
   const panels: any = panelData
@@ -98,6 +87,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   const [Form, setForm] = React.useState<any>()
 
   //현재시간 계산하기
+  //대신에 luxon 사용
   const getNowDateTime = () => {
     const now = new Date()
     const year = now.getFullYear()
@@ -166,7 +156,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   const dashboardBoxColor = Chakra.useColorModeValue('white', 'dark')
 
   //리스트에 있던 대시보드 불러와서 위젯을 그리는 경우
-  //2023.06.14 박윤희 수정 작업 중
+  //현재 데이터가 없으므로 테스트데이터 csv 파일 가져와서 data로 사용함
   const SelectedDashboardWidgetData = async (Layoutdata: any, panel: any) => {
     console.log('[ LayoutData ] : ', Layoutdata)
     for (let i = 0, len = Layoutdata.length; i < len; i++) {
@@ -194,7 +184,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
                 <D3ScatterPlotChart
                   widthSize={node.clientWidth}
                   heightSize={node.clientHeight}
-                  Data={data1}
+                  Data={data}
                   DataName={'TestData'}
                   Color={'#69b3a294'}
                 />
@@ -221,16 +211,18 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
             ]
             const row: any = []
             let RowObj: any = new Object()
+            console.log(data1)
 
-            for (let i = 0, len = data.length; i < len; i++) {
-              RowObj.date = data[i].date
-              RowObj.value = data[i].value
+            for (let i = 0, len = data1.length; i < len; i++) {
+              RowObj.date = data1[i].date
+              RowObj.value = data1[i].value
 
               row.push(RowObj)
               RowObj = new Object()
             }
 
             const RtnData = [column, row]
+            console.log('[ RtnData ] : ', RtnData)
 
             const elementData = (
               <DataGridWrap className={'ag-theme-alpine'}>
@@ -454,9 +446,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
               row.push(RowObj)
               RowObj = new Object()
             }
-
-            // const TableData: any = [column, row]
-            // DrawD3ChartWithData(node, TableData)
           })
           .catch((error) => {
             console.log(error)
@@ -568,57 +557,12 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   const ClickDashBoardComponent = (e: any) => {
     console.log(e.target.className)
     console.log(typeof e.target.className)
-    // if (e.target.className.includes('widget-setting-btn')) {
-    //   const boxTargetId = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
-    //   console.log('----------------------------')
-    //   console.log(boxTargetId)
-    //   console.log('----------------------------')
-    //   setBoxTargetId(boxTargetId)
-
-    //   const data = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data
-    //   console.log(data)
-    //   let autoRange: any = null
-    //   if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis !== undefined) {
-    //     autoRange = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.autorange
-    //   }
-    //   const id = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
-    //   const type = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type
-    //   if (data !== undefined) {
-    //     if (autoRange === false) {
-    //       // setLineChartShowDrawer(true)
-    //       setWidgetInfo('Line')
-    //       setBoxTargetId(id)
-    //     } else if (type === 'pie') {
-    //       // setPieChartShowDrawer(true)
-    //       setWidgetInfo('Pie')
-    //       setBoxTargetId(id)
-    //     } else if (type === 'bar') {
-    //       // setBarChartShowDrawer(true)
-    //       setWidgetInfo('Bar')
-    //       setBoxTargetId(id)
-    //     } else if (autoRange === true) {
-    //       // setTimeSeriesShowDrawer(true)
-    //       setWidgetInfo('Time Series')
-    //       setBoxTargetId(id)
-    //     }
-    //   } else {
-    //     const className = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[1].className
-    //     const id = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
-    //     if (className !== undefined) {
-    //       if (className.includes('ag')) {
-    //         setWidgetInfo('Table')
-    //         setBoxTargetId(id)
-    //       }
-    //     }
-    //   }
-    // } else
     //Data Connection 버튼 클릭한 경우
     const typeClass = e.target.className
     if (typeof typeClass !== 'object') {
       if (e.target.className.includes('connection-chart-data')) {
         const className = e.target.offsetParent.offsetParent.children[0].children[1].className
         const box_target_id = e.target.offsetParent.offsetParent.children[0].children[1].id
-        console.log('[ Connection Chart Data] : ', className)
         if (className !== undefined) {
           setDataConnectionModal(true)
           setBoxTargetId(box_target_id)
@@ -723,7 +667,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
       params = {
         com_id: localStorage.getItem('companyId'),
         lay_name: layoutTitle,
-        // img_path: response.data[0].img_path,z
         grid_id: panelIdx.toString(),
         data: args,
       }
@@ -823,6 +766,34 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
           save_grid_obj.tag_list = []
           // 추후 주석 해제
           // save_grid_obj.tag_list = JSON.parse(node.getAttribute('tag-data'))
+
+          save_grid_arr.push(save_grid_obj)
+          save_grid_obj = new Object()
+        }
+
+        console.log('[ 저장 할 레이아웃 파라미터 ] ', save_grid_arr)
+        SaveDashboard(save_grid_arr)
+      }
+      //레이아웃 수정 일 경우
+    } else {
+      //1. 위젯 이외 타이틀 등만 변경하는 경우
+      let save_grid_obj: any = new Object()
+      const save_grid_arr: any = []
+
+      if (dashboardObj !== undefined) {
+        const dashboard_data: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
+        console.log(dashboard_data)
+
+        for (let i = 0, len = dashboard_data.length; i < len; i++) {
+          save_grid_obj.grid_nm = ''
+          save_grid_obj.grid_index = i
+          save_grid_obj.widget_type = dashboard_data[i].widget_type
+          // // save_grid_obj.width = node.clientWidth
+          // // save_grid_obj.height = node.clientHeight
+          // /**2023.07.03 박윤희 Tag List 현재 데이터가 없으므로 빈값으로 보냄 */
+          save_grid_obj.tag_list = []
+          // // 추후 주석 해제
+          // // save_grid_obj.tag_list = JSON.parse(node.getAttribute('tag-data'))
 
           save_grid_arr.push(save_grid_obj)
           save_grid_obj = new Object()

@@ -14,29 +14,10 @@ import DataAnalysis from 'views/DataAnalysis'
 
 import HmidInterval from 'views/hmid_interval'
 import AIModeling from 'views/AIModeling'
-// import FoundationStructureAnalysis from 'views/DataAnalysis/PreProcessing'
-// import DataConnection from 'views/dataConnection'
-// import DataPlantModeling from 'views/dataPlantModeling'
-// import AIPlantModeling from 'views/AiPlantModeling'
-// import LayoutList from 'views/hmid/list/LayoutList'
 
 // Auth Imports
 
 const routes = [
-  // {
-  //   name: "home",
-  //   layout: "/admin",
-  //   path: "/login",
-  //   icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
-  //   component: Login,
-  // },
-  // {
-  //   name: 'Data Connection',
-  //   layout: '/admin',
-  //   path: '/data-connection',
-  //   icon: <Icon as={ImDatabase} width="20px" height="20px" color="inherit" />,
-  //   component: DataConnection,
-  // },
   {
     name: 'Data Analysis',
     layout: '/admin',

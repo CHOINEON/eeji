@@ -108,31 +108,12 @@ export const MainDashboardWS: React.FC = () => {
    * 코드 필요성 확인
    */
   React.useEffect(() => {
-    // if (window.localStorage.getItem('SelectedDashboardInfo') !== 'new') {
-    //   const Layoutdata: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
-    //   const panel: any = Object.keys(panels[Number(Layoutdata[0].grid_id)]).map((panelIndex: string) => {
-    //     return panels[Number(Layoutdata[0].grid_id)][panelIndex]
-    //   })
-
-    //   initializeTemplate(Layoutdata[0].grid_id, dashboardObj).then(function () {
-    //     SelectedDashboardWidgetData(Layoutdata, panel)
-    //   })
-
-    //   // setTimeout(function () {
-    //   //   SelectedDashboardWidgetData(Layoutdata, panel)
-    //   // }, 500)
-    //   // SelectedDashboardWidgetData(Layoutdata)
-    // } else {
     const dashboardData = initializeTemplate(null, dashboardObj)
     dashboardData.then(function (args: any) {
       setTimeout(function () {
         AddGridGauid(args, 0)
       }, 1000)
     })
-    // setTimeout(function () {
-    //   그리기함수.AddGridGauid(gridDataObj, 0)
-    // }, 500)
-    //}
   }, [panelIdx])
 
   //레이아웃 만들 경우 default값 나타내기
@@ -150,7 +131,7 @@ export const MainDashboardWS: React.FC = () => {
 
   /**
    * Gauid 그리기
-   * 2023.05.30. 작업중
+   * panel data의 위젯 조건에 따라 dom draw
    */
   const AddGridGauid = (args: any, idx: number) => {
     const panels: any = panelData
@@ -309,9 +290,6 @@ export const MainDashboardWS: React.FC = () => {
         //   ReactDOM.render(element, node)
         //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.TimeSeriesChartLayoutOptionState))
         // })
-
-        const firstDraw = true
-        // drawGraph(firstDraw)
       } else if (panel[j].widget === 'Table') {
         const data = (
           <>
@@ -399,27 +377,6 @@ export const MainDashboardWS: React.FC = () => {
     } else {
       reset()
     }
-  }
-
-  const currentDate = () => {
-    let Now = ''
-
-    setInterval(function () {
-      const DateT = new Date()
-      let Month: any = DateT.getMonth() + 1
-      if (Month.toString().length === 1) Month = '0' + Month
-      let Day: any = DateT.getDate()
-      if (Day.toString().length === 1) Day = '0' + Day
-      let Hour: any = DateT.getHours()
-      if (Hour.toString().length === 1) Hour = '0' + Hour
-      let Minute: any = DateT.getMinutes()
-      if (Minute.toString().length === 1) Minute = '0' + Minute
-      let Second: any = DateT.getSeconds()
-      if (Second.toString().length === 1) Second = '0' + Second
-      Now = DateT.getFullYear() + '/' + Month + '/' + Day + ' ' + Hour + ':' + Minute + ':' + Second
-
-      console.log(Now)
-    }, 1000)
   }
 
   return (

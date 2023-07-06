@@ -8,14 +8,11 @@
 
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'
-import axios from 'axios'
 import styled from '@emotion/styled'
 import '../hmid_config/style/style.css'
 import 'ag-grid-community/styles/ag-grid.css'
 import '../hmid/components/Modal/style/style.css'
 
-// import { AgGridReact } from 'ag-grid-react'
-// import 'ag-grid-community/styles/ag-theme-alpine.css'
 import { panelData } from '../hmid_config/data/panel-data'
 import * as d3 from 'd3'
 
@@ -29,18 +26,15 @@ import * as ReactIcon from 'react-icons/md'
 import * as Chakra from '@chakra-ui/react'
 import * as ej2 from '@syncfusion/ej2-react-layouts'
 
-import { useRecoilState } from 'recoil'
+import { useRecoilState, RecoilRoot } from 'recoil'
 import * as RecoilAtoms from '../hmid_config/recoil/config/atoms'
 import { NowDate } from '../hmid_config/recoil/base/atoms'
 
 import D3LineChartInterval from '../hmid_config/grid/function/drawD3ChartIntervalTestDw'
 import D3LineChartIntervalBT from '../hmid_config/grid/function/drawD3ChartIntervalTestDwBT'
 import D3LineChart from '../hmid_config/grid/function/drawD3Chart'
-
-// const DataGridWrap = styled.div`
-//   width: 100%;
-//   height: calc(100% - 1.1vw);
-// `
+import IntervalTestBiance from '../hmid_config/grid/drawD3ChartIntervalTestBiance'
+import IntervalTestBianceTrade from 'views/hmid_config/grid/drawD3ChartIntervalTestBianceTrade'
 
 const BoxTitle = styled.div`
   position: absolute;
@@ -149,8 +143,8 @@ export const MainDashboardInterval: React.FC = () => {
       if (panel[j].widget === 'Line1') {
         const data = (
           <>
-            <BoxTitle>Arch</BoxTitle>
-            <D3LineChartInterval
+            <BoxTitle>Binance Trade 50ms</BoxTitle>
+            {/* <D3LineChartInterval
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'TestData'}
@@ -158,20 +152,16 @@ export const MainDashboardInterval: React.FC = () => {
               ChartShow={true}
               TableShow={false}
               Multiple={false}
-            />
+            /> */}
+            <IntervalTestBianceTrade widthSize={node.clientWidth} heightSize={node.clientHeight} />
           </>
         )
         ReactDOM.render(data, node)
-        //   setWidgetInfo('Line')
-        // const result: any = ChangeLineDataArr(useRecoilValue(RecoilLineAtoms.LineChartDataOptionState))
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilLineAtoms.LineChartLayoutOptionState))
-        // })
       } else if (panel[j].widget === 'Line2') {
         const data = (
           <>
-            <BoxTitle>BT</BoxTitle>
-            <D3LineChartIntervalBT
+            <BoxTitle>Binance kline 1s</BoxTitle>
+            {/* <D3LineChartIntervalBT
               widthSize={node.clientWidth}
               heightSize={node.clientHeight}
               CallData={'Bottom'}
@@ -179,135 +169,11 @@ export const MainDashboardInterval: React.FC = () => {
               ChartShow={true}
               TableShow={false}
               Multiple={false}
-            />
+            /> */}
+            <IntervalTestBiance widthSize={node.clientWidth} heightSize={node.clientHeight} />
           </>
         )
         ReactDOM.render(data, node)
-        //setWidgetInfo('Bar')
-        // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.BarChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'Line3') {
-        const data = (
-          <>
-            <BoxTitle>Low Price</BoxTitle>
-            <D3LineChartInterval
-              widthSize={node.clientWidth}
-              heightSize={node.clientHeight}
-              CallData={'LowPrice'}
-              Color={'orange'}
-              ChartShow={true}
-              TableShow={false}
-              Multiple={false}
-            />
-          </>
-        )
-        //ReactDOM.render(data, node)
-        //setWidgetInfo('Bar')
-        // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.BarChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'Line4') {
-        const data = (
-          <>
-            <BoxTitle>High Price</BoxTitle>
-            <D3LineChartInterval
-              widthSize={node.clientWidth}
-              heightSize={node.clientHeight}
-              CallData={'HighPrice'}
-              Color={'purple'}
-              ChartShow={true}
-              TableShow={false}
-              Multiple={false}
-            />
-          </>
-        )
-        //ReactDOM.render(data, node)
-        //setWidgetInfo('Bar')
-        // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.BarChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'Line5') {
-        const data = (
-          <>
-            <BoxTitle>Opening & High & Low</BoxTitle>
-            <D3LineChartInterval
-              widthSize={node.clientWidth}
-              heightSize={node.clientHeight}
-              CallData={'Opening & High & Low'}
-              Color={'purple'}
-              ChartShow={true}
-              TableShow={false}
-              Multiple={true}
-            />
-          </>
-        )
-        // const data = (
-        //   <D3LineChart
-        //     widthSize={node.clientWidth}
-        //     heightSize={node.clientHeight}
-        //     Calltype={'WS'}
-        //     CallData={'candleAccTradePriceVolume'}
-        //   />
-        // )
-        //ReactDOM.render(data, node)
-        //setWidgetInfo('Bar')
-        // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.BarChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'Pie') {
-        //setWidgetInfo('Pie')
-        // const result: any = 가공함수.ChangePieDataArr(useRecoilValue(RecoilAtoms.PieChartLayoutOptionState))
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.PieChartLayoutOptionState))
-        // })
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.PieChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'TimeSeries') {
-        //setWidgetInfo('Time Series')
-        // const result: any = ChangeTimeSeriesDataArr()
-        // result.then(function (args: any) {
-        //   setTimeSeriesDataOption(args)
-        //   const config = {
-        //     displaylogo: true,
-        //     displayModeBar: true,
-        //   }
-        //   const data = <Plot data={args} layout={TimeSeriesLayoutOption} config={config} />
-        //   const element = React.createElement(data.type, {
-        //     data: data.props.data,
-        //     layout: data.props.layout,
-        //     config: data.props.config,
-        //   })
-        //   ReactDOM.render(element, node)
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.TimeSeriesChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'Table') {
-        const data = (
-          <>
-            <BoxTitle>All Data</BoxTitle>
-            <D3LineChartInterval
-              widthSize={node.clientWidth}
-              heightSize={node.clientHeight}
-              CallData={'DataTable'}
-              Color={'none'}
-              ChartShow={false}
-              TableShow={true}
-              Multiple={false}
-            />
-          </>
-        )
-        //ReactDOM.render(data, node)
-        // DrawGauidWidget(
-        //   panel[j].widget,
-        //   node,
-        //   useRecoilValue(RecoilAtoms.DataTableRowState),
-        //   useRecoilValue(RecoilAtoms.DataTableColumnsState)
-        // )
       }
     }
   }
@@ -358,7 +224,7 @@ export const MainDashboardInterval: React.FC = () => {
   }
 
   return (
-    <>
+    <RecoilRoot>
       <LayoutModal />
       <SaveConfirmModal />
       <WidgetModal />
@@ -387,7 +253,7 @@ export const MainDashboardInterval: React.FC = () => {
           </div>
         </div>
       </div>
-    </>
+    </RecoilRoot>
   )
 }
 export default MainDashboardInterval
