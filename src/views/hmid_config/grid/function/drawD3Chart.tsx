@@ -288,10 +288,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       let wsObj: any = new Object()
       const wsArr: any = []
       const multipleKey = ['openingPrice', 'highPrice', 'lowPrice']
-      // const resultObj: any = new Object()
-      // const resultArr: any = []
-
-      // console.log('[ call data type ] : ' + props.CallData)
 
       if (props.CallData === 'TradePrice') {
         wsObj.date = new Date(parseData.candleDateTimeKst)
@@ -319,13 +315,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
           wsArr.push(wsObj)
           wsObj = new Object()
         }
-
-        // for (const i in multipleKey) {
-        //   resultObj.name = multipleKey[i]
-        //   resultObj.value = wsArr[i]
-        //   resultArr.push(resultObj)
-        //   resultObj = new Object()
-        // }
       }
 
       if (props.CallData !== 'Opening & High & Low') {
@@ -338,9 +327,11 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     ws.current.onclose = function () {
       console.log('ws close... ')
 
-      setTimeout(function () {
+      const timeout = setTimeout(function () {
         getsocketChartData()
       }, 1000)
+
+      clearTimeout(timeout)
     }
   }
 
@@ -560,56 +551,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       .text(props.CallData)
       .style('font-size', '14px')
       .attr('alignment-baseline', 'middle')
-    // .append('text')
-    // .attr('x', width / 2)
-    // .attr('y', 0 - margin.top / 2)
-    // .attr('text-anchor', 'middle')
-    // .style('font-size', '16px')
-    // // .style("text-decoration", "underline")
-    // .text('Trade Price')
-
-    // Y axis label 추가
-
-    // Add brushing
-    /**
-     * 2023.06.08 주석 처리
-     */
-    // const brush: any = d3
-    //   .brushX() // Add the brush feature using the d3.brush function
-    //   .extent([
-    //     [0, 0],
-    //     [width, height],
-    //   ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-    //   .on('end', function (event, d) {
-    //     const extent: any = event.selection
-
-    //     // If no selection, back to initial coordinate. Otherwise, update X axis domain
-    //     if (!extent) {
-    //       if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)) // This allows to wait a little bit
-    //       x.domain([4, 8])
-    //     } else {
-    //       x.domain([x.invert(extent[0]), x.invert(extent[1])])
-    //       svg2.select('.brush').call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
-    //     }
-
-    //     // Update axis and line position
-    //     xAxis.transition().duration(1000).call(d3.axisBottom(x))
-    //     svg2
-    //       .select('.line')
-    //       .transition()
-    //       .duration(1000)
-    //       .attr(
-    //         'd',
-    //         d3
-    //           .line()
-    //           .x((d: any) => {
-    //             return x(d.date)
-    //           })
-    //           .y((d: any) => {
-    //             return y(d.value)
-    //           })
-    //       )
-    //   })
 
     // add the Line
     const valueLine: any = d3
@@ -632,40 +573,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       .attr('stroke', props.Color)
       .attr('stroke-width', 1.5)
       .attr('d', valueLine)
-    /**
-     * 2023.06.08 주석 처리
-     */
-    //svg2.append('g').attr('class', 'brush').attr('transform', 'translate(50,0)').call(brush)
-    //
-    // If user double click, reinitialize the chart
-    // svg2.on('dblclick', () => {
-    //   x.domain(
-    //     d3.extent(rtnData, (d: any) => {
-    //       return d.date
-    //     })
-    //   )
-    //   xAxis.transition().call(d3.axisBottom(x))
-    //   svg2
-    //     .select('.line')
-    //     .transition()
-    //     .attr(
-    //       'd',
-    //       d3
-    //         .line()
-    //         .x((d: any) => {
-    //           return x(d.date)
-    //         })
-    //         .y((d: any) => {
-    //           return y(d.value)
-    //         })
-    //     )
-    // })
-
-    // // A function that set idleTimeOut to null
-    // let idleTimeout: any
-    // function idled() {
-    //   idleTimeout = null
-    // }
   }
 
   const DrawD3MultipleSeriesLineChart = (data: any) => {
@@ -960,7 +867,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
   }
 
   //d3 scatter plot 테스트
-  //zoom 진행 중
   const getTestChartData = async () => {
     const data: any = await axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData3?', ['Tag-34'])
@@ -1022,77 +928,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
 
     // Add Y axis
     const yAxis = svg.append('g').call(scaleYaxis)
-
-    // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
-    // const zoom = d3
-    //   .zoom()
-    //   //.scaleExtent([1, 1]) // This control how much you can unzoom (x0.5) and zoom (x20)
-    //   //.translateExtent([[-100, -100], [height + 100, width + 100]])
-    //   .on('zoom', function (event, d) {
-    //     newX = event.transform.rescaleX(x)
-    //     newY = event.transform.rescaleX(y)
-
-    //     xAxis.call(d3.axisBottom(newX))
-    //     yAxis.call(d3.axisBottom(newY))
-
-    //     // update circle position
-    //     svg
-    //       .selectAll('circle')
-    //       .attr('cx', function (d: any) {
-    //         return newX(d.date)
-    //       })
-    //       .attr('cy', function (d: any) {
-    //         return newY(d.value)
-    //       })
-    //   })
-
-    // // Add brushing
-    // const brush: any = d3
-    //   .brushX() // Add the brush feature using the d3.brush function
-    //   .extent([
-    //     [0, 0],
-    //     [width, height],
-    //   ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-    //   .on('end', function (event, d) {
-    //     const extent: any = event.selection
-
-    //     // If no selection, back to initial coordinate. Otherwise, update X axis domain
-    //     if (!extent) {
-    //       if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)) // This allows to wait a little bit
-    //       x.domain([4, 8])
-    //       y.domain([0, 9])
-    //       // x.domain(
-    //       //   d3.extent(data, (d: any) => {
-    //       //     return d.date
-    //       //   })
-    //       // ).nice()
-    //       // y.domain(
-    //       //   d3.extent(data, (d: any) => {
-    //       //     return d.value
-    //       //   })
-    //       // ).nice()
-    //     } else {
-    //       // x.domain([x.invert(extent[0][0]), x.invert(extent[1][0])])
-    //       // y.domain([y.invert(extent[1][1]), y.invert(extent[0][1])])
-    //       svg.select('.brush').call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
-    //     }
-
-    //     // Update axis and dot position
-    //     xAxis.transition().duration(1000).call(d3.axisBottom(x))
-    //     yAxis.transition().duration(1000).call(d3.axisBottom(y))
-
-    //     svg
-    //       .selectAll('circle')
-    //       // .call(zoom)
-    //       .transition()
-    //       .duration(1000)
-    //       .attr('cx', (d: any) => {
-    //         return x(d.date)
-    //       })
-    //       .attr('cy', (d: any) => {
-    //         return y(d.value)
-    //       })
-    //   })
 
     // Add dots
     const g = svg.append('g')

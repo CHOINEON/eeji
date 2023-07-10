@@ -13,6 +13,7 @@ import ModelMaintenance from 'views/ModelMaintenance'
 import DataAnalysis from 'views/DataAnalysis'
 
 import HmidInterval from 'views/hmid_interval'
+import HmidIntervalD3 from 'views/hmid-interval-d3fc'
 import AIModeling from 'views/AIModeling'
 
 // Auth Imports
@@ -75,6 +76,13 @@ const routes = [
     path: '/hmid-interval',
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: HmidInterval,
+  },
+  {
+    name: 'MainDashboard - d3fc',
+    layout: '/admin',
+    path: '/hmid-d3fc',
+    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+    component: HmidIntervalD3,
   },
   {
     name: 'HMID Configuration',

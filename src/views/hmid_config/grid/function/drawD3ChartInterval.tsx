@@ -86,7 +86,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
         DrawD3LineChartPrev()
       }
     } else {
-      console.log('ws data lengt is not zoro !!!!')
       DataFactory(IntervalData)
     }
   }, [props.widthSize, props.heightSize])
@@ -265,9 +264,11 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       console.log('[ date change use effect ! ]')
       console.log(lastDate)
 
-      setTimeout(function () {
+      const timeout = setTimeout(function () {
         getIntervalData(lastDate)
       }, 60000)
+
+      clearTimeout(timeout)
     }
   }, [lastDate])
 
@@ -644,8 +645,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     if (props.CallData !== 'TradePrice') {
       rtnData = data
       rtnData.splice(rtnData.length - 300, rtnData.length - 100)
-      // console.log('------------------------------')
-      // console.log(rtnData)
     } else if (props.CallData !== 'TradePrice' && props.CallData !== 'Opening & High & Low') {
       rtnData = data
     }
@@ -773,47 +772,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       .style('font-size', '14px')
       .attr('alignment-baseline', 'middle')
 
-    // Add brushing
-    /**
-     * 2023.06.08 주석 처리
-     */
-    // const brush: any = d3
-    //   .brushX() // Add the brush feature using the d3.brush function
-    //   .extent([
-    //     [0, 0],
-    //     [width, height],
-    //   ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-    //   .on('end', function (event, d) {
-    //     const extent: any = event.selection
-
-    //     // If no selection, back to initial coordinate. Otherwise, update X axis domain
-    //     if (!extent) {
-    //       if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)) // This allows to wait a little bit
-    //       x.domain([4, 8])
-    //     } else {
-    //       x.domain([x.invert(extent[0]), x.invert(extent[1])])
-    //       svg2.select('.brush').call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
-    //     }
-
-    //     // Update axis and line position
-    //     xAxis.transition().duration(1000).call(d3.axisBottom(x))
-    //     svg2
-    //       .select('.line')
-    //       .transition()
-    //       .duration(1000)
-    //       .attr(
-    //         'd',
-    //         d3
-    //           .line()
-    //           .x((d: any) => {
-    //             return x(d.date)
-    //           })
-    //           .y((d: any) => {
-    //             return y(d.value)
-    //           })
-    //       )
-    //   })
-
     // add the Line
     const valueLine: any = d3
       .line()
@@ -835,41 +793,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       .attr('stroke', props.Color)
       .attr('stroke-width', 1.5)
       .attr('d', valueLine)
-
-    /**
-     * 2023.06.08 주석 처리
-     */
-    //svg2.append('g').attr('class', 'brush').attr('transform', 'translate(50,0)').call(brush)
-    //
-    // If user double click, reinitialize the chart
-    // svg2.on('dblclick', () => {
-    //   x.domain(
-    //     d3.extent(rtnData, (d: any) => {
-    //       return d.date
-    //     })
-    //   )
-    //   xAxis.transition().call(d3.axisBottom(x))
-    //   svg2
-    //     .select('.line')
-    //     .transition()
-    //     .attr(
-    //       'd',
-    //       d3
-    //         .line()
-    //         .x((d: any) => {
-    //           return x(d.date)
-    //         })
-    //         .y((d: any) => {
-    //           return y(d.value)
-    //         })
-    //     )
-    // })
-
-    // // A function that set idleTimeOut to null
-    // let idleTimeout: any
-    // function idled() {
-    //   idleTimeout = null
-    // }
   }
 
   //d3 line chart

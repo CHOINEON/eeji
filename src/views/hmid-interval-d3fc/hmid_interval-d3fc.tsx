@@ -1,8 +1,8 @@
 /**
- * INFINITE OPTIMAL
+ * INFINITE OPTIMAL (D3FC Test)
  * 메뉴 : HMI Designer
- * 시작 날짜 : 2023-03-10
- * 최종 수정 날짜 : 2023-07-03
+ * 시작 날짜 : 2023-07-10
+ * 최종 수정 날짜 : 2023-07-10
  * 개발자 : 박윤희 (BAK YUN HEE)
  */
 
@@ -33,8 +33,8 @@ import { NowDate } from '../hmid_config/recoil/base/atoms'
 import D3LineChartInterval from '../hmid_config/grid/function/drawD3ChartIntervalTestDw'
 import D3LineChartIntervalBT from '../hmid_config/grid/function/drawD3ChartIntervalTestDwBT'
 import D3LineChart from '../hmid_config/grid/function/drawD3Chart'
-import IntervalTestBiance from '../hmid_config/grid/function/drawD3ChartIntervalTestBiance'
-import IntervalTestBianceTrade from 'views/hmid_config/grid/drawD3ChartIntervalTestBianceTrade'
+//import IntervalTestBiance from '../hmid_config/grid/function/drawD3ChartIntervalTestBiance'
+//import IntervalTestBianceTrade from 'views/hmid_config/grid/drawD3ChartIntervalTestBianceTrade'
 import DrawD3FCChart from 'views/hmid_config/grid/function/drawD3FCChart'
 
 const BoxTitle = styled.div`
@@ -59,7 +59,7 @@ const CurrentIcon = styled.div`
   color: rgb(67, 56, 247);
 `
 
-export const MainDashboardInterval: React.FC = () => {
+export const MainDashboardIntervalD3FC: React.FC = () => {
   const [panelIdx, setPanelIdx] = useRecoilState(RecoilAtoms.PanelIdxState)
 
   const [NowDateText, setNowDateText] = useRecoilState(NowDate)
@@ -106,8 +106,6 @@ export const MainDashboardInterval: React.FC = () => {
   /**
    * 2023-05-25 박윤희
    * panelIdx를 확인해서 새로 만드는 대시보드인지, 기존에 있던 대시보드인지
-   * 현재는 d3차트로 연결되어있고
-   * pie, bar, line은 사용하지 않음
    * 확인하는 용도
    */
   React.useEffect(() => {
@@ -144,27 +142,43 @@ export const MainDashboardInterval: React.FC = () => {
       if (panel[j].widget === 'Line1') {
         const data = (
           <>
-            <BoxTitle>Binance Trade 50ms</BoxTitle>
-            <IntervalTestBianceTrade widthSize={node.clientWidth} heightSize={node.clientHeight} />
+            <BoxTitle>Binance Trade 50ms D3FC</BoxTitle>
+            {/* <D3LineChartInterval
+              widthSize={node.clientWidth}
+              heightSize={node.clientHeight}
+              CallData={'TestData'}
+              Color={'steelblue'}
+              ChartShow={true}
+              TableShow={false}
+              Multiple={false}
+            /> */}
+            {/* <IntervalTestBianceTrade widthSize={node.clientWidth} heightSize={node.clientHeight} /> */}
+            <DrawD3FCChart />
           </>
         )
         ReactDOM.render(data, node)
       } else if (panel[j].widget === 'Line2') {
         const data = (
           <>
-            <BoxTitle>Binance kline 1s</BoxTitle>
-            <IntervalTestBiance widthSize={node.clientWidth} heightSize={node.clientHeight} />
+            <BoxTitle>Binance kline 1s d3FC</BoxTitle>
+            {/* <D3LineChartIntervalBT
+              widthSize={node.clientWidth}
+              heightSize={node.clientHeight}
+              CallData={'Bottom'}
+              Color={'green'}
+              ChartShow={true}
+              TableShow={false}
+              Multiple={false}
+            /> */}
+            <DrawD3FCChart />
+            {/* <IntervalTestBiance widthSize={node.clientWidth} heightSize={node.clientHeight} /> */}
           </>
         )
         ReactDOM.render(data, node)
       } else if (panel[j].widget === 'Line3') {
-        const data = (
-          <>
-            <DrawD3FCChart />
-          </>
-        )
+        const data = <>{/* <DrawD3FCChart /> */}</>
 
-        ReactDOM.render(data, node)
+        // ReactDOM.render(data, node)
       }
     }
   }
@@ -208,6 +222,9 @@ export const MainDashboardInterval: React.FC = () => {
     }
     dashboardObj.panels = updatePanels
 
+    // window.localStorage.setItem('updatePanels', JSON.stringify(updatePanels))
+    // console.log(window.localStorage.getItem('updatePanels'))
+
     return dashboardObj.panels
   }
 
@@ -244,4 +261,4 @@ export const MainDashboardInterval: React.FC = () => {
     </RecoilRoot>
   )
 }
-export default MainDashboardInterval
+export default MainDashboardIntervalD3FC

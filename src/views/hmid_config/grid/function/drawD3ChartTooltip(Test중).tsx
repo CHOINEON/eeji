@@ -256,9 +256,11 @@ export const D3LineChartTooltip: React.FC<LineChartPorps> = (props) => {
     ws.current.onclose = function () {
       console.log('ws close... ')
 
-      setTimeout(function () {
+      const timeout = setTimeout(function () {
         getsocketChartData()
       }, 1000)
+
+      clearTimeout(timeout)
     }
   }
 
@@ -472,15 +474,7 @@ export const D3LineChartTooltip: React.FC<LineChartPorps> = (props) => {
       .text(props.CallData)
       .style('font-size', '14px')
       .attr('alignment-baseline', 'middle')
-    // .append('text')
-    // .attr('x', width / 2)
-    // .attr('y', 0 - margin.top / 2)
-    // .attr('text-anchor', 'middle')
-    // .style('font-size', '16px')
-    // // .style("text-decoration", "underline")
-    // .text('Trade Price')
 
-    // Y axis label 추가
     // Add brushing
     /**
      * 2023.06.08 주석 처리

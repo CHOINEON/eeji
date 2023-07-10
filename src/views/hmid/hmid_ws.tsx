@@ -104,8 +104,7 @@ export const MainDashboardWS: React.FC = () => {
   const cellSpacing: number[] = [5, 5]
 
   /**
-   * 2023-05-25 박윤희
-   * 코드 필요성 확인
+   * 2panelIndex Effect
    */
   React.useEffect(() => {
     const dashboardData = initializeTemplate(null, dashboardObj)

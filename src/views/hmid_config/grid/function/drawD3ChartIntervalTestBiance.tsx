@@ -51,9 +51,9 @@ export const IntervalTestBiance: React.FC<D3Binance1s> = (props) => {
       console.log('ws connection success')
     }
     ws.current.onmessage = function (event: any) {
-      //console.log('[ ws Return Data ]')
-      //console.log(JSON.parse(event.data))
-      //console.log(JSON.stringify(event.data))
+      console.log('[ ws Return Data ]')
+      console.log(JSON.parse(event.data))
+      console.log(JSON.stringify(event.data))
 
       const multipleKey = ['Low', 'High']
 
@@ -93,9 +93,10 @@ export const IntervalTestBiance: React.FC<D3Binance1s> = (props) => {
     ws.current.onclose = function () {
       console.log('ws close')
 
-      setTimeout(function () {
+      const timeout = setTimeout(function () {
         getsocketChartData()
       }, 1000)
+      clearTimeout(timeout)
     }
   }
 
@@ -145,10 +146,10 @@ export const IntervalTestBiance: React.FC<D3Binance1s> = (props) => {
       .domain([
         d3.min(data, (d: any) => {
           return +d.value
-        }) - 0.01,
+        }) - 0.001,
         d3.max(data, (d: any) => {
           return +d.value
-        }) + 0.01,
+        }) + 0.001,
       ])
       .range([height, 0])
 
