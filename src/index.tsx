@@ -7,7 +7,7 @@ import AdminLayout from './layouts/admin'
 import Login from './layouts/login/login'
 import { ChakraProvider } from '@chakra-ui/react'
 import theme from './theme/theme'
-import D3LineChart from 'views/hmid_config/grid/function/drawD3Chart'
+import D3LineChart from 'views/hmid_config/grid/TestComponent/drawD3Chart'
 // import PredefinedLayouts from 'views/hmid_config/grid/GridLayoutTest'
 import { RecoilRoot } from 'recoil'
 

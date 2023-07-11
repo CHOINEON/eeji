@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import * as Chakra from '@chakra-ui/react'
 import axios from 'axios'
 import './style.css'
-import { TestBtData } from './test_data_dongwon'
+import { TestBtData } from './TestDataDW/test_data_dongwon'
 
 const Wrapper = styled.svg<{ ChartShow: boolean }>`
   margin: 0 1vw;

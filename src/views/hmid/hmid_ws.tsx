@@ -28,8 +28,8 @@ import { useRecoilState } from 'recoil'
 import * as RecoilAtoms from '../hmid_config/recoil/config/atoms'
 import { NowDate } from '../hmid_config/recoil/base/atoms'
 
-import D3LineChart from '../hmid_config/grid/function/drawD3Chart'
-import D3LineChartTooltip from '../hmid_config/grid/function/drawD3ChartTooltip(Test중)'
+import D3LineChart from '../hmid_config/grid/TestComponent/drawD3Chart'
+import D3LineChartTooltip from '../hmid_config/grid/TestComponent/drawD3ChartTooltip(Test중)'
 
 const BoxTitle = styled.div`
   position: absolute;
@@ -261,33 +261,6 @@ export const MainDashboardWS: React.FC = () => {
         // const result: any = 가공함수.ChangeBarDataArr(useRecoilValue(RecoilAtoms.BarChartDataOptionState))
         // result.then(function (args: any) {
         //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.BarChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'Pie') {
-        //setWidgetInfo('Pie')
-        // const result: any = 가공함수.ChangePieDataArr(useRecoilValue(RecoilAtoms.PieChartLayoutOptionState))
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.PieChartLayoutOptionState))
-        // })
-        // result.then(function (args: any) {
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.PieChartLayoutOptionState))
-        // })
-      } else if (panel[j].widget === 'TimeSeries') {
-        //setWidgetInfo('Time Series')
-        // const result: any = ChangeTimeSeriesDataArr()
-        // result.then(function (args: any) {
-        //   setTimeSeriesDataOption(args)
-        //   const config = {
-        //     displaylogo: true,
-        //     displayModeBar: true,
-        //   }
-        //   const data = <Plot data={args} layout={TimeSeriesLayoutOption} config={config} />
-        //   const element = React.createElement(data.type, {
-        //     data: data.props.data,
-        //     layout: data.props.layout,
-        //     config: data.props.config,
-        //   })
-        //   ReactDOM.render(element, node)
-        //   DrawGauidWidget(panel[j].widget, node, args, useRecoilValue(RecoilAtoms.TimeSeriesChartLayoutOptionState))
         // })
       } else if (panel[j].widget === 'Table') {
         const data = (

@@ -10,8 +10,8 @@ import * as Chakra from '@chakra-ui/react'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
 import './style.css'
-import { TestArchData } from './test_data_dongwon'
-import TableData from './table_data_dongwon'
+import { TestArchData } from './TestDataDW/test_data_dongwon'
+import TableData from './TestDataDW/table_data_dongwon'
 
 const Wrapper = styled.svg<{ ChartShow: boolean }>`
   margin: 0 1vw;

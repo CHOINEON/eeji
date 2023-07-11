@@ -30,7 +30,6 @@ export interface LineChartPorps {
 }
 
 export const D3LineChart: React.FC<LineChartPorps> = (props) => {
-  const svgRef = React.useRef()
   const svgRef2 = React.useRef()
   const svgContainer = React.useRef(null)
 
@@ -72,6 +71,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
   const [widthState, setWidth] = React.useState<any>(props.widthSize)
   const [heightState, setHeight] = React.useState<any>(props.heightSize)
 
+  //websocket 주소
   // const webSocketUrl = `ws://demo.ineeji.com/ws`
   const webSocketUrl = `ws://192.168.1.27:8000/api/ws`
   const ws = React.useRef(null)
@@ -82,19 +82,16 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
   }, [])
 
   React.useEffect(() => {
-    console.log('[ Props Width, Height ] : ', props.widthSize + ' , ' + props.heightSize)
+    //console.log('[ Props Width, Height ] : ', props.widthSize + ' , ' + props.heightSize)
     setWidth(props.widthSize)
     setHeight(props.heightSize)
     if (WsData.length === 0) {
-      console.log('ws data lengt zero !!')
-      console.log(WsData)
       if (props.CallData === 'TradePrice') {
         getChartData()
       } else {
         DrawD3LineChartPrev()
       }
     } else {
-      console.log('ws data lengt is not zoro !!!!')
       DataFactory(WsData)
     }
   }, [props.widthSize, props.heightSize])
@@ -109,7 +106,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         setTestData(test)
       } else if (props.CallData === 'OpeningPrice') {
         let openingTest: any = []
-        //console.log(OpeningPricePrevData)
         if (OpeningPricePrevData !== undefined) {
           if (OpeningPricePrevData.length !== 0) {
             openingTest = [...OpeningPricePrevData]
@@ -127,7 +123,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         }
       } else if (props.CallData === 'LowPrice') {
         let lowTest: any = []
-        //console.log(LowPricePrevData)
         if (LowPricePrevData !== undefined) {
           if (LowPricePrevData.length !== 0) {
             lowTest = [...LowPricePrevData]
@@ -145,7 +140,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         }
       } else if (props.CallData === 'HighPrice') {
         let highTest: any = []
-        // console.log(HighPricePrevData)
         if (HighPricePrevData !== undefined) {
           if (HighPricePrevData.length !== 0) {
             highTest = [...HighPricePrevData]
@@ -163,7 +157,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         }
       } else if (props.CallData === 'DataTable') {
         let TableRowTest: any = []
-        //console.log(WSTableRowDataPrev)
         if (WSTableRowDataPrev !== undefined) {
           if (WSTableRowDataPrev.length !== 0) {
             TableRowTest = [...WSTableRowDataPrev]
@@ -260,16 +253,14 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     setWSTableRowDataClean(newArray)
   }, [WSTableRowData])
 
-  const SocketChangeData = (t: any) => {
+  const SocketChangeData = (chgData: any) => {
     if (props.CallData !== 'Opening & High & Low') {
-      if (t[0].date !== undefined && t[0].value !== undefined) {
-        DrawD3LineChart(t)
+      if (chgData[0].date !== undefined && chgData[0].value !== undefined) {
+        DrawD3LineChart(chgData)
       }
     } else {
-      if (t[0].name !== undefined) {
-        console.log('draw chart data')
-        console.log(t)
-        DrawD3MultipleSeriesLineChart(t)
+      if (chgData[0].name !== undefined) {
+        DrawD3MultipleSeriesLineChart(chgData)
       }
     }
   }
@@ -281,8 +272,8 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       console.log('ws connection !!!! ')
     }
     ws.current.onmessage = function (event: any) {
-      console.log('[ ws Return Data ]')
-      console.log(JSON.parse(event.data))
+      // console.log('[ ws Return Data ]')
+      // console.log(JSON.parse(event.data))
 
       const parseData = JSON.parse(event.data)[0]
       let wsObj: any = new Object()
@@ -335,6 +326,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     }
   }
 
+  //data 그리기 이전에 grid draw
   const DrawD3LineChartPrev = () => {
     const svg2 = d3.select(svgRef2.current)
 
@@ -389,12 +381,13 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
 
     const y: any = d3.scaleLinear().range([height, 0])
 
-    const xAxis = svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x))
+    svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x))
     svg2.append('g').attr('transform', `translate(40,3)`).call(d3.axisLeft(y))
     svg2.append('g').call(xGrid)
     svg2.append('g').call(yGrid)
   }
 
+  //기본 d3LineChart
   const DrawD3LineChart = (data: any) => {
     const svg2 = d3.select(svgRef2.current)
     //날짜일 경우 : %Y-%m-%d
@@ -407,8 +400,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     if (props.CallData !== 'TradePrice') {
       rtnData = data
       rtnData.splice(rtnData.length - 300, rtnData.length - 100)
-      // console.log('------------------------------')
-      // console.log(rtnData)
     } else if (props.CallData !== 'TradePrice' && props.CallData !== 'Opening & High & Low') {
       rtnData = data
     }
@@ -429,11 +420,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       })
     }
 
-    // console.log('[ chart draw get Data ]')
-    // console.log(data)
-    // console.log('[ Chart Draw Data ]')
-    // console.log(data)
-
     const Value = rtnData.map((v: any) => {
       return v.value
     })
@@ -442,10 +428,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
     const min = Math.min.apply(null, Value)
 
     const margin = { top: 20, right: 50, bottom: 50, left: 70 }
-    // width = props.widthSize - margin.left - margin.right,
-    // height = props.heightSize - margin.top - margin.bottom
-    // width = widthState - margin.left - margin.right,
-    // height = heightState - margin.top - margin.bottom
     let width: any = 0,
       height: any = 0
     if (widthState !== undefined && heightState !== undefined) {
@@ -503,13 +485,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         .attr('x2', width + margin.left - 20)
         .attr('y1', (d: any) => y(d - 0.1))
         .attr('y2', (d: any) => y(d - 0.1))
-    //기본 y축 데이터 넣을 때
-    // y.domain([
-    //   0,
-    //   d3.max(data, (d: any) => {
-    //     return d.value
-    //   }),
-    // ])
 
     let xAxis: any
 
@@ -575,6 +550,7 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       .attr('d', valueLine)
   }
 
+  //multiseries chart
   const DrawD3MultipleSeriesLineChart = (data: any) => {
     if (props.CallData === 'Opening & High & Low') {
       const svg2 = d3.select(svgRef2.current)
@@ -616,11 +592,11 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
         .attr('stroke-width', 1.5)
         .attr('fill', 'none')
 
+      // data group화
       const sumstat = Array.from(
         d3.group(data, (d: any) => d.name),
         ([key, values]) => ({ key, values })
       )
-      console.log('ArrayData :', sumstat)
 
       // Add X axis --> it is a date format
       const x: any = d3.scaleTime().range([0, width])
@@ -633,12 +609,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       // Add Y axis
       const y: any = d3
         .scaleLinear()
-        // .domain([
-        //   0,
-        //   d3.max(data, function (d: any) {
-        //     return +d
-        //   }),
-        // ])
         .domain([min - 20, max + 20])
         .range([height, 0])
 
@@ -740,7 +710,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
 
       const color: any = d3.scaleOrdinal().domain(res).range(['orange', 'purple', 'green'])
       // Draw the line
-      // console.log(sumstat)
       svg2
         .append('g')
         .attr('clip-path', 'url(#clip)')
@@ -775,9 +744,6 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       // .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData3?', ['Tag-34'])
       .get(process.env.REACT_APP_API_SERVER_URL + '/api/websocket/data')
       .then((response) => {
-        // console.log('[ Chart response data ] : ')
-        // console.log(response.data)
-
         if (props.CallData === 'TradePrice') {
           setPrevChartData(response.data)
           DrawD3LineChart(response.data)
@@ -802,209 +768,9 @@ export const D3LineChart: React.FC<LineChartPorps> = (props) => {
       })
   }
 
-  //csv 파일 d3 테스트
-  const getTestChartData2 = async () => {
-    const svg = d3.select(svgRef.current)
-
-    const data = await d3.csv(
-      'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv'
-    )
-
-    const parseTime = d3.timeParse('%Y-%m-%d')
-    data.forEach((d: any) => {
-      d.date = parseTime(d.date)
-      d.value = +d.value
-    })
-
-    // set the dimensions and margins of the graph
-    const margin = { top: 20, right: 20, bottom: 50, left: 70 },
-      width = 960 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom
-    // append the svg object to the body of the page
-    svg
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', `translate(${margin.left}, ${margin.top})`)
-
-    // Add X axis and Y axis
-    const x: any = d3.scaleTime().range([0, width])
-    const y: any = d3.scaleLinear().range([height, 0])
-    x.domain(
-      d3.extent(data, (d: any) => {
-        return d.date
-      })
-    )
-    y.domain([
-      0,
-      d3.max(data, (d: any) => {
-        return d.value
-      }),
-    ])
-    svg.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x))
-    svg.append('g').attr('transform', `translate(40, 0)`).call(d3.axisLeft(y))
-
-    // add the Line
-
-    const valueLine: any = d3
-      .line()
-      .x((d: any) => {
-        return x(d.date)
-      })
-      .y((d: any) => {
-        return y(d.value)
-      })
-
-    svg
-      .append('path')
-      .data([data])
-      .attr('transform', 'translate(50,0)')
-      .attr('class', 'line')
-      .attr('fill', 'none')
-      .attr('stroke', 'steelblue')
-      .attr('stroke-width', 1.5)
-      .attr('d', valueLine)
-  }
-
-  //d3 scatter plot 테스트
-  const getTestChartData = async () => {
-    const data: any = await axios
-      .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData3?', ['Tag-34'])
-      .then((response) => {
-        // console.log('[ Chart response data ] : ')
-        // console.log(response.data)
-        return response.data[0]
-
-        // setData(response.data[0].y)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-
-    const parseTime = d3.timeFormat('%Y-%m-%d')
-    const parseDate = d3.timeParse('%Y-%m-%d')
-
-    data.forEach((d: any) => {
-      // d.date = parseDate(parseTime(new Date(d.x)))
-      d.date = new Date(d.x)
-      d.value = d.y
-      delete d.x
-      delete d.y
-    })
-
-    console.log(data)
-
-    const Value = data.map((v: any) => {
-      return v.value
-    })
-
-    const max = Math.max.apply(null, Value)
-    const min = Math.min.apply(null, Value)
-
-    const svg = d3.select(svgRef.current)
-
-    // set the dimensions and margins of the graph
-    const margin = { top: 20, right: 20, bottom: 50, left: 70 },
-      width = 960 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom
-
-    svg
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-
-    const x: any = d3.scaleTime().range([0, width])
-    const y: any = d3.scaleLinear().domain([min, max]).range([height, 0])
-
-    const scaleXaxis = d3.axisBottom(x)
-    const scaleYaxis = d3.axisLeft(y)
-
-    // Add X axis
-    const xAxis = svg
-      .append('g')
-      .attr('transform', 'translate(0,' + height + ')')
-      .call(scaleXaxis)
-
-    // Add Y axis
-    const yAxis = svg.append('g').call(scaleYaxis)
-
-    // Add dots
-    const g = svg.append('g')
-
-    const points = g
-      .selectAll('dot')
-      .data(data)
-      .attr('class', 'circle')
-      .enter()
-      .append('circle')
-      .attr('cx', (d: any) => {
-        return x(d.date)
-      })
-      .attr('cy', (d: any) => {
-        return y(d.value)
-      })
-      .attr('r', 1.5)
-      .style('fill', '#69b3a294')
-
-    const zoom = d3
-      .zoom()
-      .scaleExtent([0.5, 32])
-      // .translateExtent([
-      //   [0, 0],
-      //   [width, height],
-      // ])
-      .on('zoom', (e) => {
-        const zx = e.transform.rescaleX(x).interpolate(d3.interpolateRound)
-        const zy = e.transform.rescaleY(y).interpolate(d3.interpolateRound)
-        g.attr('transform', e.transform).attr('stroke-width', 5 / e.transform.k)
-
-        xAxis.call(scaleXaxis.scale(zx))
-        yAxis.call(scaleYaxis.scale(zy))
-
-        points
-          .data(data)
-          .attr('cx', (d: any) => {
-            return x(d.date)
-          })
-          .attr('cy', (d: any) => {
-            return y(d.value)
-          })
-        // g.style('stroke-width', 3 / Math.sqrt(transform.k))
-        // points.attr('r', 3 / Math.sqrt(transform.k))
-      })
-
-    svg.call(zoom)
-
-    // svg.append('g').attr('class', 'brush').call(brush)
-
-    // If user double click, reinitialize the chart
-    svg.on('dblclick', () => {
-      // x.domain([latestMth, latestMin])
-      xAxis.transition().call(d3.axisBottom(x))
-      svg
-        .selectAll('dot')
-        .transition()
-        .attr('cx', (d: any) => {
-          return x(d.date)
-        })
-        .attr('cy', (d: any) => {
-          return y(d.value)
-        })
-    })
-
-    // A function that set idleTimeOut to null
-    // let idleTimeout: any
-    // function idled() {
-    //   idleTimeout = null
-    // }
-  }
-
   return (
     <>
       <Chakra.Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
-        {/*d3 line chart*/}
-        {/* <div>Websocket</div> */}
         <div ref={svgContainer}>
           <Wrapper ref={svgRef2} ChartShow={props.ChartShow} />
           <div id="tooltip" className="tooltip">

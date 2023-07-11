@@ -30,12 +30,12 @@ import { useRecoilState, RecoilRoot } from 'recoil'
 import * as RecoilAtoms from '../hmid_config/recoil/config/atoms'
 import { NowDate } from '../hmid_config/recoil/base/atoms'
 
-import D3LineChartInterval from '../hmid_config/grid/function/drawD3ChartIntervalTestDw'
-import D3LineChartIntervalBT from '../hmid_config/grid/function/drawD3ChartIntervalTestDwBT'
-import D3LineChart from '../hmid_config/grid/function/drawD3Chart'
-import IntervalTestBiance from '../hmid_config/grid/function/drawD3ChartIntervalTestBiance'
+import D3LineChartInterval from '../hmid_config/grid/drawD3ChartIntervalTestDw'
+import D3LineChartIntervalBT from '../hmid_config/grid/drawD3ChartIntervalTestDwBT'
+import D3LineChart from '../hmid_config/grid/TestComponent/drawD3Chart'
+import IntervalTestBiance from '../hmid_config/grid/drawD3ChartIntervalTestBiance'
 import IntervalTestBianceTrade from 'views/hmid_config/grid/drawD3ChartIntervalTestBianceTrade'
-import DrawD3FCChart from 'views/hmid_config/grid/function/drawD3FCChart'
+import DrawD3FCChart from 'views/hmid_config/grid/TestComponent/drawD3FCChart'
 
 const BoxTitle = styled.div`
   position: absolute;

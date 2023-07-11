@@ -334,13 +334,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       let wsObj: any = new Object()
       const wsArr: any = []
       const multipleKey = ['openingPrice', 'highPrice', 'lowPrice']
-      console.log(props.CallData)
-
-      // wsObj.y = parseData[0].tradePrice
-      // wsObj.x = parseData[0].candleDateTimeKst
-
-      // ItObj.date = new Date(response.data.x)
-      // ItObj.value = response.data.y
 
       if (props.CallData === 'TradePrice') {
         wsObj.date = new Date(parseData.candleDateTimeKst)

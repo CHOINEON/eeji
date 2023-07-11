@@ -36,8 +36,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import * as RecoilAtoms from '../recoil/config/atoms'
 import { LayoutTitle, NowDate } from '../recoil/base/atoms'
 
-import DrawD3FCChart from './function/drawD3FCChart'
-import D3ChartDefaultGrid from './function/drawD3ChartDefaultGrid'
+import D3ChartDefaultGrid from './TestComponent/drawD3ChartDefaultGrid'
 import D3LineChart from '../../hmid/components/d3/D3LineChart'
 import D3ScatterPlotChart from '../../hmid/components/d3/D3ScatterPlotChart'
 

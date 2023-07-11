@@ -26,27 +26,6 @@ const routes = [
     icon: <Icon as={BsHammer} width="20px" height="20px" color="inherit" />,
     component: DataAnalysis,
   },
-  // {
-  //   name: 'Chart Test',
-  //   layout: '/admin',
-  //   path: '/ai-modeling',
-  //   icon: <Icon as={BsHammer} width="20px" height="20px" color="inherit" />,
-  //   component: AIModeling,
-  // },
-  // {
-  //   name: 'AI Plant Modeling',
-  //   layout: '/admin',
-  //   path: '/ai-plant-modeling',
-  //   icon: <Icon as={FaHourglassHalf} width="20px" height="20px" color="inherit" />,
-  //   component: AIPlantModeling,
-  // },
-  // {
-  //   name: 'Data Analysis',
-  //   layout: '/admin',
-  //   path: '/data-analysis',
-  //   icon: <Icon as={MdDatasetLinked} width="20px" height="20px" color="inherit" />,
-  //   component: FoundationStructureAnalysis,
-  // },
   //잠시 주석
   // {
   //   name: 'HMID',
