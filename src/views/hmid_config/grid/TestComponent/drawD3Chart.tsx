@@ -29,12 +29,12 @@ export interface LineChartPorps {
   Multiple: boolean
 }
 
-export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
-  const svgRef = React.useRef()
+export const D3LineChart: React.FC<LineChartPorps> = (props) => {
+  const svgRef2 = React.useRef()
   const svgContainer = React.useRef(null)
 
-  const [IntervalData, setIntervalData] = React.useState<any>([])
-  const [lastDate, setLastDate] = React.useState<any>()
+  const [WsData, setWsData] = React.useState<any>([])
+  const [reWsData, setReWsData] = React.useState<any>([])
 
   //trade
   const [PrevChartData, setPrevChartData] = React.useState<any>([])
@@ -71,37 +71,40 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
   const [widthState, setWidth] = React.useState<any>(props.widthSize)
   const [heightState, setHeight] = React.useState<any>(props.heightSize)
 
+  //websocket 주소
+  // const webSocketUrl = `ws://demo.ineeji.com/ws`
+  const webSocketUrl = `ws://192.168.1.27:8000/api/ws`
+  const ws = React.useRef(null)
+
   React.useEffect(() => {
     getChartData()
+    getsocketChartData()
   }, [])
 
   React.useEffect(() => {
-    console.log('[ Props Width, Height ] : ', props.widthSize + ' , ' + props.heightSize)
+    //console.log('[ Props Width, Height ] : ', props.widthSize + ' , ' + props.heightSize)
     setWidth(props.widthSize)
     setHeight(props.heightSize)
-    if (IntervalData.length === 0) {
+    if (WsData.length === 0) {
       if (props.CallData === 'TradePrice') {
         getChartData()
       } else {
         DrawD3LineChartPrev()
       }
     } else {
-      console.log('ws data lengt is not zoro !!!!')
-      DataFactory(IntervalData)
+      DataFactory(WsData)
     }
   }, [props.widthSize, props.heightSize])
 
-  const DataFactory = (IntervalData: any) => {
-    if (IntervalData.length !== 0) {
+  const DataFactory = (WsData: any) => {
+    if (WsData.length !== 0) {
       if (props.CallData === 'TradePrice') {
-        changeDate(IntervalData.date)
         const test = [...PrevChartData]
-        test.unshift(IntervalData)
+        test.unshift(WsData)
         test.pop()
         setPrevChartData(test)
         setTestData(test)
       } else if (props.CallData === 'OpeningPrice') {
-        changeDate(IntervalData.date)
         let openingTest: any = []
         if (OpeningPricePrevData !== undefined) {
           if (OpeningPricePrevData.length !== 0) {
@@ -109,17 +112,16 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
           }
         }
         if (openingTest.length < 10) {
-          openingTest.unshift(IntervalData)
+          openingTest.unshift(WsData)
           setOpeningPricePrevData(openingTest)
           setOpeningTestData(openingTest)
         } else {
-          openingTest.unshift(IntervalData)
+          openingTest.unshift(WsData)
           openingTest.pop()
           setOpeningPricePrevData(openingTest)
           setOpeningTestData(openingTest)
         }
       } else if (props.CallData === 'LowPrice') {
-        changeDate(IntervalData.date)
         let lowTest: any = []
         if (LowPricePrevData !== undefined) {
           if (LowPricePrevData.length !== 0) {
@@ -127,17 +129,16 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
           }
         }
         if (lowTest.length < 10) {
-          lowTest.unshift(IntervalData)
+          lowTest.unshift(WsData)
           setLowPricePrevData(lowTest)
           setLowTestData(lowTest)
         } else {
-          lowTest.unshift(IntervalData)
+          lowTest.unshift(WsData)
           lowTest.pop()
           setLowPricePrevData(lowTest)
           setLowTestData(lowTest)
         }
       } else if (props.CallData === 'HighPrice') {
-        changeDate(IntervalData.date)
         let highTest: any = []
         if (HighPricePrevData !== undefined) {
           if (HighPricePrevData.length !== 0) {
@@ -145,11 +146,11 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
           }
         }
         if (highTest.length < 10) {
-          highTest.unshift(IntervalData)
+          highTest.unshift(WsData)
           setHighPricePrevData(highTest)
           setHighTestData(highTest)
         } else {
-          highTest.unshift(IntervalData)
+          highTest.unshift(WsData)
           highTest.pop()
           setHighPricePrevData(highTest)
           setHighTestData(highTest)
@@ -157,20 +158,17 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       } else if (props.CallData === 'DataTable') {
         let TableRowTest: any = []
         if (WSTableRowDataPrev !== undefined) {
-          changeDate(IntervalData.date)
           if (WSTableRowDataPrev.length !== 0) {
             TableRowTest = [...WSTableRowDataPrev]
           }
         }
         if (TableRowTest.length < 10) {
-          changeDate(IntervalData.date)
-          TableRowTest.push(IntervalData)
+          TableRowTest.push(WsData)
           setWSTableRowDataPrev(TableRowTest)
           setWSTableRowData(TableRowTest)
         } else {
-          changeDate(IntervalData.date)
           TableRowTest.splice(0, 1)
-          TableRowTest.push(IntervalData)
+          TableRowTest.push(WsData)
           setWSTableRowDataPrev(TableRowTest)
           setWSTableRowData(TableRowTest)
         }
@@ -182,22 +180,20 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
           }
         }
         if (multipleTest.length === 0) {
-          for (const i in IntervalData) {
-            multipleTest.unshift(IntervalData[i])
+          for (const i in WsData) {
+            multipleTest.unshift(WsData[i])
           }
-          changeDate(multipleTest[0].date)
 
           setMultiplePrevData(multipleTest)
           setMultipleTestData(multipleTest)
         } else {
-          changeDate(multipleTest[0].date)
-          for (const j in IntervalData) {
+          for (const j in WsData) {
             if (multipleTest.length < 30) {
-              multipleTest.unshift(IntervalData[j])
+              multipleTest.unshift(WsData[j])
               setMultiplePrevData(multipleTest)
               setMultipleTestData(multipleTest)
             } else {
-              multipleTest.unshift(IntervalData[j])
+              multipleTest.unshift(WsData[j])
               multipleTest.pop()
               multipleTest.pop()
               multipleTest.pop()
@@ -212,39 +208,37 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     }
   }
 
-  // interval
   React.useEffect(() => {
-    DataFactory(IntervalData)
-  }, [IntervalData])
+    DataFactory(WsData)
+  }, [WsData, reWsData])
 
-  // interval
   React.useEffect(() => {
     if (TestData.length !== 0) {
-      IntervalChangeData(TestData)
+      SocketChangeData(TestData)
     }
   }, [TestData])
 
   React.useEffect(() => {
     if (OpeningTestData.length !== 0) {
-      IntervalChangeData(OpeningTestData)
+      SocketChangeData(OpeningTestData)
     }
   }, [OpeningTestData])
 
   React.useEffect(() => {
     if (LowTestData.length !== 0) {
-      IntervalChangeData(LowTestData)
+      SocketChangeData(LowTestData)
     }
   }, [LowTestData])
 
   React.useEffect(() => {
     if (HighTestData.length !== 0) {
-      IntervalChangeData(HighTestData)
+      SocketChangeData(HighTestData)
     }
   }, [HighTestData])
 
   React.useEffect(() => {
     if (MultipleTestData.length !== 0) {
-      IntervalChangeData(MultipleTestData)
+      SocketChangeData(MultipleTestData)
     }
   }, [MultipleTestData])
 
@@ -259,87 +253,32 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     setWSTableRowDataClean(newArray)
   }, [WSTableRowData])
 
-  // interval
-  React.useEffect(() => {
-    if (lastDate !== undefined) {
-      console.log('[ date change use effect ! ]')
-      console.log(lastDate)
-
-      setTimeout(function () {
-        getIntervalData(lastDate)
-      }, 60000)
-    }
-  }, [lastDate])
-
-  const IntervalChangeData = (t: any) => {
+  const SocketChangeData = (chgData: any) => {
     if (props.CallData !== 'Opening & High & Low') {
-      if (t[0].date !== undefined && t[0].value !== undefined) {
-        DrawD3LineChartInterval(t)
+      if (chgData[0].date !== undefined && chgData[0].value !== undefined) {
+        DrawD3LineChart(chgData)
       }
     } else {
-      if (t[0].name !== undefined) {
-        console.log('draw chart data')
-        console.log(t)
-        DrawD3MultipleSeriesLineChart(t)
+      if (chgData[0].name !== undefined) {
+        DrawD3MultipleSeriesLineChart(chgData)
       }
     }
   }
 
-  const changeDate = (date_args: any) => {
-    if (typeof date_args === 'string') {
-      console.log('this!!!')
-      const trn_date = new Date(date_args)
-      const year = trn_date.getFullYear()
-      let month: any = trn_date.getMonth() + 1
-      if (month < 10) month = '0' + month
-      let date: any = trn_date.getDate()
-      if (date < 10) date = '0' + date
-      let hour: any = trn_date.getHours()
-      if (hour < 10) hour = '0' + hour
-      let minute: any = trn_date.getMinutes()
-      if (minute < 10) minute = '0' + minute
-      let second: any = trn_date.getSeconds()
-      if (second < 10) second = '0' + second
-
-      setLastDate(year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second)
-      return year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second
-    } else {
-      const trn_date = date_args
-      const year = trn_date.getFullYear()
-      let month: any = trn_date.getMonth() + 1
-      if (month < 10) month = '0' + month
-      let date: any = trn_date.getDate()
-      if (date < 10) date = '0' + date
-      let hour: any = trn_date.getHours()
-      if (hour < 10) hour = '0' + hour
-      let minute: any = trn_date.getMinutes()
-      if (minute < 10) minute = '0' + minute
-      let second: any = trn_date.getSeconds()
-      if (second < 10) second = '0' + second
-
-      setLastDate(year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second)
-      return year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second
+  //웹소켓
+  const getsocketChartData = () => {
+    ws.current = new WebSocket(webSocketUrl)
+    ws.current.onopen = function () {
+      console.log('ws connection !!!! ')
     }
-  }
+    ws.current.onmessage = function (event: any) {
+      // console.log('[ ws Return Data ]')
+      // console.log(JSON.parse(event.data))
 
-  //Interval Data
-  const getIntervalData = (date: string) => {
-    axios.get(process.env.REACT_APP_API_SERVER_URL + '/api/websocket/interval?from_date=' + date).then((response) => {
-      console.log('Interval Chart Data')
-      console.log(response.data[0])
-
-      const ItObj: any = new Object()
-      const parseData = response.data[0]
+      const parseData = JSON.parse(event.data)[0]
       let wsObj: any = new Object()
       const wsArr: any = []
       const multipleKey = ['openingPrice', 'highPrice', 'lowPrice']
-      console.log(props.CallData)
-
-      // wsObj.y = parseData[0].tradePrice
-      // wsObj.x = parseData[0].candleDateTimeKst
-
-      // ItObj.date = new Date(response.data.x)
-      // ItObj.value = response.data.y
 
       if (props.CallData === 'TradePrice') {
         wsObj.date = new Date(parseData.candleDateTimeKst)
@@ -354,7 +293,7 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
         wsObj.date = new Date(parseData.candleDateTimeKst)
         wsObj.value = parseData.openingPrice
       } else if (props.CallData === 'DataTable') {
-        wsObj.date = new Date(parseData.candleDateTimeKst)
+        wsObj.date = parseData.candleDateTimeKst.split('-')[2].substr(3, 8)
         wsObj.tradeprice = parseData.tradePrice
         wsObj.lowprice = parseData.lowPrice
         wsObj.highprice = parseData.highPrice
@@ -370,20 +309,30 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       }
 
       if (props.CallData !== 'Opening & High & Low') {
-        setIntervalData(wsObj)
+        setWsData(wsObj)
       } else {
         console.log(wsArr)
-        setIntervalData(wsArr)
+        setWsData(wsArr)
       }
+    }
+    ws.current.onclose = function () {
+      console.log('ws close... ')
 
-      return ItObj
-    })
+      const timeout = setTimeout(function () {
+        getsocketChartData()
+      }, 1000)
+
+      clearTimeout(timeout)
+    }
   }
 
+  //data 그리기 이전에 grid draw
   const DrawD3LineChartPrev = () => {
-    const svg2 = d3.select(svgRef.current)
+    const svg2 = d3.select(svgRef2.current)
 
     const margin = { top: 25, right: 50, bottom: 50, left: 70 }
+    // width = props.widthSize - margin.left - margin.right,
+    // height = props.heightSize - margin.top - margin.bottom
     let width: any = 0,
       height: any = 0
     if (widthState !== undefined && heightState !== undefined) {
@@ -432,208 +381,15 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
 
     const y: any = d3.scaleLinear().range([height, 0])
 
-    const xAxis = svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x))
+    svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x))
     svg2.append('g').attr('transform', `translate(40,3)`).call(d3.axisLeft(y))
     svg2.append('g').call(xGrid)
     svg2.append('g').call(yGrid)
   }
 
-  const DrawD3MultipleSeriesLineChart = (data: any) => {
-    if (props.CallData === 'Opening & High & Low') {
-      const svg2 = d3.select(svgRef.current)
-
-      const parseTime = d3.timeFormat('%H:%M:%S')
-      const parseDate = d3.timeParse('%H:%M:%S')
-
-      //redraw
-      svg2.selectAll('g').remove()
-      data.forEach((d: any) => {
-        d.date = parseDate(parseTime(d.date))
-        d.value = d.value
-      })
-
-      const Value = data.map((v: any) => {
-        return v.value
-      })
-
-      const max = Math.max.apply(null, Value)
-      const min = Math.min.apply(null, Value)
-
-      /** resize Chart Size */
-      const margin = { top: 20, right: 50, bottom: 50, left: 70 }
-      let width: any = 0,
-        height: any = 0
-      if (widthState !== undefined && heightState !== undefined) {
-        width = widthState - margin.left - margin.right
-        height = heightState - margin.top - margin.bottom
-      }
-
-      // append the svg object to the body of the page
-      svg2
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
-        .append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`)
-        .append('g')
-        .attr('stroke', '#ffc709')
-        .attr('stroke-width', 1.5)
-        .attr('fill', 'none')
-
-      const sumstat = Array.from(
-        d3.group(data, (d: any) => d.name),
-        ([key, values]) => ({ key, values })
-      )
-      console.log('ArrayData :', sumstat)
-
-      // Add X axis --> it is a date format
-      const x: any = d3.scaleTime().range([0, width])
-      x.domain(
-        d3.extent(data, (d: any) => {
-          return d.date
-        })
-      )
-
-      // Add Y axis
-      const y: any = d3
-        .scaleLinear()
-        // .domain([
-        //   0,
-        //   d3.max(data, function (d: any) {
-        //     return +d
-        //   }),
-        // ])
-        .domain([min - 20, max + 20])
-        .range([height, 0])
-
-      //grid line 속성 style은 css
-      const xGrid = (g: any) =>
-        g
-          .attr('class', 'grid-lines')
-          .selectAll('line')
-          .data(x.ticks())
-          .join('line')
-          .attr('y1', 0)
-          .attr('y2', height)
-          .attr('x1', (d: any) => x(d) + 50)
-          .attr('x2', (d: any) => x(d) + 50)
-
-      const yGrid = (g: any) =>
-        g
-          .attr('class', 'grid-lines')
-          .selectAll('line')
-          .data(y.ticks())
-          .join('line')
-          .attr('x1', margin.top + 20)
-          .attr('x2', width + margin.left - 20)
-          .attr('y1', (d: any) => y(d - 0.1))
-          .attr('y2', (d: any) => y(d - 0.1))
-
-      const newArray = data.filter((item: any, i: any) => {
-        return (
-          data.findIndex((item2: any, j: any) => {
-            return item.date.toString() === item2.date.toString()
-          }) === i
-        )
-      })
-
-      const arr: any = []
-      for (let i = 0, len = newArray.length; i < len; i++) {
-        arr.push(newArray[i].date)
-      }
-
-      svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x).tickValues(arr))
-      svg2.append('g').attr('transform', `translate(40,3)`).call(d3.axisLeft(y))
-
-      //grid 그리기
-      svg2.append('g').call(xGrid)
-      svg2.append('g').call(yGrid)
-      svg2
-        .append('g')
-        .append('rect')
-        .attr('x', width / 4)
-        .attr('y', height + 40)
-        .attr('width', 4)
-        .attr('height', 2)
-        .style('fill', 'orange')
-      svg2
-        .append('g')
-        .append('text')
-        .attr('x', width / 4 + 8)
-        .attr('y', height + 40)
-        .text('low')
-        .style('font-size', '14px')
-        .attr('alignment-baseline', 'middle')
-      svg2
-        .append('g')
-        .append('rect')
-        .attr('x', width / 2)
-        .attr('y', height + 40)
-        .attr('width', 4)
-        .attr('height', 2)
-        .style('fill', 'purple')
-      svg2
-        .append('g')
-        .append('text')
-        .attr('x', width / 2 + 8)
-        .attr('y', height + 40)
-        .text('high')
-        .style('font-size', '14px')
-        .attr('alignment-baseline', 'middle')
-      svg2
-        .append('g')
-        .append('rect')
-        .attr('x', width / 1.5 + 15)
-        .attr('y', height + 40)
-        .attr('width', 4)
-        .attr('height', 2)
-        .style('fill', 'green')
-      svg2
-        .append('g')
-        .append('text')
-        .attr('x', width / 1.5 + 23)
-        .attr('y', height + 40)
-        .text('opening')
-        .style('font-size', '14px')
-        .attr('alignment-baseline', 'middle')
-
-      // color palette
-      const res: any = sumstat.map(function (d: any) {
-        return d.key
-      }) // list of group names
-
-      const color: any = d3.scaleOrdinal().domain(res).range(['orange', 'purple', 'green'])
-      // Draw the line
-      // console.log(sumstat)
-      svg2
-        .append('g')
-        .attr('clip-path', 'url(#clip)')
-        // .append('path')
-        .selectAll('.line')
-        .data(sumstat)
-        .enter()
-        .append('path')
-        .attr('transform', 'translate(50,0)')
-        .attr('fill', 'none')
-        .attr('stroke-width', 1.5)
-        .attr('stroke', function (d: any) {
-          return color(d.key)
-        })
-        .attr('stroke-width', 1.5)
-        .attr('d', function (d: any) {
-          return d3
-            .line()
-            .x(function (d: any) {
-              return x(d.date)
-            })
-            .y(function (d: any) {
-              return y(d.value)
-            })(d.values)
-        })
-    }
-  }
-
-  const DrawD3LineChartInterval = (data: any) => {
-    const svg2 = d3.select(svgRef.current)
+  //기본 d3LineChart
+  const DrawD3LineChart = (data: any) => {
+    const svg2 = d3.select(svgRef2.current)
     //날짜일 경우 : %Y-%m-%d
     //24시간이면 %H 아니면 %I
     const parseTime = d3.timeFormat('%H:%M:%S')
@@ -644,8 +400,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     if (props.CallData !== 'TradePrice') {
       rtnData = data
       rtnData.splice(rtnData.length - 300, rtnData.length - 100)
-      // console.log('------------------------------')
-      // console.log(rtnData)
     } else if (props.CallData !== 'TradePrice' && props.CallData !== 'Opening & High & Low') {
       rtnData = data
     }
@@ -773,47 +527,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       .style('font-size', '14px')
       .attr('alignment-baseline', 'middle')
 
-    // Add brushing
-    /**
-     * 2023.06.08 주석 처리
-     */
-    // const brush: any = d3
-    //   .brushX() // Add the brush feature using the d3.brush function
-    //   .extent([
-    //     [0, 0],
-    //     [width, height],
-    //   ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-    //   .on('end', function (event, d) {
-    //     const extent: any = event.selection
-
-    //     // If no selection, back to initial coordinate. Otherwise, update X axis domain
-    //     if (!extent) {
-    //       if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)) // This allows to wait a little bit
-    //       x.domain([4, 8])
-    //     } else {
-    //       x.domain([x.invert(extent[0]), x.invert(extent[1])])
-    //       svg2.select('.brush').call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
-    //     }
-
-    //     // Update axis and line position
-    //     xAxis.transition().duration(1000).call(d3.axisBottom(x))
-    //     svg2
-    //       .select('.line')
-    //       .transition()
-    //       .duration(1000)
-    //       .attr(
-    //         'd',
-    //         d3
-    //           .line()
-    //           .x((d: any) => {
-    //             return x(d.date)
-    //           })
-    //           .y((d: any) => {
-    //             return y(d.value)
-    //           })
-    //       )
-    //   })
-
     // add the Line
     const valueLine: any = d3
       .line()
@@ -835,41 +548,194 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       .attr('stroke', props.Color)
       .attr('stroke-width', 1.5)
       .attr('d', valueLine)
+  }
 
-    /**
-     * 2023.06.08 주석 처리
-     */
-    //svg2.append('g').attr('class', 'brush').attr('transform', 'translate(50,0)').call(brush)
-    //
-    // If user double click, reinitialize the chart
-    // svg2.on('dblclick', () => {
-    //   x.domain(
-    //     d3.extent(rtnData, (d: any) => {
-    //       return d.date
-    //     })
-    //   )
-    //   xAxis.transition().call(d3.axisBottom(x))
-    //   svg2
-    //     .select('.line')
-    //     .transition()
-    //     .attr(
-    //       'd',
-    //       d3
-    //         .line()
-    //         .x((d: any) => {
-    //           return x(d.date)
-    //         })
-    //         .y((d: any) => {
-    //           return y(d.value)
-    //         })
-    //     )
-    // })
+  //multiseries chart
+  const DrawD3MultipleSeriesLineChart = (data: any) => {
+    if (props.CallData === 'Opening & High & Low') {
+      const svg2 = d3.select(svgRef2.current)
 
-    // // A function that set idleTimeOut to null
-    // let idleTimeout: any
-    // function idled() {
-    //   idleTimeout = null
-    // }
+      const parseTime = d3.timeFormat('%H:%M:%S')
+      const parseDate = d3.timeParse('%H:%M:%S')
+
+      //redraw
+      svg2.selectAll('g').remove()
+      data.forEach((d: any) => {
+        d.date = parseDate(parseTime(d.date))
+        d.value = d.value
+      })
+
+      const Value = data.map((v: any) => {
+        return v.value
+      })
+
+      const max = Math.max.apply(null, Value)
+      const min = Math.min.apply(null, Value)
+
+      /** resize Chart Size */
+      const margin = { top: 20, right: 50, bottom: 50, left: 70 }
+      let width: any = 0,
+        height: any = 0
+      if (widthState !== undefined && heightState !== undefined) {
+        width = widthState - margin.left - margin.right
+        height = heightState - margin.top - margin.bottom
+      }
+
+      // append the svg object to the body of the page
+      svg2
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+        .append('g')
+        .attr('stroke', '#ffc709')
+        .attr('stroke-width', 1.5)
+        .attr('fill', 'none')
+
+      // data group화
+      const sumstat = Array.from(
+        d3.group(data, (d: any) => d.name),
+        ([key, values]) => ({ key, values })
+      )
+
+      // Add X axis --> it is a date format
+      const x: any = d3.scaleTime().range([0, width])
+      x.domain(
+        d3.extent(data, (d: any) => {
+          return d.date
+        })
+      )
+
+      // Add Y axis
+      const y: any = d3
+        .scaleLinear()
+        .domain([min - 20, max + 20])
+        .range([height, 0])
+
+      //grid line 속성 style은 css
+      const xGrid = (g: any) =>
+        g
+          .attr('class', 'grid-lines')
+          .selectAll('line')
+          .data(x.ticks())
+          .join('line')
+          .attr('y1', 0)
+          .attr('y2', height)
+          .attr('x1', (d: any) => x(d) + 50)
+          .attr('x2', (d: any) => x(d) + 50)
+
+      const yGrid = (g: any) =>
+        g
+          .attr('class', 'grid-lines')
+          .selectAll('line')
+          .data(y.ticks())
+          .join('line')
+          .attr('x1', margin.top + 20)
+          .attr('x2', width + margin.left - 20)
+          .attr('y1', (d: any) => y(d - 0.1))
+          .attr('y2', (d: any) => y(d - 0.1))
+
+      const newArray = data.filter((item: any, i: any) => {
+        return (
+          data.findIndex((item2: any, j: any) => {
+            return item.date.toString() === item2.date.toString()
+          }) === i
+        )
+      })
+
+      const arr: any = []
+      for (let i = 0, len = newArray.length; i < len; i++) {
+        arr.push(newArray[i].date)
+      }
+
+      svg2.append('g').attr('transform', `translate(50, ${height})`).call(d3.axisBottom(x).tickValues(arr))
+      svg2.append('g').attr('transform', `translate(40,3)`).call(d3.axisLeft(y))
+
+      //grid 그리기
+      svg2.append('g').call(xGrid)
+      svg2.append('g').call(yGrid)
+      svg2
+        .append('g')
+        .append('rect')
+        .attr('x', width / 4)
+        .attr('y', height + 40)
+        .attr('width', 4)
+        .attr('height', 2)
+        .style('fill', 'orange')
+      svg2
+        .append('g')
+        .append('text')
+        .attr('x', width / 4 + 8)
+        .attr('y', height + 40)
+        .text('low')
+        .style('font-size', '14px')
+        .attr('alignment-baseline', 'middle')
+      svg2
+        .append('g')
+        .append('rect')
+        .attr('x', width / 2)
+        .attr('y', height + 40)
+        .attr('width', 4)
+        .attr('height', 2)
+        .style('fill', 'purple')
+      svg2
+        .append('g')
+        .append('text')
+        .attr('x', width / 2 + 8)
+        .attr('y', height + 40)
+        .text('high')
+        .style('font-size', '14px')
+        .attr('alignment-baseline', 'middle')
+      svg2
+        .append('g')
+        .append('rect')
+        .attr('x', width / 1.5 + 15)
+        .attr('y', height + 40)
+        .attr('width', 4)
+        .attr('height', 2)
+        .style('fill', 'green')
+      svg2
+        .append('g')
+        .append('text')
+        .attr('x', width / 1.5 + 23)
+        .attr('y', height + 40)
+        .text('opening')
+        .style('font-size', '14px')
+        .attr('alignment-baseline', 'middle')
+
+      // color palette
+      const res: any = sumstat.map(function (d: any) {
+        return d.key
+      }) // list of group names
+
+      const color: any = d3.scaleOrdinal().domain(res).range(['orange', 'purple', 'green'])
+      // Draw the line
+      svg2
+        .append('g')
+        .attr('clip-path', 'url(#clip)')
+        // .append('path')
+        .selectAll('.line')
+        .data(sumstat)
+        .enter()
+        .append('path')
+        .attr('transform', 'translate(50,0)')
+        .attr('fill', 'none')
+        .attr('stroke-width', 1.5)
+        .attr('stroke', function (d: any) {
+          return color(d.key)
+        })
+        .attr('stroke-width', 1.5)
+        .attr('d', function (d: any) {
+          return d3
+            .line()
+            .x(function (d: any) {
+              return x(d.date)
+            })
+            .y(function (d: any) {
+              return y(d.value)
+            })(d.values)
+        })
+    }
   }
 
   //d3 line chart
@@ -878,13 +744,9 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
       // .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/chartData3?', ['Tag-34'])
       .get(process.env.REACT_APP_API_SERVER_URL + '/api/websocket/data')
       .then((response) => {
-        console.log('[ Chart response data ] : ')
-        console.log(response.data)
-
-        const date = changeDate(response.data[0].x)
         if (props.CallData === 'TradePrice') {
           setPrevChartData(response.data)
-          DrawD3LineChartInterval(response.data)
+          DrawD3LineChart(response.data)
         } else if (props.CallData === 'OpeningPrice') {
           setOpeningPricePrevData([])
           DrawD3LineChartPrev()
@@ -910,13 +772,10 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
     <>
       <Chakra.Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
         <div ref={svgContainer}>
-          <Wrapper ref={svgRef} ChartShow={props.ChartShow} />
+          <Wrapper ref={svgRef2} ChartShow={props.ChartShow} />
           <div id="tooltip" className="tooltip">
             <div className="tooltip-date">
               <span id="date"></span>
-            </div>
-            <div className="tooltip-Value">
-              Value : <span id="value"></span>
             </div>
           </div>
         </div>
@@ -940,4 +799,4 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
   )
 }
 
-export default D3LineChartInterval
+export default D3LineChart

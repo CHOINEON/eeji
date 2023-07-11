@@ -9,10 +9,9 @@ import styled from '@emotion/styled'
 import * as Chakra from '@chakra-ui/react'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
-import axios from 'axios'
 import './style.css'
-import { TestArchData } from './test_data_dongwon'
-import TableData from './table_data_dongwon'
+import { TestArchData } from './TestDataDW/test_data_dongwon'
+import TableData from './TestDataDW/table_data_dongwon'
 
 const Wrapper = styled.svg<{ ChartShow: boolean }>`
   margin: 0 1vw;
@@ -100,7 +99,6 @@ export const D3LineChartInterval: React.FC<LineChartPorps> = (props) => {
 
     for (let i = 0, len = default_data.values.length; i < len; i++) {
       if (default_data.values[i] !== undefined) {
-        //console.log(typeof default_data.values[i]['Tag-34'])
         if (typeof default_data.values[i]['Tag-34'] === 'string' || default_data.values[i]['0'] === 'string') {
           default_data.values.splice(i, 1)
         }

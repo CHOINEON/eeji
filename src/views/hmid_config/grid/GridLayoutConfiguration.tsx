@@ -36,7 +36,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import * as RecoilAtoms from '../recoil/config/atoms'
 import { LayoutTitle, NowDate } from '../recoil/base/atoms'
 
-import D3ChartDefaultGrid from './function/drawD3ChartDefaultGrid'
+import D3ChartDefaultGrid from './TestComponent/drawD3ChartDefaultGrid'
 import D3LineChart from '../../hmid/components/d3/D3LineChart'
 import D3ScatterPlotChart from '../../hmid/components/d3/D3ScatterPlotChart'
 
@@ -142,9 +142,11 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   React.useEffect(() => {
     // 새로 그린 dashboard인 경우
     if (window.localStorage.getItem('SelectedDashboardInfo') === 'new') {
-      setTimeout(function () {
+      const timeout = setTimeout(function () {
         AddGridGauid(panelIdx)
       }, 500)
+
+      clearTimeout(timeout)
     }
   }, [panelIdx])
 
