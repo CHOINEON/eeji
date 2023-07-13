@@ -34,7 +34,7 @@ import D3LineChartIntervalBT from '../hmid_config/grid/drawD3ChartIntervalTestDw
 import D3LineChart from '../hmid_config/grid/TestComponent/drawD3Chart'
 import IntervalTestBiance from '../hmid_config/grid/drawD3ChartIntervalTestBiance'
 import IntervalTestBianceTrade from 'views/hmid_config/grid/drawD3ChartIntervalTestBianceTrade'
-import DrawD3FCChart from 'views/hmid_config/grid/TestComponent/drawD3FCChart'
+import DrawD3FCChart from 'views/hmid_config/grid/TestComponent/drawD3FCChart(Test중)'
 
 const BoxTitle = styled.div`
   position: absolute;
@@ -63,6 +63,7 @@ export const MainDashboardInterval: React.FC = () => {
 
   const [NowDateText, setNowDateText] = useRecoilState(NowDate)
 
+  //현재 시간 데이터 포멧 만드는 함수
   const getNowDateTime = () => {
     const now = new Date()
     const year = now.getFullYear()
@@ -82,6 +83,7 @@ export const MainDashboardInterval: React.FC = () => {
 
   React.useEffect(() => {
     getNowDateTime()
+    // 새로 만드는 대시보드로 취급하여 가이드 형식 함수를 불러 올 수 있도록 하였음
     window.localStorage.setItem('SelectedDashboardInfo', 'new')
     window.addEventListener('resize', (e: any) => {
       AddGridGauid(null, 0)
@@ -129,6 +131,7 @@ export const MainDashboardInterval: React.FC = () => {
    * Gauid 그리기
    * panelData를 확인해서 위젯 조건에 따라 DOM에 그리기
    * ChartInterval 컴포넌트에 props 전달
+   * ../hmid_config/data/panel-data 파일 사용
    * 2023.05.30. 작업중
    */
   const AddGridGauid = (args: any, idx: number) => {

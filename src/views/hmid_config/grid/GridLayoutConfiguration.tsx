@@ -131,7 +131,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
 
   React.useEffect(() => {
     if (saveLayoutInfo.length !== 0) {
-      // console.log('[ 저장 여부 ] ', saveLayoutInfo)
       setOpenSaveLayoutModal(false)
       if (saveLayoutInfo !== 'unSave') {
         getSaveLayoutInfo(saveLayoutInfo)
@@ -150,17 +149,12 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
     }
   }, [panelIdx])
 
-  React.useEffect(() => {
-    console.log('useEffect Form', Form)
-  }, [Form])
-
   //theme color mode
   const dashboardBoxColor = Chakra.useColorModeValue('white', 'dark')
 
   //리스트에 있던 대시보드 불러와서 위젯을 그리는 경우
   //현재 데이터가 없으므로 테스트데이터 csv 파일 가져와서 data로 사용함
   const SelectedDashboardWidgetData = async (Layoutdata: any, panel: any) => {
-    console.log('[ LayoutData ] : ', Layoutdata)
     for (let i = 0, len = Layoutdata.length; i < len; i++) {
       for (let j = 0, len = panel.length; j < len; j++) {
         if (Layoutdata[i].grid_index === Number(panel[j].id.split('_')[0])) {
@@ -213,7 +207,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
             ]
             const row: any = []
             let RowObj: any = new Object()
-            console.log(data1)
 
             for (let i = 0, len = data1.length; i < len; i++) {
               RowObj.date = data1[i].date
@@ -224,7 +217,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
             }
 
             const RtnData = [column, row]
-            console.log('[ RtnData ] : ', RtnData)
 
             const elementData = (
               <DataGridWrap className={'ag-theme-alpine'}>
@@ -252,7 +244,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   //grid 선택해서 레이아웃 변경 한 경우 모달의 target을 인수로 넘기는 grid render 함수를 call
   React.useEffect(() => {
     if (gridInformation !== undefined && gridInformation !== null) {
-      console.log(gridInformation)
       rendereComplete(gridInformation)
     }
   }, [gridInformation])
@@ -265,8 +256,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
     const panel: any = Object.keys(panels[index]).map((panelIndex: string) => {
       return panels[index][panelIndex]
     })
-
-    console.log('[ panel ] ', panel)
 
     for (let j = 0, len = panel.length; j < len; j++) {
       const node: any = document.getElementById(panel[j].id)
@@ -350,10 +339,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   }
 
   const getDataBySelectTagInfo = async (TagArr: any, node: any) => {
-    console.log('[ Tag Arr ] : ', TagArr)
-    console.log('[ Box Target Id ] ', boxTargetId)
-    console.log(node.className)
-
     DrawDefaultGrid(node)
 
     //일단 Table인 경우 조건 걸기 test용
@@ -370,14 +355,14 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
           const data = await d3.csv(
             'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv'
           )
-          // console.log('multiSeries Data : ', data)
+
           DrawD3ChartWithData(node, data)
         }
       } else if (TagArr.length === 2) {
         const data = await d3.csv(
           'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv'
         )
-        // console.log('multiSeries Data 222 : ', data)
+
         DrawD3ChartWithData(node, data)
       } else {
         axios
@@ -430,8 +415,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
         axios
           .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/describe', TagArr)
           .then((response) => {
-            console.log('[ Tag Describe data ] : ')
-            console.log(response.data)
             setShowLoading(false)
 
             const column: any = [
@@ -506,8 +489,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   //모달에서 선택한 TagInfoArr
   React.useEffect(() => {
     if (SelectTagInfo.length !== 0) {
-      // console.log('[ 모달에서 선택한 Tag Array ] ', SelectTagInfo)
-      // console.log('[ boxTargetId ] ', boxTargetId)
       const node: any = document.getElementById(boxTargetId)
       node.setAttribute('tag-data', JSON.stringify(SelectTagInfo))
 
@@ -524,7 +505,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   async function initializeTemplate(dashboardObj: any, indexNumber: number) {
     let panelModelValue: ej2.PanelModel = {}
     const updatePanels: ej2.PanelModel[] = []
-    console.log('[ Index Number ] ', indexNumber)
     setPanelIdx(indexNumber)
 
     const panel: any = Object.keys(panels[indexNumber]).map((panelIndex: string) => {
@@ -557,8 +537,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
    * 위젯 셋팅 drawer 연결 작업 중 ...
    */
   const ClickDashBoardComponent = (e: any) => {
-    console.log(e.target.className)
-    console.log(typeof e.target.className)
     //Data Connection 버튼 클릭한 경우
     const typeClass = e.target.className
     if (typeof typeClass !== 'object') {
@@ -604,18 +582,12 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
 
       formData.append('com_id', window.localStorage.getItem('companyId'))
       formData.append('lay_id', lay_id)
-      console.log('[ my file ] ', myfile)
       formData.append('file', myfile)
 
       setForm(formData)
     })
 
     file.then(function (result: any) {
-      // FormData의 value 확인
-      for (const value of formData.values()) {
-        console.log(value)
-      }
-
       axios
         .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout/img', formData)
         .then((response) => {
@@ -731,13 +703,10 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
    *
    * 2023-06-14 박윤희
    * 레이아웃 저장
+   * 레이아웃 저장 API 파라미터를 가공하기 위한 함수
    *
    */
   const getSaveLayoutInfo = (SaveInfo: string) => {
-    console.log('[ SaveInfo ] ', SaveInfo)
-    console.log(window.localStorage.getItem('SelectedDashboardInfo'))
-    console.log('[ Dashboard Obj ] ', dashboardObj)
-    console.log('[ Grid Information ] ', gridInformation)
     if (window.localStorage.getItem('SelectedDashboardInfo') === 'new') {
       //const company_nm: any = JSON.parse(window.localStorage.getItem('company_info')).com_nm
 
@@ -746,18 +715,9 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
 
       if (dashboardObj !== undefined) {
         const dashboard_data: any = dashboardObj.element.children
-        console.log(dashboard_data)
 
         for (let i = 0, len = dashboard_data.length; i < len; i++) {
           const node = dashboard_data[i].childNodes[0].childNodes[1]
-          console.log(node)
-          console.log(node.className)
-          console.log(node.clientWidth)
-          console.log(node.clientHeight)
-          console.log(layoutTitle)
-          console.log('[ panel Idx ] ', panelIdx)
-          console.log(node.getAttribute('tag-data'))
-          console.log(JSON.parse(node.getAttribute('tag-data')))
 
           save_grid_obj.grid_nm = ''
           save_grid_obj.grid_index = i
@@ -784,7 +744,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
 
       if (dashboardObj !== undefined) {
         const dashboard_data: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
-        console.log(dashboard_data)
 
         for (let i = 0, len = dashboard_data.length; i < len; i++) {
           save_grid_obj.grid_nm = ''
