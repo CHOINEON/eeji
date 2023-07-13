@@ -138,6 +138,7 @@ export const MainDashboardInterval: React.FC = () => {
       return panels[index][panelIndex]
     })
     // 그려지고 난 후 실행하기
+    //test
     for (let j = 0, len = panel.length; j < len; j++) {
       const node: any = document.getElementById(panel[j].id)
       if (panel[j].widget === 'Line1') {
