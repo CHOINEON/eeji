@@ -277,11 +277,13 @@ export const Login: React.FC = () => {
       })
   }
 
+  //selectbox 변경 이벤트
   const handleChange = (value: string | string[]) => {
     console.log(`Compnay Selected: ${value}`)
     setCompany(value)
   }
 
+  //회사 정보를 불러오는 함수
   const getCompanyInfo = (companyId: string) => {
     console.log(companyId)
     axios
