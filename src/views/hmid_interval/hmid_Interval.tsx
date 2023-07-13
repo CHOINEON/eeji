@@ -29,7 +29,6 @@ import * as ej2 from '@syncfusion/ej2-react-layouts'
 import { useRecoilState, RecoilRoot } from 'recoil'
 import * as RecoilAtoms from '../hmid_config/recoil/config/atoms'
 import { NowDate } from '../hmid_config/recoil/base/atoms'
-
 import D3LineChartInterval from '../hmid_config/grid/drawD3ChartIntervalTestDw'
 import D3LineChartIntervalBT from '../hmid_config/grid/drawD3ChartIntervalTestDwBT'
 import D3LineChart from '../hmid_config/grid/TestComponent/drawD3Chart'
