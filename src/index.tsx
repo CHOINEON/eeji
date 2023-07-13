@@ -18,7 +18,6 @@ ReactDOM.render(
           <Route path={`/auth`} component={AuthLayout} />
           <Route path={`/admin`} component={AdminLayout} />
           <Route path={`/login`} component={Login} />
-          {/* <Route path={`/admin/maindashboard`} component={PredefinedLayouts} /> */}
           <Redirect from="/" to="/login" />
         </Switch>
       </BrowserRouter>
