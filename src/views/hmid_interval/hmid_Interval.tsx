@@ -29,7 +29,6 @@ import * as ej2 from '@syncfusion/ej2-react-layouts'
 import { useRecoilState, RecoilRoot } from 'recoil'
 import * as RecoilAtoms from '../hmid_config/recoil/config/atoms'
 import { NowDate } from '../hmid_config/recoil/base/atoms'
-
 import D3LineChartInterval from '../hmid_config/grid/drawD3ChartIntervalTestDw'
 import D3LineChartIntervalBT from '../hmid_config/grid/drawD3ChartIntervalTestDwBT'
 import D3LineChart from '../hmid_config/grid/TestComponent/drawD3Chart'
@@ -139,6 +138,7 @@ export const MainDashboardInterval: React.FC = () => {
       return panels[index][panelIndex]
     })
     // 그려지고 난 후 실행하기
+    //test
     for (let j = 0, len = panel.length; j < len; j++) {
       const node: any = document.getElementById(panel[j].id)
       if (panel[j].widget === 'Line1') {
