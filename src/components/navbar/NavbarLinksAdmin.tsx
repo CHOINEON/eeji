@@ -31,8 +31,9 @@ import routes from 'routes'
 import ico_ko from './img/ico_ko.png'
 import ico_jp from './img/ico_jp.png'
 import ico_us from './img/ico_us.png'
-
 import BarBg from './img/side_bar_bg.png'
+
+import { useTranslation } from 'react-i18next'
 
 const LangParentBox = styled.div`
   display: flex;
@@ -94,15 +95,22 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     JSON.parse(window.localStorage.getItem('company_info')).com_tel
   )
 
-  // console.log('Window LocalStorage ... ')
-  // console.log(window.localStorage.getItem('userPosition'))
-
   React.useEffect(() => {
     setUserName(JSON.parse(window.localStorage.getItem('userData'))[0].user_nm)
     setUserCompnay(JSON.parse(window.localStorage.getItem('company_info')).com_nm)
     setCompanyEmail(JSON.parse(window.localStorage.getItem('company_info')).com_email)
     setCompnayTel(JSON.parse(window.localStorage.getItem('company_info')).com_tel)
   }, [window.localStorage])
+
+  const { t, i18n } = useTranslation('main')
+
+  //국가 아이콘 클릭시 default 언어 변경
+  const changeLanguage = (e: any) => {
+    if (e.target.id !== undefined) {
+      i18n.changeLanguage(e.target.id)
+      window.localStorage.setItem('Locale', e.target.id)
+    }
+  }
 
   const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200')
   return (
@@ -223,10 +231,14 @@ export default function HeaderLinks(props: { secondary: boolean }) {
           minW={{ base: 'unset' }}
           maxW={{ base: '360px', md: 'unset' }}
         >
-          <LangParentBox>
-            <LangKO />
-            <LangJP />
-            <LangUS />
+          <LangParentBox
+            onClick={(e: any) => {
+              changeLanguage(e)
+            }}
+          >
+            <LangKO id="ko-KR" />
+            <LangJP id="jp-JP" />
+            <LangUS id="us-US" />
           </LangParentBox>
           <Flex flexDirection="column"></Flex>
         </MenuList>

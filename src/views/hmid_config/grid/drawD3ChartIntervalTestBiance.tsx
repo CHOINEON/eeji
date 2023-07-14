@@ -51,9 +51,9 @@ export const IntervalTestBiance: React.FC<D3Binance1s> = (props) => {
       console.log('ws connection success')
     }
     ws.current.onmessage = function (event: any) {
-      console.log('[ ws Return Data ]')
-      console.log(JSON.parse(event.data))
-      console.log(JSON.stringify(event.data))
+      // console.log('[ ws Return Data ]')
+      // console.log(JSON.parse(event.data))
+      // console.log(JSON.stringify(event.data))
 
       const multipleKey = ['Low', 'High']
 
@@ -63,7 +63,6 @@ export const IntervalTestBiance: React.FC<D3Binance1s> = (props) => {
       const wsArr: any = []
 
       for (const j in multipleKey) {
-        console.log(j)
         wsObj.name = multipleKey[j]
         wsObj.date = new Date(data.E * 1000)
         if (multipleKey[j] === 'Low') {
@@ -80,7 +79,6 @@ export const IntervalTestBiance: React.FC<D3Binance1s> = (props) => {
         window.localStorage.setItem('flag', '1')
       }
 
-      console.log('[ WS Arr ] : ', wsArr)
       setWSData(wsArr)
 
       // p : price
@@ -114,7 +112,6 @@ export const IntervalTestBiance: React.FC<D3Binance1s> = (props) => {
       d3.group(data, (d: any) => d.name),
       ([key, values]) => ({ key, values })
     )
-    console.log('Multiple Series ArrayData :', sumstat)
 
     /** resize Chart Size */
     const margin = { top: 20, right: 50, bottom: 50, left: 70 },

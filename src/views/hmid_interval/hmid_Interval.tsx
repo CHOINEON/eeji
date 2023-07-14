@@ -34,7 +34,7 @@ import D3LineChartIntervalBT from '../hmid_config/grid/drawD3ChartIntervalTestDw
 import D3LineChart from '../hmid_config/grid/TestComponent/drawD3Chart'
 import IntervalTestBiance from '../hmid_config/grid/drawD3ChartIntervalTestBiance'
 import IntervalTestBianceTrade from 'views/hmid_config/grid/drawD3ChartIntervalTestBianceTrade'
-import DrawD3FCChart from 'views/hmid_config/grid/TestComponent/drawD3FCChart(Test중)'
+import DrawD3FCChart from 'views/hmid_config/grid/TestComponent/drawD3FCChartKline'
 
 const BoxTitle = styled.div`
   position: absolute;

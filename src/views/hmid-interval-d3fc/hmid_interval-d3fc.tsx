@@ -14,7 +14,6 @@ import 'ag-grid-community/styles/ag-grid.css'
 import '../hmid/components/Modal/style/style.css'
 
 import { panelData } from '../hmid_config/data/panel-data'
-import * as d3 from 'd3'
 
 import WidgetModal from '../hmid/components/Modal/WidgetModal'
 import SaveConfirmModal from '../hmid/components/Modal/SaveConfirm'
@@ -30,12 +29,10 @@ import { useRecoilState, RecoilRoot } from 'recoil'
 import * as RecoilAtoms from '../hmid_config/recoil/config/atoms'
 import { NowDate } from '../hmid_config/recoil/base/atoms'
 
-import D3LineChartInterval from '../hmid_config/grid/drawD3ChartIntervalTestDw'
-import D3LineChartIntervalBT from '../hmid_config/grid/drawD3ChartIntervalTestDwBT'
-import D3LineChart from '../hmid_config/grid/TestComponent/drawD3Chart'
 //import IntervalTestBiance from '../hmid_config/grid/function/drawD3ChartIntervalTestBiance'
 //import IntervalTestBianceTrade from 'views/hmid_config/grid/drawD3ChartIntervalTestBianceTrade'
-import DrawD3FCChart from 'views/hmid_config/grid/TestComponent/drawD3FCChart(Test중)'
+import DrawD3FCChart from 'views/hmid_config/grid/TestComponent/drawD3FCChartKline'
+import DrawD3FCChartTestData from 'views/hmid_config/grid/TestComponent/drawD3FCChartTestData'
 
 const BoxTitle = styled.div`
   position: absolute;
@@ -142,17 +139,7 @@ export const MainDashboardIntervalD3FC: React.FC = () => {
       if (panel[j].widget === 'Line1') {
         const data = (
           <>
-            <BoxTitle>Binance Trade 50ms D3FC</BoxTitle>
-            {/* <D3LineChartInterval
-              widthSize={node.clientWidth}
-              heightSize={node.clientHeight}
-              CallData={'TestData'}
-              Color={'steelblue'}
-              ChartShow={true}
-              TableShow={false}
-              Multiple={false}
-            /> */}
-            {/* <IntervalTestBianceTrade widthSize={node.clientWidth} heightSize={node.clientHeight} /> */}
+            <BoxTitle>Binance Kline 1s D3FC</BoxTitle>
             <DrawD3FCChart />
           </>
         )
@@ -160,25 +147,11 @@ export const MainDashboardIntervalD3FC: React.FC = () => {
       } else if (panel[j].widget === 'Line2') {
         const data = (
           <>
-            <BoxTitle>Binance kline 1s d3FC</BoxTitle>
-            {/* <D3LineChartIntervalBT
-              widthSize={node.clientWidth}
-              heightSize={node.clientHeight}
-              CallData={'Bottom'}
-              Color={'green'}
-              ChartShow={true}
-              TableShow={false}
-              Multiple={false}
-            /> */}
-            <DrawD3FCChart />
-            {/* <IntervalTestBiance widthSize={node.clientWidth} heightSize={node.clientHeight} /> */}
+            <BoxTitle>d3FC 1s TestData</BoxTitle>
+            <DrawD3FCChartTestData />
           </>
         )
         ReactDOM.render(data, node)
-      } else if (panel[j].widget === 'Line3') {
-        const data = <>{/* <DrawD3FCChart /> */}</>
-
-        // ReactDOM.render(data, node)
       }
     }
   }
