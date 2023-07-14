@@ -10,6 +10,7 @@ import { useColorModeValue, Box } from '@chakra-ui/react'
 import { Button, Checkbox, Form, Input } from 'antd'
 import styled from '@emotion/styled'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 const FormBox = styled.div`
   background-color: #fff;
@@ -44,6 +45,9 @@ const FormTitle = styled.div`
 export default function LayoutConfig() {
   const theme = useColorModeValue('navy.700', 'white')
 
+  //다국어 처리를 위한 t 선언
+  const { t } = useTranslation('main')
+
   return (
     <Box
       pt={{ base: '130px', md: '80px', xl: '100px' }}
@@ -66,7 +70,7 @@ export default function LayoutConfig() {
               />
             </Form.Item>
             <Form.Item valuePropName="Password">
-              <Checkbox>Password</Checkbox>
+              <Checkbox>{t('test')}</Checkbox>
             </Form.Item>
             <Form.Item>
               <Button

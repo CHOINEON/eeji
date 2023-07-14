@@ -2,7 +2,7 @@ import React from 'react'
 import * as fc from 'd3fc'
 import * as d3 from 'd3'
 
-export const DrawD3FCChart: React.FC = () => {
+export const DrawD3FCChartKline: React.FC = () => {
   const [wsData, setWSData] = React.useState<any>()
   const [prevWSData, setPrevWSData] = React.useState<any>([])
 
@@ -10,8 +10,12 @@ export const DrawD3FCChart: React.FC = () => {
   const webSocketUrl = `wss://stream.binance.com:9443/ws/btcusdt@kline_1s`
   const ws = React.useRef(null)
 
+  const stream = fc.randomFinancial().stream()
+  //const data = stream.take(110)
+
   React.useEffect(() => {
-    //getsocketChartData()
+    getsocketChartData()
+    //renderChart(data)
     window.localStorage.setItem('flag', '1')
   }, [])
 
@@ -22,11 +26,10 @@ export const DrawD3FCChart: React.FC = () => {
       for (const j in wsData) {
         data.unshift(wsData[j])
       }
-      // 데이터 최대 개수 정해서 넘으면 pop 시켜
+      // 데이터 최대 개수 정해서 넘으면 shift() 시켜
       // 데이터 흐르게 보이기
-      if (data.length === 700) {
-        data.pop()
-        data.pop()
+      if (data.length === 100) {
+        data.shift()
       }
       setPrevWSData(data)
       renderChart(data)
@@ -57,7 +60,7 @@ export const DrawD3FCChart: React.FC = () => {
         window.localStorage.setItem('flag', '1')
       }
 
-      console.log('[ WS Arr ] : ', wsArr)
+      //console.log('[ WS Arr ] : ', wsArr)
       setWSData(wsArr)
 
       // p : price
@@ -93,6 +96,9 @@ export const DrawD3FCChart: React.FC = () => {
       .xDomain(xExtent(data))
       .svgPlotArea(multi)
 
+    data.push(stream.next())
+    data.shift()
+
     chart.yDomain(yExtent(data)).xDomain(xExtent(data))
 
     d3.select('#chart').datum(data).call(chart)
@@ -104,4 +110,4 @@ export const DrawD3FCChart: React.FC = () => {
   )
 }
 
-export default DrawD3FCChart
+export default DrawD3FCChartKline
