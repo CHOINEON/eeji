@@ -17,13 +17,16 @@ export const DrawD3FCChartTestData: React.FC = () => {
   }, [])
 
   const getNextData = () => {
+    //stream data의 다음 데이터를 가져온다
     const test_data: any = stream.next()
     const RtnData = data
+    // data에 push 하고 shift
     RtnData.push(test_data)
     RtnData.shift()
     renderChart(RtnData)
   }
 
+  //d3fc chart rendering
   const renderChart = (data: any) => {
     const xScale = d3.scaleTime().domain(fc.extentTime().accessors([(d: any) => d.date])(data))
 
