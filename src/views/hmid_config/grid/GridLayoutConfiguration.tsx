@@ -274,10 +274,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
       if (node.className !== 'Table') {
         DrawD3ChartWithData(node, data)
       } else {
-        const column: any = [
-          { field: 'date', headerName: 'Date', editable: false },
-          { field: 'value', headerName: 'Value', editable: false },
-        ]
         const row: any = []
         let RowObj: any = new Object()
 
@@ -289,7 +285,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
           RowObj = new Object()
         }
 
-        const RtnData = [column, row]
+        const RtnData = row
 
         DrawD3ChartWithData(node, RtnData)
       }
@@ -329,10 +325,11 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
         { field: 'date', headerName: 'Date', editable: false },
         { field: 'value', headerName: 'Value', editable: false },
       ]
+
       const elementData = (
         <DataGridWrap className={'ag-theme-alpine'}>
           <AgGridReact
-            rowData={data[1]}
+            rowData={data}
             columnDefs={column}
             defaultColDef={{
               flex: 1,
@@ -672,7 +669,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
 
             // SaveLayoutImage(Number(window.localStorage.getItem('layout_id')), args)
 
-            getLayoutList(args)
+            // getLayoutList(args)
           }
         })
         .catch((error) => {
