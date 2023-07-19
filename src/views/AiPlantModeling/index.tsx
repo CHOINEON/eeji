@@ -70,24 +70,6 @@ export default function AIModeling() {
   const [timerId, setTimerId] = React.useState<any>(null)
 
   let tId = null
-  // console.log(theme)
-
-  //새로고침 막기
-  // const preventClose = (e: BeforeUnloadEvent) => {
-  //   e.preventDefault()
-  //   e.returnValue = '' //Chrome에서 동작하도록; deprecated
-  // }
-
-  // React.useEffect(() => {
-  //   ;(() => {
-  //     window.addEventListener('beforeunload', preventClose)
-  //   })()
-
-  //   return () => {
-  //     window.removeEventListener('beforeunload', preventClose)
-  //   }
-  // }, [])
-  //end 새로고침 막기
 
   React.useEffect(() => {
     if (timerId) {
@@ -104,21 +86,13 @@ export default function AIModeling() {
       const diff = 100 - per
       const inc = diff / (10 + per * (1 + per / 100)) // 증가값
       const percent = per + inc
-
-      // console.log(percent.toFixed(2))
-      // console.log(inc)
       setPercent(percent)
     }
-    setTimerId(setTimeout(timer, 20)) // 50 ms 단위로 timer 재귀호출
-    // if (per >= 100) {
-    //   clearInterval(id)
-    //   setTimerId(0)
-    // } else {
-    //   let a = per
-    //   a = a++
-    //   console.log(a)
-    //   setPercent(a)
-    // }
+
+    const timeout = setTimeout(timer, 20)
+    setTimerId(timeout) // 50 ms 단위로 timer 재귀호출
+
+    clearTimeout(timeout)
   }
 
   return (

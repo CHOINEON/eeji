@@ -1,3 +1,9 @@
+/**
+ * 2023-07-05
+ * 박윤희
+ * d3 scatter plot chart 코드 정리
+ */
+
 import React from 'react'
 import styled from '@emotion/styled'
 import * as d3 from 'd3'
@@ -20,7 +26,6 @@ export const D3ScatterPlotChart: React.FC<D3ScatterPlotProps> = (props) => {
 
   React.useEffect(() => {
     if (Object.keys(props.Data[0]).length > 2) {
-      console.log(Object.keys(props.Data[0]).length)
       DrawMultipleSeriesScatterPlotChart(props.Data)
     } else {
       DrawD3ScatterPlotChart(props.Data)
@@ -29,13 +34,11 @@ export const D3ScatterPlotChart: React.FC<D3ScatterPlotProps> = (props) => {
 
   const DrawMultipleSeriesScatterPlotChart = (data: any) => {
     const svg = d3.select(svgRef.current)
-    // const parseTime = d3.timeFormat('%H:%M:%S')
-    // const parseDate = d3.timeParse('%H:%M:%S')
 
     //redraw
     svg.selectAll('g').remove()
 
-    // d3 group 화
+    // d3 group
     const sumstat: any = Array.from(
       d3.group(data, (d: any) => d.name),
       ([key, values]) => ({ key, values })
@@ -45,12 +48,6 @@ export const D3ScatterPlotChart: React.FC<D3ScatterPlotProps> = (props) => {
     const margin = { top: 20, right: 50, bottom: 50, left: 70 },
       width = props.widthSize - margin.left - margin.right,
       height = props.heightSize - margin.top - margin.bottom
-    // let width: any = 0,
-    //   height: any = 0
-    // if (widthState !== undefined && heightState !== undefined) {
-    //   width = widthState - margin.left - margin.right
-    //   height = heightState - margin.top - margin.bottom
-    // }
 
     // append the svg object to the body of the page
     svg
@@ -141,10 +138,6 @@ export const D3ScatterPlotChart: React.FC<D3ScatterPlotProps> = (props) => {
 
     //add multiple data
     svg
-      // .append('g')
-      // .attr('clip-path', 'url(#clip)')
-      // .attr('transform', 'translate(50,0)')
-      // .append('path')
       .selectAll('myDots')
       .data(sumstat)
       .enter()
@@ -169,7 +162,6 @@ export const D3ScatterPlotChart: React.FC<D3ScatterPlotProps> = (props) => {
         return y(+d.n)
       })
       .attr('r', 2)
-    // .attr('stroke', 'white')
 
     // Add a legend (interactive)
     svg
@@ -206,11 +198,7 @@ export const D3ScatterPlotChart: React.FC<D3ScatterPlotProps> = (props) => {
     const svg = d3.select(svgRef.current)
 
     if (props.DataName !== 'TestData') {
-      const parseTime = d3.timeFormat('%Y-%m-%d')
-      const parseDate = d3.timeParse('%Y-%m-%d')
-
       data.forEach((d: any) => {
-        // d.date = parseDate(parseTime(new Date(d.x)))
         d.date = new Date(d.x)
         d.value = d.y
         delete d.x
@@ -303,77 +291,6 @@ export const D3ScatterPlotChart: React.FC<D3ScatterPlotProps> = (props) => {
       .style('font-size', '14px')
       .attr('alignment-baseline', 'middle')
 
-    // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
-    // const zoom = d3
-    //   .zoom()
-    //   //.scaleExtent([1, 1]) // This control how much you can unzoom (x0.5) and zoom (x20)
-    //   //.translateExtent([[-100, -100], [height + 100, width + 100]])
-    //   .on('zoom', function (event, d) {
-    //     newX = event.transform.rescaleX(x)
-    //     newY = event.transform.rescaleX(y)
-
-    //     xAxis.call(d3.axisBottom(newX))
-    //     yAxis.call(d3.axisBottom(newY))
-
-    //     // update circle position
-    //     svg
-    //       .selectAll('circle')
-    //       .attr('cx', function (d: any) {
-    //         return newX(d.date)
-    //       })
-    //       .attr('cy', function (d: any) {
-    //         return newY(d.value)
-    //       })
-    //   })
-
-    // // Add brushing
-    // const brush: any = d3
-    //   .brushX() // Add the brush feature using the d3.brush function
-    //   .extent([
-    //     [0, 0],
-    //     [width, height],
-    //   ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-    //   .on('end', function (event, d) {
-    //     const extent: any = event.selection
-
-    //     // If no selection, back to initial coordinate. Otherwise, update X axis domain
-    //     if (!extent) {
-    //       if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)) // This allows to wait a little bit
-    //       x.domain([4, 8])
-    //       y.domain([0, 9])
-    //       // x.domain(
-    //       //   d3.extent(data, (d: any) => {
-    //       //     return d.date
-    //       //   })
-    //       // ).nice()
-    //       // y.domain(
-    //       //   d3.extent(data, (d: any) => {
-    //       //     return d.value
-    //       //   })
-    //       // ).nice()
-    //     } else {
-    //       // x.domain([x.invert(extent[0][0]), x.invert(extent[1][0])])
-    //       // y.domain([y.invert(extent[1][1]), y.invert(extent[0][1])])
-    //       svg.select('.brush').call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
-    //     }
-
-    //     // Update axis and dot position
-    //     xAxis.transition().duration(1000).call(d3.axisBottom(x))
-    //     yAxis.transition().duration(1000).call(d3.axisBottom(y))
-
-    //     svg
-    //       .selectAll('circle')
-    //       // .call(zoom)
-    //       .transition()
-    //       .duration(1000)
-    //       .attr('cx', (d: any) => {
-    //         return x(d.date)
-    //       })
-    //       .attr('cy', (d: any) => {
-    //         return y(d.value)
-    //       })
-    //   })
-
     // Add dots
     const g = svg.append('g').attr('clip-path', 'url(#clip)').attr('transform', 'translate(50,0)')
 
@@ -395,10 +312,6 @@ export const D3ScatterPlotChart: React.FC<D3ScatterPlotProps> = (props) => {
     const zoom = d3
       .zoom()
       .scaleExtent([0.5, 32])
-      // .translateExtent([
-      //   [0, 0],
-      //   [width, height],
-      // ])
       .on('zoom', (e) => {
         const zx = e.transform.rescaleX(x).interpolate(d3.interpolateRound)
         const zy = e.transform.rescaleY(y).interpolate(d3.interpolateRound)
@@ -415,13 +328,9 @@ export const D3ScatterPlotChart: React.FC<D3ScatterPlotProps> = (props) => {
           .attr('cy', (d: any) => {
             return y(d.value)
           })
-        // g.style('stroke-width', 3 / Math.sqrt(transform.k))
-        // points.attr('r', 3 / Math.sqrt(transform.k))
       })
 
     svg.call(zoom)
-
-    // svg.append('g').attr('class', 'brush').call(brush)
 
     // If user double click, reinitialize the chart
     svg.on('dblclick', () => {

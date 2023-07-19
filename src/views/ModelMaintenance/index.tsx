@@ -1,30 +1,16 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
+/**
+ * INFINITE OPTIMAL
+ * 메뉴 : ModelMaintenance
+ * 최종 수정 날짜 : 2023-07-06
+ * 개발자 : 박윤희 (BAK YUN HEE)
+ */
 
 // Chakra imports
 import { useColorModeValue, Box } from '@chakra-ui/react'
 import { Button, Checkbox, Form, Input } from 'antd'
 import styled from '@emotion/styled'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 const FormBox = styled.div`
   background-color: #fff;
@@ -59,6 +45,9 @@ const FormTitle = styled.div`
 export default function LayoutConfig() {
   const theme = useColorModeValue('navy.700', 'white')
 
+  //다국어 처리를 위한 t 선언
+  const { t } = useTranslation('main')
+
   return (
     <Box
       pt={{ base: '130px', md: '80px', xl: '100px' }}
@@ -81,7 +70,7 @@ export default function LayoutConfig() {
               />
             </Form.Item>
             <Form.Item valuePropName="Password">
-              <Checkbox>Password</Checkbox>
+              <Checkbox>{t('test')}</Checkbox>
             </Form.Item>
             <Form.Item>
               <Button

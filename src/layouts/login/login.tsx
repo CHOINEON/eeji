@@ -17,7 +17,6 @@ import login_icon from './img/login_icon.png'
 import date from './img/date.png'
 import axios from 'axios'
 import { FormControl, FormLabel, Button, Input } from '@chakra-ui/react'
-import type { SelectProps } from 'antd'
 import { Select } from 'antd'
 import './style/style.css'
 import { Alert } from 'views/hmid/components/Modal/Alert'
@@ -181,11 +180,6 @@ export const Login: React.FC = () => {
   const [company, setCompany] = React.useState<any>('')
   const [companyList, setCompanyList] = React.useState<any>()
 
-  /** Alert */
-  // const [message, setMessage] = React.useState<string>('')
-  // const [showAlertModal, setShowAlertModal] = React.useState<boolean>(false)
-  //   const [messageApi, contextHolder] = message.useMessage();
-
   const [showAlarmModal, setShowAlertModal] = useRecoilState(AlertRecoil.AlertModalState)
   const setAlarmMessage = useSetRecoilState(AlertRecoil.AlertMessageState)
 
@@ -196,8 +190,8 @@ export const Login: React.FC = () => {
   const setLogin = (id: string, password: string) => {
     console.log(company)
     if (company.length === 0 || company === undefined) {
-      setAlarmMessage('회사를 선택 해주세요.')
-      setShowAlertModal(true)
+      //setAlarmMessage('회사를 선택 해주세요.')
+      //setShowAlertModal(true)
     } else {
       axios
         .get(
@@ -217,16 +211,13 @@ export const Login: React.FC = () => {
           }
         )
         .then((response) => {
-          // console.log('[ axios response data ] : ')
-          // console.log(response.data)
-
           getCompanyInfo(company)
           window.localStorage.setItem('userData', JSON.stringify(response.data))
           window.localStorage.setItem('companyId', company)
           window.localStorage.setItem('userPosition', response.data[0].user_position)
         })
         .catch((error) => {
-          // console.log(error.response)
+          console.log(error.response)
           // error('아이디 또는 비밀번호가 틀립니다.')
         })
     }
@@ -286,11 +277,13 @@ export const Login: React.FC = () => {
       })
   }
 
+  //selectbox 변경 이벤트
   const handleChange = (value: string | string[]) => {
     console.log(`Compnay Selected: ${value}`)
     setCompany(value)
   }
 
+  //회사 정보를 불러오는 함수
   const getCompanyInfo = (companyId: string) => {
     console.log(companyId)
     axios
@@ -316,11 +309,6 @@ export const Login: React.FC = () => {
 
   return (
     <>
-      {/* <Alert status="error">
-        <AlertIcon />
-        <AlertTitle>Error!</AlertTitle>
-        <AlertDescription>아이디와 패스워드를 확인 해주세요.</AlertDescription>
-      </Alert> */}
       <Wrapper />
       <Home_Bg />
       <Logo />

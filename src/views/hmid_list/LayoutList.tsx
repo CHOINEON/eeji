@@ -1,14 +1,24 @@
+/**
+ * INFINITE OPTIMAL
+ * 메뉴 : HMI Designer - LayoutList
+ * 최종 수정 날짜 : 2023-07-06
+ * 개발자 : 박윤희 (BAK YUN HEE)
+ */
+
 import React from 'react'
 import axios from 'axios'
 import { BiSelectMultiple } from 'react-icons/bi'
 import { RiDeleteBinLine } from 'react-icons/ri'
-import { Box, useColorModeValue, Stack, Button, Checkbox } from '@chakra-ui/react'
+import { Box, Stack, Button } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import no_image from './img/no-image.jpg'
 import use_yn_check from './img/use_yn_check.png'
 import preview_icon from './img/preview_icon.png'
 import layout_add_btn from './img/layout_add_btn.png'
 import { Alert } from 'views/hmid/components/Modal/Alert'
+
+import { useSetRecoilState } from 'recoil'
+import * as RecoilAtoms from '../hmid_config/recoil/config/atoms'
 
 interface LayoutListProps {
   company_id: string
@@ -139,8 +149,9 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   const [AdminInfo, setAdminInfo] = React.useState('block')
   const [CompanyId, setCompanyId] = React.useState()
   const [LayoutId, setLayoutId] = React.useState<any>()
-  const [showModal, setShowModal] = React.useState(false)
-  const [message, setMessage] = React.useState('')
+
+  const setAlertMessage = useSetRecoilState(RecoilAtoms.AlertMessageState)
+  const setShowAlertModal = useSetRecoilState(RecoilAtoms.AlertModalState)
 
   // const theme = useColorModeValue('navy.700', 'white')
 
@@ -149,11 +160,8 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   React.useEffect(() => {
     setCompanyId(props.company_id)
     getLayoutList(props.company_id)
+    //getLayoutListByUseQuer(props.company_id)
   }, [props.comapny_id])
-
-  React.useEffect(() => {
-    console.log(LayoutId)
-  }, [LayoutId])
 
   //새로운 대시보드 만들기
   const NewDashboard = () => {
@@ -167,8 +175,6 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
     } else {
       setLayoutId(e.target.offsetParent.children[0].id)
     }
-
-    // setLayoutId(e.target.offsetParent.children[0].id)
 
     for (let i = 0, len = testRefs.current.length; i < len; i++) {
       if (testRefs.current[i] !== null) {
@@ -284,7 +290,6 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
 
   //layoutlist api 연결
   const getLayoutList = (company_id: string) => {
-    console.log(company_id)
     renderLayoutList([])
     axios
       .get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout?company_id=' + company_id, {
@@ -297,6 +302,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
       .then((response) => {
         console.log('[ get Layout List axios response data ] : ')
         console.log(response.data)
+        window.localStorage.setItem('img_path', response.data[Number(response.data.length) - 1].img_path)
 
         renderLayoutList(response.data)
       })
@@ -329,6 +335,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
         console.log(error.response)
       })
   }
+
   //레이아웃 삭제
   const deleteLayout = () => {
     axios
@@ -344,8 +351,8 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
         console.log(response.data)
 
         if (response.data.detail === 'success') {
-          setShowModal(true)
-          setMessage('레이아웃 삭제가 완료 되었습니다.')
+          setAlertMessage('레이아웃 삭제가 완료 되었습니다.')
+          setShowAlertModal(true)
 
           getLayoutList(localStorage.getItem('companyId'))
         }
@@ -353,11 +360,6 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
       .catch((error) => {
         console.log(error.response)
       })
-  }
-
-  const getCloseModal = (e: boolean) => {
-    console.log(e)
-    setShowModal(false)
   }
 
   return (

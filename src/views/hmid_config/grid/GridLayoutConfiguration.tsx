@@ -16,7 +16,6 @@ import { Spin } from 'antd'
 import '../../hmid/components/Modal/style/style.css'
 
 import { AgGridReact } from 'ag-grid-react'
-import { ColDef } from 'ag-grid-community'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
 import { panelData } from '../data/panel-data_config'
 import * as d3 from 'd3'
@@ -27,33 +26,23 @@ import LayoutModal from '../../hmid/components/Modal/LayoutListModal'
 import DataConnection from '../../hmid/components/Modal/DataConnection'
 import { Alert } from '../../hmid/components/Modal/Alert'
 
+import domtoimage from 'dom-to-image'
+
 import * as ReactIcon from 'react-icons/md'
 import * as Chakra from '@chakra-ui/react'
 import * as ej2 from '@syncfusion/ej2-react-layouts'
-import * as 그리기함수 from './function/차트그리기함수'
-import * as 가공함수 from './function/차트데이터가공함수'
-import * as 이미지저장함수 from './function/캡쳐이미지저장함수'
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import * as RecoilAtoms from '../recoil/config/atoms'
-import { CompanyId, LayoutTitle, NowDate, WsDataTest } from '../recoil/base/atoms'
-// import D3LineChart from './function/drawD3Chart'
-import D3LineChartTooltip from './function/drawD3ChartTooltip(Test중)'
-import D3ChartDefaultGrid from './function/drawD3ChartDefaultGrid'
+import { LayoutTitle, NowDate } from '../recoil/base/atoms'
+
+import D3ChartDefaultGrid from './TestComponent/drawD3ChartDefaultGrid'
 import D3LineChart from '../../hmid/components/d3/D3LineChart'
 import D3ScatterPlotChart from '../../hmid/components/d3/D3ScatterPlotChart'
 
 const DataGridWrap = styled.div`
   width: 100%;
   height: calc(100% - 1.1vw);
-`
-
-const BoxTitle = styled.div`
-  position: absolute;
-  left: 1vw;
-  top: 1vw;
-  font-size: 0.8vw;
-  font-weight: bold;
 `
 
 const CurrentText = styled.div`
@@ -71,16 +60,6 @@ const CurrentIcon = styled.div`
 `
 
 export const PredefinedLayoutsConfiguration: React.FC = () => {
-  //atom
-  //옵션 삭제
-  // const [LineDataOption, setLineDataOption] = useRecoilState(RecoilLineAtoms.LineChartDataOptionState)
-  // const [LineLayoutOption, setLineLayoutOption] = useRecoilState(RecoilLineAtoms.LineChartLayoutOptionState)
-  // const [TimeSeriesDataOption, setTimeSeriesDataOption] = useRecoilState(
-  //   RecoilTimeSeriesAtoms.TimeSeriesChartDataOptionState
-  // )
-  // const [TimeSeriesLayoutOption, setTimeSeriesLayoutOption] = useRecoilState(
-  //   RecoilTimeSeriesAtoms.TimeSeriesChartLayoutOptionState
-  // )
   const [gridInformation, setGridInformation] = useRecoilState(RecoilAtoms.GridInformationState)
   const [showLoading, setShowLoading] = useRecoilState(RecoilAtoms.ShowLoadingState)
   const [widgetInfo, setWidgetInfo] = useRecoilState(RecoilAtoms.WidgetInfoState)
@@ -98,38 +77,17 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
 
   //모달에서 선택한 Tag Array
   const SelectTagInfo = useRecoilValue(RecoilAtoms.SelectTagInfoState)
-  const companyId = useRecoilValue(CompanyId)
   const layoutTitle = useRecoilValue(LayoutTitle)
-
-  //보류
-  // const [SaveTagDataList, setSaveTagDataList] = React.useState<any>([
-  //   {
-  //     type: 'Time Series',
-  //     tag_data: [],
-  //   },
-  //   {
-  //     type: 'Pie',
-  //     tag_data: [],
-  //   },
-  //   {
-  //     type: 'Bar',
-  //     tag_data: [],
-  //   },
-  //   {
-  //     type: 'Line',
-  //     tag_data: [],
-  //   },
-  //   {
-  //     type: 'Table',
-  //     tag_data: [],
-  //   },
-  // ])
 
   const panels: any = panelData
   let dashboardObj: ej2.DashboardLayoutComponent
   const cellSpacing: number[] = [5, 5]
 
+  //test
+  const [Form, setForm] = React.useState<any>()
+
   //현재시간 계산하기
+  //대신에 luxon 사용
   const getNowDateTime = () => {
     const now = new Date()
     const year = now.getFullYear()
@@ -161,45 +119,48 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
         SelectedDashboardWidgetData(Layoutdata, panel)
       })
     } else {
-      const dashboardData = initializeTemplate(dashboardObj, 0)
-      // //가이드 필요한 경우
-      // dashboardData.then(function (args: any) {
-      //   setTimeout(function () {
-      //     AddGridGauid(0)
-      //   }, 1000)
-      // })
+      // 새로 생성하는 대시보드인 경우 Template 그린 후 가이드 그리기
+      initializeTemplate(dashboardObj, 0).then(function () {
+        AddGridGauid(0)
+      })
     }
   }, [])
 
+  //현재 날짜, 시간 불러오기
   React.useEffect(() => {
     setInterval(function () {
       getNowDateTime()
     }, 1000)
   }, [NowDateText])
 
+  //'save' 버튼 클릭했을 경우 모달창 열기
   React.useEffect(() => {
     if (saveLayoutInfo.length !== 0) {
-      // console.log('[ 저장 여부 ] ', saveLayoutInfo)
       setOpenSaveLayoutModal(false)
       if (saveLayoutInfo !== 'unSave') {
-        getSaveLayoutInfo(saveLayoutInfo)
+        makeSaveLayoutInfo(saveLayoutInfo)
       }
     }
   }, [saveLayoutInfo])
 
   React.useEffect(() => {
-    // console.log('[ panelIdx ] ', panelIdx)
-    setTimeout(function () {
-      AddGridGauid(panelIdx)
-    }, 500)
+    console.log('[ panelIdx ] : ', panelIdx)
+    // 새로 그린 dashboard인 경우
+    if (panelIdx !== undefined) {
+      if (window.localStorage.getItem('SelectedDashboardInfo') === 'new') {
+        setTimeout(function () {
+          AddGridGauid(panelIdx)
+        }, 1000)
+      }
+    }
   }, [panelIdx])
 
   //theme color mode
   const dashboardBoxColor = Chakra.useColorModeValue('white', 'dark')
 
   //리스트에 있던 대시보드 불러와서 위젯을 그리는 경우
-  //2023.06.14 박윤희 수정 작업 중
-  const SelectedDashboardWidgetData = (Layoutdata: any, panel: any) => {
+  //현재 데이터가 없으므로 테스트데이터 csv 파일 가져와서 data로 사용함
+  const SelectedDashboardWidgetData = async (Layoutdata: any, panel: any) => {
     for (let i = 0, len = Layoutdata.length; i < len; i++) {
       for (let j = 0, len = panel.length; j < len; j++) {
         if (Layoutdata[i].grid_index === Number(panel[j].id.split('_')[0])) {
@@ -210,47 +171,78 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
             uniqueArr = [...new Set(set)]
           }
           const node: any = document.getElementById(panel[j].id)
-          if (Layoutdata[i].widget_type === 'Line') {
-            그리기함수.getDataList(
-              uniqueArr,
-              Layoutdata[i].widget_type,
-              node,
-              JSON.parse(Layoutdata[i].layout_option),
-              JSON.parse(Layoutdata[i].data_option)
+
+          const data = await d3.csv(
+            'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv'
+          )
+
+          const data1 = await d3.csv(
+            'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv'
+          )
+
+          if (Layoutdata[i].widget_type === 'Scatter Plot') {
+            const elementData = (
+              <>
+                <D3ScatterPlotChart
+                  widthSize={node.clientWidth}
+                  heightSize={node.clientHeight}
+                  Data={data}
+                  DataName={'TestData'}
+                  Color={'#69b3a294'}
+                />
+              </>
             )
-          } else if (Layoutdata[i].widget_type === 'Bar') {
-            그리기함수.getDataList(
-              uniqueArr,
-              Layoutdata[i].widget_type,
-              node,
-              JSON.parse(Layoutdata[i].layout_option),
-              JSON.parse(Layoutdata[i].data_option)
+            ReactDOM.render(elementData, node)
+          } else if (Layoutdata[i].widget_type === 'Time Series') {
+            const elementData = (
+              <>
+                <D3LineChart
+                  widthSize={node.clientWidth}
+                  heightSize={node.clientHeight}
+                  Data={data1}
+                  DataName={'TestData'}
+                  Color={'orange'}
+                />
+              </>
             )
-          } else if (Layoutdata[i].widget_type === 'Pie') {
-            const lay_option = JSON.parse(Layoutdata[i].layout_option)
-            const data_option = JSON.parse(Layoutdata[i].data_option)
-            그리기함수.getDataList(uniqueArr, Layoutdata[i].widget_type, node, lay_option, data_option)
-          } else if (Layoutdata[i].widget_type === 'TimeSeries') {
-            그리기함수.getDataList(
-              uniqueArr,
-              Layoutdata[i].widget_type,
-              node,
-              JSON.parse(Layoutdata[i].layout_option),
-              JSON.parse(Layoutdata[i].data_option)
+            ReactDOM.render(elementData, node)
+          } else {
+            const column: any = [
+              { field: 'date', headerName: 'Date', editable: false },
+              { field: 'value', headerName: 'Value', editable: false },
+            ]
+            const row: any = []
+            let RowObj: any = new Object()
+
+            for (let i = 0, len = data1.length; i < len; i++) {
+              RowObj.date = data1[i].date
+              RowObj.value = data1[i].value
+
+              row.push(RowObj)
+              RowObj = new Object()
+            }
+
+            const RtnData = [column, row]
+
+            const elementData = (
+              <DataGridWrap className={'ag-theme-alpine'}>
+                <AgGridReact
+                  rowData={RtnData[1]}
+                  columnDefs={RtnData[0]}
+                  defaultColDef={{
+                    flex: 1,
+                    editable: true,
+                  }}
+                  enableCellChangeFlash={true}
+                  editType={'fullRow'}
+                  pagination={true}
+                  paginationAutoPageSize={true}
+                />
+              </DataGridWrap>
             )
-          } else if (Layoutdata[i].widget_type === 'Table') {
-            그리기함수.getDataList(
-              uniqueArr,
-              Layoutdata[i].widget_type,
-              node,
-              JSON.parse(Layoutdata[i].layout_option),
-              JSON.parse(Layoutdata[i].data_option)
-            )
+            ReactDOM.render(elementData, node)
           }
         }
-
-        const inputElement: any = document.getElementById('input' + i)
-        inputElement.value = Layoutdata[i].grid_nm
       }
     }
   }
@@ -258,7 +250,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   //grid 선택해서 레이아웃 변경 한 경우 모달의 target을 인수로 넘기는 grid render 함수를 call
   React.useEffect(() => {
     if (gridInformation !== undefined && gridInformation !== null) {
-      console.log(gridInformation)
       rendereComplete(gridInformation)
     }
   }, [gridInformation])
@@ -272,14 +263,9 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
       return panels[index][panelIndex]
     })
 
-    console.log('[ panel ] ', panel)
-
     for (let j = 0, len = panel.length; j < len; j++) {
       const node: any = document.getElementById(panel[j].id)
       node.className = panel[j].widget
-      // console.log('[ Draw Dashboard Gauid ]')
-      // console.log(node)
-      // console.log(node.className)
       let data: any = []
       data = await d3.csv(
         'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv'
@@ -288,10 +274,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
       if (node.className !== 'Table') {
         DrawD3ChartWithData(node, data)
       } else {
-        const column: any = [
-          { field: 'date', headerName: 'Date', editable: false },
-          { field: 'value', headerName: 'Value', editable: false },
-        ]
         const row: any = []
         let RowObj: any = new Object()
 
@@ -303,7 +285,8 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
           RowObj = new Object()
         }
 
-        const RtnData = [column, row]
+        const RtnData = row
+
         DrawD3ChartWithData(node, RtnData)
       }
     }
@@ -338,11 +321,16 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
       )
       ReactDOM.render(elementData, node)
     } else {
+      const column: any = [
+        { field: 'date', headerName: 'Date', editable: false },
+        { field: 'value', headerName: 'Value', editable: false },
+      ]
+
       const elementData = (
         <DataGridWrap className={'ag-theme-alpine'}>
           <AgGridReact
-            rowData={data[1]}
-            columnDefs={data[0]}
+            rowData={data}
+            columnDefs={column}
             defaultColDef={{
               flex: 1,
               editable: true,
@@ -359,13 +347,9 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   }
 
   const getDataBySelectTagInfo = async (TagArr: any, node: any) => {
-    console.log('[ Tag Arr ] : ', TagArr)
-    console.log('[ Box Target Id ] ', boxTargetId)
-    console.log(node.className)
-
     DrawDefaultGrid(node)
 
-    //일단 Table인 경우 조건 걸기 chart를 그려야 하기 때문
+    //일단 Table인 경우 조건 걸기 test용
     if (node.className !== 'Table') {
       //Test Data
       if (TagArr.length === 1) {
@@ -379,14 +363,14 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
           const data = await d3.csv(
             'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv'
           )
-          // console.log('multiSeries Data : ', data)
+
           DrawD3ChartWithData(node, data)
         }
       } else if (TagArr.length === 2) {
         const data = await d3.csv(
           'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv'
         )
-        // console.log('multiSeries Data 222 : ', data)
+
         DrawD3ChartWithData(node, data)
       } else {
         axios
@@ -439,8 +423,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
         axios
           .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/describe', TagArr)
           .then((response) => {
-            console.log('[ Tag Describe data ] : ')
-            console.log(response.data)
             setShowLoading(false)
 
             const column: any = [
@@ -457,9 +439,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
               row.push(RowObj)
               RowObj = new Object()
             }
-
-            // const TableData: any = [column, row]
-            // DrawD3ChartWithData(node, TableData)
           })
           .catch((error) => {
             console.log(error)
@@ -518,8 +497,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   //모달에서 선택한 TagInfoArr
   React.useEffect(() => {
     if (SelectTagInfo.length !== 0) {
-      // console.log('[ 모달에서 선택한 Tag Array ] ', SelectTagInfo)
-      // console.log('[ boxTargetId ] ', boxTargetId)
       const node: any = document.getElementById(boxTargetId)
       node.setAttribute('tag-data', JSON.stringify(SelectTagInfo))
 
@@ -536,7 +513,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
   async function initializeTemplate(dashboardObj: any, indexNumber: number) {
     let panelModelValue: ej2.PanelModel = {}
     const updatePanels: ej2.PanelModel[] = []
-    console.log('[ Index Number ] ', indexNumber)
     setPanelIdx(indexNumber)
 
     const panel: any = Object.keys(panels[indexNumber]).map((panelIndex: string) => {
@@ -569,62 +545,12 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
    * 위젯 셋팅 drawer 연결 작업 중 ...
    */
   const ClickDashBoardComponent = (e: any) => {
-    console.log(e.target.className)
-    console.log(typeof e.target.className)
-    // if (e.target.className.includes('widget-setting-btn')) {
-    //   const boxTargetId = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
-    //   console.log('----------------------------')
-    //   console.log(boxTargetId)
-    //   console.log('----------------------------')
-    //   setBoxTargetId(boxTargetId)
-
-    //   const data = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data
-    //   console.log(data)
-    //   let autoRange: any = null
-    //   if (e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis !== undefined) {
-    //     autoRange = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].layout.xaxis.autorange
-    //   }
-    //   const id = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
-    //   const type = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[0].data[0].type
-    //   if (data !== undefined) {
-    //     if (autoRange === false) {
-    //       // setLineChartShowDrawer(true)
-    //       setWidgetInfo('Line')
-    //       setBoxTargetId(id)
-    //     } else if (type === 'pie') {
-    //       // setPieChartShowDrawer(true)
-    //       setWidgetInfo('Pie')
-    //       setBoxTargetId(id)
-    //     } else if (type === 'bar') {
-    //       // setBarChartShowDrawer(true)
-    //       setWidgetInfo('Bar')
-    //       setBoxTargetId(id)
-    //     } else if (autoRange === true) {
-    //       // setTimeSeriesShowDrawer(true)
-    //       setWidgetInfo('Time Series')
-    //       setBoxTargetId(id)
-    //     }
-    //   } else {
-    //     const className = e.target.offsetParent.offsetParent.children[0].childNodes[1].childNodes[1].className
-    //     const id = e.target.offsetParent.offsetParent.children[0].childNodes[1].id
-    //     if (className !== undefined) {
-    //       if (className.includes('ag')) {
-    //         setWidgetInfo('Table')
-    //         setBoxTargetId(id)
-    //       }
-    //     }
-    //   }
-    // } else
-    /**2023-06-13
-     * 윤희 수정 작업 중
-     */
     //Data Connection 버튼 클릭한 경우
     const typeClass = e.target.className
     if (typeof typeClass !== 'object') {
       if (e.target.className.includes('connection-chart-data')) {
         const className = e.target.offsetParent.offsetParent.children[0].children[1].className
         const box_target_id = e.target.offsetParent.offsetParent.children[0].children[1].id
-        console.log('[ Connection Chart Data] : ', className)
         if (className !== undefined) {
           setDataConnectionModal(true)
           setBoxTargetId(box_target_id)
@@ -653,8 +579,41 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
     }
   }
 
+  //이미지 저장
+  const SaveLayoutImage = (lay_id: number, args: any) => {
+    const formData: any = new FormData()
+
+    const file: any = domtoimage.toBlob(document.querySelector('#DashboardBox')).then((blob) => {
+      const id: any = lay_id
+
+      const myfile = new File([blob], id + '.png', { type: 'image/png', lastModified: new Date().getTime() })
+
+      formData.append('com_id', window.localStorage.getItem('companyId'))
+      formData.append('lay_id', lay_id)
+      formData.append('file', myfile)
+
+      setForm(formData)
+    })
+
+    file.then(function (result: any) {
+      axios
+        .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout/img', formData)
+        .then((response) => {
+          console.log('[ Save Dashboard Image Response Data ] : ')
+          console.log(response.data)
+          setAlertMessage('레이아웃 이미지 저장이 완료 되었습니다.')
+          setShowAlertModal(true)
+        })
+        .catch((error) => {
+          console.log(error)
+          setAlertMessage('이미지 저장 오류. 관리자에게 문의 바랍니다.')
+          setShowAlertModal(true)
+        })
+    })
+  }
+
   //Layoutlist 가져오기
-  const getLayoutList = () => {
+  const getLayoutList = (args: any) => {
     axios
       .get(
         process.env.REACT_APP_API_SERVER_URL +
@@ -671,8 +630,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
       .then((response) => {
         console.log('[ get Layout List axios response data ] : ')
         console.log(response.data)
-
-        이미지저장함수.SaveLayoutImage(response.data[Number(response.data.length) - 1].lay_id)
+        SaveLayoutImage(response.data[Number(response.data.length) - 1].lay_id, args)
       })
       .catch((error) => {
         console.log(error)
@@ -695,6 +653,9 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
         data: args,
       }
 
+      console.log('[ Save Dashboard Params ] : ', params)
+      console.log(JSON.stringify(params))
+
       axios
         .post(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout', params)
         .then((response) => {
@@ -704,8 +665,11 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
           if (response.data.detail === 'success') {
             setAlertMessage('레이아웃 저장이 완료 되었습니다.')
             setShowAlertModal(true)
+            getLayoutList(args)
 
-            getLayoutList()
+            // SaveLayoutImage(Number(window.localStorage.getItem('layout_id')), args)
+
+            // getLayoutList(args)
           }
         })
         .catch((error) => {
@@ -732,7 +696,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
             setAlertMessage('레이아웃 업데이트가 완료 되었습니다.')
             setShowAlertModal(true)
 
-            이미지저장함수.SaveLayoutImage(Number(window.localStorage.getItem('layout_id')))
+            SaveLayoutImage(Number(window.localStorage.getItem('layout_id')), args)
           }
         })
         .catch((error) => {
@@ -747,13 +711,10 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
    *
    * 2023-06-14 박윤희
    * 레이아웃 저장
+   * 레이아웃 저장 API 파라미터를 가공하기 위한 함수
    *
    */
-  const getSaveLayoutInfo = (SaveInfo: string) => {
-    console.log('[ SaveInfo ] ', SaveInfo)
-    console.log(window.localStorage.getItem('SelectedDashboardInfo'))
-    console.log('[ Dashboard Obj ] ', dashboardObj)
-    console.log('[ Grid Information ] ', gridInformation)
+  const makeSaveLayoutInfo = (SaveInfo: string) => {
     if (window.localStorage.getItem('SelectedDashboardInfo') === 'new') {
       //const company_nm: any = JSON.parse(window.localStorage.getItem('company_info')).com_nm
 
@@ -762,25 +723,46 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
 
       if (dashboardObj !== undefined) {
         const dashboard_data: any = dashboardObj.element.children
-        console.log(dashboard_data)
 
         for (let i = 0, len = dashboard_data.length; i < len; i++) {
           const node = dashboard_data[i].childNodes[0].childNodes[1]
-          console.log(node)
-          console.log(node.className)
-          console.log(node.clientWidth)
-          console.log(node.clientHeight)
-          console.log(layoutTitle)
-          console.log('[ panel Idx ] ', panelIdx)
-          console.log(node.getAttribute('tag-data'))
-          console.log(JSON.parse(node.getAttribute('tag-data')))
 
+          save_grid_obj.grid_nm = ''
+          save_grid_obj.grid_index = i
           save_grid_obj.widget_type = node.className
-          save_grid_obj.width = node.clientWidth
-          save_grid_obj.height = node.clientHeight
-          save_grid_obj.tag_list = JSON.parse(node.getAttribute('tag-data'))
-          save_grid_obj.data_option = ''
-          save_grid_obj.layout_option = ''
+          // save_grid_obj.width = node.clientWidth
+          // save_grid_obj.height = node.clientHeight
+          /**2023.07.03 박윤희 Tag List 현재 수정 */
+          save_grid_obj.tag_list = []
+          // 추후 주석 해제
+          // save_grid_obj.tag_list = JSON.parse(node.getAttribute('tag-data'))
+
+          save_grid_arr.push(save_grid_obj)
+          save_grid_obj = new Object()
+        }
+
+        console.log('[ 저장 할 레이아웃 파라미터 ] ', save_grid_arr)
+        SaveDashboard(save_grid_arr)
+      }
+      //레이아웃 수정 일 경우
+    } else {
+      //1. 위젯 이외 타이틀 등만 변경하는 경우
+      let save_grid_obj: any = new Object()
+      const save_grid_arr: any = []
+
+      if (dashboardObj !== undefined) {
+        const dashboard_data: any = JSON.parse(window.localStorage.getItem('SelectedDashboardInfo'))
+
+        for (let i = 0, len = dashboard_data.length; i < len; i++) {
+          save_grid_obj.grid_nm = ''
+          save_grid_obj.grid_index = i
+          save_grid_obj.widget_type = dashboard_data[i].widget_type
+          // // save_grid_obj.width = node.clientWidth
+          // // save_grid_obj.height = node.clientHeight
+          // /**2023.07.03 박윤희 Tag List 현재 데이터가 없으므로 빈값으로 보냄 */
+          save_grid_obj.tag_list = []
+          // // 추후 주석 해제
+          // // save_grid_obj.tag_list = JSON.parse(node.getAttribute('tag-data'))
 
           save_grid_arr.push(save_grid_obj)
           save_grid_obj = new Object()
