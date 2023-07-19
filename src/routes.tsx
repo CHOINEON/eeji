@@ -1,8 +1,6 @@
 import { Icon } from '@chakra-ui/react'
-import { MdDashboard, MdDatasetLinked, MdSettings, MdOutlineModelTraining, MdDisplaySettings } from 'react-icons/md'
-import { ImDatabase } from 'react-icons/im'
+import { MdDashboard, MdSettings, MdOutlineModelTraining, MdDisplaySettings } from 'react-icons/md'
 import { BsHammer } from 'react-icons/bs'
-import { FaHourglassHalf } from 'react-icons/fa'
 
 // Admin Imports
 import MainDashboard from 'views/hmid'
@@ -14,7 +12,6 @@ import DataAnalysis from 'views/DataAnalysis'
 
 import HmidInterval from 'views/hmid_interval'
 import HmidIntervalD3 from 'views/hmid-interval-d3fc'
-import AIModeling from 'views/AIModeling'
 
 // Auth Imports
 
@@ -26,38 +23,15 @@ const routes = [
     icon: <Icon as={BsHammer} width="20px" height="20px" color="inherit" />,
     component: DataAnalysis,
   },
-  //잠시 주석
-  // {
-  //   name: 'HMID',
-  //   layout: '/admin',
-  //   path: '/maindashboard',
-  //   icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
-  //   component: MainDashboard,
-  // },
-  // {
-  //   name: 'ChartTest',
-  //   layout: '/admin',
-  //   path: '/chartTest',
-  //   icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
-  //   component: ChartTest,
-  // },
-  // 잠시 주석
-  // {
-  //   name: 'MainDashboard-WS',
-  //   layout: '/admin',
-  //   path: '/hmid-ws',
-  //   icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
-  //   component: MainDashboard,
-  // },
   {
-    name: 'MainDashboard',
+    name: 'MainDashboard-Line',
     layout: '/admin',
     path: '/hmid-interval',
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: HmidInterval,
   },
   {
-    name: 'MainDashboard - d3fc',
+    name: 'MainDashboard-D3FC',
     layout: '/admin',
     path: '/hmid-d3fc',
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,

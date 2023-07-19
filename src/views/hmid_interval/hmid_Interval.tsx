@@ -132,7 +132,6 @@ export const MainDashboardInterval: React.FC = () => {
    * panelData를 확인해서 위젯 조건에 따라 DOM에 그리기
    * ChartInterval 컴포넌트에 props 전달
    * ../hmid_config/data/panel-data 파일 사용
-   * 2023.05.30. 작업중
    */
   const AddGridGauid = (args: any, idx: number) => {
     const panels: any = panelData

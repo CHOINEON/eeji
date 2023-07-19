@@ -119,33 +119,39 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
         SelectedDashboardWidgetData(Layoutdata, panel)
       })
     } else {
-      initializeTemplate(dashboardObj, 0)
+      // 새로 생성하는 대시보드인 경우 Template 그린 후 가이드 그리기
+      initializeTemplate(dashboardObj, 0).then(function () {
+        AddGridGauid(0)
+      })
     }
   }, [])
 
+  //현재 날짜, 시간 불러오기
   React.useEffect(() => {
     setInterval(function () {
       getNowDateTime()
     }, 1000)
   }, [NowDateText])
 
+  //'save' 버튼 클릭했을 경우 모달창 열기
   React.useEffect(() => {
     if (saveLayoutInfo.length !== 0) {
       setOpenSaveLayoutModal(false)
       if (saveLayoutInfo !== 'unSave') {
-        getSaveLayoutInfo(saveLayoutInfo)
+        makeSaveLayoutInfo(saveLayoutInfo)
       }
     }
   }, [saveLayoutInfo])
 
   React.useEffect(() => {
+    console.log('[ panelIdx ] : ', panelIdx)
     // 새로 그린 dashboard인 경우
-    if (window.localStorage.getItem('SelectedDashboardInfo') === 'new') {
-      const timeout = setTimeout(function () {
-        AddGridGauid(panelIdx)
-      }, 500)
-
-      clearTimeout(timeout)
+    if (panelIdx !== undefined) {
+      if (window.localStorage.getItem('SelectedDashboardInfo') === 'new') {
+        setTimeout(function () {
+          AddGridGauid(panelIdx)
+        }, 1000)
+      }
     }
   }, [panelIdx])
 
@@ -268,10 +274,6 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
       if (node.className !== 'Table') {
         DrawD3ChartWithData(node, data)
       } else {
-        const column: any = [
-          { field: 'date', headerName: 'Date', editable: false },
-          { field: 'value', headerName: 'Value', editable: false },
-        ]
         const row: any = []
         let RowObj: any = new Object()
 
@@ -283,7 +285,8 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
           RowObj = new Object()
         }
 
-        const RtnData = [column, row]
+        const RtnData = row
+
         DrawD3ChartWithData(node, RtnData)
       }
     }
@@ -318,11 +321,16 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
       )
       ReactDOM.render(elementData, node)
     } else {
+      const column: any = [
+        { field: 'date', headerName: 'Date', editable: false },
+        { field: 'value', headerName: 'Value', editable: false },
+      ]
+
       const elementData = (
         <DataGridWrap className={'ag-theme-alpine'}>
           <AgGridReact
-            rowData={data[1]}
-            columnDefs={data[0]}
+            rowData={data}
+            columnDefs={column}
             defaultColDef={{
               flex: 1,
               editable: true,
@@ -661,7 +669,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
 
             // SaveLayoutImage(Number(window.localStorage.getItem('layout_id')), args)
 
-            getLayoutList(args)
+            // getLayoutList(args)
           }
         })
         .catch((error) => {
@@ -706,7 +714,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
    * 레이아웃 저장 API 파라미터를 가공하기 위한 함수
    *
    */
-  const getSaveLayoutInfo = (SaveInfo: string) => {
+  const makeSaveLayoutInfo = (SaveInfo: string) => {
     if (window.localStorage.getItem('SelectedDashboardInfo') === 'new') {
       //const company_nm: any = JSON.parse(window.localStorage.getItem('company_info')).com_nm
 
