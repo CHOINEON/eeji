@@ -1,11 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import '../../style/uploader.css'
 import { Button, Typography } from 'antd'
 import { useSetRecoilState } from 'recoil'
-import { stepCountStore } from 'views/DataAnalysis/atom'
+import { stepCountStore, dataSetStore } from 'views/DataAnalysis/store/atom'
+import axios from 'axios'
+import { DeleteOutlined } from '@ant-design/icons'
+const { Text, Link } = Typography
 
-const ContentContainer = styled.div`
+const DescBoxContainer = styled.div`
   display: block;
   float: left;
   background-color: #fff;
@@ -13,6 +16,7 @@ const ContentContainer = styled.div`
   height: 150px;
   border: 1px solid lightgray;
   &:hover {
+    // cursor: pointer;
     color: #0d99ff;
     background-color: #91caff69;
   }
@@ -25,9 +29,13 @@ const Content = styled.div`
 const TitleWrapper = styled.div`
   display: block;
   margin: 20px;
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 export interface DescriptionBoxProps {
+  id: string
   name: string
   size: number
   create: string
@@ -36,27 +44,59 @@ export interface DescriptionBoxProps {
 
 export interface IDescriptionBox {
   data: DescriptionBoxProps
+  onSelect: any
+  onDelete: any
 }
 
 const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
-  const setActiveStep = useSetRecoilState(stepCountStore)
-  const { name, size, create, update } = props.data
+  const setDataSet = useSetRecoilState(dataSetStore)
+  const { id, name, size } = props.data
+  const { onSelect, onDelete } = props
+
+  const [create, setCreate] = useState('')
+
+  useEffect(() => {
+    setCreate(new Date(props.data.create_date).toLocaleDateString())
+  }, [])
 
   const handleClick = () => {
-    setActiveStep(1)
+    setDataSet(id)
+    onSelect(true)
+  }
+
+  const handleDelete = (id: any) => {
+    // console.log('delete:', id)
+    const com_id = localStorage.getItem('companyId')
+
+    axios.delete(process.env.REACT_APP_API_SERVER_URL + '/api/dataset?com_id=' + com_id + '&dataset_id=' + id).then(
+      (response) => {
+        // console.log(response)
+        if (response.status === 200) {
+          alert('success!')
+          onDelete(true)
+        }
+      },
+      (error) => {
+        alert(error)
+      }
+    )
   }
 
   return (
     <>
-      <ContentContainer onClick={handleClick}>
+      <DescBoxContainer>
         <TitleWrapper>
-          <Typography.Title level={3}>{name}</Typography.Title>
+          <a onClick={() => handleDelete(id)}>
+            <DeleteOutlined style={{ float: 'right', color: 'red' }} />
+          </a>
+          <Typography.Title onClick={handleClick} level={3}>
+            {name}
+          </Typography.Title>
         </TitleWrapper>
         <div
           className="container"
           style={{
             display: 'flex',
-
             flexDirection: 'row',
             flexWrap: 'wrap',
             justifyContent: 'space-evenly',
@@ -64,29 +104,20 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
         >
           <Content>
             <div>Total Size</div>
-            <div>{size} MB</div>
+            <div>{Math.round(size / 1024)} MB</div>
           </Content>
           <Content>
             {' '}
-            <div>Create</div>
+            <div>Created</div>
             <div>{create}</div>
           </Content>
           <Content>
             {' '}
-            <div>Update</div>
-            <div>{update}</div>
+            <div>Created by</div>
+            <div>{'admin'}</div>
           </Content>
-          {/* <Content>
-            {' '}
-            <div>Column</div>
-            <div>344</div>
-          </Content>
-          <Content>
-            <div>Row</div>
-            <div>23523</div>
-          </Content> */}
         </div>
-      </ContentContainer>
+      </DescBoxContainer>
     </>
   )
 }

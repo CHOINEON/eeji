@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Modal, Input, Select, Space } from 'antd'
 import { useRecoilValue } from 'recoil'
-import { excludeHistoryStore } from 'views/DataAnalysis/atom'
+import { excludeHistoryStore } from 'views/DataAnalysis/store/atom'
 import { AgGridReact } from 'ag-grid-react'
 
 const HistoryModal = (props: any) => {

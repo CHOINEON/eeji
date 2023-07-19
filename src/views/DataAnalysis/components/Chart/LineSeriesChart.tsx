@@ -26,10 +26,10 @@ import {
 import Button from '@mui/material/Button'
 import ChartContextMenu from '../ContextMenu/ChartContextMenu'
 // import { CSVLink, CSVDownload } from 'react-csv'
-// import CsvDownloader from 'react-csv-downloader'
+import CsvDownloader from 'react-csv-downloader'
 import SetValueModal from './SetValueModal'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { excludeHistoryStore, indexColumnStore } from 'views/DataAnalysis/atom'
+import { excludeHistoryStore, indexColumnStore } from 'views/DataAnalysis/store/atom'
 import HistoryModal from './HistoryModal'
 
 const LineSeriesChart = (props: any) => {
@@ -50,7 +50,7 @@ const LineSeriesChart = (props: any) => {
 
   const chartRef: any = useRef()
 
-  const defaultXAxis: AxisModel = {
+  const primaryxAxis: AxisModel = {
     // crosshairTooltip: { enable: true },
     valueType: 'DateTime',
     labelFormat: 'M/d hh:mm',
@@ -60,11 +60,11 @@ const LineSeriesChart = (props: any) => {
     labelIntersectAction: 'Rotate45',
   }
 
-  const [primaryxAxis, setPrimaryxAxis] = useState<AxisModel>(defaultXAxis)
+  // const [primaryxAxis, setPrimaryxAxis] = useState<AxisModel>(defaultXAxis)
   useEffect(() => setExcludedData([]), [])
 
   useEffect(() => {
-    console.log('useref:', chartRef)
+    // console.log('properties:', chartRef.current.properties)
 
     if (indexColumn == '') {
       chartRef.current.properties.labelformat = ''
@@ -360,7 +360,7 @@ const LineSeriesChart = (props: any) => {
       <HistoryModal visible={modalOpen} onClose={handleModalClose} onGetValue={handleGetValue} />
       {/* <div id="btn-control" style={{ marginLeft: '60px' }}>
         <CsvDownloader
-          style={{ display: 'none' }}
+          style={{ display: 'block' }}
           ref={csvLinkRef}
           filename={chartInputData.name + '-edited-' + new Date()}
           extension=".csv"

@@ -27,6 +27,9 @@ import React from 'react'
 import ReactLoading from 'react-loading'
 import styled from '@emotion/styled'
 import thumb from '/img/thumbnail_01.png'
+import LineChart from 'views/DataAnalysis/components/Chart/LineChart'
+import D3Chart from 'views/DataAnalysis/components/Chart/D3Chart'
+import D3ChartTest from 'views/DataAnalysis/components/Chart/D3Chart copy'
 
 const LoadingBox = styled.div<{ toggle: any }>`
   width: 10vw;
@@ -55,7 +58,7 @@ const ModelingTitle = styled.div`
   margin-bottom: 1vw;
 `
 
-export default function AIPlantModeling() {
+export default function AIModeling() {
   //권한
   const [AdminInfo, setAdminInfo] = React.useState('block')
 
@@ -126,13 +129,10 @@ export default function AIPlantModeling() {
       >
         <div>
           <div>
-            <div>
-              <div>AI Plant Modeling</div>
-              <div>AI Plant Modeling</div>
-            </div>
-            <div>Company Name</div>
+            <div>Scatter plot rendering test _ D3</div>
+            {/* <LineChart /> */}
+            <D3ChartTest />
           </div>
-          <div></div>
         </div>
         {/* <Button
           style={{

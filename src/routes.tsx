@@ -1,8 +1,9 @@
 import { Icon } from '@chakra-ui/react'
 import { MdDashboard, MdDatasetLinked, MdSettings, MdOutlineModelTraining, MdDisplaySettings } from 'react-icons/md'
 import { ImDatabase } from 'react-icons/im'
-import { BsHammer } from 'react-icons/bs'
+import { BsHammer, BsGraphUpArrow } from 'react-icons/bs'
 import { FaHourglassHalf } from 'react-icons/fa'
+import { MdOutlineAnalytics } from 'react-icons/md'
 
 // Admin Imports
 import MainDashboard from 'views/hmid'
@@ -41,8 +42,15 @@ const routes = [
     name: 'Data Analysis',
     layout: '/admin',
     path: '/data-analysis',
-    icon: <Icon as={BsHammer} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
     component: DataAnalysis,
+  },
+  {
+    name: 'AI Modeling',
+    layout: '/admin',
+    path: '/use-model',
+    icon: <Icon as={BsGraphUpArrow} width="20px" height="20px" color="inherit" />,
+    component: AIModeling,
   },
   // {
   //   name: 'Chart Test',

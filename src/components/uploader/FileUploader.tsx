@@ -1,12 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { RemovingEventArgs, UploaderComponent } from '@syncfusion/ej2-react-inputs'
-// import { Button } from '@chakra-ui/react'
-// import Button from '@mui/material/Button'
-import { readFileSync } from 'fs'
 import axios from 'axios'
-import DataSummary from './DataSummary'
-import { stepCountStore } from './atom'
-import { useRecoilState } from 'recoil'
+import DataSummary from '../../views/DataAnalysis/components/DataInfo/DataSummary'
 import styled from '@emotion/styled'
 import ArrowDownward from 'assets/img/dataAnalysis/arrow_downward.png'
 import { Button } from 'antd'
@@ -23,12 +18,16 @@ const UploadWrapperDiv = styled.div<{ uploaded: any }>`
 `
 
 const FileUploader = (props: any) => {
+  const { onUploaded, refresh, onSaved, reqParams, type } = props
+
   const uploadObj = useRef<UploaderComponent>(null)
   const [loading, setLoading] = useState(false)
-  // const [uploaded, setUploaded] = useState(false)
   const [selected, setSelected] = useState(false)
-  const { onUploaded, refresh, onSaved } = props
   const [summaryResult, setSummaryResult] = useState([])
+
+  useEffect(() => {
+    // console.log('FileUploader props::', props)
+  }, [props])
 
   useEffect(() => {
     if (refresh) {
@@ -138,32 +137,69 @@ const FileUploader = (props: any) => {
       const formData = new FormData()
       const uploadFiles = uploadObj.current.getFilesData()
 
-      for (const i in uploadFiles) {
-        formData.append('com_id', localStorage.getItem('companyId'))
-        formData.append('files', uploadFiles[i].rawFile)
-      }
+      // console.log('uploadFiles:', uploadFiles)
+      // console.log('reqParams:', reqParams)
+      if (type === 'TRAIN') {
+        for (const i in uploadFiles) {
+          formData.append('com_id', localStorage.getItem('companyId'))
+          formData.append('name', uploadFiles[0].name)
+          formData.append('files', uploadFiles[i].rawFile)
+        }
 
-      axios
-        .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/uploadfile', formData, {
-          headers: {
-            'Content-Type': `multipart/form-data;`,
-          },
-        })
-        .then(
-          (response) => {
-            // console.log(' uploadfile RESP :', response)
-            setLoading(false)
+        axios
+          .post(process.env.REACT_APP_API_SERVER_URL + '/api/upload', formData, {
+            headers: {
+              'Content-Type': `multipart/form-data;`,
+            },
+          })
+          .then(
+            (response) => {
+              // console.log('UPLOAD RESP :', response)
+              setLoading(false)
 
-            if (response.status === 200) {
-              onSaved(summaryResult)
+              if (response.status === 200) {
+                onSaved(summaryResult)
+              }
+            },
+            (error) => {
+              // console.log('error:', error)
+              setLoading(false)
+              alert(error)
             }
-          },
-          (error) => {
-            // console.log('error:', error)
-            setLoading(false)
-            alert(error)
-          }
-        )
+          )
+      } else if (type === 'TEST') {
+        // console.log('uploadFiles[0].rawFile:', uploadFiles[0].rawFile)
+
+        // const modelArr = []
+        // modelArr.push(reqParams.data.model_id)
+
+        // const modelArr = new Array(reqParams.data.model_id.toString())
+
+        // for (const i in modelArr) {
+        //   formData.append('com_id', localStorage.getItem('companyId'))
+        //   formData.append('model_id', modelArr[i])
+        //   formData.append('file', uploadFiles[0].rawFile) //single file
+        // }
+
+        onSaved(uploadFiles[0].rawFile)
+
+        // axios
+        //   .post(process.env.REACT_APP_API_SERVER_URL + '/api/predict/model/chart', formData, {
+        //     headers: {
+        //       'Content-Type': `multipart/form-data;`,
+        //     },
+        //   })
+        //   .then(
+        //     (response) => {
+        //       console.log('/api/predict/model/chart RESP :', response)
+
+        //     },
+        //     (error) => {
+        //       setLoading(false)
+        //       alert(error)
+        //     }
+        //   )
+      }
     } else {
       alert('업로드할 파일이 없습니다')
       // setMessage('업로드할 파일이 없습니다')
@@ -192,14 +228,7 @@ const FileUploader = (props: any) => {
                 selected={handleSelect}
               ></UploaderComponent>
               <p>Allowed file extensions : .xls(x), .csv</p>
-              {/* <div style={{ textAlign: 'right' }}>
-                <Button loading={loading} onClick={handleUpload}>
-                  Save
-                </Button>
-              </div> */}
-              {/* <div style={{ display: uploaded ? 'block' : 'none', margin: 'auto', padding: '10px' }}>
-                <img src={ArrowDownward} style={{ margin: 'auto' }} />
-              </div> */}
+
               <div style={{ marginBottom: '30px' }}>
                 <DataSummaryDiv toggle={summaryResult.length > 0 ? true : false}>
                   <>
@@ -214,7 +243,7 @@ const FileUploader = (props: any) => {
                     onClick={handleSave}
                     style={{ float: 'right', maxWidth: '400px', margin: 'auto', display: selected ? 'block' : 'none' }}
                   >
-                    Save
+                    Ok
                   </Button>
                 </div>
               </div>

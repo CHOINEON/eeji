@@ -52,80 +52,86 @@ const Worksheet = (props: any) => {
     })
   }, [])
 
+  // useEffect(() => getChartdata(), [])
+
   // useEffect(() => {
   //   setChartData([])
   // }, [refresh])
 
-  // useEffect(() => {
-  //   if (selectedTags.length > 0) {
-  //     const height = Math.floor(100 / selectedTags.length)
-  //     if (height < 33) {
-  //       setChartHeight('32%') // minimum height : 33%
-  //     } else {
-  //       setChartHeight(height + '%')
-  //     }
-  //      chartWrapper.current.style.height = height + '%'
-  //   }
-  // }, [selectedTags])
+  useEffect(() => {
+    if (chartWrapper && selectedTags.length > 0) {
+      const height = Math.floor(100 / selectedTags.length)
+      if (height < 33) {
+        setChartHeight('32%') // minimum height : 33%
+      } else {
+        setChartHeight(height + '%')
+      }
+      // chartWrapper.current.style.height = height + '%'
+    }
+  }, [selectedTags])
 
   const handleCreateChart = () => {
     // setClicked(true)
-    getChartdata()
+    // getChartdata()
     // setActive(true)
   }
+
+  useEffect(() => {
+    // console.log('selectedTags::', selectedTags)
+    setChartData(selectedTags)
+  }, [selectedTags])
 
   const getChartdata = () => {
     setProgressActive(true)
 
-    if (selectedTags.length > 0) {
-      axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/chartData1', selectedTags).then(
-        (response: any) => {
-          if (response.status === 200) {
-            // console.log('chartData response: ', response.data)
-            setChartData(response.data)
-            // renderItem()
-            setProgressActive(false)
-          }
-        },
-        (error) => {
-          console.log('error:', error)
-          setProgressActive(false)
-        }
-      )
-    }
+    // if (selectedTags.length > 0) {
+    //   axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/chartData1', selectedTags).then(
+    //     (response: any) => {
+    //       if (response.status === 200) {
+    //         // console.log('chartData response: ', response.data)
+    //         setChartData(response.data)
+    //         // renderItem()
+    //         setProgressActive(false)
+    //       }
+    //     },
+    //     (error) => {
+    //       console.log('error:', error)
+    //       setProgressActive(false)
+    //     }
+    //   )
+    // }
   }
 
   const renderItem = () => {
-    // console.log('renderItem:', chartData)
+    console.log('renderItem:', chartData)
 
     if (chartData.length > 0) {
-      const singleChart = (
-        <LineSeriesChart onExport={onExport} chartInputData={chartData} chartHeight={chartHeight} onSave={onSave} />
-      )
-
-      return singleChart
+      // const singleChart = (
+      //   <LineSeriesChart onExport={onExport} chartInputData={chartData} chartHeight={chartHeight} onSave={onSave} />
+      // )
+      // return singleChart
 
       //리턴할 차트들 여러개 만들기
-      // const singleChart = chartData.map((value, index) => {
-      //   return (
-      //     <div
-      //       ref={chartWrapper}
-      //       key={index}
-      //       style={{
-      //         width: '100%',
-      //         height: chartHeight,
-      //         maxHeight: '97%',
-      //         float: 'left',
-      //         // border: '1px solid red',
-      //         // backgroundColor: 'pink',
-      //         marginBottom: '10px',
-      //       }}
-      //     >
-      //       <LineSeriesChart onExport={onExport} chartInputData={value} chartHeight={chartHeight} onSave={onSave} />
-      //     </div>
-      //   )
-      // })
-      // return singleChart
+      const multipleChart = chartData.map((value, index) => {
+        return (
+          <div
+            ref={chartWrapper}
+            key={index}
+            style={{
+              width: '100%',
+              height: chartHeight,
+              maxHeight: '97%',
+              float: 'left',
+              // border: '1px solid red',
+              // backgroundColor: 'pink',
+              marginBottom: '10px',
+            }}
+          >
+            <LineSeriesChart onExport={onExport} chartInputData={value} chartHeight={chartHeight} onSave={onSave} />
+          </div>
+        )
+      })
+      return multipleChart
     }
   }
 
@@ -146,7 +152,7 @@ const Worksheet = (props: any) => {
         {progressActive && <CircularProgress style={{ position: 'relative', top: '200px' }} />}
         {renderItem()}
       </div>
-      <div style={{ width: '100%', margin: 'auto', textAlign: 'center' }}>
+      {/* <div style={{ width: '100%', margin: 'auto', textAlign: 'center' }}>
         <Button
           variant="contained"
           onClick={handleCreateChart}
@@ -154,7 +160,7 @@ const Worksheet = (props: any) => {
         >
           CREATE CHART
         </Button>
-      </div>
+      </div> */}
       {/* <ChartSelectionDialog isOpen={isOpen} onDialogClose={handldDialogClose} onSelectChart={onSelectChart} /> */}
     </>
   )

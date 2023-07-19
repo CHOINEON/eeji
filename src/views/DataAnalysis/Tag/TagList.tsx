@@ -8,7 +8,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css'
 import axios from 'axios'
 
 const TagList = (props: any) => {
-  const { syncSelectedTag, refresh } = props
+  const { syncSelectedTag, refresh, data } = props
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), [])
   const gridRef = useRef<AgGridReact<any>>(null)
   //datagrid row data
@@ -24,28 +24,19 @@ const TagList = (props: any) => {
   ])
 
   useEffect(() => {
+    const result = []
+    for (let i = 0; i < data.length; i++) {
+      result.push({ name: data[i].name })
+    }
+
+    setRowData(result)
+  }, [data])
+
+  useEffect(() => {
     // console.log('taglist refresh:', gridRef.current)
     //selection 초기화
     if (refresh) gridRef.current.api.deselectAll()
   }, [refresh])
-
-  useEffect(() => {
-    // setRowData([])
-    fetchTaglistData()
-  }, [])
-
-  const fetchTaglistData = () => {
-    axios
-      .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/list', {
-        com_id: localStorage.getItem('companyId'),
-        search_type: 'process',
-      })
-      .then((response) => {
-        // console.log('fetchTaglistData/process:', response)
-        setRowData(response.data)
-      })
-      .catch((error) => error('Data Load Failed'))
-  }
 
   const onSelectionChanged = (e: any) => {
     // console.log('onSelectionChanged:', e)

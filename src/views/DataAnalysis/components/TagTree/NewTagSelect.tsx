@@ -1,79 +1,151 @@
-import React, { useState, useEffect, useReducer, ChangeEvent, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Typography } from '@mui/material'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 import {
-  stepCountStore,
-  variableStoreX,
-  variableStoreY,
   selectedVarStoreX,
   selectedVarStoreY,
   indexColumnStore,
   variableStore,
-} from '../../atom'
-import { cloneDeep, eachRight } from 'lodash'
-import { Col, Row, DatePicker, Select, Space, Divider, Tag } from 'antd'
-import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
-import type { SelectProps } from 'antd'
-
-// const options: SelectProps['options'] = []
-// const testOption = [
-//   { value: 'yoga_train_0_426', label: 'x427' },
-//   { value: 'yoga_train_0_425', label: 'x426' },
-//   { value: 'yoga_train_0_424', label: 'x425' },
-// ]
-
-// for (let i = 0; i < testOption.length; i++) {
-//   options.push(testOption[i])
-// }
-
-const tagRender = (props: CustomTagProps) => {
-  const { label, value, closable, onClose } = props
-  const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
-    event.preventDefault()
-    event.stopPropagation()
-  }
-  return (
-    <Tag
-      // color={value}
-      onMouseDown={onPreventMouseDown}
-      closable={closable}
-      onClose={onClose}
-      style={{ marginRight: 3 }}
-    >
-      {label}
-    </Tag>
-  )
-}
+  usedVariableStore,
+} from '../../store/atom'
+import { Select } from 'antd'
 
 const NewTagSelect = (props: any) => {
-  const { selectionType, type, title, style, filteredOptions, defaultOptions } = props
+  const { selectionType, type, title, style } = props
 
   const [options, setOptions] = useState([])
-  const [value, setValue] = useState()
+  const [value, setValue] = useState([])
 
   //최초 리스트
   const [variableList, setVariableList] = useRecoilState(variableStore)
-  // const [rawDataX, setRawDataX] = useRecoilState(variableStoreX)
-  // const [rawDataY, setRawDataY] = useRecoilState(variableStoreY)
+  const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
 
-  const [filteredData, setFilteredData] = useState([])
   const [selectedVarX, setSelectedVarX] = useRecoilState(selectedVarStoreX)
   const [selectedVarY, setSelectedVarY] = useRecoilState(selectedVarStoreY)
 
   const [indexColumn, setIndexColumn] = useRecoilState(indexColumnStore)
 
-  useEffect(() => setOptions(defaultOptions), [defaultOptions])
+  //Update "options" in <Select> whenever feature selected
   useEffect(() => {
-    if (filteredOptions && filteredOptions.length > 0) setOptions(filteredOptions)
-  }, [filteredOptions])
+    // console.log('-----------usedVariable:::::', usedVariable)
+
+    // let category = ''
+    // if (type === 'TARGET_VARIABLE') category = 'y'
+    // if (type === 'EXPLANATORY_VARIABLE') category = 'x'
+
+    if (usedVariable && usedVariable.length > 0) {
+      if (type === 'TARGET_VARIABLE') {
+        const leftItems = usedVariable.filter((item) => item.category !== 'x').map((item) => item.value)
+        setOptions(variableList[0].options.filter((x: any) => leftItems.includes(x.value)))
+      } else {
+        const leftItems = usedVariable.filter((item) => item.category !== 'y').map((item) => item.value)
+        setOptions(variableList[0].options.filter((x: any) => leftItems.includes(x.value)))
+      }
+    }
+  }, [usedVariable])
 
   useEffect(() => {
-    return console.log('newtagselect cleanup!')
-  }, [])
+    setOptions(variableList)
+  }, [variableList])
+
+  useEffect(() => {
+    if (value) {
+      // console.log('value changed:', value)
+      // console.log('usedVariable:', usedVariable)
+
+      const result = []
+      for (let i = 0; i < usedVariable.length; i++) {
+        if (value.includes(usedVariable[i].value)) {
+          result.push({ value: usedVariable[i].value, used: true, category: type === 'TARGET_VARIABLE' ? 'y' : 'x' })
+        } else {
+          result.push(usedVariable[i])
+        }
+      }
+      // console.log('result:', result)
+      setUsedVariable(result)
+
+      //   if (type === 'TARGET_VARIABLE') {
+      //     const result = []
+      //     for (let i = 0; i < usedVariable.length; i++) {
+      //       if (value.includes(usedVariable[i].value)) {
+      //         result.push({ value: usedVariable[i].value, used: true, category: 'y' })
+      //       } else {
+      //         result.push(usedVariable[i])
+      //       }
+      //     }
+      //     // console.log('result:', result)
+      //     setVariableUsage(result)
+      //   } else if (type === 'EXPLANATORY_VARIABLE') {
+      //     const result = []
+      //     for (let i = 0; i < usedVariable.length; i++) {
+      //       if (value.includes(usedVariable[i].value)) {
+      //         result.push({ value: usedVariable[i].value, used: true, category: 'x' })
+      //       } else {
+      //         result.push(usedVariable[i])
+      //       }
+      //     }
+      //     // console.log('result:', result)
+      //     setVariableUsage(result)
+      //   }
+      // }
+    }
+  }, [value])
+
+  //상위로 이동
+  // const fetchTaglistData = () => {
+  //   axios
+  //     .post(
+  //       process.env.REACT_APP_API_SERVER_URL + '/api/tag/list',
+  //       {
+  //         com_id: localStorage.getItem('companyId'),
+  //         search_type: 'tree',
+  //       }
+  //       // { cancelToken: cancelSource }
+  //     )
+  //     .then((response) => {
+  //       // console.log('fetchTaglistData:', response.data)
+  //       setVariableList(response.data)
+
+  //       const values = response.data[0].options
+  //       const valueArr: Array<any> = values.map((item: any) => item.value)
+
+  //       const result: Array<any> = []
+  //       valueArr.forEach((value: any) => {
+  //         result.push({ value: value, used: false })
+  //       })
+
+  //       setUsedVariable(result)
+  //       // setFilteredList(response.data)
+  //     })
+  //     .catch((error) => error('Data Load Failed'))
+  // }
+
+  const handleDeselect = (param: any) => {
+    // console.log('param:', param)
+    // console.log('value:', value)
+
+    // if (type === 'TARGET_VARIABLE') {
+    const result = []
+    for (let i = 0; i < usedVariable.length; i++) {
+      if (value.includes(usedVariable[i].value)) {
+        result.push({ value: usedVariable[i].value, used: false })
+      } else {
+        result.push(usedVariable[i])
+      }
+    }
+    // console.log('result:', result)
+    setUsedVariable(result)
+    // }
+  }
+
+  // useEffect(() => {
+  //   // console.log('filtered::', filteredOptions)
+  //   if (filteredOptions && filteredOptions.length > 0) setOptions(filteredOptions)
+  // }, [filteredOptions])
 
   const handleClick = (e: any) => {
-    // console.log('selectedVarY: ', selectedVarY)
+    // console.log('new tagselect handleClick: ', e)
     // if (type === 'EXPLANATORY_VARIABLE') {
     //   if (selectedVarY.length > 0) {
     //     const array = selectedVarY[0].variable //['x1','x2']
@@ -100,30 +172,12 @@ const NewTagSelect = (props: any) => {
     // console.log('handleChange:: ', selectedValue)
     setValue(selectedValue)
 
-    //formatting 을 request 직전으로 옮기자...
-    // const result = []
-    // result.push({ table_nm: variableList[0].label, variable: selectedValue })
-
     if (type === 'TARGET_VARIABLE') {
-      //formatting FOR VARIABLE Y
-      // const formattedObj = { table_nm: rawDataY[0].label, variable: [selectedValue] }
-
-      setSelectedVarY(selectedValue)
-
-      ////////////TEST////////////////////////////////////
-      // 타겟변수 제외한 모든 변수를 원인변수의 디폴트로 선택
-      // const X_defaultValue = rawDataX[0].options
-      //   .filter((x: any) => x.value !== selectedValue)
-      //   .map((row: any) => row.value)
-
-      // 원인변수 세팅 위해서 props 넘기기
-      // onSelectionChanged({ type, X_defaultValue })
-      ////////////TEST////////////////////////////////////
+      setSelectedVarY([selectedValue])
     }
     if (type === 'EXPLANATORY_VARIABLE') {
       setSelectedVarX(selectedValue)
     }
-
     if (type === 'INDEX_COLUMN') {
       setIndexColumn(selectedValue)
     }
@@ -138,9 +192,8 @@ const NewTagSelect = (props: any) => {
       <Select
         id={selectionType}
         mode={selectionType}
-        // tagRender={tagRender}
-        allowClear
-        showSearch
+        // allowClear
+        // showSearch
         placeholder="Search to select"
         optionFilterProp="children"
         filterOption={(input, option) => (option?.label ?? '').includes(input)}
@@ -150,13 +203,14 @@ const NewTagSelect = (props: any) => {
         value={value}
         options={options}
         onChange={handleChange}
-        onClick={handleClick}
+        onDeselect={handleDeselect}
+        // onClear={handleClear}
+        // onClick={handleClick}
         maxTagCount="responsive"
         // onSelect={handleSelect}
         // onDropdownVisibleChange={handleDropdownVisibleChange}
         // defaultActiveFirstOption={true}
       ></Select>
-      {/* {type === 'EXPLANATORY_VARIABLE' && <button onClick={handleAllSelect}>All select</button>} */}
     </div>
   )
 }
