@@ -39,6 +39,8 @@ export const IntervalTestBiance: React.FC<D3Binance1s> = (props) => {
         data.pop()
         data.pop()
       }
+
+      // 새로 가공한 데이터를 다른 state에 담아서 최신으로 유지
       setPrevWSData(data)
       DrawMultipleSeriesD3LineChart(data)
     }
