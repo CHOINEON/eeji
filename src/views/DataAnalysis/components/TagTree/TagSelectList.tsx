@@ -9,7 +9,7 @@ import Checkbox from '@mui/material/Checkbox'
 import axios from 'axios'
 import { Typography } from '@mui/material'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { stepCountStore, variableStoreX, variableStoreY, selectedVarStoreX, selectedVarStoreY } from '../../atom'
+import { stepCountStore, variableStoreX, variableStoreY, selectedVarStoreX, selectedVarStoreY } from '../../store/atom'
 import { cloneDeep } from 'lodash'
 
 const ITEM_HEIGHT = 50

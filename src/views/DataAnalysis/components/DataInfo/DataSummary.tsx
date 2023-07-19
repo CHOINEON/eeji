@@ -8,7 +8,7 @@ import Button from '@mui/material/Button'
 import { Box, Stack } from '@mui/material'
 import Pagination from '@mui/material/Pagination'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import { theme } from './theme'
+import { theme } from '../../theme/theme'
 import { AgGridReact } from 'ag-grid-react'
 import { Typography } from 'antd'
 

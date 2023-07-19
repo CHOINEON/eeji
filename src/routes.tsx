@@ -1,5 +1,5 @@
 import { Icon } from '@chakra-ui/react'
-import { MdDashboard, MdSettings, MdOutlineModelTraining, MdDisplaySettings } from 'react-icons/md'
+import { MdDashboard, MdSettings, MdOutlineModelTraining, MdDisplaySettings, MdOutlineAnalytics } from 'react-icons/md'
 import { BsHammer } from 'react-icons/bs'
 
 // Admin Imports
@@ -9,7 +9,7 @@ import DashboardConfig from 'views/hmid_config'
 import LayoutList from 'views/hmid_list'
 import ModelMaintenance from 'views/ModelMaintenance'
 import DataAnalysis from 'views/DataAnalysis'
-
+import AIModeling from 'views/AIModeling'
 import HmidInterval from 'views/hmid_interval'
 import HmidIntervalD3 from 'views/hmid-interval-d3fc'
 
@@ -20,8 +20,15 @@ const routes = [
     name: 'Data Analysis',
     layout: '/admin',
     path: '/data-analysis',
-    icon: <Icon as={BsHammer} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
     component: DataAnalysis,
+  },
+  {
+    name: 'Run Model',
+    layout: '/admin',
+    path: '/run-model',
+    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+    component: AIModeling,
   },
   {
     name: 'MainDashboard-Line',

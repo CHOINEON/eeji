@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal } from 'antd'
-import FileUploader from 'views/DataAnalysis/FileUploader'
+import FileUploader from 'components/uploader/FileUploader'
 
 const DataImportModal = (props: any) => {
-  const { modalOpen, onClose, onSaveData } = props
-  const [loading, setLoading] = useState(false)
+  const { modalOpen, onClose, onSaveData, reqParams, type } = props
   const [open, setOpen] = useState(false)
   const [refresh, setRefresh] = useState(false)
+
+  useEffect(() => {
+    // console.log('DataImportModal props::', props)
+  }, [props])
 
   useEffect(() => {
     setOpen(modalOpen)
@@ -29,7 +32,6 @@ const DataImportModal = (props: any) => {
   }
 
   const handleSaved = (param: any) => {
-    // console.log(param)
     onSaveData(param)
     setOpen(false)
     onClose()
@@ -63,7 +65,7 @@ const DataImportModal = (props: any) => {
           ]
         }
       >
-        <FileUploader onSaved={handleSaved} refresh={refresh} />
+        <FileUploader type={type} onSaved={handleSaved} refresh={refresh} reqParams={reqParams} />
       </Modal>
     </div>
   )

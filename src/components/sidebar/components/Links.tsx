@@ -24,8 +24,8 @@ export function SidebarLinks(props: { routes: RoutesType[] }) {
     return location.pathname.includes(routeName)
   }
 
-  console.log('[ Linek User Auth ]')
-  console.log(window.localStorage.getItem('userPosition'))
+  // console.log('[ Linek User Auth ]')
+  // console.log(window.localStorage.getItem('userPosition'))
 
   // this function creates the links from the secondary accordions (for example auth -> sign-in -> default)
   const createLinks = (routes: RoutesType[]) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react'
 import { Box } from '@chakra-ui/react'
-import FileUploader from './FileUploader'
+import FileUploader from '../../components/uploader/FileUploader'
 import PreProcessing from './PreProcessing'
 import ModelSetting from './ModelSetting'
 import { ThemeProvider } from '@mui/material/styles'
@@ -8,17 +8,16 @@ import VariableSelection from './VariableSelection'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
 import StepButton from '@mui/material/StepButton'
-import { theme } from './theme'
+import { theme } from './theme/theme'
 import { useRecoilState } from 'recoil'
-import { stepCountStore } from './atom'
-import DataImport from './DataImport'
+import { stepCountStore } from './store/atom'
+import DataImport from './DataSet'
 
-export default function DataAnalysis() {
+const DataAnalysis = () => {
   // const activeStep = useRecoilValue(stepCountStore)
   // const setActiveStep = useSetRecoilState(stepCountStore)
 
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
-  const [refresh, setRefresh] = useState(false)
   // const [uploaded, setUploaded] = useState(false)
   const [dataSource, setDataSource] = useState([])
   const [loading, setLoading] = useState(false)
@@ -26,18 +25,10 @@ export default function DataAnalysis() {
     [k: number]: boolean
   }>({})
 
-  const onRefresh = () => {
-    refreshAll()
-  }
-
-  const refreshAll = () => {
-    setRefresh(true)
-  }
-
   // const onUploaded = (param: boolean) => {
   //   setUploaded(param)
   // }
-  const steps = ['Upload Data', 'Select Variables', 'Preprocessing', 'Set Model']
+  const steps = ['Upload Data', 'Select Variables', 'Set Model']
 
   const totalSteps = () => {
     return steps.length
@@ -109,9 +100,11 @@ export default function DataAnalysis() {
         {/* <Box>{activeStep === 0 && <FileUploader refresh={refresh} />}</Box> */}
         <Box>{activeStep === 0 && <DataImport />}</Box>
         <Box>{activeStep === 1 && <VariableSelection />}</Box>
-        <Box>{activeStep === 2 && <PreProcessing onPreprocessed={onPreprocessed} />}</Box>
-        <Box>{activeStep === 3 && <ModelSetting dataSource={dataSource} />}</Box>
+        {/* <Box>{activeStep === 2 && <PreProcessing onPreprocessed={onPreprocessed} />}</Box> */}
+        <Box>{activeStep === 2 && <ModelSetting dataSource={dataSource} />}</Box>
       </Box>
     </ThemeProvider>
   )
 }
+
+export default DataAnalysis

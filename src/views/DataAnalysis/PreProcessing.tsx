@@ -5,7 +5,7 @@ import TagList from './Tag/TagList'
 import Worksheet from './components/Worksheets/Worksheet'
 import './style/uploader.css'
 import SeriesSelectionGrid from './Tag/SeriesSelectionGrid'
-import { stepCountStore } from './atom'
+import { stepCountStore } from './store/atom'
 import { useSetRecoilState } from 'recoil'
 
 export const PreProcessing = (props: any) => {

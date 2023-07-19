@@ -1,28 +1,44 @@
 import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
-import { CircularProgress, FormControlLabel, Grid, Typography } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import LineChart from './components/Chart/LineChart'
 import styled from '@emotion/styled'
 import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { stepCountStore, variableStoreX, variableStoreY, selectedVarStoreX, selectedVarStoreY } from './atom'
-import { Col, Divider, Row, Select, Space, Spin, Button, Popover } from 'antd'
+import {
+  stepCountStore,
+  variableStoreX,
+  variableStoreY,
+  selectedVarStoreX,
+  selectedVarStoreY,
+  dataSetStore,
+  dataFileStore,
+} from './store/atom'
+import { Col, Divider, Row, Select, Space, Spin, Button, Popover, message } from 'antd'
 import CheckableTag from 'antd/es/tag/CheckableTag'
-import AssistantOutlinedIcon from '@mui/icons-material/AssistantOutlined'
+// import AssistantOutlinedIcon from '@mui/icons-material/AssistantOutlined'
 import './style/styles.css'
+import ModelSavePopup from './components/Modeling/ModelSavePopup'
 
 const ModelSetting = (props: any) => {
   const setActiveStep = useSetRecoilState(stepCountStore)
+
+  const [selectedDataSet, setSelectedDataSet] = useRecoilState(dataSetStore)
+  const [selectedDataFile, setSelectedDataFile] = useRecoilState(dataFileStore)
 
   //step2에서 선택된 변수
   const [selectedVarX, setSelectedVarX] = useRecoilState(selectedVarStoreX)
   const [selectedVarY, setSelectedVarY] = useRecoilState(selectedVarStoreY)
 
   const [chartData, setChartData] = useState<any>()
-  const [model, setModel] = useState('PLS')
+  const [model, setModel] = useState('plsr')
   const [resultText, setResultText] = useState({ mae: '', r2: '', rmse: '' })
   const [btnLoading, setBtnLoading] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [modelingInfo, setModelingInfo] = useState({})
+
+  //modal
+  const [open, setOpen] = useState(false)
 
   const [options, setOptions] = useState([
     { value: 'plsr', label: 'PLS' },
@@ -42,62 +58,106 @@ const ModelSetting = (props: any) => {
     </div>
   )
 
+  //messages
+  const [messageApi, contextHolder] = message.useMessage()
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'This is a success message',
+    })
+  }
+
   // const mergedArrow = useMemo(() => {
   //   if (arrowAtCenter) return { pointAtCenter: true };
   //   return showArrow;
   // }, [showArrow, arrowAtCenter]);
 
   useEffect(() => {
-    // console.log('selectedVarX:', selectedVarX)
-    // console.log('selectedVarY:', selectedVarY)
-    // console.log('selectedVarY[0]:', selectedVarY[0])
-
     setSelectedTagsY([selectedVarY[0]]) //첫번째 타겟 선택
     setSelectedTagsX(selectedVarX)
   }, [])
 
-  const fetchChartData = () => {
+  const fetchModelingData = (type: string, modelName?: string) => {
     // const ChartDataArr: any = []
+
+    // console.log(selectedTagsX)
+    // console.log(selectedDataFile)
 
     if (selectedTagsX.length > 0 && selectedTagsY.length > 0) {
       const param = {
+        com_id: localStorage.getItem('companyId'),
+        dataset_id: selectedDataSet,
+        file_nm: selectedDataFile,
+        y_value: selectedTagsY,
         x_value: selectedTagsX,
-        y_value: selectedTagsY[0],
         predict_type: model,
+        model_nm: modelName,
+        upload: type === 'SAVE' ? true : false,
       }
-      console.log(param)
+      // console.log(param)
 
-      axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/predict/chartData?', param).then((response) => {
-        setLoading(true)
-        if (response.status === 200) {
-          // console.log('chartData response:', response.data)
-          const result = response.data
+      axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/aimodel', param).then(
+        (response) => {
+          setLoading(true)
+          if (response.status === 200) {
+            // console.log('chartData response:', response.data)
 
-          const dataArray = []
-          setResultText({ mae: '', r2: '', rmse: '' })
-          for (let i = 0; i < result.length; i++) {
-            if (result[i].name === 'evaluation') {
-              setResultText(result[i])
-            } else {
-              dataArray.push(result[i])
+            if (type === 'RUN') {
+              const result = response.data
+              const dataArray = []
+              setResultText({ mae: '', r2: '', rmse: '' })
+              for (let i = 0; i < result.length; i++) {
+                if (result[i].name === 'evaluation') {
+                  setResultText(result[i])
+                } else {
+                  dataArray.push(result[i])
+                }
+              }
+              setChartData(dataArray)
+            } else if (type === 'SAVE') {
+              alert('Saved!')
+              handleClose()
+              setOpen(false)
             }
           }
-          setChartData(dataArray)
-        }
-        setLoading(false)
-      })
-    } else {
-      alert('Variables are not selected')
-      setActiveStep(1)
-      setLoading(false)
+          setLoading(false)
+        },
+        (error) => console.log(error)
+      )
+
+      // axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/predict/chartData?', param).then((response) => {
+      //   setLoading(true)
+      //   if (response.status === 200) {
+      //     // console.log('chartData response:', response.data)
+      //     const result = response.data
+
+      //     const dataArray = []
+      //     setResultText({ mae: '', r2: '', rmse: '' })
+      //     for (let i = 0; i < result.length; i++) {
+      //       if (result[i].name === 'evaluation') {
+      //         setResultText(result[i])
+      //       } else {
+      //         dataArray.push(result[i])
+      //       }
+      //     }
+      //     setChartData(dataArray)
+      //   }
+      //   setLoading(false)
+      // })
+      // } else {
+      //   alert('Variables are not selected')
+      //   setActiveStep(1)
+      //   setLoading(false)
+      // }
     }
   }
 
   const handleRun = (event: any) => {
-    fetchChartData()
+    fetchModelingData('RUN')
   }
 
   const handleChange = (value: string) => {
+    // console.log('test:', value)
     setModel(value)
   }
 
@@ -121,7 +181,6 @@ const ModelSetting = (props: any) => {
           setSelectedTagsX(nextSelectedTags)
         }
       }
-
       // const nextSelectedTags = checked ? [...selectedTagsX, tag] : selectedTagsX.filter((t) => t !== tag)
     }
   }
@@ -136,10 +195,20 @@ const ModelSetting = (props: any) => {
 
   const fetchFeatureSuggest = (y: any) => {
     setBtnLoading(true)
-    axios.get(process.env.REACT_APP_API_SERVER_URL + '/api/predict/boruta?value=' + y).then((response) => {
+
+    const param = {
+      y_value: selectedTagsY[0],
+      x_value: selectedTagsX,
+      com_id: localStorage.getItem('companyId'),
+      dataset_id: selectedDataSet,
+      file_nm: selectedDataFile,
+    }
+
+    // console.log('param:', param)
+    axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/boruta', param).then((response) => {
       setBtnLoading(false)
 
-      console.log('boruta resp:', response)
+      // console.log('boruta resp:', response)
 
       const suggestedArr = response.data
       const newSelection = []
@@ -154,6 +223,22 @@ const ModelSetting = (props: any) => {
         alert('추천 변수가 없습니다')
       }
     })
+  }
+
+  const handleModelSave = () => {
+    setOpen(true)
+    setModelingInfo({ predict_type: model, x_value: selectedTagsX, y_value: selectedTagsY[0] })
+    // fetchModelingData('SAVE')
+  }
+
+  const handleClose = () => {
+    // setOpen(false)
+  }
+
+  const handleSave = (title: string) => {
+    // console.log('title:', title)
+    fetchModelingData('SAVE', title)
+    // success()
   }
 
   return (
@@ -232,14 +317,6 @@ const ModelSetting = (props: any) => {
                   </CheckableTag>
                 ))}
               </Space>
-              {/* <NewTagSelect
-                style={{ width: '70%', margin: 'auto', minWidth: '150px' }}
-                selectionType="multiple"
-                type="EXPLANATORY_VARIABLE"
-                title="원인변수(X)"
-                // selectedValue={selectedVarX}
-                // defaultValue={selectedArr}
-              /> */}
             </Col>
           </Row>
           <Button type="primary" onClick={handleRun} style={{ float: 'right', textAlign: 'right' }} loading={loading}>
@@ -271,11 +348,15 @@ const ModelSetting = (props: any) => {
           <LineChart chartData={chartData} />
         </div>
       </Box>
-      {/* <div style={{ width: '100%', float: 'right', marginTop: '30px' }}>
-        <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-          {loading ? <CircularProgress /> : null}
-        </Box>
-      </div> */}
+      <Button
+        type="primary"
+        onClick={handleModelSave}
+        style={{ float: 'right', textAlign: 'right', marginTop: '10px' }}
+      >
+        MODEL SAVE
+      </Button>
+      <ModelSavePopup modalOpen={open} onClose={handleClose} data={modelingInfo} onSave={handleSave} />
+      {contextHolder}
     </>
   )
 }
