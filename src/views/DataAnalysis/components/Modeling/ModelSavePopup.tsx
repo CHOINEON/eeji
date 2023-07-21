@@ -1,5 +1,4 @@
 import { Button, Input, Modal } from 'antd'
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
 function ModelSavePopup(props: any) {
@@ -27,17 +26,10 @@ function ModelSavePopup(props: any) {
   }
 
   const handleSave = (param: any) => {
-    // console.log(param)
-    // onSave()
-    // setOpen(false)
-    // onClose()
-    // setRefresh(true)
-    // fetchModelingData()
     onSave(title)
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // console.log('Change:', e.target.value)
     setTitle(e.target.value)
   }
 

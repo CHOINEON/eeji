@@ -173,7 +173,7 @@ const ModelList = () => {
       <ThemeProvider theme={theme}>
         <div style={{ textAlign: 'right', margin: '20px 0' }}>
           <Button type="primary" onClick={handleRunTest}>
-            Run Test
+            Run
           </Button>
         </div>
         <div className="grid-wrapper">

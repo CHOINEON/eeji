@@ -66,7 +66,8 @@ const DataFileModal = (props: any) => {
           <List.Item.Meta
             key={idx}
             title={<a onClick={() => handleClick(item.name)}>{item.name}</a>}
-            description={item.size + ' Byte '}
+            // description={item.size + ' Byte '}
+            description={Math.round(item.size / 1024) + ' MB '}
           />
         </List.Item>
       ))

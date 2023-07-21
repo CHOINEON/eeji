@@ -58,10 +58,10 @@ const DataSet = () => {
   return (
     <>
       <div style={{ width: '100%', display: 'block', float: 'right', margin: '20px 0' }}>
-        <Button type="primary" onClick={handleClick} style={{ width: '100%', margin: '20px 0' }}>
+        <Button type="primary" onClick={handleClick} style={{ width: '100%', height: '40px', margin: '20px 0' }}>
           + NEW DATASET
         </Button>
-        <Row gutter={[16, 32]}>
+        <Row gutter={[16, 16]}>
           {dataSet.map((item, index) => (
             <Col span={12} key={index}>
               <DescriptionBox data={item} onSelect={handleSelect} onDelete={handleDelete} />

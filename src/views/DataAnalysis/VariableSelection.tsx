@@ -17,8 +17,6 @@ import {
 import { Col, Row, Modal, Switch } from 'antd'
 import NewTagSelect from './components/TagTree/NewTagSelect'
 import './style/styles.css'
-import TagList from './Tag/TagList'
-import Worksheet from './components/Worksheets/Worksheet'
 
 const VariableSelection = () => {
   const setActiveStep = useSetRecoilState(stepCountStore)
@@ -58,10 +56,6 @@ const VariableSelection = () => {
     } else {
       showModal()
     }
-  }
-
-  const handleNext = () => {
-    setActiveStep(2)
   }
 
   const showModal = () => {
@@ -127,13 +121,13 @@ const VariableSelection = () => {
       }
     }
     fetchData()
+
     return () => {
       abortController.abort()
     }
   }
 
   const onChangeSwitch = (param: any) => {
-    // console.log('onChangeSwitch:', param)
     setChecked(param)
   }
 

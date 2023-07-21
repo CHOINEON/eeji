@@ -27,15 +27,23 @@ const FileUploader = (props: any) => {
 
   useEffect(() => {
     // console.log('FileUploader props::', props)
-  }, [props])
-
-  useEffect(() => {
-    if (refresh) {
-      uploadObj.current.clearAll()
-      setSelected(false)
-      setSummaryResult([])
-    }
+    clearSelection()
   }, [refresh])
+
+  // useEffect(() => {
+  //   console.log('refresh:', refresh)
+  //   if (refresh) {
+  //     uploadObj.current.clearAll()
+  //     setSelected(false)
+  //     setSummaryResult([])
+  //   }
+  // }, [refresh])
+
+  const clearSelection = () => {
+    uploadObj.current.clearAll()
+    setSelected(false)
+    setSummaryResult([])
+  }
 
   const asyncSettings: object = {
     chunkSize: 100000000, // set chunk size for enable the chunk upload

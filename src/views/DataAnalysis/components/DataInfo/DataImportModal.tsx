@@ -2,33 +2,29 @@ import React, { useState, useEffect } from 'react'
 import { Button, Modal } from 'antd'
 import FileUploader from 'components/uploader/FileUploader'
 
+/**
+ *
+ */
+
 const DataImportModal = (props: any) => {
   const { modalOpen, onClose, onSaveData, reqParams, type } = props
   const [open, setOpen] = useState(false)
   const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
-    // console.log('DataImportModal props::', props)
-  }, [props])
-
-  useEffect(() => {
     setOpen(modalOpen)
-  }, [props])
-
-  const showModal = () => {
-    setOpen(true)
-  }
+  }, [modalOpen])
 
   const handleOk = () => {
     setOpen(false)
-    onClose()
     setRefresh(true)
+    onClose()
   }
 
   const handleCancel = () => {
     setOpen(false)
-    onClose()
     setRefresh(true)
+    onClose()
   }
 
   const handleSaved = (param: any) => {

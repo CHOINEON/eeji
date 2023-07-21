@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import { Grid, Typography } from '@mui/material'
 import LineChart from './components/Chart/LineChart'
-import styled from '@emotion/styled'
+import './style/styles.css'
 import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
@@ -16,13 +16,10 @@ import {
 } from './store/atom'
 import { Col, Divider, Row, Select, Space, Spin, Button, Popover, message } from 'antd'
 import CheckableTag from 'antd/es/tag/CheckableTag'
-// import AssistantOutlinedIcon from '@mui/icons-material/AssistantOutlined'
-import './style/styles.css'
 import ModelSavePopup from './components/Modeling/ModelSavePopup'
 
 const ModelSetting = (props: any) => {
-  const setActiveStep = useSetRecoilState(stepCountStore)
-
+  const [activeStep, setActiveStep] = useRecoilState(stepCountStore)
   const [selectedDataSet, setSelectedDataSet] = useRecoilState(dataSetStore)
   const [selectedDataFile, setSelectedDataFile] = useRecoilState(dataFileStore)
 
@@ -118,6 +115,7 @@ const ModelSetting = (props: any) => {
               alert('Saved!')
               handleClose()
               setOpen(false)
+              setActiveStep(0)
             }
           }
           setLoading(false)

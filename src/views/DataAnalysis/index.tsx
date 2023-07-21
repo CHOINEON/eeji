@@ -28,6 +28,9 @@ const DataAnalysis = () => {
   // const onUploaded = (param: boolean) => {
   //   setUploaded(param)
   // }
+
+  useEffect(() => setActiveStep(0), [])
+
   const steps = ['Upload Data', 'Select Variables', 'Set Model']
 
   const totalSteps = () => {
@@ -65,29 +68,12 @@ const DataAnalysis = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1)
   }
 
-  const handleComplete = () => {
-    const newCompleted = completed
-    newCompleted[activeStep] = true
-    setCompleted(newCompleted)
-    handleNext()
-  }
-
-  const handleReset = () => {
-    setActiveStep(0)
-    setCompleted({})
-  }
-
-  const onPreprocessed = (args: any) => {
-    // console.log('onPreprocess:', args)
-    setDataSource(args)
-  }
-
   // https://mui.com/material-ui/react-stepper/
   return (
     <ThemeProvider theme={theme}>
       <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
         <Box margin={5}>
-          <Stepper nonLinear activeStep={activeStep}>
+          <Stepper activeStep={activeStep}>
             {steps.map((label, index) => (
               <Step key={label} completed={completed[index]}>
                 <StepButton color="inherit" onClick={handleStep(index)}>
