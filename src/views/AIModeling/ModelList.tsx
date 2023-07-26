@@ -119,9 +119,9 @@ const ModelList = () => {
     }
 
     // key/value 쌍이 담긴 리스트
-    // for (const [name, value] of formData) {
-    //   console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
-    // }
+    for (const [name, value] of formData) {
+      console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
+    }
 
     // const param = { com_id: com_id, model_id: selectedRow.model_id, file: file }
     axios
@@ -133,7 +133,7 @@ const ModelList = () => {
       .then(
         (response: any) => {
           if (response.status === 200) {
-            // console.log('chartData response: ', response.data)
+            console.log('/api/predict/model/chart response: ', response.data)
             setChartData(response.data)
             setLoading(false)
           }

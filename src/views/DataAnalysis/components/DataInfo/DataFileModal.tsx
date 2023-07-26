@@ -6,7 +6,7 @@ import { List, Select, Space, Typography } from 'antd'
 // import { Typography } from '@mui/material'
 import axios from 'axios'
 import { useRecoilState, useSetRecoilState } from 'recoil'
-import { dataFileStore, dataSetStore, stepCountStore } from 'views/DataAnalysis/store/atom'
+import { dataFileStore, dataSetStore, stepCountStore, variableStore } from 'views/DataAnalysis/store/atom'
 const { Option } = Select
 
 const DataFileModal = (props: any) => {
@@ -15,6 +15,8 @@ const DataFileModal = (props: any) => {
   const setActiveStep = useSetRecoilState(stepCountStore)
   const [selectedDataSet, setSelectedDataSet] = useRecoilState(dataSetStore)
   const [selectedDataFile, setSelectedDataFile] = useRecoilState(dataFileStore)
+  const [variableList, setVariableList] = useRecoilState(variableStore)
+
   const [open, setOpen] = useState(false)
   const [fileList, setFileList] = useState([])
 
@@ -26,10 +28,6 @@ const DataFileModal = (props: any) => {
     setOpen(modalOpen)
   }, [props])
 
-  const showModal = () => {
-    setOpen(true)
-  }
-
   const handleOk = () => {
     setOpen(false)
     onClose()
@@ -40,12 +38,6 @@ const DataFileModal = (props: any) => {
     setOpen(false)
     onClose()
     setFileList([])
-  }
-
-  const handleSaved = (param: any) => {
-    onSaveData(param)
-    setOpen(false)
-    onClose()
   }
 
   const fetchIncludedFileList = () => {
@@ -66,7 +58,7 @@ const DataFileModal = (props: any) => {
           <List.Item.Meta
             key={idx}
             title={<a onClick={() => handleClick(item.name)}>{item.name}</a>}
-            description={item.size + ' Byte '}
+            description={`${item.size} Byte | start date : ${item.start_date} | end date: ${item.end_date}`}
           />
         </List.Item>
       ))
@@ -76,8 +68,40 @@ const DataFileModal = (props: any) => {
   const handleClick = (fileName: string) => {
     // console.log('clicked:', fileName)
     setSelectedDataFile(fileName)
+    fetchTaglistData(fileName)
     setActiveStep(1)
   }
+
+  const fetchTaglistData = (fileName: string) => {
+    // console.log('selectedDataset:', selectedDataset)
+    // console.log('selectedFile:', selectedFile)
+
+    const param = [
+      {
+        id: selectedDataSet,
+        file_name: fileName,
+      },
+    ]
+
+    // console.log('param：', param)
+
+    axios
+      .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag', param)
+      .then((response) => {
+        // console.log('/api/tag:', response.data)
+        setVariableList(response.data)
+
+        const values = response.data[0].options
+        const valueArr: Array<any> = values.map((item: any) => item.value)
+
+        const result: Array<any> = []
+        valueArr.forEach((value: any) => {
+          result.push({ value: value, used: false })
+        })
+      })
+      .catch((error) => alert('TagData Load Failed::'))
+  }
+
   return (
     <div>
       <Modal open={open} title="Select file" onOk={handleOk} onCancel={handleCancel} footer={null}>

@@ -100,7 +100,7 @@ const ModelSetting = (props: any) => {
         (response) => {
           setLoading(true)
           if (response.status === 200) {
-            // console.log('chartData response:', response.data)
+            // console.log('/api/aimodel response:', response.data)
 
             if (type === 'RUN') {
               const result = response.data

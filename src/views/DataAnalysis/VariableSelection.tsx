@@ -43,8 +43,7 @@ const VariableSelection = () => {
   const [checked, setChecked] = useState(false)
 
   useEffect(() => {
-    if (selectedDataset[0] !== '' && selectedFile[0] !== '') fetchTaglistData()
-    else {
+    if (selectedDataset[0] == '' || selectedFile[0] == '') {
       alert('파일이 선택되지 않았습니다.')
       setActiveStep(0)
     }
@@ -137,37 +136,37 @@ const VariableSelection = () => {
     setChecked(param)
   }
 
-  const fetchTaglistData = () => {
-    // console.log('selectedDataset:', selectedDataset)
-    // console.log('selectedFile:', selectedFile)
+  // const fetchTaglistData = () => {
+  //   // console.log('selectedDataset:', selectedDataset)
+  //   // console.log('selectedFile:', selectedFile)
 
-    const param = [
-      {
-        id: selectedDataset[0],
-        file_name: selectedFile[0],
-      },
-    ]
+  //   const param = [
+  //     {
+  //       id: selectedDataset[0],
+  //       file_name: selectedFile[0],
+  //     },
+  //   ]
 
-    // console.log('param：', param)
+  //   // console.log('param：', param)
 
-    axios
-      .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag', param)
-      .then((response) => {
-        // console.log('fetchTaglistData:', response.data)
-        setVariableList(response.data)
+  //   axios
+  //     .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag', param)
+  //     .then((response) => {
+  //       console.log('fetchTaglistData:', response.data)
+  //       setVariableList(response.data)
 
-        const values = response.data[0].options
-        const valueArr: Array<any> = values.map((item: any) => item.value)
+  //       const values = response.data[0].options
+  //       const valueArr: Array<any> = values.map((item: any) => item.value)
 
-        const result: Array<any> = []
-        valueArr.forEach((value: any) => {
-          result.push({ value: value, used: false })
-        })
+  //       const result: Array<any> = []
+  //       valueArr.forEach((value: any) => {
+  //         result.push({ value: value, used: false })
+  //       })
 
-        setUsedVariable(result)
-      })
-      .catch((error) => alert('TagData Load Failed::'))
-  }
+  //       setUsedVariable(result)
+  //     })
+  //     .catch((error) => alert('TagData Load Failed::'))
+  // }
 
   const onTagClicked = (tags: any) => {
     // console.log('tag clicked:', tags)

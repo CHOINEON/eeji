@@ -26,10 +26,6 @@ const FileUploader = (props: any) => {
   const [summaryResult, setSummaryResult] = useState([])
 
   useEffect(() => {
-    // console.log('FileUploader props::', props)
-  }, [props])
-
-  useEffect(() => {
     if (refresh) {
       uploadObj.current.clearAll()
       setSelected(false)
@@ -154,7 +150,7 @@ const FileUploader = (props: any) => {
           })
           .then(
             (response) => {
-              // console.log('UPLOAD RESP :', response)
+              console.log('UPLOAD RESP :', response)
               setLoading(false)
 
               if (response.status === 200) {

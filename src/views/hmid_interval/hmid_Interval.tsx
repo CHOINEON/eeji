@@ -143,7 +143,7 @@ export const MainDashboardInterval: React.FC = () => {
     //test
     for (let j = 0, len = panel.length; j < len; j++) {
       const node: any = document.getElementById(panel[j].id)
-      if (panel[j].widget === 'Line1') {
+      if (node && panel[j].widget === 'Line1') {
         const data = (
           <>
             <BoxTitle>Binance Trade 50ms</BoxTitle>
@@ -151,7 +151,7 @@ export const MainDashboardInterval: React.FC = () => {
           </>
         )
         ReactDOM.render(data, node)
-      } else if (panel[j].widget === 'Line2') {
+      } else if (node && panel[j].widget === 'Line2') {
         const data = (
           <>
             <BoxTitle>Binance kline 1s</BoxTitle>
