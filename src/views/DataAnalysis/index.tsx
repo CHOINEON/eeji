@@ -12,6 +12,7 @@ import { theme } from './theme/theme'
 import { useRecoilState } from 'recoil'
 import { stepCountStore } from './store/atom'
 import DataImport from './DataSet'
+import CorrelationView from './CorrelationView'
 
 const DataAnalysis = () => {
   // const activeStep = useRecoilValue(stepCountStore)
@@ -28,7 +29,7 @@ const DataAnalysis = () => {
   // const onUploaded = (param: boolean) => {
   //   setUploaded(param)
   // }
-  const steps = ['Upload Data', 'Select Variables', 'Set Model']
+  const steps = ['Upload Data', 'View Correlation', 'Select Variables', 'Run/Save Model']
 
   const totalSteps = () => {
     return steps.length
@@ -99,9 +100,10 @@ const DataAnalysis = () => {
         </Box>
         {/* <Box>{activeStep === 0 && <FileUploader refresh={refresh} />}</Box> */}
         <Box>{activeStep === 0 && <DataImport />}</Box>
-        <Box>{activeStep === 1 && <VariableSelection />}</Box>
+        <Box>{activeStep === 1 && <CorrelationView />}</Box>
+        <Box>{activeStep === 2 && <VariableSelection />}</Box>
         {/* <Box>{activeStep === 2 && <PreProcessing onPreprocessed={onPreprocessed} />}</Box> */}
-        <Box>{activeStep === 2 && <ModelSetting dataSource={dataSource} />}</Box>
+        <Box>{activeStep === 3 && <ModelSetting dataSource={dataSource} />}</Box>
       </Box>
     </ThemeProvider>
   )

@@ -33,7 +33,7 @@ const DataSet = () => {
     setListOpen(false)
   }
 
-  const handleSave = (param: any) => {
+  const handleSave = () => {
     fetchDataSetList()
   }
 
@@ -42,12 +42,13 @@ const DataSet = () => {
     axios
       .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset?com_id=' + com_id)
       .then((response) => {
+        // console.log('api/dataset::', response.data)
         setDataSet(response.data)
       })
       .catch((err) => console.log(err))
   }
 
-  const handleSelect = (param: any) => {
+  const handleSelect = () => {
     setListOpen(true)
   }
 

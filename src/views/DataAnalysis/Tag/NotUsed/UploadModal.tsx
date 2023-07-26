@@ -94,14 +94,6 @@ export const UploadModal: React.FC<UploadModalProps> = (props) => {
     setVisible(false)
   }
 
-  const onBeforeUpload = (args: UploadingEventArgs) => {
-    console.log('onBeforeUpload:', args)
-    // get the file size in bytes
-    // const sizeInBytes: number = args.fileData.size
-    // get the file size in standard format
-    // alert('File size is: ' + this.uploadObj.bytesToSize(sizeInBytes))
-  }
-
   const chunkUploading = (e: any) => {
     console.log('chunkUploading:', e)
   }

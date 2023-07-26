@@ -12,7 +12,7 @@ import {
 import { Select } from 'antd'
 
 const NewTagSelect = (props: any) => {
-  const { selectionType, type, title, style } = props
+  const { selectionType, type, title, style, onChange } = props
 
   const [options, setOptions] = useState([])
   const [value, setValue] = useState([])
@@ -23,7 +23,6 @@ const NewTagSelect = (props: any) => {
 
   const [selectedVarX, setSelectedVarX] = useRecoilState(selectedVarStoreX)
   const [selectedVarY, setSelectedVarY] = useRecoilState(selectedVarStoreY)
-
   const [indexColumn, setIndexColumn] = useRecoilState(indexColumnStore)
 
   //Update "options" in <Select> whenever feature selected
@@ -53,6 +52,12 @@ const NewTagSelect = (props: any) => {
     if (value) {
       // console.log('value changed:', value)
       // console.log('usedVariable:', usedVariable)
+
+      const selected = {
+        type: type === 'TARGET_VARIABLE' ? 'y' : 'x',
+        value: value,
+      }
+      onChange(selected)
 
       const result = []
       for (let i = 0; i < usedVariable.length; i++) {
@@ -139,35 +144,6 @@ const NewTagSelect = (props: any) => {
     // }
   }
 
-  // useEffect(() => {
-  //   // console.log('filtered::', filteredOptions)
-  //   if (filteredOptions && filteredOptions.length > 0) setOptions(filteredOptions)
-  // }, [filteredOptions])
-
-  const handleClick = (e: any) => {
-    // console.log('new tagselect handleClick: ', e)
-    // if (type === 'EXPLANATORY_VARIABLE') {
-    //   if (selectedVarY.length > 0) {
-    //     const array = selectedVarY[0].variable //['x1','x2']
-    //     for (let i = 0; i < array.length; i++) {
-    //       // console.log('options:', options)
-    //       // console.log('array[i]:', array[i])
-    //       // console.log(
-    //       //   'options[0].variable.filter((x: any) => x.value !== array[i]):',
-    //       //   options[0].options.filter((x: any) => x.value !== array[i])
-    //       // )
-    //       const result = []
-    //       result.push({
-    //         label: rawDataX[0].label,
-    //         options: options[0].options.filter((x: any) => x.value !== array[i]),
-    //       })
-    //       // console.log('---------------------result:', result)
-    //       setOptions(result)
-    //     }
-    //   }
-    // }
-  }
-
   const handleChange = (selectedValue: any) => {
     // console.log('handleChange:: ', selectedValue)
     setValue(selectedValue)
@@ -194,6 +170,7 @@ const NewTagSelect = (props: any) => {
         mode={selectionType}
         // allowClear
         // showSearch
+        bordered={true}
         placeholder="Search to select"
         optionFilterProp="children"
         filterOption={(input, option) => (option?.label ?? '').includes(input)}
