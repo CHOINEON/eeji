@@ -5,6 +5,19 @@ export const stepCountStore = atom({
   default: 0,
 })
 
+// export const selectedDataStore = atom({
+//   key: 'selectedData',
+//   default: [
+//     { key: 'data_set', value: '' },
+//     { key: 'data_file', value: '' },
+//   ],
+// })
+
+// export const loadingStore = atom({
+//   key: 'loading',
+//   default: false,
+// })
+
 export const dataSetStore = atom({
   key: 'selectedDataSet',
   default: '',

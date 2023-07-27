@@ -40,6 +40,10 @@ const ModelSetting = (props: any) => {
   const [options, setOptions] = useState([
     { value: 'plsr', label: 'PLS' },
     { value: 'rfr', label: 'Random Forest' },
+    { value: 'cnn1d', label: '1DCNN' },
+    { value: 'mlp', label: 'MLP' },
+    { value: 'cnnlstm', label: 'CNNLSTM' },
+    { value: 'pls_1dcnn', label: 'PLS_1DCNN' },
   ])
 
   //step4에서 선택된 변수
@@ -57,12 +61,6 @@ const ModelSetting = (props: any) => {
 
   //messages
   const [messageApi, contextHolder] = message.useMessage()
-  const success = () => {
-    messageApi.open({
-      type: 'success',
-      content: 'This is a success message',
-    })
-  }
 
   // const mergedArrow = useMemo(() => {
   //   if (arrowAtCenter) return { pointAtCenter: true };
@@ -97,7 +95,7 @@ const ModelSetting = (props: any) => {
         (response) => {
           setLoading(true)
           if (response.status === 200) {
-            // console.log('chartData response:', response.data)
+            // console.log('/api/aimodel response:', response.data)
 
             if (type === 'RUN') {
               const result = response.data

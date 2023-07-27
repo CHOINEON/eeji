@@ -6,6 +6,7 @@ import { useRecoilState } from 'recoil'
 import { dataSetStore } from 'views/DataAnalysis/store/atom'
 const { Option } = Select
 
+/**버그가 있어서 일단 사용안함 */
 const DataFileSelect = (props: any) => {
   const { onSelect } = props
   const [options, setOptions] = useState([])

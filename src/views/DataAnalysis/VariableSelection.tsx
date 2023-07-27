@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Box, Typography } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
-import Button from '@mui/material/Button'
+import { Button } from 'antd'
 import { selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   dataFileStore,
@@ -17,6 +17,7 @@ import {
 import { Col, Row, Modal, Switch } from 'antd'
 import NewTagSelect from './components/TagTree/NewTagSelect'
 import './style/styles.css'
+import { ArrowRightOutlined } from '@ant-design/icons'
 
 const VariableSelection = () => {
   const setActiveStep = useSetRecoilState(stepCountStore)
@@ -31,24 +32,30 @@ const VariableSelection = () => {
   // const tagList = useRecoilValue(currentTagListQuery)
   const [selectedVarX, setSelectedVarX] = useRecoilState(selectedVarStoreX)
   const [selectedVarY, setSelectedVarY] = useRecoilState(selectedVarStoreY)
+  const [indexColumn, setIndexColumn] = useRecoilState(indexColumnStore)
 
   //left side
-  const [tagList, setTagList] = useState([])
-  const [chartData, setChartData] = useState([])
-  const indexColumn = useRecoilValue(indexColumnStore)
+  // const [tagList, setTagList] = useState([])
+  // const [chartData, setChartData] = useState([])
 
   const [open, setOpen] = useState(false)
   const [checked, setChecked] = useState(false)
 
   useEffect(() => {
-    if (selectedDataset[0] !== '' && selectedFile[0] !== '') fetchTaglistData()
-    else {
+    if (selectedDataset[0] == '' || selectedFile[0] == '') {
       alert('파일이 선택되지 않았습니다.')
       setActiveStep(0)
     }
+
+    // corr plot에서 선택된 값 초기화
+    setSelectedVarX([])
+    setSelectedVarY([])
   }, [])
 
   const handleClick = () => {
+    // console.log('selectedX:', selectedVarX)
+    // console.log('selectedY:', selectedVarY)
+
     if (selectedVarX.length === 0) {
       alert('X 변수를 선택해 주세요')
     } else if (selectedVarY.length === 0) {
@@ -69,11 +76,11 @@ const VariableSelection = () => {
   const handlePreprocessing = () => {
     setLoading(true)
     hideModal()
+    // console.log('selectedX:', selectedVarX)
+    // console.log('selectedY:', selectedVarY)
 
     const causeArray = []
     const targetArray = []
-    // console.log('selectedX:', selectedVarX)
-    // console.log('selectedY:', selectedVarY)
 
     causeArray.push({ file_nm: variableList[0].label, variable: selectedVarX })
     targetArray.push({ file_nm: variableList[0].label, variable: selectedVarY })
@@ -104,9 +111,9 @@ const VariableSelection = () => {
             (response: any) => {
               // console.log('preprocessing response:', response.data)
               if (response.status === 200) {
-                setTagList(response.data)
+                // setTagList(response.data)
                 setLoading(false)
-                setActiveStep(2)
+                setActiveStep(3)
               }
             },
             (error) => {
@@ -131,53 +138,82 @@ const VariableSelection = () => {
     setChecked(param)
   }
 
-  const fetchTaglistData = () => {
-    // console.log('selectedDataset:', selectedDataset)
-    // console.log('selectedFile:', selectedFile)
+  const handleSelect = (param: any) => {
+    if (param.type === 'x') {
+      //multiple selection
+      setSelectedVarX((prev) => [...prev, param.value])
 
-    const param = [
-      {
-        id: selectedDataset[0],
-        file_name: selectedFile[0],
-      },
-    ]
+      const result = []
+      for (let i = 0; i < usedVariable.length; i++) {
+        if (param.value.includes(usedVariable[i].value)) {
+          result.push({ value: usedVariable[i].value, used: true, category: param.type })
+        } else {
+          result.push(usedVariable[i])
+        }
+      }
 
-    // console.log('param：', param)
+      setUsedVariable(result)
+    } else if (param.type == 'y') {
+      //single selection
+      setSelectedVarY([param.value])
 
-    axios
-      .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag', param)
-      .then((response) => {
-        // console.log('fetchTaglistData:', response.data)
-        setVariableList(response.data)
+      const result = []
+      for (let i = 0; i < usedVariable.length; i++) {
+        //같은 카테고리에 선택된거 있으면 해제
+        if (usedVariable[i].category === param.type) {
+          result.push({ value: usedVariable[i].value, used: false })
+        }
+        //선택된 값은 true처리
+        else if (usedVariable[i].value === param.value) {
+          result.push({ value: usedVariable[i].value, used: true, category: param.type })
+        } else {
+          //그 외는 그대로 렌더링
+          result.push(usedVariable[i])
+        }
+      }
 
-        const values = response.data[0].options
-        const valueArr: Array<any> = values.map((item: any) => item.value)
-
-        const result: Array<any> = []
-        valueArr.forEach((value: any) => {
-          result.push({ value: value, used: false })
-        })
-
-        setUsedVariable(result)
-      })
-      .catch((error) => alert('TagData Load Failed::'))
-  }
-
-  const onTagClicked = (tags: any) => {
-    // console.log('tag clicked:', tags)
-    // console.log('전체 taglist::', tagList)
-
-    const tempArr = []
-    for (let i = 0; i < tags.length; i++) {
-      const selectedData = tagList.filter((tag: any) => tag.name === tags[i])
-      // console.log('selectedData:', selectedData)
-      tempArr.push(selectedData[0])
+      setUsedVariable(result)
+    } else {
+      setIndexColumn(param.value)
     }
-    // console.log('tempArr:', tempArr)
-    setChartData(tempArr)
-    // tagList.filter((item: any) => tagList.includes(item.name))
-    // setSelectedTag(params)
   }
+
+  const handleDeselect = (param: any) => {
+    // console.log('deselect:', param)
+
+    if (param.type === 'x') {
+      //multiple selection
+
+      setSelectedVarX(selectedVarX.filter((x) => x !== param.value))
+
+      const result = []
+      for (let i = 0; i < usedVariable.length; i++) {
+        if (param.value === usedVariable[i].value) {
+          result.push({ value: usedVariable[i].value, used: false })
+        } else {
+          result.push(usedVariable[i])
+        }
+      }
+      setUsedVariable(result)
+    }
+
+    //
+  }
+  // const handleChange = (param: any) => {
+  //   // console.log('before:', usedVariable)
+
+  //   const newValue = param.value
+  //   const result = []
+  //   for (let i = 0; i < usedVariable.length; i++) {
+  //     if (newValue.includes(usedVariable[i].value)) {
+  //       result.push({ value: usedVariable[i].value, used: true, category: param.type })
+  //     } else {
+  //       result.push(usedVariable[i])
+  //     }
+  //   }
+  //   // console.log('result:', result)
+  //   setUsedVariable(result)
+  // }
 
   return (
     <>
@@ -216,6 +252,8 @@ const VariableSelection = () => {
                 selectionType="single"
                 type="TARGET_VARIABLE"
                 title="타겟변수(Y)"
+                onSelect={handleSelect}
+                onDeselect={handleDeselect}
               />
             </div>
           </Col>
@@ -227,6 +265,8 @@ const VariableSelection = () => {
                 selectionType="multiple"
                 type="EXPLANATORY_VARIABLE"
                 title="원인변수(X)"
+                onSelect={handleSelect}
+                onDeselect={handleDeselect}
               />
             </div>
           </Col>
@@ -238,60 +278,42 @@ const VariableSelection = () => {
                   selectionType=""
                   type="INDEX_COLUMN"
                   title="날짜 컬럼"
-                  subtext="시계열 데이터의 경우만 선택"
-                  defaultOptions={variableList}
+                  onSelect={handleSelect}
+                  onDeselect={handleDeselect}
+
+                  // subtext="시계열 데이터의 경우만 선택"
+                  // defaultOptions={variableList}
                 />
               )}
             </div>
           </Col>
         </Row>
-        <Row justify="space-evenly" align="top"></Row>
-        <div style={{ width: '100%', float: 'right' }}>
-          <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-            {loading ? <CircularProgress /> : <Button onClick={handleClick}>SAVE</Button>}
-          </Box>
-        </div>
       </Box>
-      <Box
-        className="rounded-box"
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          '& > :not(style)': {
-            m: 1,
-            width: '100%',
-            // height: 100,
-          },
-        }}
-      >
-        {/* <Row style={{ width: '100%', height: '650px' }}>
-          <div style={{ width: '20%' }}>
-            <TagList data={tagList} syncSelectedTag={onTagClicked} />
-          </div>
-          <div style={{ width: '80%', backgroundColor: 'lightgrey' }}>
-            multi chart 테스트중 <Worksheet selectedTags={chartData} />
-          </div>
-        </Row> */}
-        {/* <Row>
-          <Box style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-            <Button variant="contained" onClick={handleNext}>
+      <div style={{ width: '100%', float: 'right' }}>
+        <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <Button type="text" icon={<ArrowRightOutlined />} onClick={handleClick}>
               NEXT
             </Button>
-          </Box>
-        </Row> */}
-      </Box>
-      <Modal
-        title="선택 확인"
-        open={open}
-        onOk={handlePreprocessing}
-        onCancel={hideModal}
-        okText="저장"
-        cancelText="취소"
-      >
-        <p>X : {selectedVarX.length > 0 && selectedVarX.join(' / ')}</p>
-        <p>Y : {selectedVarY.length > 0 && selectedVarY.join(' / ')}</p>
-        <p>날짜 : {indexColumn === '' ? '없음' : indexColumn}</p>
-      </Modal>
+          )}
+        </Box>
+      </div>
+      {open && (
+        <Modal
+          title="선택 확인"
+          open={open}
+          onOk={handlePreprocessing}
+          onCancel={hideModal}
+          okText="저장"
+          cancelText="취소"
+        >
+          <p>X : {selectedVarX.length > 0 && selectedVarX.join(' / ')}</p>
+          <p>Y : {selectedVarY.length > 0 && selectedVarY.join(' / ')}</p>
+          <p>날짜 : {indexColumn === '' ? '없음' : indexColumn}</p>
+        </Modal>
+      )}
     </>
   )
 }

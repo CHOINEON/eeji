@@ -1,34 +1,36 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal } from 'antd'
-import FileUploader from 'components/uploader/FileUploader'
-// import DatasetSelect from './DataFileSelect'
+import { Button, Modal, Spin } from 'antd'
 import { List, Select, Space, Typography } from 'antd'
-// import { Typography } from '@mui/material'
 import axios from 'axios'
 import { useRecoilState, useSetRecoilState } from 'recoil'
-import { dataFileStore, dataSetStore, stepCountStore } from 'views/DataAnalysis/store/atom'
+import {
+  dataFileStore,
+  dataSetStore,
+  stepCountStore,
+  usedVariableStore,
+  variableStore,
+} from 'views/DataAnalysis/store/atom'
+
 const { Option } = Select
 
 const DataFileModal = (props: any) => {
   const { modalOpen, onClose, onSaveData, dsId } = props
 
-  const setActiveStep = useSetRecoilState(stepCountStore)
   const [selectedDataSet, setSelectedDataSet] = useRecoilState(dataSetStore)
-  const [selectedDataFile, setSelectedDataFile] = useRecoilState(dataFileStore)
+  const setActiveStep = useSetRecoilState(stepCountStore)
+  const setSelectedDataFile = useSetRecoilState(dataFileStore)
+  const setVariableList = useSetRecoilState(variableStore)
+  const setUsedVariable = useSetRecoilState(usedVariableStore)
+
   const [open, setOpen] = useState(false)
   const [fileList, setFileList] = useState([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     fetchIncludedFileList()
   }, [selectedDataSet])
 
-  useEffect(() => {
-    setOpen(modalOpen)
-  }, [props])
-
-  const showModal = () => {
-    setOpen(true)
-  }
+  useEffect(() => setOpen(modalOpen), [props])
 
   const handleOk = () => {
     setOpen(false)
@@ -42,43 +44,71 @@ const DataFileModal = (props: any) => {
     setFileList([])
   }
 
-  const handleSaved = (param: any) => {
-    onSaveData(param)
-    setOpen(false)
-    onClose()
-  }
-
   const fetchIncludedFileList = () => {
     axios
       .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset/file?ds_id=' + selectedDataSet)
       .then((response) => {
-        // console.log('fetchTagList:', response)
+        // console.log('/api/dataset/file:', response)
         setFileList(response.data)
       })
-      .catch((error) => console.log('Fetch tag list failed(Descption box):', error))
+      .catch((error) => console.log('/api/dataset/file :', error))
   }
 
   const renderItem = () => {
     return (
-      fileList.length > 0 &&
-      fileList.map((item, idx) => (
-        <List.Item key={idx}>
-          <List.Item.Meta
-            key={idx}
-            title={<a onClick={() => handleClick(item.name)}>{item.name}</a>}
-            // description={item.size + ' Byte '}
-            description={Math.round(item.size / 1024) + ' MB '}
-          />
-        </List.Item>
-      ))
+      fileList.length > 0 && (
+        <Spin key="spin" spinning={loading}>
+          {fileList.map((item, idx) => (
+            <List.Item key={idx}>
+              <List.Item.Meta
+                key={idx}
+                title={<a onClick={() => handleClick(item.name)}>{item.name}</a>}
+                description={`${Math.round(item.size) / 1024} MB `}
+                //| start date : ${item.start_date} | end date: ${  item.end_date}
+              />
+            </List.Item>
+          ))}
+        </Spin>
+      )
     )
   }
 
   const handleClick = (fileName: string) => {
-    // console.log('clicked:', fileName)
+    setLoading(true)
     setSelectedDataFile(fileName)
-    setActiveStep(1)
+    fetchTaglistData(fileName)
   }
+
+  const fetchTaglistData = (fileName: string) => {
+    const param = [
+      {
+        id: selectedDataSet,
+        file_name: fileName,
+      },
+    ]
+    // console.log('/api/tag param::', param)
+
+    axios
+      .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag', param)
+      .then((response) => {
+        setLoading(false)
+
+        setVariableList(response.data)
+        setActiveStep(1)
+
+        const values = response.data[0].options
+        const valueArr: Array<any> = values.map((item: any) => item.value)
+
+        const result: Array<any> = []
+        valueArr.forEach((value: any) => {
+          result.push({ value: value, used: false })
+        })
+
+        setUsedVariable(result)
+      })
+      .catch((error) => alert('TagData Load Failed::'))
+  }
+
   return (
     <div>
       <Modal open={open} title="Select file" onOk={handleOk} onCancel={handleCancel} footer={null}>

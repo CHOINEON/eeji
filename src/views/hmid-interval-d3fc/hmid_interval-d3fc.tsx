@@ -149,7 +149,7 @@ export const MainDashboardIntervalD3FC: React.FC = () => {
       else if (panel[j].widget === 'Line2') {
         const data = (
           <>
-            <BoxTitle>d3FC 1s TestData(버그 확인중)</BoxTitle>
+            <BoxTitle>d3FC 1s TestData(버그확인중)</BoxTitle>
             {/* <DrawD3FCChartTestData /> */}
           </>
         )
