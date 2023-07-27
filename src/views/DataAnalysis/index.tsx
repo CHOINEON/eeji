@@ -66,23 +66,6 @@ const DataAnalysis = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1)
   }
 
-  const handleComplete = () => {
-    const newCompleted = completed
-    newCompleted[activeStep] = true
-    setCompleted(newCompleted)
-    handleNext()
-  }
-
-  const handleReset = () => {
-    setActiveStep(0)
-    setCompleted({})
-  }
-
-  const onPreprocessed = (args: any) => {
-    // console.log('onPreprocess:', args)
-    setDataSource(args)
-  }
-
   // https://mui.com/material-ui/react-stepper/
   return (
     <ThemeProvider theme={theme}>

@@ -13,6 +13,11 @@ export const stepCountStore = atom({
 //   ],
 // })
 
+// export const loadingStore = atom({
+//   key: 'loading',
+//   default: false,
+// })
+
 export const dataSetStore = atom({
   key: 'selectedDataSet',
   default: '',

@@ -1,124 +1,97 @@
 import styled from '@emotion/styled'
 import React, { useState, useEffect } from 'react'
-import { Box, Typography } from '@mui/material'
-import { DatePicker, Space, Select, Button } from 'antd'
+import { DatePicker, Space, Select, Button, Empty, Skeleton } from 'antd'
 import ItemBox from './components/DataEntry/ItemBox'
 import axios from 'axios'
-import { useRecoilState } from 'recoil'
-import { dataFileStore, dataSetStore, variableStore } from './store/atom'
+import { useRecoilState, useSetRecoilState } from 'recoil'
+import {
+  dataFileStore,
+  dataSetStore,
+  selectedVarStoreX,
+  selectedVarStoreY,
+  stepCountStore,
+  usedVariableStore,
+  variableStore,
+} from './store/atom'
 import NewTagSelect from './components/TagTree/NewTagSelect'
 import SliderWithNumber from './components/DataEntry/SliderWithNumber'
 import Plot from 'react-plotly.js'
 import RadioButtonGroup from './components/DataEntry/RadioButtonGroup'
+import { ArrowRightOutlined, DotChartOutlined } from '@ant-design/icons'
 
 const CorrelationViewContainer = styled.div`
-  display: block;
-  float: left;
+  display: flex;
+  justify-content: space-evenly;
   width: 100%;
-  height: 700px;
-  margin: 0 1vw;
+  height: 25vw;
   // border: 1px solid red;
 `
 const HyperpararmeterWrapper = styled.div`
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 4vw 2vw;
   float: left;
-  margin-left: 2vw;
-  width: 35%;
-  height: 450px;
-  // border: 1px solid blue;
+  width: 30%;
+  height: 100%;
 `
 const PlotWrapper = styled.div`
-  padding: 3vw 0;
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 3vw 1vw;
   float: left;
-  width: 60%;
-  height: 465px;
-  // border: 1px solid blue;
-  // background-color: pink;
+  width: 62%;
 `
 
+const defaultLayout: any = {
+  automargin: true,
+  autoresize: true,
+  hovermode: 'closest',
+  title: 'CorrPlot',
+  plot_bgcolor: 'rgba(255,255,255,0)',
+}
+
 const CorrelationView = () => {
-  const { RangePicker } = DatePicker
+  // const { RangePicker } = DatePicker
+  const setActiveStep = useSetRecoilState(stepCountStore)
+
   const selectedDataset = useRecoilState(dataSetStore)
   const selectedFile = useRecoilState(dataFileStore)
 
-  const [variableList, setVariableList] = useRecoilState(variableStore)
   const [plotData, setPlotData] = useState()
-  const [plotImg, setPlotImg] = useState('')
-  const [base64, setBase64] = useState('')
+  const [plotImg, setPlotImg] = useState()
+
   const [scalingOption, setScalingOption] = useState('iqr')
-  const [layoutOption, setLayoutOption] = useState()
+  const [layoutOption, setLayoutOption] = useState(defaultLayout)
   const [featureX, setFeatureX] = useState([])
   const [featureY, setFeatureY] = useState([])
 
   const [loading, setLoading] = useState<boolean>(false)
 
+  const [optionsX, setOptionsX] = useState([])
+  const [optionsY, setOptionsY] = useState([])
+
+  const [variableList, setVariableList] = useRecoilState(variableStore)
+  const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
+
+  const config = {
+    displaylogo: false,
+    responsive: true,
+  }
+
   useEffect(() => {
-    // fetchTaglistData()
-    // fetchCorrelationPlot()
     setLoading(false)
   }, [])
 
-  // const layoutOption: any = {
-  //   // automargin: true,
-  //   autoresize: true,
-  //   hovermode: 'closest',
-  //   title: 'Result',
-  //   // width: '1000',
-  //   height: '420',
-  //   plot_bgcolor: 'rgba(255,255,255,0)',
-  //   // paper_bgcolor: 'lightpink',
-  //   xaxis: {
-  //     type: 'date',
-  //     tickformat: '%d %b\n %H:%M',
-  //     // tickangle: 90,
-  //     rangeslider: {},
-  //   },
-  //   yaxis: {
-  //     fixedrange: true,
-  //   },
-  //   pad: { r: 10, b: 10 },
-  //   // margin: { top: 0 },
-  //   // updatemenus: updatemenus,
-  // }
-
-  // const fetchTaglistData = () => {
-  //   // console.log('selectedDataset:', selectedDataset)
-  //   // console.log('selectedFile:', selectedFile)
-
-  //   const param = [
-  //     {
-  //       id: selectedDataset[0],
-  //       file_name: selectedFile[0],
-  //     },
-  //   ]
-
-  //   // console.log('param：', param)
-
-  //   axios
-  //     .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag', param)
-  //     .then((response) => {
-  //       // console.log('fetchTaglistData:', response.data)
-  //       setVariableList(response.data)
-
-  //       const values = response.data[0].options
-  //       const valueArr: Array<any> = values.map((item: any) => item.value)
-
-  //       const result: Array<any> = []
-  //       valueArr.forEach((value: any) => {
-  //         result.push({ value: value, used: false })
-  //       })
-
-  //       // setUsedVariable(result)
-  //     })
-  //     .catch((error) => alert('TagData Load Failed::'))
-  // }
+  useEffect(() => {
+    setOptionsX(variableList)
+    setOptionsY(variableList)
+  }, [variableList])
 
   const fetchCorrelationPlot = async () => {
     setLoading(true)
 
     const param = {
-      response_type: 'img',
+      response_type: 'json', //DB에서 encoded image or json 중 알아서 보내주기로
       dataset_id: selectedDataset[0],
       file_nm: selectedFile[0],
       scaling_method: scalingOption,
@@ -126,19 +99,21 @@ const CorrelationView = () => {
       y_value: featureY,
     }
 
-    console.log('param:', param)
-
-    // response type: 'json'
+    // console.log('param:', param)
     await axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/corrplot/cplot', param)
       .then((response: any) => {
         setLoading(false)
 
-        if (typeof response.data === 'object') {
+        setPlotImg(undefined)
+        setPlotData(undefined)
+
+        console.log('/api/corrplot/cplot response ::', response)
+        if (response.data.image) {
+          setPlotImg(response.data.image)
+        } else {
           setPlotData(response.data.data)
           setLayoutOption(response.data.layout)
-        } else if (typeof response.data === 'string') {
-          console.log('img received::', response)
         }
       })
       .catch((error) => {
@@ -146,7 +121,7 @@ const CorrelationView = () => {
         console.log(error)
       })
 
-    // response_type : 'img' 인 경우
+    // image를 그대로 받아오는 경우 ( response_type : 'blob'  인 경우 )
     // await axios
     //   .post<Blob>('http://101.101.209.181:8080' + '/api/corrplot/cplot', param, {
     //     responseType: 'blob',
@@ -167,42 +142,48 @@ const CorrelationView = () => {
     fetchCorrelationPlot()
   }
 
-  const handleRadioButtonChange = (e: any) => {
-    // console.log('radio checked', e.target.value)
-    setScalingOption(e.target.value)
+  const handleRadioButtonChange = (value: any) => {
+    setScalingOption(value)
   }
 
-  const handleFeatureSelect = (param: any) => {
-    // console.log('param:', param)
-
-    if (param.type === 'y') setFeatureY(param.value)
+  const handleSelect = (param: any) => {
     if (param.type === 'x') setFeatureX(param.value)
+    if (param.type === 'y') setFeatureY(param.value)
+
+    const result = []
+    for (let i = 0; i < usedVariable.length; i++) {
+      //같은 카테고리에 선택된거 있으면 해제
+      if (usedVariable[i].category === param.type) {
+        result.push({ value: usedVariable[i].value, used: false })
+      }
+      //선택된 값은 true처리
+      else if (usedVariable[i].value === param.value) {
+        result.push({ value: usedVariable[i].value, used: true, category: param.type })
+      } else {
+        //그 외는 그대로 렌더링
+        result.push(usedVariable[i])
+      }
+    }
+
+    setUsedVariable(result)
+  }
+
+  const handleNext = () => {
+    setActiveStep(2)
   }
 
   return (
     <>
       <CorrelationViewContainer>
-        <PlotWrapper className="rounded-box">
-          {plotImg && <img src={plotImg} width="500" height="200" style={{ margin: 'auto' }} />}
-          {/* {plotData && <Plot data={plotData} layout={layoutOption} />} */}
+        <PlotWrapper className="rounded-box w-100 h-100">
+          <div className="w-100 h-100">
+            {plotImg && <img src={plotImg} width="500" height="200" style={{ margin: 'auto' }} />}
+            {!plotImg && <Plot className="w-100 h-100" data={plotData} layout={layoutOption} config={config} />}
+          </div>
         </PlotWrapper>
-
-        <HyperpararmeterWrapper>
-          {' '}
-          <Box
-            className="rounded-box"
-            sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              '& > :not(style)': {
-                width: '100%',
-                height: '70%',
-                p: 5,
-                // m: 1,
-              },
-            }}
-          >
-            <Space direction="vertical" size={12}>
+        <HyperpararmeterWrapper className="rounded-box">
+          <div className="w-100 h-100">
+            <Space className="w-100 h-100" direction="vertical" size={20}>
               {/* <Typography
                 variant="subtitle2"
                 gutterBottom
@@ -213,14 +194,16 @@ const CorrelationView = () => {
               </Typography> */}
               {/* <Switch onChange={onChangeSwitch} checked={checked} style={{ margin: '0 10px' }} /> */}
               {/* <ItemBox title="Date Range" component={<RangePicker size="middle" style={{ width: '100%' }} />} /> */}
+
               <ItemBox
                 title="Variable X"
                 component={
                   <NewTagSelect
                     style={{ width: '100%', margin: 'auto', float: 'left', minWidth: '150px' }}
                     selectionType="single"
-                    type="TARGET_VARIABLE"
-                    onChange={handleFeatureSelect}
+                    type="EXPLANATORY_VARIABLE"
+                    onSelect={handleSelect}
+                    selectOptions={optionsX}
                   />
                 }
               />
@@ -230,24 +213,33 @@ const CorrelationView = () => {
                   <NewTagSelect
                     style={{ width: '100%', margin: 'auto', float: 'left', minWidth: '150px' }}
                     selectionType="single"
-                    type="EXPLANATORY_VARIABLE"
-                    onChange={handleFeatureSelect}
+                    type="TARGET_VARIABLE"
+                    onSelect={handleSelect}
+                    selectOptions={optionsY}
                   />
                 }
               />
-              {/* <ItemBox title="Marker Size" component={<SliderWithNumber />} /> */}
               <ItemBox
                 title="Scaling Option"
                 component={<RadioButtonGroup onChangeValue={handleRadioButtonChange} />}
               />
-
-              <Button type="primary" block style={{ marginTop: '50px' }} onClick={handleSearchClick} loading={loading}>
-                Search
-              </Button>
+              <ItemBox
+                title=""
+                component={
+                  <Button type="primary" block onClick={handleSearchClick} loading={loading}>
+                    Search
+                  </Button>
+                }
+              />
             </Space>
-          </Box>
+          </div>
         </HyperpararmeterWrapper>
       </CorrelationViewContainer>
+      <div style={{ margin: '10px 30px', float: 'right' }}>
+        <Button type="text" icon={<ArrowRightOutlined />} onClick={handleNext}>
+          NEXT
+        </Button>
+      </div>
     </>
   )
 }

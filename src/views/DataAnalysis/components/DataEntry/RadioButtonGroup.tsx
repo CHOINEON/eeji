@@ -7,9 +7,9 @@ const RadioButtonGroup = (props: any) => {
   const { onChangeValue } = props
 
   const onChange = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value)
+    // console.log('radio checked', e.target.value)
     setValue(e.target.value)
-    // onChangeValue(e.target.value)
+    onChangeValue(e.target.value)
   }
 
   return (
