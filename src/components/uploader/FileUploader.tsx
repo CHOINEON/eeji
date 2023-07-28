@@ -3,7 +3,6 @@ import { RemovingEventArgs, UploaderComponent } from '@syncfusion/ej2-react-inpu
 import axios from 'axios'
 import DataSummary from '../../views/DataAnalysis/components/DataInfo/DataSummary'
 import styled from '@emotion/styled'
-import ArrowDownward from 'assets/img/dataAnalysis/arrow_downward.png'
 import { Button } from 'antd'
 
 const DataSummaryDiv = styled.div<{ toggle: any }>`
@@ -245,7 +244,7 @@ const FileUploader = (props: any) => {
           </div>
         </div>
       </div>
-      {/* <Alert ShowModal={showAlertModal} message={message} getCloseModal={getCloseAlertModal} /> */}
+      {/* <Alert ShowModal={showAlertModal} message={mes  sage} getCloseModal={getCloseAlertModal} /> */}
     </div>
   )
 }

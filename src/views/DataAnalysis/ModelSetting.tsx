@@ -31,8 +31,9 @@ const ModelSetting = (props: any) => {
   const [model, setModel] = useState('plsr')
   const [resultText, setResultText] = useState({ mae: '', r2: '', rmse: '' })
   const [btnLoading, setBtnLoading] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [running, setRunning] = useState(false)
   const [modelingInfo, setModelingInfo] = useState({})
+  const [saveDisabled, setSaveDisabled] = useState(false)
 
   //modal
   const [open, setOpen] = useState(false)
@@ -43,7 +44,8 @@ const ModelSetting = (props: any) => {
     { value: 'cnn1d', label: '1DCNN' },
     { value: 'mlp', label: 'MLP' },
     { value: 'cnnlstm', label: 'CNNLSTM' },
-    { value: 'pls_1dcnn', label: 'PLS_1DCNN' },
+    { value: 'lstm', label: 'LSTM' },
+    // { value: 'pls_1dcnn', label: 'PLS_1DCNN' },
   ])
 
   //step4에서 선택된 변수
@@ -91,60 +93,43 @@ const ModelSetting = (props: any) => {
       }
       // console.log(param)
 
-      axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/aimodel', param).then(
-        (response) => {
-          setLoading(true)
-          if (response.status === 200) {
-            // console.log('/api/aimodel response:', response.data)
+      if (selectedTagsX.length > 4) {
+        alert('X는 4개까지만 선택 가능합니다.')
+      } else {
+        setRunning(true)
 
-            if (type === 'RUN') {
-              const result = response.data
-              const dataArray = []
-              setResultText({ mae: '', r2: '', rmse: '' })
-              for (let i = 0; i < result.length; i++) {
-                if (result[i].name === 'evaluation') {
-                  setResultText(result[i])
-                } else {
-                  dataArray.push(result[i])
+        axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/aimodel', param).then(
+          (response) => {
+            console.log('/api/aimodel response:', response.data)
+
+            if (response.status === 200) {
+              if (type === 'RUN') {
+                const result = response.data
+                const dataArray = []
+                setResultText({ mae: '', r2: '', rmse: '' })
+                for (let i = 0; i < result.length; i++) {
+                  if (result[i].name === 'evaluation') {
+                    setResultText(result[i])
+                  } else {
+                    dataArray.push(result[i])
+                  }
                 }
+                setChartData(dataArray)
+              } else if (type === 'SAVE') {
+                alert('Saved!')
+                handleClose()
+                setOpen(false)
+                setActiveStep(0)
               }
-              setChartData(dataArray)
-            } else if (type === 'SAVE') {
-              alert('Saved!')
-              handleClose()
-              setOpen(false)
-              setActiveStep(0)
+              setRunning(false)
             }
+          },
+          (error) => {
+            console.log(error)
+            setRunning(false)
           }
-          setLoading(false)
-        },
-        (error) => console.log(error)
-      )
-
-      // axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/predict/chartData?', param).then((response) => {
-      //   setLoading(true)
-      //   if (response.status === 200) {
-      //     // console.log('chartData response:', response.data)
-      //     const result = response.data
-
-      //     const dataArray = []
-      //     setResultText({ mae: '', r2: '', rmse: '' })
-      //     for (let i = 0; i < result.length; i++) {
-      //       if (result[i].name === 'evaluation') {
-      //         setResultText(result[i])
-      //       } else {
-      //         dataArray.push(result[i])
-      //       }
-      //     }
-      //     setChartData(dataArray)
-      //   }
-      //   setLoading(false)
-      // })
-      // } else {
-      //   alert('Variables are not selected')
-      //   setActiveStep(1)
-      //   setLoading(false)
-      // }
+        )
+      }
     }
   }
 
@@ -155,6 +140,15 @@ const ModelSetting = (props: any) => {
   const handleChange = (value: string) => {
     // console.log('test:', value)
     setModel(value)
+
+    const modelArr = ['rfr', 'plsr']
+    if (modelArr.includes(value)) {
+      //model save버튼 활성화
+      setSaveDisabled(false)
+    } else {
+      //비활성화
+      setSaveDisabled(true)
+    }
   }
 
   const handleChangeTag = (type: string, tag: string, checked: boolean) => {
@@ -166,8 +160,12 @@ const ModelSetting = (props: any) => {
     } else if (type === 'x') {
       let nextSelectedTags = []
       if (checked) {
-        nextSelectedTags = [...selectedTagsX, tag]
-        setSelectedTagsX(nextSelectedTags)
+        if (selectedTagsX.length < 4) {
+          nextSelectedTags = [...selectedTagsX, tag]
+          setSelectedTagsX(nextSelectedTags)
+        } else {
+          alert('4개까지만 선택 가능합니다.')
+        }
       } else {
         if (selectedTagsX.length == 1) {
           //마지막 하나 선택된거는 유지
@@ -232,7 +230,6 @@ const ModelSetting = (props: any) => {
   }
 
   const handleSave = (title: string) => {
-    // console.log('title:', title)
     fetchModelingData('SAVE', title)
     // success()
   }
@@ -315,12 +312,13 @@ const ModelSetting = (props: any) => {
               </Space>
             </Col>
           </Row>
-          <Button type="primary" onClick={handleRun} style={{ float: 'right', textAlign: 'right' }} loading={loading}>
+          <Button type="primary" onClick={handleRun} style={{ float: 'right', textAlign: 'right' }} loading={running}>
             RUN
           </Button>
         </Grid>
       </Box>
       <Box
+        style={{ minHeight: '600px' }}
         marginTop={2}
         paddingBottom={2}
         className="rounded-box"
@@ -328,29 +326,33 @@ const ModelSetting = (props: any) => {
           display: 'flex',
           flexWrap: 'wrap',
           '& > :not(style)': {
-            m: 3,
+            m: 2,
             // width: '100%',
             // height: 100,
           },
         }}
       >
         {/* </Paper> */}
-        <div style={{ display: 'block' }}>
+        <div className="d-block">
           <Popover placement="rightTop" title="평가 지표" content={content}>
             <Button>평가 지표</Button>
           </Popover>
         </div>
-        <div style={{ display: 'block', width: '100%', margin: 'auto' }}>
+        <div className="d-block w-100 m-auto">
           <LineChart chartData={chartData} />
         </div>
+        <div className="d-block w-100">
+          {' '}
+          <Button
+            type="primary"
+            onClick={handleModelSave}
+            style={{ float: 'right', textAlign: 'right' }}
+            disabled={saveDisabled}
+          >
+            MODEL SAVE
+          </Button>
+        </div>
       </Box>
-      <Button
-        type="primary"
-        onClick={handleModelSave}
-        style={{ float: 'right', textAlign: 'right', marginTop: '10px' }}
-      >
-        MODEL SAVE
-      </Button>
       <ModelSavePopup modalOpen={open} onClose={handleClose} data={modelingInfo} onSave={handleSave} />
       {contextHolder}
     </>

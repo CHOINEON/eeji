@@ -69,6 +69,7 @@ const CorrelationView = () => {
 
   const [optionsX, setOptionsX] = useState([])
   const [optionsY, setOptionsY] = useState([])
+  const [defaultOption, setDefaultOption] = useState([])
 
   const [variableList, setVariableList] = useRecoilState(variableStore)
   const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
@@ -83,8 +84,9 @@ const CorrelationView = () => {
   }, [])
 
   useEffect(() => {
-    setOptionsX(variableList)
-    setOptionsY(variableList)
+    // setOptionsX(variableList)
+    // setOptionsY(variableList)
+    setDefaultOption(variableList)
   }, [variableList])
 
   const fetchCorrelationPlot = async () => {
@@ -203,7 +205,7 @@ const CorrelationView = () => {
                     selectionType="single"
                     type="EXPLANATORY_VARIABLE"
                     onSelect={handleSelect}
-                    selectOptions={optionsX}
+                    selectOptions={defaultOption}
                   />
                 }
               />
@@ -215,7 +217,7 @@ const CorrelationView = () => {
                     selectionType="single"
                     type="TARGET_VARIABLE"
                     onSelect={handleSelect}
-                    selectOptions={optionsY}
+                    selectOptions={defaultOption}
                   />
                 }
               />

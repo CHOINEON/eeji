@@ -46,7 +46,7 @@ function LineChart(props: any) {
     hovermode: 'closest',
     title: 'Result',
     // width: '1000',
-    height: '420',
+    height: '400',
     plot_bgcolor: 'rgba(255,255,255,0)',
     // paper_bgcolor: 'lightpink',
     xaxis: {

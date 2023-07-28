@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { Typography } from '@mui/material'
 import { useRecoilState } from 'recoil'
 import {
@@ -36,12 +35,6 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
 
   //Update "options" in <Select> whenever feature selected
   useEffect(() => {
-    // console.log('-----------usedVariable:::::', usedVariable)
-
-    // let category = ''
-    // if (type === 'TARGET_VARIABLE') category = 'y'
-    // if (type === 'EXPLANATORY_VARIABLE') category = 'x'
-
     if (usedVariable && usedVariable.length > 0) {
       if (type === 'TARGET_VARIABLE') {
         const leftItems = usedVariable.filter((item) => item.category !== 'x').map((item) => item.value)
@@ -76,33 +69,7 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
           result.push(usedVariable[i])
         }
       }
-      // console.log('result:', result)
       setUsedVariable(result)
-
-      //   if (type === 'TARGET_VARIABLE') {
-      //     const result = []
-      //     for (let i = 0; i < usedVariable.length; i++) {
-      //       if (value.includes(usedVariable[i].value)) {
-      //         result.push({ value: usedVariable[i].value, used: true, category: 'y' })
-      //       } else {
-      //         result.push(usedVariable[i])
-      //       }
-      //     }
-      //     // console.log('result:', result)
-      //     setVariableUsage(result)
-      //   } else if (type === 'EXPLANATORY_VARIABLE') {
-      //     const result = []
-      //     for (let i = 0; i < usedVariable.length; i++) {
-      //       if (value.includes(usedVariable[i].value)) {
-      //         result.push({ value: usedVariable[i].value, used: true, category: 'x' })
-      //       } else {
-      //         result.push(usedVariable[i])
-      //       }
-      //     }
-      //     // console.log('result:', result)
-      //     setVariableUsage(result)
-      //   }
-      // }
     }
   }, [value])
 
@@ -136,10 +103,6 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
   // }
 
   const handleDeselect = (param: any) => {
-    // console.log('param:', param)
-    // console.log('value:', value)
-
-    // if (type === 'TARGET_VARIABLE') {
     const result = []
     for (let i = 0; i < usedVariable.length; i++) {
       if (value.includes(usedVariable[i].value)) {
@@ -148,9 +111,7 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
         result.push(usedVariable[i])
       }
     }
-    // console.log('result:', result)
     setUsedVariable(result)
-    // }
   }
 
   const handleChange = (selectedValue: any) => {
@@ -173,28 +134,27 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
       <Typography variant="subtitle2" gutterBottom marginLeft={1}>
         {title}
       </Typography>
-
       <Select
         id={selectionType}
         mode={selectionType}
         loading={loading}
         disabled={loading}
-        // allowClear
-        // showSearch
         bordered={true}
         placeholder="Search to select"
         optionFilterProp="children"
         filterOption={(input, option) => (option?.label ?? '').includes(input)}
-        filterSort={(optionA, optionB) =>
-          (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-        }
         value={value}
         options={options}
         onChange={handleChange}
         onDeselect={handleDeselect}
+        maxTagCount="responsive"
+        // filterSort={(optionA, optionB) =>
+        //   (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+        // }
+        // allowClear
+        // showSearch
         // onClear={handleClear}
         // onClick={handleClick}
-        maxTagCount="responsive"
         // onSelect={handleSelect}
         // onDropdownVisibleChange={handleDropdownVisibleChange}
         // defaultActiveFirstOption={true}
