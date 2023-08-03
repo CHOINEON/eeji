@@ -46,15 +46,15 @@ function LineChart(props: any) {
     hovermode: 'closest',
     title: 'Result',
     // width: '1000',
-    height: '420',
+    height: '500',
     plot_bgcolor: 'rgba(255,255,255,0)',
     // paper_bgcolor: 'lightpink',
-    xaxis: {
-      type: 'date',
-      tickformat: '%d %b\n %H:%M',
-      // tickangle: 90,
-      rangeslider: {},
-    },
+    // xaxis: {
+    //   type: 'date',
+    //   tickformat: '%d %b\n %H:%M',
+    //   // tickangle: 90,
+    //   rangeslider: {},
+    // },
     yaxis: {
       fixedrange: true,
     },

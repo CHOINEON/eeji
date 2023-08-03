@@ -1,53 +1,57 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { RemovingEventArgs, UploaderComponent } from '@syncfusion/ej2-react-inputs'
+import { RemovingEventArgs, SelectedEventArgs, UploaderComponent } from '@syncfusion/ej2-react-inputs'
 import axios from 'axios'
 import DataSummary from '../../views/DataAnalysis/components/DataInfo/DataSummary'
 import styled from '@emotion/styled'
 import ArrowDownward from 'assets/img/dataAnalysis/arrow_downward.png'
 import { Button } from 'antd'
+import { useRecoilState } from 'recoil'
+import { startEndDateAtom } from 'views/DataAnalysis/store/base/atom'
 
 const DataSummaryDiv = styled.div<{ toggle: any }>`
   display: ${(props: any) => (props.toggle ? 'block' : 'none')};
 `
 
-const UploadWrapperDiv = styled.div<{ uploaded: any }>`
-  width: 100%;
-  float: left;
-  margin: auto;
-  display: ${(props: any) => (props.uploaded ? 'block' : 'none')};
-`
-
 const FileUploader = (props: any) => {
-  const { onUploaded, refresh, onSaved, reqParams, type } = props
+  const { refresh, onSaved, type } = props
+  const [startEndDate, setStartEndDate] = useRecoilState(startEndDateAtom)
 
   const uploadObj = useRef<UploaderComponent>(null)
   const [loading, setLoading] = useState(false)
   const [selected, setSelected] = useState(false)
   const [summaryResult, setSummaryResult] = useState([])
 
-  const clearSelection = () => {
-    uploadObj.current.clearAll()
-    setSelected(false)
-    setSummaryResult([])
-  }
-
   const asyncSettings: object = {
     chunkSize: 100000000, // set chunk size for enable the chunk upload
   }
 
-  function onRemoveFile(args: RemovingEventArgs): void {
-    args.postRawFile = false
+  ///아예 다시 만들자..
+  useEffect(() => {
+    setSummaryResult([])
+  }, [refresh])
+
+  const onRemove = (args: SelectedEventArgs) => {
+    console.log('args:', args)
+    setSummaryResult([])
+
+    // this.removeFile=[];
+    // args.cancel = true;
+    // this.removeFile.push(args.filesData as any);
+    // this.dialog.show();
   }
 
   const handleSelect = (event: any) => {
-    // console.log('handleSelect:', event.filesData[0].rawFile)
-
     const readFile = (file: any) => {
       const fileReader = new FileReader()
 
       if (file) {
         fileReader.onload = function (event: any) {
           const text = event.target.result
+          // console.log('file.size：', file.size)
+
+          if (file.size > 10485760) {
+            alert('업로드 가능 파일용량 초과(최대 10MB)')
+          }
           csvFileToArray(file.name, file.size, text)
         }
 
@@ -61,8 +65,6 @@ const FileUploader = (props: any) => {
   const csvFileToArray = (name: string, size: number, string: string) => {
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',')
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n')
-
-    // console.log('csvRows:', csvRows)
 
     const array = csvRows.map((item) => {
       if (item != '') {
@@ -94,13 +96,19 @@ const FileUploader = (props: any) => {
     const summary = []
     const lengthOfArray = array.length
 
+    const start = sortedAsc[0].dateTime
+    const end = sortedAsc[lengthOfArray - 1].dateTime
+    console.log('start:', start)
+    console.log('end:', end)
+    setStartEndDate([start, end])
+
     summary.push({
       name: name,
       size: Math.round(size / 1024),
       rowCount: sortedAsc.length,
       colCount: Object.keys(sortedAsc[0]).length,
-      startDate: dateTimeToString(sortedAsc[0].dateTime),
-      endDate: dateTimeToString(sortedAsc[lengthOfArray - 1].dateTime),
+      startDate: dateTimeToString(start),
+      endDate: dateTimeToString(end),
     })
 
     // console.log('summary:', summary)
@@ -216,7 +224,7 @@ const FileUploader = (props: any) => {
                 // success={onSuccess}
                 // progress={onFileUpload}
                 allowedExtensions=".xls,.xlsx,.csv"
-                removing={onRemoveFile.bind(this)}
+                removing={onRemove}
                 asyncSettings={asyncSettings}
                 maxFileSize={100000000} //100MB
                 selected={handleSelect}

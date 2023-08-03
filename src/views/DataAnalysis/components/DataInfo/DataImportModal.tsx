@@ -1,37 +1,34 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal } from 'antd'
+import { Modal } from 'antd'
 import FileUploader from 'components/uploader/FileUploader'
-
-/**
- *
- */
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 
 const DataImportModal = (props: any) => {
-  const { modalOpen, onClose, onSaveData, reqParams, type } = props
+  const { onSaveData, reqParams, type } = props
   const [open, setOpen] = useState(false)
   const [refresh, setRefresh] = useState(false)
 
+  const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
+
   useEffect(() => {
-    setOpen(modalOpen)
-  }, [modalOpen])
+    setOpen(importOpen)
+  }, [importOpen])
 
   const handleOk = () => {
-    setOpen(false)
-    setRefresh(true)
-    onClose()
+    setImportOpen(true)
+    // setRefresh(true)
   }
 
   const handleCancel = () => {
-    setOpen(false)
-    setRefresh(true)
-    onClose()
+    // setRefresh(true)
+    setImportOpen(false)
   }
 
   const handleSaved = (param: any) => {
     onSaveData(param)
-    setOpen(false)
-    onClose()
-    setRefresh(true)
+    // setRefresh(true)
+    setImportOpen(false)
   }
 
   return (

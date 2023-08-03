@@ -10,6 +10,8 @@ import { Button } from 'antd'
 import LineChart from 'views/DataAnalysis/components/Chart/LineChart'
 import DataImportModal from 'views/DataAnalysis/components/DataInfo/DataImportModal'
 import CircularProgress from '@mui/material/CircularProgress'
+import { useRecoilState } from 'recoil'
+import { importModalAtom, listModalAtom } from 'views/DataAnalysis/store/modal/atom'
 
 export type Model = {
   com_id: string
@@ -27,7 +29,10 @@ const ModelList = () => {
   // const requestParam = { url: '/api/upload' }
   // const [modelList, setModelList] = useState([])
   const [rowData, setRowData] = useState([])
-  const [modalOpen, setModalOpen] = useState(false)
+
+  // const [modalOpen, setModalOpen] = useState(false)
+  const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
+
   const [requestParam, setRequestParam] = useState({})
   const [selectedRow, setSelectedRow] = useState<any>('')
   const [loading, setLoading] = useState(false)
@@ -67,8 +72,8 @@ const ModelList = () => {
     { field: 'file_nm', headerName: 'File Name' },
     { field: 'x_value', headerName: 'X', resizable: true },
     { field: 'y_value', headerName: 'Y', resizable: true, width: 100 },
-    { field: '', headerName: 'accuracy', resizable: true, width: 100 },
-    { field: '', headerName: 'loss', resizable: true, width: 100 },
+    // { field: '', headerName: 'accuracy', resizable: true, width: 100 },
+    { field: '', headerName: 'Error', resizable: true, width: 100 },
     { field: '', headerName: 'Creator', resizable: true, width: 100 },
     { field: 'create_date', headerName: 'Created', resizable: true },
     { field: 'edit', cellRenderer: editColumnRenderer },
@@ -92,13 +97,14 @@ const ModelList = () => {
     axios
       .get(process.env.REACT_APP_API_SERVER_URL + '/api/predict/model?com_id=' + com_id)
       .then((response: any) => {
+        console.log('/api/predict/model resp::', response)
         setRowData(response.data)
       })
       .catch((err) => console.error(err))
   }
 
   const handleClose = () => {
-    setModalOpen(false)
+    setImportOpen(false)
   }
 
   const handleSave = (savedFile: any) => {
@@ -154,7 +160,7 @@ const ModelList = () => {
 
   const handleRunTest = () => {
     setRequestParam({ url: '/api/upload', data: selectedRow })
-    setModalOpen(true)
+    setImportOpen(true)
   }
 
   const onSelectionChanged = useCallback(() => {
@@ -193,8 +199,8 @@ const ModelList = () => {
         </div>
         <DataImportModal
           type="TEST"
-          modalOpen={modalOpen}
-          onClose={handleClose}
+          // modalOpen={modalOpen}
+          // onClose={handleClose}
           onSaveData={handleSave}
           reqParams={requestParam}
         />

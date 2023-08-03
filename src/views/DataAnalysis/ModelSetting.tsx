@@ -5,15 +5,8 @@ import LineChart from './components/Chart/LineChart'
 import './style/styles.css'
 import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import {
-  stepCountStore,
-  variableStoreX,
-  variableStoreY,
-  selectedVarStoreX,
-  selectedVarStoreY,
-  dataSetStore,
-  dataFileStore,
-} from './store/atom'
+import { stepCountStore, dataSetStore, dataFileStore } from './store/atom'
+import { variableStoreX, variableStoreY, selectedVarStoreX, selectedVarStoreY } from './store/variable/atom'
 import { Col, Divider, Row, Select, Space, Spin, Button, Popover, message } from 'antd'
 import CheckableTag from 'antd/es/tag/CheckableTag'
 import ModelSavePopup from './components/Modeling/ModelSavePopup'
@@ -36,15 +29,16 @@ const ModelSetting = (props: any) => {
 
   //modal
   const [open, setOpen] = useState(false)
-
   const [options, setOptions] = useState([
     { value: 'plsr', label: 'PLS' },
     { value: 'rfr', label: 'Random Forest' },
     { value: 'cnn1d', label: '1DCNN' },
     { value: 'mlp', label: 'MLP' },
     { value: 'cnnlstm', label: 'CNNLSTM' },
+    { value: 'lstm', label: 'LSTM' },
     { value: 'pls_1dcnn', label: 'PLS_1DCNN' },
   ])
+  const [saveDisabled, setSaveDisabled] = useState(false)
 
   //step4에서 선택된 변수
   const [selectedTagsX, setSelectedTagsX] = useState([])
@@ -95,7 +89,7 @@ const ModelSetting = (props: any) => {
         (response) => {
           setLoading(true)
           if (response.status === 200) {
-            // console.log('/api/aimodel response:', response.data)
+            console.log('/api/aimodel response:', response.data)
 
             if (type === 'RUN') {
               const result = response.data
@@ -120,31 +114,6 @@ const ModelSetting = (props: any) => {
         },
         (error) => console.log(error)
       )
-
-      // axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/predict/chartData?', param).then((response) => {
-      //   setLoading(true)
-      //   if (response.status === 200) {
-      //     // console.log('chartData response:', response.data)
-      //     const result = response.data
-
-      //     const dataArray = []
-      //     setResultText({ mae: '', r2: '', rmse: '' })
-      //     for (let i = 0; i < result.length; i++) {
-      //       if (result[i].name === 'evaluation') {
-      //         setResultText(result[i])
-      //       } else {
-      //         dataArray.push(result[i])
-      //       }
-      //     }
-      //     setChartData(dataArray)
-      //   }
-      //   setLoading(false)
-      // })
-      // } else {
-      //   alert('Variables are not selected')
-      //   setActiveStep(1)
-      //   setLoading(false)
-      // }
     }
   }
 
@@ -153,8 +122,10 @@ const ModelSetting = (props: any) => {
   }
 
   const handleChange = (value: string) => {
-    // console.log('test:', value)
     setModel(value)
+
+    const tempModels = ['rfr', 'plsr']
+    setSaveDisabled(!tempModels.includes(value))
   }
 
   const handleChangeTag = (type: string, tag: string, checked: boolean) => {
@@ -348,6 +319,7 @@ const ModelSetting = (props: any) => {
         type="primary"
         onClick={handleModelSave}
         style={{ float: 'right', textAlign: 'right', marginTop: '10px' }}
+        disabled={saveDisabled}
       >
         MODEL SAVE
       </Button>

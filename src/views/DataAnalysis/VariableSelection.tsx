@@ -4,16 +4,14 @@ import { Box, Typography } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import { Button } from 'antd'
 import { selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { dataFileStore, dataSetStore, stepCountStore } from './store/atom'
 import {
-  dataFileStore,
-  dataSetStore,
-  indexColumnStore,
   selectedVarStoreX,
   selectedVarStoreY,
-  stepCountStore,
   usedVariableStore,
   variableStore,
-} from './store/atom'
+  indexColumnStore,
+} from './store/variable/atom'
 import { Col, Row, Modal, Switch } from 'antd'
 import NewTagSelect from './components/TagTree/NewTagSelect'
 import './style/styles.css'
@@ -135,10 +133,13 @@ const VariableSelection = () => {
   }
 
   const onChangeSwitch = (param: any) => {
+    if (!param) setIndexColumn('')
     setChecked(param)
   }
 
   const handleSelect = (param: any) => {
+    // console.log('select:', param)
+
     if (param.type === 'x') {
       //multiple selection
       setSelectedVarX((prev) => [...prev, param.value])
@@ -250,7 +251,7 @@ const VariableSelection = () => {
               <NewTagSelect
                 style={{ width: '70%', margin: 'auto', minWidth: '150px' }}
                 selectionType="single"
-                type="TARGET_VARIABLE"
+                type="y"
                 title="타겟변수(Y)"
                 onSelect={handleSelect}
                 onDeselect={handleDeselect}
@@ -263,7 +264,7 @@ const VariableSelection = () => {
               <NewTagSelect
                 style={{ width: '70%', margin: 'auto', minWidth: '150px' }}
                 selectionType="multiple"
-                type="EXPLANATORY_VARIABLE"
+                type="x"
                 title="원인변수(X)"
                 onSelect={handleSelect}
                 onDeselect={handleDeselect}
@@ -276,7 +277,7 @@ const VariableSelection = () => {
                 <NewTagSelect
                   style={{ width: '70%', margin: 'auto', minWidth: '150px' }}
                   selectionType=""
-                  type="INDEX_COLUMN"
+                  type="date"
                   title="날짜 컬럼"
                   onSelect={handleSelect}
                   onDeselect={handleDeselect}
@@ -289,15 +290,11 @@ const VariableSelection = () => {
           </Col>
         </Row>
       </Box>
-      <div style={{ width: '100%', float: 'right' }}>
+      <div style={{ width: '100%', float: 'right', margin: '10px 0px' }}>
         <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-          {loading ? (
-            <CircularProgress />
-          ) : (
-            <Button type="text" icon={<ArrowRightOutlined />} onClick={handleClick}>
-              NEXT
-            </Button>
-          )}
+          <Button type="text" icon={<ArrowRightOutlined />} onClick={handleClick} loading={loading}>
+            NEXT
+          </Button>
         </Box>
       </div>
       {open && (

@@ -1,36 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
 import DescriptionBox, { DescriptionBoxProps } from './components/DataInfo/DescriptionBox'
 import { Button, Col, Row } from 'antd'
 import DataImportModal from './components/DataInfo/DataImportModal'
+import DataFileModal from './components/DataInfo/DataFileModal'
 import './style/styles.css'
 import axios from 'axios'
-import DataFileModal from './components/DataInfo/DataFileModal'
-
-// const tempData: Array<DescriptionBoxProps> = [
-//   { name: 'Dataset-1', size: 40, create: '2 weeks ago', update: '1 week ago' },
-//   { name: 'Dataset-2', size: 23, create: '1 month ago', update: '2 week ago' },
-// ]
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { importModalAtom, listModalAtom } from './store/modal/atom'
 
 const DataSet = () => {
-  const [importOpen, setImportOpen] = useState(false)
-  const [listOpen, setListOpen] = useState(false)
+  const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
+  const [fileListOpen, setFileListOpen] = useRecoilState(listModalAtom)
   const [dataSet, setDataSet] = useState([])
   const reqParams = { url: '/api/tag/uploadfile', param: 'undefined' }
 
-  useEffect(() => fetchDataSetList(), [])
+  useEffect(() => {
+    fetchDataSetList()
+  }, [])
 
   const handleClick = () => {
-    setDataSet
+    console.log('clicked')
     setImportOpen(true)
-  }
-
-  const handleImportClose = () => {
-    setImportOpen(false)
-  }
-
-  const handleListClose = () => {
-    setListOpen(false)
   }
 
   const handleSave = () => {
@@ -49,7 +39,8 @@ const DataSet = () => {
   }
 
   const handleSelect = () => {
-    setListOpen(true)
+    console.log('select')
+    setFileListOpen(true)
   }
 
   const handleDelete = (param: boolean) => {
@@ -70,11 +61,12 @@ const DataSet = () => {
           ))}
         </Row>
       </div>
-      <DataFileModal modalOpen={listOpen} onClose={handleListClose} />
+      {/* <DataFileModal modalOpen={listOpen} onClose={handleListClose} /> */}
+      <DataFileModal />
       <DataImportModal
         type="TRAIN"
-        modalOpen={importOpen}
-        onClose={handleImportClose}
+        // modalOpen={importOpen}
+        // onClose={handleImportClose}
         onSaveData={handleSave}
         reqParams={reqParams}
       />
