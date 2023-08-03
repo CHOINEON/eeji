@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import type { RadioChangeEvent } from 'antd'
-import { Radio } from 'antd'
+import { Radio, Tooltip } from 'antd'
 
 const RadioButtonGroup = (props: any) => {
   const [value, setValue] = useState('iqr')
@@ -14,8 +14,12 @@ const RadioButtonGroup = (props: any) => {
 
   return (
     <Radio.Group onChange={onChange} value={value}>
-      <Radio value={'iqr'}>IQR</Radio>
-      <Radio value={'std'}>STD</Radio>
+      <Tooltip placement="bottom" title="IQR : ">
+        <Radio value={'iqr'}>IQR</Radio>
+      </Tooltip>
+      <Tooltip placement="bottom" title="STD : ">
+        <Radio value={'std'}>STD</Radio>
+      </Tooltip>
     </Radio.Group>
   )
 }

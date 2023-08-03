@@ -1,11 +1,14 @@
-import { Button, Input, Modal } from 'antd'
+import { Button, Input, Modal, Space } from 'antd'
+import TextArea from 'antd/es/input/TextArea'
 import React, { useEffect, useState } from 'react'
 
 function ModelSavePopup(props: any) {
   const { modalOpen, onClose, onSave, data } = props
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
+
   const [title, setTitle] = useState('model_')
+  const [description, setDescription] = useState('')
 
   useEffect(() => {
     setOpen(modalOpen)
@@ -29,8 +32,14 @@ function ModelSavePopup(props: any) {
     onSave(title)
   }
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // console.log('e:', e)
     setTitle(e.target.value)
+  }
+
+  const onChangeTextArea = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // console.log('e:', e)
+    setDescription(e.target.value)
   }
 
   return (
@@ -58,7 +67,10 @@ function ModelSavePopup(props: any) {
           // </Button>,
         ]}
       >
-        <Input showCount maxLength={30} onChange={onChange} defaultValue={'model_'} />
+        <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+          Model Name: <Input showCount maxLength={30} onChange={onChangeInput} defaultValue={'model_'} />
+          Description : <TextArea placeholder="Model Description" allowClear onChange={onChangeTextArea} />
+        </Space>
       </Modal>
     </div>
   )
