@@ -5,15 +5,8 @@ import LineChart from './components/Chart/LineChart'
 import './style/styles.css'
 import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import {
-  stepCountStore,
-  variableStoreX,
-  variableStoreY,
-  selectedVarStoreX,
-  selectedVarStoreY,
-  dataSetStore,
-  dataFileStore,
-} from './store/atom'
+import { stepCountStore, dataSetStore, dataFileStore } from './store/atom'
+import { variableStoreX, variableStoreY, selectedVarStoreX, selectedVarStoreY } from './store/variable/atom'
 import { Col, Divider, Row, Select, Space, Spin, Button, Popover, message } from 'antd'
 import CheckableTag from 'antd/es/tag/CheckableTag'
 import ModelSavePopup from './components/Modeling/ModelSavePopup'
@@ -30,6 +23,7 @@ const ModelSetting = (props: any) => {
   const [chartData, setChartData] = useState<any>()
   const [model, setModel] = useState('plsr')
   const [resultText, setResultText] = useState({ mae: '', r2: '', rmse: '' })
+
   const [btnLoading, setBtnLoading] = useState(false)
   const [running, setRunning] = useState(false)
   const [modelingInfo, setModelingInfo] = useState({})
@@ -37,7 +31,6 @@ const ModelSetting = (props: any) => {
 
   //modal
   const [open, setOpen] = useState(false)
-
   const [options, setOptions] = useState([
     { value: 'plsr', label: 'PLS' },
     { value: 'rfr', label: 'Random Forest' },
@@ -45,7 +38,7 @@ const ModelSetting = (props: any) => {
     { value: 'mlp', label: 'MLP' },
     { value: 'cnnlstm', label: 'CNNLSTM' },
     { value: 'lstm', label: 'LSTM' },
-    // { value: 'pls_1dcnn', label: 'PLS_1DCNN' },
+    { value: 'pls_1dcnn', label: 'PLS_1DCNN' },
   ])
 
   //step4에서 선택된 변수
@@ -100,9 +93,9 @@ const ModelSetting = (props: any) => {
 
         axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/aimodel', param).then(
           (response) => {
-            console.log('/api/aimodel response:', response.data)
-
             if (response.status === 200) {
+              console.log('/api/aimodel response:', response.data)
+
               if (type === 'RUN') {
                 const result = response.data
                 const dataArray = []
@@ -138,17 +131,10 @@ const ModelSetting = (props: any) => {
   }
 
   const handleChange = (value: string) => {
-    // console.log('test:', value)
     setModel(value)
 
-    const modelArr = ['rfr', 'plsr']
-    if (modelArr.includes(value)) {
-      //model save버튼 활성화
-      setSaveDisabled(false)
-    } else {
-      //비활성화
-      setSaveDisabled(true)
-    }
+    const tempArr = ['plsr', 'rfr']
+    setSaveDisabled(!tempArr.includes(value))
   }
 
   const handleChangeTag = (type: string, tag: string, checked: boolean) => {

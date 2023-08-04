@@ -1,29 +1,24 @@
 import styled from '@emotion/styled'
 import React, { useState, useEffect } from 'react'
-import { DatePicker, Space, Select, Button, Empty, Skeleton } from 'antd'
+import { DatePicker, Space, Select, Button, Empty, Skeleton, Switch } from 'antd'
 import ItemBox from './components/DataEntry/ItemBox'
 import axios from 'axios'
-import { useRecoilState, useSetRecoilState } from 'recoil'
-import {
-  dataFileStore,
-  dataSetStore,
-  selectedVarStoreX,
-  selectedVarStoreY,
-  stepCountStore,
-  usedVariableStore,
-  variableStore,
-} from './store/atom'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { dataFileStore, dataSetStore, stepCountStore } from './store/atom'
+import { selectedVarStoreX, selectedVarStoreY, usedVariableStore, variableStore } from './store/variable/atom'
 import NewTagSelect from './components/TagTree/NewTagSelect'
 import SliderWithNumber from './components/DataEntry/SliderWithNumber'
 import Plot from 'react-plotly.js'
 import RadioButtonGroup from './components/DataEntry/RadioButtonGroup'
 import { ArrowRightOutlined, DotChartOutlined } from '@ant-design/icons'
+import { startEndDateAtom } from './store/base/atom'
+import dayjs from 'dayjs'
 
 const CorrelationViewContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
   width: 100%;
-  height: 25vw;
+  height: 37vw;
   // border: 1px solid red;
 `
 const HyperpararmeterWrapper = styled.div`
@@ -49,13 +44,17 @@ const defaultLayout: any = {
   title: 'CorrPlot',
   plot_bgcolor: 'rgba(255,255,255,0)',
 }
+const DATE_FORMAT = 'YYYY-MM-DD'
 
 const CorrelationView = () => {
-  // const { RangePicker } = DatePicker
-  const setActiveStep = useSetRecoilState(stepCountStore)
+  const { RangePicker } = DatePicker
 
+  const setActiveStep = useSetRecoilState(stepCountStore)
   const selectedDataset = useRecoilState(dataSetStore)
   const selectedFile = useRecoilState(dataFileStore)
+  const defaultValue = useRecoilValue(startEndDateAtom)
+
+  const [selectedDates, setSelectedDates] = useState()
 
   const [plotData, setPlotData] = useState()
   const [plotImg, setPlotImg] = useState()
@@ -73,6 +72,8 @@ const CorrelationView = () => {
 
   const [variableList, setVariableList] = useRecoilState(variableStore)
   const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
+
+  const [checked, setChecked] = useState(false)
 
   const config = {
     displaylogo: false,
@@ -102,6 +103,7 @@ const CorrelationView = () => {
     }
 
     // console.log('param:', param)
+
     await axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/corrplot/cplot', param)
       .then((response: any) => {
@@ -111,11 +113,17 @@ const CorrelationView = () => {
         setPlotData(undefined)
 
         console.log('/api/corrplot/cplot response ::', response)
+        // console.log('layout::', response.data.layout)
+
         if (response.data.image) {
           setPlotImg(response.data.image)
         } else {
           setPlotData(response.data.data)
-          setLayoutOption(response.data.layout)
+
+          //layout 수정
+          const layout = response.data.layout
+          layout['margin'] = { r: 10, b: 10 }
+          setLayoutOption(layout)
         }
       })
       .catch((error) => {
@@ -149,6 +157,7 @@ const CorrelationView = () => {
   }
 
   const handleSelect = (param: any) => {
+    // console.log('selected:', param)
     if (param.type === 'x') setFeatureX(param.value)
     if (param.type === 'y') setFeatureY(param.value)
 
@@ -174,6 +183,26 @@ const CorrelationView = () => {
     setActiveStep(2)
   }
 
+  const onChangeSwitch = (param: any) => {
+    // console.log('swithc:', param)
+    setChecked(param)
+  }
+
+  const handleChange = (dateArray: any) => {
+    console.log('datearr[0]:', dateArray[0].format('YYYY-MM-DD'))
+
+    setSelectedDates(dateArray)
+  }
+
+  //type error...
+  const handleDefaultValue = () => {
+    // if (selectedDates) {
+    //   return [dayjs(defaultValue[0], DATE_FORMAT), dayjs(defaultValue[1], DATE_FORMAT)]
+    // }
+
+    return [dayjs(), dayjs()]
+  }
+
   return (
     <>
       <CorrelationViewContainer>
@@ -184,26 +213,28 @@ const CorrelationView = () => {
           </div>
         </PlotWrapper>
         <HyperpararmeterWrapper className="rounded-box">
-          <div className="w-100 h-100">
-            <Space className="w-100 h-100" direction="vertical" size={20}>
-              {/* <Typography
-                variant="subtitle2"
-                gutterBottom
-                marginLeft={0}
-                style={{ display: 'inline-block', float: 'left' }}
-              >
-                시계열 데이터
-              </Typography> */}
-              {/* <Switch onChange={onChangeSwitch} checked={checked} style={{ margin: '0 10px' }} /> */}
-              {/* <ItemBox title="Date Range" component={<RangePicker size="middle" style={{ width: '100%' }} />} /> */}
-
+          <div className="w-100 h-90">
+            <Space className="w-100" direction="vertical" size={15}>
+              <ItemBox title="Time Series" component={<Switch onChange={onChangeSwitch} checked={checked} />} />
+              <ItemBox
+                title="Date Range"
+                component={
+                  <RangePicker
+                    size="middle"
+                    style={{ width: '100%' }}
+                    // defaultValue={handleDefaultValue}
+                    onChange={handleChange}
+                  />
+                }
+                visible={checked}
+              ></ItemBox>
               <ItemBox
                 title="Variable X"
                 component={
                   <NewTagSelect
                     style={{ width: '100%', margin: 'auto', float: 'left', minWidth: '150px' }}
                     selectionType="single"
-                    type="EXPLANATORY_VARIABLE"
+                    type="x"
                     onSelect={handleSelect}
                     selectOptions={defaultOption}
                   />
@@ -215,7 +246,7 @@ const CorrelationView = () => {
                   <NewTagSelect
                     style={{ width: '100%', margin: 'auto', float: 'left', minWidth: '150px' }}
                     selectionType="single"
-                    type="TARGET_VARIABLE"
+                    type="y"
                     onSelect={handleSelect}
                     selectOptions={defaultOption}
                   />
@@ -225,15 +256,17 @@ const CorrelationView = () => {
                 title="Scaling Option"
                 component={<RadioButtonGroup onChangeValue={handleRadioButtonChange} />}
               />
-              <ItemBox
-                title=""
-                component={
-                  <Button type="primary" block onClick={handleSearchClick} loading={loading}>
-                    Search
-                  </Button>
-                }
-              />
             </Space>
+          </div>
+          <div className="w-100 h-10">
+            <ItemBox
+              title=""
+              component={
+                <Button type="primary" block onClick={handleSearchClick} loading={loading}>
+                  Search
+                </Button>
+              }
+            />
           </div>
         </HyperpararmeterWrapper>
       </CorrelationViewContainer>

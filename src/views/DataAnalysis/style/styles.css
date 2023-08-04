@@ -137,10 +137,10 @@ template {
   height:100%;
 }
 
-.m-auto{
-  margin:auto;
+.h-90{
+  height:90%;
 }
 
-.d-block{
-  display:block;
+.h-10{
+  height:10%;
 }

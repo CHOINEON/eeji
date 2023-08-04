@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react'
 import {
   ChartComponent,
   SeriesCollectionDirective,
@@ -6,21 +6,13 @@ import {
   Inject,
   ILoadedEventArgs,
   ChartTheme,
-  LineSeries,
   Legend,
   DateTime,
   ScatterSeries,
   Zoom,
-  ZoomSettingsModel,
-  ScrollBar,
-  IScrollEventArgs,
   Selection,
   AxisModel,
   StripLine,
-  StripLinesDirective,
-  StripLineDirective,
-  minMax,
-  Trendline,
 } from '@syncfusion/ej2-react-charts'
 // import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import Button from '@mui/material/Button'
@@ -29,7 +21,8 @@ import ChartContextMenu from '../ContextMenu/ChartContextMenu'
 import CsvDownloader from 'react-csv-downloader'
 import SetValueModal from './SetValueModal'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { excludeHistoryStore, indexColumnStore } from 'views/DataAnalysis/store/atom'
+import { excludeHistoryStore } from 'views/DataAnalysis/store/atom'
+import { indexColumnStore } from 'views/DataAnalysis/store/variable/atom'
 import HistoryModal from './HistoryModal'
 
 const LineSeriesChart = (props: any) => {
@@ -235,38 +228,9 @@ const LineSeriesChart = (props: any) => {
     // console.log('dataSource:', dataSource)
   }
 
-  const handleAddThreshold = (e: any) => {
-    //
-  }
-
-  const handleCSVExport = () => {
-    csvLinkRef?.current?.handleClick()
-  }
-
-  // const primaryxAxis: AxisModel = {
-  //   // crosshairTooltip: { enable: true },
-  //   valueType: 'DateTime',
-  //   labelFormat: 'M/d hh:mm',
-  //   // valueType: 'Double',
-  //   interval: 5,
-  //   edgeLabelPlacement: 'Shift',
-  //   majorGridLines: { width: 0 },
-  //   labelIntersectAction: 'Rotate45',
-  // }
-
   const primaryyAxis: AxisModel = {
-    // crosshairTooltip: { enable: true },
     title: '',
     rangePadding: 'None',
-    //stripLines: [{ start: threshold, end: threshold + 0.01, color: '#CCDCFF', visible: true }],
-    // labelFormat: '000',
-    // labelStyle: { color: 'red' },
-    // minimum: 0,
-    // maximum: 1000,
-    // interval: 500,
-    // lineStyle: { width: 0 },
-    // majorTickLines: { width: 4 },
-    // minorTickLines: { width: 0 },
   }
 
   const handleItemClick = (param: any) => {

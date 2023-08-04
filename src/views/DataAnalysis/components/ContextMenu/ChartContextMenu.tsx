@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './style.css'
 import { ContextMenuComponent, MenuItemModel } from '@syncfusion/ej2-react-navigations'
 import { useRecoilValue } from 'recoil'
-import { indexColumnStore } from 'views/DataAnalysis/store/atom'
+import { indexColumnStore } from 'views/DataAnalysis/store/variable/atom'
 
 const ChartContextMenu = (props: any) => {
   const { onItemClicked } = props

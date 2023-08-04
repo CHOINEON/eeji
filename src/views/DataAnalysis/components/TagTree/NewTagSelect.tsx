@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Typography } from '@mui/material'
 import { useRecoilState } from 'recoil'
-import { variableStore, usedVariableStore } from '../../store/atom'
+import {
+  selectedVarStoreX,
+  selectedVarStoreY,
+  indexColumnStore,
+  variableStore,
+  usedVariableStore,
+} from '../../store/variable/atom'
 import { Select } from 'antd'
 
 interface NewTagSelectProps {
@@ -28,7 +34,7 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
   //Update "options" in <Select> whenever feature selected
   useEffect(() => {
     if (usedVariable && usedVariable.length > 0) {
-      if (type === 'TARGET_VARIABLE') {
+      if (type === 'y') {
         const leftItems = usedVariable.filter((item) => item.category !== 'x').map((item) => item.value)
         setOptions(variableList[0].options.filter((x: any) => leftItems.includes(x.value)))
       } else {
@@ -44,7 +50,7 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
 
   const handleSelect = (value: any) => {
     const selected = {
-      type: type === 'TARGET_VARIABLE' ? 'y' : 'x',
+      type: type,
       value: value,
     }
     onSelect(selected)
@@ -52,7 +58,7 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
 
   const handleDeselect = (value: any) => {
     const deselected = {
-      type: type === 'TARGET_VARIABLE' ? 'y' : 'x',
+      type: type,
       value: value,
     }
     onDeselect(deselected)
