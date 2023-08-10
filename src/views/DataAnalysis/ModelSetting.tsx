@@ -93,8 +93,9 @@ const ModelSetting = (props: any) => {
 
         axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/aimodel', param).then(
           (response) => {
+            setRunning(true)
             if (response.status === 200) {
-              console.log('/api/aimodel response:', response.data)
+              // console.log('/api/aimodel response:', response.data)
 
               if (type === 'RUN') {
                 const result = response.data
@@ -122,6 +123,31 @@ const ModelSetting = (props: any) => {
             setRunning(false)
           }
         )
+
+        // axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/predict/chartData?', param).then((response) => {
+        //   setLoading(true)
+        //   if (response.status === 200) {
+        //     // console.log('chartData response:', response.data)
+        //     const result = response.data
+
+        //     const dataArray = []
+        //     setResultText({ mae: '', r2: '', rmse: '' })
+        //     for (let i = 0; i < result.length; i++) {
+        //       if (result[i].name === 'evaluation') {
+        //         setResultText(result[i])
+        //       } else {
+        //         dataArray.push(result[i])
+        //       }
+        //     }
+        //     setChartData(dataArray)
+        //   }
+        //   setLoading(false)
+        // })
+        // } else {
+        //   alert('Variables are not selected')
+        //   setActiveStep(1)
+        //   setLoading(false)
+        // }
       }
     }
   }
@@ -132,9 +158,6 @@ const ModelSetting = (props: any) => {
 
   const handleChange = (value: string) => {
     setModel(value)
-
-    const tempArr = ['plsr', 'rfr']
-    setSaveDisabled(!tempArr.includes(value))
   }
 
   const handleChangeTag = (type: string, tag: string, checked: boolean) => {
@@ -327,18 +350,14 @@ const ModelSetting = (props: any) => {
         <div className="d-block w-100 m-auto">
           <LineChart chartData={chartData} />
         </div>
-        <div className="d-block w-100">
-          {' '}
-          <Button
-            type="primary"
-            onClick={handleModelSave}
-            style={{ float: 'right', textAlign: 'right' }}
-            disabled={saveDisabled}
-          >
-            MODEL SAVE
-          </Button>
-        </div>
       </Box>
+      <Button
+        type="primary"
+        onClick={handleModelSave}
+        style={{ float: 'right', textAlign: 'right', marginTop: '10px' }}
+      >
+        MODEL SAVE
+      </Button>
       <ModelSavePopup modalOpen={open} onClose={handleClose} data={modelingInfo} onSave={handleSave} />
       {contextHolder}
     </>

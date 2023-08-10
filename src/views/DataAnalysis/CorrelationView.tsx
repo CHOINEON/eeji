@@ -13,14 +13,12 @@ import createPlotlyComponent from 'react-plotly.js/factory'
 import RadioButtonGroup from './components/DataEntry/RadioButtonGroup'
 import { ArrowRightOutlined, DotChartOutlined } from '@ant-design/icons'
 import { startEndDateAtom } from './store/base/atom'
-import dayjs from 'dayjs'
-import ReactDOM from 'react-dom'
 
 const CorrelationViewContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
   width: 100%;
-  height: 37vw;
+  height: 25vw;
   // border: 1px solid red;
 `
 const HyperpararmeterWrapper = styled.div`
@@ -74,10 +72,9 @@ const CorrelationView = () => {
 
   const [variableList, setVariableList] = useRecoilState(variableStore)
   const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
-
-  const [checked, setChecked] = useState(false)
-  const plotRef = useRef(null)
   const [respData, setRespData] = useState({ plotdata: [], layout: {} })
+  const plotRef = useRef(null)
+  const [checked, setChecked] = useState(false)
 
   const config = {
     displaylogo: false,
@@ -121,20 +118,11 @@ const CorrelationView = () => {
         setPlotData(undefined)
 
         console.log('/api/corrplot/cplot response ::', response)
-        // console.log('layout::', response.data.layout)
-
         if (response.data.image) {
           setPlotImg(response.data.image)
         } else {
           setPlotData(response.data.data)
-
-          //layout 수정
-          const layout = response.data.layout
-          layout['margin'] = { r: 10, b: 10 }
-          setLayoutOption(layout)
-
-          //테스트용...
-          setRespData({ plotdata: response.data.data, layout: response.data.layout })
+          setLayoutOption(response.data.layout)
         }
       })
       .catch((error) => {
@@ -802,18 +790,6 @@ const CorrelationView = () => {
 
     setLayoutOption({ ...respData.layout })
     setPlotData([...respData.plotdata])
-  }
-
-  function handleRelayout(event: any) {
-    // console.log('e:', event)
-  }
-  //type error...
-  const handleDefaultValue = () => {
-    // if (selectedDates) {
-    //   return [dayjs(defaultValue[0], DATE_FORMAT), dayjs(defaultValue[1], DATE_FORMAT)]
-    // }
-
-    return [dayjs(), dayjs()]
   }
 
   return (
