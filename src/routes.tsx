@@ -23,13 +23,13 @@ const routes = [
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
     component: DataAnalysis,
   },
-  {
-    name: 'Model',
-    layout: '/admin',
-    path: '/model',
-    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
-    component: AIModeling,
-  },
+  // {
+  //   name: 'Model',
+  //   layout: '/admin',
+  //   path: '/model',
+  //   icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+  //   component: AIModeling,
+  // },
   {
     name: 'MainDashboard-Line',
     layout: '/admin',

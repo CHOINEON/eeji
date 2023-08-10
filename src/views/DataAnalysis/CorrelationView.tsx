@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { DatePicker, Space, Select, Button, Empty, Skeleton, Switch } from 'antd'
 import ItemBox from './components/DataEntry/ItemBox'
 import axios from 'axios'
@@ -9,10 +9,12 @@ import { selectedVarStoreX, selectedVarStoreY, usedVariableStore, variableStore 
 import NewTagSelect from './components/TagTree/NewTagSelect'
 import SliderWithNumber from './components/DataEntry/SliderWithNumber'
 import Plot from 'react-plotly.js'
+import createPlotlyComponent from 'react-plotly.js/factory'
 import RadioButtonGroup from './components/DataEntry/RadioButtonGroup'
 import { ArrowRightOutlined, DotChartOutlined } from '@ant-design/icons'
 import { startEndDateAtom } from './store/base/atom'
 import dayjs from 'dayjs'
+import ReactDOM from 'react-dom'
 
 const CorrelationViewContainer = styled.div`
   display: flex;
@@ -56,7 +58,7 @@ const CorrelationView = () => {
 
   const [selectedDates, setSelectedDates] = useState()
 
-  const [plotData, setPlotData] = useState()
+  const [plotData, setPlotData] = useState([])
   const [plotImg, setPlotImg] = useState()
 
   const [scalingOption, setScalingOption] = useState('iqr')
@@ -74,6 +76,8 @@ const CorrelationView = () => {
   const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
 
   const [checked, setChecked] = useState(false)
+  const plotRef = useRef(null)
+  const [respData, setRespData] = useState({ plotdata: [], layout: {} })
 
   const config = {
     displaylogo: false,
@@ -83,6 +87,10 @@ const CorrelationView = () => {
   useEffect(() => {
     setLoading(false)
   }, [])
+
+  function handleRedrawPlot() {
+    console.log('handleRedrawPlot: ')
+  }
 
   useEffect(() => {
     // setOptionsX(variableList)
@@ -124,6 +132,9 @@ const CorrelationView = () => {
           const layout = response.data.layout
           layout['margin'] = { r: 10, b: 10 }
           setLayoutOption(layout)
+
+          //테스트용...
+          setRespData({ plotdata: response.data.data, layout: response.data.layout })
         }
       })
       .catch((error) => {
@@ -194,6 +205,608 @@ const CorrelationView = () => {
     setSelectedDates(dateArray)
   }
 
+  const handleResetButton = (event: any) => {
+    // fetchCorrelationPlot()
+    const update = {
+      title: 'some new title', // updates the title
+      'xaxis.range': [-0.8237524999999999, -0.05399250000000011],
+      'xaxis.range[0]': -0.8237524999999999,
+      'xaxis.range[1]': -0.05399250000000011,
+      'yaxis.range': [-0.75151875, 0.12421125000000002],
+      'yaxis.range[0]': -0.75151875,
+      'yaxis.range[1]': 0.12421125000000002,
+      'xaxis.autorange': false,
+      'yaxis.autorange': false,
+    }
+
+    const updateTest = {
+      title: {
+        text: '2D scatter plot colored by density',
+      },
+      xaxis: {
+        title: {
+          text: 'x3',
+        },
+        range: [1.4299895079509772, 1.688060492049022],
+        type: 'linear',
+        // fixedrange: false,
+      },
+      yaxis: {
+        title: {
+          text: 'x6',
+        },
+        range: [1.3455490515780735, 1.604980948421927],
+        type: 'linear',
+        // fixedrange: false,
+      },
+      template: {
+        data: {
+          histogram2dcontour: [
+            {
+              type: 'histogram2dcontour',
+              colorbar: {
+                outlinewidth: 0,
+                ticks: '',
+              },
+              colorscale: [
+                [0, '#0d0887'],
+                [0.1111111111111111, '#46039f'],
+                [0.2222222222222222, '#7201a8'],
+                [0.3333333333333333, '#9c179e'],
+                [0.4444444444444444, '#bd3786'],
+                [0.5555555555555556, '#d8576b'],
+                [0.6666666666666666, '#ed7953'],
+                [0.7777777777777778, '#fb9f3a'],
+                [0.8888888888888888, '#fdca26'],
+                [1, '#f0f921'],
+              ],
+            },
+          ],
+          choropleth: [
+            {
+              type: 'choropleth',
+              colorbar: {
+                outlinewidth: 0,
+                ticks: '',
+              },
+            },
+          ],
+          histogram2d: [
+            {
+              type: 'histogram2d',
+              colorbar: {
+                outlinewidth: 0,
+                ticks: '',
+              },
+              colorscale: [
+                [0, '#0d0887'],
+                [0.1111111111111111, '#46039f'],
+                [0.2222222222222222, '#7201a8'],
+                [0.3333333333333333, '#9c179e'],
+                [0.4444444444444444, '#bd3786'],
+                [0.5555555555555556, '#d8576b'],
+                [0.6666666666666666, '#ed7953'],
+                [0.7777777777777778, '#fb9f3a'],
+                [0.8888888888888888, '#fdca26'],
+                [1, '#f0f921'],
+              ],
+            },
+          ],
+          heatmap: [
+            {
+              type: 'heatmap',
+              colorbar: {
+                outlinewidth: 0,
+                ticks: '',
+              },
+              colorscale: [
+                [0, '#0d0887'],
+                [0.1111111111111111, '#46039f'],
+                [0.2222222222222222, '#7201a8'],
+                [0.3333333333333333, '#9c179e'],
+                [0.4444444444444444, '#bd3786'],
+                [0.5555555555555556, '#d8576b'],
+                [0.6666666666666666, '#ed7953'],
+                [0.7777777777777778, '#fb9f3a'],
+                [0.8888888888888888, '#fdca26'],
+                [1, '#f0f921'],
+              ],
+            },
+          ],
+          heatmapgl: [
+            {
+              type: 'heatmapgl',
+              colorbar: {
+                outlinewidth: 0,
+                ticks: '',
+              },
+              colorscale: [
+                [0, '#0d0887'],
+                [0.1111111111111111, '#46039f'],
+                [0.2222222222222222, '#7201a8'],
+                [0.3333333333333333, '#9c179e'],
+                [0.4444444444444444, '#bd3786'],
+                [0.5555555555555556, '#d8576b'],
+                [0.6666666666666666, '#ed7953'],
+                [0.7777777777777778, '#fb9f3a'],
+                [0.8888888888888888, '#fdca26'],
+                [1, '#f0f921'],
+              ],
+            },
+          ],
+          contourcarpet: [
+            {
+              type: 'contourcarpet',
+              colorbar: {
+                outlinewidth: 0,
+                ticks: '',
+              },
+            },
+          ],
+          contour: [
+            {
+              type: 'contour',
+              colorbar: {
+                outlinewidth: 0,
+                ticks: '',
+              },
+              colorscale: [
+                [0, '#0d0887'],
+                [0.1111111111111111, '#46039f'],
+                [0.2222222222222222, '#7201a8'],
+                [0.3333333333333333, '#9c179e'],
+                [0.4444444444444444, '#bd3786'],
+                [0.5555555555555556, '#d8576b'],
+                [0.6666666666666666, '#ed7953'],
+                [0.7777777777777778, '#fb9f3a'],
+                [0.8888888888888888, '#fdca26'],
+                [1, '#f0f921'],
+              ],
+            },
+          ],
+          surface: [
+            {
+              type: 'surface',
+              colorbar: {
+                outlinewidth: 0,
+                ticks: '',
+              },
+              colorscale: [
+                [0, '#0d0887'],
+                [0.1111111111111111, '#46039f'],
+                [0.2222222222222222, '#7201a8'],
+                [0.3333333333333333, '#9c179e'],
+                [0.4444444444444444, '#bd3786'],
+                [0.5555555555555556, '#d8576b'],
+                [0.6666666666666666, '#ed7953'],
+                [0.7777777777777778, '#fb9f3a'],
+                [0.8888888888888888, '#fdca26'],
+                [1, '#f0f921'],
+              ],
+            },
+          ],
+          mesh3d: [
+            {
+              type: 'mesh3d',
+              colorbar: {
+                outlinewidth: 0,
+                ticks: '',
+              },
+            },
+          ],
+          scatter: [
+            {
+              fillpattern: {
+                fillmode: 'overlay',
+                size: 10,
+                solidity: 0.2,
+              },
+              type: 'scatter',
+            },
+          ],
+          parcoords: [
+            {
+              type: 'parcoords',
+              line: {
+                colorbar: {
+                  outlinewidth: 0,
+                  ticks: '',
+                },
+              },
+            },
+          ],
+          scatterpolargl: [
+            {
+              type: 'scatterpolargl',
+              marker: {
+                colorbar: {
+                  outlinewidth: 0,
+                  ticks: '',
+                },
+              },
+            },
+          ],
+          bar: [
+            {
+              error_x: {
+                color: '#2a3f5f',
+              },
+              error_y: {
+                color: '#2a3f5f',
+              },
+              marker: {
+                line: {
+                  color: '#E5ECF6',
+                  width: 0.5,
+                },
+                pattern: {
+                  fillmode: 'overlay',
+                  size: 10,
+                  solidity: 0.2,
+                },
+              },
+              type: 'bar',
+            },
+          ],
+          scattergeo: [
+            {
+              type: 'scattergeo',
+              marker: {
+                colorbar: {
+                  outlinewidth: 0,
+                  ticks: '',
+                },
+              },
+            },
+          ],
+          scatterpolar: [
+            {
+              type: 'scatterpolar',
+              marker: {
+                colorbar: {
+                  outlinewidth: 0,
+                  ticks: '',
+                },
+              },
+            },
+          ],
+          histogram: [
+            {
+              marker: {
+                pattern: {
+                  fillmode: 'overlay',
+                  size: 10,
+                  solidity: 0.2,
+                },
+              },
+              type: 'histogram',
+            },
+          ],
+          scattergl: [
+            {
+              type: 'scattergl',
+              marker: {
+                colorbar: {
+                  outlinewidth: 0,
+                  ticks: '',
+                },
+              },
+            },
+          ],
+          scatter3d: [
+            {
+              type: 'scatter3d',
+              line: {
+                colorbar: {
+                  outlinewidth: 0,
+                  ticks: '',
+                },
+              },
+              marker: {
+                colorbar: {
+                  outlinewidth: 0,
+                  ticks: '',
+                },
+              },
+            },
+          ],
+          scattermapbox: [
+            {
+              type: 'scattermapbox',
+              marker: {
+                colorbar: {
+                  outlinewidth: 0,
+                  ticks: '',
+                },
+              },
+            },
+          ],
+          scatterternary: [
+            {
+              type: 'scatterternary',
+              marker: {
+                colorbar: {
+                  outlinewidth: 0,
+                  ticks: '',
+                },
+              },
+            },
+          ],
+          scattercarpet: [
+            {
+              type: 'scattercarpet',
+              marker: {
+                colorbar: {
+                  outlinewidth: 0,
+                  ticks: '',
+                },
+              },
+            },
+          ],
+          carpet: [
+            {
+              aaxis: {
+                endlinecolor: '#2a3f5f',
+                gridcolor: 'white',
+                linecolor: 'white',
+                minorgridcolor: 'white',
+                startlinecolor: '#2a3f5f',
+              },
+              baxis: {
+                endlinecolor: '#2a3f5f',
+                gridcolor: 'white',
+                linecolor: 'white',
+                minorgridcolor: 'white',
+                startlinecolor: '#2a3f5f',
+              },
+              type: 'carpet',
+            },
+          ],
+          table: [
+            {
+              cells: {
+                fill: {
+                  color: '#EBF0F8',
+                },
+                line: {
+                  color: 'white',
+                },
+              },
+              header: {
+                fill: {
+                  color: '#C8D4E3',
+                },
+                line: {
+                  color: 'white',
+                },
+              },
+              type: 'table',
+            },
+          ],
+          barpolar: [
+            {
+              marker: {
+                line: {
+                  color: '#E5ECF6',
+                  width: 0.5,
+                },
+                pattern: {
+                  fillmode: 'overlay',
+                  size: 10,
+                  solidity: 0.2,
+                },
+              },
+              type: 'barpolar',
+            },
+          ],
+          pie: [
+            {
+              automargin: true,
+              type: 'pie',
+            },
+          ],
+        },
+        layout: {
+          autotypenumbers: 'strict',
+          colorway: [
+            '#636efa',
+            '#EF553B',
+            '#00cc96',
+            '#ab63fa',
+            '#FFA15A',
+            '#19d3f3',
+            '#FF6692',
+            '#B6E880',
+            '#FF97FF',
+            '#FECB52',
+          ],
+          font: {
+            color: '#2a3f5f',
+          },
+          hovermode: 'closest',
+          hoverlabel: {
+            align: 'left',
+          },
+          paper_bgcolor: 'white',
+          plot_bgcolor: '#E5ECF6',
+          polar: {
+            bgcolor: '#E5ECF6',
+            angularaxis: {
+              gridcolor: 'white',
+              linecolor: 'white',
+              ticks: '',
+            },
+            radialaxis: {
+              gridcolor: 'white',
+              linecolor: 'white',
+              ticks: '',
+            },
+          },
+          ternary: {
+            bgcolor: '#E5ECF6',
+            aaxis: {
+              gridcolor: 'white',
+              linecolor: 'white',
+              ticks: '',
+            },
+            baxis: {
+              gridcolor: 'white',
+              linecolor: 'white',
+              ticks: '',
+            },
+            caxis: {
+              gridcolor: 'white',
+              linecolor: 'white',
+              ticks: '',
+            },
+          },
+          coloraxis: {
+            colorbar: {
+              outlinewidth: 0,
+              ticks: '',
+            },
+          },
+          colorscale: {
+            sequential: [
+              [0, '#0d0887'],
+              [0.1111111111111111, '#46039f'],
+              [0.2222222222222222, '#7201a8'],
+              [0.3333333333333333, '#9c179e'],
+              [0.4444444444444444, '#bd3786'],
+              [0.5555555555555556, '#d8576b'],
+              [0.6666666666666666, '#ed7953'],
+              [0.7777777777777778, '#fb9f3a'],
+              [0.8888888888888888, '#fdca26'],
+              [1, '#f0f921'],
+            ],
+            sequentialminus: [
+              [0, '#0d0887'],
+              [0.1111111111111111, '#46039f'],
+              [0.2222222222222222, '#7201a8'],
+              [0.3333333333333333, '#9c179e'],
+              [0.4444444444444444, '#bd3786'],
+              [0.5555555555555556, '#d8576b'],
+              [0.6666666666666666, '#ed7953'],
+              [0.7777777777777778, '#fb9f3a'],
+              [0.8888888888888888, '#fdca26'],
+              [1, '#f0f921'],
+            ],
+            diverging: [
+              [0, '#8e0152'],
+              [0.1, '#c51b7d'],
+              [0.2, '#de77ae'],
+              [0.3, '#f1b6da'],
+              [0.4, '#fde0ef'],
+              [0.5, '#f7f7f7'],
+              [0.6, '#e6f5d0'],
+              [0.7, '#b8e186'],
+              [0.8, '#7fbc41'],
+              [0.9, '#4d9221'],
+              [1, '#276419'],
+            ],
+          },
+          xaxis: {
+            gridcolor: 'white',
+            linecolor: 'white',
+            ticks: '',
+            title: {
+              standoff: 15,
+            },
+            zerolinecolor: 'white',
+            automargin: true,
+            zerolinewidth: 2,
+          },
+          yaxis: {
+            gridcolor: 'white',
+            linecolor: 'white',
+            ticks: '',
+            title: {
+              standoff: 15,
+            },
+            zerolinecolor: 'white',
+            automargin: true,
+            zerolinewidth: 2,
+          },
+          scene: {
+            xaxis: {
+              backgroundcolor: '#E5ECF6',
+              gridcolor: 'white',
+              linecolor: 'white',
+              showbackground: true,
+              ticks: '',
+              zerolinecolor: 'white',
+              gridwidth: 2,
+            },
+            yaxis: {
+              backgroundcolor: '#E5ECF6',
+              gridcolor: 'white',
+              linecolor: 'white',
+              showbackground: true,
+              ticks: '',
+              zerolinecolor: 'white',
+              gridwidth: 2,
+            },
+            zaxis: {
+              backgroundcolor: '#E5ECF6',
+              gridcolor: 'white',
+              linecolor: 'white',
+              showbackground: true,
+              ticks: '',
+              zerolinecolor: 'white',
+              gridwidth: 2,
+            },
+          },
+          shapedefaults: {
+            line: {
+              color: '#2a3f5f',
+            },
+          },
+          annotationdefaults: {
+            arrowcolor: '#2a3f5f',
+            arrowhead: 0,
+            arrowwidth: 1,
+          },
+          geo: {
+            bgcolor: 'white',
+            landcolor: '#E5ECF6',
+            subunitcolor: 'white',
+            showland: true,
+            showlakes: true,
+            lakecolor: 'white',
+          },
+          title: {
+            x: 0.05,
+          },
+          mapbox: {
+            style: 'light',
+          },
+        },
+      },
+      autosize: true,
+      font: {
+        family: 'NanumGothic',
+      },
+      margin: {
+        r: 10,
+        b: 10,
+      },
+    }
+
+    console.log('handleResetButton', handleResetButton)
+    // setLayoutOption(updateTest)
+
+    //console.log('respData:', respData)
+
+    setPlotData(undefined)
+    setLayoutOption(undefined)
+
+    setLayoutOption({ ...respData.layout })
+    setPlotData([...respData.plotdata])
+  }
+
+  function handleRelayout(event: any) {
+    // console.log('e:', event)
+  }
   //type error...
   const handleDefaultValue = () => {
     // if (selectedDates) {
@@ -208,8 +821,22 @@ const CorrelationView = () => {
       <CorrelationViewContainer>
         <PlotWrapper className="rounded-box w-100 h-100">
           <div className="w-100 h-100">
+            <Button onClick={handleResetButton}>Reset Axes</Button>
             {plotImg && <img src={plotImg} width="500" height="200" style={{ margin: 'auto' }} />}
-            {!plotImg && <Plot className="w-100 h-100" data={plotData} layout={layoutOption} config={config} />}
+            {!plotImg && (
+              <Plot
+                ref={plotRef}
+                // onButtonClicked={handleButtonClick}
+                // onClick={() => console.log('clicked')}
+                // onRedraw={handleRedrawPlot}
+                className="w-100 h-100"
+                data={plotData}
+                layout={layoutOption}
+                config={config}
+                // onRedraw={handleRedrawPlot}
+                // onRelayout={handleRelayout}
+              />
+            )}
           </div>
         </PlotWrapper>
         <HyperpararmeterWrapper className="rounded-box">

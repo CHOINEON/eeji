@@ -1,11 +1,11 @@
-import i18n, { Resource } from 'i18next'
+import i18n from 'i18next'
+// import i18n, { Resource } from 'i18next'
 import { initReactI18next } from 'react-i18next'
-// 작성된 마크업을 불러옵니다. import 를 간소화하기 위해 *를 사용했습니다.
 import * as en from './en'
 import * as ko from './ko'
 import * as jp from './jp'
 
-const resources: Resource = {
+const resources: any = {
   'us-US': {
     ...en,
   },
