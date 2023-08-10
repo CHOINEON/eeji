@@ -40,6 +40,7 @@ const ModelSetting = (props: any) => {
     { value: 'lstm', label: 'LSTM' },
     { value: 'pls_1dcnn', label: 'PLS_1DCNN' },
   ])
+  const [saveDisabled, setSaveDisabled] = useState(false)
 
   //step4에서 선택된 변수
   const [selectedTagsX, setSelectedTagsX] = useState([])
@@ -107,6 +108,23 @@ const ModelSetting = (props: any) => {
                   } else {
                     dataArray.push(result[i])
                   }
+
+      axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/aimodel', param).then(
+        (response) => {
+          setLoading(true)
+          if (response.status === 200) {
+            console.log('/api/aimodel response:', response.data)
+
+            if (type === 'RUN') {
+              const result = response.data
+              const dataArray = []
+              setResultText({ mae: '', r2: '', rmse: '' })
+              for (let i = 0; i < result.length; i++) {
+                if (result[i].name === 'evaluation') {
+                  setResultText(result[i])
+                } else {
+                  dataArray.push(result[i])
+
                 }
                 setChartData(dataArray)
               } else if (type === 'SAVE') {
@@ -122,33 +140,17 @@ const ModelSetting = (props: any) => {
             console.log(error)
             setRunning(false)
           }
+
         )
 
-        // axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/predict/chartData?', param).then((response) => {
-        //   setLoading(true)
-        //   if (response.status === 200) {
-        //     // console.log('chartData response:', response.data)
-        //     const result = response.data
-
-        //     const dataArray = []
-        //     setResultText({ mae: '', r2: '', rmse: '' })
-        //     for (let i = 0; i < result.length; i++) {
-        //       if (result[i].name === 'evaluation') {
-        //         setResultText(result[i])
-        //       } else {
-        //         dataArray.push(result[i])
-        //       }
-        //     }
-        //     setChartData(dataArray)
-        //   }
-        //   setLoading(false)
-        // })
-        // } else {
-        //   alert('Variables are not selected')
-        //   setActiveStep(1)
-        //   setLoading(false)
-        // }
+    
       }
+
+          setLoading(false)
+        },
+        (error) => console.log(error)
+      )
+
     }
   }
 
@@ -158,6 +160,9 @@ const ModelSetting = (props: any) => {
 
   const handleChange = (value: string) => {
     setModel(value)
+
+    const tempModels = ['rfr', 'plsr']
+    setSaveDisabled(!tempModels.includes(value))
   }
 
   const handleChangeTag = (type: string, tag: string, checked: boolean) => {
@@ -355,6 +360,7 @@ const ModelSetting = (props: any) => {
         type="primary"
         onClick={handleModelSave}
         style={{ float: 'right', textAlign: 'right', marginTop: '10px' }}
+        disabled={saveDisabled}
       >
         MODEL SAVE
       </Button>

@@ -39,6 +39,7 @@ const DataSet = () => {
   }
 
   const handleSelect = () => {
+    console.log('select')
     setFileListOpen(true)
   }
 
