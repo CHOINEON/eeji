@@ -76,8 +76,6 @@ const CorrelationView = () => {
   const plotRef = useRef(null)
   const [checked, setChecked] = useState(false)
 
-  const [checked, setChecked] = useState(false)
-
   const config = {
     displaylogo: false,
     responsive: true,
@@ -798,6 +796,7 @@ const CorrelationView = () => {
 
     setLayoutOption({ ...respData.layout })
     setPlotData([...respData.plotdata])
+  }
 
   const handleDefaultValue = () => {
     // if (selectedDates) {
@@ -805,7 +804,6 @@ const CorrelationView = () => {
     // }
 
     return [dayjs(), dayjs()]
-
   }
 
   return (

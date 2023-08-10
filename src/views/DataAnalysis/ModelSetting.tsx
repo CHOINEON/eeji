@@ -40,7 +40,6 @@ const ModelSetting = (props: any) => {
     { value: 'lstm', label: 'LSTM' },
     { value: 'pls_1dcnn', label: 'PLS_1DCNN' },
   ])
-  const [saveDisabled, setSaveDisabled] = useState(false)
 
   //step4에서 선택된 변수
   const [selectedTagsX, setSelectedTagsX] = useState([])
@@ -74,7 +73,10 @@ const ModelSetting = (props: any) => {
     // console.log(selectedTagsX)
     // console.log(selectedDataFile)
 
-    if (selectedTagsX.length > 0 && selectedTagsY.length > 0) {
+    if (selectedTagsX.length > 4) {
+      alert('X는 4개까지만 선택 가능합니다.')
+      return false
+    } else if (selectedTagsX.length > 0 && selectedTagsY.length > 0) {
       const param = {
         com_id: localStorage.getItem('companyId'),
         dataset_id: selectedDataSet,
@@ -86,71 +88,34 @@ const ModelSetting = (props: any) => {
         upload: type === 'SAVE' ? true : false,
       }
       // console.log(param)
+      setRunning(true)
+      axios
+        .post(process.env.REACT_APP_API_SERVER_URL + '/api/aimodel', param)
+        .then((response) => {
+          console.log(response)
 
-      if (selectedTagsX.length > 4) {
-        alert('X는 4개까지만 선택 가능합니다.')
-      } else {
-        setRunning(true)
+          if (type === 'RUN') {
+            const result = response.data
+            const dataArray = []
+            setResultText({ mae: '', r2: '', rmse: '' })
 
-        axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/aimodel', param).then(
-          (response) => {
-            setRunning(true)
-            if (response.status === 200) {
-              // console.log('/api/aimodel response:', response.data)
-
-              if (type === 'RUN') {
-                const result = response.data
-                const dataArray = []
-                setResultText({ mae: '', r2: '', rmse: '' })
-                for (let i = 0; i < result.length; i++) {
-                  if (result[i].name === 'evaluation') {
-                    setResultText(result[i])
-                  } else {
-                    dataArray.push(result[i])
-                  }
-
-      axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/aimodel', param).then(
-        (response) => {
-          setLoading(true)
-          if (response.status === 200) {
-            console.log('/api/aimodel response:', response.data)
-
-            if (type === 'RUN') {
-              const result = response.data
-              const dataArray = []
-              setResultText({ mae: '', r2: '', rmse: '' })
-              for (let i = 0; i < result.length; i++) {
-                if (result[i].name === 'evaluation') {
-                  setResultText(result[i])
-                } else {
-                  dataArray.push(result[i])
-
-                }
-                setChartData(dataArray)
-              } else if (type === 'SAVE') {
-                alert('Saved!')
-                handleClose()
-                setOpen(false)
-                setActiveStep(0)
+            for (let i = 0; i < result.length; i++) {
+              if (result[i].name === 'evaluation') {
+                setResultText(result[i])
+              } else {
+                dataArray.push(result[i])
               }
-              setRunning(false)
+              setChartData(dataArray)
             }
-          },
-          (error) => {
-            console.log(error)
-            setRunning(false)
+          } else if (type === 'SAVE') {
+            alert('Saved!')
+            handleClose()
+            setOpen(false)
+            setActiveStep(0)
           }
-
-        )
-
-    
-      }
-
-          setLoading(false)
-        },
-        (error) => console.log(error)
-      )
-
+          setRunning(false)
+        })
+        .catch((err) => console.log(err))
     }
   }
 
