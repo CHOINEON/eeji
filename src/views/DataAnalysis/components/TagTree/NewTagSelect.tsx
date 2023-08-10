@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { Typography } from '@mui/material'
 import { useRecoilState } from 'recoil'
 import {
@@ -17,7 +16,7 @@ interface NewTagSelectProps {
   title?: string
   style?: any
   onSelect: any
-  onDeselect?: any //only for multiple deselect
+  onDeselect?: any //only for multiple selection
   loading?: boolean
   selectOptions?: any
 }
@@ -34,8 +33,6 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
 
   //Update "options" in <Select> whenever feature selected
   useEffect(() => {
-    // console.log('-----------usedVariable:::::', usedVariable)
-
     if (usedVariable && usedVariable.length > 0) {
       if (type === 'y') {
         const leftItems = usedVariable.filter((item) => item.category !== 'x').map((item) => item.value)

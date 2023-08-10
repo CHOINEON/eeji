@@ -88,6 +88,13 @@ export const MainDashboardIntervalD3FC: React.FC = () => {
     window.removeEventListener('resize', (e: any) => {
       AddGridGauid(null, 0)
     })
+
+    return () => {
+      const highestIntervalId = setInterval(';')
+      for (let i = 0; i < highestIntervalId; i++) {
+        clearInterval(i)
+      }
+    }
   }, [])
 
   React.useEffect(() => {
@@ -144,13 +151,11 @@ export const MainDashboardIntervalD3FC: React.FC = () => {
           </>
         )
         ReactDOM.render(data, node)
-      }
-      // clear interval 이슈로 숨김
-      else if (panel[j].widget === 'Line2') {
+      } else if (panel[j].widget === 'Line2') {
         const data = (
           <>
-            <BoxTitle>d3FC 1s TestData(버그확인중)</BoxTitle>
-            {/* <DrawD3FCChartTestData /> */}
+            <BoxTitle>d3FC 1s TestData(테스트중)</BoxTitle>
+            <DrawD3FCChartTestData />
           </>
         )
         ReactDOM.render(data, node)

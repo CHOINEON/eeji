@@ -100,6 +100,7 @@ const DataFileModal = (props: any) => {
           result.push({ value: value, used: false })
         })
 
+        //feature 사용관리 하기 위한 최초 store
         setUsedVariable(result)
       })
       .catch((error) => alert('TagData Load Failed::'))

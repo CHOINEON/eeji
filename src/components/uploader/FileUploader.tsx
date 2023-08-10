@@ -3,7 +3,6 @@ import { RemovingEventArgs, SelectedEventArgs, UploaderComponent } from '@syncfu
 import axios from 'axios'
 import DataSummary from '../../views/DataAnalysis/components/DataInfo/DataSummary'
 import styled from '@emotion/styled'
-import ArrowDownward from 'assets/img/dataAnalysis/arrow_downward.png'
 import { Button } from 'antd'
 import { useRecoilState } from 'recoil'
 import { startEndDateAtom } from 'views/DataAnalysis/store/base/atom'
@@ -253,7 +252,7 @@ const FileUploader = (props: any) => {
           </div>
         </div>
       </div>
-      {/* <Alert ShowModal={showAlertModal} message={message} getCloseModal={getCloseAlertModal} /> */}
+      {/* <Alert ShowModal={showAlertModal} message={mes  sage} getCloseModal={getCloseAlertModal} /> */}
     </div>
   )
 }

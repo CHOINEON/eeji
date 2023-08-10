@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Box, Typography } from '@mui/material'
-import CircularProgress from '@mui/material/CircularProgress'
 import { Button } from 'antd'
 import { selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { dataFileStore, dataSetStore, stepCountStore } from './store/atom'
@@ -32,6 +31,8 @@ const VariableSelection = () => {
   const [selectedVarY, setSelectedVarY] = useRecoilState(selectedVarStoreY)
   const [indexColumn, setIndexColumn] = useRecoilState(indexColumnStore)
 
+  const [defaultOption, setDefaultOption] = useState([])
+
   //left side
   // const [tagList, setTagList] = useState([])
   // const [chartData, setChartData] = useState([])
@@ -49,6 +50,9 @@ const VariableSelection = () => {
     setSelectedVarX([])
     setSelectedVarY([])
   }, [])
+  useEffect(() => {
+    setDefaultOption(variableList)
+  }, [variableList])
 
   const handleClick = () => {
     // console.log('selectedX:', selectedVarX)
@@ -152,7 +156,6 @@ const VariableSelection = () => {
           result.push(usedVariable[i])
         }
       }
-
       setUsedVariable(result)
     } else if (param.type == 'y') {
       //single selection
@@ -172,7 +175,6 @@ const VariableSelection = () => {
           result.push(usedVariable[i])
         }
       }
-
       setUsedVariable(result)
     } else {
       setIndexColumn(param.value)
@@ -255,6 +257,7 @@ const VariableSelection = () => {
                 title="타겟변수(Y)"
                 onSelect={handleSelect}
                 onDeselect={handleDeselect}
+                selectOptions={defaultOption}
               />
             </div>
           </Col>
@@ -268,6 +271,7 @@ const VariableSelection = () => {
                 title="원인변수(X)"
                 onSelect={handleSelect}
                 onDeselect={handleDeselect}
+                selectOptions={defaultOption}
               />
             </div>
           </Col>
@@ -281,6 +285,7 @@ const VariableSelection = () => {
                   title="날짜 컬럼"
                   onSelect={handleSelect}
                   onDeselect={handleDeselect}
+                  selectOptions={defaultOption}
 
                   // subtext="시계열 데이터의 경우만 선택"
                   // defaultOptions={variableList}
