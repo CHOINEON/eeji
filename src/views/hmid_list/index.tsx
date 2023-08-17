@@ -14,7 +14,10 @@ export default function LayoutConfig() {
   return (
     <>
       <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
-        <LayoutList company_id={window.localStorage.getItem('companyId')} />
+        <LayoutList
+          company_id={window.localStorage.getItem('companyId')}
+          user_id={window.localStorage.getItem('userId')}
+        />
       </Box>
     </>
   )

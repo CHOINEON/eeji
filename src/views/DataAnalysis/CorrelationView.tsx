@@ -1,80 +1,44 @@
 import styled from '@emotion/styled'
 import React, { useState, useEffect, useRef } from 'react'
-import { DatePicker, Space, Select, Button, Empty, Skeleton, Switch } from 'antd'
+import { DatePicker, Space, Button, Switch, message } from 'antd'
 import ItemBox from './components/DataEntry/ItemBox'
 import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { dataFileStore, dataSetStore, stepCountStore } from './store/atom'
 import { selectedVarStoreX, selectedVarStoreY, usedVariableStore, variableStore } from './store/variable/atom'
 import NewTagSelect from './components/TagTree/NewTagSelect'
-import SliderWithNumber from './components/DataEntry/SliderWithNumber'
 import Plot from 'react-plotly.js'
-import createPlotlyComponent from 'react-plotly.js/factory'
 import RadioButtonGroup from './components/DataEntry/RadioButtonGroup'
 import { ArrowRightOutlined, DotChartOutlined } from '@ant-design/icons'
 import { startEndDateAtom } from './store/base/atom'
 import dayjs from 'dayjs'
 
-const CorrelationViewContainer = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-  width: 100%;
-  height: 35vw;
-  // border: 1px solid red;
-`
-const HyperpararmeterWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 4vw 2vw;
-  float: left;
-  width: 30%;
-  height: 100%;
-`
-const PlotWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 3vw 1vw;
-  float: left;
-  width: 62%;
-`
-
-const defaultLayout: any = {
-  automargin: true,
-  autoresize: true,
-  hovermode: 'closest',
-  title: 'CorrPlot',
-  plot_bgcolor: 'rgba(255,255,255,0)',
-}
-const DATE_FORMAT = 'YYYY-MM-DD'
-
 const CorrelationView = () => {
   const { RangePicker } = DatePicker
+  const [messageApi, contextHolder] = message.useMessage()
 
   const setActiveStep = useSetRecoilState(stepCountStore)
   const selectedDataset = useRecoilState(dataSetStore)
   const selectedFile = useRecoilState(dataFileStore)
-  const defaultValue = useRecoilValue(startEndDateAtom)
   const [selectedDates, setSelectedDates] = useState()
 
-  const [plotData, setPlotData] = useState([])
+  const [plotData, setPlotData] = useState()
   const [plotImg, setPlotImg] = useState()
 
   const [scalingOption, setScalingOption] = useState('iqr')
-  const [layoutOption, setLayoutOption] = useState(defaultLayout)
+  const [layoutOption, setLayoutOption] = useState()
   const [featureX, setFeatureX] = useState([])
   const [featureY, setFeatureY] = useState([])
 
   const [loading, setLoading] = useState<boolean>(false)
 
-  const [optionsX, setOptionsX] = useState([])
-  const [optionsY, setOptionsY] = useState([])
   const [defaultOption, setDefaultOption] = useState([])
 
   const [variableList, setVariableList] = useRecoilState(variableStore)
   const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
-  const [respData, setRespData] = useState({ plotdata: [], layout: {} })
-  const plotRef = useRef(null)
   const [checked, setChecked] = useState(false)
+
+  const plotRef = useRef(null)
 
   const config = {
     displaylogo: false,
@@ -85,13 +49,7 @@ const CorrelationView = () => {
     setLoading(false)
   }, [])
 
-  function handleRedrawPlot() {
-    console.log('handleRedrawPlot: ')
-  }
-
   useEffect(() => {
-    // setOptionsX(variableList)
-    // setOptionsY(variableList)
     setDefaultOption(variableList)
   }, [variableList])
 
@@ -105,6 +63,7 @@ const CorrelationView = () => {
       scaling_method: scalingOption,
       x_value: featureX,
       y_value: featureY,
+      user_id: localStorage.getItem('userId'),
     }
 
     // console.log('param:', param)
@@ -118,7 +77,6 @@ const CorrelationView = () => {
         setPlotData(undefined)
 
         console.log('/api/corrplot/cplot response ::', response)
-        console.log('layout::', response.data.layout)
 
         if (response.data.image) {
           setPlotImg(response.data.image)
@@ -127,12 +85,23 @@ const CorrelationView = () => {
 
           //layout 수정
           const layout = response.data.layout
-          layout['margin'] = { r: 10, b: 10 }
+          layout['margin'] = {
+            x: '4vw',
+            y: '1vw',
+          }
           setLayoutOption(layout)
         }
       })
       .catch((error) => {
         setLoading(false)
+        messageApi.open({
+          type: 'error',
+          content: '관리자에게 문의하세요',
+          duration: 1,
+          style: {
+            margin: 'auto',
+          },
+        })
         console.log(error)
       })
 
@@ -154,7 +123,18 @@ const CorrelationView = () => {
   }
 
   const handleSearchClick = () => {
-    fetchCorrelationPlot()
+    if (featureX.length === 0 || featureY.length === 0) {
+      messageApi.open({
+        type: 'error',
+        content: '변수 X, Y를 선택하십시오.',
+        duration: 1,
+        style: {
+          margin: 'auto',
+        },
+      })
+    } else {
+      fetchCorrelationPlot()
+    }
   }
 
   const handleRadioButtonChange = (value: any) => {
@@ -194,13 +174,13 @@ const CorrelationView = () => {
   }
 
   const handleChange = (dateArray: any) => {
-    console.log('datearr[0]:', dateArray[0].format('YYYY-MM-DD'))
+    // console.log('datearr[0]:', dateArray[0].format('YYYY-MM-DD'))
 
     setSelectedDates(dateArray)
   }
 
   const handleResetButton = (event: any) => {
-    // fetchCorrelationPlot()
+    fetchCorrelationPlot()
     const update = {
       title: 'some new title', // updates the title
       'xaxis.range': [-0.8237524999999999, -0.05399250000000011],
@@ -786,16 +766,16 @@ const CorrelationView = () => {
       },
     }
 
-    console.log('handleResetButton', handleResetButton)
+    // console.log('handleResetButton', handleResetButton)
     // setLayoutOption(updateTest)
 
     //console.log('respData:', respData)
 
-    setPlotData(undefined)
-    setLayoutOption(undefined)
+    // setPlotData(undefined)
+    // setLayoutOption(undefined)
 
-    setLayoutOption({ ...respData.layout })
-    setPlotData([...respData.plotdata])
+    // setLayoutOption({ ...respData.layout })
+    // setPlotData([...respData.plotdata])
   }
 
   const handleDefaultValue = () => {
@@ -810,29 +790,23 @@ const CorrelationView = () => {
     <>
       <CorrelationViewContainer>
         <PlotWrapper className="rounded-box w-100 h-100">
-          <div className="w-100 h-100">
-            <Button onClick={handleResetButton}>Reset Axes</Button>
-            {plotImg && <img src={plotImg} width="500" height="200" style={{ margin: 'auto' }} />}
-            {!plotImg && (
-              <Plot
-                ref={plotRef}
-                // onButtonClicked={handleButtonClick}
-                // onClick={() => console.log('clicked')}
-                // onRedraw={handleRedrawPlot}
-                className="w-100 h-100"
-                data={plotData}
-                layout={layoutOption}
-                config={config}
-                // onRedraw={handleRedrawPlot}
-                // onRelayout={handleRelayout}
-              />
+          <div className="w-100 h-100 d-flex" style={{ justifyContent: 'center', alignItems: 'center' }}>
+            {/** default image */}
+            {!plotImg && !plotData && (
+              <DotChartOutlined style={{ fontSize: 100, color: '#bfbfbf', textAlign: 'center' }} />
             )}
+            {/** render image or plot */}
+            {plotImg ? (
+              <img src={plotImg} style={{ margin: 'auto', width: '40vw' }} />
+            ) : plotData ? (
+              <Plot ref={plotRef} className="w-100 h-100" data={plotData} layout={layoutOption} config={config} />
+            ) : null}
           </div>
         </PlotWrapper>
         <HyperpararmeterWrapper className="rounded-box">
           <div className="w-100 h-90">
             <Space className="w-100" direction="vertical" size={15}>
-              <ItemBox title="Time Series" component={<Switch onChange={onChangeSwitch} checked={checked} />} />
+              {/* <ItemBox title="Time Series" component={<Switch onChange={onChangeSwitch} checked={checked} />} />
               <ItemBox
                 title="Date Range"
                 component={
@@ -844,7 +818,7 @@ const CorrelationView = () => {
                   />
                 }
                 visible={checked}
-              ></ItemBox>
+              ></ItemBox> */}
               <ItemBox
                 title="Variable X"
                 component={
@@ -892,8 +866,33 @@ const CorrelationView = () => {
           NEXT
         </Button>
       </div>
+      {contextHolder}
     </>
   )
 }
 
 export default CorrelationView
+
+const CorrelationViewContainer = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 35vw;
+  margin-top: 2vw;
+  // border: 1px solid red;
+`
+const HyperpararmeterWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 4vw 2vw;
+  float: left;
+  width: 30%;
+  height: 100%;
+`
+const PlotWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 3vw 1vw;
+  float: left;
+  width: 62%;
+`

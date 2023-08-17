@@ -89,11 +89,12 @@ const VariableSelection = () => {
 
     const Object: any = {
       com_id: localStorage.getItem('companyId'),
+      user_id: localStorage.getItem('userId'),
       dataset_id: selectedDataset[0],
       cause: causeArray,
       target: targetArray[0],
     }
-    // console.log('Object:', Object)
+    // console.log('/api/preprocessing param:', Object)
 
     if (indexColumn !== '') {
       Object['data_index'] = indexColumn

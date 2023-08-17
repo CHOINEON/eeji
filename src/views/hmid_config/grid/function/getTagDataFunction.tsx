@@ -8,6 +8,7 @@ export const getTagList = () => {
 
   const params: any = {
     com_id: localStorage.getItem('companyId'),
+    user_id: localStorage.getItem('userId'),
     search_type: 'hmid',
   }
 

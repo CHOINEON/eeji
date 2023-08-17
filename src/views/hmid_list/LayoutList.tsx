@@ -22,6 +22,7 @@ import * as RecoilAtoms from '../hmid_config/recoil/config/atoms'
 
 interface LayoutListProps {
   company_id: string
+  user_id: string
 }
 
 const LayoutListWrap = styled.div`
@@ -149,6 +150,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   const [AdminInfo, setAdminInfo] = React.useState('block')
   const [CompanyId, setCompanyId] = React.useState()
   const [LayoutId, setLayoutId] = React.useState<any>()
+  const [UserId, serUserId] = React.useState<any>()
 
   const setAlertMessage = useSetRecoilState(RecoilAtoms.AlertMessageState)
   const setShowAlertModal = useSetRecoilState(RecoilAtoms.AlertModalState)
@@ -159,8 +161,9 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
 
   React.useEffect(() => {
     setCompanyId(props.company_id)
-    getLayoutList(props.company_id)
+    getLayoutList(props.company_id, props.user_id)
     //getLayoutListByUseQuer(props.company_id)
+    serUserId(props.user_id)
   }, [props.comapny_id])
 
   //새로운 대시보드 만들기
@@ -200,24 +203,26 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
    * 2023-04-27 박윤희
    * 대시보드 아이디에 따라 info값 가져오기
    */
-  const getClickDashboardInfo = (DashboardId: string) => {
-    axios.get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout/info?lay_id=' + DashboardId).then((response) => {
-      console.log('[ Select Layout Info Response ] :')
-      console.log(response.data)
+  const getClickDashboardInfo = (DashboardId: string, user_id: string) => {
+    axios
+      .get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout/info?lay_id=' + DashboardId + '&user_id=' + user_id)
+      .then((response) => {
+        console.log('[ Select Layout Info Response ] :')
+        console.log(response.data)
 
-      //storage 안에 info data
-      window.localStorage.setItem('layout_id', DashboardId)
-      window.localStorage.setItem('SelectedDashboardInfo', JSON.stringify(response.data))
-      window.location.href = '/admin/layout-configuration'
-    })
+        //storage 안에 info data
+        window.localStorage.setItem('layout_id', DashboardId)
+        window.localStorage.setItem('SelectedDashboardInfo', JSON.stringify(response.data))
+        window.location.href = '/admin/layout-configuration'
+      })
   }
 
   //개별 대시보드 정보 가져와서 담기
   const getDashboardInfo = (e: any) => {
     if (e.target.offsetParent.children.length === 3) {
-      getClickDashboardInfo(e.target.offsetParent.children[1].id)
+      getClickDashboardInfo(e.target.offsetParent.children[1].id, UserId)
     } else {
-      getClickDashboardInfo(e.target.offsetParent.children[0].id)
+      getClickDashboardInfo(e.target.offsetParent.children[0].id, UserId)
     }
   }
 
@@ -289,10 +294,10 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   }
 
   //layoutlist api 연결
-  const getLayoutList = (company_id: string) => {
+  const getLayoutList = (company_id: string, user_id: string) => {
     renderLayoutList([])
     axios
-      .get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout?company_id=' + company_id, {
+      .get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout?company_id=' + company_id + '&user_id=' + user_id, {
         headers: {
           Accept: '*/*',
           'Content-Type': 'application/x-www-form-urlencoded;',
@@ -315,7 +320,13 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   const SetDefaultDashboard = () => {
     axios
       .put(
-        process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout/default?com_id=' + CompanyId + '&lay_id=' + LayoutId,
+        process.env.REACT_APP_API_SERVER_URL +
+          '/api/hmid/layout/default?com_id=' +
+          CompanyId +
+          '&lay_id=' +
+          LayoutId +
+          '&user_id=' +
+          UserId,
         {
           headers: {
             Accept: '*/*',
@@ -329,7 +340,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
         console.log(response.data)
 
         renderLayoutList(response.data)
-        getLayoutList(CompanyId)
+        getLayoutList(CompanyId, UserId)
       })
       .catch((error) => {
         console.log(error.response)
@@ -339,13 +350,22 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
   //레이아웃 삭제
   const deleteLayout = () => {
     axios
-      .delete(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/layout?com_id=' + CompanyId + '&lay_id=' + LayoutId, {
-        headers: {
-          Accept: '*/*',
-          'Content-Type': 'application/x-www-form-urlencoded;',
-        },
-        timeout: 5000,
-      })
+      .delete(
+        process.env.REACT_APP_API_SERVER_URL +
+          '/api/hmid/layout?com_id=' +
+          CompanyId +
+          '&lay_id=' +
+          LayoutId +
+          '&user_id=' +
+          UserId,
+        {
+          headers: {
+            Accept: '*/*',
+            'Content-Type': 'application/x-www-form-urlencoded;',
+          },
+          timeout: 5000,
+        }
+      )
       .then((response) => {
         console.log('[ get Layout List axios response data ] : ')
         console.log(response.data)
@@ -354,7 +374,7 @@ export const LayoutList: React.FC<LayoutListProps> = (props: any) => {
           setAlertMessage('레이아웃 삭제가 완료 되었습니다.')
           setShowAlertModal(true)
 
-          getLayoutList(localStorage.getItem('companyId'))
+          getLayoutList(localStorage.getItem('companyId'), localStorage.getItem('userId'))
         }
       })
       .catch((error) => {
