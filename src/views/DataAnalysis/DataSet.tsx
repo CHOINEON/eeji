@@ -16,10 +16,9 @@ const DataSet = () => {
 
   useEffect(() => {
     fetchDataSetList()
-  }, [])
+  }, [importOpen])
 
   const handleClick = () => {
-    console.log('clicked')
     setImportOpen(true)
   }
 
@@ -29,8 +28,10 @@ const DataSet = () => {
 
   const fetchDataSetList = () => {
     const com_id = localStorage.getItem('companyId')
+    const user_id = localStorage.getItem('userId')
+
     axios
-      .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset?com_id=' + com_id)
+      .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset?com_id=' + com_id + '&user_id=' + user_id)
       .then((response) => {
         // console.log('api/dataset::', response.data)
         setDataSet(response.data)
@@ -39,7 +40,6 @@ const DataSet = () => {
   }
 
   const handleSelect = () => {
-    console.log('select')
     setFileListOpen(true)
   }
 
@@ -63,13 +63,7 @@ const DataSet = () => {
       </div>
       {/* <DataFileModal modalOpen={listOpen} onClose={handleListClose} /> */}
       <DataFileModal />
-      <DataImportModal
-        type="TRAIN"
-        // modalOpen={importOpen}
-        // onClose={handleImportClose}
-        onSaveData={handleSave}
-        reqParams={reqParams}
-      />
+      <DataImportModal />
     </>
   )
 }

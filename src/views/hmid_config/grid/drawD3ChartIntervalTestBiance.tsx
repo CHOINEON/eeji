@@ -27,6 +27,10 @@ export const IntervalTestBiance: React.FC<D3Binance1s> = (props) => {
   }, [])
 
   React.useEffect(() => {
+    console.log('prevWSData:', prevWSData)
+  }, [prevWSData])
+
+  React.useEffect(() => {
     if (wsData !== undefined) {
       const data: any = prevWSData
 

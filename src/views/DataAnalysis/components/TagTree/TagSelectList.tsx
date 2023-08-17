@@ -115,6 +115,7 @@ const TagSelectList = (props: any) => {
     axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/list', {
         com_id: localStorage.getItem('companyId'),
+        user_id: localStorage.getItem('userId'),
         search_type: 'all',
       })
       .then((response) => {

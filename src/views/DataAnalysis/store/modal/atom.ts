@@ -9,3 +9,8 @@ export const listModalAtom = atom({
   key: 'dataListModal',
   default: false,
 })
+
+export const saveModalAtom = atom({
+  key: 'saveModalAtom',
+  default: false,
+})
