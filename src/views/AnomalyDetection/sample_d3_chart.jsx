@@ -79,6 +79,7 @@
 
 //   export default sampled3chart
 
+import { Box } from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
 import Plot from 'react-plotly.js'
 // //[
@@ -113,7 +114,7 @@ const AdvancedChart = () => {
   const [index, setIndex] = useState([])
 
   useEffect(() => {
-    console.log('socketData:', socketData)
+    // console.log('socketData:', socketData)
 
     //socketData안의 값들 state로 관리
     setChartData(socketData.data)
@@ -131,19 +132,17 @@ const AdvancedChart = () => {
   }, [socketData])
 
   useEffect(() => {
-    console.log('chartData:', chartData)
+    // console.log('chartData:', chartData)
     setDataArr((prev) => [chartData, ...prev])
   }, [chartData])
 
   useEffect(() => {
-    console.log('dataArr:::::', dataArr)
-
-    console.log(isAnomaly)
+    // console.log('dataArr:::::', dataArr)
+    // console.log(isAnomaly)
   }, [dataArr])
 
   useEffect(() => {
-    console.log('mounted')
-    const ws = new WebSocket('ws://172.30.1.65:8000/ws/web')
+    const ws = new WebSocket('ws://222.121.66.49:8000/ws/web')
 
     ws.onopen = () => {
       console.log('WebSocket connection opened')
@@ -151,11 +150,11 @@ const AdvancedChart = () => {
 
     ws.onmessage = (message) => {
       const dataString = message.data.trim()
-      console.log('dataString::', dataString)
+      // console.log('dataString::', dataString)
 
       try {
         const dataObj = JSON.parse(dataString)
-        console.log('data obj:', dataObj)
+        // console.log('data obj:', dataObj)
         setSocketData(dataObj)
       } catch (error) {
         console.error('JSON parsing error:', error)
@@ -210,10 +209,15 @@ const AdvancedChart = () => {
   }
 
   return (
-    <div>
-      <h2>WebSocket Line Chart Example</h2>
-      <Plot data={testdata} layout={layout} />
-    </div>
+    <Box
+      pt={{ base: '130px', md: '80px', xl: '80px' }}
+      style={{ position: 'relative', zIndex: 1000, width: '82vw', height: '93vh' }}
+    >
+      <div>
+        <h2>WebSocket Line Chart Example</h2>
+        <Plot data={testdata} layout={layout} />
+      </div>
+    </Box>
   )
 }
 
