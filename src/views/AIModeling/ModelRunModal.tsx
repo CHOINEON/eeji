@@ -3,46 +3,31 @@ import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { runModalAtom } from './store/atom'
 import { DotChartOutlined, UploadOutlined } from '@ant-design/icons'
-import type { UploadProps } from 'antd'
+import type { UploadFile, UploadProps } from 'antd'
 import { Button, message, Upload } from 'antd'
 import LineChart from 'views/DataAnalysis/components/Chart/LineChart'
 import axios from 'axios'
+import styled from '@emotion/styled'
+
+const FlexContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+`
 
 const ModelRunModal = (props: any) => {
-  const [importOpen, setImportOpen] = useRecoilState(runModalAtom)
   const selectedData = props.selectedData
-  const [open, setOpen] = useState(false)
+
+  const [importOpen, setImportOpen] = useRecoilState(runModalAtom)
   const [confirmLoading, setConfirmLoading] = useState(false)
+  const [fileList, setFileList] = useState<UploadFile[]>([])
   const [imgsrc, setImgsrc] = useState(undefined)
 
   useEffect(() => {
     getOldPredictionChart(selectedData.model_id)
+    setFileList([])
   }, [selectedData])
-
-  const UploadProps: UploadProps = {
-    name: 'file',
-    // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    // headers: {
-    //   authorization: 'authorization-text',
-    // },
-    onChange(info) {
-      console.log('info:', info)
-      getChartdata(info.file)
-
-      // if (info.file.status !== 'uploading') {
-      //   console.log(info.file, info.fileList)
-      // }
-      // if (info.file.status === 'done') {
-      //   message.success(`${info.file.name} file uploaded successfully`)
-      // } else if (info.file.status === 'error') {
-      //   message.error(`${info.file.name} file upload failed.`)
-      // }
-    },
-  }
-
-  const showModal = () => {
-    setImportOpen(true)
-  }
 
   const handleOk = () => {
     setConfirmLoading(true)
@@ -61,32 +46,37 @@ const ModelRunModal = (props: any) => {
       user_id: localStorage.getItem('userId'),
       model_id: model_id,
     }
+    // console.log('param:', param)
 
-    console.log('param:', param)
     axios
       .post<Blob>(process.env.REACT_APP_API_SERVER_URL + '/api/load_model_graph', param, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'multipart/form-data' },
         responseType: 'arraybuffer',
       })
       .then((res) => {
-        console.log('/api/load_mpodel_graph resp:', res)
+        // console.log('/api/load_mpodel_graph resp:', res)
 
-        const myFile = new File([res.data], 'imageName')
-        const reader = new FileReader()
-        reader.onload = (ev) => {
-          const previewImage = String(ev.target?.result)
-          console.log('111::', previewImage)
-          setImgsrc(previewImage) // myImage라는 state에 저장했음
+        if (res.status === 200) {
+          const myFile = new File([res.data], 'imageName')
+
+          if (myFile.size > 0) {
+            const reader = new FileReader()
+            reader.onload = (ev) => {
+              const previewImage = String(ev.target?.result)
+              // console.log('previewImage:', previewImage)
+              setImgsrc(previewImage)
+            }
+            reader.readAsDataURL(myFile)
+          }
         }
-        reader.readAsDataURL(myFile)
       })
       .catch((error) => console.log('error:', error))
   }
 
   const getChartdata = (rawFile: any) => {
-    console.log('file：', rawFile)
-    console.log('selectedData:', selectedData)
-    // const modelArr = new Array(selectedRow.model_id.toString())
+    // console.log('file：', rawFile)
+    // console.log('selectedData:', selectedData)
+
     const formData = new FormData()
 
     // for (const i in selectedRow) {
@@ -123,6 +113,14 @@ const ModelRunModal = (props: any) => {
     //   )
   }
 
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+    // console.log('fileList::', fileList)
+    setFileList(newFileList)
+    if (fileList.length > 0) {
+      getChartdata(fileList[0].originFileObj)
+    }
+  }
+
   return (
     <Modal
       width={1000}
@@ -132,27 +130,34 @@ const ModelRunModal = (props: any) => {
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
     >
-      <div style={{ textAlign: 'center' }}>
-        <p style={{ color: '#002D65', fontSize: '20px', fontWeight: 'bold', float: 'left', width: '100%' }}>
+      <FlexContainer>
+        <p className="w-100" style={{ textAlign: 'center', color: '#002D65', fontSize: '20px', fontWeight: 'bold' }}>
           Summary of Prediction
         </p>
-        <p>yyyymmdd ~ yyyymmdd</p>
+        <p className="w-100" style={{ textAlign: 'center' }}>
+          {' '}
+          yyyymmdd ~ yyyymmdd
+        </p>
 
         {imgsrc ? (
-          <img src={imgsrc} style={{ margin: 'auto', width: '40vw' }} />
+          <img src={imgsrc} style={{ margin: 'auto' }} />
         ) : (
           <DotChartOutlined style={{ fontSize: 120, color: '#bfbfbf' }} />
         )}
         <Divider />
-        <div>
-          <div style={{ display: 'block', width: '100%', margin: 'auto' }}>
-            <LineChart />
-          </div>
-          <Upload {...props}>
+
+        <div className="w-100">
+          <Upload
+            style={{ display: 'inline-flex', border: '1px solid red' }}
+            maxCount={1}
+            fileList={fileList}
+            onChange={handleChange}
+          >
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
+          <LineChart />
         </div>
-      </div>
+      </FlexContainer>
     </Modal>
   )
 }

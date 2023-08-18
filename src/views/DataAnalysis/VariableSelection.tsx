@@ -100,41 +100,29 @@ const VariableSelection = () => {
       Object['data_index'] = indexColumn
     }
 
-    const abortController = new AbortController()
-
     const fetchData = async () => {
-      try {
-        axios
-          .post(process.env.REACT_APP_API_SERVER_URL + '/api/preprocessing', JSON.stringify(Object), {
-            headers: {
-              'Content-Type': `application/json`,
-            },
-          })
-          .then(
-            (response: any) => {
-              // console.log('preprocessing response:', response.data)
-              if (response.status === 200) {
-                // setTagList(response.data)
-                setLoading(false)
-                setActiveStep(3)
-              }
-            },
-            (error) => {
+      axios
+        .post(process.env.REACT_APP_API_SERVER_URL + '/api/preprocessing', JSON.stringify(Object), {
+          headers: {
+            'Content-Type': `application/json`,
+          },
+        })
+        .then(
+          (response: any) => {
+            // console.log('preprocessing response:', response.data)
+            if (response.status === 200) {
+              // setTagList(response.data)
               setLoading(false)
-              console.log('error:', error)
+              setActiveStep(3)
             }
-          )
-      } catch (error) {
-        if (error.name === 'AbortError') {
-          //
-        }
-      }
+          },
+          (error) => {
+            setLoading(false)
+            console.log('error:', error)
+          }
+        )
     }
     fetchData()
-
-    return () => {
-      abortController.abort()
-    }
   }
 
   const onChangeSwitch = (param: any) => {
