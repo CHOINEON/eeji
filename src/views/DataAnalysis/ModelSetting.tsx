@@ -48,6 +48,7 @@ const ModelSetting = (props: any) => {
   const [messageApi, msgContextHolder] = message.useMessage()
   const [api, apiContextHolder] = notification.useNotification()
   const [saveModalOpen, setSaveModalOpen] = useRecoilState(saveModalAtom)
+  const [countdownValue, setCountdownValue] = useState(Date.now() + 3000 * 1000)
 
   //modal
   const [options, setOptions] = useState([
@@ -91,7 +92,7 @@ const ModelSetting = (props: any) => {
     setResultText({ mae: '', rmse: '' })
   }
   const fetchModelingData = (type: string, modelName?: string, desc?: string) => {
-    // setRunning(true)
+    setRunning(true)
 
     if (selectedTagsX.length > 20) {
       messageApi.open({
@@ -181,6 +182,7 @@ const ModelSetting = (props: any) => {
 
   const handleRun = () => {
     fetchModelingData('RUN')
+    setCountdownValue(Date.now() + 3000 * 1000)
   }
 
   const handleChange = (value: string) => {
@@ -313,7 +315,7 @@ const ModelSetting = (props: any) => {
   }
 
   const onChange: CountdownProps['onChange'] = (val) => {
-    if (typeof val === 'number' && 59.92 * 1000 < val && val < 60 * 1000) {
+    if (typeof val === 'number' && 59.95 * 1000 < val && val < 60 * 1000) {
       openNotification('topRight')
     }
   }
@@ -448,7 +450,7 @@ const ModelSetting = (props: any) => {
         MODEL SAVE
       </Button>
       <div style={{ display: 'inline-block', float: 'right', marginTop: '10px', marginRight: '10px' }}>
-        <Countdown title="" value={Date.now() + 3000 * 1000} onChange={onChange} onFinish={onFinish} />
+        <Countdown title="" value={countdownValue} onChange={onChange} onFinish={onFinish} />
       </div>
       <ModelSavePopup data={modelingInfo} onSave={handleSave} />
       {msgContextHolder}
