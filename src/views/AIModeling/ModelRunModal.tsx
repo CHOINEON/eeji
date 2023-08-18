@@ -25,7 +25,9 @@ const ModelRunModal = (props: any) => {
   const [imgsrc, setImgsrc] = useState(undefined)
 
   useEffect(() => {
-    getOldPredictionChart(selectedData.model_id)
+    if (selectedData) {
+      getOldPredictionChart(selectedData.model_id)
+    }
     setFileList([])
   }, [selectedData])
 

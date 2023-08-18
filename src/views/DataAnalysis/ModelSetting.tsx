@@ -136,6 +136,8 @@ const ModelSetting = (props: any) => {
           }
         })
         .catch((err) => {
+          setRunning(false)
+
           setSaveModalOpen(false)
           console.log(err)
         })
