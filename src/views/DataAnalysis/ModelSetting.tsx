@@ -7,12 +7,27 @@ import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { stepCountStore, dataSetStore, dataFileStore } from './store/atom'
 import { variableStoreX, variableStoreY, selectedVarStoreX, selectedVarStoreY } from './store/variable/atom'
-import { Col, Divider, Row, Select, Space, Spin, Button, Popover, message } from 'antd'
+import {
+  Col,
+  Divider,
+  Row,
+  Select,
+  Space,
+  Spin,
+  Button,
+  Popover,
+  message,
+  Statistic,
+  CountdownProps,
+  notification,
+} from 'antd'
 import CheckableTag from 'antd/es/tag/CheckableTag'
 import ModelSavePopup from './components/Modeling/ModelSavePopup'
 import { saveModalAtom } from './store/modal/atom'
+import { NotificationPlacement } from 'antd/es/notification/interface'
 
 const ModelSetting = (props: any) => {
+  const { Countdown } = Statistic
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore)
   const [selectedDataSet, setSelectedDataSet] = useRecoilState(dataSetStore)
   const [selectedDataFile, setSelectedDataFile] = useRecoilState(dataFileStore)
@@ -30,7 +45,8 @@ const ModelSetting = (props: any) => {
   const [modelingInfo, setModelingInfo] = useState({})
   const [saveDisabled, setSaveDisabled] = useState(true)
 
-  const [messageApi, contextHolder] = message.useMessage()
+  const [messageApi, msgContextHolder] = message.useMessage()
+  const [api, apiContextHolder] = notification.useNotification()
   const [saveModalOpen, setSaveModalOpen] = useRecoilState(saveModalAtom)
 
   //modal
@@ -42,6 +58,11 @@ const ModelSetting = (props: any) => {
     { value: 'cnnlstm', label: 'CNNLSTM' },
     { value: 'lstm', label: 'LSTM' },
     { value: 'pls_1dcnn', label: 'PLS_1DCNN' },
+    { value: 'nbeats', label: 'NBEATS' },
+    { value: 'nhits', label: 'NHITS' },
+    { value: 'nlinear', label: 'NLINEAR' },
+    { value: 'tstmodel', label: 'TSTMODEL' },
+    { value: 'tftmodel', label: 'TFTMODEL' },
   ])
 
   //step4에서 선택된 변수
@@ -291,6 +312,25 @@ const ModelSetting = (props: any) => {
     fetchSaveModel(title, desc)
   }
 
+  const onChange: CountdownProps['onChange'] = (val) => {
+    if (typeof val === 'number' && 59.92 * 1000 < val && val < 60 * 1000) {
+      openNotification('topRight')
+    }
+  }
+
+  const openNotification = (placement: NotificationPlacement) => {
+    api.warning({
+      message: `Notification`,
+      description: '저장하지 않은 모델은 1분 뒤 사라집니다.',
+      placement,
+    })
+  }
+
+  const onFinish: CountdownProps['onFinish'] = () => {
+    console.log('finished!')
+    setActiveStep(0)
+  }
+
   return (
     <>
       <Box
@@ -407,9 +447,12 @@ const ModelSetting = (props: any) => {
       >
         MODEL SAVE
       </Button>
+      <div style={{ display: 'inline-block', float: 'right', marginTop: '10px', marginRight: '10px' }}>
+        <Countdown title="" value={Date.now() + 3000 * 1000} onChange={onChange} onFinish={onFinish} />
+      </div>
       <ModelSavePopup data={modelingInfo} onSave={handleSave} />
-
-      {contextHolder}
+      {msgContextHolder}
+      {apiContextHolder}
     </>
   )
 }
