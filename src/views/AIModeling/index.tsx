@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import ModelList from './ModelList'
 import { Box } from '@chakra-ui/react'
-import Stepper from '@mui/material/Stepper'
-import Step from '@mui/material/Step'
-import StepButton from '@mui/material/StepButton'
-import { ThemeProvider } from '@mui/material/styles'
-import { theme } from './theme'
 import { useRecoilState } from 'recoil'
-import { stepCountStore } from './store/atom'
-import FileUploader from 'components/uploader/FileUploader'
+// import Stepper from '@mui/material/Stepper'
+// import Step from '@mui/material/Step'
+// import StepButton from '@mui/material/StepButton'
+// import { ThemeProvider } from '@mui/material/styles'
+// import { theme } from './theme'
 
-const RunAIModel = () => {
+const AIModelManagement = () => {
   const steps = ['Select Model', 'Upload Data', 'Test Model']
-  const [activeStep, setActiveStep] = useRecoilState(stepCountStore)
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean
   }>({})
-
-  const handleStep = (step: number) => {
-    setActiveStep(step)
-  }
 
   return (
     <>
@@ -49,4 +42,4 @@ const RunAIModel = () => {
   )
 }
 
-export default RunAIModel
+export default AIModelManagement

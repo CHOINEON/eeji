@@ -9,7 +9,7 @@
 
 
 .upload_wrapper, .rtl_wrapper,.validation_wrapper {
-    max-width: 400px;
+    /* max-width: 530px; */
 	margin: auto;
 }
 
@@ -19,9 +19,9 @@
     margin-top: 30px;
     /* background: transparent url('img/사각형 2439.png') 0% 0% no-repeat padding-box; */
     background-color:white;
-    box-shadow: 0px 5px 20px #4338F733;
-    border-radius: 18px;
-    opacity: 1;
+    /* box-shadow: 0px 5px 20px #4338F733; */
+    /* border-radius: 18px; */
+    /* opacity: 1; */
 }
 
 .upload_wrapper .e-upload .e-upload-drag-hover, .rtl_wrapper .e-upload .e-upload-drag-hover,  .validation_wrapper .e-upload .e-upload-drag-hover {

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { Typography } from '@mui/material'
 import { useRecoilState } from 'recoil'
 import {
@@ -8,7 +7,7 @@ import {
   indexColumnStore,
   variableStore,
   usedVariableStore,
-} from '../../store/atom'
+} from '../../store/variable/atom'
 import { Select } from 'antd'
 
 interface NewTagSelectProps {
@@ -17,7 +16,7 @@ interface NewTagSelectProps {
   title?: string
   style?: any
   onSelect: any
-  onDeselect?: any //only for multiple deselect
+  onDeselect?: any //only for multiple selection
   loading?: boolean
   selectOptions?: any
 }
@@ -32,18 +31,10 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
   const [variableList, setVariableList] = useRecoilState(variableStore)
   const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
 
-  const [selectedVarX, setSelectedVarX] = useRecoilState(selectedVarStoreX)
-  const [selectedVarY, setSelectedVarY] = useRecoilState(selectedVarStoreY)
-  const [indexColumn, setIndexColumn] = useRecoilState(indexColumnStore)
-
-  // useEffect(() => console.log('selectOptions:', selectOptions)), [selectOptions]
-
   //Update "options" in <Select> whenever feature selected
   useEffect(() => {
-    // console.log('-----------usedVariable:::::', usedVariable)
-
     if (usedVariable && usedVariable.length > 0) {
-      if (type === 'TARGET_VARIABLE') {
+      if (type === 'y') {
         const leftItems = usedVariable.filter((item) => item.category !== 'x').map((item) => item.value)
         setOptions(variableList[0].options.filter((x: any) => leftItems.includes(x.value)))
       } else {
@@ -59,7 +50,7 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
 
   const handleSelect = (value: any) => {
     const selected = {
-      type: type === 'TARGET_VARIABLE' ? 'y' : 'x',
+      type: type,
       value: value,
     }
     onSelect(selected)
@@ -67,52 +58,15 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
 
   const handleDeselect = (value: any) => {
     const deselected = {
-      type: type === 'TARGET_VARIABLE' ? 'y' : 'x',
+      type: type,
       value: value,
     }
     onDeselect(deselected)
-    // const result = []
-    // for (let i = 0; i < usedVariable.length; i++) {
-    //   if (value.includes(usedVariable[i].value)) {
-    //     result.push({ value: usedVariable[i].value, used: false })
-    //   } else {
-    //     result.push(usedVariable[i])
-    //   }
-    // }
-    // setUsedVariable(result)
   }
 
   // only for rendering inside of the component itself
   const handleChange = (selectedValue: any) => {
-    // console.log('handleChange:: ', selectedValue)
     setValue(selectedValue)
-
-    //   if (type === 'TARGET_VARIABLE') {
-    //     setSelectedVarY([selectedValue])
-    //   }
-    //   if (type === 'EXPLANATORY_VARIABLE') {
-    //     setSelectedVarX(selectedValue)
-    //   }
-    //   if (type === 'INDEX_COLUMN') {
-    //     setIndexColumn(selectedValue)
-    //   }
-
-    //   const selected = {
-    //     type: type === 'TARGET_VARIABLE' ? 'y' : 'x',
-    //     value: value,
-    //   }
-    //   onChange(selected)
-
-    //   const result = []
-    //   for (let i = 0; i < usedVariable.length; i++) {
-    //     if (value.includes(usedVariable[i].value)) {
-    //       result.push({ value: usedVariable[i].value, used: true, category: type === 'TARGET_VARIABLE' ? 'y' : 'x' })
-    //     } else {
-    //       result.push(usedVariable[i])
-    //     }
-    //   }
-    //   // console.log('result:', result)
-    //   setUsedVariable(result)
   }
 
   return (

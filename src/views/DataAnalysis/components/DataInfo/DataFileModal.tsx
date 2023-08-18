@@ -2,21 +2,20 @@ import React, { useState, useEffect } from 'react'
 import { Button, Modal, Spin } from 'antd'
 import { List, Select, Space, Typography } from 'antd'
 import axios from 'axios'
-import { useRecoilState, useSetRecoilState } from 'recoil'
-import {
-  dataFileStore,
-  dataSetStore,
-  stepCountStore,
-  usedVariableStore,
-  variableStore,
-} from 'views/DataAnalysis/store/atom'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { dataFileStore, dataSetStore, stepCountStore } from 'views/DataAnalysis/store/atom'
+import { usedVariableStore, variableStore } from 'views/DataAnalysis/store/variable/atom'
+import { listModalAtom } from 'views/DataAnalysis/store/modal/atom'
 
 const { Option } = Select
 
 const DataFileModal = (props: any) => {
-  const { modalOpen, onClose, onSaveData, dsId } = props
+  // const { modalOpen, onClose } = props
+  const user_id = localStorage.getItem('userId')
 
   const [selectedDataSet, setSelectedDataSet] = useRecoilState(dataSetStore)
+  const [fileListOpen, setFileListOpen] = useRecoilState(listModalAtom)
+
   const setActiveStep = useSetRecoilState(stepCountStore)
   const setSelectedDataFile = useSetRecoilState(dataFileStore)
   const setVariableList = useSetRecoilState(variableStore)
@@ -27,31 +26,29 @@ const DataFileModal = (props: any) => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    setOpen(fileListOpen)
+  }, [fileListOpen])
+
+  useEffect(() => {
     fetchIncludedFileList()
   }, [selectedDataSet])
 
-  useEffect(() => setOpen(modalOpen), [props])
-
   const handleOk = () => {
-    setOpen(false)
-    onClose()
-    setFileList([])
+    setFileListOpen(false)
   }
 
   const handleCancel = () => {
-    setOpen(false)
-    onClose()
-    setFileList([])
+    setFileListOpen(false)
   }
 
   const fetchIncludedFileList = () => {
     axios
-      .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset/file?ds_id=' + selectedDataSet)
+      .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset/file?ds_id=' + selectedDataSet + '&user_id=' + user_id)
       .then((response) => {
         // console.log('/api/dataset/file:', response)
         setFileList(response.data)
       })
-      .catch((error) => console.log('/api/dataset/file :', error))
+      .catch((error) => console.log('/api/dataset/file error:', error))
   }
 
   const renderItem = () => {
@@ -63,7 +60,12 @@ const DataFileModal = (props: any) => {
               <List.Item.Meta
                 key={idx}
                 title={<a onClick={() => handleClick(item.name)}>{item.name}</a>}
-                description={`${Math.round(item.size) / 1024} MB `}
+                description={
+                  item.size / 1024 < 1024
+                    ? Math.round(item.size / 1024) + ' KB'
+                    : Math.round(item.size / 1024 / 1024) + ' MB'
+                }
+
                 //| start date : ${item.start_date} | end date: ${  item.end_date}
               />
             </List.Item>
@@ -84,6 +86,7 @@ const DataFileModal = (props: any) => {
       {
         id: selectedDataSet,
         file_name: fileName,
+        user_id: user_id,
       },
     ]
     // console.log('/api/tag param::', param)
@@ -94,6 +97,7 @@ const DataFileModal = (props: any) => {
         setLoading(false)
 
         setVariableList(response.data)
+        setFileListOpen(false)
         setActiveStep(1)
 
         const values = response.data[0].options
@@ -104,6 +108,7 @@ const DataFileModal = (props: any) => {
           result.push({ value: value, used: false })
         })
 
+        //feature 사용관리 하기 위한 최초 store
         setUsedVariable(result)
       })
       .catch((error) => alert('TagData Load Failed::'))

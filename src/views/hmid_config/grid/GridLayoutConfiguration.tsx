@@ -591,6 +591,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
       formData.append('com_id', window.localStorage.getItem('companyId'))
       formData.append('lay_id', lay_id)
       formData.append('file', myfile)
+      formData.append('user_id', window.localStorage.getItem('userId'))
 
       setForm(formData)
     })
@@ -618,7 +619,10 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
       .get(
         process.env.REACT_APP_API_SERVER_URL +
           '/api/hmid/layout?company_id=' +
-          window.localStorage.getItem('companyId'),
+          window.localStorage.getItem('companyId') +
+          '&user_id=' +
+          window.localStorage.getItem('userId'),
+
         {
           headers: {
             Accept: '*/*',
@@ -651,6 +655,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
         lay_name: layoutTitle,
         grid_id: panelIdx.toString(),
         data: args,
+        user_id: localStorage.getItem('userId'),
       }
 
       console.log('[ Save Dashboard Params ] : ', params)
@@ -680,6 +685,7 @@ export const PredefinedLayoutsConfiguration: React.FC = () => {
     } else {
       params = {
         com_id: localStorage.getItem('companyId'),
+        user_id: localStorage.getItem('userId'),
         lay_id: Number(window.localStorage.getItem('layout_id')),
         lay_name: layoutTitle,
         grid_id: panelIdx.toString(),

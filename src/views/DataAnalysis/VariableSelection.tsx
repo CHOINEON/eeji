@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Box, Typography } from '@mui/material'
-import CircularProgress from '@mui/material/CircularProgress'
 import { Button } from 'antd'
 import { selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { dataFileStore, dataSetStore, stepCountStore } from './store/atom'
 import {
-  dataFileStore,
-  dataSetStore,
-  indexColumnStore,
   selectedVarStoreX,
   selectedVarStoreY,
-  stepCountStore,
   usedVariableStore,
   variableStore,
-} from './store/atom'
+  indexColumnStore,
+} from './store/variable/atom'
 import { Col, Row, Modal, Switch } from 'antd'
 import NewTagSelect from './components/TagTree/NewTagSelect'
 import './style/styles.css'
@@ -34,6 +31,8 @@ const VariableSelection = () => {
   const [selectedVarY, setSelectedVarY] = useRecoilState(selectedVarStoreY)
   const [indexColumn, setIndexColumn] = useRecoilState(indexColumnStore)
 
+  const [defaultOption, setDefaultOption] = useState([])
+
   //left side
   // const [tagList, setTagList] = useState([])
   // const [chartData, setChartData] = useState([])
@@ -51,6 +50,9 @@ const VariableSelection = () => {
     setSelectedVarX([])
     setSelectedVarY([])
   }, [])
+  useEffect(() => {
+    setDefaultOption(variableList)
+  }, [variableList])
 
   const handleClick = () => {
     // console.log('selectedX:', selectedVarX)
@@ -87,58 +89,50 @@ const VariableSelection = () => {
 
     const Object: any = {
       com_id: localStorage.getItem('companyId'),
+      user_id: localStorage.getItem('userId'),
       dataset_id: selectedDataset[0],
       cause: causeArray,
       target: targetArray[0],
     }
-    // console.log('Object:', Object)
+    // console.log('/api/preprocessing param:', Object)
 
     if (indexColumn !== '') {
       Object['data_index'] = indexColumn
     }
 
-    const abortController = new AbortController()
-
     const fetchData = async () => {
-      try {
-        axios
-          .post(process.env.REACT_APP_API_SERVER_URL + '/api/preprocessing', JSON.stringify(Object), {
-            headers: {
-              'Content-Type': `application/json`,
-            },
-          })
-          .then(
-            (response: any) => {
-              // console.log('preprocessing response:', response.data)
-              if (response.status === 200) {
-                // setTagList(response.data)
-                setLoading(false)
-                setActiveStep(3)
-              }
-            },
-            (error) => {
+      axios
+        .post(process.env.REACT_APP_API_SERVER_URL + '/api/preprocessing', JSON.stringify(Object), {
+          headers: {
+            'Content-Type': `application/json`,
+          },
+        })
+        .then(
+          (response: any) => {
+            // console.log('preprocessing response:', response.data)
+            if (response.status === 200) {
+              // setTagList(response.data)
               setLoading(false)
-              console.log('error:', error)
+              setActiveStep(3)
             }
-          )
-      } catch (error) {
-        if (error.name === 'AbortError') {
-          //
-        }
-      }
+          },
+          (error) => {
+            setLoading(false)
+            console.log('error:', error)
+          }
+        )
     }
     fetchData()
-
-    return () => {
-      abortController.abort()
-    }
   }
 
   const onChangeSwitch = (param: any) => {
+    if (!param) setIndexColumn('')
     setChecked(param)
   }
 
   const handleSelect = (param: any) => {
+    // console.log('select:', param)
+
     if (param.type === 'x') {
       //multiple selection
       setSelectedVarX((prev) => [...prev, param.value])
@@ -151,7 +145,6 @@ const VariableSelection = () => {
           result.push(usedVariable[i])
         }
       }
-
       setUsedVariable(result)
     } else if (param.type == 'y') {
       //single selection
@@ -171,7 +164,6 @@ const VariableSelection = () => {
           result.push(usedVariable[i])
         }
       }
-
       setUsedVariable(result)
     } else {
       setIndexColumn(param.value)
@@ -250,10 +242,11 @@ const VariableSelection = () => {
               <NewTagSelect
                 style={{ width: '70%', margin: 'auto', minWidth: '150px' }}
                 selectionType="single"
-                type="TARGET_VARIABLE"
+                type="y"
                 title="타겟변수(Y)"
                 onSelect={handleSelect}
                 onDeselect={handleDeselect}
+                selectOptions={defaultOption}
               />
             </div>
           </Col>
@@ -263,10 +256,11 @@ const VariableSelection = () => {
               <NewTagSelect
                 style={{ width: '70%', margin: 'auto', minWidth: '150px' }}
                 selectionType="multiple"
-                type="EXPLANATORY_VARIABLE"
+                type="x"
                 title="원인변수(X)"
                 onSelect={handleSelect}
                 onDeselect={handleDeselect}
+                selectOptions={defaultOption}
               />
             </div>
           </Col>
@@ -276,10 +270,11 @@ const VariableSelection = () => {
                 <NewTagSelect
                   style={{ width: '70%', margin: 'auto', minWidth: '150px' }}
                   selectionType=""
-                  type="INDEX_COLUMN"
+                  type="date"
                   title="날짜 컬럼"
                   onSelect={handleSelect}
                   onDeselect={handleDeselect}
+                  selectOptions={defaultOption}
 
                   // subtext="시계열 데이터의 경우만 선택"
                   // defaultOptions={variableList}
@@ -289,15 +284,11 @@ const VariableSelection = () => {
           </Col>
         </Row>
       </Box>
-      <div style={{ width: '100%', float: 'right' }}>
+      <div style={{ width: '100%', float: 'right', margin: '10px 0px' }}>
         <Box className="upload_wrapper" style={{ float: 'right', maxWidth: '400px', margin: 'auto' }}>
-          {loading ? (
-            <CircularProgress />
-          ) : (
-            <Button type="text" icon={<ArrowRightOutlined />} onClick={handleClick}>
-              NEXT
-            </Button>
-          )}
+          <Button type="text" icon={<ArrowRightOutlined />} onClick={handleClick} loading={loading}>
+            NEXT
+          </Button>
         </Box>
       </div>
       {open && (

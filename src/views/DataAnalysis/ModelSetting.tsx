@@ -5,20 +5,29 @@ import LineChart from './components/Chart/LineChart'
 import './style/styles.css'
 import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { stepCountStore, dataSetStore, dataFileStore } from './store/atom'
+import { variableStoreX, variableStoreY, selectedVarStoreX, selectedVarStoreY } from './store/variable/atom'
 import {
-  stepCountStore,
-  variableStoreX,
-  variableStoreY,
-  selectedVarStoreX,
-  selectedVarStoreY,
-  dataSetStore,
-  dataFileStore,
-} from './store/atom'
-import { Col, Divider, Row, Select, Space, Spin, Button, Popover, message } from 'antd'
+  Col,
+  Divider,
+  Row,
+  Select,
+  Space,
+  Spin,
+  Button,
+  Popover,
+  message,
+  Statistic,
+  CountdownProps,
+  notification,
+} from 'antd'
 import CheckableTag from 'antd/es/tag/CheckableTag'
 import ModelSavePopup from './components/Modeling/ModelSavePopup'
+import { saveModalAtom } from './store/modal/atom'
+import { NotificationPlacement } from 'antd/es/notification/interface'
 
 const ModelSetting = (props: any) => {
+  const { Countdown } = Statistic
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore)
   const [selectedDataSet, setSelectedDataSet] = useRecoilState(dataSetStore)
   const [selectedDataFile, setSelectedDataFile] = useRecoilState(dataFileStore)
@@ -27,40 +36,45 @@ const ModelSetting = (props: any) => {
   const [selectedVarX, setSelectedVarX] = useRecoilState(selectedVarStoreX)
   const [selectedVarY, setSelectedVarY] = useRecoilState(selectedVarStoreY)
 
-  const [chartData, setChartData] = useState<any>()
+  const [chartData, setChartData] = useState({})
   const [model, setModel] = useState('plsr')
-  const [resultText, setResultText] = useState({ mae: '', r2: '', rmse: '' })
+  const [resultText, setResultText] = useState({ mae: '', rmse: '' })
+
   const [btnLoading, setBtnLoading] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [running, setRunning] = useState(false)
   const [modelingInfo, setModelingInfo] = useState({})
+  const [saveDisabled, setSaveDisabled] = useState(true)
+
+  const [messageApi, msgContextHolder] = message.useMessage()
+  const [api, apiContextHolder] = notification.useNotification()
+  const [saveModalOpen, setSaveModalOpen] = useRecoilState(saveModalAtom)
 
   //modal
-  const [open, setOpen] = useState(false)
-
   const [options, setOptions] = useState([
     { value: 'plsr', label: 'PLS' },
     { value: 'rfr', label: 'Random Forest' },
     { value: 'cnn1d', label: '1DCNN' },
     { value: 'mlp', label: 'MLP' },
     { value: 'cnnlstm', label: 'CNNLSTM' },
+    { value: 'lstm', label: 'LSTM' },
     { value: 'pls_1dcnn', label: 'PLS_1DCNN' },
+    { value: 'nbeats', label: 'NBEATS' },
+    { value: 'nhits', label: 'NHITS' },
+    { value: 'nlinear', label: 'NLINEAR' },
+    { value: 'tstmodel', label: 'TSTMODEL' },
+    { value: 'tftmodel', label: 'TFTMODEL' },
   ])
 
   //step4에서 선택된 변수
   const [selectedTagsX, setSelectedTagsX] = useState([])
   const [selectedTagsY, setSelectedTagsY] = useState([])
 
-  const text = <span>Title</span>
   const content = (
     <div>
       <p>MAE : {resultText.mae}</p>
-      <p>R² : {resultText.r2}</p>
       <p>RMSE : {resultText.rmse}</p>
     </div>
   )
-
-  //messages
-  const [messageApi, contextHolder] = message.useMessage()
 
   // const mergedArrow = useMemo(() => {
   //   if (arrowAtCenter) return { pointAtCenter: true };
@@ -72,89 +86,108 @@ const ModelSetting = (props: any) => {
     setSelectedTagsX(selectedVarX)
   }, [])
 
-  const fetchModelingData = (type: string, modelName?: string) => {
-    // const ChartDataArr: any = []
+  const refreshData = () => {
+    setChartData({})
+    setResultText({ mae: '', rmse: '' })
+  }
+  const fetchModelingData = (type: string, modelName?: string, desc?: string) => {
+    // setRunning(true)
 
-    // console.log(selectedTagsX)
-    // console.log(selectedDataFile)
-
-    if (selectedTagsX.length > 0 && selectedTagsY.length > 0) {
+    if (selectedTagsX.length > 20) {
+      messageApi.open({
+        type: 'error',
+        content: 'X는 20개까지만 선택 가능합니다.',
+        duration: 1,
+        style: {
+          margin: 'auto',
+        },
+      })
+      return false
+    } else if (selectedTagsX.length > 0 && selectedTagsY.length > 0) {
       const param = {
         com_id: localStorage.getItem('companyId'),
+        user_id: localStorage.getItem('userId'),
         dataset_id: selectedDataSet,
         file_nm: selectedDataFile,
         y_value: selectedTagsY,
         x_value: selectedTagsX,
         predict_type: model,
-        model_nm: modelName,
         upload: type === 'SAVE' ? true : false,
+        model_nm: type === 'SAVE' ? modelName : null,
+        desc: type === 'SAVE' ? desc : null,
       }
       // console.log(param)
 
-      axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/aimodel', param).then(
-        (response) => {
-          setLoading(true)
-          if (response.status === 200) {
-            // console.log('/api/aimodel response:', response.data)
+      refreshData()
 
-            if (type === 'RUN') {
-              const result = response.data
-              const dataArray = []
-              setResultText({ mae: '', r2: '', rmse: '' })
-              for (let i = 0; i < result.length; i++) {
-                if (result[i].name === 'evaluation') {
-                  setResultText(result[i])
-                } else {
-                  dataArray.push(result[i])
-                }
-              }
-              setChartData(dataArray)
-            } else if (type === 'SAVE') {
-              alert('Saved!')
-              handleClose()
-              setOpen(false)
-              setActiveStep(0)
-            }
+      axios
+        .post(process.env.REACT_APP_API_SERVER_URL + '/api/aimodel', param)
+        .then((response) => {
+          if (type === 'RUN') {
+            const result = response.data
+            console.log('/api/aimodel::', result)
+
+            setResultText(result.evaluation)
+
+            setRunning(false)
+            setChartData(result)
+            setSaveDisabled(false)
           }
-          setLoading(false)
-        },
-        (error) => console.log(error)
-      )
-
-      // axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/predict/chartData?', param).then((response) => {
-      //   setLoading(true)
-      //   if (response.status === 200) {
-      //     // console.log('chartData response:', response.data)
-      //     const result = response.data
-
-      //     const dataArray = []
-      //     setResultText({ mae: '', r2: '', rmse: '' })
-      //     for (let i = 0; i < result.length; i++) {
-      //       if (result[i].name === 'evaluation') {
-      //         setResultText(result[i])
-      //       } else {
-      //         dataArray.push(result[i])
-      //       }
-      //     }
-      //     setChartData(dataArray)
-      //   }
-      //   setLoading(false)
-      // })
-      // } else {
-      //   alert('Variables are not selected')
-      //   setActiveStep(1)
-      //   setLoading(false)
-      // }
+        })
+        .catch((err) => {
+          setSaveModalOpen(false)
+          console.log(err)
+        })
+    } else {
+      setSaveModalOpen(false)
     }
   }
 
-  const handleRun = (event: any) => {
+  const fetchSaveModel = (modelName?: string, desc?: string) => {
+    const param = {
+      user_id: localStorage.getItem('userId'),
+      model_name: modelName,
+      desc: desc,
+    }
+
+    axios
+      .post(process.env.REACT_APP_API_SERVER_URL + '/api/save_model', param)
+      .then((response) => {
+        if (response.status === 200) {
+          messageApi.open({
+            type: 'success',
+            content: 'Saved.',
+            duration: 1,
+            style: {
+              margin: 'auto',
+            },
+          })
+          setSaveModalOpen(false)
+        }
+      })
+      .catch((err) => {
+        setSaveModalOpen(false)
+        messageApi.open({
+          type: 'error',
+          content: '저장 실패. 관리자에게 문의하세요.',
+          duration: 1,
+          style: {
+            margin: 'auto',
+          },
+        })
+        console.log(err)
+      })
+  }
+
+  const handleRun = () => {
     fetchModelingData('RUN')
   }
 
   const handleChange = (value: string) => {
-    // console.log('test:', value)
     setModel(value)
+
+    // const tempModels = ['rfr', 'plsr']
+    // setSaveDisabled(!tempModels.includes(value))
   }
 
   const handleChangeTag = (type: string, tag: string, checked: boolean) => {
@@ -166,8 +199,12 @@ const ModelSetting = (props: any) => {
     } else if (type === 'x') {
       let nextSelectedTags = []
       if (checked) {
-        nextSelectedTags = [...selectedTagsX, tag]
-        setSelectedTagsX(nextSelectedTags)
+        if (selectedTagsX.length < 21) {
+          nextSelectedTags = [...selectedTagsX, tag]
+          setSelectedTagsX(nextSelectedTags)
+        } else {
+          alert('20개까지만 선택 가능합니다.')
+        }
       } else {
         if (selectedTagsX.length == 1) {
           //마지막 하나 선택된거는 유지
@@ -196,45 +233,102 @@ const ModelSetting = (props: any) => {
       y_value: selectedTagsY[0],
       x_value: selectedTagsX,
       com_id: localStorage.getItem('companyId'),
+      user_id: localStorage.getItem('userId'),
       dataset_id: selectedDataSet,
       file_nm: selectedDataFile,
     }
 
     // console.log('param:', param)
-    axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/boruta', param).then((response) => {
-      setBtnLoading(false)
+    axios
+      .post(process.env.REACT_APP_API_SERVER_URL + '/api/boruta', param)
+      .then((response) => {
+        // console.log('boruta resp:', response)
 
-      // console.log('boruta resp:', response)
+        const suggestedArr = response.data
+        const newSelection: Array<any> = []
 
-      const suggestedArr = response.data
-      const newSelection = []
-      if (suggestedArr.length > 0) {
-        for (let i = 0; i < suggestedArr.length; i++) {
-          if (selectedVarX.includes(suggestedArr[i]))
-            newSelection.push(selectedVarX.filter((x: any) => x === suggestedArr[i])[0])
+        if (suggestedArr.length > 0) {
+          for (let i = 0; i < suggestedArr.length; i++) {
+            if (selectedVarX.includes(suggestedArr[i]))
+              newSelection.push(selectedVarX.filter((x: any) => x === suggestedArr[i])[0])
+          }
+
+          if (selectedVarX.every((item: any) => newSelection.includes(item))) {
+            messageApi.open({
+              type: 'success',
+              content: '모든 추천 변수가 선택 되었습니다.',
+              duration: 1,
+              style: {
+                margin: 'auto',
+              },
+            })
+          } else {
+            setSelectedTagsX(newSelection)
+          }
+        } else {
+          messageApi.open({
+            type: 'error',
+            content: '추천 변수가 없습니다.',
+            duration: 1,
+            style: {
+              margin: 'auto',
+            },
+          })
         }
-        setSelectedTagsX(newSelection)
-        // console.log('selectedTagX:', newSelection)
-      } else {
-        alert('추천 변수가 없습니다')
-      }
-    })
+        setBtnLoading(false)
+      })
+      .catch((error) => {
+        console.log('error:', error)
+        setBtnLoading(false)
+      })
+  }
+  function isEmptyObj(obj: any) {
+    if (obj.constructor === Object && Object.keys(obj).length === 0) {
+      return true
+    }
+
+    return false
   }
 
   const handleModelSave = () => {
-    setOpen(true)
-    setModelingInfo({ predict_type: model, x_value: selectedTagsX, y_value: selectedTagsY[0] })
-    // fetchModelingData('SAVE')
+    // console.log('chartData:', chartData)
+
+    if (isEmptyObj(chartData)) {
+      messageApi.open({
+        type: 'error',
+        content: '저장할 모델이 없습니다.',
+        duration: 1,
+        style: {
+          margin: 'auto',
+        },
+      })
+    } else {
+      setSaveModalOpen(true)
+      setModelingInfo({ predict_type: model, x_value: selectedTagsX, y_value: selectedTagsY[0] })
+    }
   }
 
-  const handleClose = () => {
-    // setOpen(false)
+  const handleSave = (title: string, desc: string) => {
+    fetchSaveModel(title, desc)
   }
 
-  const handleSave = (title: string) => {
-    // console.log('title:', title)
-    fetchModelingData('SAVE', title)
-    // success()
+  const onChange: CountdownProps['onChange'] = (val) => {
+    if (typeof val === 'number' && 59.92 * 1000 < val && val < 60 * 1000) {
+      openNotification('topRight')
+    }
+  }
+
+  const openNotification = (placement: NotificationPlacement) => {
+    api.warning({
+      message: `Notification`,
+      description: '저장하지 않은 모델은 1분 뒤 사라집니다.',
+      placement,
+    })
+  }
+
+  const onFinish: CountdownProps['onFinish'] = () => {
+    console.log('finished!')
+    setActiveStep(0)
   }
 
   return (
@@ -315,32 +409,33 @@ const ModelSetting = (props: any) => {
               </Space>
             </Col>
           </Row>
-          <Button type="primary" onClick={handleRun} style={{ float: 'right', textAlign: 'right' }} loading={loading}>
+          <Button type="primary" onClick={handleRun} style={{ float: 'right', textAlign: 'right' }} loading={running}>
             RUN
           </Button>
         </Grid>
       </Box>
       <Box
+        style={{ minHeight: '600px' }}
         marginTop={2}
         paddingBottom={2}
         className="rounded-box"
         sx={{
           display: 'flex',
+          flexDirection: 'column',
           flexWrap: 'wrap',
           '& > :not(style)': {
-            m: 3,
+            p: 2,
             // width: '100%',
-            // height: 100,
+            // height: '100%',
           },
         }}
       >
-        {/* </Paper> */}
-        <div style={{ display: 'block' }}>
+        <div className="w-100">
           <Popover placement="rightTop" title="평가 지표" content={content}>
             <Button>평가 지표</Button>
           </Popover>
         </div>
-        <div style={{ display: 'block', width: '100%', margin: 'auto' }}>
+        <div className="w-100">
           <LineChart chartData={chartData} />
         </div>
       </Box>
@@ -348,11 +443,16 @@ const ModelSetting = (props: any) => {
         type="primary"
         onClick={handleModelSave}
         style={{ float: 'right', textAlign: 'right', marginTop: '10px' }}
+        disabled={saveDisabled}
       >
         MODEL SAVE
       </Button>
-      <ModelSavePopup modalOpen={open} onClose={handleClose} data={modelingInfo} onSave={handleSave} />
-      {contextHolder}
+      <div style={{ display: 'inline-block', float: 'right', marginTop: '10px', marginRight: '10px' }}>
+        <Countdown title="" value={Date.now() + 3000 * 1000} onChange={onChange} onFinish={onFinish} />
+      </div>
+      <ModelSavePopup data={modelingInfo} onSave={handleSave} />
+      {msgContextHolder}
+      {apiContextHolder}
     </>
   )
 }

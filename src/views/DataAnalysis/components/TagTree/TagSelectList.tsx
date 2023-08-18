@@ -9,7 +9,13 @@ import Checkbox from '@mui/material/Checkbox'
 import axios from 'axios'
 import { Typography } from '@mui/material'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { stepCountStore, variableStoreX, variableStoreY, selectedVarStoreX, selectedVarStoreY } from '../../store/atom'
+import { stepCountStore } from '../../store/atom'
+import {
+  variableStoreX,
+  variableStoreY,
+  selectedVarStoreX,
+  selectedVarStoreY,
+} from 'views/DataAnalysis/store/variable/atom'
 import { cloneDeep } from 'lodash'
 
 const ITEM_HEIGHT = 50
@@ -109,6 +115,7 @@ const TagSelectList = (props: any) => {
     axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/list', {
         com_id: localStorage.getItem('companyId'),
+        user_id: localStorage.getItem('userId'),
         search_type: 'all',
       })
       .then((response) => {

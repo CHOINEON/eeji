@@ -26,8 +26,8 @@ const routes = [
       component : DataAnalysis,
   },
   {
-    name : 'Model',
-    layout : '/admin',
+    name: 'Model Management',
+    layout: '/admin',
     path: '/model',
     icon : <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
     component : AIModeling,

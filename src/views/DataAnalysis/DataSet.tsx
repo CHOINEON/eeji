@@ -1,36 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
 import DescriptionBox, { DescriptionBoxProps } from './components/DataInfo/DescriptionBox'
 import { Button, Col, Row } from 'antd'
 import DataImportModal from './components/DataInfo/DataImportModal'
+import DataFileModal from './components/DataInfo/DataFileModal'
 import './style/styles.css'
 import axios from 'axios'
-import DataFileModal from './components/DataInfo/DataFileModal'
-
-// const tempData: Array<DescriptionBoxProps> = [
-//   { name: 'Dataset-1', size: 40, create: '2 weeks ago', update: '1 week ago' },
-//   { name: 'Dataset-2', size: 23, create: '1 month ago', update: '2 week ago' },
-// ]
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { importModalAtom, listModalAtom } from './store/modal/atom'
 
 const DataSet = () => {
-  const [importOpen, setImportOpen] = useState(false)
-  const [listOpen, setListOpen] = useState(false)
+  const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
+  const [fileListOpen, setFileListOpen] = useRecoilState(listModalAtom)
   const [dataSet, setDataSet] = useState([])
   const reqParams = { url: '/api/tag/uploadfile', param: 'undefined' }
 
-  useEffect(() => fetchDataSetList(), [])
+  useEffect(() => {
+    fetchDataSetList()
+  }, [importOpen])
 
   const handleClick = () => {
-    setDataSet
     setImportOpen(true)
-  }
-
-  const handleImportClose = () => {
-    setImportOpen(false)
-  }
-
-  const handleListClose = () => {
-    setListOpen(false)
   }
 
   const handleSave = () => {
@@ -39,8 +28,10 @@ const DataSet = () => {
 
   const fetchDataSetList = () => {
     const com_id = localStorage.getItem('companyId')
+    const user_id = localStorage.getItem('userId')
+
     axios
-      .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset?com_id=' + com_id)
+      .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset?com_id=' + com_id + '&user_id=' + user_id)
       .then((response) => {
         // console.log('api/dataset::', response.data)
         setDataSet(response.data)
@@ -49,7 +40,7 @@ const DataSet = () => {
   }
 
   const handleSelect = () => {
-    setListOpen(true)
+    setFileListOpen(true)
   }
 
   const handleDelete = (param: boolean) => {
@@ -70,14 +61,9 @@ const DataSet = () => {
           ))}
         </Row>
       </div>
-      <DataFileModal modalOpen={listOpen} onClose={handleListClose} />
-      <DataImportModal
-        type="TRAIN"
-        modalOpen={importOpen}
-        onClose={handleImportClose}
-        onSaveData={handleSave}
-        reqParams={reqParams}
-      />
+      {/* <DataFileModal modalOpen={listOpen} onClose={handleListClose} /> */}
+      <DataFileModal />
+      <DataImportModal />
     </>
   )
 }

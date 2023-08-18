@@ -214,6 +214,7 @@ export const Login: React.FC = () => {
           getCompanyInfo(company)
           window.localStorage.setItem('userData', JSON.stringify(response.data))
           window.localStorage.setItem('companyId', company)
+          window.localStorage.setItem('userId', response.data[0].user_id)
           window.localStorage.setItem('userPosition', response.data[0].user_position)
         })
         .catch((error) => {

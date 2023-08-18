@@ -1,32 +1,24 @@
 import React, { useRef } from 'react'
 import * as fc from 'd3fc'
 import * as d3 from 'd3'
-
-// https://sangcho.tistory.com/entry/ReactHooks%EC%9D%98%EB%B9%99%EC%82%B0
+import { useInterval } from './useInterval'
 
 export const DrawD3FCChartTestData: React.FC = () => {
   const stream = fc.randomFinancial().stream()
   const data = stream.take(110)
   const intervalRef = useRef(null)
 
-  React.useEffect(() => {
-    // getsocketChartData()
-    renderChart(data)
+  // useInterval(() => getNextData(), 200)
 
-    // fix : 이전에 생성된 interval clear 안되는 버그 수정
-    console.log(intervalRef.current)
+  React.useEffect(() => {
+    renderChart(data)
     clearInterval(intervalRef.current)
 
     intervalRef.current = setInterval(getNextData, 200)
 
-    // console.log(IntervalId)
-    // if (IntervalId) {
-    //   window.clearInterval(IntervalId)
-    // }
-
-    // return () => {
-    //   if (intervalRef.current) clearInterval(intervalRef.current)
-    // }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+    }
   }, [])
 
   const getNextData = () => {
