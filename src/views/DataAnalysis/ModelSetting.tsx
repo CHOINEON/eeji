@@ -25,6 +25,14 @@ import CheckableTag from 'antd/es/tag/CheckableTag'
 import ModelSavePopup from './components/Modeling/ModelSavePopup'
 import { saveModalAtom } from './store/modal/atom'
 import { NotificationPlacement } from 'antd/es/notification/interface'
+import styled from '@emotion/styled'
+
+const TimerContainer = styled.div<{ visible: boolean }>`
+  display: ${(props: any) => (props.visible ? 'inline-block' : 'none')};
+  float: right;
+  margin-top: 10px;
+  margin-right: 10px;
+`
 
 const ModelSetting = (props: any) => {
   const { Countdown } = Statistic
@@ -49,6 +57,7 @@ const ModelSetting = (props: any) => {
   const [api, apiContextHolder] = notification.useNotification()
   const [saveModalOpen, setSaveModalOpen] = useRecoilState(saveModalAtom)
   const [countdownValue, setCountdownValue] = useState(Date.now() + 3000 * 1000)
+  const [timerVisible, setTimerVisible] = useState(false)
 
   //modal
   const [options, setOptions] = useState([
@@ -133,12 +142,15 @@ const ModelSetting = (props: any) => {
             setRunning(false)
             setChartData(result)
             setSaveDisabled(false)
+            setTimerVisible(true)
+            setCountdownValue(Date.now() + 3000 * 1000)
           }
         })
         .catch((err) => {
           setRunning(false)
-
           setSaveModalOpen(false)
+          setTimerVisible(false)
+          setSaveDisabled(true)
           console.log(err)
         })
     } else {
@@ -183,8 +195,21 @@ const ModelSetting = (props: any) => {
   }
 
   const handleRun = () => {
-    fetchModelingData('RUN')
-    setCountdownValue(Date.now() + 3000 * 1000)
+    // console.log('x:', selectedTagsX)
+    // console.log('y:', selectedTagsY)
+
+    if (selectedTagsX.length === 0) {
+      messageApi.open({
+        type: 'error',
+        content: '변수가 선택되지 않았습니다.',
+        duration: 1,
+        style: {
+          margin: 'auto',
+        },
+      })
+    } else {
+      fetchModelingData('RUN')
+    }
   }
 
   const handleChange = (value: string) => {
@@ -451,9 +476,9 @@ const ModelSetting = (props: any) => {
       >
         MODEL SAVE
       </Button>
-      <div style={{ display: 'inline-block', float: 'right', marginTop: '10px', marginRight: '10px' }}>
+      <TimerContainer visible={timerVisible}>
         <Countdown title="" value={countdownValue} onChange={onChange} onFinish={onFinish} />
-      </div>
+      </TimerContainer>
       <ModelSavePopup data={modelingInfo} onSave={handleSave} />
       {msgContextHolder}
       {apiContextHolder}
