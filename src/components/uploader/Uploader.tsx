@@ -66,13 +66,7 @@ const Uploader = (props: any) => {
     <div className="App">
       {/* <form onSubmit={handleSubmit}> */}
       <UploadComponentWrapper>
-        <input
-          style={{ display: 'none' }}
-          ref={inputRef}
-          type="file"
-          onChange={handleChange}
-          accept=".csv, .xls, .xlsx"
-        />
+        <input style={{ display: 'none' }} ref={inputRef} type="file" onChange={handleChange} accept=".csv" />
         <div className="flex-container">
           <div style={{ flex: 1 }}>
             <UploadButton style={{ float: 'left' }} onClick={handleUploadClick} />

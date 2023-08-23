@@ -94,6 +94,7 @@ const DataFileModal = (props: any) => {
     axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag', param)
       .then((response) => {
+        console.log(' /api/tag resp :: ', response)
         setLoading(false)
 
         setVariableList(response.data)

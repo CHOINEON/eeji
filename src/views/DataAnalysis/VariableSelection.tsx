@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Box, Typography } from '@mui/material'
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import { selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { dataFileStore, dataSetStore, stepCountStore } from './store/atom'
 import {
@@ -17,6 +17,8 @@ import './style/styles.css'
 import { ArrowRightOutlined } from '@ant-design/icons'
 
 const VariableSelection = () => {
+  const [messageApi, contextHolder] = message.useMessage()
+
   const setActiveStep = useSetRecoilState(stepCountStore)
   const [loading, setLoading] = useState(false)
   const selectedDataset = useRecoilState(dataSetStore)
@@ -42,8 +44,15 @@ const VariableSelection = () => {
 
   useEffect(() => {
     if (selectedDataset[0] == '' || selectedFile[0] == '') {
-      alert('파일이 선택되지 않았습니다.')
-      setActiveStep(0)
+      messageApi.open({
+        type: 'error',
+        content: '파일이 선택되지 않았습니다.',
+        duration: 1,
+        style: {
+          margin: 'auto',
+        },
+      })
+      // setActiveStep(0)
     }
 
     // corr plot에서 선택된 값 초기화
@@ -59,9 +68,23 @@ const VariableSelection = () => {
     // console.log('selectedY:', selectedVarY)
 
     if (selectedVarX.length === 0) {
-      alert('X 변수를 선택해 주세요')
+      messageApi.open({
+        type: 'error',
+        content: 'X 변수를 선택해 주세요',
+        duration: 1,
+        style: {
+          margin: 'auto',
+        },
+      })
     } else if (selectedVarY.length === 0) {
-      alert('Y 변수를 선택해 주세요')
+      messageApi.open({
+        type: 'error',
+        content: 'Y 변수를 선택해 주세요',
+        duration: 1,
+        style: {
+          margin: 'auto',
+        },
+      })
     } else {
       showModal()
     }
@@ -305,6 +328,7 @@ const VariableSelection = () => {
           <p>날짜 : {indexColumn === '' ? '없음' : indexColumn}</p>
         </Modal>
       )}
+      {contextHolder}
     </>
   )
 }
