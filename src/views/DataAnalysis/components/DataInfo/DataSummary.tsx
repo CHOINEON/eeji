@@ -74,15 +74,27 @@ const DataSummary = (props: any) => {
   }, [props])
 
   const readFile = (file: any) => {
+    // console.log('readfile:', file)
     const fileReader = new FileReader()
 
     if (file) {
-      fileReader.onload = function (event: any) {
-        const text = event.target.result
-        csvFileToArray(file.name, file.size, text)
-      }
+      if (file.type === 'text/csv') {
+        fileReader.onload = function (event: any) {
+          const text = event.target.result
+          csvFileToArray(file.name, file.size, text)
+        }
 
-      fileReader.readAsText(file)
+        fileReader.readAsText(file)
+      } else {
+        messageApi.open({
+          type: 'error',
+          content: '.csv 파일을 올려주세요',
+          duration: 1,
+          style: {
+            margin: 'auto',
+          },
+        })
+      }
     }
   }
 

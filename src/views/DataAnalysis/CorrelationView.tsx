@@ -79,6 +79,8 @@ const CorrelationView = () => {
 
   const fetchCorrelationPlot = async () => {
     setLoading(true)
+    setPlotImg(undefined)
+    setPlotData(undefined)
 
     const param = {
       response_type: 'json', //DB에서 encoded image or json 중 알아서 보내주기로
@@ -90,15 +92,12 @@ const CorrelationView = () => {
       user_id: localStorage.getItem('userId'),
     }
 
-    // console.log('param:', param)
+    console.log('param:', param)
 
     await axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/corrplot/cplot', param)
       .then((response: any) => {
         setLoading(false)
-
-        setPlotImg(undefined)
-        setPlotData(undefined)
 
         console.log('/api/corrplot/cplot response ::', response)
 
