@@ -24,6 +24,7 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { excludeHistoryStore } from 'views/DataAnalysis/store/atom'
 import { indexColumnStore } from 'views/DataAnalysis/store/variable/atom'
 import HistoryModal from './HistoryModal'
+import { dateTimeToString } from 'common/DateFunction'
 
 const LineSeriesChart = (props: any) => {
   const { chartInputData, chartHeight, onExport, onSave } = props
@@ -153,28 +154,25 @@ const LineSeriesChart = (props: any) => {
   //   }
   // }
 
-  const dateTimeToString = (date: any) => {
-    let month = date.getMonth() + 1
-    let day = date.getDate()
-    let hour = date.getHours()
-    let minute = date.getMinutes()
-    let second = date.getSeconds()
+  // const dateTimeToString = (date: any) => {
+  //   let month = date.getMonth() + 1
+  //   let day = date.getDate()
+  //   let hour = date.getHours()
+  //   let minute = date.getMinutes()
+  //   let second = date.getSeconds()
 
-    month = month >= 10 ? month : '0' + month
-    day = day >= 10 ? day : '0' + day
-    hour = hour >= 10 ? hour : '0' + hour
-    minute = minute >= 10 ? minute : '0' + minute
-    second = second >= 10 ? second : '0' + second
+  //   month = month >= 10 ? month : '0' + month
+  //   day = day >= 10 ? day : '0' + day
+  //   hour = hour >= 10 ? hour : '0' + hour
+  //   minute = minute >= 10 ? minute : '0' + minute
+  //   second = second >= 10 ? second : '0' + second
 
-    return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
-  }
+  //   return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+  // }
 
   // useEffect(() => console.log('excludedData:', excludedData), [excludedData])
 
   const handleExcludeData = (e: any) => {
-    console.log('-----------------handleExcludeData---------------------')
-    // console.log('original:', dataSource)
-
     //선택된 구간의 시작/종료 시각
     const selected_start = new Date(Date.parse(selectedDatetime[0]))
     const selected_end = new Date(Date.parse(selectedDatetime[1]))
@@ -188,9 +186,7 @@ const LineSeriesChart = (props: any) => {
       end: dateTimeToString(selected_end),
       datetime: dateTimeToString(new Date()),
     }
-    // console.log('historyRow-', historyRow)
 
-    // console.log('------------------------', excludedData)
     setExcludedData((prep) => [...prep, historyRow])
 
     const newDataArr = []
@@ -219,8 +215,6 @@ const LineSeriesChart = (props: any) => {
           }
         }
       }
-      // console.log('idx:', startIdx, endIdx)
-
       const arrayToRemove = tagData.slice(startIdx, endIdx) // 삭제할 구간 데이터 담은 변수
       newDataArr.push({ data: tagData.filter((item) => !arrayToRemove.includes(item)), name: tagName })
     }
@@ -247,17 +241,6 @@ const LineSeriesChart = (props: any) => {
   const handleGetValue = (param: any) => {
     // setThreshold(param)
   }
-
-  const columns = [
-    {
-      id: 'x',
-      displayName: 'Datetime',
-    },
-    {
-      id: 'y',
-      displayName: 'Value',
-    },
-  ]
 
   const renderMultiSeries = () => {
     // console.log('renderMultiSeries')

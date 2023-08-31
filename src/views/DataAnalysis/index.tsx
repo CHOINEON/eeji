@@ -16,7 +16,6 @@ import './style/styles.css'
 const DataAnalysis = () => {
   const steps = ['Upload Data', 'View Correlation', 'Select Variables', 'Run/Save Model']
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
-  const [dataSource, setDataSource] = useState([])
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean
   }>({})
@@ -74,7 +73,7 @@ const DataAnalysis = () => {
         <Box>{activeStep === 0 && <DataImport />}</Box>
         <Box>{activeStep === 1 && <CorrelationView />}</Box>
         <Box>{activeStep === 2 && <VariableSelection />}</Box>
-        <Box>{activeStep === 3 && <ModelSetting dataSource={dataSource} />}</Box>
+        <Box>{activeStep === 3 && <ModelSetting />}</Box>
       </Box>
     </ThemeProvider>
   )

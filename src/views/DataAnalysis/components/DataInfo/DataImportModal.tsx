@@ -116,7 +116,14 @@ const DataImportModal = (props: any) => {
 
   return (
     <>
-      <Modal width="700px" open={importOpen} title="Data Import" footer={null} onCancel={handleCancel}>
+      <Modal
+        className="rounded-corners"
+        width="700px"
+        open={importOpen}
+        title="Data Import"
+        footer={null}
+        onCancel={handleCancel}
+      >
         <Uploader onSelectedFile={handleSelectedFile} />
         <DataSummary file={dataFile} />
         <div style={{ marginTop: '20px', textAlign: 'right' }}>

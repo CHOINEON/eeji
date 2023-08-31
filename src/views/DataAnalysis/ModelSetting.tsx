@@ -6,21 +6,8 @@ import './style/styles.css'
 import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { stepCountStore, dataSetStore, dataFileStore } from './store/atom'
-import { variableStoreX, variableStoreY, selectedVarStoreX, selectedVarStoreY } from './store/variable/atom'
-import {
-  Col,
-  Divider,
-  Row,
-  Select,
-  Space,
-  Spin,
-  Button,
-  Popover,
-  message,
-  Statistic,
-  CountdownProps,
-  notification,
-} from 'antd'
+import { selectedVarStoreX, selectedVarStoreY } from './store/variable/atom'
+import { Col, Row, Select, Space, Button, Popover, message, Statistic, CountdownProps, notification } from 'antd'
 import CheckableTag from 'antd/es/tag/CheckableTag'
 import ModelSavePopup from './components/Modeling/ModelSavePopup'
 import { saveModalAtom } from './store/modal/atom'
@@ -36,13 +23,19 @@ const TimerContainer = styled.div<{ visible: boolean }>`
 
 const ModelSetting = (props: any) => {
   const { Countdown } = Statistic
-  const [activeStep, setActiveStep] = useRecoilState(stepCountStore)
-  const [selectedDataSet, setSelectedDataSet] = useRecoilState(dataSetStore)
-  const [selectedDataFile, setSelectedDataFile] = useRecoilState(dataFileStore)
 
-  //step2에서 선택된 변수
-  const [selectedVarX, setSelectedVarX] = useRecoilState(selectedVarStoreX)
-  const [selectedVarY, setSelectedVarY] = useRecoilState(selectedVarStoreY)
+  const setActiveStep = useSetRecoilState(stepCountStore)
+  const setSaveModalOpen = useSetRecoilState(saveModalAtom)
+  const selectedDataSet = useRecoilValue(dataSetStore)
+  const selectedDataFile = useRecoilValue(dataFileStore)
+
+  //step2에서 선택된 변수(for rendering)
+  const selectedVarX = useRecoilValue(selectedVarStoreX)
+  const selectedVarY = useRecoilValue(selectedVarStoreY)
+
+  //step4에서 선택된 변수(for fetching data)
+  const [selectedTagsX, setSelectedTagsX] = useState([])
+  const [selectedTagsY, setSelectedTagsY] = useState([])
 
   const [chartData, setChartData] = useState({})
   const [model, setModel] = useState('plsr')
@@ -55,29 +48,24 @@ const ModelSetting = (props: any) => {
 
   const [messageApi, msgContextHolder] = message.useMessage()
   const [api, apiContextHolder] = notification.useNotification()
-  const [saveModalOpen, setSaveModalOpen] = useRecoilState(saveModalAtom)
   const [countdownValue, setCountdownValue] = useState(Date.now() + 3000 * 1000)
   const [timerVisible, setTimerVisible] = useState(false)
 
-  //modal
-  const [options, setOptions] = useState([
+  const options = [
+    { value: 'ineeji', label: 'INEEJI' },
     { value: 'plsr', label: 'PLS' },
     { value: 'rfr', label: 'Random Forest' },
     { value: 'cnn1d', label: '1DCNN' },
     { value: 'mlp', label: 'MLP' },
     { value: 'cnnlstm', label: 'CNNLSTM' },
     { value: 'lstm', label: 'LSTM' },
-    { value: 'pls_1dcnn', label: 'PLS_1DCNN' },
+    // { value: 'pls_1dcnn', label: 'PLS_1DCNN' },
     { value: 'nbeats', label: 'NBEATS' },
     { value: 'nhits', label: 'NHITS' },
     { value: 'nlinear', label: 'NLINEAR' },
     { value: 'tstmodel', label: 'TSTMODEL' },
     { value: 'tftmodel', label: 'TFTMODEL' },
-  ])
-
-  //step4에서 선택된 변수
-  const [selectedTagsX, setSelectedTagsX] = useState([])
-  const [selectedTagsY, setSelectedTagsY] = useState([])
+  ]
 
   const content = (
     <div>
@@ -92,7 +80,7 @@ const ModelSetting = (props: any) => {
   // }, [showArrow, arrowAtCenter]);
 
   useEffect(() => {
-    setSelectedTagsY([selectedVarY[0]]) //첫번째 타겟 선택
+    setSelectedTagsY([selectedVarY[0]]) //step3에서 선택된 타겟 렌더링
     setSelectedTagsX(selectedVarX)
   }, [])
 
@@ -102,6 +90,7 @@ const ModelSetting = (props: any) => {
   }
   const fetchModelingData = (type: string, modelName?: string, desc?: string) => {
     setRunning(true)
+    setTimerVisible(false)
 
     if (selectedTagsX.length > 20) {
       messageApi.open({
@@ -127,7 +116,6 @@ const ModelSetting = (props: any) => {
         desc: type === 'SAVE' ? desc : null,
       }
       // console.log(param)
-
       refreshData()
 
       axios
@@ -141,8 +129,8 @@ const ModelSetting = (props: any) => {
 
             setRunning(false)
             setChartData(result)
-            setSaveDisabled(false)
             setTimerVisible(true)
+            setSaveDisabled(false)
             setCountdownValue(Date.now() + 3000 * 1000)
           }
         })
@@ -168,6 +156,7 @@ const ModelSetting = (props: any) => {
     axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/save_model', param)
       .then((response) => {
+        console.log('/api/save_model::', response)
         if (response.status === 200) {
           messageApi.open({
             type: 'success',
@@ -195,9 +184,9 @@ const ModelSetting = (props: any) => {
   }
 
   const handleRun = () => {
+    setSaveDisabled(true)
     // console.log('x:', selectedTagsX)
     // console.log('y:', selectedTagsY)
-
     if (selectedTagsX.length === 0) {
       messageApi.open({
         type: 'error',
@@ -215,8 +204,8 @@ const ModelSetting = (props: any) => {
   const handleChange = (value: string) => {
     setModel(value)
 
-    // const tempModels = ['rfr', 'plsr']
-    // setSaveDisabled(!tempModels.includes(value))
+    // const tempModels = ['pls_1dcnn']
+    // setSaveDisabled(tempModels.includes(value))
   }
 
   const handleChangeTag = (type: string, tag: string, checked: boolean) => {
@@ -311,17 +300,16 @@ const ModelSetting = (props: any) => {
         setBtnLoading(false)
       })
   }
+
   function isEmptyObj(obj: any) {
     if (obj.constructor === Object && Object.keys(obj).length === 0) {
       return true
     }
-
     return false
   }
 
   const handleModelSave = () => {
     // console.log('chartData:', chartData)
-
     if (isEmptyObj(chartData)) {
       messageApi.open({
         type: 'error',

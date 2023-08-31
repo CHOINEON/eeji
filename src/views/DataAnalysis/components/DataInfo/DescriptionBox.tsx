@@ -15,6 +15,8 @@ const DescBoxContainer = styled.div`
   width: 100%;
   height: 150px;
   border: 1px solid lightgray;
+  border-radius: 18px;
+  box-shadow: 0px 0px 10px #0000001a;
   &:hover {
     // cursor: pointer;
     color: #0d99ff;
