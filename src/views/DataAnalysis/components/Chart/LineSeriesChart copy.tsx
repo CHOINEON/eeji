@@ -6,75 +6,25 @@ import {
   Inject,
   ILoadedEventArgs,
   ChartTheme,
-  LineSeries,
   Legend,
   DateTime,
   ScatterSeries,
-  Zoom,
-  ZoomSettingsModel,
-  ScrollBar,
   IScrollEventArgs,
   Selection,
   AxisModel,
   StripLine,
-  StripLinesDirective,
-  StripLineDirective,
 } from '@syncfusion/ej2-react-charts'
-// import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import Button from '@mui/material/Button'
 import ChartContextMenu from '../ContextMenu/ChartContextMenu'
-// import { CSVLink, CSVDownload } from 'react-csv'
 import CsvDownloader from 'react-csv-downloader'
 import SetValueModal from './SetValueModal'
-
-const SAMPLE_CSS = `
-     .control-fluid {
-         padding: 0px !important;
-     }
-     #btn-control {
-         width: 100%;
-         text-align: center;
-     }
- 
-     .e-export-icon::before {
-         content: '\\e728';
-     }
-     
-     .e-view.fabric .e-export-icon::before, .e-view.fabric-dark .e-export-icon::before  {
-         content: '\\e710';
-     }
-     
-     .e-view.bootstrap4 .e-export-icon::before {
-         content: '\\e780';
-     }
-     
-     .e-view.tailwind-dark .e-export-icon::before, .e-view.tailwind .e-export-icon::before {
-         content: '\\e7bf';
-     }
-     
-     .e-view.highcontrast .e-export-icon::before {
-         content: '\\e710';
-     }
-     
-     .e-view.bootstrap5 .e-export-icon::before, .e-view.bootstrap5-dark .e-export-icon::before {
-         content: '\\e72e';
-     }
-
-     .control-fluid {
-      padding: 0px !important;
-      }
-
-      .charts {
-          align :center
-      }
-  `
+import { dateTimeToString } from 'common/DateFunction'
 
 const LineSeriesChart = (props: any) => {
   const { chartInputData, chartHeight, onExport, onSave } = props
   const [selectedData, setSelectedData] = useState([])
   const [dataSource, setDataSource] = useState([])
   const [modalOpen, setModalOpen] = useState(false)
-  const [threshold, setThreshold] = useState(0)
   const ExcludeBtnRef = useRef(null)
   const AddThresholdBtnRef = useRef(null)
   const csvLinkRef = useRef(null)
@@ -179,21 +129,21 @@ const LineSeriesChart = (props: any) => {
   //   }
   // }
 
-  const dateTimeToString = (date: any) => {
-    let month = date.getMonth() + 1
-    let day = date.getDate()
-    let hour = date.getHours()
-    let minute = date.getMinutes()
-    let second = date.getSeconds()
+  // const dateTimeToString = (date: any) => {
+  //   let month = date.getMonth() + 1
+  //   let day = date.getDate()
+  //   let hour = date.getHours()
+  //   let minute = date.getMinutes()
+  //   let second = date.getSeconds()
 
-    month = month >= 10 ? month : '0' + month
-    day = day >= 10 ? day : '0' + day
-    hour = hour >= 10 ? hour : '0' + hour
-    minute = minute >= 10 ? minute : '0' + minute
-    second = second >= 10 ? second : '0' + second
+  //   month = month >= 10 ? month : '0' + month
+  //   day = day >= 10 ? day : '0' + day
+  //   hour = hour >= 10 ? hour : '0' + hour
+  //   minute = minute >= 10 ? minute : '0' + minute
+  //   second = second >= 10 ? second : '0' + second
 
-    return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
-  }
+  //   return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+  // }
 
   const handleExcludeData = (e: any) => {
     /* selectedData = 
@@ -304,7 +254,6 @@ const LineSeriesChart = (props: any) => {
 
   return (
     <div className="control-pane">
-      <style>{SAMPLE_CSS}</style>
       <div id="chartSection" className="control-section">
         <ChartComponent
           id="contextmenutarget"

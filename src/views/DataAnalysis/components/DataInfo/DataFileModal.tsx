@@ -117,7 +117,14 @@ const DataFileModal = (props: any) => {
 
   return (
     <div>
-      <Modal open={open} title="Select file" onOk={handleOk} onCancel={handleCancel} footer={null}>
+      <Modal
+        className="rounded-corners"
+        open={open}
+        title="Select file"
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={null}
+      >
         <List bordered dataSource={fileList} renderItem={renderItem} />
 
         {/* <Select onChange={handleChange} style={{ width: 400 }}>

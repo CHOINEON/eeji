@@ -9,3 +9,8 @@ export const runModalAtom = atom({
   key: 'modelRunModal',
   default: false,
 })
+
+export const modelListAtom = atom({
+  key: 'modelList',
+  default: [],
+})

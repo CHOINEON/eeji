@@ -8,8 +8,8 @@ import ineeji_bl from 'components/sidebar/components/nav_bar_logo.png'
 
 const Logo = styled.div<{ colorMode: string }>`
   width: 100%;
-  height: 4vw;
-  background-position: left 3.3vw bottom 1.3vw;
+  height: 90px;
+  background-position: left 1.5vw bottom 1.4vw;
   background-repeat: no-repeat;
   background-size: auto 65%;
   cursor: pointer;
