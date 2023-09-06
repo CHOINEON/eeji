@@ -81,7 +81,7 @@
 import { Box } from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
 import Plot from 'react-plotly.js'
-import {Switch, Space } from 'antd';
+import { Switch, Space } from 'antd'
 
 const AdvancedChart = () => {
   /*socket url*/
@@ -90,79 +90,140 @@ const AdvancedChart = () => {
   /* managing the states of incoming data */
   const [socketData, setSocketData] = useState({})
   const [chartData, setChartData] = useState([])
-  const [anomalyScore, setAnomalyScore] = useState([])
+  // const [anomalyScore, setAnomalyScore] = useState([])
   const [threshold, setThreshold] = useState([])
   const [index, setIndex] = useState([])
-  const [isAnomaly, setIsAnomaly] = useState([]) 
+  const [isAnomaly, setIsAnomaly] = useState([])
 
-  /*accumulating updated data into an array for storage.Soon these will be used as a plotly data*/ 
+  /*accumulating updated data into an array for storage.Soon these will be used as a plotly data*/
   const [dataArr, setDataArr] = useState([])
+  const [testData, setTestData] = useState([])
   const [anomalyScoreArr, setAnomalyScoreArr] = useState([])
   const [thresholdArr, setThresholdArr] = useState([])
-  const [isAnomalyArr, setIsAnomalyArr] = useState([])
+  // const [isAnomalyArr, setIsAnomalyArr] = useState([])
 
   //whenever socketData comes in, keep updates
+
   useEffect(() => {
-    setChartData(socketData.data)
-    setAnomalyScore(socketData.anomaly_pred)
-    setThreshold(socketData.thr)
-    setIsAnomaly(socketData.is_anormaly) 
-    setIndex([...index, socketData.index])
+    if (socketData.data) {
+      setChartData(socketData.data)
+
+      setDataArr((prev) => {
+        return [...prev, socketData.data]
+      })
+      setIndex((prev) => {
+        return [...prev, socketData.index]
+      })
+      setAnomalyScoreArr((prev) => {
+        return [...prev, socketData.anomaly_pred]
+      })
+      setThresholdArr((prev) => {
+        return [...prev, socketData.thr]
+      })
+
+      //for plotly chart
+      const plotData = [
+        {
+          x: index,
+          y: dataArr,
+          type: 'line',
+          mode: 'lines',
+          name: 'data',
+          line: {
+            color: 'black',
+            width: '2',
+          },
+          // marker: isAnomaly === false ? { color: 'red' } : { color: 'blue' },
+        },
+        {
+          x: index,
+          y: anomalyScoreArr,
+          name: 'Anomaly Score',
+          type: 'line',
+          line: {
+            color: 'red',
+          },
+          mode: 'lines',
+          yaxis: 'y2',
+          visible: isVisible,
+        },
+        {
+          x: index,
+          y: thresholdArr,
+          name: 'threshold',
+          type: 'line',
+          mode: 'lines',
+          line: {
+            color: 'green',
+          },
+          yaxis: 'y2',
+          visible: yesVisible,
+        },
+        //   type: 'dot',
+        //   mode: 'markers',
+        //   // marker: isAnomaly === false ? { color: 'red' } : { color: 'blue' },
+        //   marker: { color: colors, size: 8 },
+        // },
+      ]
+      setTestData(plotData)
+    }
+    // setAnomalyScore(socketData.anomaly_pred)
+    // setThreshold(socketData.thr)
+    // setIsAnomaly(socketData.is_anormaly)
+    // setIndex([...index, socketData.index])
+    // setIndex(socketData.index)
   }, [socketData])
 
   /*store data into array by using spread operator*/
-  useEffect(() => {
-    setDataArr((prev) => [chartData, ...prev])
-    setAnomalyScoreArr((prev) => [anomalyScore, ...prev])
-    setThresholdArr((prev)=> [threshold, ...prev])
-    setIsAnomalyArr((prev) => [isAnomaly, ...prev])
-  }, [chartData])
-
-  // useEffect(()=> {/*console check test*/
-  //   console.log ('isAnomalyArr ', isAnomalyArr)
-  // }, [anomalyScoreArr])
+  // useEffect(() => {
+  //   //  setDataArr((prev) => [ ...prev,chartData])
+  //   setAnomalyScoreArr((prev) => [...prev, anomalyScore ])
+  //   setThresholdArr((prev)=> [...prev,threshold])
+  //   setIsAnomalyArr((prev) => [...prev,isAnomaly ])
+  // }, [socketData])
 
   /*add timestamp to the end of the url*/
   useEffect(() => {
     var timestamp = Date.now()
-    var newURL = `${originURL}${timestamp}` 
+    var newURL = `${originURL}${timestamp}`
     const ws = new WebSocket(newURL)
-      ws.onopen = () => {
-          console.log(`WebSocket connection`)
-  }
+    ws.onopen = () => {
+      console.log(`WebSocket connection`)
+    }
 
-  /*parsing the incoming data*/
+    /*parsing the incoming data*/
     ws.onmessage = (message) => {
       const dataString = message.data.trim()
 
       try {
         const dataObj = JSON.parse(dataString)
         setSocketData(dataObj)
+        // console.log('dataOjb:', dataObj)
       } catch (error) {
         console.error('JSON parsing error:', error)
       }
     }
 
-  ws.onclose = (event) => {
-    if (event.wasClean) {
-        console.log(`WebSocket connection closed unexpectedly`);
+    ws.onclose = (event) => {
+      if (event.wasClean) {
+        console.log(`WebSocket connection closed unexpectedly`)
+      } else {
+        console.log('WebSocket connection closed')
+      }
     }
-    else {
-    console.log('WebSocket connection closed')}
-}
-return () => {
-    ws.close()
-}
-}, [])
+    return () => {
+      ws.close()
+    }
+  }, [])
 
-//Toggle switch function
-  const [isVisible, setIsVisible] = useState(true);
+  //Toggle switch function
+  const [isVisible, setIsVisible] = useState(true)
   const handleScoreToggle = () => {
-    setIsVisible(!isVisible);
+    setIsVisible(!isVisible)
   }
-  const [yesVisible, setYesVisible] = useState(true);
+  const [yesVisible, setYesVisible] = useState(true)
   const handleThreToggle = () => {
-    setYesVisible(!yesVisible);
+    setYesVisible(!yesVisible)
   }
 
   // const colors = isAnomaly.map(() => {
@@ -175,130 +236,87 @@ return () => {
   //   if (isAnomalyArr == true) {
   //     return index
   //   }
-  //   else return 
+  //   else return
   // })
 
-  const highlightAnomaly = [
-    {
-      type: 'rect',
-      xref: 'x',
-      yref: 'paper',
-      x0: 10,
-      y0: 0,
-      x1: 40,
-      y1: 1,
-      fillcolor: 'red',
-      opacity: 0.2,
-      line: {width: 0}
-    },    
-    {
-      type: 'rect',
-      xref: 'x',
-      yref: 'paper',
-      x0: 100,
-      y0: 0,
-      x1: 500,
-      y1: 1,
-      fillcolor: 'red',
-      opacity: 0.2,
-      line: {width: 0}
-    },
-    {
-      type: 'rect',
-      // x-reference is assigned to the x-values
-      xref: 'x',
-      // y-reference is assigned to the plot paper [0,1]
-      yref: 'paper',
-      x0: 1800,
-      y0: 0,
-      x1: 2100,
-      y1: 1,
-      fillcolor: 'red',
-      opacity: 0.2,
-      line: {width: 0}
-    },]
+  // const highlightAnomaly = [
+  //   {
+  //     type: 'rect',
+  //     xref: 'x',
+  //     yref: 'paper',
+  //     x0: 400,
+  //     y0:2,
+  //     x1: 100,
+  //     y1: 1,
 
-  //for plotly chart
-  const testdata = [
-    {
-      x: index,
-      y: dataArr,
-      type: 'line',
-      mode: 'lines',
-      name: 'data',
-      line: {
-        color: 'black',
-        width: '2' 
-      }
-      // marker: isAnomaly === false ? { color: 'red' } : { color: 'blue' },
-    },
-    {
-      x: index,
-      y: anomalyScoreArr,
-      name: 'Anomaly Score',
-      type: 'line',
-      line: {
-        color: 'red',
-      },
-      mode: 'lines',
-      yaxis: 'y2',
-      visible : isVisible,
-    },
-    {
-      x: index,
-      y: thresholdArr,
-      name: 'threshold',
-      type: 'line',
-      mode: 'lines',
-      line: {
-        color: 'green',
-      },
-      yaxis: 'y2',
-      visible : yesVisible,
-    },
-    //   type: 'dot',
-    //   mode: 'markers',
-    //   // marker: isAnomaly === false ? { color: 'red' } : { color: 'blue' },
-    //   marker: { color: colors, size: 8 },
-    // },
-  ]
+  //     fillcolor: 'red',
+  //     opacity: 0.2,
+  //     line: { width: 0 },
+  //   },
+  // {
+  //   type: 'rect',
+  //   xref: 'x',
+  //   yref: 'paper',
+  //   x1: 500,
+  //   y1: 1,
+  //   x0: 100,
+  //   y0: 0,
 
-  const layout = 
-  {
-  title: 'Anomaly Detection Plot',
-  titlefont: {size: 20},
-    xaxis: 
-    {
+  //   fillcolor: 'red',
+  //   opacity: 0.2,
+  //   line: { width: 0 },
+  // },
+  // {
+  //   type: 'rect',
+  //   // x-reference is assigned to the x-values
+  //   xref: 'x',
+  //   // y-reference is assigned to the plot paper [0,1]
+  //   yref: 'paper',
+  //   x0: 1800,
+  //   y0: 0,
+  //   x1: 2100,
+  //   y1: 1,
+  //   fillcolor: 'red',
+  //   opacity: 0.2,
+  //   line: { width: 0 },
+  // },
+  //]
+
+  const layout = {
+    title: 'Anomaly Detection Plot',
+    titlefont: { size: 20 },
+    xaxis: {
       title: 'Index',
-      titlefont: {size: 20}
+      titlefont: { size: 20 },
     },
-    yaxis: 
-    {
+    yaxis: {
       title: 'Data',
-      titlefont: {size : 20},
-      tickfont: {size : 15}
+      titlefont: { size: 20 },
+      tickfont: { size: 15 },
     },
-    yaxis2: 
-    {
+    yaxis2: {
       title: 'anomaly score',
-      titlefont: {color: 'black', size : 20,
-    },
-      tickfont: {color: 'black', size : 15},
+      titlefont: { color: 'black', size: 20 },
+      tickfont: { color: 'black', size: 15 },
       overlaying: 'y',
       side: 'right',
-      zeroline : false,
+      zeroline: false,
     },
-  width: 2200,
-  height: 800,
-  margin: {
-    t: 50,
-    b: 80,
-    l: 100,
-    r: 80,
-  },
-  shapes: highlightAnomaly
+    width: 1500,
+    height: 800,
+    margin: {
+      t: 50,
+      b: 80,
+      l: 100,
+      r: 80,
+      // },
+      // shapes: highlightAnomaly,
+      responsive: true,
+      useResizeHandler: true,
+      autosize: true,
+    },
   }
-  
+
   return (
     <Box
       pt={{ base: '130px', md: '80px', xl: '80px' }}
@@ -306,11 +324,23 @@ return () => {
     >
       <div>
         {/* <h2>WebSocket Line Chart Example</h2>  */}
-        <Plot data={testdata} layout={layout} />
+        <Plot data={testData} layout={layout} />
       </div>
       <Space direction="vertical">
-        <Switch style = {{width : 150}}onClick={handleThreToggle} checkedChildren="Show Threshold" unCheckedChildren="Hide Threshold" defaultChecked />
-        <Switch style = {{width : 150}}onClick={handleScoreToggle} checkedChildren="Show AnomalyScore" unCheckedChildren="Hide AnomalyScore" defaultChecked />
+        <Switch
+          style={{ width: 150 }}
+          onClick={handleThreToggle}
+          checkedChildren="Show Threshold"
+          unCheckedChildren="Hide Threshold"
+          defaultChecked
+        />
+        <Switch
+          style={{ width: 150 }}
+          onClick={handleScoreToggle}
+          checkedChildren="Show AnomalyScore"
+          unCheckedChildren="Hide AnomalyScore"
+          defaultChecked
+        />
       </Space>
     </Box>
   )
