@@ -35,9 +35,10 @@
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
+    "module": "ES6",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "sourceMap": true, // 디버깅 맵
     /* Experimental Options */
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

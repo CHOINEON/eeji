@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Icon } from '@chakra-ui/react'
 import { MdDashboard, MdSettings, MdOutlineModelTraining, MdDisplaySettings, MdOutlineAnalytics } from 'react-icons/md'
 import { BsHammer } from 'react-icons/bs'
@@ -9,10 +10,12 @@ import DashboardConfig from 'views/hmid_config'
 import LayoutList from 'views/hmid_list'
 import ModelMaintenance from 'views/ModelMaintenance'
 import DataAnalysis from 'views/DataAnalysis'
-import AIModeling from 'views/AIModeling'
+import AIModelManagement from 'views/AIModelManagement'
 import HmidInterval from 'views/hmid_interval'
 import HmidIntervalD3 from 'views/hmid-interval-d3fc'
-
+// import Anomalyd3chart from 'views/AnomalyDetection/anomaly_d3chart-test'
+import Test from 'views/Test/AnomalyTest'
+import PriceForecasting from 'views/PriceForecasting'
 // Auth Imports
 
 const routes = [
@@ -23,13 +26,20 @@ const routes = [
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
     component: DataAnalysis,
   },
-  // {
-  //   name: 'Model',
-  //   layout: '/admin',
-  //   path: '/model',
-  //   icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
-  //   component: AIModeling,
-  // },
+  {
+    name: 'Model Management',
+    layout: '/admin',
+    path: '/model',
+    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+    component: AIModelManagement,
+  },
+  {
+    name: 'Price Forecast',
+    layout: '/admin',
+    path: '/price-forecast',
+    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+    component: PriceForecasting,
+  },
   {
     name: 'MainDashboard-Line',
     layout: '/admin',
@@ -43,6 +53,13 @@ const routes = [
     path: '/hmid-d3fc',
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: HmidIntervalD3,
+  },
+  {
+    name: 'Anomaly Detection',
+    layout: '/admin',
+    path: '/anomalyDetection',
+    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+    component: Test,
   },
   {
     name: 'HMID Configuration',

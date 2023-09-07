@@ -144,3 +144,31 @@ template {
 .h-10{
   height:10%;
 }
+
+.d-flex{
+  display:flex;
+}
+
+.flex-container{
+  display:flex;
+  justify-content:flex-start;
+  flex-wrap:wrap;
+}
+
+.sub-title{
+  color: '#002D65';
+  font-size: '23px'; 
+  font-weight: 'bold';
+  float: 'left';
+  width: '100%';
+}
+
+.ant-modal-title{
+  font-size: 23px !important;
+  color:#002D65 !important;
+  font-weight: 600 !important;
+}
+
+.rounded-corners{
+  border-radius: 10px;
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import '../../style/uploader.css'
-import { Button, Typography } from 'antd'
+import { Button, Typography, message } from 'antd'
 import { useSetRecoilState } from 'recoil'
 import { stepCountStore, dataSetStore } from 'views/DataAnalysis/store/atom'
 import axios from 'axios'
@@ -15,6 +15,8 @@ const DescBoxContainer = styled.div`
   width: 100%;
   height: 150px;
   border: 1px solid lightgray;
+  border-radius: 18px;
+  box-shadow: 0px 0px 10px #0000001a;
   &:hover {
     // cursor: pointer;
     color: #0d99ff;
@@ -50,6 +52,7 @@ export interface IDescriptionBox {
 
 const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
   const setDataSet = useSetRecoilState(dataSetStore)
+  const [messageApi, contextHolder] = message.useMessage()
   const { id, name, size } = props.data
   const { onSelect, onDelete } = props
 
@@ -67,19 +70,38 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
   const handleDelete = (id: any) => {
     // console.log('delete:', id)
     const com_id = localStorage.getItem('companyId')
+    const user_id = localStorage.getItem('userId')
 
-    axios.delete(process.env.REACT_APP_API_SERVER_URL + '/api/dataset?com_id=' + com_id + '&dataset_id=' + id).then(
-      (response) => {
-        // console.log(response)
-        if (response.status === 200) {
-          alert('success!')
-          onDelete(true)
+    axios
+      .delete(
+        process.env.REACT_APP_API_SERVER_URL +
+          '/api/dataset?com_id=' +
+          com_id +
+          '&dataset_id=' +
+          id +
+          '&user_id=' +
+          user_id
+      )
+      .then(
+        (response) => {
+          // console.log(response)
+          if (response.status === 200) {
+            messageApi
+              .open({
+                type: 'success',
+                content: '선택된 데이터셋 삭제',
+                duration: 2,
+                style: {
+                  margin: 'auto',
+                },
+              })
+              .then(() => onDelete(true))
+          }
+        },
+        (error) => {
+          alert(error)
         }
-      },
-      (error) => {
-        alert(error)
-      }
-    )
+      )
   }
 
   return (
@@ -104,7 +126,7 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
         >
           <Content>
             <div>Total Size</div>
-            <div>{Math.round(size / 1024)} MB</div>
+            <div>{size / 1024 < 1024 ? Math.round(size / 1024) + ' KB' : Math.round(size / 1024 / 1024) + ' MB'}</div>
           </Content>
           <Content>
             {' '}
@@ -118,6 +140,7 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
           </Content>
         </div>
       </DescBoxContainer>
+      {contextHolder}
     </>
   )
 }

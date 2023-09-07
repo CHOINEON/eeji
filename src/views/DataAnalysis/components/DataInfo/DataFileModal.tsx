@@ -11,6 +11,8 @@ const { Option } = Select
 
 const DataFileModal = (props: any) => {
   // const { modalOpen, onClose } = props
+  const user_id = localStorage.getItem('userId')
+
   const [selectedDataSet, setSelectedDataSet] = useRecoilState(dataSetStore)
   const [fileListOpen, setFileListOpen] = useRecoilState(listModalAtom)
 
@@ -41,7 +43,7 @@ const DataFileModal = (props: any) => {
 
   const fetchIncludedFileList = () => {
     axios
-      .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset/file?ds_id=' + selectedDataSet)
+      .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset/file?ds_id=' + selectedDataSet + '&user_id=' + user_id)
       .then((response) => {
         // console.log('/api/dataset/file:', response)
         setFileList(response.data)
@@ -58,7 +60,12 @@ const DataFileModal = (props: any) => {
               <List.Item.Meta
                 key={idx}
                 title={<a onClick={() => handleClick(item.name)}>{item.name}</a>}
-                description={`${Math.round(item.size / 1024)} MB `}
+                description={
+                  item.size / 1024 < 1024
+                    ? Math.round(item.size / 1024) + ' KB'
+                    : Math.round(item.size / 1024 / 1024) + ' MB'
+                }
+
                 //| start date : ${item.start_date} | end date: ${  item.end_date}
               />
             </List.Item>
@@ -79,6 +86,7 @@ const DataFileModal = (props: any) => {
       {
         id: selectedDataSet,
         file_name: fileName,
+        user_id: user_id,
       },
     ]
     // console.log('/api/tag param::', param)
@@ -86,6 +94,7 @@ const DataFileModal = (props: any) => {
     axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/tag', param)
       .then((response) => {
+        console.log(' /api/tag resp :: ', response)
         setLoading(false)
 
         setVariableList(response.data)
@@ -108,7 +117,14 @@ const DataFileModal = (props: any) => {
 
   return (
     <div>
-      <Modal open={open} title="Select file" onOk={handleOk} onCancel={handleCancel} footer={null}>
+      <Modal
+        className="rounded-corners"
+        open={open}
+        title="Select file"
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={null}
+      >
         <List bordered dataSource={fileList} renderItem={renderItem} />
 
         {/* <Select onChange={handleChange} style={{ width: 400 }}>

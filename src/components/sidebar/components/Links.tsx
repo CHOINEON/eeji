@@ -50,7 +50,7 @@ export function SidebarLinks(props: { routes: RoutesType[] }) {
                       >
                         {route.name}
                       </Text>
-                    </Flex>
+                    </Flex> 
                     <Box
                       h="36px"
                       w="4px"

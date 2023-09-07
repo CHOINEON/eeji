@@ -11,6 +11,7 @@ export interface D3Binance1s {
  * biance data ws 테스트
  * 1초마다 불러오는 데이터
  */
+
 export const IntervalTestBiance: React.FC<D3Binance1s> = (props) => {
   // const queryclient = new QueryClient()
   const svgRef2 = React.useRef()
@@ -25,6 +26,10 @@ export const IntervalTestBiance: React.FC<D3Binance1s> = (props) => {
     getsocketChartData()
     window.localStorage.setItem('flag', '1')
   }, [])
+
+  React.useEffect(() => {
+    console.log('prevWSData:', prevWSData)
+  }, [prevWSData])
 
   React.useEffect(() => {
     if (wsData !== undefined) {

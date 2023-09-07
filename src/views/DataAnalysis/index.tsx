@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react'
 import { Box } from '@chakra-ui/react'
-import FileUploader from '../../components/uploader/FileUploader'
-import PreProcessing from './PreProcessing'
 import ModelSetting from './ModelSetting'
 import { ThemeProvider } from '@mui/material/styles'
 import VariableSelection from './VariableSelection'
@@ -13,23 +11,14 @@ import { useRecoilState } from 'recoil'
 import { stepCountStore } from './store/atom'
 import DataImport from './DataSet'
 import CorrelationView from './CorrelationView'
+import './style/styles.css'
 
 const DataAnalysis = () => {
-  // const activeStep = useRecoilValue(stepCountStore)
-  // const setActiveStep = useSetRecoilState(stepCountStore)
-
+  const steps = ['Upload Data', 'View Correlation', 'Select Variables', 'Run/Save Model']
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
-  // const [uploaded, setUploaded] = useState(false)
-  const [dataSource, setDataSource] = useState([])
-  const [loading, setLoading] = useState(false)
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean
   }>({})
-
-  // const onUploaded = (param: boolean) => {
-  //   setUploaded(param)
-  // }
-  const steps = ['Upload Data', 'View Correlation', 'Select Variables', 'Run/Save Model']
 
   const totalSteps = () => {
     return steps.length
@@ -47,6 +36,10 @@ const DataAnalysis = () => {
     return completedSteps() === totalSteps()
   }
 
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1)
+  }
+
   const handleNext = () => {
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
@@ -60,10 +53,6 @@ const DataAnalysis = () => {
 
   const handleStep = (step: number) => () => {
     setActiveStep(step)
-  }
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1)
   }
 
   // https://mui.com/material-ui/react-stepper/
@@ -81,12 +70,10 @@ const DataAnalysis = () => {
             ))}
           </Stepper>
         </Box>
-        {/* <Box>{activeStep === 0 && <FileUploader refresh={refresh} />}</Box> */}
         <Box>{activeStep === 0 && <DataImport />}</Box>
         <Box>{activeStep === 1 && <CorrelationView />}</Box>
         <Box>{activeStep === 2 && <VariableSelection />}</Box>
-        {/* <Box>{activeStep === 2 && <PreProcessing onPreprocessed={onPreprocessed} />}</Box> */}
-        <Box>{activeStep === 3 && <ModelSetting dataSource={dataSource} />}</Box>
+        <Box>{activeStep === 3 && <ModelSetting />}</Box>
       </Box>
     </ThemeProvider>
   )
