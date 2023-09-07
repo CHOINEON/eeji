@@ -117,7 +117,8 @@ const AdvancedChart = () => {
       setAnomalyScoreArr((prev) => {
         return [...prev, socketData.anomaly_pred]
       })
-      setThresholdArr((prev) => {
+
+      setThresholdArr((prev)=> {
         return [...prev, socketData.thr]
       })
 
@@ -145,7 +146,8 @@ const AdvancedChart = () => {
           },
           mode: 'lines',
           yaxis: 'y2',
-          visible: isVisible,
+
+          visible : isVisible,
         },
         {
           x: index,
@@ -157,7 +159,8 @@ const AdvancedChart = () => {
             color: 'green',
           },
           yaxis: 'y2',
-          visible: yesVisible,
+          visible : yesVisible,
+
         },
         //   type: 'dot',
         //   mode: 'markers',
@@ -249,38 +252,6 @@ const AdvancedChart = () => {
   //     x1: 100,
   //     y1: 1,
 
-  //     fillcolor: 'red',
-  //     opacity: 0.2,
-  //     line: { width: 0 },
-  //   },
-  // {
-  //   type: 'rect',
-  //   xref: 'x',
-  //   yref: 'paper',
-  //   x1: 500,
-  //   y1: 1,
-  //   x0: 100,
-  //   y0: 0,
-
-  //   fillcolor: 'red',
-  //   opacity: 0.2,
-  //   line: { width: 0 },
-  // },
-  // {
-  //   type: 'rect',
-  //   // x-reference is assigned to the x-values
-  //   xref: 'x',
-  //   // y-reference is assigned to the plot paper [0,1]
-  //   yref: 'paper',
-  //   x0: 1800,
-  //   y0: 0,
-  //   x1: 2100,
-  //   y1: 1,
-  //   fillcolor: 'red',
-  //   opacity: 0.2,
-  //   line: { width: 0 },
-  // },
-  //]
 
   const layout = {
     title: 'Anomaly Detection Plot',
@@ -316,6 +287,7 @@ const AdvancedChart = () => {
       autosize: true,
     },
   }
+
 
   return (
     <Box
