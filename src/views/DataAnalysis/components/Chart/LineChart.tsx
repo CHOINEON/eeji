@@ -6,9 +6,6 @@ function LineChart(props: any) {
   const [data, setData] = useState<any>()
 
   useEffect(() => console.log('chartData:', chartData), [props])
-
- 
-  const [data, setData] = useState([])
   const [layout, setLayout] = useState({
     responsive: true,
     useResizeHandler: true,

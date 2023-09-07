@@ -25,8 +25,6 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
 
 import SidebarBrand from 'components/sidebar/components/Brand'
-import { modelListAtom } from 'views/AIModelManagement/store/atom'
-
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -264,7 +262,7 @@ export const Login: React.FC = () => {
       })
       .then((response) => {
         console.log('[ axios response data ] : ')
-        console.log(response.data)
+        // console.log(response.data)
 
         for (let i = 0, len = response.data.length; i < len; i++) {
           Obj.value = response.data[i].com_id
@@ -273,7 +271,7 @@ export const Login: React.FC = () => {
           Obj = new Object()
         }
 
-        // console.log(Arr)
+        console.log(Arr)
         setCompanyList(Arr)
       })
       .catch((error) => {

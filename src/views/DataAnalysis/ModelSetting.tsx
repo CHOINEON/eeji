@@ -88,7 +88,7 @@ const ModelSetting = (props: any) => {
     setChartData({})
     setResultText({ mae: '', rmse: '' })
   }
-  
+
   const fetchModelingData = (type: string, modelName?: string, desc?: string) => {
     setRunning(true)
     setTimerVisible(false)
