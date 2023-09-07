@@ -88,6 +88,7 @@ const ModelSetting = (props: any) => {
     setChartData({})
     setResultText({ mae: '', rmse: '' })
   }
+  
   const fetchModelingData = (type: string, modelName?: string, desc?: string) => {
     setRunning(true)
     setTimerVisible(false)
@@ -115,6 +116,7 @@ const ModelSetting = (props: any) => {
         model_nm: type === 'SAVE' ? modelName : null,
         desc: type === 'SAVE' ? desc : null,
       }
+
       // console.log(param)
       refreshData()
 
