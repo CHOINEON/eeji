@@ -5,7 +5,7 @@ function LineChart(props: any) {
   const { chartData } = props
   const [data, setData] = useState<any>()
 
-  // useEffect(() => console.log('chartData:', chartData), [props])
+  useEffect(() => console.log('chartData:', chartData), [props])
 
   const config = {
     displaylogo: false,

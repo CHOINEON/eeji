@@ -23,6 +23,7 @@ import { Alert } from 'views/hmid/components/Modal/Alert'
 
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
+import SidebarBrand from 'components/sidebar/components/Brand'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -80,10 +81,10 @@ const Title = styled(BgStyle)`
 const Logo = styled(BgStyle)`
   background-image: url(${logo});
   position: fixed;
-  left: 7vw;
-  top: 4vw;
-  width: 9vw;
-  height: 2vw;
+  // left: 7vw;
+  // top: 4vw;
+  // width: 9vw;
+  // height: 2vw;
   z-index: 999;
 `
 
@@ -311,7 +312,10 @@ export const Login: React.FC = () => {
     <>
       <Wrapper />
       <Home_Bg />
-      <Logo />
+      {/* <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
+        <Logo />
+      </div> */}
+      <SidebarBrand />
       <Title />
       <BottomBox>
         <Circle />

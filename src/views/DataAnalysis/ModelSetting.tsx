@@ -87,7 +87,7 @@ const ModelSetting = (props: any) => {
         model_nm: modelName,
         upload: type === 'SAVE' ? true : false,
       }
-      // console.log(param)
+      console.log(param)
       setRunning(true)
       axios
         .post(process.env.REACT_APP_API_SERVER_URL + '/api/aimodel', param)
@@ -115,7 +115,10 @@ const ModelSetting = (props: any) => {
           }
           setRunning(false)
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          console.log(err)
+          setRunning(false)
+        })
     }
   }
 
