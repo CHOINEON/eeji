@@ -15,6 +15,7 @@ import HmidInterval from 'views/hmid_interval'
 import HmidIntervalD3 from 'views/hmid-interval-d3fc'
 // import Anomalyd3chart from 'views/AnomalyDetection/anomaly_d3chart-test'
 import Test from 'views/Test/AnomalyTest'
+import PriceForecasting from 'views/PriceForecasting'
 // Auth Imports
 
 const routes = [
@@ -31,6 +32,13 @@ const routes = [
     path: '/model',
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
     component: AIModelManagement,
+  },
+  {
+    name: 'Price Forecast',
+    layout: '/admin',
+    path: '/price-forecast',
+    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+    component: PriceForecasting,
   },
   {
     name: 'MainDashboard-Line',

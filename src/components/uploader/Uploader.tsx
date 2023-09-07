@@ -5,6 +5,8 @@ import { Button } from 'antd'
 import { useRecoilValue } from 'recoil'
 import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import Title from 'antd/es/typography/Title'
+import DraggableUploader from './DraggableUploader'
+import DragDrop from './TestUploader'
 
 const UploadComponentWrapper = styled.div`
   // background: transparent url('img/사각형 2439.png') 0% 0% no-repeat padding-box;
@@ -27,9 +29,11 @@ const UploadButton = styled.button`
 /**https://www.filestack.com/fileschool/react/react-file-upload/ */
 const Uploader = (props: any) => {
   const { onSelectedFile } = props
+
   const inputRef = useRef(null)
+  const dragRef = useRef(null)
+
   const [file, setFile] = useState<File>(null)
-  const dragRef = useRef<HTMLButtonElement>(null)
   const importOpen = useRecoilValue(importModalAtom)
   // 드래그 중일때와 아닐때의 스타일을 구분하기 위한 state 변수
   const [isDragging, setIsDragging] = useState<boolean>(false)
@@ -66,12 +70,13 @@ const Uploader = (props: any) => {
     }
   }, [])
 
+  //triggers when file is dropped
   const handleDrop = (e: DragEvent): void => {
+    // console.log('handle drop:', e)
     e.preventDefault()
     e.stopPropagation()
-    // console.log('handle drop:', e)
 
-    //button에 drop해서 생긴 이벤트를 input의 onchange 이벤트로 전달해준
+    //button에 drop해서 생긴 이벤트를 input의 onchange 이벤트로 전달해
     handleChange(e)
     setIsDragging(false)
   }
@@ -101,13 +106,20 @@ const Uploader = (props: any) => {
   }, [initDragEvents, resetDragEvents])
 
   const handleChange = (e: any) => {
-    // console.log('handleChange', e)
+    // console.log('handle Change:', e)
 
-    e.preventDefault()
-    e.stopPropagation()
-    setFile(e.target.files[0])
+    if (e.type === 'drop') {
+      e.preventDefault()
+      e.stopPropagation()
+
+      // const files = e.target.files
+      // console.log('file?', files)
+    } else if (e.type === 'change') {
+      setFile(e.target.files[0])
+    }
   }
 
+  //triggers when file is selected with click
   const handleUploadClick = () => {
     inputRef.current.click()
   }
@@ -126,7 +138,6 @@ const Uploader = (props: any) => {
 
   return (
     <div className="App">
-      {/* <form onSubmit={handleSubmit}> */}
       <UploadComponentWrapper>
         <input
           style={{ display: 'none' }}
@@ -134,21 +145,25 @@ const Uploader = (props: any) => {
           type="file"
           onChange={handleChange}
           accept=".csv, .xls, .xlsx"
+          id="input-file-upload"
         />
+
         <div className="flex-container">
           <div style={{ flex: 1 }}>
-            <UploadButton ref={dragRef} style={{ float: 'left' }} onClick={handleUploadClick} />
+            <label htmlFor="input-file-upload">
+              <UploadButton ref={dragRef} style={{ float: 'left' }} onClick={handleUploadClick} />
+            </label>
           </div>
           <div style={{ padding: '10px', width: '70%', float: 'left' }}>
             <Title level={4} style={{ color: '#002D65' }}>
               Upload Dataset
             </Title>
-            {/* <p style={{ color: '#002D65', fontSize: '18px', float: 'left', width: '100%' }}>Upload Dataset</p> */}
             {file && renderFileList()}
           </div>
         </div>
       </UploadComponentWrapper>
-      {/* </form> */}
+
+      {/* <DraggableUploader /> */}
     </div>
   )
 }

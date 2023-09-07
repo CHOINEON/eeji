@@ -10,6 +10,7 @@ import { modelListAtom } from './store/atom'
 
 const FlexContainer = styled.div`
   display: flex;
+  alignitems: center;
   flexdirection: column;
   flex-wrap: wrap;
   justify-content: center;
@@ -116,7 +117,7 @@ const ModelTest = (props: any) => {
       .then(
         (response: any) => {
           if (response.status === 200) {
-            // console.log('/api/model_reuse response: ', response.data)
+            console.log('/api/model_reuse response: ', response.data)
             setChartData(response.data)
             setLoading(false)
             return 'done'
@@ -184,7 +185,7 @@ const ModelTest = (props: any) => {
       )}
       <Divider />
 
-      <div className="w-100 ">
+      <div className="w-100 " style={{ textAlign: 'center', width: '100%', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', width: '20%', margin: 'auto', padding: '10px' }}>
           <Upload
             method="POST"
@@ -200,7 +201,8 @@ const ModelTest = (props: any) => {
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
         </div>
-        <div className="w-100" style={{ display: 'inline-flex' }}>
+
+        <div style={{ textAlign: 'center', width: '100%', maxWidth: '2040px', margin: 'auto' }}>
           <LineChart chartData={chartData} />
         </div>
       </div>
