@@ -7,6 +7,7 @@ const TestChart = () => {
   const [data, setData] = useState([])
   const [verticalLineTime, setVerticalLineTime] = useState([])
   const [ObservedTempData, setObservedTempData] = useState([])
+  const [selectedOption, setSelectedOption] = useState()
 
   const [layout, setLayout] = useState({
     responsive: true,
@@ -14,6 +15,18 @@ const TestChart = () => {
     autosize: true,
   })
   const config = { responsive: true, useResizeHandler: true }
+  const options = [
+    { value: 'brent', label: 'brent' },
+    { value: 'wti', label: 'wti' },
+  ]
+
+  const [predObj, setPredObj] = useState({ index_pred: '', predict: '' })
+  const [histObj, setHistObj] = useState({ index_hist: '', pred_hist: '' })
+  const [gtObj, setGtObj] = useState({ index_hist: '', gt_hist: '' })
+
+  // const predict_obj = { index_pred: '', predict: '' }
+  // const hist_obj = { index_hist: '', pred_hist: '' }
+  // const gt_obj = { index_hist: '', gt_hist: '' }
 
   useEffect(() => {
     fetchChartData()
@@ -45,17 +58,28 @@ const TestChart = () => {
   }, [verticalLineTime])
 
   const fetchChartData = () => {
+    const user_id = localStorage.getItem('userId')
+    const param = {
+      user_id: user_id,
+    }
+
     axios
-      .get(process.env.REACT_APP_API_SERVER_URL + '/api/index_predict')
+      .post(process.env.REACT_APP_API_SERVER_URL + '/api/oil_predict', param)
       .then((response) => {
-        console.log('response', response)
+        console.log('/api/oil_predict response', response)
         const respData = response.data
-        formatChartData(respData)
+        // formatChartData(respData)
+        //gt_hist, index_hist, index_pred, predict_hist, predict
+        if (selectedOption === 'wti') {
+          //response.data.wti
+          const predict_obj = { index_pred: '', predict: '' }
+          const hist_obj = { index_hist: '', pred_hist: '' }
+          const gt_obj = { index_hist: '', gt_hist: '' }
+        }
 
         //세로 줄
-        const arr = respData.predicted_time_points[0]
-
-        setVerticalLineTime(respData.observed_time_points.slice(-1)[0])
+        // const arr = respData.predicted_time_points[0]
+        // setVerticalLineTime(respData.observed_time_points.slice(-1)[0])
       })
       .catch((error) => console.log('error:', error))
   }
@@ -98,10 +122,15 @@ const TestChart = () => {
     //
   }
 
+  const handleChange = (param: any) => {
+    // console.log('param:', param)
+    setSelectedOption(param)
+  }
+
   return (
     <>
       <div style={{ width: '200px' }}>
-        <Select defaultValue="Sample" style={{ width: 120 }} options={[{ value: 'sample', label: 'Sample Price' }]} />
+        <Select defaultValue={options[0]} style={{ width: 120 }} options={options} onChange={handleChange} />
       </div>
       <Plot style={{ width: '100%' }} config={config} data={data} layout={layout} />
     </>
