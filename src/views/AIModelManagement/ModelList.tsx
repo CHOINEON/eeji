@@ -7,14 +7,12 @@ import { ThemeProvider } from '@mui/material/styles'
 import { theme } from './theme'
 import { AgGridReact } from 'ag-grid-react'
 import { Button, Modal, message } from 'antd'
-import LineChart from 'views/DataAnalysis/components/Chart/LineChart'
-import DataImportModal from 'views/DataAnalysis/components/DataInfo/DataImportModal'
 import CircularProgress from '@mui/material/CircularProgress'
-import { useRecoilState } from 'recoil'
-import { importModalAtom, listModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import { ExclamationCircleFilled } from '@ant-design/icons'
-import { runModalAtom } from './store/atom'
-import ModelRunModal from './ModelRunModal'
+import { Link, Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
+import { useRecoilState } from 'recoil'
+import { modelListAtom } from './store/atom'
+import { dateTimeToString, removeSeparator } from 'common/DateFunction'
 
 export type Model = {
   com_id: string
@@ -26,35 +24,27 @@ export type Model = {
   y_value: string
 }
 
-const ModelList = () => {
+const ModelList = (props: any) => {
+  const { onSelected } = props
+  const [modelList, setModelList] = useRecoilState(modelListAtom)
+
   const gridRef = useRef<AgGridReact<any>>(null)
   const com_id = localStorage.getItem('companyId')
   const user_id = localStorage.getItem('userId')
   const [rowData, setRowData] = useState([])
 
-  // const [modalOpen, setModalOpen] = useState(false)
-  const [importOpen, setImportOpen] = useRecoilState(runModalAtom)
   const [messageApi, contextHolder] = message.useMessage()
 
   const [requestParam, setRequestParam] = useState({})
   const [selectedRow, setSelectedRow] = useState<any>('')
   const [loading, setLoading] = useState(false)
-  const [chartData, setChartData] = useState([])
 
   const modelNameColumnRenderer = (param: any) => {
-    // console.log('param:', param)
-
-    const handleModelClick = useCallback((model: any) => {
-      //
-      //팝업이 열리고 그 팝업에 과거 예측 이미지랑 업로드 컴포넌트 보임
-      setImportOpen(true)
-    }, [])
-
     return (
       <span>
-        <a href="#" onClick={() => handleModelClick(param.data.model_id)}>
-          <span style={{ textDecoration: 'underline' }}>{param.data.model_name}</span>
-        </a>
+        <Link style={{ textDecoration: 'underline' }} to={`/admin/model/${param.data.model_name}`}>
+          {param.data.model_name}
+        </Link>
       </span>
     )
   }
@@ -81,6 +71,10 @@ const ModelList = () => {
         </a>
       </span>
     )
+  }
+
+  const dateColumnRenderer = (param: any) => {
+    return removeSeparator(param.value)
   }
 
   const handleDeleteClick = useCallback((modelId: any) => {
@@ -121,13 +115,12 @@ const ModelList = () => {
     { field: 'y_value', headerName: 'Y', resizable: true, width: 100 },
     { field: 'error', headerName: 'Error', resizable: true, width: 120 },
     { field: 'creator', headerName: 'Creator', resizable: true, width: 100 },
-    { field: 'create_date', headerName: 'Created', resizable: true },
+    { field: 'create_date', headerName: 'Created', resizable: true, cellRenderer: dateColumnRenderer },
     { field: 'edit', cellRenderer: editColumnRenderer },
   ])
 
   useEffect(() => {
     fetchModelList()
-    // sizeToFit()
   }, [])
 
   const sizeToFit = useCallback(() => {
@@ -143,65 +136,31 @@ const ModelList = () => {
     axios
       .get(process.env.REACT_APP_API_SERVER_URL + '/api/predict/model?com_id=' + com_id + '&user_id=' + user_id)
       .then((response: any) => {
-        console.log('/api/predict/model resp::', response)
+        // console.log('/api/predict/model resp::', response)
         setRowData(response.data)
+        setModelList(response.data)
       })
       .catch((err) => console.error(err))
   }
 
-  // const handleCardClick = (param: any) => {
-  //   console.log(param)
-  //   setModalOpen(true)
-  // }
-
-  const onGridReady = useCallback(fetchModelList, [])
-
-  const handleRunTest = () => {
-    setRequestParam({ url: '/api/upload', data: selectedRow })
-    // setImportOpen(true)
-  }
-
-  const onSelectionChanged = useCallback(() => {
-    const selectedRowdata = gridRef.current.api.getSelectedRows()
-    setSelectedRow(selectedRowdata[0])
-    // console.log('selectedRowdata:', selectedRowdata[0])
-  }, [])
-
   return (
     <>
-      {/* <div>
-        {modelList.map((model, index) => (
-          <ModelCard data={model} key={index} onClicked={handleCardClick} />
-        ))}
-      </div> */}
       <ThemeProvider theme={theme}>
-        {/* <div style={{ textAlign: 'right', margin: '20px 0' }}>
-          <Button type="primary" onClick={handleRunTest}>
-            Run
-          </Button>
-        </div> */}
-
         <div style={{ marginTop: '30px' }} className="grid-wrapper">
-          <div className="ag-theme-alpine" style={{ height: 700, width: '100%' }}>
+          <div className="ag-theme-alpine" style={{ height: 800, width: '100%' }}>
             <AgGridReact
               rowSelection="multiple"
               ref={gridRef}
               rowData={rowData}
               columnDefs={columnDefs}
-              onGridReady={onGridReady}
-              onSelectionChanged={onSelectionChanged}
+              // onGridReady={onGridReady}
+              // onSelectionChanged={onSelectionChanged}
             ></AgGridReact>
           </div>
         </div>
-        {/* <div className="d-block">
-          <LineChart chartData={chartData} />
-        </div> */}
-        <ModelRunModal selectedData={selectedRow} />
+
         {loading && <CircularProgress />}
       </ThemeProvider>
-      {/* <div style={{ display: 'block', width: '100%', margin: 'auto' }}>
-        <LineChart />
-      </div> */}
       {contextHolder}
     </>
   )

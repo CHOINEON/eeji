@@ -169,6 +169,6 @@ template {
   font-weight: 600 !important;
 }
 
-.ant-modal{
+.rounded-corners{
   border-radius: 10px;
 }

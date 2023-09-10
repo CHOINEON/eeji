@@ -75,6 +75,7 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
         {title}
       </Typography>
       <Select
+        style={{ width: '100%' }}
         id={selectionType}
         mode={selectionType}
         loading={loading}

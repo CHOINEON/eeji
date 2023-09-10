@@ -304,7 +304,7 @@ const CorrelationView = () => {
               title=""
               component={
                 <Button type="primary" block onClick={handleSearchClick} loading={loading}>
-                  Search
+                  Plot
                 </Button>
               }
             />
