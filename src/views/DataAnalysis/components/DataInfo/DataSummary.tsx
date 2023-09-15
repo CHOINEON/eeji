@@ -1,6 +1,8 @@
-import { Table, message } from 'antd'
+import { Table, Typography, message } from 'antd'
 import { ColumnsType } from 'antd/es/table'
+import Title from 'antd/es/typography/Title'
 import React, { useEffect, useState } from 'react'
+import { dateTimeToString } from 'common/DateFunction'
 
 interface DataType {
   name: string
@@ -50,6 +52,7 @@ const SummaryDataGrid = (props: any) => {
 const DataSummary = (props: any) => {
   const [messageApi, contextHolder] = message.useMessage()
   const [summaryData, setSummaryData] = useState([])
+  const { Title } = Typography
 
   useEffect(() => {
     // console.log('DataSummary props:', props.file)
@@ -151,28 +154,29 @@ const DataSummary = (props: any) => {
     setSummaryData(summary)
   }
 
-  const dateTimeToString = (date: any) => {
-    let month = date.getMonth() + 1
-    let day = date.getDate()
-    let hour = date.getHours()
-    let minute = date.getMinutes()
-    let second = date.getSeconds()
+  // const dateTimeToString = (date: any) => {
+  //   let month = date.getMonth() + 1
+  //   let day = date.getDate()
+  //   let hour = date.getHours()
+  //   let minute = date.getMinutes()
+  //   let second = date.getSeconds()
 
-    month = month >= 10 ? month : '0' + month
-    day = day >= 10 ? day : '0' + day
-    hour = hour >= 10 ? hour : '0' + hour
-    minute = minute >= 10 ? minute : '0' + minute
-    second = second >= 10 ? second : '0' + second
+  //   month = month >= 10 ? month : '0' + month
+  //   day = day >= 10 ? day : '0' + day
+  //   hour = hour >= 10 ? hour : '0' + hour
+  //   minute = minute >= 10 ? minute : '0' + minute
+  //   second = second >= 10 ? second : '0' + second
 
-    return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
-  }
+  //   return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+  // }
   // readFile(event.filesData[0].rawFile)
 
   return (
     <div style={{ marginTop: '30px' }}>
-      <p style={{ color: '#002D65', fontSize: '20px', fontWeight: 'bold', float: 'left', width: '100%' }}>
+      {/* <p style={{ color: '#002D65', fontSize: '18px', float: 'left', width: '100%' }}>Data Summary</p> */}
+      <Title level={4} style={{ color: '#002D65' }}>
         Data Summary
-      </p>
+      </Title>
       {summaryData && <SummaryDataGrid data={summaryData} size="small" />}
       {contextHolder}
     </div>

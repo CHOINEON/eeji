@@ -19,16 +19,17 @@ ReactDOM.render(
         token: {
           // Seed Token
           colorPrimary: '#4338f7',
-          borderRadius: 2,
+          borderRadius: 10,
           // Alias Token
           colorBgContainer: '#FFFFFF',
         },
         components: {
           Button: {
             colorPrimary: '#4338f7',
+            borderRadius: 10,
           },
           Modal: {
-            borderRadius: 2,
+            borderRadius: 10,
           },
         },
       }}

@@ -89,6 +89,7 @@ const AdvancedChart = () => {
       setAnomalyScoreArr((prev) => {
         return [...prev, socketData.anomaly_pred[0]]
       })
+
       setThresholdArr((prev)=> {
         return [...prev, socketData.thr[0]]
       })
@@ -116,6 +117,7 @@ const AdvancedChart = () => {
           },
           mode: 'lines',
           yaxis: 'y2',
+
           visible : isVisible,
           hovertemplate: '<b>Anomaly Score</b><br>Index: %{x}<br>Score: %{y}'
         },
@@ -130,6 +132,7 @@ const AdvancedChart = () => {
           },
           yaxis: 'y2',
           visible : yesVisible,
+
           hovertemplate: '<b>Threshold</b><br>Index: %{x}<br>Threshold: %{y}',
         },
       ]
@@ -207,6 +210,33 @@ const AdvancedChart = () => {
     setYesVisible(!yesVisible)
   }
 
+
+  // const colors = isAnomaly.map(() => {
+  //   if (isAnomaly == 1) {
+  //     return 'black'
+  //   } else return 'pink'
+  // })
+
+  // const showAnomaly = isAnomalyArr.map(() => {
+  //   if (isAnomalyArr == true) {
+  //     return index
+  //   }
+  //   else return
+  // })
+
+  // const highlightAnomaly = [
+  //   {
+  //     type: 'rect',
+  //     xref: 'x',
+  //     yref: 'paper',
+  //     x0: 400,
+  //     y0:2,
+  //     x1: 100,
+  //     y1: 1,
+
+
+
+  
   const layout = {
     title: 'Anomaly Detection Plot',
     titlefont: { size: 20 },
@@ -239,6 +269,8 @@ const AdvancedChart = () => {
     useResizeHandler: true,
     autosize: true,
   }
+
+
 
   return (
     <Box

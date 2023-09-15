@@ -24,6 +24,8 @@ import { Alert } from 'views/hmid/components/Modal/Alert'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
 
+import SidebarBrand from 'components/sidebar/components/Brand'
+
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
 const Wrapper = styled.div`
@@ -80,10 +82,10 @@ const Title = styled(BgStyle)`
 const Logo = styled(BgStyle)`
   background-image: url(${logo});
   position: fixed;
-  left: 7vw;
-  top: 4vw;
-  width: 9vw;
-  height: 2vw;
+  // left: 7vw;
+  // top: 4vw;
+  // width: 9vw;
+  // height: 2vw;
   z-index: 999;
 `
 
@@ -179,8 +181,7 @@ export const Login: React.FC = () => {
   const [password, setPassword] = React.useState()
   const [company, setCompany] = React.useState<any>('')
   const [companyList, setCompanyList] = React.useState<any>()
-
-  const [showAlarmModal, setShowAlertModal] = useRecoilState(AlertRecoil.AlertModalState)
+  const setShowAlertModal = useSetRecoilState(AlertRecoil.AlertModalState)
   const setAlarmMessage = useSetRecoilState(AlertRecoil.AlertMessageState)
 
   React.useEffect(() => {
@@ -261,7 +262,7 @@ export const Login: React.FC = () => {
       })
       .then((response) => {
         console.log('[ axios response data ] : ')
-        console.log(response.data)
+        // console.log(response.data)
 
         for (let i = 0, len = response.data.length; i < len; i++) {
           Obj.value = response.data[i].com_id
@@ -270,7 +271,7 @@ export const Login: React.FC = () => {
           Obj = new Object()
         }
 
-        // console.log(Arr)
+        console.log(Arr)
         setCompanyList(Arr)
       })
       .catch((error) => {
@@ -280,13 +281,13 @@ export const Login: React.FC = () => {
 
   //selectbox 변경 이벤트
   const handleChange = (value: string | string[]) => {
-    console.log(`Compnay Selected: ${value}`)
+    // console.log(`Compnay Selected: ${value}`)
     setCompany(value)
   }
 
   //회사 정보를 불러오는 함수
   const getCompanyInfo = (companyId: string) => {
-    console.log(companyId)
+    // console.log(companyId)
     axios
       .get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/company/info?company_id=' + companyId, {
         headers: {
@@ -312,7 +313,10 @@ export const Login: React.FC = () => {
     <>
       <Wrapper />
       <Home_Bg />
-      <Logo />
+      {/* <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
+        <Logo />
+      </div> */}
+      <SidebarBrand />
       <Title />
       <BottomBox>
         <Circle />
@@ -324,7 +328,7 @@ export const Login: React.FC = () => {
           <BottomTitle />
           <BottomCotents>
             is Prediction solution for ENERGY SAVING based on time series data that enables companies to realize
-            productivity improvement, production energy cost reduction, and quality improvement through process
+            productivity improvement, production energy cost reduction and quality improvement through process
             optimization of industrial processes.
           </BottomCotents>
         </BottomTitleParent>
