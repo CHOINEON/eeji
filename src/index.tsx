@@ -26,7 +26,7 @@ ReactDOM.render(
         components: {
           Button: {
             colorPrimary: '#4338f7',
-            borderRadius: 10,
+            borderRadius: 100,
           },
           Modal: {
             borderRadius: 10,
