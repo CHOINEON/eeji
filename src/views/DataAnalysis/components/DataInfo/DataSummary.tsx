@@ -77,11 +77,16 @@ const DataSummary = (props: any) => {
   }, [props])
 
   const readFile = (file: any) => {
-    // console.log('readfile:', file)
+    console.log('readfile:', file)
+    console.log('type:', file.name.split('.', 2)[1])
+
     const fileReader = new FileReader()
 
+    const fileFormat = file.name.split('.', 2)[1]
+    const acceptedFormats = ['csv', 'xls', 'xlsx']
+
     if (file) {
-      if (file.type === 'text/csv') {
+      if (acceptedFormats.includes(fileFormat)) {
         fileReader.onload = function (event: any) {
           const text = event.target.result
           csvFileToArray(file.name, file.size, text)
@@ -91,7 +96,7 @@ const DataSummary = (props: any) => {
       } else {
         messageApi.open({
           type: 'error',
-          content: '.csv 파일을 올려주세요',
+          content: '지원하지 않는 파일 유형입니다.',
           duration: 1,
           style: {
             margin: 'auto',
@@ -116,6 +121,7 @@ const DataSummary = (props: any) => {
       }
     })
 
+    console.log('array:', array)
     //split하면서 마지막 행에 빈 값 들어있어서 자름
     array.splice(array.length - 1)
 
@@ -137,8 +143,8 @@ const DataSummary = (props: any) => {
 
     const start = sortedAsc[0].dateTime
     const end = sortedAsc[lengthOfArray - 1].dateTime
-    // console.log('start:', start)
-    // console.log('end:', end)
+    // console.log('start:', dateTimeToString(start).length)
+    // console.log('end:', typeof dateTimeToString(end))
 
     summary.push({
       key: 1,
@@ -146,30 +152,13 @@ const DataSummary = (props: any) => {
       size: Math.round(size / 1024),
       rowCount: sortedAsc.length,
       colCount: Object.keys(sortedAsc[0]).length,
-      startDate: dateTimeToString(start),
-      endDate: dateTimeToString(end),
+      startDate: dateTimeToString(start).length === 19 ? dateTimeToString(start) : '-',
+      endDate: dateTimeToString(end).length === 19 ? dateTimeToString(end) : '-',
     })
 
     // console.log('summary:', summary)
     setSummaryData(summary)
   }
-
-  // const dateTimeToString = (date: any) => {
-  //   let month = date.getMonth() + 1
-  //   let day = date.getDate()
-  //   let hour = date.getHours()
-  //   let minute = date.getMinutes()
-  //   let second = date.getSeconds()
-
-  //   month = month >= 10 ? month : '0' + month
-  //   day = day >= 10 ? day : '0' + day
-  //   hour = hour >= 10 ? hour : '0' + hour
-  //   minute = minute >= 10 ? minute : '0' + minute
-  //   second = second >= 10 ? second : '0' + second
-
-  //   return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
-  // }
-  // readFile(event.filesData[0].rawFile)
 
   return (
     <div style={{ marginTop: '30px' }}>

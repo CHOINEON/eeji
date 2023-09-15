@@ -1,30 +1,46 @@
-import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
-import ico_upload_button from 'assets/img/ineeji/ico_upload_button.png'
-import styled from '@emotion/styled'
+import React, { ChangeEvent, useCallback, useRef, useState, useEffect } from 'react'
 
-const UploadButton = styled.div`
-  top: 278px;
-  left: 703px;
-  width: 176px;
-  height: 176px;
-  background: transparent url(${ico_upload_button}) 0% 0% no-repeat padding-box;
-  opacity: 1;
-`
 interface IFileTypes {
-  id: number // 파일들의 고유값 id
+  id: number
   object: File
 }
 
-const DraggableUploader = () => {
-  const inputRef = useRef(null)
-  const dragRef = useRef(null)
-
-  const [isDragging, setIsDragging] = useState<boolean>()
+const DragDrop = () => {
+  const [isDragging, setIsDragging] = useState<boolean>(false)
   const [files, setFiles] = useState<IFileTypes[]>([])
+
+  const dragRef = useRef<HTMLLabelElement | null>(null)
+  const fileId = useRef<number>(0)
 
   const onChangeFiles = useCallback(
     (e: ChangeEvent<HTMLInputElement> | any): void => {
-      //test
+      let selectFiles: File[] = []
+      let tempFiles: IFileTypes[] = files
+
+      if (e.type === 'drop') {
+        selectFiles = e.dataTransfer.files
+      } else {
+        selectFiles = e.target.files
+      }
+
+      for (const file of selectFiles) {
+        tempFiles = [
+          ...tempFiles,
+          {
+            id: fileId.current++,
+            object: file,
+          },
+        ]
+      }
+
+      setFiles(tempFiles)
+    },
+    [files]
+  )
+
+  const handleFilterFile = useCallback(
+    (id: number): void => {
+      setFiles(files.filter((file: IFileTypes) => file.id !== id))
     },
     [files]
   )
@@ -51,11 +67,10 @@ const DraggableUploader = () => {
   }, [])
 
   const handleDrop = useCallback(
-    (e: any): void => {
+    (e: DragEvent): void => {
       e.preventDefault()
       e.stopPropagation()
 
-      console.log('e::', e)
       onChangeFiles(e)
       setIsDragging(false)
     },
@@ -63,8 +78,6 @@ const DraggableUploader = () => {
   )
 
   const initDragEvents = useCallback((): void => {
-    // 앞서 말했던 4개의 이벤트에 Listener를 등록합니다. (마운트 될때)
-
     if (dragRef.current !== null) {
       dragRef.current.addEventListener('dragenter', handleDragIn)
       dragRef.current.addEventListener('dragleave', handleDragOut)
@@ -74,8 +87,6 @@ const DraggableUploader = () => {
   }, [handleDragIn, handleDragOut, handleDragOver, handleDrop])
 
   const resetDragEvents = useCallback((): void => {
-    // 앞서 말했던 4개의 이벤트에 Listener를 삭제합니다. (언마운트 될때)
-
     if (dragRef.current !== null) {
       dragRef.current.removeEventListener('dragenter', handleDragIn)
       dragRef.current.removeEventListener('dragleave', handleDragOut)
@@ -91,18 +102,33 @@ const DraggableUploader = () => {
   }, [initDragEvents, resetDragEvents])
 
   return (
-    <>
-      <input ref={inputRef} id="file-input" type="file" accept=".csv, .xls, .xlsx" hidden />
-      <label ref={dragRef} htmlFor="file-input" onDrop={handleDrop}>
-        <div>
-          <span>Drag and drop your file here</span>
-        </div>
-        <div>
-          <span>or</span>
-        </div>
+    <div className="DragDrop" style={{ border: '1px solid red' }}>
+      <input type="file" id="fileUpload" style={{ display: 'none' }} multiple={true} onChange={onChangeFiles} />
+
+      <label className={isDragging ? 'DragDrop-File-Dragging' : 'DragDrop-File'} htmlFor="fileUpload" ref={dragRef}>
+        <div>파일 첨부</div>
       </label>
-    </>
+
+      <div className="DragDrop-Files">
+        {files.length > 0 &&
+          files.map((file: IFileTypes) => {
+            const {
+              id,
+              object: { name },
+            } = file
+
+            return (
+              <div key={id}>
+                <div>{name}</div>
+                <div className="DragDrop-Files-Filter" onClick={() => handleFilterFile(id)}>
+                  X
+                </div>
+              </div>
+            )
+          })}
+      </div>
+    </div>
   )
 }
 
-export default DraggableUploader
+export default DragDrop

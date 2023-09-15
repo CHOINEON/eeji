@@ -22,9 +22,9 @@ const DataImportModal = (props: any) => {
     }
   }, [importOpen])
 
-  const handleSelectedFile = (param: any) => {
-    setDataFile(param)
-    setDataName(param.name)
+  const handleSelectedFile = (file: any) => {
+    setDataFile(file)
+    setDataName(file?.name.split('.', 2)[0])
   }
 
   const handleSave = () => {

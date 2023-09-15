@@ -62,7 +62,7 @@ const DataSet = () => {
         </DatasetAddButton>
         <Row gutter={[16, 16]}>
           {dataSet.map((item, index) => (
-            <Col span={12} key={index}>
+            <Col span={8} key={index}>
               <DescriptionBox data={item} onSelect={handleSelect} onDelete={handleDelete} />
             </Col>
           ))}

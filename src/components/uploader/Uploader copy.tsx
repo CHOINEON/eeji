@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import ico_upload_button from 'assets/img/ineeji/ico_upload_button.png'
+import { Button } from 'antd'
 import { useRecoilValue } from 'recoil'
 import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import Title from 'antd/es/typography/Title'
-import { CloseOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
+import DraggableUploader from './DraggableUploader'
+import DragDrop from './TestUploader'
 
 const UploadComponentWrapper = styled.div`
   // background: transparent url('img/사각형 2439.png') 0% 0% no-repeat padding-box;
@@ -46,7 +47,7 @@ const Uploader = (props: any) => {
 
   useEffect(() => {
     //내보내기
-    onSelectedFile(file)
+    if (file) onSelectedFile(file)
   }, [file])
 
   const handleDragIn = useCallback((e: DragEvent): void => {
@@ -123,17 +124,10 @@ const Uploader = (props: any) => {
     inputRef.current.click()
   }
 
-  const handleCancel = () => {
-    console.log('clicked')
-    setFile(null)
-  }
-
   const renderFileList = () => {
     return (
       <>
-        <div>
-          파일명 : {file.name} <CloseOutlined onClick={handleCancel} />
-        </div>
+        <div>파일명 : {file.name}</div>
         <div>
           크기 :{' '}
           {file.size / 1024 < 1024 ? Math.round(file.size / 1024) + ' KB' : Math.round(file.size / 1024 / 1024) + ' MB'}
@@ -153,6 +147,7 @@ const Uploader = (props: any) => {
           accept=".csv, .xls, .xlsx"
           id="input-file-upload"
         />
+
         <div className="flex-container">
           <div style={{ flex: 1 }}>
             <label htmlFor="input-file-upload" ref={dragRef}>

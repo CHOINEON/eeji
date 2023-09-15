@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import '../../style/uploader.css'
-import { Button, Typography, message } from 'antd'
+import { Button, Dropdown, MenuProps, Typography, message } from 'antd'
 import { useSetRecoilState } from 'recoil'
 import { stepCountStore, dataSetStore } from 'views/DataAnalysis/store/atom'
 import axios from 'axios'
-import { DeleteOutlined } from '@ant-design/icons'
+import { DeleteOutlined, MoreOutlined } from '@ant-design/icons'
 const { Text, Link } = Typography
 
 const DescBoxContainer = styled.div`
@@ -58,16 +58,30 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
 
   const [create, setCreate] = useState('')
 
+  const items: MenuProps['items'] = [
+    {
+      label: 'Edit',
+      key: '1',
+    },
+    {
+      label: 'Delete',
+      key: '2',
+    },
+  ]
+
   useEffect(() => {
     setCreate(new Date(props.data.create_date).toLocaleDateString())
   }, [])
 
-  const handleClick = () => {
-    setDataSet(id)
-    onSelect(true)
+  const handleClick = (event: any) => {
+    if (event.target.tagName !== 'svg' && event.target.tagName !== 'SPAN') {
+      //"more" 아이콘 클릭된 경우 예외로 처리
+      setDataSet(id)
+      onSelect(true)
+    }
   }
 
-  const handleDelete = (id: any) => {
+  const handleDelete = () => {
     // console.log('delete:', id)
     const com_id = localStorage.getItem('companyId')
     const user_id = localStorage.getItem('userId')
@@ -104,16 +118,35 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
       )
   }
 
+  const onClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === '1') {
+      messageApi.open({
+        type: 'warning',
+        content: '구현 예정입니다',
+        duration: 2,
+        style: {
+          margin: 'auto',
+        },
+      })
+    }
+    if (key === '2') {
+      handleDelete()
+    }
+  }
+
   return (
     <>
-      <DescBoxContainer>
+      <DescBoxContainer onClick={handleClick} role="button">
         <TitleWrapper>
-          <a onClick={() => handleDelete(id)}>
-            <DeleteOutlined style={{ float: 'right', color: 'red' }} />
-          </a>
-          <Typography.Title onClick={handleClick} level={3}>
+          <Typography.Title level={4} style={{ display: 'inline-block' }}>
             {name}
           </Typography.Title>
+          <Dropdown menu={{ items, onClick }}>
+            <MoreOutlined style={{ float: 'right' }} size={16} />
+          </Dropdown>
+          {/* <a onClick={() => handleDelete}>
+            <DeleteOutlined style={{ float: 'right', color: 'red' }} />
+          </a> */}
         </TitleWrapper>
         <div
           className="container"

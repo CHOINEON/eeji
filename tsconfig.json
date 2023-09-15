@@ -43,7 +43,7 @@
     /* Experimental Options */
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "isolatedModules": false,
+    "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
     "incremental": true,
