@@ -286,7 +286,7 @@ const AdvancedChart = () => {
           defaultChecked
         />
       </Space>
-      <div>Control Panel</div>
+     
     </Box>
   )
 }
