@@ -71,6 +71,18 @@ const CorrelationView = () => {
 
   useEffect(() => {
     setLoading(false)
+
+    if (selectedDataset[0] == '' || selectedFile[0] == '') {
+      messageApi.open({
+        type: 'error',
+        content: '파일이 선택되지 않았습니다.',
+        duration: 1,
+        style: {
+          margin: 'auto',
+        },
+      })
+      // setActiveStep(0)
+    }
   }, [])
 
   useEffect(() => {

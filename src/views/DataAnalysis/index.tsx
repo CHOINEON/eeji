@@ -12,6 +12,7 @@ import { stepCountStore } from './store/atom'
 import DataImport from './DataSet'
 import CorrelationView from './CorrelationView'
 import './style/styles.css'
+import OptionSetting from './OptionSetting'
 
 const DataAnalysis = () => {
   const steps = ['Upload Data', 'View Correlation', 'Select Variables', 'Run/Save Model']
@@ -70,10 +71,13 @@ const DataAnalysis = () => {
             ))}
           </Stepper>
         </Box>
-        <Box>{activeStep === 0 && <DataImport />}</Box>
-        <Box>{activeStep === 1 && <CorrelationView />}</Box>
-        <Box>{activeStep === 2 && <VariableSelection />}</Box>
-        <Box>{activeStep === 3 && <ModelSetting />}</Box>
+        <Box padding={5}>
+          {activeStep === 0 && <DataImport />}
+          {activeStep === 1 && <CorrelationView />}
+          <Box>{activeStep === 2 && <VariableSelection />}</Box>
+          {/* {activeStep === 2 && <OptionSetting />} */}
+          {activeStep === 3 && <ModelSetting />}
+        </Box>
       </Box>
     </ThemeProvider>
   )

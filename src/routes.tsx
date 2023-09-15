@@ -16,6 +16,10 @@ import HmidIntervalD3 from 'views/hmid-interval-d3fc'
 // import Anomalyd3chart from 'views/AnomalyDetection/anomaly_d3chart-test'
 import Test from 'views/Test/AnomalyTest'
 import PriceForecasting from 'views/PriceForecasting'
+import DraggableUploader from 'components/uploader/DraggableUploader'
+import DragDrop from 'components/uploader/DraggableUploader'
+import Temp from 'views/Test'
+
 // Auth Imports
 
 const routes = [
@@ -40,20 +44,21 @@ const routes = [
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
     component: PriceForecasting,
   },
-  {
-    name: 'MainDashboard-Line',
-    layout: '/admin',
-    path: '/hmid-interval',
-    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
-    component: HmidInterval,
-  },
-  {
-    name: 'MainDashboard-D3FC',
-    layout: '/admin',
-    path: '/hmid-d3fc',
-    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
-    component: HmidIntervalD3,
-  },
+
+  // {
+  //   name: 'MainDashboard-Line',
+  //   layout: '/admin',
+  //   path: '/hmid-interval',
+  //   icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+  //   component: HmidInterval,
+  // },
+  // {
+  //   name: 'MainDashboard-D3FC',
+  //   layout: '/admin',
+  //   path: '/hmid-d3fc',
+  //   icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+  //   component: HmidIntervalD3,
+  // },
   {
     name: 'Anomaly Detection',
     layout: '/admin',
@@ -88,6 +93,13 @@ const routes = [
     path: '/configuration',
     icon: <Icon as={MdSettings} width="20px" height="20px" color="inherit" />,
     component: Configuration,
+  },
+  {
+    name: 'Temp page',
+    layout: '/admin',
+    path: '/temp-page',
+    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+    component: Temp,
   },
 ]
 
