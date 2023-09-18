@@ -1,64 +1,16 @@
 /* eslint-disable prettier/prettier */
 import { Box } from '@chakra-ui/react'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Plot from 'react-plotly.js'
-import { Switch, Space } from 'antd'
+import { Switch, Space, Button } from 'antd'
 // import window.SHAP from 'bundle.js'
-
-{/* <script type="text/javascript" src="/test/bundle.js" charset="utf-8"></script> */}
-
-
-async function load_shap_plot(event) {
-  event.preventDefault()
-  
-  const shapPlotContainer = document.getElementById("shapPlotContainer");
-  try {
-    const response = await fetch('http://222.121.66.49:8001/load_shap_plot', {
-      method: 'GET',
-    }
-    );
-    console.log('test:', response)
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    
-    const result = await response.text();
-    shapPlotContainer.innerHTML = stripAndExecuteScript(result);
-    stripAndExecuteScript(result);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-}
-
-function stripAndExecuteScript(text) {
-  var scripts = '';
-  var cleaned = text.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, function(){
-      scripts += arguments[1] + '\n';
-      return '';
-  });
-  if (window.execScript){
-      window.execScript(scripts);
-      console.log('hi')
-  } else {
-      var head = document.getElementsByTagName('head')[0];
-      var scriptElement = document.createElement('script');
-      scriptElement.setAttribute('type', 'text/javascript');
-      scriptElement.innerText = scripts;
-      console.log(scripts);
-      head.appendChild(scriptElement);
-      head.removeChild(scriptElement);
-  }
-  return cleaned;
-};
-
 
 const AdvancedChart = () => {
   //새로운 주소로 바뀔 예정
   const originURL = 'ws://222.121.66.49:8001/ws/web'
-  const imgURL = 'http://222.121.66.49:8000/static/shap.png' 
-  // const load_shapURL =  'http://222.121.66.49:8001/load_shap_plot' 
+  const imgURL = 'http://222.121.66.49:8000/static/shap.png'
+  // const load_shapURL =  'http://222.121.66.49:8001/load_shap_plot'
   // const [shapData, setShapData] = useState([]);
-
 
   /* managing the states of incoming data */
   const [socketData, setSocketData] = useState({})
@@ -71,7 +23,6 @@ const AdvancedChart = () => {
   const [anomalyScoreArr, setAnomalyScoreArr] = useState([])
   const [thresholdArr, setThresholdArr] = useState([])
   // const [isAnomalyArr, setIsAnomalyArr] = useState([])
-
 
   useEffect(() => {
     if (socketData.data) {
@@ -90,7 +41,7 @@ const AdvancedChart = () => {
         return [...prev, socketData.anomaly_pred[0]]
       })
 
-      setThresholdArr((prev)=> {
+      setThresholdArr((prev) => {
         return [...prev, socketData.thr[0]]
       })
 
@@ -105,7 +56,7 @@ const AdvancedChart = () => {
             color: 'black',
             width: '2',
           },
-        hovertemplate: '<b>Data</b><br>Index: %{x}<br>Data: %{y}',
+          hovertemplate: '<b>Data</b><br>Index: %{x}<br>Data: %{y}',
         },
         {
           x: index,
@@ -118,8 +69,8 @@ const AdvancedChart = () => {
           mode: 'lines',
           yaxis: 'y2',
 
-          visible : isVisible,
-          hovertemplate: '<b>Anomaly Score</b><br>Index: %{x}<br>Score: %{y}'
+          visible: isVisible,
+          hovertemplate: '<b>Anomaly Score</b><br>Index: %{x}<br>Score: %{y}',
         },
         {
           x: index,
@@ -131,7 +82,7 @@ const AdvancedChart = () => {
             color: 'green',
           },
           yaxis: 'y2',
-          visible : yesVisible,
+          visible: yesVisible,
 
           hovertemplate: '<b>Threshold</b><br>Index: %{x}<br>Threshold: %{y}',
         },
@@ -143,29 +94,26 @@ const AdvancedChart = () => {
     //  ){
 
     // }
-}, [socketData])
+  }, [socketData])
 
-// useEffect(() => {
-//   const fetchData = async () => {
-//     try {
-//       const response = await fetch(load_shapURL);
-//       if (!response.ok) {
-//         throw new Error(`HTTP error! Status: ${response.status}`);
-//       }
-//       const data = await response.json();
-//       setShapData(data); // Assuming data is an array of image paths
-//     } catch (error) {
-//       console.error('Error fetching data:', error);
-//     }
-//   };
-   
-//   // Call the fetchData function when the component mounts
-//   fetchData();
-//   console.log("shapData:", shapData)
-// }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(load_shapURL);
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
+  //       const data = await response.json();
+  //       setShapData(data); // Assuming data is an array of image paths
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
 
-
-
+  //   // Call the fetchData function when the component mounts
+  //   fetchData();
+  //   console.log("shapData:", shapData)
+  // }, []);
 
   /*add timestamp*/
   useEffect(() => {
@@ -210,7 +158,6 @@ const AdvancedChart = () => {
     setYesVisible(!yesVisible)
   }
 
-
   // const colors = isAnomaly.map(() => {
   //   if (isAnomaly == 1) {
   //     return 'black'
@@ -234,9 +181,6 @@ const AdvancedChart = () => {
   //     x1: 100,
   //     y1: 1,
 
-
-
-  
   const layout = {
     title: 'Anomaly Detection Plot',
     titlefont: { size: 20 },
@@ -270,39 +214,101 @@ const AdvancedChart = () => {
     autosize: true,
   }
 
+  async function load_shap_plot(event) {
+    event.preventDefault()
 
+    try {
+      const response = await fetch('http://222.121.66.49:8001/load_shap_plot', {
+        method: 'GET',
+      })
+      // console.log('test:', response)
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const result = await response.text()
+      // console.log('result:', result)
+
+      const shapPlotContainer = document.getElementById('shapPlotContainer')
+      shapPlotContainer.innerHTML = getHtmlElement(result) //html 요소만 잘라옴
+
+      addScriptToDom(result)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+
+  function getHtmlElement(text) {
+    // var scripts = ''
+    // var cleaned = text.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, function () {
+    //   scripts += arguments[1] + '\n'
+    //   return ''
+    // })
+    // return cleaned
+
+    return text.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, '')
+  }
+
+  function addScriptToDom(text) {
+    let scripts = ''
+    text.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, function () {
+      scripts += arguments[1] + '\n'
+    })
+
+    // console.log('window.execScript:', window.execScript)
+    // if (window.execScript) {
+    //   window.execScript(scripts)
+    //   console.log('hi')
+    // } else {
+
+    var head = document.getElementsByTagName('head')[0]
+    var scriptElement = document.createElement('script')
+
+    scriptElement.setAttribute('type', 'text/javascript')
+    scriptElement.innerText = scripts
+
+    head.appendChild(scriptElement)
+    head.removeChild(scriptElement)
+    // }
+  }
 
   return (
     <Box
       pt={{ base: '130px', md: '80px', xl: '80px' }}
-      style={{ position: 'relative', zIndex: 1000, width: '100%', height: '100%', useResizeHandler: 'true', responsive : 'true', autosize: 'true'}}
+      style={{
+        position: 'relative',
+        zIndex: 1000,
+        width: '100%',
+        height: '100%',
+        useResizeHandler: 'true',
+        responsive: 'true',
+        autosize: 'true',
+      }}
     >
       <div>
         {/* <h2>WebSocket Line Chart Example</h2>  */}
-        <Plot 
-          data={testData} 
-          layout={layout} 
-          useResizeHandler={true} 
-          responsive ={true} 
+        <Plot
+          data={testData}
+          layout={layout}
+          useResizeHandler={true}
+          responsive={true}
           autosize={true}
-          style={{width: '100%', height: '100%'}}   
-          />
+          style={{ width: '100%', height: '100%' }}
+        />
       </div>
-      
-      <div>
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>Shap result</div>
-        <img src= {imgURL} alt="shap"/>
-       
-        <div id="shapPlotContainer">
-        <button onClick={load_shap_plot}>Shap 플롯 로드</button>
-      
-        </div>
 
-        
-       
+      <div>
+        <div style={{ fontSize: '20px', marginTop: '20px', textAlign: 'center' }}>Shap Result</div>
+        {/* <img src= {imgURL} alt="shap"/> */}
+
+        <div
+          id="shapPlotContainer"
+          style={{ width: '100%', height: '150px', backgroundColor: 'white', paddingTop: '20px' }}
+        />
       </div>
 
       <Space direction="vertical">
+        <Button onClick={load_shap_plot}>Shap 플롯 로드</Button>
         <Switch
           style={{ width: 150 }}
           onClick={handleThreToggle}
@@ -318,7 +324,6 @@ const AdvancedChart = () => {
           defaultChecked
         />
       </Space>
-     
     </Box>
   )
 }

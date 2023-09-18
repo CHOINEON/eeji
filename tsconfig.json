@@ -27,6 +27,8 @@
 
   "compilerOptions": {
     "typeRoots": ["node_modules/@types", "src/types"],
+    "declaration":true,
+    "declarationDir": "./types",
     "target": "es2016",
     "lib": ["dom", "dom.iterable", "esnext", "es2015.iterable"],
     "allowJs": true,
@@ -56,6 +58,7 @@
       "@assets/*": ["./src/assetsassets/*"]
     },
   },
+  "typeRoots": ["./types", "./node_modules/@types"],
   "include": [
     "./src",
     "next-env.d.ts",

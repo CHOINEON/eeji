@@ -81,7 +81,7 @@ const ModelTest = (props: any) => {
               const reader = new FileReader()
               reader.onload = (ev) => {
                 const previewImage = String(ev.target?.result)
-                // console.log('previewImage:', previewImage)
+                console.log('previewImage:', previewImage)
                 setImgsrc(previewImage)
               }
               reader.readAsDataURL(myFile)
