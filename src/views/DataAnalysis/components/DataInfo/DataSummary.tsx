@@ -1,8 +1,10 @@
 import { Table, Typography, message } from 'antd'
 import { ColumnsType } from 'antd/es/table'
-import Title from 'antd/es/typography/Title'
 import React, { useEffect, useState } from 'react'
 import { dateTimeToString } from 'common/DateFunction'
+import { useRecoilValue } from 'recoil'
+import { uploadDataAtom, uploadFileInfoAtom } from 'views/DataAnalysis/store/base/atom'
+import styled from '@emotion/styled'
 
 interface DataType {
   name: string
@@ -11,6 +13,10 @@ interface DataType {
   startDate: string
   endDate: string
 }
+
+const DataSummaryContainer = styled.div`
+  margin-top: 30px;
+`
 
 const SummaryDataGrid = (props: any) => {
   const [data, setData] = useState([])
@@ -49,81 +55,27 @@ const SummaryDataGrid = (props: any) => {
   )
 }
 
-const DataSummary = (props: any) => {
-  const [messageApi, contextHolder] = message.useMessage()
-  const [summaryData, setSummaryData] = useState([])
+const DataSummary = () => {
   const { Title } = Typography
 
-  useEffect(() => {
-    // console.log('DataSummary props:', props.file)
+  const uploadData = useRecoilValue(uploadDataAtom)
+  const uploadFileInfo = useRecoilValue(uploadFileInfoAtom)
+  // const [visible, setVisible] = useState(false)
 
-    if (props.file) {
-      if (props.file.size <= 10485760) {
-        readFile(props.file)
-      } else {
-        messageApi.open({
-          type: 'error',
-          content: '업로드 가능 파일용량 초과(최대 10MB)',
-          duration: 1,
-          style: {
-            margin: 'auto',
-          },
-        })
-        setSummaryData([])
-      }
+  const [messageApi, contextHolder] = message.useMessage()
+  const [summaryData, setSummaryData] = useState([])
+
+  useEffect(() => {
+    if (uploadData.length > 0) {
+      // setVisible(true)
+      searchStartEndDate(uploadData)
     } else {
       setSummaryData([])
     }
-  }, [props])
+  }, [uploadData])
 
-  const readFile = (file: any) => {
-    console.log('readfile:', file)
-    console.log('type:', file.name.split('.', 2)[1])
-
-    const fileReader = new FileReader()
-
-    const fileFormat = file.name.split('.', 2)[1]
-    const acceptedFormats = ['csv', 'xls', 'xlsx']
-
-    if (file) {
-      if (acceptedFormats.includes(fileFormat)) {
-        fileReader.onload = function (event: any) {
-          const text = event.target.result
-          csvFileToArray(file.name, file.size, text)
-        }
-
-        fileReader.readAsText(file)
-      } else {
-        messageApi.open({
-          type: 'error',
-          content: '지원하지 않는 파일 유형입니다.',
-          duration: 1,
-          style: {
-            margin: 'auto',
-          },
-        })
-      }
-    }
-  }
-
-  const csvFileToArray = (name: string, size: number, string: string) => {
-    const csvHeader = string.slice(0, string.indexOf('\n')).split(',')
-    const csvRows = string.slice(string.indexOf('\n') + 1).split('\n')
-
-    const array = csvRows.map((item) => {
-      if (item != '') {
-        const values = item.split(',')
-        const obj = csvHeader.reduce((object: any, header, index) => {
-          object[header] = values[index]
-          return object
-        }, {})
-        return obj
-      }
-    })
-
-    console.log('array:', array)
-    //split하면서 마지막 행에 빈 값 들어있어서 자름
-    array.splice(array.length - 1)
+  const searchStartEndDate = (array: Array<any>) => {
+    console.log('searchStartEndDate:', Object.keys(array[0]))
 
     //min & max datetime 찾기
     const dateColumnName = Object.keys(array[0])[0]
@@ -148,8 +100,8 @@ const DataSummary = (props: any) => {
 
     summary.push({
       key: 1,
-      name: name,
-      size: Math.round(size / 1024),
+      name: uploadFileInfo.name,
+      size: Math.round(uploadFileInfo.size / 1024),
       rowCount: sortedAsc.length,
       colCount: Object.keys(sortedAsc[0]).length,
       startDate: dateTimeToString(start).length === 19 ? dateTimeToString(start) : '-',
@@ -161,14 +113,14 @@ const DataSummary = (props: any) => {
   }
 
   return (
-    <div style={{ marginTop: '30px' }}>
+    <DataSummaryContainer>
       {/* <p style={{ color: '#002D65', fontSize: '18px', float: 'left', width: '100%' }}>Data Summary</p> */}
       <Title level={4} style={{ color: '#002D65' }}>
         Data Summary
       </Title>
       {summaryData && <SummaryDataGrid data={summaryData} size="small" />}
       {contextHolder}
-    </div>
+    </DataSummaryContainer>
   )
 }
 

@@ -94,13 +94,13 @@ const routes = [
     icon: <Icon as={MdSettings} width="20px" height="20px" color="inherit" />,
     component: Configuration,
   },
-  {
-    name: 'Temp page',
-    layout: '/admin',
-    path: '/temp-page',
-    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
-    component: Temp,
-  },
+  // {
+  //   name: 'Temp page',
+  //   layout: '/admin',
+  //   path: '/temp-page',
+  //   icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+  //   component: Temp,
+  // },
 ]
 
 export default routes

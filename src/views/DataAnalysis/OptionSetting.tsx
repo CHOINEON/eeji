@@ -51,8 +51,8 @@ const LabelBox = styled.div`
 
 const { RangePicker } = DatePicker
 const modelOptions = [
-  { value: 'ineeji', label: 'INEEJI' },
-  { value: 'plsr', label: 'PLS' },
+  // { value: 'ineeji', label: 'INEEJI' },
+  { value: 'plsr', label: 'INEEJI' },
   { value: 'rfr', label: 'Random Forest' },
   { value: 'cnn1d', label: '1DCNN' },
   { value: 'mlp', label: 'MLP' },
@@ -65,6 +65,7 @@ const modelOptions = [
   { value: 'tstmodel', label: 'TSTMODEL' },
   { value: 'tftmodel', label: 'TFTMODEL' },
 ]
+//사용자가 모델 선택을 pls, rf => epoch은 비활성화
 
 const OptionSetting = () => {
   const [disabled, setDisabled] = useState(true)
@@ -315,10 +316,6 @@ const OptionSetting = () => {
                 {/* <Divider orientation="center"></Divider> */}
 
                 <Col span={24}>
-                  <LabelBox>epoch</LabelBox>
-                  <Input defaultValue="1000" disabled={disabled} />
-                </Col>
-                <Col span={24}>
                   <LabelBox>베이지안 탐색 횟수</LabelBox>
                   <InputNumber
                     style={{ width: '100%' }}
@@ -340,6 +337,10 @@ const OptionSetting = () => {
                     // defaultValue={selectedArr}
                   />
                 </Col>
+                <Col span={24}>
+                  <LabelBox>epoch</LabelBox>
+                  <Input defaultValue="1000" disabled={disabled} />
+                </Col>
               </Row>
             </div>
             <Row>
@@ -350,7 +351,7 @@ const OptionSetting = () => {
                   color: '#fff',
                   borderRadius: '100px',
                   width: '100%',
-                  marginTop: '10px',
+                  marginTop: '20px',
                 }}
               >
                 RUN

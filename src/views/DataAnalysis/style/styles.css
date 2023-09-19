@@ -14,23 +14,21 @@
   margin-bottom: 1rem;
 }
 
-.property-panel-section{
-  color:black;
+.property-panel-section {
+  color: black;
 }
-
-
 
 /**progress button**/
 
 @keyframes custom-rolling {
   0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
   100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
 
 template {
@@ -42,46 +40,42 @@ template {
   height: 16px;
   width: 16px;
 }
-  
+
 .template {
   -webkit-animation: custom-rolling 1.3s linear infinite;
   animation: custom-rolling 1.3s linear infinite;
 }
 
-.rounded-box{
+.rounded-box {
   background-color: white;
-  box-shadow: 0px 5px 20px #4338F733;
+  box-shadow: 0px 5px 20px #4338f733;
   border-radius: 18px;
   opacity: 1;
 }
 
-.title-md{
-  font-size:medium; 
-  font-weight:bold;
-  margin-left:10px;
+.title-md {
+  font-size: medium;
+  font-weight: bold;
+  margin-left: 10px;
 }
 
-.title-sm{
-  font-size:small; 
-  font-weight:bold;
-  margin-top: '20px' 
+.title-sm {
+  font-size: small;
+  font-weight: bold;
+  margin-top: '20px';
 }
 
-
-.contents{
-  margin-left:12px;
+.contents {
+  margin-left: 12px;
 }
-
 
 /*ag grid*/
 .ag-theme-alpine {
-
   /* --ag-header-height: 30px; */
   /* --ag-header-foreground-color: white; */
   /* --ag-header-background-color: black; */
   /* --ag-header-cell-hover-background-color: rgb(80, 40, 140);
   --ag-header-cell-moving-background-color: rgb(80, 40, 140);  */
-  
 }
 
 /* .ag-theme-alpine .ag-header-group-cell {
@@ -96,14 +90,14 @@ template {
 
 .ag-root-wrapper {
   background-color: white;
-  box-shadow: 0px 5px 20px #4338F733;
+  box-shadow: 0px 5px 20px #4338f733;
   border-radius: 18px;
   opacity: 1;
-  --ag-borders:none;
+  --ag-borders: none;
 }
 
-.ant-tag-checkable-checked{
-  background-color:#4338f7
+.ant-tag-checkable-checked {
+  background-color: #4338f7;
 }
 
 .example {
@@ -115,10 +109,8 @@ template {
   border-radius: 4px;
 }
 
-
-
 .ant-modal-root .ant-modal-mask {
-  display:block;  /*hmid에 none처리 되어있음*/
+  display: block; /*hmid에 none처리 되어있음*/
   position: fixed;
   top: 0;
   inset-inline-end: 0;
@@ -126,59 +118,65 @@ template {
   inset-inline-start: 0;
   z-index: 1000;
   height: 100%;
-  background-color: rgba(0,0,0,.45);
+  background-color: rgba(0, 0, 0, 0.45);
 }
 
-.w-100{
-  width:100%;
+.w-100 {
+  width: 100%;
 }
 
-.h-100{
-  height:100%;
+.h-100 {
+  height: 100%;
 }
 
-.h-90{
-  height:90%;
+.h-90 {
+  height: 90%;
 }
 
-.h-10{
-  height:10%;
+.h-10 {
+  height: 10%;
 }
 
-.d-flex{
-  display:flex;
+.d-flex {
+  display: flex;
 }
 
-.flex-container{
-  display:flex;
-  justify-content:flex-start;
-  flex-wrap:wrap;
+.flex-container {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
-.sub-title{
+.sub-title {
   color: '#002D65';
-  font-size: '23px'; 
+  font-size: '23px';
   font-weight: 'bold';
   float: 'left';
   width: '100%';
 }
 
-.ant-modal-title{
+.ant-modal-title {
   font-size: 23px !important;
-  color:#002D65 !important;
+  color: #002d65 !important;
   font-weight: 600 !important;
 }
 
-.rounded-corners{
+.rounded-corners {
   border-radius: 10px;
 }
 
-.ant-btn{
-  border-radius:10px
+.ant-btn {
+  border-radius: 10px;
 }
 
-.ant-btn:hover{
-  background-color:#fff !important;
-  border:1px solid #4338F7 !important;
-  color:#4338F7 !important;
+.ant-btn:hover {
+  background-color: #fff !important;
+  border: 1px solid #4338f7 !important;
+  color: #4338f7 !important;
+}
+
+.custom-input {
+  background-color: '#fff' !important;
+  border: '1px solid #A3AFCF' !important;
+  border-radius: '10px';
 }
