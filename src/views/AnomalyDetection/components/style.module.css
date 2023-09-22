@@ -1,0 +1,55 @@
+.panelContainer{
+display : flex;
+/* grid-template-columns: 1fr 1fr 1fr; */
+justify-content: center;
+
+width: auto;
+height:auto
+}
+
+.controlPanel{
+height : 220px;
+
+display : grid;
+grid-template-rows: 1fr 1fr 1fr 1fr;
+justify-content: center;
+align-items: center;
+background-color: #fff;
+margin-top : 10px;
+max-width: 100%;
+
+width: auto;
+height:auto
+}
+.slider{
+    display : grid;
+    grid-template-columns: 1fr 1fr ;  
+    align-items: center;
+    justify-items: center; 
+}
+
+    .SliderContainer{
+    /* border : 1px solid #000; */
+    /* height : 150px;
+    width : 500px; */
+    padding : 1rem;
+    margin-top : 10px;
+    background-color: #fff;
+    justify-content: center;
+    align-items: center;
+    vertical-align: center;
+    margin-left : 10px;
+    
+    display : flex;
+    flex-direction : column;
+    /* responsive: true;
+    useResizeHandler: true;
+    auto-size: true; */
+    /* width: '100%';
+    height: '100%'; */
+    max-width: 100%;
+    
+    width: auto;
+    height:auto
+    }
+

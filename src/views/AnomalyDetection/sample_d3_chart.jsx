@@ -2,49 +2,65 @@
 import { Box } from '@chakra-ui/react'
 import React, { useState, useEffect, useRef } from 'react'
 import Plot from 'react-plotly.js'
-import { Switch, Space, Button } from 'antd'
-// import window.SHAP from 'bundle.js'
+import { Switch, Space, Button, Col, InputNumber, Row, Slider } from 'antd'
+import { Checkbox } from 'antd'
+import styled from 'styled-components'
+import FeatureSlider from './components/Slider'
+import CSS from './components/style.module.css'
+import { useRecoilState } from 'recoil'
+import { sliderValueState } from './atom'
+import axios from 'axios'
+
+const onChange = (e) => {
+  console.log(`checked = ${e.target.checked}`)
+}
 
 const AdvancedChart = () => {
-  //새로운 주소로 바뀔 예정
   const originURL = 'ws://222.121.66.49:8001/ws/web'
-  const imgURL = 'http://222.121.66.49:8000/static/shap.png'
-  // const load_shapURL =  'http://222.121.66.49:8001/load_shap_plot'
-  // const [shapData, setShapData] = useState([]);
-
   /* managing the states of incoming data */
   const [socketData, setSocketData] = useState({})
   const [chartData, setChartData] = useState([])
   const [index, setIndex] = useState([])
-  // const [isAnomaly, setIsAnomaly] = useState([])
-
   const [dataArr, setDataArr] = useState([])
   const [testData, setTestData] = useState([])
   const [anomalyScoreArr, setAnomalyScoreArr] = useState([])
   const [thresholdArr, setThresholdArr] = useState([])
-  // const [isAnomalyArr, setIsAnomalyArr] = useState([])
+  // Control panel을 위한 useState
+  const [indexSize, setIndexSize] = useState([])
+  const [price, setPrice] = useState([])
+  const [volume, setVolume] = useState([])
+  const [clickedPoint, setClickedPoint] = useState({ x: null, y: null })
 
+  const handleChartClick = (data) => {
+    for (const point of data.points) {
+      const clickedXvalue = point.x
+      const clickedYvalue = point.y
+      console.log('클릭한 포인트 (내부):', clickedXvalue, clickedYvalue)
+      setClickedPoint({ clickedXvalue, clickedYvalue })
+    }
+  }
   useEffect(() => {
     if (socketData.data) {
       setChartData(socketData.data)
-      // console.log('data:', socketData.data[0][0])
-
       setDataArr((prev) => {
         return [...prev, socketData.data[0][0]]
       })
-
-      // console.log('dataArr:', dataArr)
       setIndex((prev) => {
         return [...prev, socketData.index[0]]
       })
       setAnomalyScoreArr((prev) => {
         return [...prev, socketData.anomaly_pred[0]]
       })
-
       setThresholdArr((prev) => {
         return [...prev, socketData.thr[0]]
       })
-
+      if (Array.isArray(socketData.feature_names) && socketData.feature_names.length > 0) {
+        // 배열의 첫 번째 요소에 접근
+        setPrice(socketData.feature_names[0])
+        setVolume(socketData.feature_names[1])
+      } else {
+      }
+      setIndexSize(socketData.index_size)
       const plotData = [
         {
           x: index,
@@ -68,7 +84,6 @@ const AdvancedChart = () => {
           },
           mode: 'lines',
           yaxis: 'y2',
-
           visible: isVisible,
           hovertemplate: '<b>Anomaly Score</b><br>Index: %{x}<br>Score: %{y}',
         },
@@ -83,37 +98,15 @@ const AdvancedChart = () => {
           },
           yaxis: 'y2',
           visible: yesVisible,
-
           hovertemplate: '<b>Threshold</b><br>Index: %{x}<br>Threshold: %{y}',
         },
       ]
       setTestData(plotData)
     }
-
     // else (socketData.data[0][0]//T가 매우 클 경우
     //  ){
-
     // }
   }, [socketData])
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(load_shapURL);
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! Status: ${response.status}`);
-  //       }
-  //       const data = await response.json();
-  //       setShapData(data); // Assuming data is an array of image paths
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
-
-  //   // Call the fetchData function when the component mounts
-  //   fetchData();
-  //   console.log("shapData:", shapData)
-  // }, []);
 
   /*add timestamp*/
   useEffect(() => {
@@ -123,11 +116,9 @@ const AdvancedChart = () => {
     ws.onopen = () => {
       console.log(`WebSocket connection`)
     }
-
     /*parsing the incoming data*/
     ws.onmessage = (message) => {
       const dataString = message.data.trim()
-
       try {
         const dataObj = JSON.parse(dataString)
         setSocketData(dataObj)
@@ -135,7 +126,6 @@ const AdvancedChart = () => {
         console.error('JSON parsing error:', error)
       }
     }
-
     ws.onclose = (event) => {
       if (event.wasClean) {
         console.log(`WebSocket connection closed unexpectedly`)
@@ -148,7 +138,7 @@ const AdvancedChart = () => {
     }
   }, [])
 
-  //Toggle switch function
+  //Toggle switch
   const [isVisible, setIsVisible] = useState(true)
   const handleScoreToggle = () => {
     setIsVisible(!isVisible)
@@ -157,30 +147,11 @@ const AdvancedChart = () => {
   const handleThreToggle = () => {
     setYesVisible(!yesVisible)
   }
-
   // const colors = isAnomaly.map(() => {
   //   if (isAnomaly == 1) {
   //     return 'black'
   //   } else return 'pink'
   // })
-
-  // const showAnomaly = isAnomalyArr.map(() => {
-  //   if (isAnomalyArr == true) {
-  //     return index
-  //   }
-  //   else return
-  // })
-
-  // const highlightAnomaly = [
-  //   {
-  //     type: 'rect',
-  //     xref: 'x',
-  //     yref: 'paper',
-  //     x0: 400,
-  //     y0:2,
-  //     x1: 100,
-  //     y1: 1,
-
   const layout = {
     title: 'Anomaly Detection Plot',
     titlefont: { size: 20 },
@@ -201,8 +172,6 @@ const AdvancedChart = () => {
       side: 'right',
       zeroline: false,
     },
-    // width: 1900,
-    // height: 800,
     margin: {
       t: 50,
       b: 80,
@@ -227,7 +196,6 @@ const AdvancedChart = () => {
       }
 
       const result = await response.text()
-      // console.log('result:', result)
 
       const shapPlotContainer = document.getElementById('shapPlotContainer')
       shapPlotContainer.innerHTML = getHtmlElement(result) //html 요소만 잘라옴
@@ -262,14 +230,38 @@ const AdvancedChart = () => {
     // } else {
 
     var head = document.getElementsByTagName('head')[0]
-    var scriptElement = document.createElement('script')
+    var scriptElement = document.createElement('script') //public/index
 
     scriptElement.setAttribute('type', 'text/javascript')
     scriptElement.innerText = scripts
 
     head.appendChild(scriptElement)
     head.removeChild(scriptElement)
-    // }
+  }
+
+  const [sliderValue, setSliderValue] = useRecoilState(sliderValueState)
+
+  const handleClick = () => {
+    // "revised_values": [
+    //   [
+    //     1,
+    //     2
+    //   ]
+    // ]
+
+    const param = {
+      revised_values: [[sliderValue.price, sliderValue.volume]],
+    }
+
+    console.log('param;', param)
+    axios
+      .post('http://222.121.66.49:8001/post_new_input', param)
+      .then(function (response) {
+        console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
   }
 
   return (
@@ -286,7 +278,6 @@ const AdvancedChart = () => {
       }}
     >
       <div>
-        {/* <h2>WebSocket Line Chart Example</h2>  */}
         <Plot
           data={testData}
           layout={layout}
@@ -294,13 +285,34 @@ const AdvancedChart = () => {
           responsive={true}
           autosize={true}
           style={{ width: '100%', height: '100%' }}
+          config={{ displayModeBar: true }}
+          onClick={handleChartClick}
         />
       </div>
-
+      <div className={CSS.panelContainer}>
+        <div
+          style={{ responsive: true, useResizeHandler: true, autosize: true, width: '100%' }}
+          id="ControlPanel"
+          className={CSS.controlPanel}
+        >
+          Control Panel
+          <h1>
+            Selected Data x: {[clickedPoint.clickedXvalue, clickedPoint.clickedYvalue]} y:{[clickedPoint.clickedYvalue]}
+          </h1>
+          <h1>Features</h1>
+          <div>
+            <Checkbox onChange={onChange}>{price}</Checkbox>
+          </div>
+          <div>
+            <Checkbox onChange={onChange}>{volume}</Checkbox>
+          </div>
+        </div>
+        <FeatureSlider clickedPoint={clickedPoint} />
+        <Button onClick={handleClick}> click</Button>
+        <div className="index"> </div>
+      </div>
       <div>
         <div style={{ fontSize: '20px', marginTop: '20px', textAlign: 'center' }}>Shap Result</div>
-        {/* <img src= {imgURL} alt="shap"/> */}
-
         <div
           id="shapPlotContainer"
           style={{ width: '100%', height: '150px', backgroundColor: 'white', paddingTop: '20px' }}
