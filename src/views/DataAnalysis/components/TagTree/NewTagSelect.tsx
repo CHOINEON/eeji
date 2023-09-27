@@ -15,7 +15,7 @@ interface NewTagSelectProps {
   type: string
   title?: string
   style?: any
-  onSelect: any
+  onSelect?: any
   onDeselect?: any //only for multiple selection
   loading?: boolean
   selectOptions?: any
@@ -33,13 +33,14 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
 
   //Update "options" in <Select> whenever feature selected
   useEffect(() => {
+    // console.log('usedVariable:', usedVariable)
     if (usedVariable && usedVariable.length > 0) {
       if (type === 'y') {
         const leftItems = usedVariable.filter((item) => item.category !== 'x').map((item) => item.value)
-        setOptions(variableList[0].options.filter((x: any) => leftItems.includes(x.value)))
+        setOptions(variableList.filter((x: any) => leftItems.includes(x.value)))
       } else {
         const leftItems = usedVariable.filter((item) => item.category !== 'y').map((item) => item.value)
-        setOptions(variableList[0].options.filter((x: any) => leftItems.includes(x.value)))
+        setOptions(variableList.filter((x: any) => leftItems.includes(x.value)))
       }
     }
   }, [usedVariable])
@@ -71,9 +72,7 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
 
   return (
     <div style={style}>
-      <Typography variant="subtitle2" gutterBottom marginLeft={1}>
-        {title}
-      </Typography>
+      <Typography variant="subtitle2">{title}</Typography>
       <Select
         style={{ width: '100%' }}
         id={selectionType}
@@ -89,7 +88,8 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
         onChange={handleChange}
         onSelect={handleSelect}
         onDeselect={handleDeselect}
-        maxTagCount="responsive"
+        // maxTagCount="responsive"
+
         // filterSort={(optionA, optionB) =>
         //   (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
         // }

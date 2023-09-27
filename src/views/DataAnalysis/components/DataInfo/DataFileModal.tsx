@@ -3,17 +3,19 @@ import { Button, Modal, Spin } from 'antd'
 import { List, Select, Space, Typography } from 'antd'
 import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { dataFileStore, dataSetStore, stepCountStore } from 'views/DataAnalysis/store/atom'
+import { dataFileStore, stepCountStore } from 'views/DataAnalysis/store/atom'
 import { usedVariableStore, variableStore } from 'views/DataAnalysis/store/variable/atom'
 import { listModalAtom } from 'views/DataAnalysis/store/modal/atom'
+import { selectedDataState } from 'views/DataAnalysis/store/base/atom'
 
 const { Option } = Select
 
+/** 파일 1개만 처리하기로 하면서 리스트 필요 없어짐(09.26) */
 const DataFileModal = (props: any) => {
   // const { modalOpen, onClose } = props
   const user_id = localStorage.getItem('userId')
 
-  const [selectedDataSet, setSelectedDataSet] = useRecoilState(dataSetStore)
+  const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
   const [fileListOpen, setFileListOpen] = useRecoilState(listModalAtom)
 
   const setActiveStep = useSetRecoilState(stepCountStore)
@@ -31,7 +33,7 @@ const DataFileModal = (props: any) => {
 
   useEffect(() => {
     fetchIncludedFileList()
-  }, [selectedDataSet])
+  }, [selectedData])
 
   const handleOk = () => {
     setFileListOpen(false)
@@ -43,9 +45,9 @@ const DataFileModal = (props: any) => {
 
   const fetchIncludedFileList = () => {
     axios
-      .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset/file?ds_id=' + selectedDataSet + '&user_id=' + user_id)
+      .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset/file?ds_id=' + selectedData.id + '&user_id=' + user_id)
       .then((response) => {
-        // console.log('/api/dataset/file:', response)
+        console.log('/api/dataset/file:', response)
         setFileList(response.data)
       })
       .catch((error) => console.log('/api/dataset/file error:', error))
@@ -84,7 +86,7 @@ const DataFileModal = (props: any) => {
   const fetchTaglistData = (fileName: string) => {
     const param = [
       {
-        id: selectedDataSet,
+        id: selectedData.id,
         file_name: fileName,
         user_id: user_id,
       },

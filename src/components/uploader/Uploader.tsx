@@ -117,6 +117,8 @@ const Uploader = (props: any) => {
     } else if (e.type === 'change') {
       setFile(e.target.files[0])
     }
+
+    e.target.value = '' //실제 data가 변경될 경우에만 동작하기 때문에 발생하는 버그 방지
   }
 
   //triggers when file is selected with click

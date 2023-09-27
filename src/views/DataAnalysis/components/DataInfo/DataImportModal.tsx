@@ -1,42 +1,62 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Input, Modal, Row, Typography, message } from 'antd'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import Uploader from 'components/uploader/Uploader'
-import axios from 'axios'
 import DataSummary from './DataSummary'
 import DataProperties from './DataProperties'
-import { optionListState, uploadDataAtom, uploadFileInfoAtom } from 'views/DataAnalysis/store/base/atom'
+import {
+  dataPropertyState,
+  summaryFetchState,
+  // uploadFileInfoAtom,
+  uploadedDataState,
+  userInfoState,
+} from 'views/DataAnalysis/store/base/atom'
 import { dateTimeToString } from 'common/DateFunction'
+import styled from '@emotion/styled'
+import axios from 'axios'
+
+const UploadButton = styled.button<{ visible: boolean }>`
+  width: 100%;
+  height: 30px;
+  display: ${(props: any) => (props.visible ? 'block' : 'none')};
+`
 
 const DataImportModal = (props: any) => {
-  const [inputOption, setInputOption] = useRecoilState(optionListState)
-
-  const [uploadData, setUploadData] = useRecoilState(uploadDataAtom)
-  const [uploadFileInfo, setUploadFileInfo] = useRecoilState(uploadFileInfoAtom)
-
-  const [dataFile, setDataFile] = useState(null)
-  const [saving, setSaving] = useState(false)
-  const [messageApi, contextHolder] = message.useMessage()
+  const userInfo = useRecoilValue(userInfoState)
+  const [summaryFetch, setSummaryFetch] = useRecoilState(summaryFetchState)
+  const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
+  const resetUploadFileState = useResetRecoilState(uploadedDataState)
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
+  const inputOption = useRecoilValue(dataPropertyState)
+
+  const [dataArray, setDataArray] = useState([])
+  const [buttonVisible, setButtonVisible] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  const [messageApi, contextHolder] = message.useMessage()
 
   useEffect(() => {
     if (!importOpen) {
       //선택 초기화
-      clearSelectedFile()
+      resetUploadFileState()
     }
   }, [importOpen])
 
+  useEffect(() => {
+    if (inputOption && inputOption.date_col != '') setButtonVisible(true)
+  }, [inputOption])
+
   const handleSelectedFile = (file: any) => {
-    setDataFile(file)
     if (file) {
-      if (file.size <= 10485760) {
+      if (file.size <= 209715200) {
         readFile(file)
-        setUploadFileInfo(file)
+        setUploadedData({ ...uploadedData, file: file, name: file.name, content: [] })
+        // setUploadFileInfo(file)
       } else {
         messageApi.open({
           type: 'error',
-          content: '업로드 가능 파일용량 초과(최대 10MB)',
+          content: '업로드 가능 파일용량 초과(최대 200MB)',
           duration: 1,
           style: {
             margin: 'auto',
@@ -46,10 +66,9 @@ const DataImportModal = (props: any) => {
     }
   }
 
-  const clearSelectedFile = () => {
-    setUploadData([])
-    setUploadFileInfo({ name: '', size: 0, type: '' })
-  }
+  useEffect(() => {
+    setUploadedData({ ...uploadedData, content: dataArray })
+  }, [dataArray])
 
   const readFile = (file: any) => {
     // console.log('readfile:', file)
@@ -97,41 +116,38 @@ const DataImportModal = (props: any) => {
     })
 
     array.splice(array.length - 1) //split하면서 마지막 행에 빈 값 들어있어서 자름
-    setUploadData(array)
+    setDataArray(array)
+    // setUploadedData({ ...uploadedData, content: array })
     // console.log('array:', array)
   }
 
   const handleSave = () => {
+    const dataFile = uploadedData.file
     // console.log('dataFile::', dataFile)
 
-    if (dataFile && dataFile.size > 10485760) {
+    if (dataFile && dataFile.size > 209715200) {
       messageApi.open({
         type: 'error',
-        content: '10MB 이상의 파일은 업로드 할 수 없습니다.',
+        content: '200MB 이상의 파일은 업로드 할 수 없습니다.',
         duration: 1,
         style: {
           margin: 'auto',
         },
       })
     } else {
-      const url = process.env.REACT_APP_API_SERVER_URL + '/api/upload'
+      const url = process.env.REACT_APP_NEW_API_SERVER_URL + `/api/save/${userInfo.user_id}?user_id=${userInfo.user_id}`
       const config = {
         headers: {
-          'content-type': 'multipart/form-data',
+          'content-type': 'application/x-www-form-urlencoded',
         },
       }
-
       if (dataFile) {
         const formData = new FormData()
-        const uploadFile = dataFile
 
-        formData.append('user_id', localStorage.getItem('userId'))
-        formData.append('com_id', localStorage.getItem('companyId'))
-        formData.append('name', inputOption.name)
+        formData.append('com_id', userInfo.com_id)
         formData.append('date_col', inputOption.date_col)
-        formData.append('files', uploadFile)
+        formData.append('name', inputOption.name)
         formData.append('desc', inputOption.desc.length === 0 ? null : inputOption.desc)
-
         // for (const [name, value] of formData) {
         //   console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
         // }
@@ -146,13 +162,16 @@ const DataImportModal = (props: any) => {
             },
           })
         } else {
-          setSaving(true)
-
+          setSummaryFetch('requested')
+          // setSaving(true)
           axios
             .post(url, formData, config)
             .then((response) => {
               if (response.status === 200) {
-                setSaving(false)
+                setSummaryFetch('completed')
+                // setSaving(false)
+                console.log('response:', response.data['1'])
+                // saveDataSummary(response.data['1'])
                 messageApi.open({
                   type: 'success',
                   content: '저장 완료!',
@@ -165,6 +184,8 @@ const DataImportModal = (props: any) => {
               }
             })
             .catch((error) => {
+              setSummaryFetch('failed')
+
               messageApi.open({
                 type: 'error',
                 content: error,
@@ -173,7 +194,7 @@ const DataImportModal = (props: any) => {
                   margin: 'auto',
                 },
               })
-              setSaving(false)
+              // setSaving(false)
               setImportOpen(false)
             })
         }
@@ -187,7 +208,7 @@ const DataImportModal = (props: any) => {
 
   const handleCancelClick = () => {
     // console.log('param:', param)
-    clearSelectedFile()
+    resetUploadFileState()
   }
 
   return (
@@ -206,21 +227,22 @@ const DataImportModal = (props: any) => {
         <DataSummary />
         <div style={{ marginTop: '20px', textAlign: 'right' }}>
           <div style={{ width: '40%', display: 'inline-block' }}>
-            <Button
+            {/* <Button
               type="default"
               onClick={handleCancel}
               style={{ width: '100px', height: '30px', borderRadius: '10px', marginRight: '10px' }}
             >
               CANCEL
-            </Button>
-            <Button
-              type="primary"
-              loading={saving}
+            </Button> */}
+            <UploadButton
+              className="custom-btn custom-btn-primary"
+              // type="primary"
+              // loading={saving}
+              visible={buttonVisible}
               onClick={handleSave}
-              style={{ width: '100px', height: '30px', borderRadius: '10px' }}
             >
-              Ok
-            </Button>
+              Upload
+            </UploadButton>
           </div>
         </div>
       </Modal>

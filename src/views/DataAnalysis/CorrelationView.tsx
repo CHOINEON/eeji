@@ -1,16 +1,16 @@
 import styled from '@emotion/styled'
 import React, { useState, useEffect, useRef } from 'react'
-import { DatePicker, Space, Button, Switch, message } from 'antd'
+import { DatePicker, Space, Button, Switch, message, notification } from 'antd'
 import ItemBox from './components/DataEntry/ItemBox'
 import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { dataFileStore, dataSetStore, stepCountStore } from './store/atom'
+import { dataFileStore, stepCountStore } from './store/atom'
 import { selectedVarStoreX, selectedVarStoreY, usedVariableStore, variableStore } from './store/variable/atom'
 import NewTagSelect from './components/TagTree/NewTagSelect'
 import Plot from 'react-plotly.js'
 import RadioButtonGroup from './components/DataEntry/RadioButtonGroup'
 import { ArrowRightOutlined, DotChartOutlined } from '@ant-design/icons'
-import { startEndDateAtom } from './store/base/atom'
+import { selectedDataState, startEndDateAtom } from './store/base/atom'
 import dayjs from 'dayjs'
 
 const CorrelationViewContainer = styled.div`
@@ -37,14 +37,18 @@ const PlotWrapper = styled.div`
   width: 62%;
 `
 
+const Context = React.createContext({ name: 'Default' })
+
 const CorrelationView = () => {
   const { RangePicker } = DatePicker
-  const [messageApi, contextHolder] = message.useMessage()
+  // const [messageApi, contextHolder] = message.useMessage()
+  const [api, contextHolder] = notification.useNotification()
 
   const setActiveStep = useSetRecoilState(stepCountStore)
-  const selectedDataset = useRecoilState(dataSetStore)
-  const selectedFile = useRecoilState(dataFileStore)
+  // const selectedDataset = useRecoilState(dataSetStore)
+  // const selectedFile = useRecoilState(dataFileStore)
   const [selectedDates, setSelectedDates] = useState()
+  const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
 
   const [plotData, setPlotData] = useState()
   const [plotImg, setPlotImg] = useState()
@@ -71,23 +75,34 @@ const CorrelationView = () => {
 
   useEffect(() => {
     setLoading(false)
-
-    if (selectedDataset[0] == '' || selectedFile[0] == '') {
-      messageApi.open({
-        type: 'error',
-        content: '파일이 선택되지 않았습니다.',
-        duration: 1,
-        style: {
-          margin: 'auto',
-        },
-      })
-      // setActiveStep(0)
-    }
+    openNotification()
+    // if (selectedData.id === '') {
+    //   messageApi.open({
+    //     type: 'error',
+    //     content: '파일이 선택되지 않았습니다.',
+    //     duration: 1,
+    //     style: {
+    //       margin: 'auto',
+    //     },
+    //   })
+    //   setActiveStep(0)
+    // }
   }, [])
 
   useEffect(() => {
     setDefaultOption(variableList)
   }, [variableList])
+
+  const openNotification = () => {
+    api.info({
+      message: `Notification`,
+      description: (
+        <Context.Consumer>
+          {({ name }) => '현재 서버 이전 중으로 일부 기능의 동작이 원활하지 않습니다.'}
+        </Context.Consumer>
+      ),
+    })
+  }
 
   const fetchCorrelationPlot = async () => {
     setLoading(true)
@@ -96,15 +111,15 @@ const CorrelationView = () => {
 
     const param = {
       response_type: 'json', //DB에서 encoded image or json 중 알아서 보내주기로
-      dataset_id: selectedDataset[0],
-      file_nm: selectedFile[0],
+      dataset_id: selectedData.id,
+      file_nm: selectedData.name,
       scaling_method: scalingOption,
       x_value: featureX,
       y_value: featureY,
       user_id: localStorage.getItem('userId'),
     }
 
-    console.log('param:', param)
+    // console.log('param:', param)
 
     await axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/corrplot/cplot', param)
@@ -129,14 +144,14 @@ const CorrelationView = () => {
       })
       .catch((error) => {
         setLoading(false)
-        messageApi.open({
-          type: 'error',
-          content: '관리자에게 문의하세요',
-          duration: 1,
-          style: {
-            margin: 'auto',
-          },
-        })
+        // messageApi.open({
+        //   type: 'error',
+        //   content: '관리자에게 문의하세요',
+        //   duration: 1,
+        //   style: {
+        //     margin: 'auto',
+        //   },
+        // })
         console.log(error)
       })
 
@@ -159,14 +174,14 @@ const CorrelationView = () => {
 
   const handleSearchClick = () => {
     if (featureX.length === 0 || featureY.length === 0) {
-      messageApi.open({
-        type: 'error',
-        content: '변수 X, Y를 선택하십시오.',
-        duration: 1,
-        style: {
-          margin: 'auto',
-        },
-      })
+      // messageApi.open({
+      //   type: 'error',
+      //   content: '변수 X, Y를 선택하십시오.',
+      //   duration: 1,
+      //   style: {
+      //     margin: 'auto',
+      //   },
+      // })
     } else {
       fetchCorrelationPlot()
     }

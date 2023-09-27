@@ -1,9 +1,8 @@
-import { Table, Typography, message } from 'antd'
+import { Spin, Table, Typography, message } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import React, { useEffect, useState } from 'react'
-import { dateTimeToString } from 'common/DateFunction'
-import { useRecoilValue } from 'recoil'
-import { uploadDataAtom, uploadFileInfoAtom } from 'views/DataAnalysis/store/base/atom'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { dataPropertyState, summaryFetchState, uploadedDataState } from 'views/DataAnalysis/store/base/atom'
 import styled from '@emotion/styled'
 
 interface DataType {
@@ -14,8 +13,9 @@ interface DataType {
   endDate: string
 }
 
-const DataSummaryContainer = styled.div`
+const DataSummaryContainer = styled.div<{ visible: boolean }>`
   margin-top: 30px;
+  display: ${(props: any) => (props.visible ? 'block' : 'none')};
 `
 
 const SummaryDataGrid = (props: any) => {
@@ -58,67 +58,98 @@ const SummaryDataGrid = (props: any) => {
 const DataSummary = () => {
   const { Title } = Typography
 
-  const uploadData = useRecoilValue(uploadDataAtom)
-  const uploadFileInfo = useRecoilValue(uploadFileInfoAtom)
-  // const [visible, setVisible] = useState(false)
+  const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
+  const [summaryFetch, setSummaryFetch] = useRecoilState(summaryFetchState)
+  const inputOption = useRecoilValue(dataPropertyState)
 
-  const [messageApi, contextHolder] = message.useMessage()
+  const [spinning, setSpinning] = useState(false)
+  const [visible, setVisible] = useState(false)
   const [summaryData, setSummaryData] = useState([])
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   useEffect(() => {
-    if (uploadData.length > 0) {
-      // setVisible(true)
-      searchStartEndDate(uploadData)
+    // console.log('summaryFetch:', summaryFetch)
+
+    if (summaryFetch === 'requested' || summaryFetch === 'completed') {
+      setVisible(true)
+      setSpinning(true)
     } else {
-      setSummaryData([])
+      setVisible(false)
     }
-  }, [uploadData])
+  }, [summaryFetch])
 
-  const searchStartEndDate = (array: Array<any>) => {
-    console.log('searchStartEndDate:', Object.keys(array[0]))
-
-    //min & max datetime 찾기
-    const dateColumnName = Object.keys(array[0])[0]
-    const newArr = array.map((obj) => {
-      return { ...obj, dateTime: new Date(obj[dateColumnName]) } //0번째 컬럼 : 날짜
-    })
-
-    // console.log('newArr:', newArr)
-
-    //Sort in Ascending order(low to high)
-    //https://bobbyhadz.com/blog/javascript-sort-array-of-objects-by-date-property
-    const sortedAsc = newArr.sort((a, b) => Number(a.dateTime) - Number(b.dateTime))
-    // console.log('sortedAsc:', sortedAsc)
+  useEffect(() => {
+    // console.log('uploadedData:', uploadedData)
 
     const summary = []
-    const lengthOfArray = array.length
-
-    const start = sortedAsc[0].dateTime
-    const end = sortedAsc[lengthOfArray - 1].dateTime
-    // console.log('start:', dateTimeToString(start).length)
-    // console.log('end:', typeof dateTimeToString(end))
 
     summary.push({
       key: 1,
-      name: uploadFileInfo.name,
-      size: Math.round(uploadFileInfo.size / 1024),
-      rowCount: sortedAsc.length,
-      colCount: Object.keys(sortedAsc[0]).length,
-      startDate: dateTimeToString(start).length === 19 ? dateTimeToString(start) : '-',
-      endDate: dateTimeToString(end).length === 19 ? dateTimeToString(end) : '-',
+      name: uploadedData.name,
+      size: Math.round(uploadedData.file ? uploadedData.file.size / 1024 : 0),
+      rowCount: uploadedData.rowCount,
+      colCount: uploadedData.colCount,
+      startDate: uploadedData.startDate,
+      endDate: uploadedData.endDate,
     })
 
     // console.log('summary:', summary)
     setSummaryData(summary)
+    setSpinning(false)
+  }, [uploadedData])
+
+  const searchStartEndDate = (array: Array<any>) => {
+    //min & max datetime 찾기
+    // const dateColumnName = Object.keys(array[0])[0]
+    const dateColumnName = inputOption.date_col
+
+    const newArr = array.map((obj) => {
+      return { ...obj, dateTime: new Date(obj[dateColumnName]) } //날짜컬럼(사용자가 선택한 값)
+    })
+
+    if (!newArr[0].dateTime.getTime()) {
+      alert('날짜 컬럼이 아닙니다.')
+    }
+    // console.log('newArr[0].dateTime:', newArr[0].dateTime)
+    // console.log('test:', isValidDate(newArr[0].dateTime))
+
+    //Sort in Ascending order(low to high)
+    //https://bobbyhadz.com/blog/javascript-sort-array-of-objects-by-date-property
+    // const sortedAsc = newArr.sort((a, b) => Number(a.dateTime) - Number(b.dateTime))
+    // console.log('sortedAsc:', sortedAsc)
+
+    // console.log('-----test:', Object.prototype.toString.call(sortedAsc[0].dateTime))
+
+    // const summary = []
+    // const lengthOfArray = array.length
+
+    // const start = sortedAsc[0].dateTime
+    // const end = sortedAsc[lengthOfArray - 1].dateTime
+    // console.log('start:', dateTimeToString(start).length)
+    // console.log('end:', typeof end)
+
+    // summary.push({
+    //   key: 1,
+    //   name: uploadFileInfo.name,
+    //   size: Math.round(uploadFileInfo.size / 1024),
+    //   rowCount: sortedAsc.length,
+    //   colCount: Object.keys(sortedAsc[0]).length,
+    //   startDate: dateTimeToString(start).length === 19 ? dateTimeToString(start) : '-',
+    //   endDate: dateTimeToString(end).length === 19 ? dateTimeToString(end) : '-',
+    // })
+
+    // console.log('summary:', summary)
+    // setSummaryData(summary)
   }
 
   return (
-    <DataSummaryContainer>
+    <DataSummaryContainer visible={visible}>
       {/* <p style={{ color: '#002D65', fontSize: '18px', float: 'left', width: '100%' }}>Data Summary</p> */}
       <Title level={4} style={{ color: '#002D65' }}>
         Data Summary
       </Title>
-      {summaryData && <SummaryDataGrid data={summaryData} size="small" />}
+      <Spin spinning={spinning}> {summaryData && <SummaryDataGrid data={summaryData} size="small" />}</Spin>
       {contextHolder}
     </DataSummaryContainer>
   )
