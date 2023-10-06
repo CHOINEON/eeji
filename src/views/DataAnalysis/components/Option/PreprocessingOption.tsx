@@ -22,7 +22,7 @@ const PreprocessingOption = () => {
   const [missingValueInputDisabled, setMissingValueInputDisabled] = useState(true)
   const [outlierValueInputDisabled, setOutlierValueInputDisabled] = useState(true)
 
-  const [numberRange, setNumberRange] = useState([0, 0])
+  const [numberRange, setNumberRange] = useState([0.1, 3.5])
   const [missingValue, setMissingValue] = useState({ name: '', number: 0 })
   const [outlierValue, setOutlierValue] = useState({ name: '', number: 0 })
 
@@ -48,6 +48,8 @@ const PreprocessingOption = () => {
   }
 
   const onOutlierValueChange = (param: any) => {
+    // console.log('param:', param)
+
     if (param === 'std') {
       setNumberRange([0.1, 3.5])
       setOutlierValue({ name: param, number: 0.1 })
@@ -126,7 +128,7 @@ const PreprocessingOption = () => {
     //       key: '2',
     //       label: 'Preprocessing',
     //       children: (
-    <Row gutter={[8, 16]}>
+    <Row gutter={[0, 16]}>
       <Row>
         <LabelBox>시작일</LabelBox>{' '}
         <DatePicker
@@ -177,6 +179,7 @@ const PreprocessingOption = () => {
           <InputNumber
             min={0}
             // max={10}
+            style={{ width: '30%' }}
             defaultValue={0}
             onChange={missingInputChange}
             disabled={missingValueInputDisabled}
@@ -189,7 +192,7 @@ const PreprocessingOption = () => {
         <Space.Compact style={{ width: '100%' }}>
           <Select
             defaultValue="null"
-            // style={{ width: '70%' }}
+            style={{ width: '70%' }}
             onChange={onOutlierValueChange}
             options={[
               { value: 'null', label: '선택 안 함' },
@@ -201,6 +204,7 @@ const PreprocessingOption = () => {
           />
           {/* <Input defaultValue="0" disabled={outlierValueInputDisabled} /> */}
           <InputNumber
+            style={{ width: '30%' }}
             min={numberRange[0]}
             max={numberRange[1]}
             defaultValue={numberRange[0]}
@@ -212,9 +216,10 @@ const PreprocessingOption = () => {
       </Row>
       <Row>
         <LabelBox>데이터 정규화</LabelBox>
+
         <Select
+          style={{ width: '100%' }}
           defaultValue="null"
-          style={{ width: 120 }}
           disabled={disabled}
           onChange={onNormalizationChange}
           options={[

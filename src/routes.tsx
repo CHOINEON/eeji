@@ -15,11 +15,12 @@ import HmidInterval from 'views/hmid_interval'
 import HmidIntervalD3 from 'views/hmid-interval-d3fc'
 // import Anomalyd3chart from 'views/AnomalyDetection/anomaly_d3chart-test'
 import Test from 'views/Test/AnomalyTest'
-import PriceForecasting from 'views/PriceForecasting'
+import PriceForecasting from 'views/PriceForecasting/OilPrice'
 import DraggableUploader from 'components/uploader/DraggableUploader'
 import DragDrop from 'components/uploader/DraggableUploader'
 import Temp from 'views/Test'
 import PriceDetection from 'views/AnomalyDetection/PriceDetection.tsx'
+import NotFound from 'common/NotFound'
 
 // Auth Imports
 
@@ -67,13 +68,13 @@ const routes = [
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: Test,
   },
-  {
-    name: 'Anomaly Detection_BTC',
-    layout: '/admin',
-    path: '/anomalyDetectionBTC',
-    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
-    component: PriceDetection,
-  },
+  // {
+  //   name: 'Anomaly Detection_BTC',
+  //   layout: '/admin',
+  //   path: '/anomalyDetectionBTC',
+  //   icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+  //   component: PriceDetection,
+  // },
 
   // {
   //   name: 'HMID Configuration',
@@ -102,6 +103,13 @@ const routes = [
     path: '/configuration',
     icon: <Icon as={MdSettings} width="20px" height="20px" color="inherit" />,
     component: Configuration,
+  },
+  {
+    name: 'NotFound',
+    layout: '/admin',
+    path: '/404',
+    icon: <Icon as={MdSettings} width="20px" height="20px" color="inherit" />,
+    component: NotFound,
   },
   // {
   //   name: 'Temp page',

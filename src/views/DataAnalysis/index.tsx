@@ -9,7 +9,7 @@ import StepButton from '@mui/material/StepButton'
 import { theme } from './theme/theme'
 import { useRecoilState } from 'recoil'
 import { stepCountStore } from './store/atom'
-import DataImport from './DataSet'
+import DataSet from './DataSet'
 import CorrelationView from './CorrelationView'
 import './style/styles.css'
 import OptionSetting from './OptionSetting'
@@ -93,7 +93,11 @@ const DataAnalysis = () => {
             </Stepper>
           </Box>
           <Box padding={5}>
-            {activeStep === 0 && <DataImport />}
+            {activeStep === 0 && (
+              // <ErrorBoundary>
+              <DataSet />
+              // </ErrorBoundary>
+            )}
             {activeStep === 1 && <CorrelationView />}
             {activeStep === 2 && <CustomTools />}
 

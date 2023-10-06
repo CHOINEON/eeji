@@ -3,16 +3,22 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import Plot from 'react-plotly.js'
 
-const TestChart = () => {
+const OilPriceChart = () => {
   const [data, setData] = useState([])
   const [selectedOption, setSelectedOption] = useState('brent')
+  const [minMax, setMinMax] = useState([
+    { key: 'brent', min: 400, max: 600 },
+    { key: 'wti', min: 80, max: 100 },
+  ])
+
   const options = [
     { value: 'brent', label: 'Brent' },
     { value: 'wti', label: 'WTI' },
   ]
 
   //chart
-  const config = { responsive: true, useResizeHandler: true }
+  const config = { displaylogo: false, responsive: true, useResizeHandler: true }
+
   const [chartData, setChartData] = useState([])
   const [layout, setLayout] = useState({
     responsive: true,
@@ -24,13 +30,19 @@ const TestChart = () => {
     fetchChartData()
   }, [])
 
+  // useEffect(() => {
+  //   console.log('minMax:', minMax)
+  // }, [minMax])
+
   useEffect(() => {
     if (data) formatChartData(data)
   }, [data, selectedOption])
 
-  const setVerticalLineOnChart = (datetime: any) => {
+  const setLayoutOnChart = (item: string, datetime: any) => {
+    const title = options.find((x) => x.value === item).label
+
     const newLayout = {
-      title: 'Oil Price Forecasting',
+      title: `${title} Oil Price Forecasting`,
       font: {
         // family: 'sans-serif',
         // size: 14,
@@ -40,13 +52,14 @@ const TestChart = () => {
       responsive: true,
       useResizeHandler: true,
       autosize: true,
+
       shapes: [
         {
           type: 'line',
           x0: datetime.toString(),
-          y0: 0,
+          y0: minMax.find((x) => x.key === item).min,
           x1: datetime.toString(),
-          y1: 600,
+          y1: minMax.find((x) => x.key === item).max,
           line: {
             color: 'darkgrey',
             width: 1,
@@ -78,14 +91,13 @@ const TestChart = () => {
     axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/oil_predict', param)
       .then((response) => {
-        console.log('response', response.data)
-
+        // console.log('response', response.data)
         const respData = response.data
         setData(respData)
 
-        //실제 값과 예측값 시점 분기하는 세로 줄
+        //초기 레이아웃 (brent)
         const lastDayOfHistoryData = respData[selectedOption].index_hist.slice(-1)
-        setVerticalLineOnChart(lastDayOfHistoryData)
+        setLayoutOnChart('brent', lastDayOfHistoryData)
       })
       .catch((error) => console.log('error:', error))
   }
@@ -116,7 +128,7 @@ const TestChart = () => {
       }
 
       //원본 데이터에서 마지막 날짜가 몇번째 데이터인지 찾아서 예측 점선의 첫번째에 넣으려고 사전작업
-      //(json parsing하면서 순서 섞이는 경우 있음)
+      //(json parsing하면서 순서 섞이는 경우 있어서 다시 정렬함)
       const dateArr: Array<any> = pred_hist.x
       dateArr.sort((a, b) => {
         return new Date(b).getTime() - new Date(a).getTime()
@@ -143,29 +155,40 @@ const TestChart = () => {
           // color:
         },
       }
-
-      // console.log('prediction:', prediction)
       setChartData([realPrice, pred_hist, prediction])
+
+      //y축 min, max 세팅
+      // const min_y = Math.min.apply(null, predict_y)
+      // const max_y = Math.max.apply(null, predict_y)
+
+      // console.log(min_y)
+      // console.log(max_y)
     }
   }
 
-  const handleSelect = (param: any) => {
-    setSelectedOption(param)
+  const handleSelect = (item: any) => {
+    setSelectedOption(item)
+
+    //선택된 옵션에 따라 레이아웃 다시 그림
+    const lastDayOfHistoryData = data[item].index_hist.slice(-1)
+    setLayoutOnChart(item, lastDayOfHistoryData)
   }
 
   return (
     <>
-      <div style={{ width: '200px' }}>
-        <Select
-          style={{ width: 120, backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-          defaultValue={options[0]}
-          options={options}
-          onSelect={handleSelect}
-        />
+      <div className="w-100">
+        <div style={{ width: '200px', height: '50px' }}>
+          <Select
+            style={{ width: 120, backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
+            defaultValue={options[0]}
+            options={options}
+            onSelect={handleSelect}
+          />
+        </div>
+        <Plot style={{ width: '100%' }} config={config} data={chartData} layout={layout} />
       </div>
-      <Plot style={{ width: '100%' }} config={config} data={chartData} layout={layout} />
     </>
   )
 }
 
-export default TestChart
+export default OilPriceChart

@@ -114,7 +114,7 @@ const VariableOption = () => {
     //       key: '1',
     //       label: 'Data',
     //       children: (
-    <Row gutter={[8, 16]}>
+    <Row gutter={[0, 16]}>
       <NewTagSelect
         style={{ width: '100%', margin: 'auto' }}
         selectionType="single"

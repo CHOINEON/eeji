@@ -2,11 +2,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Col, InputNumber, Row, Slider } from 'antd'
 import CSS from './style.module.css'
-import styled from 'styled-components'
+// import styled from 'styled-components'
 import { useRecoilState } from 'recoil'
 import { sliderValueState } from '../atom'
 
-const DecimalStep = (props: any) => {
+const DecimalStep = (props) => {
   const { type, clickedPoint } = props
   const [inputValue, setInputValue] = useState(0)
   const [sliderValue, setSliderValue] = useRecoilState(sliderValueState)

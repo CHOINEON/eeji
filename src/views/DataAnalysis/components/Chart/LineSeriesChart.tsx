@@ -24,7 +24,7 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { excludeHistoryStore } from 'views/DataAnalysis/store/atom'
 import { indexColumnStore } from 'views/DataAnalysis/store/variable/atom'
 import HistoryModal from './HistoryModal'
-import { dateTimeToString } from 'common/DateFunction'
+import { dateTimeToString } from 'utils/DateFunction'
 
 const LineSeriesChart = (props: any) => {
   const { chartInputData, chartHeight, onExport, onSave } = props
