@@ -1,7 +1,5 @@
-.panelContainer{
-display : flex;
-/* grid-template-columns: 1fr 1fr 1fr; */
-justify-content: center;
+.Panel{
+
 
 width: auto;
 height:auto
@@ -9,7 +7,6 @@ height:auto
 
 .controlPanel{
 height : 220px;
-
 display : grid;
 grid-template-rows: 1fr 1fr 1fr 1fr;
 justify-content: center;
@@ -17,7 +14,6 @@ align-items: center;
 background-color: #fff;
 margin-top : 10px;
 max-width: 100%;
-
 width: auto;
 height:auto
 }
@@ -27,11 +23,19 @@ height:auto
     align-items: center;
     justify-items: center; 
 }
+.ButtonContainer{
+    display : flex;
+    flex-direction: column;
+    width : 320px;
+    margin-top: 10px;
+    margin-bottom : 10px;
 
+}
+.featureBox{
+    display :flex;
+    flex-direction: row;
+}
     .SliderContainer{
-    /* border : 1px solid #000; */
-    /* height : 150px;
-    width : 500px; */
     padding : 1rem;
     margin-top : 10px;
     background-color: #fff;

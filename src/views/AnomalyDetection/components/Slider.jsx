@@ -1,12 +1,11 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect, useRef } from 'react'
-import { Col, InputNumber, Row, Slider } from 'antd'
+import React, { useState, useEffect } from 'react'
+import { Col, InputNumber, Row, Slider, Card, Space, Statistic } from 'antd'
 import CSS from './style.module.css'
-import styled from 'styled-components'
 import { useRecoilState } from 'recoil'
 import { sliderValueState } from '../atom'
 
-const DecimalStep = (props: any) => {
+const DecimalStep = (props) => {
   const { type, clickedPoint } = props
   const [inputValue, setInputValue] = useState(0)
   const [sliderValue, setSliderValue] = useRecoilState(sliderValueState)
@@ -60,6 +59,7 @@ const DecimalStep = (props: any) => {
           onChange={onChange}
         />
       </Col>
+      
     </Row>
   )
 }
@@ -70,14 +70,42 @@ const FeatureSlider = ({ clickedPoint }) => {
   }, [clickedPoint])
   return (
     <div className={CSS.slider}>
-      <div className={CSS.SliderContainer}>
-        Price Slider
-        <DecimalStep clickedPoint={clickedPoint} type="price"></DecimalStep>
-      </div>
-      <div className={CSS.SliderContainer}>
-        Volume Slider
-        <DecimalStep clickedPoint={clickedPoint} type="volume"></DecimalStep>
-      </div>
+      <Card style={{
+                height:150,
+                responsive: true, 
+                useResizeHandler: true, 
+                autosize: true, 
+                width: '100%' ,
+                marginTop : 20  ,
+                marginRight : 10,
+                marginLeft : 10 
+          }}>
+        <Statistic  
+                value='PRICE SLIDER' 
+                valueStyle={{
+                        fontWeight:500, 
+                        fontSize : 15
+                        }}/>
+          <DecimalStep clickedPoint={clickedPoint} type="price"></DecimalStep>
+      </Card>
+      <Card style={{
+                height:150,
+                responsive: true, 
+                useResizeHandler: true, 
+                autosize: true, 
+                width: '100%',
+                marginTop : 20,
+                 
+                  
+          }}>
+          <Statistic  
+                  value='VOLUME SLIDER' 
+                  valueStyle={{
+                          fontWeight:500, 
+                          fontSize : 15,
+                          }}/>
+            <DecimalStep clickedPoint={clickedPoint} type="volume"></DecimalStep>
+      </Card>
     </div>
   )
 }
