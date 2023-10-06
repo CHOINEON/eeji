@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import DescriptionBox, { DescriptionBoxProps } from './components/DataInfo/DescriptionBox'
-import { Button, Col, Row } from 'antd'
+import { Button, Col, Row, message } from 'antd'
 import DataImportModal from './components/DataInfo/DataImportModal'
-import DataFileModal from './components/DataInfo/DataFileModal'
+// import DataFileModal from './components/DataInfo/DataFileModal'
 import './style/styles.css'
 import axios from 'axios'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { importModalAtom, listModalAtom } from './store/modal/atom'
 import styled from '@emotion/styled'
+import { selectedDataState, userInfoState } from './store/base/atom'
+import { stepCountStore } from './store/atom'
+import { usedVariableStore, variableStore } from './store/variable/atom'
 
 const DatasetAddButton = styled.button`
   width: 100%;
@@ -21,12 +24,26 @@ const DatasetAddButton = styled.button`
 `
 
 const DataSet = () => {
+  const [messageApi, contextHolder] = message.useMessage()
+
+  const setUserInfo = useSetRecoilState(userInfoState)
+  const setActiveStep = useSetRecoilState(stepCountStore)
+  const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
+
+  // 최초 리스트 렌더링
+  const setVariableList = useSetRecoilState(variableStore)
+  const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
+
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
-  const setFileListOpen = useSetRecoilState(listModalAtom)
-  const [dataSet, setDataSet] = useState([])
+
+  const [dataSetList, setDataSetList] = useState([])
 
   useEffect(() => {
-    fetchDataSetList()
+    setUserInfo({ user_id: localStorage.getItem('userId'), com_id: localStorage.getItem('companyId') })
+  }, [])
+
+  useEffect(() => {
+    if (!importOpen) fetchDataSetList()
   }, [importOpen])
 
   const handleClick = () => {
@@ -34,24 +51,84 @@ const DataSet = () => {
   }
 
   const fetchDataSetList = () => {
-    const com_id = localStorage.getItem('companyId')
     const user_id = localStorage.getItem('userId')
 
     axios
-      .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset?com_id=' + com_id + '&user_id=' + user_id)
+      .post(process.env.REACT_APP_NEW_API_SERVER_URL + `/api/dataset_list/${user_id}?user_id=${user_id}`)
       .then((response) => {
         // console.log('api/dataset::', response.data)
-        setDataSet(response.data)
+        setDataSetList(response.data.data)
       })
       .catch((err) => console.log(err))
   }
 
-  const handleSelect = () => {
-    setFileListOpen(true)
+  const handleSelect = (data: any) => {
+    setSelectedData({
+      id: data.ds_id,
+      name: data.name,
+      size: data.size,
+      rowCount: 0,
+      colCount: 0,
+      startDate: data.start_date,
+      endDate: data.end_date,
+    })
+    setFeatureList(data.name, JSON.parse(data.col_list))
   }
 
-  const handleDelete = (param: boolean) => {
-    if (param) fetchDataSetList()
+  const setFeatureList = (name: string, columns: Array<any>) => {
+    if (columns) {
+      //X, Y 변수 드롭다운 리스트(default로 사용) 포맷팅
+      const formattedData: any = []
+      columns.forEach((column: any) => {
+        formattedData.push({ value: column, label: column })
+      })
+      // const temp = [{ label: name, options: formattedData }]
+      setVariableList(formattedData)
+
+      //feature 사용관리 하기 위한 store 데이터 포맷팅
+      const result: Array<any> = []
+      columns.forEach((value: any) => {
+        result.push({ value: value, used: false })
+      })
+
+      setUsedVariable(result)
+      setActiveStep(1)
+    }
+  }
+
+  const handleDelete = (ds_id: string) => {
+    // if (param) fetchDataSetList()
+    const com_id = localStorage.getItem('companyId')
+    const user_id = localStorage.getItem('userId')
+
+    axios
+      .delete(
+        process.env.REACT_APP_API_SERVER_URL +
+          '/api/dataset?com_id=' +
+          com_id +
+          '&dataset_id=' +
+          ds_id +
+          '&user_id=' +
+          user_id
+      )
+      .then(
+        (response) => {
+          // console.log(response)
+          if (response.status === 200) {
+            messageApi.open({
+              type: 'success',
+              content: '선택된 데이터셋 삭제',
+              duration: 2,
+              style: {
+                margin: 'auto',
+              },
+            })
+          }
+        },
+        (error) => {
+          alert(error)
+        }
+      )
   }
 
   return (
@@ -61,14 +138,14 @@ const DataSet = () => {
           + NEW DATASET
         </DatasetAddButton>
         <Row gutter={[16, 16]}>
-          {dataSet.map((item, index) => (
-            <Col span={8} key={index}>
+          {dataSetList.map((item, index) => (
+            <Col span={12} key={index}>
               <DescriptionBox data={item} onSelect={handleSelect} onDelete={handleDelete} />
             </Col>
           ))}
         </Row>
       </div>
-      <DataFileModal />
+      {/* <DataFileModal /> */}
       <DataImportModal />
     </>
   )

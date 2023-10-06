@@ -19,6 +19,7 @@ import PriceForecasting from 'views/PriceForecasting'
 import DraggableUploader from 'components/uploader/DraggableUploader'
 import DragDrop from 'components/uploader/DraggableUploader'
 import Temp from 'views/Test'
+import PriceDetection from 'views/AnomalyDetection/PriceDetection.tsx'
 
 // Auth Imports
 
@@ -67,26 +68,34 @@ const routes = [
     component: Test,
   },
   {
-    name: 'HMID Configuration',
+    name: 'Anomaly Detection_BTC',
     layout: '/admin',
-    path: '/layout-list',
-    icon: <Icon as={MdDisplaySettings} width="20px" height="20px" color="white" />,
-    component: LayoutList,
+    path: '/anomalyDetectionBTC',
+    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+    component: PriceDetection,
   },
-  {
-    name: 'HMID Configuration',
-    layout: '/admin',
-    path: '/layout-configuration',
-    icon: <Icon as={MdDisplaySettings} width="20px" height="20px" color="white" />,
-    component: DashboardConfig,
-  },
-  {
-    name: 'Model Maintenance',
-    layout: '/admin',
-    path: '/model-maintenance',
-    icon: <Icon as={MdOutlineModelTraining} width="20px" height="20px" color="inherit" />,
-    component: ModelMaintenance,
-  },
+
+  // {
+  //   name: 'HMID Configuration',
+  //   layout: '/admin',
+  //   path: '/layout-list',
+  //   icon: <Icon as={MdDisplaySettings} width="20px" height="20px" color="white" />,
+  //   component: LayoutList,
+  // },
+  // {
+  //   name: 'HMID Configuration',
+  //   layout: '/admin',
+  //   path: '/layout-configuration',
+  //   icon: <Icon as={MdDisplaySettings} width="20px" height="20px" color="white" />,
+  //   component: DashboardConfig,
+  // },
+  // {
+  //   name: 'Model Maintenance',
+  //   layout: '/admin',
+  //   path: '/model-maintenance',
+  //   icon: <Icon as={MdOutlineModelTraining} width="20px" height="20px" color="inherit" />,
+  //   component: ModelMaintenance,
+  // },
   {
     name: 'Configuration',
     layout: '/admin',
@@ -94,13 +103,13 @@ const routes = [
     icon: <Icon as={MdSettings} width="20px" height="20px" color="inherit" />,
     component: Configuration,
   },
-  {
-    name: 'Temp page',
-    layout: '/admin',
-    path: '/temp-page',
-    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
-    component: Temp,
-  },
+  // {
+  //   name: 'Temp page',
+  //   layout: '/admin',
+  //   path: '/temp-page',
+  //   icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+  //   component: Temp,
+  // },
 ]
 
 export default routes

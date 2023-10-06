@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import '../../style/uploader.css'
-import { Button, Dropdown, MenuProps, Typography, message } from 'antd'
-import { useSetRecoilState } from 'recoil'
-import { stepCountStore, dataSetStore } from 'views/DataAnalysis/store/atom'
+import { Dropdown, MenuProps, Modal, Typography, message } from 'antd'
 import axios from 'axios'
-import { DeleteOutlined, MoreOutlined } from '@ant-design/icons'
-const { Text, Link } = Typography
+import { ExclamationCircleFilled, MoreOutlined } from '@ant-design/icons'
 
 const DescBoxContainer = styled.div`
   display: block;
@@ -37,11 +34,16 @@ const TitleWrapper = styled.div`
 `
 
 export interface DescriptionBoxProps {
-  id: string
-  name: string
-  size: number
-  create: string
-  update: string
+  ds_id?: string
+  name?: string
+  size?: number
+  create_date?: string
+  update_date?: string
+  start_date?: string
+  end_date?: string
+  date_col?: string
+  descr?: string
+  loc?: string
 }
 
 export interface IDescriptionBox {
@@ -51,12 +53,8 @@ export interface IDescriptionBox {
 }
 
 const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
-  const setDataSet = useSetRecoilState(dataSetStore)
   const [messageApi, contextHolder] = message.useMessage()
-  const { id, name, size } = props.data
-  const { onSelect, onDelete } = props
-
-  const [create, setCreate] = useState('')
+  const { data, onSelect, onDelete } = props
 
   const items: MenuProps['items'] = [
     {
@@ -69,54 +67,20 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
     },
   ]
 
-  useEffect(() => {
-    setCreate(new Date(props.data.create_date).toLocaleDateString())
-  }, [])
+  // useEffect(() => {
+  //   setCreate(new Date(props.data.create_date).toLocaleDateString())
+  // }, [])
 
   const handleClick = (event: any) => {
     if (event.target.tagName !== 'svg' && event.target.tagName !== 'SPAN') {
       //"more" 아이콘 클릭된 경우 예외로 처리
-      setDataSet(id)
-      onSelect(true)
+      onSelect(data)
     }
   }
 
-  const handleDelete = () => {
-    // console.log('delete:', id)
-    const com_id = localStorage.getItem('companyId')
-    const user_id = localStorage.getItem('userId')
-
-    axios
-      .delete(
-        process.env.REACT_APP_API_SERVER_URL +
-          '/api/dataset?com_id=' +
-          com_id +
-          '&dataset_id=' +
-          id +
-          '&user_id=' +
-          user_id
-      )
-      .then(
-        (response) => {
-          // console.log(response)
-          if (response.status === 200) {
-            messageApi
-              .open({
-                type: 'success',
-                content: '선택된 데이터셋 삭제',
-                duration: 2,
-                style: {
-                  margin: 'auto',
-                },
-              })
-              .then(() => onDelete(true))
-          }
-        },
-        (error) => {
-          alert(error)
-        }
-      )
-  }
+  // const handleDelete = (ds_id: string) => {
+  //   onDelete(ds_id)
+  // }
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
     if (key === '1') {
@@ -130,8 +94,22 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
       })
     }
     if (key === '2') {
-      handleDelete()
+      showConfirm()
     }
+  }
+
+  const showConfirm = () => {
+    Modal.confirm({
+      title: 'Do you want to delete this dataset?',
+      icon: <ExclamationCircleFilled />,
+      content: `Deletion is permanent and you will not be able to undo it.`,
+      onOk() {
+        onDelete(data.ds_id)
+      },
+      onCancel() {
+        console.log('Cancel')
+      },
+    })
   }
 
   return (
@@ -139,14 +117,11 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
       <DescBoxContainer onClick={handleClick} role="button">
         <TitleWrapper>
           <Typography.Title level={4} style={{ display: 'inline-block' }}>
-            {name}
+            {data?.name}
           </Typography.Title>
           <Dropdown menu={{ items, onClick }}>
             <MoreOutlined style={{ float: 'right' }} size={16} />
           </Dropdown>
-          {/* <a onClick={() => handleDelete}>
-            <DeleteOutlined style={{ float: 'right', color: 'red' }} />
-          </a> */}
         </TitleWrapper>
         <div
           className="container"
@@ -159,12 +134,21 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
         >
           <Content>
             <div>Total Size</div>
-            <div>{size / 1024 < 1024 ? Math.round(size / 1024) + ' KB' : Math.round(size / 1024 / 1024) + ' MB'}</div>
+            <div>
+              {data?.size / 1024 < 1024
+                ? Math.round(data?.size / 1024) + ' KB'
+                : Math.round(data?.size / 1024 / 1024) + ' MB'}
+            </div>
           </Content>
           <Content>
             {' '}
             <div>Created</div>
-            <div>{create}</div>
+            <div>{data?.create_date}</div>
+          </Content>
+          <Content>
+            {' '}
+            <div>Updated</div>
+            <div>{data?.update_date}</div>
           </Content>
           <Content>
             {' '}

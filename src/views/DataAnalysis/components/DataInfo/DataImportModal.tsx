@@ -1,101 +1,62 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Input, Modal, message } from 'antd'
-import { useRecoilState } from 'recoil'
+import { Button, Col, Input, Modal, Row, Typography, message } from 'antd'
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import Uploader from 'components/uploader/Uploader'
-import axios from 'axios'
 import DataSummary from './DataSummary'
+import DataProperties from './DataProperties'
+import {
+  dataPropertyState,
+  summaryFetchState,
+  // uploadFileInfoAtom,
+  uploadedDataState,
+  userInfoState,
+} from 'views/DataAnalysis/store/base/atom'
+import { dateTimeToString } from 'common/DateFunction'
+import styled from '@emotion/styled'
+import axios from 'axios'
+
+const UploadButton = styled.button<{ visible: boolean }>`
+  width: 100%;
+  height: 30px;
+  display: ${(props: any) => (props.visible ? 'block' : 'none')};
+`
 
 const DataImportModal = (props: any) => {
-  const [dataFile, setDataFile] = useState(null)
-  const [dataName, setDataName] = useState(null)
-  const [saving, setSaving] = useState(false)
-  const [defaultValue, setDefaultValue] = useState('')
-  const [messageApi, contextHolder] = message.useMessage()
+  const userInfo = useRecoilValue(userInfoState)
+  const [summaryFetch, setSummaryFetch] = useRecoilState(summaryFetchState)
+  const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
+  const resetUploadFileState = useResetRecoilState(uploadedDataState)
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
+  const inputOption = useRecoilValue(dataPropertyState)
+
+  const [dataArray, setDataArray] = useState([])
+  const [buttonVisible, setButtonVisible] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  const [messageApi, contextHolder] = message.useMessage()
 
   useEffect(() => {
     if (!importOpen) {
       //선택 초기화
-      setDataFile(null)
-      setDataName(null)
+      resetUploadFileState()
     }
   }, [importOpen])
 
+  useEffect(() => {
+    if (inputOption && inputOption.date_col != '') setButtonVisible(true)
+  }, [inputOption])
+
   const handleSelectedFile = (file: any) => {
-    setDataFile(file)
-    setDataName(file?.name.split('.', 2)[0])
-  }
-
-  const handleSave = () => {
-    // console.log('dataFile::', dataFile)
-
-    if (dataFile && dataFile.size > 10485760) {
-      messageApi.open({
-        type: 'error',
-        content: '10MB 이상의 파일은 업로드 할 수 없습니다.',
-        duration: 1,
-        style: {
-          margin: 'auto',
-        },
-      })
-    } else {
-      const url = process.env.REACT_APP_API_SERVER_URL + '/api/upload'
-      const config = {
-        headers: {
-          'content-type': 'multipart/form-data',
-        },
-      }
-
-      if (dataFile) {
-        setSaving(true)
-
-        const formData = new FormData()
-        const uploadFile = dataFile
-
-        formData.append('com_id', localStorage.getItem('companyId'))
-        formData.append('user_id', localStorage.getItem('userId'))
-        formData.append('name', dataName)
-        formData.append('files', uploadFile)
-
-        setDefaultValue(uploadFile.name)
-
-        // for (const [name, value] of formData) {
-        //   console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
-        // }
-
-        axios
-          .post(url, formData, config)
-          .then((response) => {
-            if (response.status === 200) {
-              setSaving(false)
-              messageApi.open({
-                type: 'success',
-                content: '저장 완료!',
-                duration: 1,
-                style: {
-                  margin: 'auto',
-                },
-              })
-              setImportOpen(false)
-            }
-          })
-          .catch((error) => {
-            messageApi.open({
-              type: 'error',
-              content: error,
-              duration: 1,
-              style: {
-                margin: 'auto',
-              },
-            })
-            setSaving(false)
-            setImportOpen(false)
-          })
+    if (file) {
+      if (file.size <= 209715200) {
+        readFile(file)
+        setUploadedData({ ...uploadedData, file: file, name: file.name, content: [] })
+        // setUploadFileInfo(file)
       } else {
         messageApi.open({
           type: 'error',
-          content: '업로드할 파일이 없습니다.',
+          content: '업로드 가능 파일용량 초과(최대 200MB)',
           duration: 1,
           style: {
             margin: 'auto',
@@ -105,13 +66,149 @@ const DataImportModal = (props: any) => {
     }
   }
 
+  useEffect(() => {
+    setUploadedData({ ...uploadedData, content: dataArray })
+  }, [dataArray])
+
+  const readFile = (file: any) => {
+    // console.log('readfile:', file)
+    // console.log('type:', file.name.split('.', 2)[1])
+
+    const fileReader = new FileReader()
+
+    const fileFormat = file.name.split('.', 2)[1]
+    const acceptedFormats = ['csv', 'xls', 'xlsx']
+
+    if (file) {
+      if (acceptedFormats.includes(fileFormat)) {
+        fileReader.onload = function (event: any) {
+          const text = event.target.result
+          csvFileToArray(file.name, file.size, text)
+        }
+
+        fileReader.readAsText(file)
+      } else {
+        messageApi.open({
+          type: 'error',
+          content: '지원하지 않는 파일 유형입니다.',
+          duration: 1,
+          style: {
+            margin: 'auto',
+          },
+        })
+      }
+    }
+  }
+
+  const csvFileToArray = (name: string, size: number, string: string) => {
+    const csvHeader = string.slice(0, string.indexOf('\n')).split(',')
+    const csvRows = string.slice(string.indexOf('\n') + 1).split('\n')
+
+    const array = csvRows.map((item) => {
+      if (item != '') {
+        const values = item.split(',')
+        const obj = csvHeader.reduce((object: any, header, index) => {
+          object[header] = values[index]
+          return object
+        }, {})
+        return obj
+      }
+    })
+
+    array.splice(array.length - 1) //split하면서 마지막 행에 빈 값 들어있어서 자름
+    setDataArray(array)
+    // setUploadedData({ ...uploadedData, content: array })
+    // console.log('array:', array)
+  }
+
+  const handleSave = () => {
+    const dataFile = uploadedData.file
+    // console.log('dataFile::', dataFile)
+
+    if (dataFile && dataFile.size > 209715200) {
+      messageApi.open({
+        type: 'error',
+        content: '200MB 이상의 파일은 업로드 할 수 없습니다.',
+        duration: 1,
+        style: {
+          margin: 'auto',
+        },
+      })
+    } else {
+      const url = process.env.REACT_APP_NEW_API_SERVER_URL + `/api/save/${userInfo.user_id}?user_id=${userInfo.user_id}`
+      const config = {
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+        },
+      }
+      if (dataFile) {
+        const formData = new FormData()
+
+        formData.append('com_id', userInfo.com_id)
+        formData.append('date_col', inputOption.date_col)
+        formData.append('name', inputOption.name)
+        formData.append('desc', inputOption.desc.length === 0 ? null : inputOption.desc)
+        // for (const [name, value] of formData) {
+        //   console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
+        // }
+
+        if (inputOption.date_col.length === 0) {
+          messageApi.open({
+            type: 'error',
+            content: 'Timestamp column is not selected.',
+            duration: 5,
+            style: {
+              margin: 'auto',
+            },
+          })
+        } else {
+          setSummaryFetch('requested')
+          // setSaving(true)
+          axios
+            .post(url, formData, config)
+            .then((response) => {
+              if (response.status === 200) {
+                setSummaryFetch('completed')
+                // setSaving(false)
+                console.log('response:', response.data['1'])
+                // saveDataSummary(response.data['1'])
+                messageApi.open({
+                  type: 'success',
+                  content: '저장 완료!',
+                  duration: 1,
+                  style: {
+                    margin: 'auto',
+                  },
+                })
+                setImportOpen(false)
+              }
+            })
+            .catch((error) => {
+              setSummaryFetch('failed')
+
+              messageApi.open({
+                type: 'error',
+                content: error,
+                duration: 5,
+                style: {
+                  margin: 'auto',
+                },
+              })
+              // setSaving(false)
+              setImportOpen(false)
+            })
+        }
+      }
+    }
+  }
+
   const handleCancel = () => {
     setImportOpen(false)
   }
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // console.log('Change:', e.target.value)
-    setDataName(e.target.value)
+  const handleCancelClick = () => {
+    // console.log('param:', param)
+    resetUploadFileState()
   }
 
   return (
@@ -124,29 +221,28 @@ const DataImportModal = (props: any) => {
         footer={null}
         onCancel={handleCancel}
       >
-        <Uploader onSelectedFile={handleSelectedFile} />
-        <DataSummary file={dataFile} />
+        <Uploader onSelectedFile={handleSelectedFile} onCancelClick={handleCancelClick} />
+
+        <DataProperties />
+        <DataSummary />
         <div style={{ marginTop: '20px', textAlign: 'right' }}>
-          <div style={{ width: '60%', display: 'inline-block' }}>
-            <span> Dataset Name : </span>
-            <Input style={{ width: '300px' }} maxLength={20} onChange={onChange} value={dataName} />
-          </div>
           <div style={{ width: '40%', display: 'inline-block' }}>
-            <Button
+            {/* <Button
               type="default"
               onClick={handleCancel}
               style={{ width: '100px', height: '30px', borderRadius: '10px', marginRight: '10px' }}
             >
               CANCEL
-            </Button>
-            <Button
-              type="primary"
-              loading={saving}
+            </Button> */}
+            <UploadButton
+              className="custom-btn custom-btn-primary"
+              // type="primary"
+              // loading={saving}
+              visible={buttonVisible}
               onClick={handleSave}
-              style={{ width: '100px', height: '30px', borderRadius: '10px' }}
             >
-              Ok
-            </Button>
+              Upload
+            </UploadButton>
           </div>
         </div>
       </Modal>

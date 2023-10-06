@@ -17,17 +17,18 @@ const UploadComponentWrapper = styled.div`
 `
 
 const UploadButton = styled.button`
-  top: 278px;
-  left: 703px;
-  width: 176px;
-  height: 176px;
+  // top: 278px;
+  // left: 703px;
+  width: 150px;
+  height: 150px;
   background: transparent url(${ico_upload_button}) 0% 0% no-repeat padding-box;
+  background-size: cover;
   opacity: 1;
 `
 
 /**https://www.filestack.com/fileschool/react/react-file-upload/ */
 const Uploader = (props: any) => {
-  const { onSelectedFile } = props
+  const { onSelectedFile, onCancelClick } = props
 
   const inputRef = useRef(null)
   const dragRef = useRef(null)
@@ -116,6 +117,8 @@ const Uploader = (props: any) => {
     } else if (e.type === 'change') {
       setFile(e.target.files[0])
     }
+
+    e.target.value = '' //실제 data가 변경될 경우에만 동작하기 때문에 발생하는 버그 방지
   }
 
   //triggers when file is selected with click
@@ -124,7 +127,7 @@ const Uploader = (props: any) => {
   }
 
   const handleCancel = () => {
-    console.log('clicked')
+    onCancelClick()
     setFile(null)
   }
 
@@ -156,7 +159,7 @@ const Uploader = (props: any) => {
         <div className="flex-container">
           <div style={{ flex: 1 }}>
             <label htmlFor="input-file-upload" ref={dragRef}>
-              <UploadButton style={{ float: 'left' }} onClick={handleUploadClick} />
+              <UploadButton onClick={handleUploadClick} />
             </label>
           </div>
           <div style={{ padding: '10px', width: '70%', float: 'left' }}>
@@ -167,8 +170,6 @@ const Uploader = (props: any) => {
           </div>
         </div>
       </UploadComponentWrapper>
-
-      {/* <DraggableUploader /> */}
     </div>
   )
 }

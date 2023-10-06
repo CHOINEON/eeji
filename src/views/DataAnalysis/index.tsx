@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react'
+import React, { useState, useEffect, useReducer, useMemo } from 'react'
 import { Box } from '@chakra-ui/react'
 import ModelSetting from './ModelSetting'
 import { ThemeProvider } from '@mui/material/styles'
@@ -13,13 +13,31 @@ import DataImport from './DataSet'
 import CorrelationView from './CorrelationView'
 import './style/styles.css'
 import OptionSetting from './OptionSetting'
+import CustomTools from './CustomTools'
+import { notification } from 'antd'
+import { NotificationPlacement } from 'antd/es/notification/interface'
+
+const Context = React.createContext({ name: 'Default' })
 
 const DataAnalysis = () => {
-  const steps = ['Upload Data', 'View Correlation', 'Select Variables', 'Run/Save Model']
+  const [api, contextHolder] = notification.useNotification()
+  const steps = ['Upload Data', 'View Correlation', 'Generate Model']
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean
   }>({})
+
+  const openNotification = () => {
+    api.info({
+      message: `Notification`,
+      description: (
+        <Context.Consumer>
+          {({ name }) => '현재 서버 이전 중으로 일부 기능의 동작이 원활하지 않습니다.'}
+        </Context.Consumer>
+      ),
+    })
+  }
+  const contextValue = useMemo(() => ({ name: 'Ant Design' }), [])
 
   const totalSteps = () => {
     return steps.length
@@ -54,31 +72,36 @@ const DataAnalysis = () => {
 
   const handleStep = (step: number) => () => {
     setActiveStep(step)
+    if (step === 1) openNotification()
   }
 
   // https://mui.com/material-ui/react-stepper/
   return (
     <ThemeProvider theme={theme}>
-      <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
-        <Box margin={5}>
-          <Stepper nonLinear activeStep={activeStep}>
-            {steps.map((label, index) => (
-              <Step key={label} completed={completed[index]}>
-                <StepButton color="inherit" onClick={handleStep(index)}>
-                  {label}
-                </StepButton>
-              </Step>
-            ))}
-          </Stepper>
+      <Context.Provider value={contextValue}>
+        {contextHolder}
+        <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
+          <Box margin={5}>
+            <Stepper nonLinear activeStep={activeStep}>
+              {steps.map((label, index) => (
+                <Step key={label} completed={completed[index]}>
+                  <StepButton color="inherit" onClick={handleStep(index)}>
+                    {label}
+                  </StepButton>
+                </Step>
+              ))}
+            </Stepper>
+          </Box>
+          <Box padding={5}>
+            {activeStep === 0 && <DataImport />}
+            {activeStep === 1 && <CorrelationView />}
+            {activeStep === 2 && <CustomTools />}
+
+            {/* <Box>{activeStep === 2 && <VariableSelection />}</Box> */}
+            {/* {activeStep === 3 && <ModelSetting />} */}
+          </Box>
         </Box>
-        <Box padding={5}>
-          {activeStep === 0 && <DataImport />}
-          {activeStep === 1 && <CorrelationView />}
-          <Box>{activeStep === 2 && <VariableSelection />}</Box>
-          {/* {activeStep === 2 && <OptionSetting />} */}
-          {activeStep === 3 && <ModelSetting />}
-        </Box>
-      </Box>
+      </Context.Provider>
     </ThemeProvider>
   )
 }

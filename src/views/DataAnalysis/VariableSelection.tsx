@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Box, Typography } from '@mui/material'
 import { Button, message } from 'antd'
 import { selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { dataFileStore, dataSetStore, stepCountStore } from './store/atom'
+import { dataFileStore, stepCountStore } from './store/atom'
 import {
   selectedVarStoreX,
   selectedVarStoreY,
@@ -15,13 +15,15 @@ import { Col, Row, Modal, Switch } from 'antd'
 import NewTagSelect from './components/TagTree/NewTagSelect'
 import './style/styles.css'
 import { ArrowRightOutlined } from '@ant-design/icons'
+import { selectedDataState } from './store/base/atom'
 
 const VariableSelection = () => {
   const [messageApi, contextHolder] = message.useMessage()
 
   const setActiveStep = useSetRecoilState(stepCountStore)
   const [loading, setLoading] = useState(false)
-  const selectedDataset = useRecoilState(dataSetStore)
+
+  const selectedDataset = useRecoilState(selectedDataState)
   const selectedFile = useRecoilState(dataFileStore)
 
   //최초 리스트
@@ -43,22 +45,23 @@ const VariableSelection = () => {
   const [checked, setChecked] = useState(false)
 
   useEffect(() => {
-    if (selectedDataset[0] == '' || selectedFile[0] == '') {
-      messageApi.open({
-        type: 'error',
-        content: '파일이 선택되지 않았습니다.',
-        duration: 1,
-        style: {
-          margin: 'auto',
-        },
-      })
-      // setActiveStep(0)
-    }
+    // if (selectedDataset.id === '') {
+    //   messageApi.open({
+    //     type: 'error',
+    //     content: '파일이 선택되지 않았습니다.',
+    //     duration: 1,
+    //     style: {
+    //       margin: 'auto',
+    //     },
+    //   })
+    //   // setActiveStep(0)
+    // }
 
     // corr plot에서 선택된 값 초기화
     setSelectedVarX([])
     setSelectedVarY([])
   }, [])
+
   useEffect(() => {
     setDefaultOption(variableList)
   }, [variableList])
@@ -98,55 +101,55 @@ const VariableSelection = () => {
     setOpen(false)
   }
 
-  const handlePreprocessing = () => {
-    setLoading(true)
-    hideModal()
-    // console.log('selectedX:', selectedVarX)
-    // console.log('selectedY:', selectedVarY)
+  // const handlePreprocessing = () => {
+  //   setLoading(true)
+  //   hideModal()
+  //   // console.log('selectedX:', selectedVarX)
+  //   // console.log('selectedY:', selectedVarY)
 
-    const causeArray = []
-    const targetArray = []
+  //   const causeArray = []
+  //   const targetArray = []
 
-    causeArray.push({ file_nm: variableList[0].label, variable: selectedVarX })
-    targetArray.push({ file_nm: variableList[0].label, variable: selectedVarY })
+  //   causeArray.push({ file_nm: variableList[0].label, variable: selectedVarX })
+  //   targetArray.push({ file_nm: variableList[0].label, variable: selectedVarY })
 
-    const Object: any = {
-      com_id: localStorage.getItem('companyId'),
-      user_id: localStorage.getItem('userId'),
-      dataset_id: selectedDataset[0],
-      cause: causeArray,
-      target: targetArray[0],
-    }
-    // console.log('/api/preprocessing param:', Object)
+  //   const Object: any = {
+  //     com_id: localStorage.getItem('companyId'),
+  //     user_id: localStorage.getItem('userId'),
+  //     dataset_id: selectedDataset.id,
+  //     cause: causeArray,
+  //     target: targetArray[0],
+  //   }
+  //   // console.log('/api/preprocessing param:', Object)
 
-    if (indexColumn !== '') {
-      Object['data_index'] = indexColumn
-    }
+  //   if (indexColumn !== '') {
+  //     Object['data_index'] = indexColumn
+  //   }
 
-    const fetchData = async () => {
-      axios
-        .post(process.env.REACT_APP_API_SERVER_URL + '/api/preprocessing', JSON.stringify(Object), {
-          headers: {
-            'Content-Type': `application/json`,
-          },
-        })
-        .then(
-          (response: any) => {
-            // console.log('preprocessing response:', response.data)
-            if (response.status === 200) {
-              // setTagList(response.data)
-              setLoading(false)
-              setActiveStep(3)
-            }
-          },
-          (error) => {
-            setLoading(false)
-            console.log('error:', error)
-          }
-        )
-    }
-    fetchData()
-  }
+  //   const fetchData = async () => {
+  //     axios
+  //       .post(process.env.REACT_APP_API_SERVER_URL + '/api/preprocessing', JSON.stringify(Object), {
+  //         headers: {
+  //           'Content-Type': `application/json`,
+  //         },
+  //       })
+  //       .then(
+  //         (response: any) => {
+  //           // console.log('preprocessing response:', response.data)
+  //           if (response.status === 200) {
+  //             // setTagList(response.data)
+  //             setLoading(false)
+  //             setActiveStep(3)
+  //           }
+  //         },
+  //         (error) => {
+  //           setLoading(false)
+  //           console.log('error:', error)
+  //         }
+  //       )
+  //   }
+  //   fetchData()
+  // }
 
   const onChangeSwitch = (param: any) => {
     if (!param) setIndexColumn('')
@@ -318,7 +321,7 @@ const VariableSelection = () => {
         <Modal
           title="선택 확인"
           open={open}
-          onOk={handlePreprocessing}
+          // onOk={handlePreprocessing}
           onCancel={hideModal}
           okText="저장"
           cancelText="취소"

@@ -31,6 +31,18 @@ ReactDOM.render(
           Modal: {
             borderRadius: 10,
           },
+          Input: {
+            // colorBgContainer: '#FFFFFF',
+            // colorBorderBg: '1px solid #A3AFCF',
+            borderRadius: 10,
+          },
+          Select: {
+            // colorPrimary: '#4338f7',
+            // colorBgBase: '#FFFFFF',
+            // colorBgContainer: '#FFFFFF',
+            // colorBorderBg: '1px solid #A3AFCF',
+            borderRadius: 10,
+          },
         },
       }}
     >
