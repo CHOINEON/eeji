@@ -1,8 +1,7 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect, useRef } from 'react'
-import { Col, InputNumber, Row, Slider } from 'antd'
+import React, { useState, useEffect } from 'react'
+import { Col, InputNumber, Row, Slider, Card, Space, Statistic } from 'antd'
 import CSS from './style.module.css'
-// import styled from 'styled-components'
 import { useRecoilState } from 'recoil'
 import { sliderValueState } from '../atom'
 
@@ -70,14 +69,46 @@ const FeatureSlider = ({ clickedPoint }) => {
   }, [clickedPoint])
   return (
     <div className={CSS.slider}>
-      <div className={CSS.SliderContainer}>
-        Price Slider
+      <Card
+        style={{
+          height: 150,
+          responsive: true,
+          useResizeHandler: true,
+          autosize: true,
+          width: '100%',
+          marginTop: 20,
+          marginRight: 10,
+          marginLeft: 10,
+        }}
+      >
+        <Statistic
+          value="PRICE SLIDER"
+          valueStyle={{
+            fontWeight: 500,
+            fontSize: 15,
+          }}
+        />
         <DecimalStep clickedPoint={clickedPoint} type="price"></DecimalStep>
-      </div>
-      <div className={CSS.SliderContainer}>
-        Volume Slider
+      </Card>
+      <Card
+        style={{
+          height: 150,
+          responsive: true,
+          useResizeHandler: true,
+          autosize: true,
+          width: '100%',
+          marginTop: 20,
+        }}
+      >
+        <Statistic
+          value="VOLUME SLIDER"
+          valueStyle={{
+            fontWeight: 500,
+            fontSize: 15,
+          }}
+        />
         <DecimalStep clickedPoint={clickedPoint} type="volume"></DecimalStep>
-      </div>
+      </Card>
     </div>
   )
 }

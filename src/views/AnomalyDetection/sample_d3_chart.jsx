@@ -1,23 +1,23 @@
 /* eslint-disable prettier/prettier */
-import { Box } from '@chakra-ui/react'
-import React, { useState, useEffect, useRef } from 'react'
+import { Box, Flex, flexbox } from '@chakra-ui/react'
+import React, { useState, useEffect } from 'react'
 import Plot from 'react-plotly.js'
-import { Switch, Space, Button, Col, InputNumber, Row, Slider } from 'antd'
+import { Switch, Space, Button, Card, Statistic, Col, Row } from 'antd'
 import { Checkbox } from 'antd'
-// import styled from 'styled-components'
 import FeatureSlider from './components/Slider'
 import CSS from './components/style.module.css'
 import { useRecoilState } from 'recoil'
-import { sliderValueState } from './atom'
+import { sliderValueState, ThreValueState } from './atom'
 import axios from 'axios'
+import styled from 'styled-components'
+import { column } from 'stylis'
+import ThreSlider from './components/ThrSlider'
 
 const onChange = (e) => {
   console.log(`checked = ${e.target.checked}`)
 }
-
 const AdvancedChart = () => {
   const originURL = 'ws://222.121.66.49:8001/ws/web'
-  /* managing the states of incoming data */
   const [socketData, setSocketData] = useState({})
   const [chartData, setChartData] = useState([])
   const [index, setIndex] = useState([])
@@ -39,6 +39,7 @@ const AdvancedChart = () => {
       setClickedPoint({ clickedXvalue, clickedYvalue })
     }
   }
+
   useEffect(() => {
     if (socketData.data) {
       setChartData(socketData.data)
@@ -61,6 +62,7 @@ const AdvancedChart = () => {
       } else {
       }
       setIndexSize(socketData.index_size)
+
       const plotData = [
         {
           x: index,
@@ -91,10 +93,17 @@ const AdvancedChart = () => {
           x: index,
           y: thresholdArr,
           name: 'threshold',
-          type: 'line',
-          mode: 'lines',
+          type: 'scatter',
+          mode: 'lines+markers',
+          marker: {
+            color: 'green',
+            size: 3,
+            symbol: 'square',
+          },
           line: {
             color: 'green',
+
+            dash: 'dash',
           },
           yaxis: 'y2',
           visible: yesVisible,
@@ -103,11 +112,53 @@ const AdvancedChart = () => {
       ]
       setTestData(plotData)
     }
-    // else (socketData.data[0][0]//T가 매우 클 경우
-    //  ){
-    // }
   }, [socketData])
 
+  const config = [
+    {
+      displayModeBar: false,
+      responsive: true,
+      useResizeHandler: true,
+      autosize: true,
+    },
+  ]
+
+  const layout = {
+    title: 'Anomaly Detection Plot',
+    titlefont: { size: 20 },
+
+    xaxis: {
+      title: 'Index',
+      titlefont: { size: 20 },
+    },
+
+    yaxis: {
+      title: 'Data',
+      titlefont: { size: 20 },
+      tickfont: { size: 15 },
+    },
+
+    yaxis2: {
+      title: 'anomaly score',
+      titlefont: { color: 'black', size: 20 },
+      tickfont: { color: 'black', size: 15 },
+      overlaying: 'y',
+      side: 'right',
+      zeroline: false,
+    },
+
+    margin: {
+      t: 80,
+      b: 100,
+      l: 110,
+      r: 100,
+    },
+
+    // displayModeBar: false,
+    responsive: true,
+    useResizeHandler: true,
+    autosize: true,
+  }
   /*add timestamp*/
   useEffect(() => {
     var timestamp = Date.now()
@@ -138,7 +189,6 @@ const AdvancedChart = () => {
     }
   }, [])
 
-  //Toggle switch
   const [isVisible, setIsVisible] = useState(true)
   const handleScoreToggle = () => {
     setIsVisible(!isVisible)
@@ -146,41 +196,6 @@ const AdvancedChart = () => {
   const [yesVisible, setYesVisible] = useState(true)
   const handleThreToggle = () => {
     setYesVisible(!yesVisible)
-  }
-  // const colors = isAnomaly.map(() => {
-  //   if (isAnomaly == 1) {
-  //     return 'black'
-  //   } else return 'pink'
-  // })
-  const layout = {
-    title: 'Anomaly Detection Plot',
-    titlefont: { size: 20 },
-    xaxis: {
-      title: 'Index',
-      titlefont: { size: 20 },
-    },
-    yaxis: {
-      title: 'Data',
-      titlefont: { size: 20 },
-      tickfont: { size: 15 },
-    },
-    yaxis2: {
-      title: 'anomaly score',
-      titlefont: { color: 'black', size: 20 },
-      tickfont: { color: 'black', size: 15 },
-      overlaying: 'y',
-      side: 'right',
-      zeroline: false,
-    },
-    margin: {
-      t: 50,
-      b: 80,
-      l: 100,
-      r: 80,
-    },
-    responsive: true,
-    useResizeHandler: true,
-    autosize: true,
   }
 
   async function load_shap_plot(event) {
@@ -240,17 +255,27 @@ const AdvancedChart = () => {
   }
 
   const [sliderValue, setSliderValue] = useRecoilState(sliderValueState)
+  const [threValue, setThreValue] = useRecoilState(ThreValueState)
 
   const handleClick = () => {
-    // "revised_values": [
-    //   [
-    //     1,
-    //     2
-    //   ]
-    // ]
-
     const param = {
       revised_values: [[sliderValue.price, sliderValue.volume]],
+    }
+
+    console.log('param;', param)
+    axios
+      .post('http://222.121.66.49:8001/post_new_input', param)
+      .then(function (response) {
+        console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+
+  const handleSecClick = () => {
+    const param = {
+      revised_values: [[ThreValueState.Threshold]],
     }
 
     console.log('param;', param)
@@ -277,7 +302,21 @@ const AdvancedChart = () => {
         autosize: 'true',
       }}
     >
-      <div>
+      <div className={CSS.Top}>
+        {/* <div className = {CSS.ButtonContainer}> 
+              <Switch
+                    style={{ width: 100, marginRight : 3 }}
+                    onClick={handleThreToggle}
+                    checkedChildren=" THRESHOLD "
+                    unCheckedChildren="THRESHOLD "
+                    defaultChecked/>
+              <Switch
+                    style={{ width: 100 }}
+                    onClick={handleScoreToggle}
+                    checkedChildren=" ANOMALY SCORE "
+                    unCheckedChildren="ANOMALY SCORE "
+                    defaultChecked/> 
+        </div> */}
         <Plot
           data={testData}
           layout={layout}
@@ -285,57 +324,235 @@ const AdvancedChart = () => {
           responsive={true}
           autosize={true}
           style={{ width: '100%', height: '100%' }}
-          config={{ displayModeBar: true }}
+          config={config}
           onClick={handleChartClick}
         />
       </div>
-      <div className={CSS.panelContainer}>
-        <div
-          style={{ responsive: true, useResizeHandler: true, autosize: true, width: '100%' }}
-          id="ControlPanel"
-          className={CSS.controlPanel}
-        >
-          Control Panel
-          <h1>
-            Selected Data x: {[clickedPoint.clickedXvalue, clickedPoint.clickedYvalue]} y:{[clickedPoint.clickedYvalue]}
-          </h1>
-          <h1>Features</h1>
-          <div>
-            <Checkbox onChange={onChange}>{price}</Checkbox>
+
+      <div className={CSS.Panel}>
+        <Space direction="Vertical">
+          <Space direction="Horizontal">
+            <Card
+              style={{
+                width: 400,
+                height: 370,
+                responsive: true,
+                useResizeHandler: true,
+                autosize: true,
+                marginTop: 20,
+                marginBottom: 10,
+              }}
+            >
+              <Statistic
+                value="SELECTED DATA"
+                valueStyle={{
+                  fontWeight: 500,
+                  fontSize: 20,
+                }}
+              />
+              <Row gutter={16}>
+                <Col span={8}>
+                  <Statistic title="X Data" value={[clickedPoint.clickedXvalue]} />
+                </Col>
+                <Col span={8}>
+                  <Statistic title="Y Data" value={[clickedPoint.clickedYvalue]} />
+                </Col>
+              </Row>
+              <br />
+              <Statistic
+                value="IMPORT DATA"
+                valueStyle={{
+                  fontWeight: 500,
+                  fontSize: 20,
+                }}
+              />
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Statistic title="DATA" value={thresholdArr[0]} />
+                </Col>
+              </Row>
+              <br />
+              <Statistic
+                value="INDEX SIZE"
+                valueStyle={{
+                  fontWeight: 500,
+                  fontSize: 20,
+                }}
+              />
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Statistic title="DATA" value={indexSize} />
+                </Col>
+              </Row>
+            </Card>
+          </Space>
+          {/* <Card style={{ 
+                      width:150, 
+                      height:150,
+                      marginTop : 20,
+                      marginBottom : 10,  
+                      responsive: true, 
+                      useResizeHandler: true, 
+                      autosize: true, 
+                      }}>
+                <Statistic  
+                    value="INDEX SIZE" 
+                    valueStyle={{
+                              fontWeight:500, 
+                              fontSize : 20,
+                            }}
+                /> 
+                    <Row gutter={16}>
+                      <Col span={12}>
+                        <Statistic title="DATA" value={indexSize} />
+                      </Col>
+                    </Row>     
+          </Card> */}
+
+          <div className={CSS.featureBox}>
+            <Card
+              style={{
+                height: 370,
+                marginTop: 20,
+                responsive: true,
+                useResizeHandler: true,
+                autosize: true,
+              }}
+            >
+              <Statistic
+                value="FEATURES"
+                valueStyle={{
+                  fontWeight: 500,
+                  fontSize: 20,
+                  marginBottom: 10,
+                }}
+              />
+              <Checkbox onChange={onChange}>{price}</Checkbox>
+              <Checkbox onChange={onChange}>{volume}</Checkbox>
+              <FeatureSlider clickedPoint={clickedPoint} />{' '}
+              <Button
+                type="primary"
+                onClick={handleClick}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: '20px',
+                }}
+              >
+                {' '}
+                SUBMIT
+              </Button>
+            </Card>
           </div>
-          <div>
-            <Checkbox onChange={onChange}>{volume}</Checkbox>
+          <div className={CSS.ThreBox}>
+            <Card
+              style={{
+                height: 370,
+                marginTop: 20,
+                responsive: true,
+                useResizeHandler: true,
+                autosize: true,
+              }}
+            >
+              <Statistic
+                value="THRESHOLD "
+                valueStyle={{
+                  fontWeight: 500,
+                  fontSize: 20,
+                }}
+              />
+              <Row gutter={16}>
+                <Col span={10}>
+                  <Statistic value={socketData.thr} />
+                </Col>
+              </Row>
+
+              <ThreSlider clickedPoint={clickedPoint} />
+              <Button
+                type="primary"
+                onClick={handleSecClick}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: '30px',
+                }}
+              >
+                {' '}
+                SUBMIT
+              </Button>
+            </Card>
           </div>
-        </div>
-        <FeatureSlider clickedPoint={clickedPoint} />
-        <Button onClick={handleClick}> click</Button>
-        <div className="index"> </div>
-      </div>
-      <div>
-        <div style={{ fontSize: '20px', marginTop: '20px', textAlign: 'center' }}>Shap Result</div>
-        <div
-          id="shapPlotContainer"
-          style={{ width: '100%', height: '150px', backgroundColor: 'white', paddingTop: '20px' }}
-        />
+          <div className={CSS.plotButton}>
+            <Card
+              style={{
+                height: 370,
+                marginTop: 20,
+                responsive: true,
+                useResizeHandler: true,
+                autosize: true,
+              }}
+            >
+              <Statistic
+                value="CHART SETTING"
+                valueStyle={{
+                  fontWeight: 500,
+                  fontSize: 20,
+                }}
+              />
+              <div className={CSS.ButtonContainer}>
+                <Switch
+                  style={{ width: 100, marginRight: 3, MarginTop: 10 }}
+                  onClick={handleThreToggle}
+                  checkedChildren=" THRESHOLD "
+                  unCheckedChildren="THRESHOLD "
+                  defaultChecked
+                />
+                <Switch
+                  style={{ width: 100 }}
+                  onClick={handleScoreToggle}
+                  checkedChildren=" ANOMALY SCORE "
+                  unCheckedChildren="ANOMALY SCORE "
+                  defaultChecked
+                />
+              </div>
+            </Card>
+          </div>
+        </Space>
       </div>
 
-      <Space direction="vertical">
-        <Button onClick={load_shap_plot}>Shap 플롯 로드</Button>
-        <Switch
-          style={{ width: 150 }}
-          onClick={handleThreToggle}
-          checkedChildren="Show Threshold"
-          unCheckedChildren="Hide Threshold"
-          defaultChecked
-        />
-        <Switch
-          style={{ width: 150 }}
-          onClick={handleScoreToggle}
-          checkedChildren="Show AnomalyScore"
-          unCheckedChildren="Hide AnomalyScore"
-          defaultChecked
-        />
-      </Space>
+      <Card
+        style={{
+          height: 250,
+          responsive: true,
+          useResizeHandler: true,
+          autosize: true,
+          width: '100%',
+        }}
+      >
+        <div
+          style={{
+            fontSize: '20px',
+            textAlign: 'center',
+          }}
+        >
+          <Statistic
+            value="SHAP RESULT"
+            valueStyle={{
+              fontWeight: 600,
+            }}
+          />
+          <Button onClick={load_shap_plot}>Shap 플롯 로드</Button>
+          <div
+            id="shapPlotContainer"
+            style={{
+              width: '100%',
+              height: '150px',
+              backgroundColor: 'white',
+              paddingTop: '20px',
+            }}
+          ></div>
+        </div>
+      </Card>
     </Box>
   )
 }
