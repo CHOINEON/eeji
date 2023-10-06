@@ -12,7 +12,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons'
 import { Link, Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import { modelListAtom } from './store/atom'
-import { dateTimeToString, removeSeparator } from 'common/DateFunction'
+import { dateTimeToString, removeSeparator } from 'utils/DateFunction'
 
 export type Model = {
   com_id: string

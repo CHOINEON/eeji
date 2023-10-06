@@ -11,6 +11,9 @@ import styled from '@emotion/styled'
 import { selectedDataState, userInfoState } from './store/base/atom'
 import { stepCountStore } from './store/atom'
 import { usedVariableStore, variableStore } from './store/variable/atom'
+import DatasetApi from 'apis/DatasetApi'
+import useGetDatasets from 'hooks/queries/useGetDatasets'
+import { useQuery } from 'react-query'
 
 const DatasetAddButton = styled.button`
   width: 100%;
@@ -22,7 +25,6 @@ const DatasetAddButton = styled.button`
   background-color: #4338f7;
   box-shadow: 0 2px 0 rgba(55, 5, 255, 0.06);
 `
-
 const DataSet = () => {
   const [messageApi, contextHolder] = message.useMessage()
 
@@ -37,30 +39,31 @@ const DataSet = () => {
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
 
   const [dataSetList, setDataSetList] = useState([])
+  const { status, data } = useGetDatasets(localStorage.getItem('userId'))
+
+  useEffect(() => {
+    console.log('data:', data)
+  }, [data])
 
   useEffect(() => {
     setUserInfo({ user_id: localStorage.getItem('userId'), com_id: localStorage.getItem('companyId') })
   }, [])
 
-  useEffect(() => {
-    if (!importOpen) fetchDataSetList()
-  }, [importOpen])
-
   const handleClick = () => {
     setImportOpen(true)
   }
 
-  const fetchDataSetList = () => {
-    const user_id = localStorage.getItem('userId')
-
-    axios
-      .post(process.env.REACT_APP_NEW_API_SERVER_URL + `/api/dataset_list/${user_id}?user_id=${user_id}`)
-      .then((response) => {
-        // console.log('api/dataset::', response.data)
-        setDataSetList(response.data.data)
-      })
-      .catch((err) => console.log(err))
-  }
+  // const fetchDataSetList = () => {
+  // const user_id = localStorage.getItem('userId')
+  // axios
+  //   .post(process.env.REACT_APP_NEW_API_SERVER_URL + `/api/dataset_list/${user_id}?user_id=${user_id}`)
+  //   .then((response) => {
+  //     console.log('api/dataset::', response.data)
+  //     setDataSetList(response.data.data)
+  //   })
+  //   ///예외처리
+  //   .catch((err) => console.log(err))
+  // }
 
   const handleSelect = (data: any) => {
     setSelectedData({
@@ -138,9 +141,9 @@ const DataSet = () => {
           + NEW DATASET
         </DatasetAddButton>
         <Row gutter={[16, 16]}>
-          {dataSetList.map((item, index) => (
+          {data?.data.map((data: any, index: number) => (
             <Col span={12} key={index}>
-              <DescriptionBox data={item} onSelect={handleSelect} onDelete={handleDelete} />
+              <DescriptionBox data={data} onSelect={handleSelect} onDelete={handleDelete} />
             </Col>
           ))}
         </Row>

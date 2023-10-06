@@ -106,6 +106,7 @@ const OptionSetting = () => {
     }
 
     const url =
+
       process.env.REACT_APP_NEW_API_SERVER_URL + `/api/get_model_option/${userInfo.user_id}?user_id=${userInfo.user_id}`
 
     // param.y_value = param.y_value[0]
@@ -122,7 +123,9 @@ const OptionSetting = () => {
     <Container>
       <Row gutter={[24, 16]} style={{ width: '100%' }}>
         <Col span={18}>
-          <RoundedBox minHeight={'35vw'}>
+
+          <RoundedBox minHeight={'100%'}>
+
             <div className="w-100">
               <Popover placement="rightTop" title="평가 지표" content={content}>
                 <Button>평가 지표</Button>
@@ -134,7 +137,7 @@ const OptionSetting = () => {
           </RoundedBox>
         </Col>
         <Col span={6}>
-          <RoundedBox minHeight={'35vw'}>
+          <RoundedBox minHeight={'100%'}>
             <div style={{ marginBottom: '10px', textAlign: 'right' }}>
               <Switch defaultChecked checkedChildren="Auto" unCheckedChildren="Manual" onChange={onChange} />
             </div>

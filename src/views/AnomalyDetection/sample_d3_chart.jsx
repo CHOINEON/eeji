@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Box, Flex, flexbox } from '@chakra-ui/react'
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import Plot from 'react-plotly.js'
 import { Switch, Space, Button, Card, Statistic, Col, Row } from 'antd'
 import { Checkbox } from 'antd'
@@ -17,7 +17,6 @@ const onChange = (e) => {
   console.log(`checked = ${e.target.checked}`)
 }
 const AdvancedChart = () => {
-
   const originURL = 'ws://222.121.66.49:8001/ws/web'
   const [socketData, setSocketData] = useState({})
   const [chartData, setChartData] = useState([])
@@ -64,7 +63,6 @@ const AdvancedChart = () => {
       }
       setIndexSize(socketData.index_size)
 
-
       const plotData = [
         {
           x: index,
@@ -104,9 +102,9 @@ const AdvancedChart = () => {
           },
           line: {
             color: 'green',
-           
-            dash : 'dash',
-                },
+
+            dash: 'dash',
+          },
           yaxis: 'y2',
           visible: yesVisible,
           hovertemplate: '<b>Threshold</b><br>Index: %{x}<br>Threshold: %{y}',
@@ -114,47 +112,48 @@ const AdvancedChart = () => {
       ]
       setTestData(plotData)
     }
-
   }, [socketData])
 
-const config = [{
-    displayModeBar: false,
-    responsive: true,
-    useResizeHandler: true,
-    autosize: true,
-  }];  
+  const config = [
+    {
+      displayModeBar: false,
+      responsive: true,
+      useResizeHandler: true,
+      autosize: true,
+    },
+  ]
 
- const layout = {
+  const layout = {
     title: 'Anomaly Detection Plot',
     titlefont: { size: 20 },
 
     xaxis: {
-        title: 'Index',
-        titlefont: { size: 20 },
-        },
+      title: 'Index',
+      titlefont: { size: 20 },
+    },
 
     yaxis: {
-        title: 'Data',
-        titlefont: { size: 20 },
-        tickfont: { size: 15 },
-        },
+      title: 'Data',
+      titlefont: { size: 20 },
+      tickfont: { size: 15 },
+    },
 
     yaxis2: {
-        title: 'anomaly score',
-        titlefont: { color: 'black', size: 20 },
-        tickfont: { color: 'black', size: 15 },
-        overlaying: 'y',
-        side: 'right',
-        zeroline: false,
-        },
+      title: 'anomaly score',
+      titlefont: { color: 'black', size: 20 },
+      tickfont: { color: 'black', size: 15 },
+      overlaying: 'y',
+      side: 'right',
+      zeroline: false,
+    },
 
     margin: {
-        t: 80,
-        b: 100,
-        l: 110,
-        r: 100,
-        },
-    
+      t: 80,
+      b: 100,
+      l: 110,
+      r: 100,
+    },
+
     // displayModeBar: false,
     responsive: true,
     useResizeHandler: true,
@@ -198,8 +197,6 @@ const config = [{
   const handleThreToggle = () => {
     setYesVisible(!yesVisible)
   }
-
- 
 
   async function load_shap_plot(event) {
     event.preventDefault()
@@ -261,7 +258,6 @@ const config = [{
   const [threValue, setThreValue] = useRecoilState(ThreValueState)
 
   const handleClick = () => {
-
     const param = {
       revised_values: [[sliderValue.price, sliderValue.volume]],
     }
@@ -278,7 +274,6 @@ const config = [{
   }
 
   const handleSecClick = () => {
-
     const param = {
       revised_values: [[ThreValueState.Threshold]],
     }
@@ -296,18 +291,18 @@ const config = [{
 
   return (
     <Box
-        pt={{ base: '130px', md: '80px', xl: '80px' }}
-          style={{
-                position: 'relative',
-                zIndex: 1000,
-                width: '100%',
-                height: '100%',
-                useResizeHandler: 'true',
-                responsive: 'true',
-                autosize: 'true',
-          }}>
-            
-      <div className = {CSS.Top}>
+      pt={{ base: '130px', md: '80px', xl: '80px' }}
+      style={{
+        position: 'relative',
+        zIndex: 1000,
+        width: '100%',
+        height: '100%',
+        useResizeHandler: 'true',
+        responsive: 'true',
+        autosize: 'true',
+      }}
+    >
+      <div className={CSS.Top}>
         {/* <div className = {CSS.ButtonContainer}> 
               <Switch
                     style={{ width: 100, marginRight : 3 }}
@@ -333,60 +328,64 @@ const config = [{
           onClick={handleChartClick}
         />
       </div>
-      
-      <div className={CSS.Panel}>
-        <Space direction = "Vertical">
-        <Space direction="Horizontal">
-          <Card style={{ 
-                      width:400, 
-                      height:370,
-                      responsive: true, 
-                      useResizeHandler: true, 
-                      autosize: true, 
-                      marginTop : 20,
-                      marginBottom : 10,  
-                      }}>
-              <Statistic  
-                      value='SELECTED DATA' 
-                      valueStyle={{
-                                  fontWeight:500, 
-                                  fontSize : 20
-                                  }}/> 
-                      <Row gutter={16}>
-                            <Col span={8}>
-                              <Statistic title="X Data" value={[clickedPoint.clickedXvalue]} />
-                            </Col>
-                            <Col span={8}><Statistic title="Y Data" value={[clickedPoint.clickedYvalue]} />
-                            </Col> 
-                      </Row><br/> 
-              <Statistic  
-                  value="IMPORT DATA" 
-                  valueStyle={{
-                                fontWeight:500, 
-                                fontSize : 20
-                              }}
-              /> 
-              <Row gutter={16}>
-                          <Col span={12}>
-                                <Statistic title="DATA" value={thresholdArr[0]} />
-                          </Col>
-              </Row><br/> 
-              <Statistic  
-                    value="INDEX SIZE" 
-                    valueStyle={{
-                              fontWeight:500, 
-                              fontSize : 20,
-                            }}
-                /> 
-                    <Row gutter={16}>
-                      <Col span={12}>
-                        <Statistic title="DATA" value={indexSize} />
-                      </Col>
-                    </Row>     
-          </Card>
-          
 
-</Space>
+      <div className={CSS.Panel}>
+        <Space direction="Vertical">
+          <Space direction="Horizontal">
+            <Card
+              style={{
+                width: 400,
+                height: 370,
+                responsive: true,
+                useResizeHandler: true,
+                autosize: true,
+                marginTop: 20,
+                marginBottom: 10,
+              }}
+            >
+              <Statistic
+                value="SELECTED DATA"
+                valueStyle={{
+                  fontWeight: 500,
+                  fontSize: 20,
+                }}
+              />
+              <Row gutter={16}>
+                <Col span={8}>
+                  <Statistic title="X Data" value={[clickedPoint.clickedXvalue]} />
+                </Col>
+                <Col span={8}>
+                  <Statistic title="Y Data" value={[clickedPoint.clickedYvalue]} />
+                </Col>
+              </Row>
+              <br />
+              <Statistic
+                value="IMPORT DATA"
+                valueStyle={{
+                  fontWeight: 500,
+                  fontSize: 20,
+                }}
+              />
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Statistic title="DATA" value={thresholdArr[0]} />
+                </Col>
+              </Row>
+              <br />
+              <Statistic
+                value="INDEX SIZE"
+                valueStyle={{
+                  fontWeight: 500,
+                  fontSize: 20,
+                }}
+              />
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Statistic title="DATA" value={indexSize} />
+                </Col>
+              </Row>
+            </Card>
+          </Space>
           {/* <Card style={{ 
                       width:150, 
                       height:150,
@@ -410,132 +409,150 @@ const config = [{
                     </Row>     
           </Card> */}
 
-              <div className= {CSS.featureBox}>
-                  <Card style={{ 
-                              
-                              height: 370,
-                              marginTop : 20,  
-                              responsive: true, 
-                              useResizeHandler: true, 
-                              autosize: true, 
-                        }}>                   
-                    <Statistic  value="FEATURES"  
-                                valueStyle={{
-                                      fontWeight:500, 
-                                      fontSize : 20,
-                                      marginBottom : 10
-                                    }}
-                    />
-                      <Checkbox onChange={onChange}>{price}</Checkbox>
-                      <Checkbox onChange={onChange}>{volume}</Checkbox>
-                      
-                    <FeatureSlider clickedPoint={clickedPoint}/> <Button 
-                          type="primary" 
-                          onClick={handleClick} 
-                          style = {{
-                            justifyContent: 'center',
-                            alignItems : 'center',
-                            marginTop  : '20px'
-                                  }}> SUBMIT 
-                      </Button> 
-                      </Card> 
-              </div>
-              <div className= {CSS.ThreBox}>
-                  <Card style={{ 
-                              height: 370,
-                              marginTop : 20,  
-                              responsive: true, 
-                              useResizeHandler: true, 
-                              autosize: true, 
-                        }}>                   
-                    <Statistic  value="THRESHOLD "  
-                                valueStyle={{
-                                      fontWeight:500, 
-                                      fontSize : 20,
-                                    }}
-                    />
-                        <Row gutter={16}>
-                          <Col span={10}>
-                                <Statistic  value={socketData.thr} />
-                          </Col>
+          <div className={CSS.featureBox}>
+            <Card
+              style={{
+                height: 370,
+                marginTop: 20,
+                responsive: true,
+                useResizeHandler: true,
+                autosize: true,
+              }}
+            >
+              <Statistic
+                value="FEATURES"
+                valueStyle={{
+                  fontWeight: 500,
+                  fontSize: 20,
+                  marginBottom: 10,
+                }}
+              />
+              <Checkbox onChange={onChange}>{price}</Checkbox>
+              <Checkbox onChange={onChange}>{volume}</Checkbox>
+              <FeatureSlider clickedPoint={clickedPoint} />{' '}
+              <Button
+                type="primary"
+                onClick={handleClick}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: '20px',
+                }}
+              >
+                {' '}
+                SUBMIT
+              </Button>
+            </Card>
+          </div>
+          <div className={CSS.ThreBox}>
+            <Card
+              style={{
+                height: 370,
+                marginTop: 20,
+                responsive: true,
+                useResizeHandler: true,
+                autosize: true,
+              }}
+            >
+              <Statistic
+                value="THRESHOLD "
+                valueStyle={{
+                  fontWeight: 500,
+                  fontSize: 20,
+                }}
+              />
+              <Row gutter={16}>
+                <Col span={10}>
+                  <Statistic value={socketData.thr} />
+                </Col>
               </Row>
-            
-                    <ThreSlider clickedPoint={clickedPoint}/> 
-                    <Button 
-                      type="primary" 
-                      onClick={handleSecClick} 
-                      style = {{
-                              justifyContent: 'center',
-                              alignItems : 'center',
-                              marginTop  : '30px'
-                              }}> SUBMIT 
-                    </Button>
-                    </Card> 
+
+              <ThreSlider clickedPoint={clickedPoint} />
+              <Button
+                type="primary"
+                onClick={handleSecClick}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: '30px',
+                }}
+              >
+                {' '}
+                SUBMIT
+              </Button>
+            </Card>
+          </div>
+          <div className={CSS.plotButton}>
+            <Card
+              style={{
+                height: 370,
+                marginTop: 20,
+                responsive: true,
+                useResizeHandler: true,
+                autosize: true,
+              }}
+            >
+              <Statistic
+                value="CHART SETTING"
+                valueStyle={{
+                  fontWeight: 500,
+                  fontSize: 20,
+                }}
+              />
+              <div className={CSS.ButtonContainer}>
+                <Switch
+                  style={{ width: 100, marginRight: 3, MarginTop: 10 }}
+                  onClick={handleThreToggle}
+                  checkedChildren=" THRESHOLD "
+                  unCheckedChildren="THRESHOLD "
+                  defaultChecked
+                />
+                <Switch
+                  style={{ width: 100 }}
+                  onClick={handleScoreToggle}
+                  checkedChildren=" ANOMALY SCORE "
+                  unCheckedChildren="ANOMALY SCORE "
+                  defaultChecked
+                />
               </div>
-              <div className= {CSS.plotButton}>
-                  <Card style={{ 
-                              height: 370,
-                              marginTop : 20,  
-                              responsive: true, 
-                              useResizeHandler: true, 
-                              autosize: true, 
-                        }}>                   
-                     <Statistic  
-                      value="CHART SETTING" 
-                      valueStyle={{
-                                    fontWeight:500, 
-                                    fontSize : 20
-                                  }}
-                      /> 
-                      <div className = {CSS.ButtonContainer}> 
-                      <Switch
-                            style={{ width: 100, marginRight : 3, MarginTop : 10 }}
-                            onClick={handleThreToggle}
-                            checkedChildren=" THRESHOLD "
-                            unCheckedChildren="THRESHOLD "
-                            defaultChecked/>
-                      <Switch
-                            style={{ width: 100 }}
-                            onClick={handleScoreToggle}
-                            checkedChildren=" ANOMALY SCORE "
-                            unCheckedChildren="ANOMALY SCORE "
-                            defaultChecked/> 
-                    </div>
-          
-                    </Card> 
-              </div>
-            </Space>
-            
+            </Card>
+          </div>
+        </Space>
       </div>
-      
-        <Card style={{ 
-                    height:250,
-                    responsive: true, 
-                    useResizeHandler: true, 
-                    autosize: true, 
-                    width: '100%' 
-                    }}>
-            <div style={{ 
-                        fontSize: '20px', 
-                        textAlign: 'center' 
-                    }}> 
-                <Statistic  
-                        value='SHAP RESULT' 
-                        valueStyle={{
-                                fontWeight:600
-                                }}/>
-                                <Button onClick={load_shap_plot}>Shap 플롯 로드</Button> 
-                                <div
-              id="shapPlotContainer"
-              style={{ 
-                    width: '100%', 
-                    height: '150px', 
-                    backgroundColor: 'white', 
-                    paddingTop: '20px' 
-              }}></div>
-            </div>
-        </Card> 
-          
+
+      <Card
+        style={{
+          height: 250,
+          responsive: true,
+          useResizeHandler: true,
+          autosize: true,
+          width: '100%',
+        }}
+      >
+        <div
+          style={{
+            fontSize: '20px',
+            textAlign: 'center',
+          }}
+        >
+          <Statistic
+            value="SHAP RESULT"
+            valueStyle={{
+              fontWeight: 600,
+            }}
+          />
+          <Button onClick={load_shap_plot}>Shap 플롯 로드</Button>
+          <div
+            id="shapPlotContainer"
+            style={{
+              width: '100%',
+              height: '150px',
+              backgroundColor: 'white',
+              paddingTop: '20px',
+            }}
+          ></div>
+        </div>
+      </Card>
     </Box>
   )
 }

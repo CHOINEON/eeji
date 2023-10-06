@@ -6,7 +6,7 @@ import { saveModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import { modelListAtom } from 'views/AIModelManagement/store/atom'
 
 import axios from 'axios'
-import * as common from 'common/DateFunction'
+import * as common from 'utils/DateFunction'
 
 // const getNowDateTime = () => {
 //   const now = new Date()

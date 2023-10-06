@@ -59,7 +59,6 @@ const DecimalStep = (props) => {
           onChange={onChange}
         />
       </Col>
-      
     </Row>
   )
 }
@@ -70,41 +69,45 @@ const FeatureSlider = ({ clickedPoint }) => {
   }, [clickedPoint])
   return (
     <div className={CSS.slider}>
-      <Card style={{
-                height:150,
-                responsive: true, 
-                useResizeHandler: true, 
-                autosize: true, 
-                width: '100%' ,
-                marginTop : 20  ,
-                marginRight : 10,
-                marginLeft : 10 
-          }}>
-        <Statistic  
-                value='PRICE SLIDER' 
-                valueStyle={{
-                        fontWeight:500, 
-                        fontSize : 15
-                        }}/>
-          <DecimalStep clickedPoint={clickedPoint} type="price"></DecimalStep>
+      <Card
+        style={{
+          height: 150,
+          responsive: true,
+          useResizeHandler: true,
+          autosize: true,
+          width: '100%',
+          marginTop: 20,
+          marginRight: 10,
+          marginLeft: 10,
+        }}
+      >
+        <Statistic
+          value="PRICE SLIDER"
+          valueStyle={{
+            fontWeight: 500,
+            fontSize: 15,
+          }}
+        />
+        <DecimalStep clickedPoint={clickedPoint} type="price"></DecimalStep>
       </Card>
-      <Card style={{
-                height:150,
-                responsive: true, 
-                useResizeHandler: true, 
-                autosize: true, 
-                width: '100%',
-                marginTop : 20,
-                 
-                  
-          }}>
-          <Statistic  
-                  value='VOLUME SLIDER' 
-                  valueStyle={{
-                          fontWeight:500, 
-                          fontSize : 15,
-                          }}/>
-            <DecimalStep clickedPoint={clickedPoint} type="volume"></DecimalStep>
+      <Card
+        style={{
+          height: 150,
+          responsive: true,
+          useResizeHandler: true,
+          autosize: true,
+          width: '100%',
+          marginTop: 20,
+        }}
+      >
+        <Statistic
+          value="VOLUME SLIDER"
+          valueStyle={{
+            fontWeight: 500,
+            fontSize: 15,
+          }}
+        />
+        <DecimalStep clickedPoint={clickedPoint} type="volume"></DecimalStep>
       </Card>
     </div>
   )

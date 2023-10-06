@@ -18,7 +18,7 @@ import Button from '@mui/material/Button'
 import ChartContextMenu from '../ContextMenu/ChartContextMenu'
 import CsvDownloader from 'react-csv-downloader'
 import SetValueModal from './SetValueModal'
-import { dateTimeToString } from 'common/DateFunction'
+import { dateTimeToString } from 'utils/DateFunction'
 
 const LineSeriesChart = (props: any) => {
   const { chartInputData, chartHeight, onExport, onSave } = props
