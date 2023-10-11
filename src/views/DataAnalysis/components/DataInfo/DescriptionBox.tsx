@@ -1,37 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import '../../style/uploader.css'
-import { Dropdown, MenuProps, Modal, Typography, message } from 'antd'
+import { Dropdown, MenuProps, App, Typography, message } from 'antd'
 import axios from 'axios'
 import { ExclamationCircleFilled, MoreOutlined } from '@ant-design/icons'
-
-const DescBoxContainer = styled.div`
-  display: block;
-  float: left;
-  background-color: #fff;
-  width: 100%;
-  height: 150px;
-  border: 1px solid lightgray;
-  border-radius: 18px;
-  box-shadow: 0px 0px 10px #0000001a;
-  &:hover {
-    // cursor: pointer;
-    color: #0d99ff;
-    background-color: #91caff69;
-  }
-`
-const Content = styled.div`
-  display: block;
-  color: gray;
-  font-size: 15px;
-`
-const TitleWrapper = styled.div`
-  display: block;
-  margin: 20px;
-  &:hover {
-    cursor: pointer;
-  }
-`
+import { useRecoilState } from 'recoil'
+import { datasetEditModalState } from 'views/DataAnalysis/store/modal/atom'
+import { selectedDataState } from 'views/DataAnalysis/store/base/atom'
 
 export interface DescriptionBoxProps {
   ds_id?: string
@@ -48,13 +23,19 @@ export interface DescriptionBoxProps {
 
 export interface IDescriptionBox {
   data: DescriptionBoxProps
-  onSelect: any
-  onDelete: any
+  // onSelect: any
+  // onViewMore: any
 }
 
 const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
-  const [messageApi, contextHolder] = message.useMessage()
-  const { data, onSelect, onDelete } = props
+  const com_id = localStorage.getItem('companyId')
+  const user_id = localStorage.getItem('userId')
+
+  const [modalState, setModalState] = useRecoilState(datasetEditModalState)
+  const { modal } = App.useApp()
+  const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
+
+  const { data } = props
 
   const items: MenuProps['items'] = [
     {
@@ -67,49 +48,36 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
     },
   ]
 
-  // useEffect(() => {
-  //   setCreate(new Date(props.data.create_date).toLocaleDateString())
-  // }, [])
-
   const handleClick = (event: any) => {
     if (event.target.tagName !== 'svg' && event.target.tagName !== 'SPAN') {
       //"more" 아이콘 클릭된 경우 예외로 처리
-      onSelect(data)
+      // onSelect(data)
+    } else {
+      setSelectedData(data)
     }
   }
 
-  // const handleDelete = (ds_id: string) => {
-  //   onDelete(ds_id)
-  // }
+  const handleDelete = (ds_id: any) => {
+    alert(`${ds_id} deleted`)
+  }
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
     if (key === '1') {
-      messageApi.open({
-        type: 'warning',
-        content: '구현 예정입니다',
-        duration: 2,
-        style: {
-          margin: 'auto',
+      setModalState(true)
+    }
+    if (key === '2') {
+      modal.confirm({
+        title: 'Do you want to delete this dataset?',
+        icon: <ExclamationCircleFilled />,
+        content: `Deletion is permanent and you will not be able to undo it.`,
+        onOk() {
+          handleDelete(data.ds_id)
+        },
+        onCancel() {
+          console.log('Cancel')
         },
       })
     }
-    if (key === '2') {
-      showConfirm()
-    }
-  }
-
-  const showConfirm = () => {
-    Modal.confirm({
-      title: 'Do you want to delete this dataset?',
-      icon: <ExclamationCircleFilled />,
-      content: `Deletion is permanent and you will not be able to undo it.`,
-      onOk() {
-        onDelete(data.ds_id)
-      },
-      onCancel() {
-        console.log('Cancel')
-      },
-    })
   }
 
   return (
@@ -157,9 +125,36 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
           </Content>
         </div>
       </DescBoxContainer>
-      {contextHolder}
     </>
   )
 }
 
 export default DescriptionBox
+
+const DescBoxContainer = styled.div`
+  display: block;
+  float: left;
+  background-color: #fff;
+  width: 100%;
+  height: 150px;
+  border: 1px solid lightgray;
+  border-radius: 18px;
+  box-shadow: 0px 0px 10px #0000001a;
+  &:hover {
+    // cursor: pointer;
+    color: #0d99ff;
+    background-color: #91caff69;
+  }
+`
+const Content = styled.div`
+  display: block;
+  color: gray;
+  font-size: 15px;
+`
+const TitleWrapper = styled.div`
+  display: block;
+  margin: 20px;
+  &:hover {
+    cursor: pointer;
+  }
+`

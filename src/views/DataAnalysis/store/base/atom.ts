@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import { get } from 'lodash'
 import { atom, selector, selectorFamily } from 'recoil'
+import { StringDecoder } from 'string_decoder'
 
 export const userInfoState = atom({
   key: 'userInfo',
@@ -46,7 +47,7 @@ export const uploadedDataState = atom({
   } as UploadData,
 })
 
-interface SelectedData {
+interface IDataset {
   id: string
   name?: string
   size?: number
@@ -54,6 +55,7 @@ interface SelectedData {
   colCount?: number
   startDate?: string
   endDate?: string
+  descr?: string
 }
 
 export const selectedDataState = atom({
@@ -66,7 +68,8 @@ export const selectedDataState = atom({
     colCount: 0,
     startDate: '',
     endDate: '',
-  } as SelectedData,
+    descr: '',
+  } as IDataset,
 })
 
 interface IOption {

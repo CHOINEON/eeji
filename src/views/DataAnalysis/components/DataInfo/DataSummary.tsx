@@ -59,7 +59,7 @@ const DataSummary = () => {
   const { Title } = Typography
 
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
-  const [summaryFetch, setSummaryFetch] = useRecoilState(summaryFetchState)
+  // const [summaryFetch, setSummaryFetch] = useRecoilState(summaryFetchState)
   const inputOption = useRecoilValue(dataPropertyState)
 
   const [spinning, setSpinning] = useState(false)
@@ -68,16 +68,14 @@ const DataSummary = () => {
 
   const [messageApi, contextHolder] = message.useMessage()
 
-  useEffect(() => {
-    // console.log('summaryFetch:', summaryFetch)
-
-    if (summaryFetch === 'requested' || summaryFetch === 'completed') {
-      setVisible(true)
-      setSpinning(true)
-    } else {
-      setVisible(false)
-    }
-  }, [summaryFetch])
+  // useEffect(() => {
+  //   if (summaryFetch === 'requested' || summaryFetch === 'completed') {
+  //     setVisible(true)
+  //     setSpinning(true)
+  //   } else {
+  //     setVisible(false)
+  //   }
+  // }, [summaryFetch])
 
   useEffect(() => {
     // console.log('uploadedData:', uploadedData)

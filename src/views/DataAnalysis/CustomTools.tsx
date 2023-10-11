@@ -134,7 +134,7 @@ const CustomTools = () => {
     <Container>
       <Row gutter={[24, 16]} style={{ width: '100%' }}>
         <Col span={18}>
-          <RoundedBox minHeight={'35vw'}>
+          <RoundedBox minHeight={'80%'}>
             <div className="w-100">
               <Popover placement="rightTop" title="평가 지표" content={content}>
                 <Button>평가 지표</Button>
@@ -146,7 +146,7 @@ const CustomTools = () => {
           </RoundedBox>
         </Col>
         <Col span={6} style={{ minHeight: '670px' }}>
-          <RoundedBox minHeight={'35vw'}>
+          <RoundedBox minHeight={'80%'}>
             <div style={{ marginBottom: '10px', textAlign: 'right' }}>
               <Switch
                 checkedChildren="Auto"
