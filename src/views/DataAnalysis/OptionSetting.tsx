@@ -34,35 +34,7 @@ interface Container {
   position?: string
 }
 
-const Container = styled.div`
-  width: 100%;
-  height: 35vw;
-  margin-top: 2vw;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-`
-
-const RoundedBox = styled.div<Container>`
-  margin-right: 0.5vw;
-  background-color: #fff;
-  box-shadow: 0px 5px 10px #4338f733;
-  border-radius: 20px;
-  padding: 1vw;
-  width: ${(props) => (props.width ? props.width : 'auto')};
-  height: ${(props) => (props.height ? props.height : 'auto')};
-  min-height: ${(props) => (props.minHeight ? props.minHeight : 'auto')};
-  position: ${(props) => (props.position ? props.position : 'relative')};
-`
-const LabelBox = styled.div`
-  //   text-align: center;
-  // font-size: 15px;
-  // color: #002d65;
-  // font-weight: bold;
-`
-
 //사용자가 모델 선택을 pls, rf => epoch은 비활성화
-
 const OptionSetting = () => {
   const com_id = localStorage.getItem('companyId')
   const user_id = localStorage.getItem('userId')
@@ -120,6 +92,7 @@ const OptionSetting = () => {
     // console.log('userInputOption:', userInputOption)
   }
   return (
+
     <Container>
       <Row gutter={[24, 16]} style={{ width: '100%' }}>
         <Col span={18}>
@@ -145,26 +118,96 @@ const OptionSetting = () => {
             <VariableOption />
             <PreprocessingOption />
             <ModelOption />
-            <Row>
-              <Button
-                id="design_button"
-                style={{
-                  backgroundColor: '#4338F7',
-                  color: '#fff',
-                  borderRadius: '100px',
-                  width: '100%',
-                  marginTop: '20px',
-                }}
-                onClick={handleClick}
-              >
-                RUN
-              </Button>
-            </Row>
-          </RoundedBox>
-        </Col>
-      </Row>
-    </Container>
+          </div>
+          <div className="w-100 h-10">
+            <Button
+              id="design_button"
+              style={{
+                backgroundColor: '#4338F7',
+                color: '#fff',
+                borderRadius: '100px',
+                width: '100%',
+                marginTop: '20px',
+              }}
+              onClick={handleClick}
+            >
+              RUN
+            </Button>
+          </div>
+        </RoundedBox>
+      </OptionWrapper>
+    </WrapperContainer>
   )
 }
 
 export default OptionSetting
+
+const Container = styled.div`
+  width: 100%;
+  height: 35vw;
+  margin-top: 2vw;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+`
+const RoundedBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  float: left;
+  background-color: white;
+  box-shadow: 0px 5px 20px #4338f733;
+  border-radius: 18px;
+  opacity: 1;
+`
+
+// const RoundedBox = styled.div<Container>`
+//   margin-right: 0.5vw;
+//   background-color: #fff;
+//   box-shadow: 0px 5px 10px #4338f733;
+//   border-radius: 20px;
+//   padding: 1vw;
+//   width: ${(props) => (props.width ? props.width : 'auto')};
+//   height: ${(props) => (props.height ? props.height : 'auto')};
+//   min-height: ${(props) => (props.minHeight ? props.minHeight : 'auto')};
+//   position: ${(props) => (props.position ? props.position : 'relative')};
+// `
+const LabelBox = styled.div`
+  //   text-align: center;
+  // font-size: 15px;
+  // color: #002d65;
+  // font-weight: bold;
+`
+const WrapperContainer = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  min-height: 80%;
+  margin-top: 2vw;
+`
+
+const RoundBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  float: left;
+  background-color: white;
+  box-shadow: 0px 5px 20px #4338f733;
+  border-radius: 18px;
+  opacity: 1;
+  min-height: 80%;
+`
+
+const OptionWrapper = styled(RoundBox)`
+  // display: flex;
+  // flex-wrap: wrap;
+  // float: left;
+  padding: 4vw 2vw;
+  width: 30%;
+  height: 100%;
+`
+const PlotWrapper = styled(RoundBox)`
+  // display: flex;
+  // flex-wrap: wrap;
+  // float: left;
+  padding: 3vw 1vw;
+  width: 62%;
+`

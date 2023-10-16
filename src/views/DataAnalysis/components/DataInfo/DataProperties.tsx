@@ -2,15 +2,13 @@ import { Col, Input, Row, Select, Typography, message } from 'antd'
 import Title from 'antd/es/typography/Title'
 import React, { useEffect, useState } from 'react'
 import TextArea from 'antd/es/input/TextArea'
-import {
-  dataPropertyState,
-  summaryFetchState,
-  uploadedDataState,
-  userInfoState,
-} from 'views/DataAnalysis/store/base/atom'
+import { dataPropertyState, uploadedDataState, userInfoState } from 'views/DataAnalysis/store/base/atom'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import styled from '@emotion/styled'
-import axios from 'axios'
+import { QueryClient, useMutation, useQueryClient } from 'react-query'
+import DatasetApi from 'apis/DatasetApi'
+import { useApiError } from 'hooks/useApiError'
+import { useToast } from 'hooks/useToast'
 
 const { Text } = Typography
 
@@ -19,19 +17,27 @@ const DataPropertiesContainer = styled.div`
 `
 
 const DataProperties = () => {
+  const { fireToast } = useToast()
   const userInfo = useRecoilValue(userInfoState)
-  const [summaryFetch, setSummaryFetch] = useRecoilState(summaryFetchState)
 
   const [inputOption, setInputOption] = useRecoilState(dataPropertyState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
 
-  const [messageApi, contextHolder] = message.useMessage()
-
   const [options, setOptions] = useState([{ value: '', label: '' }])
 
-  // useEffect(() => {
-  //   console.log('inputOption:', inputOption)
-  // }, [inputOption])
+  const { handleError } = useApiError()
+  const { mutate } = useMutation(DatasetApi.uploadDataset, {
+    onSuccess: (response: any) => {
+      // console.log('success:', response)
+      // setSummaryFetch('completed')
+      fireToast('request success')
+      saveDataSummary(response['1'])
+    },
+    onError: (error: any) => {
+      console.log('DataProperties/ onError :', error)
+      handleError(error)
+    },
+  })
 
   useEffect(() => {
     if (uploadedData && uploadedData.content.length > 0) {
@@ -58,13 +64,6 @@ const DataProperties = () => {
   }
 
   const getFileDescription = (date_col: string) => {
-    const url = process.env.REACT_APP_NEW_API_SERVER_URL + `/api/upload/${userInfo.user_id}?user_id=${userInfo.user_id}`
-    const config = {
-      headers: {
-        'content-type': 'multipart/form-data',
-      },
-    }
-
     if (uploadedData.file && date_col !== '') {
       const formData = new FormData()
 
@@ -72,53 +71,50 @@ const DataProperties = () => {
       formData.append('date_col', date_col)
       formData.append('files', uploadedData.file)
 
-      // for (const [name, value] of formData) {
-      //   console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
-      // }
-      setSummaryFetch('requested')
+      const user_id = localStorage.getItem('userId').toString()
+      mutate({ user_id, formData })
 
-      axios
-        .post(url, formData, config)
-        .then((response) => {
-          // console.log('response:', response)
-          if (response.status === 200) {
-            setSummaryFetch('completed')
-            saveDataSummary(response.data['1'])
-          }
+      //   axios
+      //     .post(url, formData, config)
+      //     .then((response) => {
+      //       console.log('/api/upload/ response:', response)
+      //       if (response.status === 200) {
+      //         setSummaryFetch('completed')
+      //         saveDataSummary(response.data['1'])
+      //       }
 
-          // setSaving(false)
-        })
-        .catch((error) => {
-          // console.log('error:', error)
-          setSummaryFetch('failed')
+      //       // setSaving(false)
+      //     })
+      //     .catch((error) => {
+      //       // console.log('error:', error)
+      //       setSummaryFetch('failed')
 
-          if (error.response?.status === 400) {
-            console.error(error.response)
-            messageApi.open({
-              type: 'error',
-              content: error.response.data.detail,
-              duration: 5,
-              style: {
-                margin: 'auto',
-              },
-            })
-          } else {
-            messageApi.open({
-              type: 'error',
-              content: error.name,
-              duration: 5,
-              style: {
-                margin: 'auto',
-              },
-            })
-          }
-        })
+      //       if (error.response?.status === 400) {
+      //         console.error(error.response)
+      //         messageApi.open({
+      //           type: 'error',
+      //           content: error.response.data.detail,
+      //           duration: 5,
+      //           style: {
+      //             margin: 'auto',
+      //           },
+      //         })
+      //       } else {
+      //         messageApi.open({
+      //           type: 'error',
+      //           content: error.name,
+      //           duration: 5,
+      //           style: {
+      //             margin: 'auto',
+      //           },
+      //         })
+      //       }
+      //     })
     }
   }
 
   const saveDataSummary = (data: any) => {
     // console.log('saveDataSummary:', data)
-    // console.log('before update:', uploadedData)
 
     setUploadedData({
       ...uploadedData,
@@ -186,7 +182,6 @@ const DataProperties = () => {
           />
         </Row>
       </DataPropertiesContainer>
-      {contextHolder}
     </>
   )
 }

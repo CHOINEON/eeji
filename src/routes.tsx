@@ -20,6 +20,7 @@ import DraggableUploader from 'components/uploader/DraggableUploader'
 import DragDrop from 'components/uploader/DraggableUploader'
 import Temp from 'views/Test'
 import PriceDetection from 'views/AnomalyDetection/PriceDetection.tsx'
+import NotFound from 'components/common/NotFound'
 
 // Auth Imports
 
@@ -103,6 +104,15 @@ const routes = [
     icon: <Icon as={MdSettings} width="20px" height="20px" color="inherit" />,
     component: Configuration,
   },
+
+  {
+    name: 'NotFound',
+    layout: '/admin',
+    path: '/404',
+    icon: <Icon as={MdSettings} width="20px" height="20px" color="inherit" />,
+    component: NotFound,
+  },
+
   // {
   //   name: 'Temp page',
   //   layout: '/admin',

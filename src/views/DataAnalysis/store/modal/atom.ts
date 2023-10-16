@@ -14,3 +14,8 @@ export const saveModalAtom = atom({
   key: 'saveModalAtom',
   default: false,
 })
+
+export const datasetEditModalState = atom({
+  key: 'datasetEditModalState',
+  default: false,
+})

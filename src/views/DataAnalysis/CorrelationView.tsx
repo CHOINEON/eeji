@@ -1,49 +1,24 @@
 import styled from '@emotion/styled'
 import React, { useState, useEffect, useRef } from 'react'
-import { DatePicker, Space, Button, Switch, message, notification } from 'antd'
+import { App, DatePicker, Space, Button } from 'antd'
 import ItemBox from './components/DataEntry/ItemBox'
 import axios from 'axios'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { dataFileStore, stepCountStore } from './store/atom'
+import { useRecoilState, useSetRecoilState } from 'recoil'
+import { stepCountStore } from './store/atom'
 import { selectedVarStoreX, selectedVarStoreY, usedVariableStore, variableStore } from './store/variable/atom'
 import NewTagSelect from './components/TagTree/NewTagSelect'
 import Plot from 'react-plotly.js'
 import RadioButtonGroup from './components/DataEntry/RadioButtonGroup'
 import { ArrowRightOutlined, DotChartOutlined } from '@ant-design/icons'
-import { selectedDataState, startEndDateAtom } from './store/base/atom'
+import { selectedDataState } from './store/base/atom'
 import dayjs from 'dayjs'
-
-const CorrelationViewContainer = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-  width: 100%;
-  height: 35vw;
-  margin-top: 2vw;
-  // border: 1px solid red;
-`
-const HyperpararmeterWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 4vw 2vw;
-  float: left;
-  width: 30%;
-  height: 100%;
-`
-const PlotWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 3vw 1vw;
-  float: left;
-  width: 62%;
-`
 
 const Context = React.createContext({ name: 'Default' })
 
 const CorrelationView = () => {
   const { RangePicker } = DatePicker
-  // const [messageApi, contextHolder] = message.useMessage()
-  const [api, contextHolder] = notification.useNotification()
 
+  const { message, notification } = App.useApp()
   const setActiveStep = useSetRecoilState(stepCountStore)
   // const selectedDataset = useRecoilState(dataSetStore)
   // const selectedFile = useRecoilState(dataFileStore)
@@ -94,7 +69,7 @@ const CorrelationView = () => {
   }, [variableList])
 
   const openNotification = () => {
-    api.info({
+    notification.info({
       message: `Notification`,
       description: (
         <Context.Consumer>
@@ -266,7 +241,7 @@ const CorrelationView = () => {
   return (
     <>
       <CorrelationViewContainer>
-        <PlotWrapper className="rounded-box w-100 h-100">
+        <PlotWrapper>
           <div className="w-100 h-100 d-flex" style={{ justifyContent: 'center', alignItems: 'center' }}>
             {/** default image */}
             {!plotImg && !plotData && (
@@ -280,7 +255,7 @@ const CorrelationView = () => {
             ) : null}
           </div>
         </PlotWrapper>
-        <HyperpararmeterWrapper className="rounded-box">
+        <OptionWrapper>
           <div className="w-100 h-90">
             <Space className="w-100" direction="vertical" size={15}>
               {/* <ItemBox title="Time Series" component={<Switch onChange={onChangeSwitch} checked={checked} />} />
@@ -336,16 +311,48 @@ const CorrelationView = () => {
               }
             />
           </div>
-        </HyperpararmeterWrapper>
+        </OptionWrapper>
       </CorrelationViewContainer>
       <div style={{ margin: '10px 30px', float: 'right' }}>
         <Button type="text" icon={<ArrowRightOutlined />} onClick={handleNext}>
           NEXT
         </Button>
       </div>
-      {contextHolder}
     </>
   )
 }
 
 export default CorrelationView
+
+const CorrelationViewContainer = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 35vw;
+  margin-top: 2vw;
+`
+const RoundBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  float: left;
+  background-color: white;
+  box-shadow: 0px 5px 20px #4338f733;
+  border-radius: 18px;
+  opacity: 1;
+`
+
+const OptionWrapper = styled(RoundBox)`
+  // display: flex;
+  // flex-wrap: wrap;
+  // float: left;
+  padding: 4vw 2vw;
+  width: 30%;
+  height: 100%;
+`
+const PlotWrapper = styled(RoundBox)`
+  // display: flex;
+  // flex-wrap: wrap;
+  // float: left;
+  padding: 3vw 1vw;
+  width: 62%;
+`

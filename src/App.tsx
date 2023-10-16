@@ -5,7 +5,9 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import AuthLayout from './layouts/auth'
 import AdminLayout from './layouts/admin'
 import Login from './layouts/login/login'
-import NotFound from 'common/NotFound'
+import NotFound from 'components/common/NotFound'
+import { Loading } from 'components/common/Loading'
+import NetworkError from 'components/common/NetworkError'
 
 export function App() {
   const { handleError } = useApiError()
@@ -27,16 +29,19 @@ export function App() {
   })
 
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route path={`/auth`} component={AuthLayout} />
-        <Route path={`/admin`} component={AdminLayout} />
-        <Route path={`/login`} component={Login} />
-        <Route path={`/404`} component={NotFound} />
+    <>
+      <BrowserRouter>
+        <Switch>
+          <Route path={`/auth`} component={AuthLayout} />
+          <Route path={`/admin`} component={AdminLayout} />
+          <Route path={`/login`} component={Login} />
+          <Route path={`/404`} component={NotFound} />
+          <Route path={`/500`} component={NetworkError} />
 
-        <Redirect from="/" to="/login" />
-      </Switch>
-    </BrowserRouter>
+          <Redirect from="/" to="/login" />
+        </Switch>
+      </BrowserRouter>
+    </>
   )
 }
 

@@ -4,30 +4,20 @@ import { Button, Col, Row, message } from 'antd'
 import DataImportModal from './components/DataInfo/DataImportModal'
 // import DataFileModal from './components/DataInfo/DataFileModal'
 import './style/styles.css'
-import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { importModalAtom, listModalAtom } from './store/modal/atom'
 import styled from '@emotion/styled'
 import { selectedDataState, userInfoState } from './store/base/atom'
 import { stepCountStore } from './store/atom'
 import { usedVariableStore, variableStore } from './store/variable/atom'
-import DatasetApi from 'apis/DatasetApi'
 import useGetDatasets from 'hooks/queries/useGetDatasets'
-import { useQuery } from 'react-query'
+import { useToast } from 'hooks/useToast'
+import { App } from 'antd'
+import DataEditModal from './components/DataInfo/DataEditModal'
 
-const DatasetAddButton = styled.button`
-  width: 100%;
-  height: 50px;
-  margin: 20px 0;
-  border-radius: 10px;
-  font-size: 17px;
-  color: #fff;
-  background-color: #4338f7;
-  box-shadow: 0 2px 0 rgba(55, 5, 255, 0.06);
-`
 const DataSet = () => {
-  const [messageApi, contextHolder] = message.useMessage()
-
+  const { message } = App.useApp()
+  const { fireToast } = useToast()
   const setUserInfo = useSetRecoilState(userInfoState)
   const setActiveStep = useSetRecoilState(stepCountStore)
   const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
@@ -35,15 +25,9 @@ const DataSet = () => {
   // 최초 리스트 렌더링
   const setVariableList = useSetRecoilState(variableStore)
   const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
-
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
 
-  const [dataSetList, setDataSetList] = useState([])
-  const { status, data } = useGetDatasets(localStorage.getItem('userId'))
-
-  useEffect(() => {
-    console.log('data:', data)
-  }, [data])
+  const { data } = useGetDatasets(localStorage.getItem('userId'))
 
   useEffect(() => {
     setUserInfo({ user_id: localStorage.getItem('userId'), com_id: localStorage.getItem('companyId') })
@@ -65,18 +49,18 @@ const DataSet = () => {
   //   .catch((err) => console.log(err))
   // }
 
-  const handleSelect = (data: any) => {
-    setSelectedData({
-      id: data.ds_id,
-      name: data.name,
-      size: data.size,
-      rowCount: 0,
-      colCount: 0,
-      startDate: data.start_date,
-      endDate: data.end_date,
-    })
-    setFeatureList(data.name, JSON.parse(data.col_list))
-  }
+  // const handleSelect = (data: any) => {
+  //   setSelectedData({
+  //     id: data.ds_id,
+  //     name: data.name,
+  //     size: data.size,
+  //     rowCount: 0,
+  //     colCount: 0,
+  //     startDate: data.start_date,
+  //     endDate: data.end_date,
+  //   })
+  //   setFeatureList(data.name, JSON.parse(data.col_list))
+  // }
 
   const setFeatureList = (name: string, columns: Array<any>) => {
     if (columns) {
@@ -99,39 +83,44 @@ const DataSet = () => {
     }
   }
 
-  const handleDelete = (ds_id: string) => {
-    // if (param) fetchDataSetList()
-    const com_id = localStorage.getItem('companyId')
-    const user_id = localStorage.getItem('userId')
+  const handleActionInViewMore = (param: object) => {
+    console.log('handleActionInViewMore:', param)
 
-    axios
-      .delete(
-        process.env.REACT_APP_API_SERVER_URL +
-          '/api/dataset?com_id=' +
-          com_id +
-          '&dataset_id=' +
-          ds_id +
-          '&user_id=' +
-          user_id
-      )
-      .then(
-        (response) => {
-          // console.log(response)
-          if (response.status === 200) {
-            messageApi.open({
-              type: 'success',
-              content: '선택된 데이터셋 삭제',
-              duration: 2,
-              style: {
-                margin: 'auto',
-              },
-            })
-          }
-        },
-        (error) => {
-          alert(error)
-        }
-      )
+    // if (param) fetchDataSetList()
+
+    // axios
+    //   .delete(
+    //     process.env.REACT_APP_API_SERVER_URL +
+    //       '/api/dataset?com_id=' +
+    //       com_id +
+    //       '&dataset_id=' +
+    //       ds_id +
+    //       '&user_id=' +
+    //       user_id
+    //   )
+    //   .then(
+    //     (response) => {
+    //       // console.log(response)
+    //       if (response.status === 200) {
+    //         messageApi.open({
+    //           type: 'success',
+    //           content: '선택된 데이터셋 삭제',
+    //           duration: 2,
+    //           style: {
+    //             margin: 'auto',
+    //           },
+    //         })
+    //       }
+    //     },
+    //     (error) => {
+    //       alert(error)
+    //     }
+    //   )
+  }
+
+  const handleEdit = (ds_id: string) => {
+    //
+    console.log('handleEdig:', ds_id)
   }
 
   return (
@@ -143,15 +132,27 @@ const DataSet = () => {
         <Row gutter={[16, 16]}>
           {data?.data.map((data: any, index: number) => (
             <Col span={12} key={index}>
-              <DescriptionBox data={data} onSelect={handleSelect} onDelete={handleDelete} />
+              <DescriptionBox data={data} />
             </Col>
           ))}
         </Row>
       </div>
       {/* <DataFileModal /> */}
       <DataImportModal />
+      <DataEditModal />
     </>
   )
 }
 
 export default DataSet
+
+const DatasetAddButton = styled.button`
+  width: 100%;
+  height: 50px;
+  margin: 20px 0;
+  border-radius: 10px;
+  font-size: 17px;
+  color: #fff;
+  background-color: #4338f7;
+  box-shadow: 0 2px 0 rgba(55, 5, 255, 0.06);
+`

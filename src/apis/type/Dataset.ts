@@ -1,3 +1,9 @@
+export type IDatasetReq = {
+  user_id: string
+  com_id: string
+  dataset_id: string
+}
+
 export interface IDatasetRes {
   col_list: string
   com_id: string
@@ -14,8 +20,23 @@ export interface IDatasetRes {
   user_id: string
 }
 
-export interface IDatasetReq {
+export type IDatasetList = Array<IDatasetRes>
+
+export interface IDataUploadReq {
   user_id: string
+  formData: FormData
 }
 
-export type IDatasetList = Array<IDatasetRes>
+export interface IDescription {
+  col_list: string
+  column_count: number
+  date_col: string
+  start_date: string
+  end_date: string
+  file_name: string
+  file_size: number
+  filename: string //나중에 빼도됨
+  row_count: number
+}
+
+export type IDescriptionRes = object

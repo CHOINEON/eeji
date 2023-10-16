@@ -16,13 +16,9 @@ import {
 import { dateTimeToString } from 'utils/DateFunction'
 
 import styled from '@emotion/styled'
-import axios from 'axios'
-
-const UploadButton = styled.button<{ visible: boolean }>`
-  width: 100%;
-  height: 30px;
-  display: ${(props: any) => (props.visible ? 'block' : 'none')};
-`
+import DatasetApi from 'apis/DatasetApi'
+import { useMutation } from 'react-query'
+import toast from 'react-hot-toast'
 
 const DataImportModal = (props: any) => {
   const userInfo = useRecoilValue(userInfoState)
@@ -37,6 +33,17 @@ const DataImportModal = (props: any) => {
   const [saving, setSaving] = useState(false)
 
   const [messageApi, contextHolder] = message.useMessage()
+  const { mutate } = useMutation(DatasetApi.saveDataset, {
+    onSuccess: (response: any) => {
+      // console.log('success:', response)
+      toast(() => response.message)
+    },
+    onError: (error: any, query: any) => {
+      // toast(() => error, query)
+
+      console.error(error)
+    },
+  })
 
   useEffect(() => {
     if (!importOpen) {
@@ -150,9 +157,6 @@ const DataImportModal = (props: any) => {
         formData.append('date_col', inputOption.date_col)
         formData.append('name', inputOption.name)
         formData.append('desc', inputOption.desc.length === 0 ? null : inputOption.desc)
-        // for (const [name, value] of formData) {
-        //   console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
-        // }
 
         if (inputOption.date_col.length === 0) {
           messageApi.open({
@@ -166,39 +170,43 @@ const DataImportModal = (props: any) => {
         } else {
           setSummaryFetch('requested')
           // setSaving(true)
-          axios
-            .post(url, formData, config)
-            .then((response) => {
-              if (response.status === 200) {
-                setSummaryFetch('completed')
-                // setSaving(false)
-                console.log('response:', response.data['1'])
-                // saveDataSummary(response.data['1'])
-                messageApi.open({
-                  type: 'success',
-                  content: '저장 완료!',
-                  duration: 1,
-                  style: {
-                    margin: 'auto',
-                  },
-                })
-                setImportOpen(false)
-              }
-            })
-            .catch((error) => {
-              setSummaryFetch('failed')
 
-              messageApi.open({
-                type: 'error',
-                content: error,
-                duration: 5,
-                style: {
-                  margin: 'auto',
-                },
-              })
-              // setSaving(false)
-              setImportOpen(false)
-            })
+          const user_id = localStorage.getItem('userId').toString()
+          mutate({ user_id, formData })
+
+          // axios
+          //   .post(url, formData, config)
+          //   .then((response) => {
+          //     if (response.status === 200) {
+          //       setSummaryFetch('completed')
+          //       // setSaving(false)
+          //       console.log('response:', response.data['1'])
+          //       // saveDataSummary(response.data['1'])
+          //       messageApi.open({
+          //         type: 'success',
+          //         content: '저장 완료!',
+          //         duration: 1,
+          //         style: {
+          //           margin: 'auto',
+          //         },
+          //       })
+          //       setImportOpen(false)
+          //     }
+          //   })
+          //   .catch((error) => {
+          //     setSummaryFetch('failed')
+
+          //     messageApi.open({
+          //       type: 'error',
+          //       content: error,
+          //       duration: 5,
+          //       style: {
+          //         margin: 'auto',
+          //       },
+          //     })
+          //     // setSaving(false)
+          //     setImportOpen(false)
+          //   })
         }
       }
     }
@@ -254,3 +262,9 @@ const DataImportModal = (props: any) => {
 }
 
 export default DataImportModal
+
+const UploadButton = styled.button<{ visible: boolean }>`
+  width: 100%;
+  height: 30px;
+  display: ${(props: any) => (props.visible ? 'block' : 'none')};
+`
