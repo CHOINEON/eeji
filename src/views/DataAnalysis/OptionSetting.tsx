@@ -78,7 +78,8 @@ const OptionSetting = () => {
     }
 
     const url =
-      process.env.REACT_APP_API_SERVER_URL + `/api/get_model_option/${userInfo.user_id}?user_id=${userInfo.user_id}`
+
+      process.env.REACT_APP_NEW_API_SERVER_URL + `/api/get_model_option/${userInfo.user_id}?user_id=${userInfo.user_id}`
 
     // param.y_value = param.y_value[0]
     // console.log('test param:', param)
@@ -91,22 +92,25 @@ const OptionSetting = () => {
     // console.log('userInputOption:', userInputOption)
   }
   return (
-    <WrapperContainer>
-      <PlotWrapper>
-        <RoundedBox>
-          <div className="w-100">
-            <Popover placement="rightTop" title="평가 지표" content={content}>
-              <Button>평가 지표</Button>
-            </Popover>
-          </div>
-          <div className="w-100">
-            <LineChart chartData={chartData} />
-          </div>
-        </RoundedBox>
-      </PlotWrapper>
-      <OptionWrapper>
-        <RoundedBox>
-          <div className="w-100 h-90">
+
+    <Container>
+      <Row gutter={[24, 16]} style={{ width: '100%' }}>
+        <Col span={18}>
+
+          <RoundedBox minHeight={'100%'}>
+
+            <div className="w-100">
+              <Popover placement="rightTop" title="평가 지표" content={content}>
+                <Button>평가 지표</Button>
+              </Popover>
+            </div>
+            <div className="w-100">
+              <LineChart chartData={chartData} />
+            </div>
+          </RoundedBox>
+        </Col>
+        <Col span={6}>
+          <RoundedBox minHeight={'100%'}>
             <div style={{ marginBottom: '10px', textAlign: 'right' }}>
               <Switch defaultChecked checkedChildren="Auto" unCheckedChildren="Manual" onChange={onChange} />
             </div>
