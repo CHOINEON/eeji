@@ -67,13 +67,13 @@ const routes = [
     icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
     component: Test,
   },
-  // {
-  //   name: 'Anomaly Detection_BTC',
-  //   layout: '/admin',
-  //   path: '/anomalyDetectionBTC',
-  //   icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
-  //   component: PriceDetection,
-  // },
+  {
+    name: 'Anomaly Detection_BTC',
+    layout: '/admin',
+    path: '/anomalyDetectionBTC',
+    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
+    component: PriceDetection,
+  },
 
   // {
   //   name: 'HMID Configuration',

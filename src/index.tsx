@@ -49,7 +49,7 @@ const queryClient = new QueryClient()
 
 ReactDOM.render(
   <RecoilRoot>
-    <ConfigProvider theme={antdCustomTheme}>
+    <ConfigProvider>
       <ChakraProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
           <Loading />
