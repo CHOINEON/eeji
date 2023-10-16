@@ -6,14 +6,16 @@ import Plot from 'react-plotly.js'
 const OilPriceChart = () => {
   const [data, setData] = useState([])
   const [selectedOption, setSelectedOption] = useState('brent')
-  const [minMax, setMinMax] = useState([
-    { key: 'brent', min: 400, max: 600 },
-    { key: 'wti', min: 80, max: 100 },
+  const [priceList, setPriceList] = useState([
+    { key: 'brent', min: 400, max: 600, title: 'Brent Oil', unit: '($/b)' },
+    { key: 'wti', min: 80, max: 100, title: 'WTI Oil', unit: '($/b)' },
+    { key: 'henry', min: 0, max: 0.15, title: 'Henry Hub', unit: '(USD/MMBtu)' },
   ])
 
   const options = [
     { value: 'brent', label: 'Brent' },
     { value: 'wti', label: 'WTI' },
+    { value: 'henry', label: 'Henry' },
   ]
 
   //chart
@@ -39,10 +41,11 @@ const OilPriceChart = () => {
   }, [data, selectedOption])
 
   const setLayoutOnChart = (item: string, datetime: any) => {
-    const title = options.find((x) => x.value === item).label
+    const title = priceList.find((x) => x.key === item).title
+    const unit = priceList.find((x) => x.key === item).unit
 
     const newLayout = {
-      title: `${title} Oil Price Forecasting`,
+      title: `${title} Price Forecasting`,
       font: {
         // family: 'sans-serif',
         // size: 14,
@@ -52,14 +55,13 @@ const OilPriceChart = () => {
       responsive: true,
       useResizeHandler: true,
       autosize: true,
-
       shapes: [
         {
           type: 'line',
           x0: datetime.toString(),
-          y0: minMax.find((x) => x.key === item).min,
+          y0: priceList.find((x) => x.key === item).min,
           x1: datetime.toString(),
-          y1: minMax.find((x) => x.key === item).max,
+          y1: priceList.find((x) => x.key === item).max,
           line: {
             color: 'darkgrey',
             width: 1,
@@ -75,7 +77,7 @@ const OilPriceChart = () => {
           xanchor: 'right',
           y: 1.1,
           yanchor: 'bottom',
-          text: '($/b)',
+          text: { unit },
           showarrow: false,
         },
       ],
@@ -167,6 +169,7 @@ const OilPriceChart = () => {
   }
 
   const handleSelect = (item: any) => {
+    // console.log('select item:', item)
     setSelectedOption(item)
 
     //선택된 옵션에 따라 레이아웃 다시 그림

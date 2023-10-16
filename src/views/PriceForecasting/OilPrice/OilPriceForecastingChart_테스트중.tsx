@@ -14,6 +14,7 @@ const OilPriceChart = () => {
   const options = [
     { value: 'brent', label: 'Brent' },
     { value: 'wti', label: 'WTI' },
+    { value: 'henry', label: 'Henrly' },
   ]
 
   //chart
@@ -38,7 +39,7 @@ const OilPriceChart = () => {
       const title = options.find((x) => x.value === item).label
       const verticalLineX = traceData[item]?.lastDate.toString()
 
-      console.log('verticalLineX:', verticalLineX)
+      // console.log('verticalLineX:', verticalLineX)
       const newLayout = {
         title: `${title} Oil Price Forecasting`,
         font: {
@@ -78,7 +79,7 @@ const OilPriceChart = () => {
         ],
       }
       setLayout(newLayout)
-      console.log('newLayout:', newLayout)
+      // console.log('newLayout:', newLayout)
     }
 
     setLayoutOnChart(selectedOption)
@@ -96,7 +97,7 @@ const OilPriceChart = () => {
     axios
       .post(process.env.REACT_APP_API_SERVER_URL + '/api/oil_predict', param)
       .then((response) => {
-        // console.log('response', response.data)
+        console.log('response', response.data)
         const respData = response.data
         setData(respData)
 

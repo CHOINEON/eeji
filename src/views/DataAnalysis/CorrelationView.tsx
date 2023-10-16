@@ -240,7 +240,7 @@ const CorrelationView = () => {
 
   return (
     <>
-      <CorrelationViewContainer>
+      <WrapperContainer>
         <PlotWrapper>
           <div className="w-100 h-100 d-flex" style={{ justifyContent: 'center', alignItems: 'center' }}>
             {/** default image */}
@@ -312,7 +312,7 @@ const CorrelationView = () => {
             />
           </div>
         </OptionWrapper>
-      </CorrelationViewContainer>
+      </WrapperContainer>
       <div style={{ margin: '10px 30px', float: 'right' }}>
         <Button type="text" icon={<ArrowRightOutlined />} onClick={handleNext}>
           NEXT
@@ -324,7 +324,7 @@ const CorrelationView = () => {
 
 export default CorrelationView
 
-const CorrelationViewContainer = styled.div`
+const WrapperContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
   width: 100%;

@@ -18,7 +18,6 @@ import Test from 'views/Test/AnomalyTest'
 import PriceForecasting from 'views/PriceForecasting/OilPrice'
 import DraggableUploader from 'components/uploader/DraggableUploader'
 import DragDrop from 'components/uploader/DraggableUploader'
-import Temp from 'views/Test'
 import PriceDetection from 'views/AnomalyDetection/PriceDetection.tsx'
 import NotFound from 'components/common/NotFound'
 

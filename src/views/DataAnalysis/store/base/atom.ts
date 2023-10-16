@@ -56,6 +56,7 @@ interface IDataset {
   startDate?: string
   endDate?: string
   descr?: string
+  dateCol?: string
 }
 
 export const selectedDataState = atom({
@@ -69,6 +70,7 @@ export const selectedDataState = atom({
     startDate: '',
     endDate: '',
     descr: '',
+    dateCol: '',
   } as IDataset,
 })
 

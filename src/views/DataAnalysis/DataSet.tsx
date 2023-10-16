@@ -49,18 +49,20 @@ const DataSet = () => {
   //   .catch((err) => console.log(err))
   // }
 
-  // const handleSelect = (data: any) => {
-  //   setSelectedData({
-  //     id: data.ds_id,
-  //     name: data.name,
-  //     size: data.size,
-  //     rowCount: 0,
-  //     colCount: 0,
-  //     startDate: data.start_date,
-  //     endDate: data.end_date,
-  //   })
-  //   setFeatureList(data.name, JSON.parse(data.col_list))
-  // }
+  const handleSelect = (data: any) => {
+    // console.log('handleSelect', data)
+    setSelectedData({
+      id: data.ds_id,
+      name: data.name,
+      size: data.size,
+      rowCount: 0,
+      colCount: 0,
+      startDate: data.start_date,
+      endDate: data.end_date,
+      dateCol: data.date_col,
+    })
+    setFeatureList(data.name, JSON.parse(data.col_list))
+  }
 
   const setFeatureList = (name: string, columns: Array<any>) => {
     if (columns) {
@@ -132,7 +134,7 @@ const DataSet = () => {
         <Row gutter={[16, 16]}>
           {data?.data.map((data: any, index: number) => (
             <Col span={12} key={index}>
-              <DescriptionBox data={data} />
+              <DescriptionBox data={data} onSelect={handleSelect} />
             </Col>
           ))}
         </Row>

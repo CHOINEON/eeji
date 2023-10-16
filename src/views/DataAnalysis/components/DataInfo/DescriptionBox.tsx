@@ -23,7 +23,7 @@ export interface DescriptionBoxProps {
 
 export interface IDescriptionBox {
   data: DescriptionBoxProps
-  // onSelect: any
+  onSelect: any
   // onViewMore: any
 }
 
@@ -35,7 +35,7 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
   const { modal } = App.useApp()
   const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
 
-  const { data } = props
+  const { data, onSelect } = props
 
   const items: MenuProps['items'] = [
     {
@@ -51,7 +51,7 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
   const handleClick = (event: any) => {
     if (event.target.tagName !== 'svg' && event.target.tagName !== 'SPAN') {
       //"more" 아이콘 클릭된 경우 예외로 처리
-      // onSelect(data)
+      onSelect(data)
     } else {
       setSelectedData(data)
     }

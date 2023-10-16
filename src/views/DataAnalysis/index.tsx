@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useReducer, useMemo } from 'react'
 import { Box } from '@chakra-ui/react'
-import ModelSetting from './ModelSetting'
 import { ThemeProvider } from '@mui/material/styles'
-import VariableSelection from './VariableSelection'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
 import StepButton from '@mui/material/StepButton'
@@ -12,10 +10,8 @@ import { stepCountStore } from './store/atom'
 import DataSet from './DataSet'
 import CorrelationView from './CorrelationView'
 import './style/styles.css'
-import OptionSetting from './OptionSetting'
 import CustomTools from './CustomTools'
 import { notification } from 'antd'
-import { NotificationPlacement } from 'antd/es/notification/interface'
 
 const Context = React.createContext({ name: 'Default' })
 

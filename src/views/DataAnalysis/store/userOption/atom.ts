@@ -7,6 +7,7 @@ interface IUserOption {
   user_id: string
   com_id: string
   dataset_id: string
+  date_col: string
   start_date: string
   end_date: string
   x_value: Array<string>

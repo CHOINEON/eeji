@@ -4,14 +4,14 @@ import Plot from 'react-plotly.js'
 function LineChart(props: any) {
   const { chartData } = props
   const [data, setData] = useState<any>()
-
-  // useEffect(() => console.log('chartData:', chartData), [props])
   const [layout, setLayout] = useState({
     responsive: true,
     useResizeHandler: true,
     autosize: true,
   })
   const config = { displaylogo: false, responsive: true, useResizeHandler: true }
+
+  useEffect(() => console.log('chartData:', chartData), [props])
 
   useEffect(() => {
     if (chartData !== undefined) {
