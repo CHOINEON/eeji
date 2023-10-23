@@ -7,6 +7,7 @@ interface IUserOption {
   user_id: string
   com_id: string
   dataset_id: string
+  date_col: string
   start_date: string
   end_date: string
   x_value: Array<string>
@@ -45,6 +46,26 @@ export const inputOptionListState = atom({
     number_epoch: null,
     number_beyssian: null,
   } as IUserOption,
+})
+
+export const inputCorrPlotOptionState = atom({
+  key: 'corrPlotOption',
+  default: {
+    user_id: '',
+    com_id: '',
+    ds_id: '',
+    x_col: '풍량',
+    y_col: '산소부화율',
+    size_col: null,
+    color_col: null,
+    x_range: null,
+    y_range: null,
+    size_range: null,
+    color_range: null,
+    filter_col: '',
+    filter_range: null,
+    date_range: null,
+  },
 })
 
 //사용자 지정 옵션(전처리, 학습 )

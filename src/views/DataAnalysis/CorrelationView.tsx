@@ -86,7 +86,7 @@ const CorrelationView = () => {
 
     const param = {
       response_type: 'json', //DB에서 encoded image or json 중 알아서 보내주기로
-      dataset_id: selectedData.id,
+      dataset_id: selectedData.ds_id,
       file_nm: selectedData.name,
       scaling_method: scalingOption,
       x_value: featureX,
@@ -240,7 +240,7 @@ const CorrelationView = () => {
 
   return (
     <>
-      <CorrelationViewContainer>
+      <WrapperContainer>
         <PlotWrapper>
           <div className="w-100 h-100 d-flex" style={{ justifyContent: 'center', alignItems: 'center' }}>
             {/** default image */}
@@ -312,7 +312,7 @@ const CorrelationView = () => {
             />
           </div>
         </OptionWrapper>
-      </CorrelationViewContainer>
+      </WrapperContainer>
       <div style={{ margin: '10px 30px', float: 'right' }}>
         <Button type="text" icon={<ArrowRightOutlined />} onClick={handleNext}>
           NEXT
@@ -324,7 +324,7 @@ const CorrelationView = () => {
 
 export default CorrelationView
 
-const CorrelationViewContainer = styled.div`
+const WrapperContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
   width: 100%;

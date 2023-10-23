@@ -59,7 +59,6 @@ const DataSummary = () => {
   const { Title } = Typography
 
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
-  // const [summaryFetch, setSummaryFetch] = useRecoilState(summaryFetchState)
   const inputOption = useRecoilValue(dataPropertyState)
 
   const [spinning, setSpinning] = useState(false)
@@ -68,20 +67,10 @@ const DataSummary = () => {
 
   const [messageApi, contextHolder] = message.useMessage()
 
-  // useEffect(() => {
-  //   if (summaryFetch === 'requested' || summaryFetch === 'completed') {
-  //     setVisible(true)
-  //     setSpinning(true)
-  //   } else {
-  //     setVisible(false)
-  //   }
-  // }, [summaryFetch])
-
   useEffect(() => {
     // console.log('uploadedData:', uploadedData)
 
     const summary = []
-
     summary.push({
       key: 1,
       name: uploadedData.name,
@@ -95,6 +84,12 @@ const DataSummary = () => {
     // console.log('summary:', summary)
     setSummaryData(summary)
     setSpinning(false)
+
+    if (uploadedData.file !== undefined && uploadedData.rowCount > 0) {
+      setVisible(true)
+    } else {
+      setVisible(false)
+    }
   }, [uploadedData])
 
   const searchStartEndDate = (array: Array<any>) => {

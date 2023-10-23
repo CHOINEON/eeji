@@ -109,7 +109,7 @@ const ModelSetting = (props: any) => {
       const param = {
         com_id: localStorage.getItem('companyId'),
         user_id: localStorage.getItem('userId'),
-        dataset_id: setSelectedData.id,
+        dataset_id: setSelectedData.ds_id,
         file_nm: selectedDataFile,
         y_value: selectedTagsY,
         x_value: selectedTagsX,
@@ -256,7 +256,7 @@ const ModelSetting = (props: any) => {
       x_value: selectedTagsX,
       com_id: localStorage.getItem('companyId'),
       user_id: localStorage.getItem('userId'),
-      dataset_id: setSelectedData.id,
+      dataset_id: setSelectedData.ds_id,
       file_nm: selectedDataFile,
     }
 

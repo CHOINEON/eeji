@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useReducer, useMemo } from 'react'
 import { Box } from '@chakra-ui/react'
-import ModelSetting from './ModelSetting'
 import { ThemeProvider } from '@mui/material/styles'
-import VariableSelection from './VariableSelection'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
 import StepButton from '@mui/material/StepButton'
@@ -12,16 +10,16 @@ import { stepCountStore } from './store/atom'
 import DataSet from './DataSet'
 import CorrelationView from './CorrelationView'
 import './style/styles.css'
-import OptionSetting from './OptionSetting'
 import CustomTools from './CustomTools'
 import { notification } from 'antd'
-import { NotificationPlacement } from 'antd/es/notification/interface'
+import ModelSetting from './ModelSetting'
+import VariableSelection from './VariableSelection'
 
 const Context = React.createContext({ name: 'Default' })
 
 const DataAnalysis = () => {
   const [api, contextHolder] = notification.useNotification()
-  const steps = ['Upload Data', 'View Correlation', 'Generate Model']
+  const steps = ['Upload Data', 'View Correlation', 'Generate model(작업중)']
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean
@@ -93,16 +91,12 @@ const DataAnalysis = () => {
             </Stepper>
           </Box>
           <Box padding={5}>
-            {activeStep === 0 && (
-              // <ErrorBoundary>
-              <DataSet />
-              // </ErrorBoundary>
-            )}
+            {activeStep === 0 && <DataSet />}
             {activeStep === 1 && <CorrelationView />}
             {activeStep === 2 && <CustomTools />}
 
-            {/* <Box>{activeStep === 2 && <VariableSelection />}</Box> */}
-            {/* {activeStep === 3 && <ModelSetting />} */}
+            {/* <Box>{activeStep === 2 && <VariableSelection />}</Box>
+            <Box> {activeStep === 3 && <ModelSetting />}</Box> */}
           </Box>
         </Box>
       </Context.Provider>

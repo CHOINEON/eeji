@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider, QueryCache } from 'react-query'
 import App from './App'
 import { App as Antd } from 'antd'
 import { Loading } from 'components/common/Loading'
-import Toast from 'components/common/Toast'
+// import toast, { Toaster } from 'react-hot-toast'
 // import { App } from 'antd'
 //https://ant.design/docs/react/customize-theme
 
@@ -49,13 +49,14 @@ const queryClient = new QueryClient()
 
 ReactDOM.render(
   <RecoilRoot>
+    <ConfigProvider>
       <ChakraProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
           <Loading />
           <Antd>
             <App />
           </Antd>
-          {/* <Toast /> */}
+          {/* <Toaster /> */}
           {/* <BrowserRouter>
               <Switch>
                 <Route path={`/auth`} component={AuthLayout} />

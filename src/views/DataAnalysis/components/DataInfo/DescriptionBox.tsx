@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styled from '@emotion/styled'
 import '../../style/uploader.css'
-import { Dropdown, MenuProps, App, Typography, message } from 'antd'
-import axios from 'axios'
+import { Dropdown, MenuProps, App, Typography } from 'antd'
 import { ExclamationCircleFilled, MoreOutlined } from '@ant-design/icons'
 import { useRecoilState } from 'recoil'
 import { datasetEditModalState } from 'views/DataAnalysis/store/modal/atom'
 import { selectedDataState } from 'views/DataAnalysis/store/base/atom'
+import { useMutation, useQueryClient } from 'react-query'
+import DatasetApi from 'apis/DatasetApi'
 
 export interface DescriptionBoxProps {
   ds_id?: string
@@ -23,20 +24,17 @@ export interface DescriptionBoxProps {
 
 export interface IDescriptionBox {
   data: DescriptionBoxProps
-  // onSelect: any
+  onSelect: any
   // onViewMore: any
 }
 
+//각 데이터셋 박스
 const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
-  const com_id = localStorage.getItem('companyId')
-  const user_id = localStorage.getItem('userId')
-
+  const { data, onSelect } = props
+  const { message, modal } = App.useApp()
+  const queryClient = useQueryClient()
   const [modalState, setModalState] = useRecoilState(datasetEditModalState)
-  const { modal } = App.useApp()
   const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
-
-  const { data } = props
-
   const items: MenuProps['items'] = [
     {
       label: 'Edit',
@@ -47,18 +45,33 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
       key: '2',
     },
   ]
-
+  const { mutate: mutateDelete } = useMutation(DatasetApi.deleteDataset, {
+    onSuccess: (response: any) => {
+      message.success(response?.message)
+      //refetching
+      queryClient.invalidateQueries('datasets')
+    },
+    onError: (error: any) => {
+      message.error('삭제 실패')
+    },
+  })
   const handleClick = (event: any) => {
     if (event.target.tagName !== 'svg' && event.target.tagName !== 'SPAN') {
       //"more" 아이콘 클릭된 경우 예외로 처리
-      // onSelect(data)
+      onSelect(data)
     } else {
       setSelectedData(data)
     }
   }
 
   const handleDelete = (ds_id: any) => {
-    alert(`${ds_id} deleted`)
+    const param = {
+      com_id: localStorage.getItem('companyId'),
+      user_id: localStorage.getItem('userId'),
+      ds_id: ds_id,
+    }
+
+    mutateDelete(param)
   }
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
