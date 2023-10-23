@@ -1,7 +1,7 @@
 import { contentQuotesLinter } from '@ant-design/cssinjs/lib/linters'
 import { useRecoilValue } from 'recoil'
 import styled, { css } from 'styled-components'
-import { toastState } from 'views/DataAnalysis/store/base/toast'
+import { toastState } from 'views/DataAnalysis/store/global/toast'
 
 function Toast() {
   const { content, isClosing } = useRecoilValue(toastState)

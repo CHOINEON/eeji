@@ -21,6 +21,7 @@ import DragDrop from 'components/uploader/DraggableUploader'
 import PriceDetection from 'views/AnomalyDetection/PriceDetection.tsx'
 import NotFound from 'components/common/NotFound'
 import AIModeling from 'views/AIPlantModeling'
+import ScatterPlot from 'views/DataAnalysis/components/Chart/D3_Scatter'
 
 // Auth Imports
 
@@ -104,21 +105,12 @@ const routes = [
     icon: <Icon as={MdSettings} width="20px" height="20px" color="inherit" />,
     component: Configuration,
   },
-
   {
-    name: 'NotFound',
+    name: 'Test',
     layout: '/admin',
-    path: '/404',
-    icon: <Icon as={MdSettings} width="20px" height="20px" color="inherit" />,
-    component: NotFound,
-  },
-
-  {
-    name: 'AIModeling',
-    layout: '/admin',
-    path: '/ai-modeling',
+    path: '/test',
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
-    component: AIModeling,
+    component: ScatterPlot,
   },
 ]
 

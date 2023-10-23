@@ -6,8 +6,8 @@ import './style/styles.css'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { importModalAtom } from './store/modal/atom'
 import styled from '@emotion/styled'
-import { selectedDataState, userInfoState } from './store/base/atom'
-import { stepCountStore } from './store/atom'
+import { selectedDataState, userInfoState } from './store/dataset/atom'
+import { stepCountStore } from './store/global/atom'
 import { usedVariableStore, variableStore } from './store/variable/atom'
 import useGetDatasets from 'hooks/queries/useGetDatasets'
 import { useToast } from 'hooks/useToast'
@@ -43,7 +43,7 @@ const DataSet = () => {
     console.log('handleSelect', data)
 
     setSelectedData({
-      ds_id: data.id,
+      ds_id: data.ds_id,
       name: data.name,
       size: data.size,
       rowCount: 0,

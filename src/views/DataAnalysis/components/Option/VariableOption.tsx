@@ -9,7 +9,7 @@ import {
   variableStore,
 } from 'views/DataAnalysis/store/variable/atom'
 import { inputOptionListState } from 'views/DataAnalysis/store/userOption/atom'
-import { uploadedDataState } from 'views/DataAnalysis/store/base/atom'
+import { uploadedDataState } from 'views/DataAnalysis/store/dataset/atom'
 
 const VariableOption = () => {
   //최초 리스트

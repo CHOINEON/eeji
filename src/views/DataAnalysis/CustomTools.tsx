@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import VariableOption from './components/Option/VariableOption'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { inputCorrPlotOptionState, inputOptionListState } from './store/userOption/atom'
-import { selectedDataState, userInfoState } from './store/base/atom'
+import { selectedDataState, userInfoState } from './store/dataset/atom'
 import axios from 'axios'
 import PreprocessingOption from './components/Option/PreprocessingOption'
 import ModelOption from './components/Option/ModelOption'
@@ -155,38 +155,38 @@ const CustomTools = () => {
 
       const url = process.env.REACT_APP_NEW_API_SERVER_URL + `/api/cor_plot/${userInfo.user_id}`
 
-      // mutate(param)
+      mutate(param)
 
       //corr plot test
-      const param_for_corrplot = {
-        user_id: localStorage.getItem('userId'),
-        com_id: localStorage.getItem('companyId'),
-        ds_id: selectedData.ds_id,
-        x_col: '풍량',
-        y_col: '산소부화율',
-        size_col: corrPlotOption.size_col,
-        color_col: corrPlotOption.color_col,
-        x_range: corrPlotOption.x_range,
-        y_range: corrPlotOption.y_range,
-        size_range: corrPlotOption.size_range,
-        color_range: corrPlotOption.color_range,
-        filter_col: corrPlotOption.filter_range,
-        filter_range: corrPlotOption.filter_range,
-        date_range: corrPlotOption.date_range,
-      }
+      // const param_for_corrplot = {
+      //   user_id: localStorage.getItem('userId'),
+      //   com_id: localStorage.getItem('companyId'),
+      //   ds_id: selectedData.ds_id,
+      //   x_col: '풍량',
+      //   y_col: '산소부화율',
+      //   size_col: corrPlotOption.size_col,
+      //   color_col: corrPlotOption.color_col,
+      //   x_range: corrPlotOption.x_range,
+      //   y_range: corrPlotOption.y_range,
+      //   size_range: corrPlotOption.size_range,
+      //   color_range: corrPlotOption.color_range,
+      //   filter_col: corrPlotOption.filter_range,
+      //   filter_range: corrPlotOption.filter_range,
+      //   date_range: corrPlotOption.date_range,
+      // }
 
-      axios
-        .post(url, param_for_corrplot)
-        .then((response) => {
-          console.log('api/cor_plot/ response:', response)
+      // axios
+      //   .post(url, param_for_corrplot)
+      //   .then((response) => {
+      //     console.log('api/cor_plot/ response:', response)
 
-          if (response.status === 200) {
-            //chart data binding
-            // setChartData(dataArr[0])
-            setChartData({ ...chartData, corrplot: response.data.cor_plot[0] })
-          }
-        })
-        .catch((error) => console.log('error:', error))
+      //     if (response.status === 200) {
+      //       //chart data binding
+      //       // setChartData(dataArr[0])
+      //       setChartData({ ...chartData, corrplot: response.data.cor_plot[0] })
+      //     }
+      //   })
+      //   .catch((error) => console.log('error:', error))
 
       //json으로 받아오기(corr plot data)
       const url_corr_data = process.env.REACT_APP_NEW_API_SERVER_URL + `/api/send_data/${userInfo.user_id}`
@@ -254,14 +254,14 @@ const CustomTools = () => {
         <Col span={18}>
           <RoundedBox minHeight={'100%'}>
             <div className="w-100">
-              <div>
+              {/* <div>
                 <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
                   Correlation Plot(data from api response)
                 </Title>
                 <div className="w-100">
                   <ScatterChart chartData={chartData.corrplot} />
                 </div>
-              </div>
+              </div> */}
 
               {/* <div>
                 <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>

@@ -5,7 +5,7 @@ import { Dropdown, MenuProps, App, Typography } from 'antd'
 import { ExclamationCircleFilled, MoreOutlined } from '@ant-design/icons'
 import { useRecoilState } from 'recoil'
 import { datasetEditModalState } from 'views/DataAnalysis/store/modal/atom'
-import { selectedDataState } from 'views/DataAnalysis/store/base/atom'
+import { selectedDataState } from 'views/DataAnalysis/store/dataset/atom'
 import { useMutation, useQueryClient } from 'react-query'
 import DatasetApi from 'apis/DatasetApi'
 

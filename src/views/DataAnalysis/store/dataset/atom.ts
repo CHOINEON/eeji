@@ -1,7 +1,5 @@
 import dayjs from 'dayjs'
-import { get } from 'lodash'
 import { atom, selector, selectorFamily } from 'recoil'
-import { StringDecoder } from 'string_decoder'
 
 export const userInfoState = atom({
   key: 'userInfo',
@@ -15,11 +13,6 @@ export const startEndDateAtom = atom({
   key: 'startEndDate',
   default: [dayjs(), dayjs()],
 })
-
-// export const uploadDataAtom = atom({
-//   key: 'uploadData',
-//   default: [],
-// })
 
 interface UploadData {
   error?: string
