@@ -4,11 +4,13 @@ import useErrorModal from 'apis/error/useErrorModal'
 import { AxiosError } from 'axios'
 import toast from 'react-hot-toast'
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom'
+import { App } from 'antd'
 
 //https://9yujin.tistory.com/59
 
 //custom hook
 export const useApiError = () => {
+  const { message } = App.useApp()
   const history = useHistory()
   // const { openErrorModal } = useErrorModal()
 
@@ -30,12 +32,11 @@ export const useApiError = () => {
     const errorResponse = axiosError.response?.data
     const error = axiosError?.name
     const status = axiosError.response?.status
-    console.log('status:', status)
 
     switch (status) {
       //BadReqeustException | ValidationError
       case 400:
-        alert('Bad request')
+        message.error('Bad request!')
         break
       case 404:
         handle404()

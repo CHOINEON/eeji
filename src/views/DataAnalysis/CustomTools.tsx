@@ -3,12 +3,12 @@ import { Button, Col, Row, Tabs, Switch, Select } from 'antd'
 import React, { useEffect, useState } from 'react'
 import VariableOption from './components/Option/VariableOption'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { inputOptionListState } from './store/userOption/atom'
+import { inputCorrPlotOptionState, inputOptionListState } from './store/userOption/atom'
 import { selectedDataState, userInfoState } from './store/base/atom'
 import axios from 'axios'
 import PreprocessingOption from './components/Option/PreprocessingOption'
 import ModelOption from './components/Option/ModelOption'
-import PreprocessingChart from './components/Chart/PreprocessingChart'
+import ScatterChart from './components/Chart/ScatterChart'
 import Title from 'antd/es/typography/Title'
 import ModelApi from 'apis/ModelApi'
 import { useMutation } from 'react-query'
@@ -20,6 +20,7 @@ const CustomTools = () => {
   const user_id = localStorage.getItem('userId')
 
   const [userInputOption, setUserInputOption] = useRecoilState(inputOptionListState)
+  const [corrPlotOption, setCorrPlotOption] = useRecoilState(inputCorrPlotOptionState)
   const [userInfo, setUserInfo] = useRecoilState(userInfoState)
   const selectedData = useRecoilValue(selectedDataState)
   const [activeKey, setActiveKey] = useState('1')
@@ -34,9 +35,11 @@ const CustomTools = () => {
   // const [resultText, setResultText] = useState({ mae: '', rmse: '' })
 
   const [result, setResult] = useState([{ preprocessing_graphs: [] }])
-  const [chartData, setChartData] = useState({})
+  const [chartData, setChartData] = useState({ preprocessing: [], corrplot: [], tempCorr: {} })
   const [options, setOptions] = useState([])
   const [selectedOption, setSelectedOption] = useState()
+
+  const [testData, setTestData] = useState([])
 
   const onSwitchChange = (checked: boolean) => {
     setAuto(checked)
@@ -65,7 +68,7 @@ const CustomTools = () => {
       setSelectedOption(selectList[0])
 
       //chart data binding
-      setChartData(dataArr[0])
+      setChartData({ ...chartData, preprocessing: dataArr[0] })
     },
     onError: (error: any) => {
       console.error(error)
@@ -76,9 +79,9 @@ const CustomTools = () => {
   //   console.log('userInputOption:', userInputOption)
   // }, [userInputOption])
 
-  // useEffect(() => {
-  //   console.log('selectedData:', selectedData)
-  // }, [selectedData])
+  useEffect(() => {
+    console.log('chartData:', chartData)
+  }, [chartData])
 
   //컴포넌트 최초 마운트 시 기초 정보 담기
   useEffect(() => {
@@ -87,7 +90,7 @@ const CustomTools = () => {
       set_auto: true,
       com_id: localStorage.getItem('companyId'),
       user_id: localStorage.getItem('userId'),
-      dataset_id: selectedData.id,
+      dataset_id: selectedData.ds_id,
       start_date: selectedData.startDate,
       end_date: selectedData.endDate,
       date_col: selectedData.dateCol,
@@ -116,7 +119,7 @@ const CustomTools = () => {
         set_auto: true,
         com_id: localStorage.getItem('companyId'),
         user_id: localStorage.getItem('userId'),
-        dataset_id: selectedData.id,
+        dataset_id: selectedData.ds_id,
       })
     }
 
@@ -128,7 +131,7 @@ const CustomTools = () => {
         set_auto: auto,
         user_id: localStorage.getItem('userId'),
         com_id: localStorage.getItem('companyId'),
-        dataset_id: selectedData.id,
+        dataset_id: selectedData.ds_id,
         date_col: selectedData.dateCol,
 
         start_date: selectedData.startDate,
@@ -148,43 +151,89 @@ const CustomTools = () => {
         number_epoch: userInputOption.number_epoch,
         number_beyssian: userInputOption.number_beyssian,
       }
-      console.log('param:', param)
+      // console.log('param:', param)
 
-      const url =
-        process.env.REACT_APP_NEW_API_SERVER_URL +
-        `/api/get_model_option/${userInfo.user_id}?user_id=${userInfo.user_id}`
+      const url = process.env.REACT_APP_NEW_API_SERVER_URL + `/api/cor_plot/${userInfo.user_id}`
 
-      mutate(param)
+      // mutate(param)
 
-      //   axios
-      //     .post(url, param)
-      //     .then((response) => {
-      //       // console.log('api/get_model_option response:', response)
+      //corr plot test
+      const param_for_corrplot = {
+        user_id: localStorage.getItem('userId'),
+        com_id: localStorage.getItem('companyId'),
+        ds_id: selectedData.ds_id,
+        x_col: '풍량',
+        y_col: '산소부화율',
+        size_col: corrPlotOption.size_col,
+        color_col: corrPlotOption.color_col,
+        x_range: corrPlotOption.x_range,
+        y_range: corrPlotOption.y_range,
+        size_range: corrPlotOption.size_range,
+        color_range: corrPlotOption.color_range,
+        filter_col: corrPlotOption.filter_range,
+        filter_range: corrPlotOption.filter_range,
+        date_range: corrPlotOption.date_range,
+      }
 
-      //       if (response.status === 200) {
-      //         //initialize
-      //         setOptions([])
+      axios
+        .post(url, param_for_corrplot)
+        .then((response) => {
+          console.log('api/cor_plot/ response:', response)
 
-      //         //formatting
-      //         const dataArr = response.data.data.preprocessing_graphs
-      //         const selectList = dataArr.map((x: any) => x.column_name)
-      //         setResult((prev) => [{ preprocessing_graphs: dataArr }])
+          if (response.status === 200) {
+            //chart data binding
+            // setChartData(dataArr[0])
+            setChartData({ ...chartData, corrplot: response.data.cor_plot[0] })
+          }
+        })
+        .catch((error) => console.log('error:', error))
 
-      //         selectList.forEach((element: any) => {
-      //           const obj = { value: '', label: '' }
-      //           obj['value'] = element
-      //           obj['label'] = element
-      //           setOptions((prev) => [...prev, obj])
-      //         })
+      //json으로 받아오기(corr plot data)
+      const url_corr_data = process.env.REACT_APP_NEW_API_SERVER_URL + `/api/send_data/${userInfo.user_id}`
+      const param_for_corrplot2 = {
+        user_id: localStorage.getItem('userId'),
+        com_id: localStorage.getItem('companyId'),
+        ds_id: selectedData.ds_id,
+      }
 
-      //         //select box binding
-      //         setSelectedOption(selectList[0])
+      axios
+        .post(url_corr_data, param_for_corrplot2)
+        .then((response) => {
+          if (response.status === 200) {
+            const startTime = performance.now()
 
-      //         //chart data binding
-      //         setChartData(dataArr[0])
-      //       }
-      //     })
-      //     .catch((error) => console.log('error:', error))
+            console.log('api/cor_plot/ json response:', response)
+            const array = response.data
+            const columns = Object.keys(array[0])
+            const result: { [key: string]: Array<string> } = {}
+            // result = {Etime : [], 두께 : [], 원자재_폭: [] }
+
+            //format
+            columns.map((column: any) => {
+              result[column] = []
+            })
+
+            //push items
+            array.map((data: any) => {
+              columns.forEach((column: any) => {
+                result[column].push(data[column])
+              })
+            })
+
+            const plotResult: { [key: string]: object } = {}
+            const tempChartData = [{ mode: 'markers', type: 'scatter', x: result['풍량'], y: result['산소부화율'] }]
+
+            plotResult['data'] = tempChartData
+            // plotResult['layout'] = { xaxis: { autorange: true }, yaxis: { autorange: true } }
+            console.log('plotResult:', plotResult)
+            setChartData({ ...chartData, tempCorr: plotResult })
+            const endTime = performance.now() // 측정 종료
+
+            console.log('소요시간:', endTime - startTime)
+            ///////////
+          }
+        })
+        .catch((error) => console.log('error:', error))
     }
   }
 
@@ -205,26 +254,36 @@ const CustomTools = () => {
         <Col span={18}>
           <RoundedBox minHeight={'100%'}>
             <div className="w-100">
-              <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
-                Preprocessing result
-              </Title>
-              {/* <Popover placement="rightTop" title="평가 지표" content={content}>
-                <Button>평가 지표</Button>
-              </Popover> */}
-              <div style={{ display: 'inline-block', width: '20%' }}>
-                <Select
-                  style={{ width: '50%' }}
-                  // defaultValue="null"
-                  // disabled={disabled}
-                  onChange={onChangeSelect}
-                  value={selectedOption}
-                  options={options}
-                />
+              <div>
+                <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
+                  Correlation Plot(data from api response)
+                </Title>
+                <div className="w-100">
+                  <ScatterChart chartData={chartData.corrplot} />
+                </div>
+              </div>
+
+              {/* <div>
+                <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
+                  Correlation Plot(frontend data handling)
+                </Title>
+                <div className="w-100">
+                  <ScatterChart chartData={chartData.tempCorr} />
+                </div>
+              </div> */}
+
+              <div>
+                <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
+                  Preprocessing result
+                </Title>
+                <div style={{ display: 'inline-block', width: '20%' }}>
+                  <Select style={{ width: '50%' }} onChange={onChangeSelect} value={selectedOption} options={options} />
+                </div>
               </div>
             </div>
-            <div className="w-100">
-              <PreprocessingChart chartData={chartData} />
-            </div>
+            {/* <div className="w-100">
+              <ScatterChart chartData={chartData.preprocessing} />
+            </div> */}
           </RoundedBox>
         </Col>
         <Col span={6} style={{ height: '670px' }}>

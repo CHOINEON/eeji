@@ -48,7 +48,7 @@ export const uploadedDataState = atom({
 })
 
 interface IDataset {
-  id: string
+  ds_id: string
   name?: string
   size?: number
   rowCount?: number
@@ -62,7 +62,7 @@ interface IDataset {
 export const selectedDataState = atom({
   key: 'selectedData',
   default: {
-    id: '',
+    ds_id: '',
     name: '',
     size: 0,
     rowCount: 0,

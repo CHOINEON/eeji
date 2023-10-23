@@ -20,6 +20,7 @@ import DraggableUploader from 'components/uploader/DraggableUploader'
 import DragDrop from 'components/uploader/DraggableUploader'
 import PriceDetection from 'views/AnomalyDetection/PriceDetection.tsx'
 import NotFound from 'components/common/NotFound'
+import AIModeling from 'views/AIPlantModeling'
 
 // Auth Imports
 
@@ -111,13 +112,13 @@ const routes = [
     component: NotFound,
   },
 
-  // {
-  //   name: 'Temp page',
-  //   layout: '/admin',
-  //   path: '/temp-page',
-  //   icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
-  //   component: Temp,
-  // },
+  {
+    name: 'AIModeling',
+    layout: '/admin',
+    path: '/ai-modeling',
+    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+    component: AIModeling,
+  },
 ]
 
 export default routes

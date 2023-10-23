@@ -12,12 +12,14 @@ import CorrelationView from './CorrelationView'
 import './style/styles.css'
 import CustomTools from './CustomTools'
 import { notification } from 'antd'
+import ModelSetting from './ModelSetting'
+import VariableSelection from './VariableSelection'
 
 const Context = React.createContext({ name: 'Default' })
 
 const DataAnalysis = () => {
   const [api, contextHolder] = notification.useNotification()
-  const steps = ['Upload Data', 'View Correlation', 'Generate Model']
+  const steps = ['Upload Data', 'View Correlation', 'Generate model(작업중)']
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean
@@ -89,16 +91,12 @@ const DataAnalysis = () => {
             </Stepper>
           </Box>
           <Box padding={5}>
-            {activeStep === 0 && (
-              // <ErrorBoundary>
-              <DataSet />
-              // </ErrorBoundary>
-            )}
+            {activeStep === 0 && <DataSet />}
             {activeStep === 1 && <CorrelationView />}
             {activeStep === 2 && <CustomTools />}
 
-            {/* <Box>{activeStep === 2 && <VariableSelection />}</Box> */}
-            {/* {activeStep === 3 && <ModelSetting />} */}
+            {/* <Box>{activeStep === 2 && <VariableSelection />}</Box>
+            <Box> {activeStep === 3 && <ModelSetting />}</Box> */}
           </Box>
         </Box>
       </Context.Provider>

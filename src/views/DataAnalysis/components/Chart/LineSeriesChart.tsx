@@ -18,8 +18,6 @@ import {
 import Button from '@mui/material/Button'
 import ChartContextMenu from '../ContextMenu/ChartContextMenu'
 // import { CSVLink, CSVDownload } from 'react-csv'
-import CsvDownloader from 'react-csv-downloader'
-import SetValueModal from './SetValueModal'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { excludeHistoryStore } from 'views/DataAnalysis/store/atom'
 import { indexColumnStore } from 'views/DataAnalysis/store/variable/atom'

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Input, Modal, Row, Typography, message } from 'antd'
+import { Button, Col, Input, Modal, Row, Typography, message, App } from 'antd'
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import Uploader from 'components/uploader/Uploader'
@@ -12,13 +12,9 @@ import {
   uploadedDataState,
   userInfoState,
 } from 'views/DataAnalysis/store/base/atom'
-
-import { dateTimeToString } from 'utils/DateFunction'
-
 import styled from '@emotion/styled'
 import DatasetApi from 'apis/DatasetApi'
 import { useMutation } from 'react-query'
-import toast from 'react-hot-toast'
 
 const DataImportModal = (props: any) => {
   const userInfo = useRecoilValue(userInfoState)
@@ -31,17 +27,15 @@ const DataImportModal = (props: any) => {
   const [dataArray, setDataArray] = useState([])
   const [buttonVisible, setButtonVisible] = useState(false)
   const [saving, setSaving] = useState(false)
-
-  const [messageApi, contextHolder] = message.useMessage()
+  const { message } = App.useApp()
   const { mutate } = useMutation(DatasetApi.saveDataset, {
     onSuccess: (response: any) => {
-      // console.log('success:', response)
-      toast(() => response.message)
+      message.success(response.message)
+      setImportOpen(false)
     },
     onError: (error: any, query: any) => {
-      // toast(() => error, query)
-
-      console.error(error)
+      message.error(error)
+      // console.error(error)
     },
   })
 
@@ -57,13 +51,13 @@ const DataImportModal = (props: any) => {
   }, [inputOption])
 
   const handleSelectedFile = (file: any) => {
+    // console.log('selected:', file)
     if (file) {
       if (file.size <= 209715200) {
         readFile(file)
         setUploadedData({ ...uploadedData, file: file, name: file.name, content: [] })
-        // setUploadFileInfo(file)
       } else {
-        messageApi.open({
+        message.open({
           type: 'error',
           content: '업로드 가능 파일용량 초과(최대 200MB)',
           duration: 1,
@@ -97,7 +91,7 @@ const DataImportModal = (props: any) => {
 
         fileReader.readAsText(file)
       } else {
-        messageApi.open({
+        message.open({
           type: 'error',
           content: '지원하지 않는 파일 유형입니다.',
           duration: 1,
@@ -135,7 +129,7 @@ const DataImportModal = (props: any) => {
     // console.log('dataFile::', dataFile)
 
     if (dataFile && dataFile.size > 209715200) {
-      messageApi.open({
+      message.open({
         type: 'error',
         content: '200MB 이상의 파일은 업로드 할 수 없습니다.',
         duration: 1,
@@ -159,7 +153,7 @@ const DataImportModal = (props: any) => {
         formData.append('desc', inputOption.desc.length === 0 ? null : inputOption.desc)
 
         if (inputOption.date_col.length === 0) {
-          messageApi.open({
+          message.open({
             type: 'error',
             content: 'Timestamp column is not selected.',
             duration: 5,
@@ -256,7 +250,6 @@ const DataImportModal = (props: any) => {
           </div>
         </div>
       </Modal>
-      {contextHolder}
     </>
   )
 }

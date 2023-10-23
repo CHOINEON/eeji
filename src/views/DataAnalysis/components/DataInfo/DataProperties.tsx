@@ -28,7 +28,7 @@ const DataProperties = () => {
   const { handleError } = useApiError()
   const { mutate } = useMutation(DatasetApi.uploadDataset, {
     onSuccess: (response: any) => {
-      // console.log('success:', response)
+      console.log('uploadDataset success:', response)
       // setSummaryFetch('completed')
       fireToast('request success')
       saveDataSummary(response['1'])
@@ -73,43 +73,6 @@ const DataProperties = () => {
 
       const user_id = localStorage.getItem('userId').toString()
       mutate({ user_id, formData })
-
-      //   axios
-      //     .post(url, formData, config)
-      //     .then((response) => {
-      //       console.log('/api/upload/ response:', response)
-      //       if (response.status === 200) {
-      //         setSummaryFetch('completed')
-      //         saveDataSummary(response.data['1'])
-      //       }
-
-      //       // setSaving(false)
-      //     })
-      //     .catch((error) => {
-      //       // console.log('error:', error)
-      //       setSummaryFetch('failed')
-
-      //       if (error.response?.status === 400) {
-      //         console.error(error.response)
-      //         messageApi.open({
-      //           type: 'error',
-      //           content: error.response.data.detail,
-      //           duration: 5,
-      //           style: {
-      //             margin: 'auto',
-      //           },
-      //         })
-      //       } else {
-      //         messageApi.open({
-      //           type: 'error',
-      //           content: error.name,
-      //           duration: 5,
-      //           style: {
-      //             margin: 'auto',
-      //           },
-      //         })
-      //       }
-      //     })
     }
   }
 

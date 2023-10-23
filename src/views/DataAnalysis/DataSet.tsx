@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react'
 import DescriptionBox, { DescriptionBoxProps } from './components/DataInfo/DescriptionBox'
 import { Button, Col, Row, message } from 'antd'
 import DataImportModal from './components/DataInfo/DataImportModal'
-// import DataFileModal from './components/DataInfo/DataFileModal'
 import './style/styles.css'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { importModalAtom, listModalAtom } from './store/modal/atom'
+import { useRecoilState, useSetRecoilState } from 'recoil'
+import { importModalAtom } from './store/modal/atom'
 import styled from '@emotion/styled'
 import { selectedDataState, userInfoState } from './store/base/atom'
 import { stepCountStore } from './store/atom'
@@ -14,19 +13,22 @@ import useGetDatasets from 'hooks/queries/useGetDatasets'
 import { useToast } from 'hooks/useToast'
 import { App } from 'antd'
 import DataEditModal from './components/DataInfo/DataEditModal'
+import { toast } from 'react-hot-toast'
 
 const DataSet = () => {
   const { message } = App.useApp()
   const { fireToast } = useToast()
-  const setUserInfo = useSetRecoilState(userInfoState)
-  const setActiveStep = useSetRecoilState(stepCountStore)
-  const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
 
-  // 최초 리스트 렌더링
-  const setVariableList = useSetRecoilState(variableStore)
+  //상태 저장
+  const setActiveStep = useSetRecoilState(stepCountStore)
+  const setUserInfo = useSetRecoilState(userInfoState)
+  const setSelectedData = useSetRecoilState(selectedDataState)
+  const setVariableList = useSetRecoilState(variableStore) //최초 변수 리스트 렌더링
+
   const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
 
+  //모든 데이터셋 가져오기
   const { data } = useGetDatasets(localStorage.getItem('userId'))
 
   useEffect(() => {
@@ -37,22 +39,11 @@ const DataSet = () => {
     setImportOpen(true)
   }
 
-  // const fetchDataSetList = () => {
-  // const user_id = localStorage.getItem('userId')
-  // axios
-  //   .post(process.env.REACT_APP_NEW_API_SERVER_URL + `/api/dataset_list/${user_id}?user_id=${user_id}`)
-  //   .then((response) => {
-  //     console.log('api/dataset::', response.data)
-  //     setDataSetList(response.data.data)
-  //   })
-  //   ///예외처리
-  //   .catch((err) => console.log(err))
-  // }
-
   const handleSelect = (data: any) => {
-    // console.log('handleSelect', data)
+    console.log('handleSelect', data)
+
     setSelectedData({
-      id: data.ds_id,
+      ds_id: data.id,
       name: data.name,
       size: data.size,
       rowCount: 0,
@@ -139,7 +130,6 @@ const DataSet = () => {
           ))}
         </Row>
       </div>
-      {/* <DataFileModal /> */}
       <DataImportModal />
       <DataEditModal />
     </>

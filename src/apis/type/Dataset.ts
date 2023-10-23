@@ -1,7 +1,12 @@
 export type IDatasetReq = {
   user_id: string
   com_id: string
-  dataset_id: string
+  ds_id: string
+}
+
+export interface IDatasetEditReq extends IDatasetReq {
+  ds_name: string
+  ds_desc: string
 }
 
 export interface IDatasetRes {

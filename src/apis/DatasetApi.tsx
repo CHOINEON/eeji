@@ -1,5 +1,5 @@
 import { axiosPrivate } from './axios'
-import { IDatasetList, IDataUploadReq, IDatasetReq } from './type/Dataset'
+import { IDatasetList, IDataUploadReq, IDatasetReq, IDatasetEditReq } from './type/Dataset'
 import { TResponseType } from './type/commonResponse'
 
 const DatasetApi = {
@@ -39,14 +39,14 @@ const DatasetApi = {
   },
 
   //데이터셋 수정하기(edit)
-  editDataset: async (payload: IDatasetReq): Promise<TResponseType<string>> => {
-    const { data } = await axiosPrivate.post(`/api/dataset/`, payload)
+  editDataset: async (payload: IDatasetEditReq): Promise<TResponseType<string>> => {
+    const { data } = await axiosPrivate.patch(`/api/edit_data/${payload.user_id}`, payload)
     return data
   },
 
   //데이터셋 삭제하기(delete)
   deleteDataset: async (payload: IDatasetReq): Promise<TResponseType<string>> => {
-    const { data } = await axiosPrivate.delete(`/api/dataset/`, { data: payload })
+    const { data } = await axiosPrivate.delete(`/api/delete_data/${payload.user_id}`, { data: payload })
     return data
   },
 }

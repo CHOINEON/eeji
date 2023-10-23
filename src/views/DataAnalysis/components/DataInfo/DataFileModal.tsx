@@ -45,7 +45,9 @@ const DataFileModal = (props: any) => {
 
   const fetchIncludedFileList = () => {
     axios
-      .get(process.env.REACT_APP_API_SERVER_URL + '/api/dataset/file?ds_id=' + selectedData.id + '&user_id=' + user_id)
+      .get(
+        process.env.REACT_APP_API_SERVER_URL + '/api/dataset/file?ds_id=' + selectedData.ds_id + '&user_id=' + user_id
+      )
       .then((response) => {
         console.log('/api/dataset/file:', response)
         setFileList(response.data)
@@ -86,7 +88,7 @@ const DataFileModal = (props: any) => {
   const fetchTaglistData = (fileName: string) => {
     const param = [
       {
-        id: selectedData.id,
+        id: selectedData.ds_id,
         file_name: fileName,
         user_id: user_id,
       },

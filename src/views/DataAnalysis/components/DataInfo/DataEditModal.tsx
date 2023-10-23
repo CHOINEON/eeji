@@ -1,26 +1,55 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Empty, Input, Modal, Row, Space, Typography } from 'antd'
+import { App, Input, Modal, Row, Space, Typography } from 'antd'
 import { useRecoilState } from 'recoil'
 import { datasetEditModalState } from 'views/DataAnalysis/store/modal/atom'
 import TextArea from 'antd/es/input/TextArea'
 import { selectedDataState } from 'views/DataAnalysis/store/base/atom'
+import DatasetApi from 'apis/DatasetApi'
+import { useMutation, useQueryClient } from 'react-query'
+import { useApiError } from 'hooks/useApiError'
 const { Text } = Typography
 
 const DataEditModal = () => {
+  const { message } = App.useApp()
+  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
-  const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
   const [modalState, setModalState] = useRecoilState(datasetEditModalState)
+  const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
+  const [inputData, setInputData] = useState({ name: '', desc: '' })
+
+  //API
+  const { handleError } = useApiError()
+  const { mutate: mutateEdit } = useMutation(DatasetApi.editDataset, {
+    onSuccess: (response: any) => {
+      message.success(response?.message)
+      //refetching
+      queryClient.invalidateQueries('datasets')
+      setModalState(false)
+    },
+    onError: (error: any) => {
+      console.log('DataProperties/ onError :', error)
+      handleError(error)
+    },
+  })
 
   useEffect(() => {
     setOpen(modalState)
 
     if (modalState) {
       //기존 데이터 바인딩
+      setInputData({ name: selectedData.name, desc: selectedData.descr })
     }
   }, [modalState])
 
   const handleOk = () => {
-    setModalState(false)
+    const param = {
+      com_id: localStorage.getItem('companyId'),
+      user_id: localStorage.getItem('userId'),
+      ds_id: selectedData.ds_id,
+      ds_name: inputData.name,
+      ds_desc: inputData.desc,
+    }
+    mutateEdit(param)
   }
 
   const handleCancel = () => {
@@ -38,8 +67,8 @@ const DataEditModal = () => {
               style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
               placeholder="Dataset Name"
               maxLength={20}
-              //   onChange={handleChange}
-              value={selectedData.name}
+              onChange={(e) => setInputData({ ...inputData, name: e.target.value })}
+              value={inputData.name}
               allowClear
             />
           </Row>
@@ -48,8 +77,8 @@ const DataEditModal = () => {
             <span> Description(Optional)</span>
             <TextArea
               style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-              value={selectedData.descr === 'null' ? '' : selectedData.descr}
-              // onChange={(e) => setInputOption({ ...inputOption, desc: e.target.value })}
+              value={inputData.desc}
+              onChange={(e) => setInputData({ ...inputData, desc: e.target.value })}
               placeholder="Description"
               maxLength={50}
               allowClear

@@ -86,7 +86,7 @@ const CorrelationView = () => {
 
     const param = {
       response_type: 'json', //DB에서 encoded image or json 중 알아서 보내주기로
-      dataset_id: selectedData.id,
+      dataset_id: selectedData.ds_id,
       file_nm: selectedData.name,
       scaling_method: scalingOption,
       x_value: featureX,
