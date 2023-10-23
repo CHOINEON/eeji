@@ -4,7 +4,7 @@ import { RangePickerProps } from 'antd/es/date-picker'
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { uploadedDataState, selectedDataState } from 'views/DataAnalysis/store/base/atom'
+import { uploadedDataState, selectedDataState } from 'views/DataAnalysis/store/dataset/atom'
 // import { optionListState } from 'views/DataAnalysis/store/base/atom'
 import { inputOptionListState, userInputOptionState } from 'views/DataAnalysis/store/userOption/atom'
 

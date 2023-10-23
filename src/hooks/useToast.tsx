@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil'
-import { toastState } from 'views/DataAnalysis/store/base/toast'
+import { toastState } from 'views/DataAnalysis/store/global/toast'
 
 export const useToast = () => {
   const [toasts, setToasts] = useRecoilState(toastState)

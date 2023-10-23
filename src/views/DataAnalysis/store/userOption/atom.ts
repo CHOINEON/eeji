@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil'
-import { userInfoState } from '../base/atom'
+import { userInfoState } from '../dataset/atom'
 import { selectedVarStoreX, selectedVarStoreY } from '../variable/atom'
 
 interface IUserOption {

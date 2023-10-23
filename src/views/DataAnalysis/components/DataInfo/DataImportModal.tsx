@@ -7,18 +7,18 @@ import DataSummary from './DataSummary'
 import DataProperties from './DataProperties'
 import {
   dataPropertyState,
-  summaryFetchState,
+  // summaryFetchState,
   // uploadFileInfoAtom,
   uploadedDataState,
   userInfoState,
-} from 'views/DataAnalysis/store/base/atom'
+} from 'views/DataAnalysis/store/dataset/atom'
 import styled from '@emotion/styled'
 import DatasetApi from 'apis/DatasetApi'
 import { useMutation } from 'react-query'
 
 const DataImportModal = (props: any) => {
   const userInfo = useRecoilValue(userInfoState)
-  const [summaryFetch, setSummaryFetch] = useRecoilState(summaryFetchState)
+  // const [summaryFetch, setSummaryFetch] = useRecoilState(summaryFetchState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const resetUploadFileState = useResetRecoilState(uploadedDataState)
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
@@ -162,7 +162,7 @@ const DataImportModal = (props: any) => {
             },
           })
         } else {
-          setSummaryFetch('requested')
+          // setSummaryFetch('requested')
           // setSaving(true)
 
           const user_id = localStorage.getItem('userId').toString()

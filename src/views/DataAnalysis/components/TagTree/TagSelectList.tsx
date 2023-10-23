@@ -9,7 +9,7 @@ import Checkbox from '@mui/material/Checkbox'
 import axios from 'axios'
 import { Typography } from '@mui/material'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { stepCountStore } from '../../store/atom'
+import { stepCountStore } from '../../store/global/atom'
 import {
   variableStoreX,
   variableStoreY,

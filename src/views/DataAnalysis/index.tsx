@@ -6,14 +6,13 @@ import Step from '@mui/material/Step'
 import StepButton from '@mui/material/StepButton'
 import { theme } from './theme/theme'
 import { useRecoilState } from 'recoil'
-import { stepCountStore } from './store/atom'
+import { stepCountStore } from './store/global/atom'
 import DataSet from './DataSet'
 import CorrelationView from './CorrelationView'
 import './style/styles.css'
 import CustomTools from './CustomTools'
 import { notification } from 'antd'
-import ModelSetting from './ModelSetting'
-import VariableSelection from './VariableSelection'
+// import ModelSetting from './ModelSetting_삭제예정'
 
 const Context = React.createContext({ name: 'Default' })
 
@@ -95,8 +94,7 @@ const DataAnalysis = () => {
             {activeStep === 1 && <CorrelationView />}
             {activeStep === 2 && <CustomTools />}
 
-            {/* <Box>{activeStep === 2 && <VariableSelection />}</Box>
-            <Box> {activeStep === 3 && <ModelSetting />}</Box> */}
+            {/* <Box> {activeStep === 3 && <ModelSetting />}</Box>  */}
           </Box>
         </Box>
       </Context.Provider>

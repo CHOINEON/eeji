@@ -13,7 +13,7 @@ const Wrapper = styled.svg`
 `
 
 //https://velog.io/@suyeonme/JS-D3.js%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-Scatter-Plot-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
-function ScatterPlot() {
+const ScatterPlot = () => {
   const svgRef = useRef(null)
   const [data, setData] = useState(dataArr)
 

@@ -5,7 +5,7 @@ import LineChart from './components/Chart/LineChart'
 import './style/styles.css'
 import axios from 'axios'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { stepCountStore, dataFileStore } from './store/atom'
+import { stepCountStore } from './store/global/atom'
 import { selectedVarStoreX, selectedVarStoreY } from './store/variable/atom'
 import { Col, Row, Select, Space, Button, Popover, message, Statistic, CountdownProps, notification } from 'antd'
 import CheckableTag from 'antd/es/tag/CheckableTag'
@@ -13,7 +13,7 @@ import ModelSavePopup from './components/Modeling/ModelSavePopup'
 import { saveModalAtom } from './store/modal/atom'
 import { NotificationPlacement } from 'antd/es/notification/interface'
 import styled from '@emotion/styled'
-import { selectedDataState } from './store/base/atom'
+import { selectedDataState } from './store/dataset/atom'
 
 const TimerContainer = styled.div<{ visible: boolean }>`
   display: ${(props: any) => (props.visible ? 'inline-block' : 'none')};
@@ -29,7 +29,7 @@ const ModelSetting = (props: any) => {
   const setSaveModalOpen = useSetRecoilState(saveModalAtom)
 
   const setSelectedData = useRecoilValue(selectedDataState)
-  const selectedDataFile = useRecoilValue(dataFileStore)
+  // const selectedDataFile = useRecoilValue(dataFileStore)
 
   //step2에서 선택된 변수(for rendering)
   const selectedVarX = useRecoilValue(selectedVarStoreX)
@@ -110,7 +110,7 @@ const ModelSetting = (props: any) => {
         com_id: localStorage.getItem('companyId'),
         user_id: localStorage.getItem('userId'),
         dataset_id: setSelectedData.ds_id,
-        file_nm: selectedDataFile,
+        // file_nm: selectedDataFile,
         y_value: selectedTagsY,
         x_value: selectedTagsX,
         predict_type: model,
@@ -257,7 +257,7 @@ const ModelSetting = (props: any) => {
       com_id: localStorage.getItem('companyId'),
       user_id: localStorage.getItem('userId'),
       dataset_id: setSelectedData.ds_id,
-      file_nm: selectedDataFile,
+      // file_nm: selectedDataFile,
     }
 
     // console.log('param:', param)
