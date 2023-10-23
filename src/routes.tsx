@@ -104,6 +104,7 @@ const routes = [
     icon: <Icon as={MdSettings} width="20px" height="20px" color="inherit" />,
     component: Configuration,
   },
+
   {
     name: 'NotFound',
     layout: '/admin',
