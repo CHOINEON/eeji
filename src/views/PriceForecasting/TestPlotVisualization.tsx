@@ -10,7 +10,6 @@ const TestChart = () => {
     { value: 'brent', label: 'Brent' },
     { value: 'wti', label: 'WTI' },
   ]
-
   //chart
   const config = { responsive: true, useResizeHandler: true }
   const [chartData, setChartData] = useState([])

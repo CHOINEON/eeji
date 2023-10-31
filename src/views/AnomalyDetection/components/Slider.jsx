@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react'
-import { Col, InputNumber, Row, Slider, Card, Space, Statistic } from 'antd'
+import { Col, InputNumber, Row, Slider, Card, Statistic } from 'antd'
 import CSS from './style.module.css'
 import { useRecoilState } from 'recoil'
 import { sliderValueState } from '../atom'
@@ -59,7 +59,6 @@ const DecimalStep = (props) => {
           onChange={onChange}
         />
       </Col>
-      
     </Row>
   )
 }
@@ -78,7 +77,7 @@ const FeatureSlider = ({ clickedPoint }) => {
                 width: '100%' ,
                 marginTop : 20  ,
                 marginRight : 10,
-                marginLeft : 10 
+                
           }}>
         <Statistic  
                 value='PRICE SLIDER' 
@@ -88,24 +87,16 @@ const FeatureSlider = ({ clickedPoint }) => {
                         }}/>
           <DecimalStep clickedPoint={clickedPoint} type="price"></DecimalStep>
       </Card>
-      <Card style={{
-                height:150,
-                responsive: true, 
-                useResizeHandler: true, 
-                autosize: true, 
-                width: '100%',
-                marginTop : 20,
-                 
-                  
-          }}>
-          <Statistic  
+     
+          {/* <Statistic  
                   value='VOLUME SLIDER' 
                   valueStyle={{
                           fontWeight:500, 
                           fontSize : 15,
+                          width : 120
                           }}/>
-            <DecimalStep clickedPoint={clickedPoint} type="volume"></DecimalStep>
-      </Card>
+            <DecimalStep clickedPoint={clickedPoint} type="volume"></DecimalStep> */}
+      
     </div>
   )
 }
