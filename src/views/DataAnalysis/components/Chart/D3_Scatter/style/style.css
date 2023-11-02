@@ -1,0 +1,9 @@
+.scatter-circle {
+  opacity: 0.7;
+  transition: opacity 0.2s ease-in;
+  color: green !important;
+}
+
+.scatter-circle:hover {
+  opacity: 1;
+}

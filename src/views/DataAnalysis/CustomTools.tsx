@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { Button, Col, Row, Tabs, Switch, Select } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { Button, Col, Row, Tabs, Switch, Select, Table } from 'antd'
+import React, { useCallback, useEffect, useState } from 'react'
 import VariableOption from './components/Option/VariableOption'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { inputCorrPlotOptionState, inputOptionListState } from './store/userOption/atom'
@@ -11,19 +11,18 @@ import ModelOption from './components/Option/ModelOption'
 import ScatterChart from './components/Chart/ScatterChart'
 import Title from 'antd/es/typography/Title'
 import ModelApi from 'apis/ModelApi'
-import { useMutation } from 'react-query'
-import toast from 'react-hot-toast'
+import { useMutation, useQueryClient } from 'react-query'
+import ScatterPlot from './components/Chart/D3_Scatter/ScatterPlot'
+import testData from 'views/DataAnalysis/components/Chart/D3_Scatter/data.json'
+import CorrelationView from './CorrelationView'
+import LineChart from './components/Chart/LineChart'
 
 //데이터, 전처리(알고리즘) , 모델 생성
 const CustomTools = () => {
-  const com_id = localStorage.getItem('companyId')
-  const user_id = localStorage.getItem('userId')
-
   const [userInputOption, setUserInputOption] = useRecoilState(inputOptionListState)
-  const [corrPlotOption, setCorrPlotOption] = useRecoilState(inputCorrPlotOptionState)
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState)
   const selectedData = useRecoilValue(selectedDataState)
   const [activeKey, setActiveKey] = useState('1')
+  const [featureList, setFeatureList] = useState([])
 
   const items = [
     { name: 'Data', value: <VariableOption /> },
@@ -31,57 +30,77 @@ const CustomTools = () => {
     { name: 'Model', value: <ModelOption /> },
   ]
   const [auto, setAuto] = useState(true)
-
-  // const [resultText, setResultText] = useState({ mae: '', rmse: '' })
-
-  const [result, setResult] = useState([{ preprocessing_graphs: [] }])
-  const [chartData, setChartData] = useState({ preprocessing: [], corrplot: [], tempCorr: {} })
-  const [options, setOptions] = useState([])
-  const [selectedOption, setSelectedOption] = useState()
-
-  const [testData, setTestData] = useState([])
-
-  const onSwitchChange = (checked: boolean) => {
-    setAuto(checked)
-    setActiveKey('1')
+  const initialData = {
+    preprocessing_graphs: Array<any>(),
+    corrplot: Array<unknown>(),
+    fig_json_rfr: Array<unknown>(),
+    fig_json_rfe: Array<unknown>(),
+    fig_json_combine: Array<unknown>(),
+    fig_coef_1st_json: Array<unknown>(),
+    fig_2nd_coef: Array<unknown>(),
+    fig_eval_json: Array<unknown>(),
+    fig_test_json: Array<unknown>(),
+    lin_pred_fig_json: Array<unknown>(),
+    sorted_results_df: Array<unknown>(),
+    // best_plot: Array<unknown>(),
   }
 
-  const { mutate } = useMutation(ModelApi.postModelOption, {
-    onSuccess: (response) => {
-      toast(() => 'success')
-      //initialize
-      setOptions([])
-
-      //formatting
-      const dataArr = response.data?.preprocessing_graphs
-      const selectList = dataArr.map((x: any) => x.column_name)
-      setResult((prev) => [{ preprocessing_graphs: dataArr }])
-
-      selectList.forEach((element: any) => {
-        const obj = { value: '', label: '' }
-        obj['value'] = element
-        obj['label'] = element
-        setOptions((prev) => [...prev, obj])
-      })
-
-      //select box binding
-      setSelectedOption(selectList[0])
-
-      //chart data binding
-      setChartData({ ...chartData, preprocessing: dataArr[0] })
-    },
-    onError: (error: any) => {
-      console.error(error)
-    },
+  const [data, setData] = useState({
+    preprocessing_graphs: [],
+    corrplot: [],
+    fig_json_rfr: [],
+    fig_json_rfe: [],
+    fig_json_combine: [],
+    fig_coef_1st_json: [],
+    fig_2nd_coef: [],
+    fig_eval_json: [],
+    fig_test_json: [],
+    lin_pred_fig_json: [],
+    sorted_results_df: [],
+    // best_plot: [],
   })
 
-  // useEffect(() => {
-  //   console.log('userInputOption:', userInputOption)
-  // }, [userInputOption])
+  const [corrplotData, setCorrplotData] = useState([])
+  const [chartData, setChartData] = useState({
+    preprocessing_graphs: [],
+    corrplot: [],
+    fig_json_rfr: [],
+    fig_json_rfe: [],
+    fig_json_combine: [],
+    fig_coef_1st_json: [],
+    fig_2nd_coef: [],
+    fig_eval_json: [],
+    fig_test_json: [],
+    lin_pred_fig_json: [],
+    sorted_results_df: [],
+  }) //차트 바인딩용
 
-  useEffect(() => {
-    console.log('chartData:', chartData)
-  }, [chartData])
+  const [columns, setColumns] = useState([])
+
+  const [options, setOptions] = useState([])
+  const [selectedOption, setSelectedOption] = useState()
+  const [controller, setController] = useState<any>()
+
+  // useEffect(() => {
+  //   const ws = new WebSocket('ws://34.64.39.165:8000/ws/train_model')
+  //   ws.onopen = () => {
+  //     console.log(`WebSocket connection`)
+  //   }
+  //   /*parsing the incoming data*/
+  //   ws.onmessage = (message) => {
+  //     console.log('message:', message)
+  //   }
+  //   ws.onclose = (event) => {
+  //     if (event.wasClean) {
+  //       console.log(`WebSocket connection closed unexpectedly`)
+  //     } else {
+  //       console.log('WebSocket connection closed')
+  //     }
+  //   }
+  //   return () => {
+  //     ws.close()
+  //   }
+  // }, [])
 
   //컴포넌트 최초 마운트 시 기초 정보 담기
   useEffect(() => {
@@ -94,7 +113,6 @@ const CustomTools = () => {
       start_date: selectedData.startDate,
       end_date: selectedData.endDate,
       date_col: selectedData.dateCol,
-
       // x_value: [],
       // y_value: '',
       // type_missing: null,
@@ -112,6 +130,126 @@ const CustomTools = () => {
     // setOptions([])
   }, [])
 
+  // useEffect(() => console.log('chartData:', chartData), [chartData])
+
+  const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
+    onSuccess: (result: any) => {
+      // console.log('mutate result:', result)
+
+      setData({
+        preprocessing_graphs: result['preprocessing_graphs'],
+        corrplot: result['result_df'],
+        fig_json_rfr: JSON.parse(result['fig_json_rfr']),
+        fig_json_rfe: JSON.parse(result['fig_json_rfe']),
+        fig_json_combine: JSON.parse(result['fig_json_combine']),
+        fig_coef_1st_json: JSON.parse(result['fig_coef_1st_json']),
+        fig_2nd_coef: JSON.parse(result['fig_2nd_coef']),
+        fig_eval_json: JSON.parse(result['fig_eval_json']),
+        fig_test_json: JSON.parse(result['fig_test_json']),
+        lin_pred_fig_json: JSON.parse(result['lin_pred_fig_json']),
+        sorted_results_df: JSON.parse(result['sorted_results_df']),
+        // best_plot: JSON.parse(result['bestplot']),
+      })
+
+      // setCorrplotData(result['result_df'])
+
+      setChartData({
+        preprocessing_graphs: result['preprocessing_graphs'][0],
+        corrplot: result['result_df'],
+        fig_json_rfr: JSON.parse(result['fig_json_rfr']),
+        fig_json_rfe: JSON.parse(result['fig_json_rfe']),
+        fig_json_combine: JSON.parse(result['fig_json_combine']),
+        fig_coef_1st_json: JSON.parse(result['fig_coef_1st_json']),
+        fig_2nd_coef: JSON.parse(result['fig_2nd_coef']),
+        fig_eval_json: JSON.parse(result['fig_eval_json']),
+        fig_test_json: JSON.parse(result['fig_test_json']),
+        lin_pred_fig_json: JSON.parse(result['lin_pred_fig_json']),
+        sorted_results_df: [],
+        // best_plot: JSON.parse(result['bestplot']),
+      })
+
+      formattingPreprocess(result['preprocessing_graphs'])
+      formattingTableData(JSON.parse(result['sorted_results_df']))
+    },
+    onError: (error: any) => {
+      if (error.message === 'canceled') {
+        alert('request canceled')
+      } else {
+        console.error(error)
+      }
+    },
+  })
+
+  useEffect(() => {
+    const param = {
+      com_id: localStorage.getItem('companyId'),
+      user_id: localStorage.getItem('userId'),
+      ds_id: selectedData.ds_id,
+    }
+    axios.post(process.env.REACT_APP_NEW_API_SERVER_URL + '/api/send_data/admin', param).then((response) => {
+      if (response.status === 200) {
+        console.log('send_data/admin resp::', response.data.data)
+        setCorrplotData(response.data.data)
+      }
+    })
+  }, [])
+
+  const onSwitchChange = (checked: boolean) => {
+    setAuto(checked)
+    setActiveKey('1')
+  }
+
+  function formattingPreprocess(dataArr: any) {
+    setOptions([])
+
+    //formatting
+    const selectList = dataArr.map((x: any) => x.column_name)
+    // console.log('selectList:', selectList)
+
+    selectList.forEach((element: any) => {
+      const obj = { value: '', label: '' }
+      obj['value'] = element
+      obj['label'] = element
+      setOptions((prev) => [...prev, obj])
+    })
+
+    //select box binding
+    setSelectedOption(selectList[0])
+
+    //passing the initial data to chart  //////side effect : setChartData 다시 호출됨
+    // onChangeSelect(selectList[0])
+  }
+
+  function formattingTableData(data: any) {
+    // console.log('data:', data)
+
+    //컬럼 포맷팅
+    const colNames = Object.keys(data)
+    const columnList: Array<any> = []
+    colNames.map((name: string) => {
+      const col = { title: name, dataIndex: name, key: name, responsive: ['md'] }
+      columnList.push(col)
+    })
+
+    setColumns(columnList)
+
+    //데이터소스 포맷팅
+    const newArr = []
+    for (let i = 0; i < Object.keys(data?.['model']).length; i++) {
+      const innerObj = {}
+      for (const column of colNames) {
+        const newKeyValue = { [column]: data[column][i] }
+        Object.assign(innerObj, newKeyValue) //새로 생성된 key:value 값
+      }
+      newArr.push(innerObj)
+    }
+    setChartData({ ...chartData, sorted_results_df: newArr })
+  }
+
+  const resetChartData = useCallback(() => {
+    setChartData(initialData)
+  }, [])
+
   const handleClick = () => {
     if (auto) {
       setUserInputOption({
@@ -123,11 +261,14 @@ const CustomTools = () => {
       })
     }
 
+    //initialize
+    // resetChartData()
+
     //TODO: Feature 선택 안 한 경우 API요청으로 넘어가지 않음
     if (userInputOption.x_value.length === 0 || userInputOption.y_value.length === 0) {
       alert('선택 안함')
     } else {
-      const param = {
+      const payload = {
         set_auto: auto,
         user_id: localStorage.getItem('userId'),
         com_id: localStorage.getItem('companyId'),
@@ -151,89 +292,9 @@ const CustomTools = () => {
         number_epoch: userInputOption.number_epoch,
         number_beyssian: userInputOption.number_beyssian,
       }
-      // console.log('param:', param)
-
-      const url = process.env.REACT_APP_NEW_API_SERVER_URL + `/api/cor_plot/${userInfo.user_id}`
-
-      mutate(param)
-
-      //corr plot test
-      // const param_for_corrplot = {
-      //   user_id: localStorage.getItem('userId'),
-      //   com_id: localStorage.getItem('companyId'),
-      //   ds_id: selectedData.ds_id,
-      //   x_col: '풍량',
-      //   y_col: '산소부화율',
-      //   size_col: corrPlotOption.size_col,
-      //   color_col: corrPlotOption.color_col,
-      //   x_range: corrPlotOption.x_range,
-      //   y_range: corrPlotOption.y_range,
-      //   size_range: corrPlotOption.size_range,
-      //   color_range: corrPlotOption.color_range,
-      //   filter_col: corrPlotOption.filter_range,
-      //   filter_range: corrPlotOption.filter_range,
-      //   date_range: corrPlotOption.date_range,
-      // }
-
-      // axios
-      //   .post(url, param_for_corrplot)
-      //   .then((response) => {
-      //     console.log('api/cor_plot/ response:', response)
-
-      //     if (response.status === 200) {
-      //       //chart data binding
-      //       // setChartData(dataArr[0])
-      //       setChartData({ ...chartData, corrplot: response.data.cor_plot[0] })
-      //     }
-      //   })
-      //   .catch((error) => console.log('error:', error))
-
-      //json으로 받아오기(corr plot data)
-      const url_corr_data = process.env.REACT_APP_NEW_API_SERVER_URL + `/api/send_data/${userInfo.user_id}`
-      const param_for_corrplot2 = {
-        user_id: localStorage.getItem('userId'),
-        com_id: localStorage.getItem('companyId'),
-        ds_id: selectedData.ds_id,
-      }
-
-      axios
-        .post(url_corr_data, param_for_corrplot2)
-        .then((response) => {
-          if (response.status === 200) {
-            const startTime = performance.now()
-
-            console.log('api/cor_plot/ json response:', response)
-            const array = response.data
-            const columns = Object.keys(array[0])
-            const result: { [key: string]: Array<string> } = {}
-            // result = {Etime : [], 두께 : [], 원자재_폭: [] }
-
-            //format
-            columns.map((column: any) => {
-              result[column] = []
-            })
-
-            //push items
-            array.map((data: any) => {
-              columns.forEach((column: any) => {
-                result[column].push(data[column])
-              })
-            })
-
-            const plotResult: { [key: string]: object } = {}
-            const tempChartData = [{ mode: 'markers', type: 'scatter', x: result['풍량'], y: result['산소부화율'] }]
-
-            plotResult['data'] = tempChartData
-            // plotResult['layout'] = { xaxis: { autorange: true }, yaxis: { autorange: true } }
-            console.log('plotResult:', plotResult)
-            setChartData({ ...chartData, tempCorr: plotResult })
-            const endTime = performance.now() // 측정 종료
-
-            console.log('소요시간:', endTime - startTime)
-            ///////////
-          }
-        })
-        .catch((error) => console.log('error:', error))
+      const controller = new AbortController()
+      setController(controller)
+      mutateRunning({ type: 'request', payload, controller })
     }
   }
 
@@ -242,10 +303,53 @@ const CustomTools = () => {
   }
 
   const onChangeSelect = (param: any) => {
-    // console.log('param:', param)
-    // console.log('result:', result)
     setSelectedOption(param)
-    setChartData(result[0].preprocessing_graphs.find((x: any) => x.column_name === param))
+    setChartData({
+      ...chartData,
+      preprocessing_graphs: data.preprocessing_graphs.find((x: any) => x.column_name === param),
+    })
+  }
+
+  const onHandleCancel = () => {
+    const type = 'cancel'
+    mutateRunning({ type, controller })
+  }
+
+  const renderCharts = () => {
+    return Object.entries(data).map((dataArr: any, index: number) => {
+      // console.log('dataArr:', dataArr)
+      const title = dataArr[0]
+      const data = dataArr[1]
+      const filterArr = ['preprocessing_graphs', 'corrplot', 'sorted_results_df']
+
+      return (
+        <div key={index}>
+          <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
+            {title}
+          </Title>
+          {/* {title === 'corrplot' && <CorrelationView data={corrplotData} options={options} />} */}
+
+          {title === 'preprocessing_graphs' && (
+            <>
+              <div style={{ display: 'inline-block', width: '20%' }}>
+                <Select style={{ width: '50%' }} onChange={onChangeSelect} value={selectedOption} options={options} />
+              </div>
+              <div className="w-100">
+                <LineChart chartData={chartData.preprocessing_graphs} />
+              </div>
+            </>
+          )}
+          {title === 'sorted_results_df' && columns && (
+            <Table dataSource={chartData?.sorted_results_df} columns={columns} size="small" />
+          )}
+          {!filterArr.includes(title) && (
+            <div className="w-100">
+              <LineChart chartData={data} />
+            </div>
+          )}
+        </div>
+      )
+    })
   }
 
   return (
@@ -253,37 +357,12 @@ const CustomTools = () => {
       <Row gutter={[24, 16]} style={{ width: '100%' }}>
         <Col span={18}>
           <RoundedBox minHeight={'100%'}>
-            <div className="w-100">
-              {/* <div>
-                <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
-                  Correlation Plot(data from api response)
-                </Title>
-                <div className="w-100">
-                  <ScatterChart chartData={chartData.corrplot} />
-                </div>
-              </div> */}
+            <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
+              Correlation Plot
+            </Title>
+            <CorrelationView data={corrplotData} options={options} />
 
-              {/* <div>
-                <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
-                  Correlation Plot(frontend data handling)
-                </Title>
-                <div className="w-100">
-                  <ScatterChart chartData={chartData.tempCorr} />
-                </div>
-              </div> */}
-
-              <div>
-                <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
-                  Preprocessing result
-                </Title>
-                <div style={{ display: 'inline-block', width: '20%' }}>
-                  <Select style={{ width: '50%' }} onChange={onChangeSelect} value={selectedOption} options={options} />
-                </div>
-              </div>
-            </div>
-            {/* <div className="w-100">
-              <ScatterChart chartData={chartData.preprocessing} />
-            </div> */}
+            {data.corrplot.length > 0 && renderCharts()}
           </RoundedBox>
         </Col>
         <Col span={6} style={{ height: '670px' }}>
@@ -312,6 +391,7 @@ const CustomTools = () => {
                 }
               })}
             />
+
             <div style={{ position: 'absolute', bottom: '5%', width: '80%' }}>
               <Button
                 id="design_button"
@@ -326,6 +406,19 @@ const CustomTools = () => {
               >
                 RUN
               </Button>
+              {/* <Button
+                id="design_button"
+                onClick={onHandleCancel}
+                style={{
+                  // backgroundColor: '#4338F7',
+                  // color: '#fff',
+                  borderRadius: '100px',
+                  width: '100%',
+                  marginTop: '20px',
+                }}
+              >
+                request cancel(테스트중)
+              </Button> */}
             </div>
           </RoundedBox>
         </Col>
@@ -361,11 +454,4 @@ const RoundedBox = styled.div<Container>`
   height: ${(props) => (props.height ? props.height : 'auto')};
   min-height: ${(props) => (props.minHeight ? props.minHeight : 'auto')};
   position: ${(props) => (props.position ? props.position : 'relative')};
-`
-
-const LabelBox = styled.div`
-  //   text-align: center;
-  font-size: 15px;
-  color: #002d65;
-  font-weight: bold;
 `
