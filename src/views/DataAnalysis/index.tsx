@@ -18,7 +18,7 @@ const Context = React.createContext({ name: 'Default' })
 
 const DataAnalysis = () => {
   const [api, contextHolder] = notification.useNotification()
-  const steps = ['Upload Data', 'View Correlation', 'Generate model(작업중)']
+  const steps = ['Upload Data', 'Generate model(작업중)']
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean
@@ -91,8 +91,8 @@ const DataAnalysis = () => {
           </Box>
           <Box padding={5}>
             {activeStep === 0 && <DataSet />}
-            {activeStep === 1 && <CorrelationView />}
-            {activeStep === 2 && <CustomTools />}
+            {/* {activeStep === 1 && <CorrelationView />} */}
+            {activeStep === 1 && <CustomTools />}
 
             {/* <Box> {activeStep === 3 && <ModelSetting />}</Box>  */}
           </Box>
