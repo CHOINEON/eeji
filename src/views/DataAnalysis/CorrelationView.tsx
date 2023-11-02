@@ -59,18 +59,34 @@ const CorrelationView = ({ data, options }: any) => {
 
     if (type === 'x') {
       setFeatureX({ ...featureX, sliderMin: param[0], sliderMax: param[1] })
-      setChartData(chartData.filter((d: any) => d[featureX.value] > param[0] && d[featureX.value] < param[1]))
+      setChartData(
+        data.filter(
+          (d: any) =>
+            d[featureX.value] > param[0] &&
+            d[featureX.value] < param[1] &&
+            d[featureY.value] > featureY.sliderMin &&
+            d[featureY.value] < featureY.sliderMax
+        )
+      )
     }
     if (type === 'y') {
       setFeatureY({ ...featureY, sliderMin: param[0], sliderMax: param[1] })
-      setChartData(chartData.filter((d: any) => d[featureY.value] > param[0] && d[featureY.value] < param[1]))
+      setChartData(
+        data.filter(
+          (d: any) =>
+            d[featureY.value] > param[0] &&
+            d[featureY.value] < param[1] &&
+            d[featureX.value] > featureX.sliderMin &&
+            d[featureX.value] < featureX.sliderMax
+        )
+      )
     }
   }
 
   return (
     <>
       <div style={{ width: '100%', height: '400px', display: 'block' }}>
-        <div style={{ width: '70%', display: 'block', float: 'left' }}>
+        <div style={{ width: '60%', display: 'block', float: 'left' }}>
           {data.length > 0 && <ScatterPlot data={chartData} featureX={featureX} featureY={featureY} />}
         </div>
         <div
