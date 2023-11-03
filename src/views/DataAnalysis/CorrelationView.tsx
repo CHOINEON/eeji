@@ -1,15 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react'
 import ItemBox from './components/DataEntry/ItemBox'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { selectedVarStoreX, selectedVarStoreY, usedVariableStore, variableStore } from './store/variable/atom'
 import ScatterPlot from './components/Chart/D3_Scatter/ScatterPlot'
-import { Col, InputNumber, Row, Select, Slider } from 'antd'
+import { Col, DatePicker, InputNumber, Row, Select, Slider } from 'antd'
+import dayjs from 'dayjs'
+import { selectedDataState } from './store/dataset/atom'
 
 const CorrelationView = ({ data, options }: any) => {
+  const selectedData = useRecoilValue(selectedDataState)
+
   const [featureX, setFeatureX] = useState({ value: '', min: 0, max: 0, sliderMin: 0, sliderMax: 0 })
   const [featureY, setFeatureY] = useState<any>({ value: '', min: 0, max: 0, sliderMin: 0, sliderMax: 0 })
   const [sliderMarks, setSliderMarks] = useState({ x: {}, y: {} })
   const [chartData, setChartData] = useState<any>({})
+  const [defaultDatetime, setDefaultDatetime] = useState({ startDate: '', endDate: '' })
 
   //테스트용으로 일단 전체 다 렌더링 (나중에 바꾸기)
   const [variableList, setVariableList] = useRecoilState(variableStore)
@@ -18,8 +23,33 @@ const CorrelationView = ({ data, options }: any) => {
     // console.log('CorrelationView data::', data)
     // console.log('CorrelationView options::', options)
 
-    setChartData(data)
+    if (data?.length > 0) {
+      renderDefaultDate(data)
+      setChartData(data)
+    }
   }, [data])
+
+  // useEffect(() => {
+  //   console.log('defaultDatetime:', defaultDatetime.startDate)
+  // }, [defaultDatetime])
+
+  const dateFormat = 'YYYY-MM-DD HH:mm:ss'
+
+  function date_ascending(a: any, b: any) {
+    const dateA = new Date(a['date_col']).getTime()
+    const dateB = new Date(b['date_col']).getTime()
+    return dateA > dateB ? 1 : -1
+  }
+
+  const renderDefaultDate = (data: Array<any>) => {
+    // console.log('render default:', data)
+    //TODO: 날짜순으로 정렬해서 처음/마지막 날짜 state에 저장
+
+    const filteredArr = data.sort(date_ascending)
+    const dateArr = filteredArr.map((value: any) => value.date_col)
+
+    setDefaultDatetime({ startDate: dateArr[0], endDate: dateArr[dateArr.length - 1] })
+  }
 
   const handleSelect = (param: any, type: any) => {
     if (data?.length > 0) {
@@ -99,6 +129,21 @@ const CorrelationView = ({ data, options }: any) => {
             // border: '1px solid red',
           }}
         >
+          {/* <ItemBox
+            title="Date Range(테스트중)"
+            component={
+              <>
+                <Row>
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    defaultValue={dayjs(defaultDatetime.startDate, dateFormat)}
+                    format={dateFormat}
+                  />
+                </Row>
+              </>
+            }
+          ></ItemBox> */}
+
           <ItemBox
             title="Feature X"
             component={

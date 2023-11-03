@@ -14,8 +14,8 @@ function LineChart(props: any) {
   const config = { displaylogo: false, responsive: true, useResizeHandler: true }
 
   useEffect(() => {
-    // console.log('LineChart chartData:', chartData)
     if (chartData) {
+      // console.log('LineChart chartData:', chartData)
       setData(chartData.data)
       setLayout(chartData.layout)
     }
