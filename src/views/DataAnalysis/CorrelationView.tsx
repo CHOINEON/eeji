@@ -1,334 +1,158 @@
-import styled from '@emotion/styled'
 import React, { useState, useEffect, useRef } from 'react'
-import { DatePicker, Space, Button, Switch, message } from 'antd'
 import ItemBox from './components/DataEntry/ItemBox'
-import axios from 'axios'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { dataFileStore, dataSetStore, stepCountStore } from './store/atom'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import { selectedVarStoreX, selectedVarStoreY, usedVariableStore, variableStore } from './store/variable/atom'
-import NewTagSelect from './components/TagTree/NewTagSelect'
-import Plot from 'react-plotly.js'
-import RadioButtonGroup from './components/DataEntry/RadioButtonGroup'
-import { ArrowRightOutlined, DotChartOutlined } from '@ant-design/icons'
-import { startEndDateAtom } from './store/base/atom'
-import dayjs from 'dayjs'
+import ScatterPlot from './components/Chart/D3_Scatter/ScatterPlot'
+import { Col, InputNumber, Row, Select, Slider } from 'antd'
 
-const CorrelationViewContainer = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-  width: 100%;
-  height: 35vw;
-  margin-top: 2vw;
-  // border: 1px solid red;
-`
-const HyperpararmeterWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 4vw 2vw;
-  float: left;
-  width: 30%;
-  height: 100%;
-`
-const PlotWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 3vw 1vw;
-  float: left;
-  width: 62%;
-`
+const CorrelationView = ({ data, options }: any) => {
+  const [featureX, setFeatureX] = useState({ value: '', min: 0, max: 0, sliderMin: 0, sliderMax: 0 })
+  const [featureY, setFeatureY] = useState<any>({ value: '', min: 0, max: 0, sliderMin: 0, sliderMax: 0 })
+  const [sliderMarks, setSliderMarks] = useState({ x: {}, y: {} })
+  const [chartData, setChartData] = useState<any>({})
 
-const CorrelationView = () => {
-  const { RangePicker } = DatePicker
-  const [messageApi, contextHolder] = message.useMessage()
-
-  const setActiveStep = useSetRecoilState(stepCountStore)
-  const selectedDataset = useRecoilState(dataSetStore)
-  const selectedFile = useRecoilState(dataFileStore)
-  const [selectedDates, setSelectedDates] = useState()
-
-  const [plotData, setPlotData] = useState()
-  const [plotImg, setPlotImg] = useState()
-
-  const [scalingOption, setScalingOption] = useState('iqr')
-  const [layoutOption, setLayoutOption] = useState()
-  const [featureX, setFeatureX] = useState([])
-  const [featureY, setFeatureY] = useState([])
-
-  const [loading, setLoading] = useState<boolean>(false)
-
-  const [defaultOption, setDefaultOption] = useState([])
-
+  //테스트용으로 일단 전체 다 렌더링 (나중에 바꾸기)
   const [variableList, setVariableList] = useRecoilState(variableStore)
-  const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
-  const [checked, setChecked] = useState(false)
-
-  const plotRef = useRef(null)
-
-  const config = {
-    displaylogo: false,
-    responsive: true,
-  }
 
   useEffect(() => {
-    setLoading(false)
+    // console.log('CorrelationView data::', data)
+    // console.log('CorrelationView options::', options)
 
-    if (selectedDataset[0] == '' || selectedFile[0] == '') {
-      messageApi.open({
-        type: 'error',
-        content: '파일이 선택되지 않았습니다.',
-        duration: 1,
-        style: {
-          margin: 'auto',
-        },
+    setChartData(data)
+  }, [data])
+
+  const handleSelect = (param: any, type: any) => {
+    if (data?.length > 0) {
+      // min, max 구하기
+      const columns = Object.keys(data[0])
+      const result: { [key: string]: Array<string> } = {}
+
+      //format
+      columns.map((column: any) => {
+        result[column] = []
       })
-      // setActiveStep(0)
-    }
-  }, [])
 
-  useEffect(() => {
-    setDefaultOption(variableList)
-  }, [variableList])
-
-  const fetchCorrelationPlot = async () => {
-    setLoading(true)
-    setPlotImg(undefined)
-    setPlotData(undefined)
-
-    const param = {
-      response_type: 'json', //DB에서 encoded image or json 중 알아서 보내주기로
-      dataset_id: selectedDataset[0],
-      file_nm: selectedFile[0],
-      scaling_method: scalingOption,
-      x_value: featureX,
-      y_value: featureY,
-      user_id: localStorage.getItem('userId'),
-    }
-
-    console.log('param:', param)
-
-    await axios
-      .post(process.env.REACT_APP_API_SERVER_URL + '/api/corrplot/cplot', param)
-      .then((response: any) => {
-        setLoading(false)
-
-        console.log('/api/corrplot/cplot response ::', response)
-
-        if (response.data.image) {
-          setPlotImg(response.data.image)
-        } else {
-          setPlotData(response.data.data)
-
-          //layout 수정
-          const layout = response.data.layout
-          layout['margin'] = {
-            x: '4vw',
-            y: '1vw',
-          }
-          setLayoutOption(layout)
-        }
-      })
-      .catch((error) => {
-        setLoading(false)
-        messageApi.open({
-          type: 'error',
-          content: '관리자에게 문의하세요',
-          duration: 1,
-          style: {
-            margin: 'auto',
-          },
+      //push items
+      data?.map((data: any) => {
+        columns.forEach((column: any) => {
+          result[column].push(data[column])
         })
-        console.log(error)
       })
 
-    // image를 그대로 받아오는 경우 ( response_type : 'blob'  인 경우 )
-    // await axios
-    //   .post<Blob>('http://101.101.209.181:8080' + '/api/corrplot/cplot', param, {
-    //     responseType: 'blob',
-    //   })
-    //   .then((res) => {
-    //     const myFile = new File([res.data], 'imageName')
-    //     const reader = new FileReader()
-    //     reader.onload = (ev) => {
-    //       const previewImage = String(ev.target?.result)
-    //       console.log('111::', previewImage)
-    //       setPlotImg(previewImage) // myImage라는 state에 저장했음
-    //     }
-    //     reader.readAsDataURL(myFile)
-    //   })
-  }
+      const arr = result[param]
+      const min = Math.min.apply(null, arr)
+      const max = Math.max.apply(null, arr)
 
-  const handleSearchClick = () => {
-    if (featureX.length === 0 || featureY.length === 0) {
-      messageApi.open({
-        type: 'error',
-        content: '변수 X, Y를 선택하십시오.',
-        duration: 1,
-        style: {
-          margin: 'auto',
-        },
-      })
-    } else {
-      fetchCorrelationPlot()
-    }
-  }
-
-  const handleRadioButtonChange = (value: any) => {
-    setScalingOption(value)
-  }
-
-  const handleSelect = (param: any) => {
-    // console.log('selected:', param)
-    if (param.type === 'x') setFeatureX(param.value)
-    if (param.type === 'y') setFeatureY(param.value)
-
-    const result = []
-    for (let i = 0; i < usedVariable.length; i++) {
-      //같은 카테고리에 선택된거 있으면 해제
-      if (usedVariable[i].category === param.type) {
-        result.push({ value: usedVariable[i].value, used: false })
+      if (type === 'x') {
+        setFeatureX({ value: param, min: min, max: max, sliderMin: min, sliderMax: max })
+        setSliderMarks({ ...sliderMarks, x: { [min]: min, [max]: max } })
       }
-      //선택된 값은 true처리
-      else if (usedVariable[i].value === param.value) {
-        result.push({ value: usedVariable[i].value, used: true, category: param.type })
-      } else {
-        //그 외는 그대로 렌더링
-        result.push(usedVariable[i])
+      if (type === 'y') {
+        setFeatureY({ value: param, min: min, max: max, sliderMin: min, sliderMax: max })
+        setSliderMarks({ ...sliderMarks, y: { [min]: min, [max]: max } })
       }
     }
-
-    setUsedVariable(result)
   }
 
-  const handleNext = () => {
-    setActiveStep(2)
-  }
+  const handleChange = (param: any, type: string) => {
+    // TODO : data 를 slider 의 min/max로 필터링해서 chartData에 담기 -> ScatterPlot에 보냄
 
-  const onChangeSwitch = (param: any) => {
-    // console.log('swithc:', param)
-    setChecked(param)
-  }
-
-  const handleChange = (dateArray: any) => {
-    // console.log('datearr[0]:', dateArray[0].format('YYYY-MM-DD'))
-
-    setSelectedDates(dateArray)
-  }
-
-  const handleResetButton = (event: any) => {
-    fetchCorrelationPlot()
-    const update = {
-      title: 'some new title', // updates the title
-      'xaxis.range': [-0.8237524999999999, -0.05399250000000011],
-      'xaxis.range[0]': -0.8237524999999999,
-      'xaxis.range[1]': -0.05399250000000011,
-      'yaxis.range': [-0.75151875, 0.12421125000000002],
-      'yaxis.range[0]': -0.75151875,
-      'yaxis.range[1]': 0.12421125000000002,
-      'xaxis.autorange': false,
-      'yaxis.autorange': false,
+    if (type === 'x') {
+      setFeatureX({ ...featureX, sliderMin: param[0], sliderMax: param[1] })
+      setChartData(
+        data.filter(
+          (d: any) =>
+            d[featureX.value] > param[0] &&
+            d[featureX.value] < param[1] &&
+            d[featureY.value] > featureY.sliderMin &&
+            d[featureY.value] < featureY.sliderMax
+        )
+      )
     }
-
-    // console.log('handleResetButton', handleResetButton)
-    // setLayoutOption(updateTest)
-
-    //console.log('respData:', respData)
-
-    // setPlotData(undefined)
-    // setLayoutOption(undefined)
-
-    // setLayoutOption({ ...respData.layout })
-    // setPlotData([...respData.plotdata])
-  }
-
-  const handleDefaultValue = () => {
-    // if (selectedDates) {
-    //   return [dayjs(defaultValue[0], DATE_FORMAT), dayjs(defaultValue[1], DATE_FORMAT)]
-    // }
-
-    return [dayjs(), dayjs()]
+    if (type === 'y') {
+      setFeatureY({ ...featureY, sliderMin: param[0], sliderMax: param[1] })
+      setChartData(
+        data.filter(
+          (d: any) =>
+            d[featureY.value] > param[0] &&
+            d[featureY.value] < param[1] &&
+            d[featureX.value] > featureX.sliderMin &&
+            d[featureX.value] < featureX.sliderMax
+        )
+      )
+    }
   }
 
   return (
     <>
-      <CorrelationViewContainer>
-        <PlotWrapper className="rounded-box w-100 h-100">
-          <div className="w-100 h-100 d-flex" style={{ justifyContent: 'center', alignItems: 'center' }}>
-            {/** default image */}
-            {!plotImg && !plotData && (
-              <DotChartOutlined style={{ fontSize: 100, color: '#bfbfbf', textAlign: 'center' }} />
-            )}
-            {/** render image or plot */}
-            {plotImg ? (
-              <img src={plotImg} style={{ margin: 'auto', width: '40vw' }} />
-            ) : plotData ? (
-              <Plot ref={plotRef} className="w-100 h-100" data={plotData} layout={layoutOption} config={config} />
-            ) : null}
-          </div>
-        </PlotWrapper>
-        <HyperpararmeterWrapper className="rounded-box">
-          <div className="w-100 h-90">
-            <Space className="w-100" direction="vertical" size={15}>
-              {/* <ItemBox title="Time Series" component={<Switch onChange={onChangeSwitch} checked={checked} />} />
-              <ItemBox
-                title="Date Range"
-                component={
-                  <RangePicker
-                    size="middle"
-                    style={{ width: '100%' }}
-                    // defaultValue={handleDefaultValue}
-                    onChange={handleChange}
-                  />
-                }
-                visible={checked}
-              ></ItemBox> */}
-              <ItemBox
-                title="Variable X"
-                component={
-                  <NewTagSelect
-                    style={{ width: '100%', margin: 'auto', float: 'left', minWidth: '150px' }}
-                    selectionType="single"
-                    type="x"
-                    onSelect={handleSelect}
-                    selectOptions={defaultOption}
-                  />
-                }
+      <div style={{ width: '100%', height: '400px', display: 'block' }}>
+        <div style={{ width: '60%', display: 'block', float: 'left' }}>
+          {data.length > 0 && <ScatterPlot data={chartData} featureX={featureX} featureY={featureY} />}
+        </div>
+        <div
+          style={{
+            height: '100%',
+            width: '30%',
+            padding: '4rem 1rem',
+            display: 'block',
+            float: 'left',
+            // border: '1px solid red',
+          }}
+        >
+          <ItemBox
+            title="Feature X"
+            component={
+              <Select
+                style={{ width: '100%', margin: 'auto', float: 'left', minWidth: '150px' }}
+                onSelect={(e: any) => handleSelect(e, 'x')}
+                options={variableList}
+                defaultValue={options[0]}
               />
-              <ItemBox
-                title="Variable Y"
-                component={
-                  <NewTagSelect
-                    style={{ width: '100%', margin: 'auto', float: 'left', minWidth: '150px' }}
-                    selectionType="single"
-                    type="y"
-                    onSelect={handleSelect}
-                    selectOptions={defaultOption}
-                  />
-                }
+            }
+          />
+          <ItemBox
+            title="Feature Y"
+            component={
+              <Select
+                style={{ width: '100%', margin: 'auto', float: 'left', minWidth: '150px' }}
+                onSelect={(e: any) => handleSelect(e, 'y')}
+                options={variableList}
+                defaultValue={options[0]}
               />
-              <ItemBox
-                title="Scaling Option"
-                component={<RadioButtonGroup onChangeValue={handleRadioButtonChange} />}
+            }
+          />
+          <ItemBox
+            title="X Range"
+            component={
+              <Slider
+                range
+                included={true}
+                marks={sliderMarks.x}
+                min={featureX.min}
+                max={featureX.max}
+                defaultValue={[featureX.min, featureX.max]}
+                value={[featureX.sliderMin, featureX.sliderMax]}
+                onChange={(e) => handleChange(e, 'x')}
               />
-            </Space>
-          </div>
-          <div className="w-100 h-10">
-            <ItemBox
-              title=""
-              component={
-                <Button type="primary" block onClick={handleSearchClick} loading={loading}>
-                  Plot
-                </Button>
-              }
-            />
-          </div>
-        </HyperpararmeterWrapper>
-      </CorrelationViewContainer>
-      <div style={{ margin: '10px 30px', float: 'right' }}>
-        <Button type="text" icon={<ArrowRightOutlined />} onClick={handleNext}>
-          NEXT
-        </Button>
+            }
+          />
+          <ItemBox
+            title="Y Range"
+            component={
+              <Slider
+                range
+                included={true}
+                marks={sliderMarks.y}
+                min={featureY.min}
+                max={featureY.max}
+                defaultValue={[featureY.min, featureY.max]}
+                value={[featureY.sliderMin, featureY.sliderMax]}
+                onChange={(e) => handleChange(e, 'y')}
+              />
+            }
+          />
+        </div>
       </div>
-      {contextHolder}
     </>
   )
 }

@@ -12,7 +12,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons'
 import { Link, Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import { modelListAtom } from './store/atom'
-import { dateTimeToString, removeSeparator } from 'common/DateFunction'
+import { dateTimeToString, removeSeparator } from 'utils/DateFunction'
 
 export type Model = {
   com_id: string
@@ -51,7 +51,7 @@ const ModelList = (props: any) => {
 
   const showConfirm = (param: any) => {
     Modal.confirm({
-      title: 'Do you Want to delete this model?',
+      title: 'Do you want to delete this model?',
       icon: <ExclamationCircleFilled />,
       content: `Deletion is permanent and you will not be able to undo it.`,
       onOk() {

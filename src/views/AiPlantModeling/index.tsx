@@ -29,34 +29,7 @@ import styled from '@emotion/styled'
 import thumb from '/img/thumbnail_01.png'
 import LineChart from 'views/DataAnalysis/components/Chart/LineChart'
 import D3Chart from 'views/DataAnalysis/components/Chart/D3Chart'
-import D3ChartTest from 'views/DataAnalysis/components/Chart/D3Chart copy'
-
-const LoadingBox = styled.div<{ toggle: any }>`
-  width: 10vw;
-  height: 10vw;
-  position: absolute;
-  left: 55%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: ${(props: any) => (props.toggle ? 'block' : 'none')};
-`
-
-const ModelingParentBox = styled.div`
-  width: 100%;
-  background-color: #fff;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justifycontent: space-between;
-  padding: 1vw;
-`
-
-const ModelingTitle = styled.div`
-  font-size: 2vw;
-  font-weight: bold;
-  color: #fff;
-  margin-bottom: 1vw;
-`
+import D3ChartTest from 'views/DataAnalysis/components/Chart/D3_Scatter'
 
 export default function AIModeling() {
   //권한
@@ -133,3 +106,30 @@ export default function AIModeling() {
     </>
   )
 }
+
+const LoadingBox = styled.div<{ toggle: any }>`
+  width: 10vw;
+  height: 10vw;
+  position: absolute;
+  left: 55%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: ${(props: any) => (props.toggle ? 'block' : 'none')};
+`
+
+const ModelingParentBox = styled.div`
+  width: 100%;
+  background-color: #fff;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justifycontent: space-between;
+  padding: 1vw;
+`
+
+const ModelingTitle = styled.div`
+  font-size: 2vw;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 1vw;
+`

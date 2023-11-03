@@ -1,8 +1,9 @@
-import { Table, Typography, message } from 'antd'
+import { Spin, Table, Typography, message } from 'antd'
 import { ColumnsType } from 'antd/es/table'
-import Title from 'antd/es/typography/Title'
 import React, { useEffect, useState } from 'react'
-import { dateTimeToString } from 'common/DateFunction'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { dataPropertyState, uploadedDataState } from 'views/DataAnalysis/store/dataset/atom'
+import styled from '@emotion/styled'
 
 interface DataType {
   name: string
@@ -11,6 +12,11 @@ interface DataType {
   startDate: string
   endDate: string
 }
+
+const DataSummaryContainer = styled.div<{ visible: boolean }>`
+  margin-top: 30px;
+  display: ${(props: any) => (props.visible ? 'block' : 'none')};
+`
 
 const SummaryDataGrid = (props: any) => {
   const [data, setData] = useState([])
@@ -49,126 +55,96 @@ const SummaryDataGrid = (props: any) => {
   )
 }
 
-const DataSummary = (props: any) => {
-  const [messageApi, contextHolder] = message.useMessage()
-  const [summaryData, setSummaryData] = useState([])
+const DataSummary = () => {
   const { Title } = Typography
 
+  const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
+  const inputOption = useRecoilValue(dataPropertyState)
+
+  const [spinning, setSpinning] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [summaryData, setSummaryData] = useState([])
+
+  const [messageApi, contextHolder] = message.useMessage()
+
   useEffect(() => {
-    // console.log('DataSummary props:', props.file)
-
-    if (props.file) {
-      if (props.file.size <= 10485760) {
-        readFile(props.file)
-      } else {
-        messageApi.open({
-          type: 'error',
-          content: '업로드 가능 파일용량 초과(최대 10MB)',
-          duration: 1,
-          style: {
-            margin: 'auto',
-          },
-        })
-        setSummaryData([])
-      }
-    } else {
-      setSummaryData([])
-    }
-  }, [props])
-
-  const readFile = (file: any) => {
-    console.log('readfile:', file)
-    console.log('type:', file.name.split('.', 2)[1])
-
-    const fileReader = new FileReader()
-
-    const fileFormat = file.name.split('.', 2)[1]
-    const acceptedFormats = ['csv', 'xls', 'xlsx']
-
-    if (file) {
-      if (acceptedFormats.includes(fileFormat)) {
-        fileReader.onload = function (event: any) {
-          const text = event.target.result
-          csvFileToArray(file.name, file.size, text)
-        }
-
-        fileReader.readAsText(file)
-      } else {
-        messageApi.open({
-          type: 'error',
-          content: '지원하지 않는 파일 유형입니다.',
-          duration: 1,
-          style: {
-            margin: 'auto',
-          },
-        })
-      }
-    }
-  }
-
-  const csvFileToArray = (name: string, size: number, string: string) => {
-    const csvHeader = string.slice(0, string.indexOf('\n')).split(',')
-    const csvRows = string.slice(string.indexOf('\n') + 1).split('\n')
-
-    const array = csvRows.map((item) => {
-      if (item != '') {
-        const values = item.split(',')
-        const obj = csvHeader.reduce((object: any, header, index) => {
-          object[header] = values[index]
-          return object
-        }, {})
-        return obj
-      }
-    })
-
-    console.log('array:', array)
-    //split하면서 마지막 행에 빈 값 들어있어서 자름
-    array.splice(array.length - 1)
-
-    //min & max datetime 찾기
-    const dateColumnName = Object.keys(array[0])[0]
-    const newArr = array.map((obj) => {
-      return { ...obj, dateTime: new Date(obj[dateColumnName]) } //0번째 컬럼 : 날짜
-    })
-
-    // console.log('newArr:', newArr)
-
-    //Sort in Ascending order(low to high)
-    //https://bobbyhadz.com/blog/javascript-sort-array-of-objects-by-date-property
-    const sortedAsc = newArr.sort((a, b) => Number(a.dateTime) - Number(b.dateTime))
-    // console.log('sortedAsc:', sortedAsc)
+    // console.log('uploadedData:', uploadedData)
 
     const summary = []
-    const lengthOfArray = array.length
-
-    const start = sortedAsc[0].dateTime
-    const end = sortedAsc[lengthOfArray - 1].dateTime
-    // console.log('start:', dateTimeToString(start).length)
-    // console.log('end:', typeof dateTimeToString(end))
-
     summary.push({
       key: 1,
-      name: name,
-      size: Math.round(size / 1024),
-      rowCount: sortedAsc.length,
-      colCount: Object.keys(sortedAsc[0]).length,
-      startDate: dateTimeToString(start).length === 19 ? dateTimeToString(start) : '-',
-      endDate: dateTimeToString(end).length === 19 ? dateTimeToString(end) : '-',
+      name: uploadedData.name,
+      size: Math.round(uploadedData.file ? uploadedData.file.size / 1024 : 0),
+      rowCount: uploadedData.rowCount,
+      colCount: uploadedData.colCount,
+      startDate: uploadedData.startDate,
+      endDate: uploadedData.endDate,
     })
 
     // console.log('summary:', summary)
     setSummaryData(summary)
+    setSpinning(false)
+
+    if (uploadedData.file !== undefined && uploadedData.rowCount > 0) {
+      setVisible(true)
+    } else {
+      setVisible(false)
+    }
+  }, [uploadedData])
+
+  const searchStartEndDate = (array: Array<any>) => {
+    //min & max datetime 찾기
+    // const dateColumnName = Object.keys(array[0])[0]
+    const dateColumnName = inputOption.date_col
+
+    const newArr = array.map((obj) => {
+      return { ...obj, dateTime: new Date(obj[dateColumnName]) } //날짜컬럼(사용자가 선택한 값)
+    })
+
+    if (!newArr[0].dateTime.getTime()) {
+      alert('날짜 컬럼이 아닙니다.')
+    }
+    // console.log('newArr[0].dateTime:', newArr[0].dateTime)
+    // console.log('test:', isValidDate(newArr[0].dateTime))
+
+    //Sort in Ascending order(low to high)
+    //https://bobbyhadz.com/blog/javascript-sort-array-of-objects-by-date-property
+    // const sortedAsc = newArr.sort((a, b) => Number(a.dateTime) - Number(b.dateTime))
+    // console.log('sortedAsc:', sortedAsc)
+
+    // console.log('-----test:', Object.prototype.toString.call(sortedAsc[0].dateTime))
+
+    // const summary = []
+    // const lengthOfArray = array.length
+
+    // const start = sortedAsc[0].dateTime
+    // const end = sortedAsc[lengthOfArray - 1].dateTime
+    // console.log('start:', dateTimeToString(start).length)
+    // console.log('end:', typeof end)
+
+    // summary.push({
+    //   key: 1,
+    //   name: uploadFileInfo.name,
+    //   size: Math.round(uploadFileInfo.size / 1024),
+    //   rowCount: sortedAsc.length,
+    //   colCount: Object.keys(sortedAsc[0]).length,
+    //   startDate: dateTimeToString(start).length === 19 ? dateTimeToString(start) : '-',
+    //   endDate: dateTimeToString(end).length === 19 ? dateTimeToString(end) : '-',
+    // })
+
+    // console.log('summary:', summary)
+    // setSummaryData(summary)
   }
 
   return (
-    <div style={{ marginTop: '30px' }}>
+    <DataSummaryContainer visible={visible}>
       {/* <p style={{ color: '#002D65', fontSize: '18px', float: 'left', width: '100%' }}>Data Summary</p> */}
       <Title level={4} style={{ color: '#002D65' }}>
         Data Summary
       </Title>
-      {summaryData && <SummaryDataGrid data={summaryData} size="small" />}
+      <Spin spinning={spinning}> {summaryData && <SummaryDataGrid data={summaryData} size="small" />}</Spin>
       {contextHolder}
-    </div>
+    </DataSummaryContainer>
   )
 }
 

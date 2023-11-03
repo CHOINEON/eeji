@@ -25,6 +25,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
 
 import SidebarBrand from 'components/sidebar/components/Brand'
+import { userInfoState } from 'views/DataAnalysis/store/dataset/atom'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
