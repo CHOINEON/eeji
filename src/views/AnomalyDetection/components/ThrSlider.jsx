@@ -51,7 +51,7 @@ const DecimalStep = (props) => {
                 value={thrValu}
                 step={0.01}
                 defaultValue={minMax[0]}
-                />
+                style={{marginLeft : '20px', marginTop : '20px', marginBottom: '20px'}}/>
             </Col>
             
             <Col span={4}>
@@ -102,7 +102,7 @@ const DecimalStep = (props) => {
                             fontSize : 15,
                             width : 200
                             }}/>
-            <DecimalStep currentThr={ currentThr }></DecimalStep>
+            <DecimalStep currentThr={ currentThr } style= {{marginLeft: '10px'}}></DecimalStep>
             
         </Card>
         

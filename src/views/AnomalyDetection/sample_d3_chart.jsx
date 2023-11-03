@@ -14,7 +14,6 @@ import ThreSlider from './components/ThrSlider'
 const AdvancedChart = () => {
 
   const originURL = 'ws://34.64.217.237:9001/ws/web'
-  //'ws://222.121.66.49:8001/ws/web' 성엽ver
   const [socketData, setSocketData] = useState({})
   const [chartData, setChartData] = useState([])
   const [index, setIndex] = useState([])
@@ -30,11 +29,10 @@ const AdvancedChart = () => {
   const [volume, setVolume] = useState([])
   const [clickedPoint, setClickedPoint] = useState({ x: null, y: null })
   const [isHovering, setIsHovering] = useState(0)
-  const [dataHovering, setDataHovering] = useState(0)
   const [indexHovering, setIndexHovering] = useState(0)
   const [threHovering, setThreHovering] = useState(0)
 
-  const { Search } = Input;
+
   const handleChartClick = (data) => {
     for (const point of data.points) 
         {
@@ -101,7 +99,7 @@ const AdvancedChart = () => {
         return [...prev, socketData.thr[0]]
       })
 
-      const subplotData = [
+  const subplotData = [
         {
           x: index,
           y: anomalyScoreArr,
@@ -153,18 +151,18 @@ const config = [{
     responsive: true,
     useResizeHandler: true,
     autosize: true,
-  }];  
+    }];  
 
 const layout = {
     title: 'Anomaly Detection Plot',
     titlefont: { size: 20 },
-    height : '30px',
+   
     xaxis: {
         title: 'Index',
         titlefont: { size: 20 },
         },
     yaxis: {
-        title: 'Data',
+        title: 'Price',
         titlefont: { size: 20 },
         tickfont: { size: 15 },
         },
@@ -182,7 +180,6 @@ const layout = {
         l: 110,
         r: 100,
         },
-    // displayModeBar: false,
     responsive: true,
     useResizeHandler: true,
     autosize: true,
@@ -195,7 +192,7 @@ const layout = {
         titlefont: { size: 20 },
         },
     yaxis: {
-        title: 'Data',
+        title: 'Volume',
         titlefont: { size: 20 },
         tickfont: { size: 15 },
         },
@@ -211,15 +208,13 @@ const layout = {
         t: 80,
         b: 100,
         l: 110,
-        r: 100,
+        r: 30,
         },
-    
-    // displayModeBar: false,
     responsive: true,
     useResizeHandler: true,
     autosize: true,
   }
-  /*add timestamp*/
+  
   useEffect(() => {
     var timestamp = Date.now()
     var newURL = `${originURL}${timestamp}`
@@ -227,7 +222,7 @@ const layout = {
     ws.onopen = () => {
       console.log(`WebSocket connection`)
     }
-    /*parsing the incoming data*/
+    
     ws.onmessage = (message) => {
       const dataString = message.data.trim()
       try {
@@ -249,15 +244,6 @@ const layout = {
       ws.close()
     }
   }, [])
-
-  // const [isVisible, setIsVisible] = useState(true)
-  // const handleScoreToggle = () => {
-  //   setIsVisible(!isVisible)
-  // }
-  // const [yesVisible, setYesVisible] = useState(true)
-  // const handleThreToggle = () => {
-  //   setYesVisible(!yesVisible)
-  // }
 
   // async function load_shap_plot(event) {
   //   event.preventDefault()
@@ -316,26 +302,22 @@ const layout = {
   // }
 
 const [sliderValue, setSliderValue] = useRecoilState(sliderValueState)
+//             body: JSON.stringify({
+//                   revised_values: [[sliderValue.price, sliderValue.volume]]
 
-const editParam = () => {
-  const secURL = 'http://34.64.217.237:9001/set_thr'
-  
-    fetch( secURL, {
-            method: "PUT",
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                  revised_values: [[sliderValue.price, sliderValue.volume]]
-            })
-          })
-        .then((response)=>response.json())
-      };
-  
   const options = [
-    { value: 'DBconeection1', label: 'DBconeection1' },
-    { value: 'DBconnection2', label: 'DBconnection2' },
-    { value: 'DBconnection2', label: 'DBconnection2' },
+    { value: 'DJI.INDX', label: 'DJI.INDX' },
+    { value: 'DXY.InDX', label: 'DXY.InDX' },
+    { value: 'EURUSD>FOREX', label: 'EURUSD>FOREX' },
+    { value: 'GSPC.INDX', label: 'GSPC.INDX'},
+    { value: 'IXIC.INDX', label: 'IXIC>INDX'},
+    { value: 'NYA.INDX', label: 'NYA>INDX'},
+    { value: 'BCOMCL.INDX', label: 'BCOMCL.INDX'},
+    { value: 'BCOMCO.INDX', label: 'BCOMCO.INDX'},
+    { value: 'BCOMGC.INDX', label: 'BCOMGC.INDX'},
+    { value: 'BCOMNG.INDX', label: 'BCOMNG.INDX'},
+    { value: 'XAX.INDX', label: 'XAX.INDX'},
+    { value: 'BCOMHG.INDX', label: 'BCOMHG.IHDX'}
   ]
   const datasetOptions = [
     { value: 'EODHD_DAILY', label: 'EODHD_DAILY' },
@@ -347,10 +329,39 @@ const editParam = () => {
     { value: 'USAD', label: 'USAD' },
     { value: 'ANOMALY TRANSFORMER', label: 'ANOMALY TRANSFORMER' },
   ]
+  
+  const [selectedModel, setSelectedModel] = useState('PCA');
+  const [selectedTable, setSelectedTable] = useState('eodhd_daily')
+  const [selectedSymbol, setSelectedSymobl] = useState('DJI.INDX')
 
   const onSearch = (value) => {
     console.log('search:', options);
   };
+  const onModelChange = (value) => {
+    setSelectedModel(value);
+  }
+  const onTableChange = (value) => {
+    setSelectedTable(value);
+  }
+
+const model_DBconfig = () => {
+  const URL = 'http://34.64.217.237:9001/set_db_config';
+    fetch(URL, {
+    method : 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ MODEL_NAME: selectedModel, TABLE_NAME: selectedTable, SYMBOL: selectedSymbol })
+  })
+    .then((response) => response.json())
+    .then((data) => {
+    // Handle the response from the server
+    console.log('Response from the server:', data);
+    })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+}
 
 return (
   <Box
@@ -373,9 +384,9 @@ return (
                       border: '1px solid #A3AFCF', 
                       borderRadius: '10px' 
                     }}
-              defaultValue={modelOptions[0]}
+              defaultValue={selectedModel}
               options={modelOptions}
-              onSelect={onSearch}
+              onSelect={onModelChange}
             />
       </div>
       <div style={{ width: '150px' }}>
@@ -401,27 +412,29 @@ return (
                     }}
             defaultValue={options[0]}
             options={options}
-            onSelect={onSearch}
+            onSelect={onTableChange}
             />
         </div>  
         <div>
-          <Button 
+          <Button
+                onClick={model_DBconfig} 
                 type="primary"
                 style={{marginBottom : '18px'}}> SUBMIT 
           </Button> 
         </div>  
     </Space>
+
   <div className = {CSS.Top}>
-  <Plot
-    data={testData}
-    layout={layout}
-    useResizeHandler={true}
-    responsive={true}
-    autosize={true}
-    style={{ width: '100%' , height:'300px'}}
-    config={config}
-    onClick={handleChartClick}
-  />
+    <Plot
+      data={testData}
+      layout={layout}
+      useResizeHandler={true}
+      responsive={true}
+      autosize={true}
+      style={{ width: '100%' , height:'300px'}}
+      config={config}
+      onClick={handleChartClick}
+    />
   </div>     
   <div className = {CSS.SecondChart}>
     <Plot
@@ -437,199 +450,101 @@ return (
   </div>
     
   <div className={CSS.Panel} 
-        style = {{ 
-                  responsive: true, 
-                  useResizeHandler: true, 
-                  autosize: true, 
-                  width : '100%'}}>
+          style = {{ 
+                    responsive: true, 
+                    useResizeHandler: true, 
+                    autosize: true, 
+                    width : '100%'}}>
     <Space direction="Horizontal">
       <Card style={{ 
-                  width : '100%',
-                  responsive: true, 
-                  useResizeHandler: true, 
-                  autosize: true, 
-                  marginTop : 20,
-                  marginBottom : 10,  
+                    width : '100%',
+                    height : '90%',
+                    responsive: true, 
+                    useResizeHandler: true, 
+                    autosize: true, 
+                    marginTop : 10,
+                    marginBottom : 10,  
                   }}>
-      <Col style ={{display : 'flex' }}>
-        <Statistic  
-              value='SELECTED DATA' 
-              valueStyle={{
-                fontWeight:500, 
-                fontSize : 20
-              }}/>
-        <Button onMouseOver={() => setIsHovering(1)} 
-                onMouseOut={() => setIsHovering(0)} 
-                style={{
-                        position:'relative',
-                        borderColor:'#fff', 
-                        marginLeft : '2px', 
-                        justifyContent : 'center', }}>
-              <QuestionCircleOutlined  />
-        </Button>
-        {isHovering ? (
-        <span style={{display:'block',position:'absolute',top:'-60%','right':'10%', backgroundColor:'#4299e1',opacity:'0.7',zIndex:'1' ,color:'#fff'}}>자세히 알아보기</span>
-          ) : (
-            ""
-          )}
-      </Col> 
-      <Row gutter={16}>
-        <Col span={8}>
-          <Statistic title="X Data" value={[clickedPoint.clickedXvalue]} />
-        </Col>
-        <Col span={8}>
-          <Statistic title="Y Data" value={[clickedPoint.clickedYvalue]} />
+        <Col style ={{ display : 'flex' }}>
+          <Statistic  
+                  value='SELECTED DATA' 
+                  valueStyle={{
+                              fontWeight:500, 
+                              fontSize : 20
+                              }}/>
+          <Button onMouseOver={() => setIsHovering(1)} 
+                  onMouseOut={() => setIsHovering(0)} 
+                  style={{
+                          position:'relative',
+                          borderColor:'#fff', 
+                          marginLeft : '2px', 
+                          justifyContent : 'center', }}>
+          <QuestionCircleOutlined  />
+          </Button>
+          {isHovering ? (
+          <span style={{display:'block',position:'absolute',top:'-60%','right':'-15%', backgroundColor:'#4299e1',opacity:'0.7',zIndex:'1' ,color:'#fff'}}>자세히 알아보기</span>
+            ) : (
+              ""
+            )}
         </Col> 
-      </Row>
-      
-      <div className= {CSS.sendValueBox}>
-
-</div>
-
-        {/* <Statistic  
-          value="IMPORT DATA" 
-          valueStyle={{
-                        fontWeight:500, 
-                        fontSize : 20
-                      }}/> 
-        <Button onMouseOver={() => setDataHovering(1)} onMouseOut={() => setDataHovering(0)} 
-                style={{
-                        borderColor:'#fff',
-                        justifyContent : 'center', 
-                        marginLeft : '2px'}}>
-        <QuestionCircleOutlined />
-        </Button>
-        {dataHovering ? (
-        <span style={{display:'block',position:'absolute',top:'-60%','right':'10%', backgroundColor:'#4299e1',opacity:'0.7',zIndex:'1' ,color:'#fff'}}>자세히 알아보기</span>
-          ) : (
-            ""
-          )} */}
-      
-      
-      <Col style = {{display : 'flex'}}>
-      <Statistic  
-        value="INDEX SIZE" 
-        valueStyle={{
-                  fontWeight:500, 
-                  fontSize : 20,
-                }}/> 
-      <Button onMouseOver={() => setIndexHovering(1)} onMouseOut={() => setIndexHovering(0)}
-              style={{
-                      borderColor: '#fff',
-                      justifyContent : 'center',
-                      marginLeft : '2px'
-              }}>
-      <QuestionCircleOutlined />
-      </Button>
-      {indexHovering ? (
-        <span style={{display:'block', position:'absolute', top:'-60%', 'right':'10%', backgroundColor:'#4299e1', opacity:'0.7', zIndex:'1' , color:'#fff'}}>자세히 알아보기</span>
-          ) : (
-            ""
-          )}
-      </Col>
-      <Row gutter={16}>
-        <Col span={12}>
-          <Statistic title="DATA" value={indexSize} />
+        <Row gutter={16}>
+          <Col span={8}><Statistic title="X Data" value={[clickedPoint.clickedXvalue]} />
+          </Col>
+          <Col span={8}><Statistic title="Y Data" value={[clickedPoint.clickedYvalue]} />
+          </Col> 
+        </Row>
+        <Col style = {{display : 'flex'}}>
+            <Statistic  
+              value="INDEX SIZE" 
+              valueStyle={{
+                          fontWeight:500, 
+                          fontSize : 20,
+                          }}/> 
+            <Button onMouseOver={() => setIndexHovering(1)} onMouseOut={() => setIndexHovering(0)}
+                    style={{
+                            borderColor: '#fff',
+                            justifyContent : 'center',
+                            marginLeft : '2px'
+                          }}>
+            <QuestionCircleOutlined />
+            </Button>
+            {indexHovering ? (
+              <span style={{display:'block', position:'absolute', top:'-60%', 'right':'10%', backgroundColor:'#4299e1', opacity:'0.7', zIndex:'1' , color:'#fff'}}>자세히 알아보기</span>
+                ) : (
+                  ""
+                )}
         </Col>
-      </Row>     
+          <Col span={2}><Statistic  value={indexSize} /></Col>
       </Card>
 
-<div className= {CSS.featureBox}>
-  <Card style={{ 
-              
-              marginTop : 20,  
-              responsive: true, 
-              useResizeHandler: true, 
-              autosize: true, 
-             height : '290px'
-}}>            
-<Col span={12}>
+{/* <div className= {CSS.featureBox}>          
+    <Col span={12}>
               <Statistic title="DATA" value={thresholdArr[0]}
               valueStyle = {{fontWeight:500, 
                 fontSize : 20,}} />
-        </Col>
-                   
-  <Statistic  value="SEND TEST VALUE"  
-              valueStyle={{
-                    fontWeight:500, 
-                    fontSize : 20,
-                    marginBottom : 10,
-                    responsive: true, 
-                    useResizeHandler: true, 
-                    autosize: true, 
-                  }}
-  />
+    </Col>
+    <Search
+        placeholder="Insert Value"
+        allowClear
+        enterButton="Submit"
+        size="large"
+        onSearch={onSearch}
+      /> */}
   {/* <Checkbox style={{marginLeft : 140,}}onChange={onChange}>{price}</Checkbox> */} 
-  <Search
-      placeholder="Insert Value"
-      allowClear
-      enterButton="Submit"
-      size="large"
-      onSearch={onSearch}
-    />       
-  {/* <Statistic  value="FEATURES"  
-              valueStyle={{
-                    fontWeight:500, 
-                    fontSize : 20,
-                    marginBottom : 10,
-                    responsive: true, 
-                    useResizeHandler: true, 
-                    autosize: true, 
-                  }}
-  /> */}
-  {/* <Checkbox style={{marginLeft : 140,}}onChange={onChange}>{price}</Checkbox> */} 
-  {/* <FeatureSlider clickedPoint={clickedPoint}/> 
-  <Button 
-        type="primary" 
-        onClick={editParam} 
-        style = {{
-          justifyContent: 'center',
-          alignItems : 'center',
-          marginTop  : '10px',
-  }}> SUBMIT 
-  </Button>  */}
-  </Card> 
-</div>
-
-{/* <div className= {CSS.sendValueBox}>
-  <Card style={{ 
-              height: '100%',
-              marginTop : 20,  
-              responsive: true, 
-              useResizeHandler: true, 
-              autosize: true, 
-              }}>                   
-  <Statistic  value="SEND TEST VALUE"  
-              valueStyle={{
-                    fontWeight:500, 
-                    fontSize : 20,
-                    marginBottom : 10,
-                    responsive: true, 
-                    useResizeHandler: true, 
-                    autosize: true, 
-                  }}
-  /> */}
-  {/* <Checkbox style={{marginLeft : 140,}}onChange={onChange}>{price}</Checkbox> */} 
-  {/* <Search
-      placeholder="Insert Value"
-      allowClear
-      enterButton="Submit"
-      size="large"
-      onSearch={onSearch}
-    />
-  </Card> 
-</div> */}
+  {/* <FeatureSlider clickedPoint={clickedPoint}/> */}
 
 <div className= {CSS.sendThr}>
   <Card style={{ 
-              height: '100%',
-              marginTop : 20,  
+              width : '100%',
+              height: '90%',
+              marginBottom : 20,  
+              marginTop : 10,  
               responsive: true, 
               useResizeHandler: true, 
               autosize: true, 
-              width : '60%'
-}}> <Space direction="Horizontal">                    
-  <Statistic  value="THRESHOLD"  
+              }}> 
+    <Space direction="Horizontal">                    
+    <Statistic  value="THRESHOLD"  
               valueStyle={{
                     fontWeight:500, 
                     fontSize : 20,
@@ -637,91 +552,43 @@ return (
                     responsive: true, 
                     useResizeHandler: true, 
                     autosize: true, 
-                  }}
-  /><Button onMouseOver={() => setThreHovering(1)} onMouseOut={() => setThreHovering(0)}
-  style={{
-          borderColor: '#fff',
-          justifyContent : 'center',
-          marginLeft : '2px'
-  }}>
-<QuestionCircleOutlined />
-</Button>
-{threHovering ? (
-<span style={{display:'block', position:'absolute',top : '5%', 'right':'85%', backgroundColor:'#4299e1', opacity:'0.7', zIndex:'1' , color:'#fff'}}>자세히 알아보기</span>
-) : (
-""
-)}</Space>
-  <Statistic  value={socketData.thr} />
-  {/* <Checkbox style={{marginLeft : 140,}}onChange={onChange}>{price}</Checkbox> */} 
-  <ThreSlider currentThr={socketData.thr}/> 
-  </Card> 
-</div>
-{/* <div className= {CSS.ThreBox}>
-  <Card style={{ 
-              height: 370,
-              marginTop : 20,  
-              responsive: true, 
-              useResizeHandler: true, 
-              autosize: true, 
-              width : '100%'
-  }}>         
-  <Space direction="Horizontal">         
-    <Statistic  value="THRESHOLD "  
-                valueStyle={{
-                      fontWeight:500, 
-                      fontSize : 20,}}/>
-                      <Button onMouseOver={() => setThreHovering(1)} onMouseOut={() => setThreHovering(0)}
-              style={{
-                      borderColor: '#fff',
-                      justifyContent : 'center',
-                      marginLeft : '2px'
-              }}>
+                  }}/>
+    <Button onMouseOver={() => setThreHovering(1)} 
+            onMouseOut={() => setThreHovering(0)}
+            style={{
+                    borderColor: '#fff',
+                    justifyContent : 'center',
+                    marginLeft : '2px'
+                  }}>
       <QuestionCircleOutlined />
-      </Button>
-      {threHovering ? (
-        <span style={{display:'block', position:'absolute',top : '5%', 'right':'10%', backgroundColor:'#4299e1', opacity:'0.7', zIndex:'1' , color:'#fff'}}>자세히 알아보기</span>
-          ) : (
-            ""
-          )} </Space> 
-      <Row gutter={16}>
-      <Col span={10}>
-      
-        <Statistic  value={socketData.thr} />
-      </Col>
-      </Row>
-        <ThreSlider currentThr={socketData.thr}/> 
-        
-  </Card> 
-</div> */}
+    </Button>
+    {threHovering ? (
+    <span style={{display:'block', position:'absolute',top : '5%', 'right':'55%', backgroundColor:'#4299e1', opacity:'0.7', zIndex:'1' , color:'#fff'}}>자세히 알아보기</span>
+    ) : (
+    ""  
+    )}
+    </Space>
+    <Statistic  value={socketData.thr} />
+      <ThreSlider currentThr={socketData.thr}
+                  stlye = {{marginLeft : '20px'}}/> 
+    </Card> 
+</div>
 </Space>
 </div>
-{/* <Card style={{ 
-            height:250,
-            responsive: true, 
-            useResizeHandler: true, 
-            autosize: true, 
-            width: '100%' 
-            }}>
-    <div style={{ 
-                fontSize: '20px', 
-                textAlign: 'center' 
-            }}> 
-        <Statistic  
-                value='SHAP RESULT' 
-                valueStyle={{
-                        fontWeight:600
-                        }}/>
-                        <Button onClick={load_shap_plot}>Shap 플롯 로드</Button> 
-                        <div
-      id="shapPlotContainer"
-      style={{ 
-            width: '100%', 
-            height: '150px', 
-            backgroundColor: 'white', 
-            paddingTop: '20px' 
-      }}></div>
-    </div>
-</Card>  */}
+{/* <Statistic  
+              value='SHAP RESULT' 
+              valueStyle={{
+                      fontWeight:600
+                      }}/>
+              <Button onClick={load_shap_plot}>Shap 플롯 로드</Button> 
+                      <div
+              id="shapPlotContainer"
+              style={{ 
+                    width: '100%', 
+                    height: '150px', 
+                    backgroundColor: 'white', 
+                    paddingTop: '20px' 
+              }}></div>*/}
 </Box>
 )
 }

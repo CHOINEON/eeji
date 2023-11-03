@@ -142,7 +142,6 @@ const TestChart = () => {
           // color:
         },
       }
-
       // console.log('prediction:', prediction)
       setChartData([realPrice, pred_hist, prediction])
     }
