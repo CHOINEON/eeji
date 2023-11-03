@@ -22,6 +22,8 @@ const AdvancedChart = () => {
   const [subData, setSubData] = useState([])
   const [anomalyScoreArr, setAnomalyScoreArr] = useState([])
   const [thresholdArr, setThresholdArr] = useState([])
+  const [anormalyPointsX, setAnormalyPointsX] = useState([])
+  const [anormalyPointsY, setAnormalyPointsY] = useState([])
 
   // Control panel을 위한 useState
   const [indexSize, setIndexSize] = useState([])
@@ -67,6 +69,13 @@ const AdvancedChart = () => {
       }
       setIndexSize(socketData.index_size)
 
+      if(socketData.is_anormaly[0])
+        {
+            setAnormalyPointsX((prev) => {
+              return [...prev, socketData.index[0]]})
+            setAnormalyPointsY([socketData.data[0][0]])
+        }
+
       const plotData = [
         {
           x: index,
@@ -79,6 +88,14 @@ const AdvancedChart = () => {
             width: '2',
           },
           hovertemplate: '<b>Data</b><br>Index: %{x}<br>Data: %{y}',
+        },
+        {
+          x: anormalyPointsX,
+          y: anormalyPointsY,
+          mode: 'markers',
+          name: 'Price Anomalies',
+          marker: { color: 'red' },
+          hovertemplate: '<b>anormalyPoints</b><br>Index: %{x}<br>anormalyPoints: %{y}',
         }
       ]
       setTestData(plotData)
