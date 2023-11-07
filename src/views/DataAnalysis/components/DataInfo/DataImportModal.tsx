@@ -5,20 +5,16 @@ import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import Uploader from 'components/uploader/Uploader'
 import DataSummary from './DataSummary'
 import DataProperties from './DataProperties'
-import {
-  dataPropertyState,
-  // summaryFetchState,
-  // uploadFileInfoAtom,
-  uploadedDataState,
-  userInfoState,
-} from 'views/DataAnalysis/store/dataset/atom'
+import { dataPropertyState, uploadedDataState, userInfoState } from 'views/DataAnalysis/store/dataset/atom'
 import styled from '@emotion/styled'
 import DatasetApi from 'apis/DatasetApi'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 
 const DataImportModal = (props: any) => {
+  const { message } = App.useApp()
   const userInfo = useRecoilValue(userInfoState)
-  // const [summaryFetch, setSummaryFetch] = useRecoilState(summaryFetchState)
+  const queryClient = useQueryClient()
+
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const resetUploadFileState = useResetRecoilState(uploadedDataState)
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
@@ -27,10 +23,12 @@ const DataImportModal = (props: any) => {
   const [dataArray, setDataArray] = useState([])
   const [buttonVisible, setButtonVisible] = useState(false)
   const [saving, setSaving] = useState(false)
-  const { message } = App.useApp()
+
   const { mutate } = useMutation(DatasetApi.saveDataset, {
     onSuccess: (response: any) => {
       message.success(response.message)
+      //refetching
+      queryClient.invalidateQueries('datasets')
       setImportOpen(false)
     },
     onError: (error: any, query: any) => {
@@ -167,40 +165,6 @@ const DataImportModal = (props: any) => {
 
           const user_id = localStorage.getItem('userId').toString()
           mutate({ user_id, formData })
-
-          // axios
-          //   .post(url, formData, config)
-          //   .then((response) => {
-          //     if (response.status === 200) {
-          //       setSummaryFetch('completed')
-          //       // setSaving(false)
-          //       console.log('response:', response.data['1'])
-          //       // saveDataSummary(response.data['1'])
-          //       messageApi.open({
-          //         type: 'success',
-          //         content: '저장 완료!',
-          //         duration: 1,
-          //         style: {
-          //           margin: 'auto',
-          //         },
-          //       })
-          //       setImportOpen(false)
-          //     }
-          //   })
-          //   .catch((error) => {
-          //     setSummaryFetch('failed')
-
-          //     messageApi.open({
-          //       type: 'error',
-          //       content: error,
-          //       duration: 5,
-          //       style: {
-          //         margin: 'auto',
-          //       },
-          //     })
-          //     // setSaving(false)
-          //     setImportOpen(false)
-          //   })
         }
       }
     }
