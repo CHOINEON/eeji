@@ -64,7 +64,7 @@ const DataSet = () => {
       })
       // const temp = [{ label: name, options: formattedData }]
       setVariableList(formattedData)
-
+      // console.log(formattedData)
       //feature 사용관리 하기 위한 store 데이터 포맷팅
       const result: Array<any> = []
       columns.forEach((value: any) => {

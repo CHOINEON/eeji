@@ -28,7 +28,6 @@ import ReactLoading from 'react-loading'
 import styled from '@emotion/styled'
 import thumb from '/img/thumbnail_01.png'
 import LineChart from 'views/DataAnalysis/components/Chart/LineChart'
-import D3Chart from 'views/DataAnalysis/components/Chart/D3Chart'
 import D3ChartTest from 'views/DataAnalysis/components/Chart/D3_Scatter'
 
 export default function AIModeling() {

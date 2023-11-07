@@ -1,14 +1,14 @@
 import { Select } from 'antd'
 import Title from 'antd/es/typography/Title'
 import React, { useEffect, useState } from 'react'
-import LineChart from './components/Chart/LineChart'
+import LineChart from './LineChart'
 
 const DynamicRenderChart = ({ type, data, options }: any) => {
   const [chartData, setChartData] = useState([])
   const [selectedOption, setSelectedOption] = useState()
 
   useEffect(() => {
-    // console.log('data:', data)
+    console.log('DynamicRenderChart data:', data)
     // console.log('options:', options)
 
     const defaultOption = options[0].value
