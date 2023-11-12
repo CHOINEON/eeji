@@ -2,7 +2,7 @@
 import { Box} from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
 import Plot from 'react-plotly.js'
-import { Space, Button, Card, Statistic, Col, Row, Select, Input } from 'antd'
+import { Space, Button, Card, Statistic, Col, Row, Select, Input, Slider } from 'antd'
 import { QuestionCircleOutlined, } from '@ant-design/icons';
 import { Checkbox } from 'antd'
 import FeatureSlider from './components/Slider'
@@ -22,8 +22,8 @@ const AdvancedChart = () => {
   const [subData, setSubData] = useState([])
   const [anomalyScoreArr, setAnomalyScoreArr] = useState([])
   const [thresholdArr, setThresholdArr] = useState([])
-  const [anormalyPointsX, setAnormalyPointsX] = useState([])
-  const [anormalyPointsY, setAnormalyPointsY] = useState([])
+  const [anomalyPointsX, setAnomalyPointsX] = useState([])
+  const [anomalyPointsY, setAnomalyPointsY] = useState([])
 
   // Control panel을 위한 useState
   const [indexSize, setIndexSize] = useState([])
@@ -62,7 +62,6 @@ const AdvancedChart = () => {
         return [...prev, socketData.thr[0]]
       })
       if (Array.isArray(socketData.feature_names) && socketData.feature_names.length > 0) {
-        // 배열의 첫 번째 요소에 접근
         setPrice(socketData.feature_names[0])
         setVolume(socketData.feature_names[4])
       } else {
@@ -71,9 +70,8 @@ const AdvancedChart = () => {
 
       if(socketData.is_anormaly[0])
         {
-            setAnormalyPointsX((prev) => {
-              return [...prev, socketData.index[0]]})
-            setAnormalyPointsY([socketData.data[0][0]])
+            setAnomalyPointsX(index)
+            setAnomalyPointsY(dataArr)
         }
 
       const plotData = [
@@ -90,12 +88,12 @@ const AdvancedChart = () => {
           hovertemplate: '<b>Data</b><br>Index: %{x}<br>Data: %{y}',
         },
         {
-          x: anormalyPointsX,
-          y: anormalyPointsY,
+          x: anomalyPointsX,
+          y: anomalyPointsY,
           mode: 'markers',
           name: 'Price Anomalies',
           marker: { color: 'red' },
-          hovertemplate: '<b>anormalyPoints</b><br>Index: %{x}<br>anormalyPoints: %{y}',
+          hovertemplate: '<b>anomalyPoints</b><br>Index: %{x}<br>anomalyPoints: %{y}',
         }
       ]
       setTestData(plotData)
@@ -173,7 +171,7 @@ const config = [{
 const layout = {
     title: 'Anomaly Detection Plot',
     titlefont: { size: 20 },
-   
+    height : '100%',
     xaxis: {
         title: 'Index',
         titlefont: { size: 20 },
@@ -202,8 +200,7 @@ const layout = {
     autosize: true,
   }
   const subLayout = {
-    title: 'Sub Plot',
-    titlefont: { size: 20 },
+    height : '100%',
     xaxis: {
         title: 'Index',
         titlefont: { size: 20 },
@@ -222,7 +219,7 @@ const layout = {
         zeroline: false,
         },
     margin: {
-        t: 80,
+        t: 40,
         b: 100,
         l: 110,
         r: 30,
@@ -436,7 +433,7 @@ return (
           <Button
                 onClick={model_DBconfig} 
                 type="primary"
-                style={{marginBottom : '18px'}}> SUBMIT 
+                > SUBMIT 
           </Button> 
         </div>  
     </Space>
@@ -448,32 +445,74 @@ return (
       useResizeHandler={true}
       responsive={true}
       autosize={true}
-      style={{ width: '100%' , height:'300px'}}
+      style={{ width: '100%' , height:'80%', marginTop : 5}}
       config={config}
       onClick={handleChartClick}
     />
   </div>     
-  <div className = {CSS.SecondChart}>
+  <div style={{display : 'flex', marginTop : '10px'}}>
     <Plot
       data={subData}
       layout={subLayout}
       useResizeHandler={true}
       responsive={true}
       autosize={true}
-      style={{ width: '100%', height:'300px' }}
+      style={{ width: '100%', height:'80%' }}
       config={config}
       onClick={handleChartClick}
     />
-  </div>
-    
-  <div className={CSS.Panel} 
-          style = {{ 
+  <div className= {CSS.sendThr}>
+  <Card style={{ 
+    width : '90%',
+    height: '100%',
+              marginBottom : 20,  
+              marginLeft : 5,
+              responsive: true, 
+              useResizeHandler: true, 
+              autosize: true, 
+              }}> 
+    <Space direction="Horizontal">                    
+    <Statistic  value="THRESHOLD"  
+              valueStyle={{
+                    fontWeight:500, 
+                    fontSize : 20,
+                    marginBottom : 10,
                     responsive: true, 
                     useResizeHandler: true, 
                     autosize: true, 
-                    width : '100%'}}>
-    <Space direction="Horizontal">
-      <Card style={{ 
+                  }}/>
+    <Button onMouseOver={() => setThreHovering(1)} 
+            onMouseOut={() => setThreHovering(0)}
+            style={{
+                    borderColor: '#fff',
+                    justifyContent : 'center',
+                    marginLeft : '2px'
+                  }}>
+      <QuestionCircleOutlined />
+    </Button>
+    {threHovering ? (
+      <span style={{display:'block', 
+                    position:'absolute',
+                    top : '5%', 'right':'55%', 
+                    backgroundColor:'#4299e1', 
+                    opacity:'0.7', 
+                    zIndex:'1' , 
+                    color:'#fff'}}>자세히 알아보기</span>
+      ) : (
+        ""  
+        )}
+    </Space>
+    <Statistic  value={socketData.thr} />
+      <ThreSlider currentThr={socketData.thr}
+                  stlye = {{marginLeft : '20px'}}/> 
+                  
+                  
+    </Card> 
+</div>
+</div>
+    
+
+      {/* <Card style={{ 
                     width : '100%',
                     height : '90%',
                     responsive: true, 
@@ -532,7 +571,7 @@ return (
                 )}
         </Col>
           <Col span={2}><Statistic  value={indexSize} /></Col>
-      </Card>
+      </Card> */}
 
 {/* <div className= {CSS.featureBox}>          
     <Col span={12}>
@@ -549,49 +588,6 @@ return (
       /> */}
   {/* <Checkbox style={{marginLeft : 140,}}onChange={onChange}>{price}</Checkbox> */} 
   {/* <FeatureSlider clickedPoint={clickedPoint}/> */}
-
-<div className= {CSS.sendThr}>
-  <Card style={{ 
-              width : '100%',
-              height: '90%',
-              marginBottom : 20,  
-              marginTop : 10,  
-              responsive: true, 
-              useResizeHandler: true, 
-              autosize: true, 
-              }}> 
-    <Space direction="Horizontal">                    
-    <Statistic  value="THRESHOLD"  
-              valueStyle={{
-                    fontWeight:500, 
-                    fontSize : 20,
-                    marginBottom : 10,
-                    responsive: true, 
-                    useResizeHandler: true, 
-                    autosize: true, 
-                  }}/>
-    <Button onMouseOver={() => setThreHovering(1)} 
-            onMouseOut={() => setThreHovering(0)}
-            style={{
-                    borderColor: '#fff',
-                    justifyContent : 'center',
-                    marginLeft : '2px'
-                  }}>
-      <QuestionCircleOutlined />
-    </Button>
-    {threHovering ? (
-    <span style={{display:'block', position:'absolute',top : '5%', 'right':'55%', backgroundColor:'#4299e1', opacity:'0.7', zIndex:'1' , color:'#fff'}}>자세히 알아보기</span>
-    ) : (
-    ""  
-    )}
-    </Space>
-    <Statistic  value={socketData.thr} />
-      <ThreSlider currentThr={socketData.thr}
-                  stlye = {{marginLeft : '20px'}}/> 
-    </Card> 
-</div>
-</Space>
-</div>
 {/* <Statistic  
               value='SHAP RESULT' 
               valueStyle={{

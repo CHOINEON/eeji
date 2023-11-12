@@ -44,7 +44,7 @@ const DecimalStep = (props) => {
     return (
         <Row>
             <Col span={22}>
-                <Slider
+                <Slider 
                 min={minMax[0] * 0.9}
                 max={minMax[1] * 1.1}
                 onChange={onChange}
@@ -53,10 +53,9 @@ const DecimalStep = (props) => {
                 defaultValue={minMax[0]}
                 style={{marginLeft : '20px', marginTop : '20px', marginBottom: '20px'}}/>
             </Col>
-            
             <Col span={4}>
                 <Space direction="Horizontal">
-                <InputNumber
+                {/* <InputNumber
                 min={minMax[0] * 0.9}
                 max={minMax[1] * 1.1}
                 style={{
@@ -65,7 +64,7 @@ const DecimalStep = (props) => {
                 step={0.01}
                 value={inputValue}
                 onChange={onChange}
-                />
+                /> */}
                 <Button 
                     type="primary" 
                     onClick={ThrSend} 
@@ -79,31 +78,22 @@ const DecimalStep = (props) => {
         </Row>
     )
     }
-
     const ThreSlider = ({ currentThr }) => {
     useEffect(() => {
         console.log('current T:', currentThr)
     }, [currentThr])
-
     return (
         <div className={CSS.slider}>
         <Card style={{
-                    height:150,
+                    height:'100%',
                     responsive: true, 
                     useResizeHandler: true, 
                     autosize: true, 
                     width: '100%' ,
-                    marginTop : 10 
+                    marginTop : 10, 
+                    
             }}>
-            <Statistic  
-                    value='THRESHOLD SLIDER' 
-                    valueStyle={{
-                            fontWeight:500, 
-                            fontSize : 15,
-                            width : 200
-                            }}/>
             <DecimalStep currentThr={ currentThr } style= {{marginLeft: '10px'}}></DecimalStep>
-            
         </Card>
         
         </div>
