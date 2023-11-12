@@ -60,15 +60,19 @@ function ScatterPlot({ data, featureX, featureY }: any) {
   const circleRadius = 2
 
   const xScale = scaleLinear()
-    .domain([Math.floor(featureX.min / 100) * 100, Math.ceil(featureX.max / 100) * 100])
+    .domain([Math.floor(featureX.sliderMin / 10) * 10, Math.ceil(featureX.sliderMax / 10) * 10])
     .range([0, innerWidth])
     .nice()
   const yScale = scaleLinear()
-    .domain([Math.floor(featureY.min / 100) * 100, Math.ceil(featureY.max / 100) * 100])
+    .domain([Math.floor(featureY.sliderMin / 10) * 10, Math.ceil(featureY.sliderMax / 10) * 10])
     .range([innerHeight, 0])
     .nice()
 
   useEffect(() => {
+    // console.log('scatter data:', data)
+    // console.log('featureX:', featureX)
+    // console.log('featureY:', featureY)
+
     handleDrawRect()
   }, [data, featureX, featureY])
 
@@ -96,17 +100,6 @@ function ScatterPlot({ data, featureX, featureY }: any) {
       .attr('r', circleRadius)
       .style('fill', (d) => 'cornflowerblue')
   }
-
-  // const svg = select(svgRef.current)
-  // handleZoom(svg)
-
-  // const handleZoom = (svg: any) => {
-  //   svg.call(
-  //     zoom().on('zoom', ({ transform: any }) => {
-  //       svg.attr('transform', transform)
-  //     })
-  //   )
-  // }
 
   return (
     <ChartWrapper>

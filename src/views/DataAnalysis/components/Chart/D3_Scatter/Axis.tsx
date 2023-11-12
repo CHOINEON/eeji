@@ -3,8 +3,8 @@ import { axisBottom, axisLeft, scaleLinear, select } from 'd3'
 import { styled } from 'styled-components'
 import PropsTypes from 'prop-types'
 
-const Tick = styled.g<{ axisType?: string; innerHeight?: number }>`
-  transform: ${(props) => props.axisType === 'yAxis' && `translate(0, ${props.innerHeight}px)`};
+const Tick = styled.g<{ axistype?: string; innerheight?: number }>`
+  transform: ${(props) => props.axistype === 'yAxis' && `translate(0, ${props.innerheight}px)`};
   path,
   line {
     stroke: #dcdbdb;
@@ -32,8 +32,8 @@ function Axis({ xScale, yScale, innerHeight, xTickPadding, yTickPadding, yTickSi
 
   return (
     <g>
-      <Tick ref={xAxisRef} axisType="xAxis" />
-      <Tick ref={yAxisRef} axisType="yAxis" innerHeight={innerHeight} />
+      <Tick ref={xAxisRef} axistype="xAxis" />
+      <Tick ref={yAxisRef} axistype="yAxis" innerheight={innerHeight} />
     </g>
   )
 }
