@@ -5,4 +5,5 @@
     "scrollbar.shadow": "#00000000"
   },
   "editor.codeActionsOnSave": {},
+  "editor.formatOnSave": true,
 }

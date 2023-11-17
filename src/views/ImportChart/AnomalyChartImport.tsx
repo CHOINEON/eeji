@@ -30,35 +30,34 @@ import D3LineChart from '../hmid_config/grid/TestComponent/drawD3Chart'
 import IntervalTestBiance from '../hmid_config/grid/drawD3ChartIntervalTestBiance'
 import IntervalTestBianceTrade from 'views/hmid_config/grid/drawD3ChartIntervalTestBianceTrade'
 import DrawD3FCChart from 'views/hmid_config/grid/TestComponent/drawD3FCChartKline'
-import AdvancedChart from '../AnomalyDetection/sample_d3_chart'
+import AdvancedChart from '../AnomalyDetection/AnomalyChart'
 import Plot from 'react-plotly.js'
 
-const BoxTitle = styled.div`
-  position: absolute;
-  left: 1vw;
-  top: 1vw;
-  font-size: 0.8vw;
-  font-weight: bold;
-`
-const CurrentText = styled.div`
-  float: right;
-  font-size: 1vw;
-  font-weight: 500;
-  padding-right: 1vw;
-`
-const CurrentIcon = styled.div`
-  float: right;
-  font-size: 1.3vw;
-  font-weight: 500;
-  color: rgb(67, 56, 247);
-`
+// const BoxTitle = styled.div`
+//   position: absolute;
+//   left: 1vw;
+//   top: 1vw;
+//   font-size: 0.8vw;
+//   font-weight: bold;
+// `
+// const CurrentText = styled.div`
+//   float: right;
+//   font-size: 1vw;
+//   font-weight: 500;
+//   padding-right: 1vw;
+// `
+// const CurrentIcon = styled.div`
+//   float: right;
+//   font-size: 1.3vw;
+//   font-weight: 500;
+//   color: rgb(67, 56, 247);
+// `
 
 const Test = () => {
-
   return (
-   <Chakra.Box style={{ position: 'relative', zIndex: 1000, height: '1vw' }}>
-    <AdvancedChart/>
-   </Chakra.Box>
+    <Chakra.Box style={{ position: 'relative', zIndex: 1000, height: '1vw' }}>
+      <AdvancedChart />
+    </Chakra.Box>
   )
 }
 export default Test

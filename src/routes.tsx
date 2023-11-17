@@ -5,7 +5,7 @@ import { MdDashboard, MdSettings, MdOutlineModelTraining, MdDisplaySettings, MdO
 // Admin Imports
 import Configuration from 'views/configuration'
 import DataAnalysis from 'views/DataAnalysis'
-import Test from 'views/Test/AnomalyTest'
+import Test from 'views/ImportChart/AnomalyChartImport'
 import PriceForecasting from 'views/PriceForecasting/OilPrice'
 import AIModelManagement from 'views/AIModelManagement'
 import MainDashboard from 'views/hmid'
@@ -16,7 +16,6 @@ import HmidIntervalD3 from 'views/hmid-interval-d3fc'
 // import Anomalyd3chart from 'views/AnomalyDetection/anomaly_d3chart-test'
 import HmidInterval from 'views/hmid_interval'
 import PriceDetection from 'views/AnomalyDetection/PriceDetection.tsx'
-import AIModeling from 'views/AIPlantModeling'
 import XAIsimulator from 'views/DataAnalysis/XAIsimulator'
 import TempDataAnalysis from 'views/DataAnalysis/TempDataAnalysis'
 
