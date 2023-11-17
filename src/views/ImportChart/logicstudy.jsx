@@ -3,7 +3,6 @@
 // import Plot from 'react-plotly.js'
 
 // const AdvancedChart = () => {
-    
 // const originlURL = 'ws://222.121.66.49:8000/ws/web'
 // const connectNum =  5;
 // var reURL = 0;
@@ -86,32 +85,30 @@
 // }
 
 // export default AdvancedChart
-var trace1 = {
-    x: [1, 2, 3],
-    y: [40, 50, 60],
-    name: 'yaxis data',
-    type: 'scatter'
-}
+// var trace1 = {
+//     x: [1, 2, 3],
+//     y: [40, 50, 60],
+//     name: 'yaxis data',
+//     type: 'scatter'
+// }
 
-var trace2 = {
-    x: [2,3,4],
-    y: [4, 5, 6],
-    name: 'yaxis2 data',
-    type : 'scatter'
-}
+// var trace2 = {
+//     x: [2,3,4],
+//     y: [4, 5, 6],
+//     name: 'yaxis2 data',
+//     type : 'scatter'
+// }
 
-var data = [trace1, trace2];
+// var data = [trace1, trace2];
 
-var layout = {
-    title: 'Double Y Axis Ex',
-    yaxis: {title: 'yaxis tilte'},
-    yaxis2: {
-        title : 'yaxis2 title',
-        titlefont: {color: 'rgb()'},
-        tickfont: {color: ''},
-        overlaying: 'y',
-        side : 'right',
+// var layout = {
+//     title: 'Double Y Axis Ex',
+//     yaxis: {title: 'yaxis tilte'},
+//     yaxis2: {
+//         title : 'yaxis2 title',
+//         titlefont: {color: 'rgb()'},
+//         tickfont: {color: ''},
+//         overlaying: 'y',
+//         side : 'right',
 
-    }
-
-}
+//     }
