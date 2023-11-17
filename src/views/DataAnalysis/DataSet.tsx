@@ -3,7 +3,7 @@ import DescriptionBox, { DescriptionBoxProps } from './components/DataInfo/Descr
 import { Button, Col, Row, message } from 'antd'
 import DataImportModal from './components/DataInfo/DataImportModal'
 import './style/styles.css'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { importModalAtom } from './store/modal/atom'
 import styled from '@emotion/styled'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
@@ -16,9 +16,6 @@ import DataEditModal from './components/DataInfo/DataEditModal'
 import { toast } from 'react-hot-toast'
 
 const DataSet = () => {
-  const { message } = App.useApp()
-  const { fireToast } = useToast()
-
   //상태 저장
   const setActiveStep = useSetRecoilState(stepCountStore)
   const setUserInfo = useSetRecoilState(userInfoState)
@@ -40,7 +37,9 @@ const DataSet = () => {
   }
 
   const handleSelect = (data: any) => {
-    console.log('handleSelect', data)
+    console.log('Dataset selected ::', data)
+
+    setUsedVariable([])
 
     setSelectedData({
       ds_id: data.ds_id,
@@ -65,6 +64,7 @@ const DataSet = () => {
       // const temp = [{ label: name, options: formattedData }]
       setVariableList(formattedData)
       // console.log(formattedData)
+
       //feature 사용관리 하기 위한 store 데이터 포맷팅
       const result: Array<any> = []
       columns.forEach((value: any) => {
