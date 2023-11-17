@@ -14,16 +14,21 @@ function LineChart(props: any) {
   const config = { displaylogo: false, responsive: true, useResizeHandler: true }
   const [width, setWidth] = useState('100%')
 
-  useEffect(() => {
-    console.log('LineChart chartData:', chartData)
-  }, [chartData])
+  // useEffect(() => {
+  //   console.log('LineChart chartData:', chartData)
+  // }, [chartData])
+
+  // useEffect(() => {
+  //   console.log('layout:', layout)
+  // }, [layout])
 
   useEffect(() => {
-    setLayout(chartData.layout)
+    // console.log('LineChart props:', props)
 
-    if (chartData) {
+    if (props.chartData?.length > 0) {
+      setLayout(chartData?.layout)
       const newTitle = {
-        text: chartData.layout?.title?.text,
+        text: chartData.layout?.title?.text || chartData.layout?.title,
         automargin: true,
         font: { color: 'black', size: 12 },
         x: 0.5,
@@ -31,20 +36,19 @@ function LineChart(props: any) {
         y: 0.98,
         yanchor: 'top',
       }
-      setLayout({ ...layout, title: newTitle })
+      setLayout({ ...chartData.layout, title: newTitle })
 
-      // if (chartData.layout['title']) {
-      //   chartData.layout['title'] = newTitle
-      //   console.log('after:', chartData.layout)
-      // }
+      if (chartData?.layout['title']) {
+        chartData.layout['title'] = newTitle
+      }
 
-      setData(chartData.data)
+      setData(chartData?.data)
     }
 
-    if (props.width) {
+    if (props?.width) {
       setWidth(props.width)
     }
-  }, [chartData])
+  }, [props])
 
   return <Plot style={{ width: width }} config={config} data={data} layout={layout} />
 }

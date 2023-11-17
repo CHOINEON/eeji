@@ -1,30 +1,36 @@
 import styled from '@emotion/styled'
 import { Button, Col, Row, Tabs, Switch, Select, Table, Divider } from 'antd'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import VariableOption from './components/Option/VariableOption'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { inputCorrPlotOptionState, inputOptionListState } from './store/userOption/atom'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
-import axios from 'axios'
 import PreprocessingOption from './components/Option/PreprocessingOption'
 import ModelOption from './components/Option/ModelOption'
-import ScatterChart from './components/Chart/ScatterChart'
-import Title from 'antd/es/typography/Title'
 import ModelApi from 'apis/ModelApi'
 import { useMutation, useQueryClient } from 'react-query'
-import ScatterPlot from './components/Chart/D3_Scatter/ScatterPlot'
-import testData from 'views/DataAnalysis/components/Chart/D3_Scatter/data.json'
 import CorrelationView from './CorrelationView'
-import LineChart from './components/Chart/LineChart'
-import DynamicRenderChart from './components/Chart/DynamicRenderChart'
 import ModelTrainingResult from './ModelTrainingResult'
 import PredictionResult from './PredictionResult'
 import FeatureImportance from './FeatureImportance'
 import RegressionCoefficient from './RegressionCoefficient'
 import DataAnalyzeApi from 'apis/DataAnalyzeApi'
+import BaysesianOptimization from './BaysesianOptimization'
+import PreprocessingResult from './PreprocessingResult'
+import ReactToPrint, { useReactToPrint } from 'react-to-print'
+import Report from 'views/DataAnalysis/components/Print/Report'
+import ComponentToPrint from './components/Print/ComponentToPrint'
+import { PrinterOutlined } from '@ant-design/icons'
 
 //데이터, 전처리(알고리즘) , 모델 생성
 const CustomTools = () => {
+  const componentRef = useRef()
+  const preprocessingRef = useRef()
+
+  const [refList, setRefList] = useState([])
+  const corrPlotRef = useRef(null)
+  const [content, setContent] = useState()
+
   const [userInputOption, setUserInputOption] = useRecoilState(inputOptionListState)
   const selectedData = useRecoilValue(selectedDataState)
   const [activeKey, setActiveKey] = useState('1')
@@ -51,20 +57,20 @@ const CustomTools = () => {
     // best_plot: Array<unknown>(),
   }
 
-  const [data, setData] = useState({
-    // preprocessing_graphs: [],
-    // corrplot: [],
-    fig_json_rfr: [],
-    fig_json_rfe: [],
-    fig_json_combine: [],
-    fig_coef_1st_json: [],
-    fig_2nd_coef: [],
-    fig_eval_json: [],
-    fig_test_json: [],
-    lin_pred_fig_json: [],
-    // sorted_results_df: [],
-    // best_plot: {},
-  })
+  // const [data, setData] = useState({
+  //   // preprocessing_graphs: [],
+  //   // corrplot: [],
+  //   fig_json_rfr: [],
+  //   fig_json_rfe: [],
+  //   fig_json_combine: [],
+  //   fig_coef_1st_json: [],
+  //   fig_2nd_coef: [],
+  //   fig_eval_json: [],
+  //   fig_test_json: [],
+  //   lin_pred_fig_json: [],
+  //   // sorted_results_df: [],
+  //   // best_plot: {},
+  // })
 
   //일회성 렌더링이 일어나는 데이터와 사용자 조작에 의해 변하는 데이터를 분리조치(11.03)
   const [preprocessingData, setPreprocessingData] = useState([])
@@ -82,6 +88,8 @@ const CustomTools = () => {
 
   const [featureImportanceData, setFeatureImportanceData] = useState({})
   const [regressionCoefData, setRegressionCoefData] = useState({})
+  const [predictionData, setPredictionData] = useState({})
+
   // useEffect(() => {
   //   const ws = new WebSocket('ws://34.64.39.165:8000/ws/train_model')
   //   ws.onopen = () => {
@@ -141,42 +149,13 @@ const CustomTools = () => {
     columns.map((column: string) => {
       //{CNN1D: {}, LSTM: {}, MLP:{} }
       result[column] = JSON.parse(plotData[column])
-
-      //selectbox option
-      const obj = { value: '', label: '' }
-      obj['value'] = column
-      obj['label'] = column
-
-      setModelOptions((prev) => [...prev, obj])
     })
-
-    // console.log('result:', result) //array
-    // setData({ ...data, best_plot: result })
     setModelResult(result)
   }
 
-  // useEffect(() => {
-  //   console.log('data::', data)
-  // }, [data])
-
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: (result: any) => {
-      // console.log('mutate result:', result)
-
-      setData({
-        // preprocessing_graphs: result['preprocessing_graphs'],
-        // corrplot: result['result_df'],
-        fig_json_rfr: JSON.parse(result['fig_json_rfr']),
-        fig_json_rfe: JSON.parse(result['fig_json_rfe']),
-        fig_json_combine: JSON.parse(result['fig_json_combine']),
-        fig_coef_1st_json: JSON.parse(result['fig_coef_1st_json']),
-        fig_2nd_coef: JSON.parse(result['fig_2nd_coef']),
-        fig_eval_json: JSON.parse(result['fig_eval_json']),
-        fig_test_json: JSON.parse(result['fig_test_json']),
-        lin_pred_fig_json: JSON.parse(result['lin_pred_fig_json']),
-        // sorted_results_df: JSON.parse(result['sorted_results_df']),
-        // best_plot: {},
-      })
+      console.log('mutate result:', result)
 
       setFeatureImportanceData({
         fig_json_rfr: JSON.parse(result['fig_json_rfr']),
@@ -189,9 +168,15 @@ const CustomTools = () => {
         fig_2nd_coef: JSON.parse(result['fig_2nd_coef']),
       })
 
+      setPredictionData({
+        lin_pred_fig_json: JSON.parse(result['lin_pred_fig_json']),
+        fig_eval_json: JSON.parse(result['fig_eval_json']),
+        fig_test_json: JSON.parse(result['fig_test_json']),
+      })
+
       formatterForBestPlot(result['best_plot'])
-      formattingPreprocess(result['preprocessing_graphs'])
       formattingTableData(JSON.parse(result['sorted_results_df']))
+      // formattingPreprocess(result['preprocessing_graphs'])
 
       //save data
       setPreprocessingData(result['preprocessing_graphs'])
@@ -286,9 +271,19 @@ const CustomTools = () => {
     // setChartData({ ...chartData, sorted_results_df: newArr })
   }
 
-  const resetData = useCallback(() => {
-    setData(initialData)
-  }, [])
+  // const resetData = useCallback(() => {
+  //   setData(initialData)
+  // }, [])
+
+  const handlePrintClick = () => {
+    handlePrint()
+  }
+
+  //TODO: print pdf
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: 'Data Analysis Report',
+  })
 
   const handleClick = () => {
     if (auto) {
@@ -348,24 +343,12 @@ const CustomTools = () => {
   }
 
   return (
-    <Container>
+    <Container ref={componentRef}>
       <Row gutter={[24, 16]}>
-        <Col span={18}>
-          {' '}
-          <RoundedBox style={{ height: '600px' }}>
-            {corrplotData && (
-              <>
-                {/* <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
-                  Correlation Plot
-                </Title> */}
-                <CorrelationView data={corrplotData} options={options} />
-              </>
-            )}
-          </RoundedBox>
-        </Col>
+        <Col span={18}> {<PredictionResult data={predictionData} />}</Col>
         <Col span={6}>
           {' '}
-          <RoundedBox style={{ height: '600px', width: '350px' }}>
+          <RoundedBox style={{ height: '635px', width: '350px' }}>
             <div style={{ marginBottom: '10px', textAlign: 'right' }}>
               <Switch
                 checkedChildren="Auto"
@@ -406,36 +389,33 @@ const CustomTools = () => {
                 RUN
               </Button>
             </div>
+            {/* <div>
+              <Button onClick={handlePrintClick} icon={<PrinterOutlined />}>
+                {' '}
+                Print
+              </Button>
+            </div> */}
           </RoundedBox>
         </Col>
         <Divider orientation="left"></Divider>
-        <Col span={10}>
-          {preprocessingData?.length > 0 && (
-            <RoundedBox>
-              <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
-                Preprocessing Result
-              </Title>
-              <DynamicRenderChart type="preprocessingResult" data={preprocessingData} options={options} />
-            </RoundedBox>
-          )}
+
+        <Col span={24}>
+          <RoundedBox style={{ height: '600px' }}>
+            {corrplotData && <CorrelationView data={corrplotData} options={options} />}
+          </RoundedBox>
         </Col>
+        <Col span={10}>{preprocessingData?.length > 0 && <PreprocessingResult data={preprocessingData} />}</Col>
         <Col span={7} style={{ height: '437px' }}>
           {Object.keys(featureImportanceData).length > 0 && <FeatureImportance data={featureImportanceData} />}
         </Col>
         <Col span={7}>
           {Object.keys(regressionCoefData).length > 0 && <RegressionCoefficient data={regressionCoefData} />}
         </Col>
-
         <Col span={11}>
-          {tableData.length > 0 && <PredictionResult data={tableData} columns={columns} size="small" />}
+          {tableData.length > 0 && <BaysesianOptimization data={tableData} columns={columns} size="small" />}
         </Col>
         <Col span={13}>
-          {Object.keys(modelResult).length > 0 && (
-            <ModelTrainingResult type="modelResult" data={modelResult} options={modelOptions} />
-            // <RoundedBox minHeight={'100%'}>
-            //   <DynamicRenderChart type="modelResult" data={modelResult} options={modelOptions} />
-            // </RoundedBox>
-          )}
+          {Object.keys(modelResult).length > 0 && <ModelTrainingResult type="modelResult" data={modelResult} />}
         </Col>
         <Divider orientation="left"></Divider>
       </Row>

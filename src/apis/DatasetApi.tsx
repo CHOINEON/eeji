@@ -8,6 +8,7 @@ const DatasetApi = {
     const { data } = await axiosPrivate.post(`/api/dataset_list/${user_id}?user_id=${user_id}`)
     return data
   },
+
   //파일 업로드 후 description 내려받기
   uploadDataset: async (payload: IDataUploadReq): Promise<TResponseType<object>> => {
     const config = {

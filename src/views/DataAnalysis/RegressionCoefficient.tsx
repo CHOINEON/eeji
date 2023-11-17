@@ -3,6 +3,7 @@ import { Carousel } from 'antd'
 import Title from 'antd/es/typography/Title'
 import React, { useEffect } from 'react'
 import LineChart from './components/Chart/LineChart'
+import InfoCircle from './components/Icon/InfoCircle'
 
 const RegressionCoefficient = ({ data }: any) => {
   // useEffect(() => console.log('RegressionCoefficient:', data), [data])
@@ -15,6 +16,7 @@ const RegressionCoefficient = ({ data }: any) => {
     <RoundedBox minHeight={'100%'}>
       <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
         Regression Coefficient
+        <InfoCircle content="각 변수가 예측 모델에 얼마나 기여하는지(예측 모델에 대한 회귀계수), 오차에 얼마나 기여하는지(오차에 대한 회귀계수)" />
       </Title>
       {/* <Pagination defaultCurrent={1} total={50} /> */}
       <Carousel autoplay style={{ marginTop: '50px' }}>
