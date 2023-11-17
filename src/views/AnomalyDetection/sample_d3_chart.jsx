@@ -1,19 +1,18 @@
 /* eslint-disable prettier/prettier */
-import { Box} from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
 import Plot from 'react-plotly.js'
-import { Space, Button, Card, Statistic, Col, Row, Select, Input } from 'antd'
-import { QuestionCircleOutlined, } from '@ant-design/icons';
+import { Space, Button, Card, Statistic, Col, Row, Select, Input, Slider } from 'antd'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 import { Checkbox } from 'antd'
 import FeatureSlider from './components/Slider'
 import CSS from './components/style.module.css'
 import { useRecoilState } from 'recoil'
-import { sliderValueState} from './atom'
+import { sliderValueState } from './atom'
 import ThreSlider from './components/ThrSlider'
 
 const AdvancedChart = () => {
-
-  const originURL = 'ws://34.64.217.237:9001/ws/web'
+  const originURL = 'ws://34.64.90.171:9001/ws/web'
   const [socketData, setSocketData] = useState({})
   const [chartData, setChartData] = useState([])
   const [index, setIndex] = useState([])
@@ -22,27 +21,28 @@ const AdvancedChart = () => {
   const [subData, setSubData] = useState([])
   const [anomalyScoreArr, setAnomalyScoreArr] = useState([])
   const [thresholdArr, setThresholdArr] = useState([])
-  const [anormalyPointsX, setAnormalyPointsX] = useState([])
-  const [anormalyPointsY, setAnormalyPointsY] = useState([])
+  const [anomalyPointsX, setAnomalyPointsX] = useState([])
+  const [anomalyPointsY, setAnomalyPointsY] = useState([])
+  const [resetChart, setResetChart] = useState(false)
+
+  const [selectedModel, setSelectedModel] = useState('PCA')
+  const [selectedTable, setSelectedTable] = useState('EODHD_DAILY')
+  const [selectedSymbol, setSelectedSymbol] = useState('DJI.INDX')
 
   // Control panel을 위한 useState
   const [indexSize, setIndexSize] = useState([])
   const [price, setPrice] = useState([])
   const [volume, setVolume] = useState([])
   const [clickedPoint, setClickedPoint] = useState({ x: null, y: null })
-  const [isHovering, setIsHovering] = useState(0)
-  const [indexHovering, setIndexHovering] = useState(0)
   const [threHovering, setThreHovering] = useState(0)
 
-
   const handleChartClick = (data) => {
-    for (const point of data.points) 
-        {
-          const clickedXvalue = point.x
-          const clickedYvalue = point.y
-          console.log('클릭한 포인트 (내부):', clickedXvalue, clickedYvalue)
-          setClickedPoint({ clickedXvalue, clickedYvalue })
-        }
+    for (const point of data.points) {
+      const clickedXvalue = point.x
+      const clickedYvalue = point.y
+      console.log('클릭한 포인트 (내부):', clickedXvalue, clickedYvalue)
+      setClickedPoint({ clickedXvalue, clickedYvalue })
+    }
   }
 
   useEffect(() => {
@@ -62,19 +62,16 @@ const AdvancedChart = () => {
         return [...prev, socketData.thr[0]]
       })
       if (Array.isArray(socketData.feature_names) && socketData.feature_names.length > 0) {
-        // 배열의 첫 번째 요소에 접근
         setPrice(socketData.feature_names[0])
         setVolume(socketData.feature_names[4])
       } else {
       }
       setIndexSize(socketData.index_size)
 
-      if(socketData.is_anormaly[0])
-        {
-            setAnormalyPointsX((prev) => {
-              return [...prev, socketData.index[0]]})
-            setAnormalyPointsY([socketData.data[0][0]])
-        }
+      if (socketData.is_anormaly[0]) {
+        setAnomalyPointsX(index)
+        setAnomalyPointsY(dataArr)
+      }
 
       const plotData = [
         {
@@ -90,17 +87,17 @@ const AdvancedChart = () => {
           hovertemplate: '<b>Data</b><br>Index: %{x}<br>Data: %{y}',
         },
         {
-          x: anormalyPointsX,
-          y: anormalyPointsY,
+          x: anomalyPointsX,
+          y: anomalyPointsY,
           mode: 'markers',
           name: 'Price Anomalies',
           marker: { color: 'red' },
-          hovertemplate: '<b>anormalyPoints</b><br>Index: %{x}<br>anormalyPoints: %{y}',
-        }
+          hovertemplate: '<b>anomalyPoints</b><br>Index: %{x}<br>anomalyPoints: %{y}',
+        },
       ]
       setTestData(plotData)
     }
-  }, [socketData])
+  }, [socketData, selectedModel])
 
   useEffect(() => {
     if (socketData.data) {
@@ -116,7 +113,7 @@ const AdvancedChart = () => {
         return [...prev, socketData.thr[0]]
       })
 
-  const subplotData = [
+      const subplotData = [
         {
           x: index,
           y: anomalyScoreArr,
@@ -134,7 +131,7 @@ const AdvancedChart = () => {
           x: index,
           y: thresholdArr,
           name: 'threshold',
-          
+
           mode: 'lines',
           marker: {
             color: 'green',
@@ -143,95 +140,101 @@ const AdvancedChart = () => {
           },
           line: {
             color: 'green',
-            dash : 'dash',
-                },
+            dash: 'dash',
+          },
           yaxis: 'y2',
           // visible: yesVisible,
           hovertemplate: '<b>Threshold</b><br>Index: %{x}<br>Threshold: %{y}',
         },
         {
-          x : index,
-          y : volume,
+          x: index,
+          y: volume,
           name: 'volume',
-          type : 'line',
-          line : { color : 'blue',},
-          mode : 'lines',
-          hovertemplate: '<b>Data</b><br>Index: %{x}<br>Data: %{y}'
-        }
+          type: 'line',
+          line: { color: 'blue' },
+          mode: 'lines',
+          hovertemplate: '<b>Data</b><br>Index: %{x}<br>Data: %{y}',
+        },
       ]
       setSubData(subplotData)
     }
   }, [socketData])
 
-const config = [{
-    displayModeBar: false,
-    responsive: true,
-    useResizeHandler: true,
-    autosize: true,
-    }];  
+  const config = [
+    {
+      displayModeBar: false,
+      responsive: true,
+      useResizeHandler: true,
+      autosize: true,
+    },
+  ]
 
-const layout = {
+  const layout = {
     title: 'Anomaly Detection Plot',
     titlefont: { size: 20 },
-   
+    height: '100%',
     xaxis: {
-        title: 'Index',
-        titlefont: { size: 20 },
-        },
+      title: 'Index',
+      titlefont: { size: 20 },
+    },
     yaxis: {
-        title: 'Price',
-        titlefont: { size: 20 },
-        tickfont: { size: 15 },
-        },
+      title: 'Price',
+      titlefont: { size: 20 },
+      tickfont: { size: 15 },
+    },
     yaxis2: {
-        title: 'anomaly score',
-        titlefont: { color: 'black', size: 20 },
-        tickfont: { color: 'black', size: 15 },
-        overlaying: 'y',
-        side: 'right',
-        zeroline: false,
-        },
+      title: 'anomaly score',
+      titlefont: { color: 'black', size: 20 },
+      tickfont: { color: 'black', size: 15 },
+      overlaying: 'y',
+      side: 'right',
+      zeroline: false,
+    },
     margin: {
-        t: 80,
-        b: 100,
-        l: 110,
-        r: 100,
-        },
+      t: 80,
+      b: 100,
+      l: 110,
+      r: 100,
+    },
     responsive: true,
     useResizeHandler: true,
     autosize: true,
   }
   const subLayout = {
-    title: 'Sub Plot',
-    titlefont: { size: 20 },
+    height: '100%',
     xaxis: {
-        title: 'Index',
-        titlefont: { size: 20 },
-        },
+      title: 'Index',
+      titlefont: { size: 20 },
+    },
     yaxis: {
-        title: 'Volume',
-        titlefont: { size: 20 },
-        tickfont: { size: 15 },
-        },
+      title: 'Volume',
+      titlefont: { size: 20 },
+      tickfont: { size: 15 },
+    },
     yaxis2: {
-        title: 'anomaly score',
-        titlefont: { color: 'black', size: 20 },
-        tickfont: { color: 'black', size: 15 },
-        overlaying: 'y',
-        side: 'right',
-        zeroline: false,
-        },
+      title: 'anomaly score',
+      titlefont: { color: 'black', size: 20 },
+      tickfont: { color: 'black', size: 15 },
+      overlaying: 'y',
+      side: 'right',
+      zeroline: false,
+    },
     margin: {
-        t: 80,
-        b: 100,
-        l: 110,
-        r: 30,
-        },
+      t: 40,
+      b: 100,
+      l: 110,
+      r: 30,
+    },
     responsive: true,
     useResizeHandler: true,
     autosize: true,
   }
-  
+
+  useEffect(() => {
+    setResetChart(true)
+    // Plotly.purge('')
+  }, [selectedModel, selectedTable, selectedSymbol])
+
   useEffect(() => {
     var timestamp = Date.now()
     var newURL = `${originURL}${timestamp}`
@@ -239,7 +242,7 @@ const layout = {
     ws.onopen = () => {
       console.log(`WebSocket connection`)
     }
-    
+
     ws.onmessage = (message) => {
       const dataString = message.data.trim()
       try {
@@ -249,7 +252,7 @@ const layout = {
         console.error('JSON parsing error:', error)
       }
     }
-    
+
     ws.onclose = (event) => {
       if (event.wasClean) {
         console.log(`WebSocket connection closed unexpectedly`)
@@ -318,24 +321,50 @@ const layout = {
   //   head.removeChild(scriptElement)
   // }
 
-const [sliderValue, setSliderValue] = useRecoilState(sliderValueState)
-//             body: JSON.stringify({
-//                   revised_values: [[sliderValue.price, sliderValue.volume]]
+  const [sliderValue, setSliderValue] = useRecoilState(sliderValueState)
+  //             body: JSON.stringify({
+  //                   revised_values: [[sliderValue.price, sliderValue.volume]]
 
-  const options = [
-    { value: 'DJI.INDX', label: 'DJI.INDX' },
-    { value: 'DXY.InDX', label: 'DXY.InDX' },
-    { value: 'EURUSD>FOREX', label: 'EURUSD>FOREX' },
-    { value: 'GSPC.INDX', label: 'GSPC.INDX'},
-    { value: 'IXIC.INDX', label: 'IXIC>INDX'},
-    { value: 'NYA.INDX', label: 'NYA>INDX'},
-    { value: 'BCOMCL.INDX', label: 'BCOMCL.INDX'},
-    { value: 'BCOMCO.INDX', label: 'BCOMCO.INDX'},
-    { value: 'BCOMGC.INDX', label: 'BCOMGC.INDX'},
-    { value: 'BCOMNG.INDX', label: 'BCOMNG.INDX'},
-    { value: 'XAX.INDX', label: 'XAX.INDX'},
-    { value: 'BCOMHG.INDX', label: 'BCOMHG.IHDX'}
-  ]
+  const symbolOptions = {
+    EODHD_DAILY: [
+      { value: 'DJI.INDX', label: 'DJI.INDX' },
+      { value: 'DXY.InDX', label: 'DXY.InDX' },
+      { value: 'EURUSD>FOREX', label: 'EURUSD>FOREX' },
+      { value: 'GSPC.INDX', label: 'GSPC.INDX' },
+      { value: 'IXIC.INDX', label: 'IXIC>INDX' },
+      { value: 'NYA.INDX', label: 'NYA>INDX' },
+      { value: 'BCOMCL.INDX', label: 'BCOMCL.INDX' },
+      { value: 'BCOMCO.INDX', label: 'BCOMCO.INDX' },
+      { value: 'BCOMGC.INDX', label: 'BCOMGC.INDX' },
+      { value: 'BCOMNG.INDX', label: 'BCOMNG.INDX' },
+      { value: 'XAX.INDX', label: 'XAX.INDX' },
+      { value: 'BCOMHG.INDX', label: 'BCOMHG.IHDX' },
+    ],
+    EODHD_REALTIME: [
+      { value: 'BTC-USD', label: 'BTC-USD' },
+      { value: 'ETH-USD', label: 'ETH-USD' },
+    ],
+  }
+  // const symbolOptions_Daily = [
+  //   { value: 'DJI.INDX', label: 'DJI.INDX' },
+  //   { value: 'DXY.InDX', label: 'DXY.InDX' },
+  //   { value: 'EURUSD>FOREX', label: 'EURUSD>FOREX' },
+  //   { value: 'GSPC.INDX', label: 'GSPC.INDX'},
+  //   { value: 'IXIC.INDX', label: 'IXIC>INDX'},
+  //   { value: 'NYA.INDX', label: 'NYA>INDX'},
+  //   { value: 'BCOMCL.INDX', label: 'BCOMCL.INDX'},
+  //   { value: 'BCOMCO.INDX', label: 'BCOMCO.INDX'},
+  //   { value: 'BCOMGC.INDX', label: 'BCOMGC.INDX'},
+  //   { value: 'BCOMNG.INDX', label: 'BCOMNG.INDX'},
+  //   { value: 'XAX.INDX', label: 'XAX.INDX'},
+  //   { value: 'BCOMHG.INDX', label: 'BCOMHG.IHDX'}
+  // ]
+
+  // const symbolOptions_Realtime = [
+  //   { value: 'BTC-USD', label: 'BTC-USD'},
+  //   { value: 'ETH-USD', label: 'ETH-USD'}
+  // ]
+
   const datasetOptions = [
     { value: 'EODHD_DAILY', label: 'EODHD_DAILY' },
     { value: 'EODHD_REALTIME', label: 'EODHD_REALTIME' },
@@ -346,134 +375,196 @@ const [sliderValue, setSliderValue] = useRecoilState(sliderValueState)
     { value: 'USAD', label: 'USAD' },
     { value: 'ANOMALY TRANSFORMER', label: 'ANOMALY TRANSFORMER' },
   ]
-  
-  const [selectedModel, setSelectedModel] = useState('PCA');
-  const [selectedTable, setSelectedTable] = useState('eodhd_daily')
-  const [selectedSymbol, setSelectedSymobl] = useState('DJI.INDX')
 
   const onSearch = (value) => {
-    console.log('search:', options);
-  };
+    console.log('search:', options)
+  }
   const onModelChange = (value) => {
-    setSelectedModel(value);
+    setSelectedModel(value)
   }
   const onTableChange = (value) => {
-    setSelectedTable(value);
+    setSelectedTable(value)
+  }
+  const onSymbolChange = (value) => {
+    setSelectedSymbol(value)
   }
 
-const model_DBconfig = () => {
-  const URL = 'http://34.64.217.237:9001/set_db_config';
+  const model_DBconfig = () => {
+    const URL = 'http://34.64.90.177:9001/set_db_config'
     fetch(URL, {
-    method : 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ MODEL_NAME: selectedModel, TABLE_NAME: selectedTable, SYMBOL: selectedSymbol })
-  })
-    .then((response) => response.json())
-    .then((data) => {
-    // Handle the response from the server
-    console.log('Response from the server:', data);
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ MODEL_NAME: selectedModel, TABLE_NAME: selectedTable, SYMBOL: selectedSymbol }),
     })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle the response from the server
+        console.log('Response from the server:', data)
+      })
       .catch((error) => {
-        console.error('Error:', error);
-      });
-}
+        console.error('Error:', error)
+      })
+  }
 
-return (
-  <Box
+  const getSymbolOptions = () => {
+    console.log(symbolOptions[selectedTable] || [])
+    return symbolOptions[selectedTable] || []
+  }
+
+  return (
+    <Box
       pt={{ base: '130px', md: '80px', xl: '80px' }}
       style={{
-              position: 'relative',
-              zIndex: 1000,
+        position: 'flex',
+        zIndex: 1000,
+        width: '100%',
+        height: '100%',
+        useResizeHandler: 'true',
+        responsive: 'true',
+        autosize: 'true',
+      }}
+    >
+      <Space direction="horizontal">
+        {/*Model Selection*/}
+        <div style={{ width: '100%' }}>
+          <Select
+            style={{
               width: '100%',
-              height: '100%',
-              useResizeHandler: 'true',
-              responsive: 'true',
-              autosize: 'true',
-              }}>
-    <Space direction='horizontal'>
-      <div style={{ width: '100%' }}>
-        <Select
-              style={{ 
-                      width: '100%', 
-                      backgroundColor: '#fff', 
-                      border: '1px solid #A3AFCF', 
-                      borderRadius: '10px' 
-                    }}
-              defaultValue={selectedModel}
-              options={modelOptions}
-              onSelect={onModelChange}
-            />
-      </div>
-      <div style={{ width: '150px' }}>
-        <Select
-            style={{ 
-                    width: 120, 
-                    backgroundColor: '#fff', 
-                    border: '1px solid #A3AFCF', 
-                    borderRadius: '10px' 
-                    }}
+              backgroundColor: '#fff',
+              border: '1px solid #A3AFCF',
+              borderRadius: '10px',
+            }}
+            defaultValue={selectedModel}
+            options={modelOptions}
+            onSelect={onModelChange}
+          />
+        </div>
+
+        {/*DB TABLE Selection*/}
+        <div style={{ width: '150px' }}>
+          <Select
+            style={{
+              width: 120,
+              backgroundColor: '#fff',
+              border: '1px solid #A3AFCF',
+              borderRadius: '10px',
+            }}
             defaultValue={datasetOptions[0]}
             options={datasetOptions}
-            onSelect={onSearch}
-        /> 
-        </div> 
-        <div style={{ width: '150px' }}>  
-          <Select
-            style={{ 
-                    width: 120, 
-                    backgroundColor: '#fff', 
-                    border: '1px solid #A3AFCF', 
-                    borderRadius: '10px' 
-                    }}
-            defaultValue={options[0]}
-            options={options}
             onSelect={onTableChange}
-            />
-        </div>  
-        <div>
-          <Button
-                onClick={model_DBconfig} 
-                type="primary"
-                style={{marginBottom : '18px'}}> SUBMIT 
-          </Button> 
-        </div>  
-    </Space>
+          />
+        </div>
 
-  <div className = {CSS.Top}>
-    <Plot
-      data={testData}
-      layout={layout}
-      useResizeHandler={true}
-      responsive={true}
-      autosize={true}
-      style={{ width: '100%' , height:'300px'}}
-      config={config}
-      onClick={handleChartClick}
-    />
-  </div>     
-  <div className = {CSS.SecondChart}>
-    <Plot
-      data={subData}
-      layout={subLayout}
-      useResizeHandler={true}
-      responsive={true}
-      autosize={true}
-      style={{ width: '100%', height:'300px' }}
-      config={config}
-      onClick={handleChartClick}
-    />
-  </div>
-    
-  <div className={CSS.Panel} 
-          style = {{ 
-                    responsive: true, 
-                    useResizeHandler: true, 
-                    autosize: true, 
-                    width : '100%'}}>
-    <Space direction="Horizontal">
-      <Card style={{ 
+        {/*Symbol Selection*/}
+        <div style={{ width: '150px' }}>
+          <Select
+            style={{
+              width: 120,
+              backgroundColor: '#fff',
+              border: '1px solid #A3AFCF',
+              borderRadius: '10px',
+            }}
+            defaultValue={getSymbolOptions()[0]}
+            options={getSymbolOptions()}
+            onSelect={onSymbolChange}
+          />
+        </div>
+
+        <div>
+          <Button onClick={model_DBconfig} type="primary">
+            {' '}
+            SUBMIT
+          </Button>
+        </div>
+      </Space>
+
+      <div className={CSS.Top}>
+        <Plot
+          data={testData}
+          layout={layout}
+          useResizeHandler={true}
+          responsive={true}
+          autosize={true}
+          style={{ width: '100%', height: '80%', marginTop: 5 }}
+          config={config}
+          onClick={handleChartClick}
+        />
+      </div>
+      <div style={{ display: 'flex', marginTop: '10px' }}>
+        <Plot
+          data={subData}
+          layout={subLayout}
+          useResizeHandler={true}
+          responsive={true}
+          autosize={true}
+          style={{ width: '100%', height: '80%' }}
+          config={config}
+          onClick={handleChartClick}
+        />
+
+        <div className={CSS.sendThr}>
+          <Card
+            style={{
+              width: '90%',
+              height: '100%',
+              marginBottom: 20,
+              marginLeft: 5,
+              responsive: true,
+              useResizeHandler: true,
+              autosize: true,
+            }}
+          >
+            <Space direction="Horizontal">
+              <Statistic
+                value="THRESHOLD"
+                valueStyle={{
+                  fontWeight: 500,
+                  fontSize: 20,
+                  marginBottom: 10,
+                  responsive: true,
+                  useResizeHandler: true,
+                  autosize: true,
+                }}
+              />
+              <Button
+                onMouseOver={() => setThreHovering(1)}
+                onMouseOut={() => setThreHovering(0)}
+                style={{
+                  borderColor: '#fff',
+                  justifyContent: 'center',
+                  marginLeft: '2px',
+                }}
+              >
+                <QuestionCircleOutlined />
+              </Button>
+              {threHovering ? (
+                <span
+                  style={{
+                    display: 'block',
+                    position: 'absolute',
+                    top: '5%',
+                    right: '55%',
+                    backgroundColor: '#4299e1',
+                    opacity: '0.7',
+                    zIndex: '1',
+                    color: '#fff',
+                  }}
+                >
+                  자세히 알아보기
+                </span>
+              ) : (
+                ''
+              )}
+            </Space>
+            <Statistic value={socketData.thr} />
+            <ThreSlider currentThr={socketData.thr} stlye={{ marginLeft: '20px' }} />
+          </Card>
+        </div>
+      </div>
+
+      {/* <Card style={{ 
                     width : '100%',
                     height : '90%',
                     responsive: true, 
@@ -532,9 +623,9 @@ return (
                 )}
         </Col>
           <Col span={2}><Statistic  value={indexSize} /></Col>
-      </Card>
+      </Card> */}
 
-{/* <div className= {CSS.featureBox}>          
+      {/* <div className= {CSS.featureBox}>          
     <Col span={12}>
               <Statistic title="DATA" value={thresholdArr[0]}
               valueStyle = {{fontWeight:500, 
@@ -547,52 +638,9 @@ return (
         size="large"
         onSearch={onSearch}
       /> */}
-  {/* <Checkbox style={{marginLeft : 140,}}onChange={onChange}>{price}</Checkbox> */} 
-  {/* <FeatureSlider clickedPoint={clickedPoint}/> */}
-
-<div className= {CSS.sendThr}>
-  <Card style={{ 
-              width : '100%',
-              height: '90%',
-              marginBottom : 20,  
-              marginTop : 10,  
-              responsive: true, 
-              useResizeHandler: true, 
-              autosize: true, 
-              }}> 
-    <Space direction="Horizontal">                    
-    <Statistic  value="THRESHOLD"  
-              valueStyle={{
-                    fontWeight:500, 
-                    fontSize : 20,
-                    marginBottom : 10,
-                    responsive: true, 
-                    useResizeHandler: true, 
-                    autosize: true, 
-                  }}/>
-    <Button onMouseOver={() => setThreHovering(1)} 
-            onMouseOut={() => setThreHovering(0)}
-            style={{
-                    borderColor: '#fff',
-                    justifyContent : 'center',
-                    marginLeft : '2px'
-                  }}>
-      <QuestionCircleOutlined />
-    </Button>
-    {threHovering ? (
-    <span style={{display:'block', position:'absolute',top : '5%', 'right':'55%', backgroundColor:'#4299e1', opacity:'0.7', zIndex:'1' , color:'#fff'}}>자세히 알아보기</span>
-    ) : (
-    ""  
-    )}
-    </Space>
-    <Statistic  value={socketData.thr} />
-      <ThreSlider currentThr={socketData.thr}
-                  stlye = {{marginLeft : '20px'}}/> 
-    </Card> 
-</div>
-</Space>
-</div>
-{/* <Statistic  
+      {/* <Checkbox style={{marginLeft : 140,}}onChange={onChange}>{price}</Checkbox> */}
+      {/* <FeatureSlider clickedPoint={clickedPoint}/> */}
+      {/* <Statistic  
               value='SHAP RESULT' 
               valueStyle={{
                       fontWeight:600
@@ -606,8 +654,8 @@ return (
                     backgroundColor: 'white', 
                     paddingTop: '20px' 
               }}></div>*/}
-</Box>
-)
+    </Box>
+  )
 }
 
 export default AdvancedChart

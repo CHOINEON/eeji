@@ -4,20 +4,19 @@ import React from 'react'
 import DynamicRenderChart from './components/Chart/DynamicRenderChart'
 import InfoCircle from './components/Icon/InfoCircle'
 
-const ModelTrainingResult = ({ data }: any) => {
-  // console.log('model training result:', data)
+const PreprocessingResult = ({ data, options }: any) => {
   return (
-    <RoundedBox minHeight={'100%'}>
+    <RoundedBox>
       <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
-        Model Training Result
-        <InfoCircle content="모델의 학습 결과" />
+        Preprocessing Result
+        <InfoCircle content="선택한 전처리 방식으로 전/후 결과를 보여줍니다." />
       </Title>
-      <DynamicRenderChart type="modelResult" data={data} />
+      <DynamicRenderChart type="preprocessingResult" data={data} options={options} />
     </RoundedBox>
   )
 }
 
-export default ModelTrainingResult
+export default PreprocessingResult
 
 interface Container {
   width?: any

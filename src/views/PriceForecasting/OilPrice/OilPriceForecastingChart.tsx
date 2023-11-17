@@ -91,9 +91,9 @@ const OilPriceChart = () => {
     }
 
     axios
-      .post(process.env.REACT_APP_API_SERVER_URL + '/api/oil_predict', param)
+      .post(process.env.REACT_APP_NEW_API_SERVER_URL + '/api/oil_predict', param)
       .then((response) => {
-        console.log('response', response.data)
+        console.log('/api/oil_predict response', response.data)
         const respData = response.data
         setData(respData)
 

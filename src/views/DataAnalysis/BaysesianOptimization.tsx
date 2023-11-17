@@ -1,23 +1,24 @@
-import styled from '@emotion/styled'
+import { Table } from 'antd'
 import Title from 'antd/es/typography/Title'
 import React from 'react'
-import DynamicRenderChart from './components/Chart/DynamicRenderChart'
+import { styled } from 'styled-components'
 import InfoCircle from './components/Icon/InfoCircle'
 
-const ModelTrainingResult = ({ data }: any) => {
-  // console.log('model training result:', data)
+const BaysesianOptimization = ({ data, columns }: any) => {
   return (
-    <RoundedBox minHeight={'100%'}>
+    <RoundedBox style={{ height: '635px' }}>
       <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
-        Model Training Result
-        <InfoCircle content="모델의 학습 결과" />
+        Bayesian Optimization
+        <InfoCircle content="각 모델별로 학습된 결과(성능)을 나타냅니다" />
       </Title>
-      <DynamicRenderChart type="modelResult" data={data} />
+      <div style={{ marginTop: '30px' }}>
+        <Table dataSource={data} columns={columns} size="small" />
+      </div>
     </RoundedBox>
   )
 }
 
-export default ModelTrainingResult
+export default BaysesianOptimization
 
 interface Container {
   width?: any

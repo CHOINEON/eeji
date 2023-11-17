@@ -7,9 +7,7 @@ import Configuration from 'views/configuration'
 import DataAnalysis from 'views/DataAnalysis'
 import Test from 'views/Test/AnomalyTest'
 import PriceForecasting from 'views/PriceForecasting/OilPrice'
-import ScatterPlot from 'views/DataAnalysis/components/Chart/D3_Scatter'
 import AIModelManagement from 'views/AIModelManagement'
-
 import MainDashboard from 'views/hmid'
 import DashboardConfig from 'views/hmid_config'
 import LayoutList from 'views/hmid_list'
@@ -19,7 +17,8 @@ import HmidIntervalD3 from 'views/hmid-interval-d3fc'
 import HmidInterval from 'views/hmid_interval'
 import PriceDetection from 'views/AnomalyDetection/PriceDetection.tsx'
 import AIModeling from 'views/AIPlantModeling'
-import CorrelationPlot from 'views/DataAnalysis/components/Chart/D3_Scatter'
+import XAIsimulator from 'views/DataAnalysis/XAIsimulator'
+import TempDataAnalysis from 'views/DataAnalysis/TempDataAnalysis'
 
 // Auth Imports
 
@@ -60,12 +59,20 @@ const routes = [
     component: Configuration,
   },
   {
-    name: 'Charts(D3.js)',
+    name: 'XAI',
     layout: '/admin',
-    path: '/corr-plot',
+    path: '/xai-simulator',
     icon: <Icon as={MdOutlineModelTraining} width="20px" height="20px" color="inherit" />,
-    component: CorrelationPlot,
+    component: XAIsimulator,
   },
+  {
+    name: 'New DataAnalysis',
+    layout: '/admin',
+    path: '/temp-data-analysis',
+    icon: <Icon as={MdOutlineModelTraining} width="20px" height="20px" color="inherit" />,
+    component: TempDataAnalysis,
+  },
+
   // {
   //   name: 'MainDashboard-Line',
   //   layout: '/admin',

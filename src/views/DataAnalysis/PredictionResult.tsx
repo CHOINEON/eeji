@@ -1,17 +1,22 @@
-import { Table } from 'antd'
+import { Icon } from '@chakra-ui/react'
 import Title from 'antd/es/typography/Title'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { styled } from 'styled-components'
+import DynamicRenderChart from './components/Chart/DynamicRenderChart'
+import InfoCircle from './components/Icon/InfoCircle'
 
-const PredictionResult = ({ data, columns }: any) => {
+const PredictionResult = ({ data }: any) => {
+  // useEffect(() => {
+  //   console.log('data:', data)
+  // }, [data])
+
   return (
-    <RoundedBox style={{ height: '635px' }}>
-      <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
-        Bayesian Optimization
+    <RoundedBox>
+      <Title level={4} style={{ color: '#002D65', display: 'inline-block' }}>
+        Prediction Result
+        <InfoCircle content="모델의 예측 결과" />
       </Title>
-      <div style={{ marginTop: '30px' }}>
-        <Table dataSource={data} columns={columns} size="small" />
-      </div>
+      <DynamicRenderChart type="prediction" data={data} />
     </RoundedBox>
   )
 }
