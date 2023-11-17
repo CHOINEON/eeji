@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react'
 import Plot from 'react-plotly.js'
 import { Space, Button, Card, Statistic, Col, Row, Select, Input, Slider } from 'antd'
 import { QuestionCircleOutlined } from '@ant-design/icons'
-// import FeatureSlider from './components/Slider'
 import CSS from './components/style.module.css'
 import { useRecoilState } from 'recoil'
 import { sliderValueState } from './atom'
@@ -12,7 +11,6 @@ import ThreSlider from './components/ThrSlider'
 const AdvancedChart = () => {
   const originURL = 'ws://34.64.90.171:9001/ws/web'
   const [socketData, setSocketData] = useState({})
-  const [chartData, setChartData] = useState([])
   const [index, setIndex] = useState([])
   const [dataArr, setDataArr] = useState([])
   const [subData, setSubData] = useState([])
@@ -21,8 +19,6 @@ const AdvancedChart = () => {
   //Object로 바꿀것
   const [anomalyPointsX, setAnomalyPointsX] = useState([])
   const [anomalyPointsY, setAnomalyPointsY] = useState([])
-  //   const [resetChart, setResetChart] = useState(false)
-
   const [selectedModel, setSelectedModel] = useState('PCA')
   const [selectedTable, setSelectedTable] = useState('EODHD_DAILY')
   const [selectedSymbol, setSelectedSymbol] = useState('DJI.INDX')
@@ -45,9 +41,6 @@ const AdvancedChart = () => {
 
   useEffect(() => {
     if (socketData.data) {
-      setChartData(socketData.data)
-      console.log('socektData:', socketData)
-
       let initial_DataArr = []
       for (let i = 0; i < socketData.data.length; i++) {
         initial_DataArr.push(socketData.data[i][0])
@@ -71,12 +64,12 @@ const AdvancedChart = () => {
 
       let initial_Threshold = []
       for (let k = 0; k < socketData.thr.length; k++) {
-        initial_Threshold.push(socketData.thr[k][0])
+        initial_Threshold.push(socketData.thr[0])
       }
       console.log('initial_Thre:', initial_Threshold)
 
       setThresholdArr((prev) => {
-        return [...prev, socketData.thr[0]]
+        return [...prev, ...initial_Threshold]
       })
 
       if (Array.isArray(socketData.feature_names) && socketData.feature_names.length > 0) {
