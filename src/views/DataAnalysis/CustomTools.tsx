@@ -18,8 +18,8 @@ import DataAnalyzeApi from 'apis/DataAnalyzeApi'
 import BaysesianOptimization from './BaysesianOptimization'
 import PreprocessingResult from './PreprocessingResult'
 import ReactToPrint, { useReactToPrint } from 'react-to-print'
-import Report from 'views/DataAnalysis/components/Print/Report'
-import ComponentToPrint from './components/Print/ComponentToPrint'
+// import Report from 'views/DataAnalysis/components/Print/Report'
+// import ComponentToPrint from './components/Print/ComponentToPrint'
 import { PrinterOutlined } from '@ant-design/icons'
 
 //데이터, 전처리(알고리즘) , 모델 생성

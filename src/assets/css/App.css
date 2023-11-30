@@ -1,13 +1,15 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap");
-@import "../../../node_modules/@syncfusion/ej2-base/styles/material.css";
-@import "../../../node_modules/@syncfusion/ej2-react-buttons/styles/material.css";
-@import "../../../node_modules/@syncfusion/ej2-react-inputs/styles/material.css";
-@import "../../../node_modules/@syncfusion/ej2-navigations/styles/material.css"; */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
+@import '../../../node_modules/@syncfusion/ej2-base/styles/material.css';
+@import '../../../node_modules/@syncfusion/ej2-react-buttons/styles/material.css';
+@import '../../../node_modules/@syncfusion/ej2-react-inputs/styles/material.css';
+@import '../../../node_modules/@syncfusion/ej2-navigations/styles/material.css';
 
-
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 body {
-  font-family: "DM Sans", sans-serif;
+  font-family: 'DM Sans', sans-serif;
   /* background-color:#f4f7fe !important; */
 }
 
@@ -17,13 +19,12 @@ option {
 
 .ag-root-wrapper {
   background-color: white;
-  box-shadow: 0px 5px 20px #4338F733;
+  box-shadow: 0px 5px 20px #4338f733;
   border-radius: 18px;
   opacity: 1;
-  --ag-borders:none;
+  --ag-borders: none;
 }
-
 
 /* .js-plotly-plot .plotly .modebar{
   display:none;
-} */               
+} */

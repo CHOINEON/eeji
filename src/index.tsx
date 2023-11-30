@@ -33,7 +33,7 @@ const antdCustomTheme = {
     Input: {
       // colorBgContainer: '#FFFFFF',
       // colorBorderBg: '1px solid #A3AFCF',
-      borderRadius: 10,
+      borderRadius: 7,
     },
     Select: {
       // colorPrimary: '#4338f7',
@@ -49,7 +49,17 @@ const queryClient = new QueryClient()
 
 ReactDOM.render(
   <RecoilRoot>
-    <ConfigProvider>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#4338F7',
+          fontFamily: 'Helvetica Neue',
+          borderRadius: 7,
+          // colorBgContainer: '#002D65',
+          // colorBgContainerDisabled: '#5951DB33',
+        },
+      }}
+    >
       <ChakraProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
           <Loading />

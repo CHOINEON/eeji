@@ -19,3 +19,8 @@ export const datasetEditModalState = atom({
   key: 'datasetEditModalState',
   default: false,
 })
+
+export const featureSelectModalState = atom({
+  key: 'featureSelectModalState',
+  default: false,
+})

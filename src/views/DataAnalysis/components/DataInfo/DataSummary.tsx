@@ -1,4 +1,4 @@
-import { Spin, Table, Typography, message } from 'antd'
+import { Spin, Table, Typography, message, Row, Col } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -13,63 +13,18 @@ interface DataType {
   endDate: string
 }
 
-const DataSummaryContainer = styled.div<{ visible: boolean }>`
-  margin-top: 30px;
-  display: ${(props: any) => (props.visible ? 'block' : 'none')};
-`
-
-const SummaryDataGrid = (props: any) => {
-  const [data, setData] = useState([])
-  const columns: ColumnsType<DataType> = [
-    { key: 'name', dataIndex: 'name', title: 'File Name', width: 200, align: 'center' },
-    { key: 'rowCount', dataIndex: 'rowCount', title: 'Row', width: 100, align: 'center' },
-    { key: 'colCount', dataIndex: 'colCount', title: 'Column', width: 80, align: 'center' },
-    { key: 'startDate', dataIndex: 'startDate', title: 'Start Date', width: 200, align: 'center' },
-    { key: 'endDate', dataIndex: 'endDate', title: 'End Date', width: 200, align: 'center' },
-    // {
-    //   title: 'Missing Value',
-    //   dataIndex: '',
-    //   key: 'x',
-    //   render: () => <a>Show</a>,
-    // },
-  ]
-
-  useEffect(() => {
-    setData(props.data)
-  }, [props])
-
-  return (
-    <>
-      <div className="ag-theme-alpine">
-        <Table
-          columns={columns}
-          dataSource={data}
-          // expandable={{
-          //   expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p>,
-          //   rowExpandable: (record) => record.name !== 'Not Expandable',
-          // }}
-          pagination={{ position: ['bottomCenter'] }}
-        />
-      </div>
-    </>
-  )
-}
-
 const DataSummary = () => {
-  const { Title } = Typography
-
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const inputOption = useRecoilValue(dataPropertyState)
+  const [visible, setVisible] = useState(false)
 
   const [spinning, setSpinning] = useState(false)
-  const [visible, setVisible] = useState(false)
   const [summaryData, setSummaryData] = useState([])
 
   const [messageApi, contextHolder] = message.useMessage()
 
   useEffect(() => {
-    // console.log('uploadedData:', uploadedData)
-
+    // console.log('DataSummary uploadedData:', uploadedData)
     const summary = []
     summary.push({
       key: 1,
@@ -80,11 +35,10 @@ const DataSummary = () => {
       startDate: uploadedData.startDate,
       endDate: uploadedData.endDate,
     })
-
     // console.log('summary:', summary)
+
     setSummaryData(summary)
     setSpinning(false)
-
     if (uploadedData.file !== undefined && uploadedData.rowCount > 0) {
       setVisible(true)
     } else {
@@ -138,14 +92,50 @@ const DataSummary = () => {
 
   return (
     <DataSummaryContainer visible={visible}>
-      {/* <p style={{ color: '#002D65', fontSize: '18px', float: 'left', width: '100%' }}>Data Summary</p> */}
-      <Title level={4} style={{ color: '#002D65' }}>
-        Data Summary
-      </Title>
-      <Spin spinning={spinning}> {summaryData && <SummaryDataGrid data={summaryData} size="small" />}</Spin>
-      {contextHolder}
+      <Row>
+        <Col span={12}>
+          <Title style={{ width: '35%' }}>∙ Row</Title>
+          <Text>{uploadedData.rowCount}</Text>
+        </Col>
+        <Col span={12}>
+          <Title style={{ width: '25%' }}>∙ Start</Title>
+          <Text>{uploadedData.startDate}</Text>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Title style={{ width: '35%' }}>∙ Column</Title>
+          <Text>{uploadedData.colCount}</Text>
+        </Col>
+        <Col span={12}>
+          <Title style={{ width: '25%' }}>∙ End</Title>
+          <Text>{uploadedData.endDate}</Text>
+        </Col>
+      </Row>
     </DataSummaryContainer>
   )
 }
 
 export default DataSummary
+
+const DataSummaryContainer = styled.div<{ visible: boolean }>`
+  display: block;
+  float: left;
+  // margin-top: 20px;
+  padding: 8px;
+  background-color: #f6f8ff;
+  border-radius: 10px;
+  width: 100%;
+  height: 60px;
+  // display: ${(props: any) => (props.visible ? 'block' : 'none')};
+`
+
+const Title = styled.div`
+  float: left;
+  display: inline-block;
+  color: #a3afcf;
+`
+
+const Text = styled.span`
+  color: #002d65;
+`

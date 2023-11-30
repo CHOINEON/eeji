@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Input, Modal, Row, Typography, message, App } from 'antd'
+import { Modal, App } from 'antd'
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
-import Uploader from 'components/uploader/Uploader'
-import DataSummary from './DataSummary'
-import DataProperties from './DataProperties'
 import { dataPropertyState, uploadedDataState, userInfoState } from 'views/DataAnalysis/store/dataset/atom'
 import styled from '@emotion/styled'
 import DatasetApi from 'apis/DatasetApi'
 import { useMutation, useQueryClient } from 'react-query'
+import BeforeUpload from './BeforeUpload'
+import AfterUpload from './AfterUpload'
+import logo_xs from 'assets/img/ineeji/logo_xs.svg'
 
 const DataImportModal = (props: any) => {
   const { message } = App.useApp()
@@ -20,9 +20,7 @@ const DataImportModal = (props: any) => {
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
   const inputOption = useRecoilValue(dataPropertyState)
 
-  const [dataArray, setDataArray] = useState([])
-  const [buttonVisible, setButtonVisible] = useState(false)
-  const [saving, setSaving] = useState(false)
+  const [btnDisabled, setBtnDisabled] = useState(true)
 
   const { mutate } = useMutation(DatasetApi.saveDataset, {
     onSuccess: (response: any) => {
@@ -45,82 +43,11 @@ const DataImportModal = (props: any) => {
   }, [importOpen])
 
   useEffect(() => {
-    if (inputOption && inputOption.date_col != '') setButtonVisible(true)
+    // console.log('inputOption::', inputOption)
+    if (inputOption && inputOption.date_col != '' && inputOption.target_y !== '') {
+      setBtnDisabled(false)
+    }
   }, [inputOption])
-
-  const handleSelectedFile = (file: any) => {
-    // console.log('selected:', file)
-    if (file) {
-      if (file.size <= 209715200) {
-        readFile(file)
-        setUploadedData({ ...uploadedData, file: file, name: file.name, content: [] })
-      } else {
-        message.open({
-          type: 'error',
-          content: '업로드 가능 파일용량 초과(최대 200MB)',
-          duration: 1,
-          style: {
-            margin: 'auto',
-          },
-        })
-      }
-    }
-  }
-
-  useEffect(() => {
-    setUploadedData({ ...uploadedData, content: dataArray })
-  }, [dataArray])
-
-  const readFile = (file: any) => {
-    // console.log('readfile:', file)
-    // console.log('type:', file.name.split('.', 2)[1])
-
-    const fileReader = new FileReader()
-
-    const fileFormat = file.name.split('.', 2)[1]
-    const acceptedFormats = ['csv', 'xls', 'xlsx']
-
-    if (file) {
-      if (acceptedFormats.includes(fileFormat)) {
-        fileReader.onload = function (event: any) {
-          const text = event.target.result
-          csvFileToArray(file.name, file.size, text)
-        }
-
-        fileReader.readAsText(file)
-      } else {
-        message.open({
-          type: 'error',
-          content: '지원하지 않는 파일 유형입니다.',
-          duration: 1,
-          style: {
-            margin: 'auto',
-          },
-        })
-      }
-    }
-  }
-
-  const csvFileToArray = (name: string, size: number, string: string) => {
-    const csvHeader = string.slice(0, string.indexOf('\n')).split(',')
-    const csvRows = string.slice(string.indexOf('\n') + 1).split('\n')
-
-    const array = csvRows.map((item) => {
-      if (item != '') {
-        const values = item.split(',')
-        const obj = csvHeader.reduce((object: any, header, index) => {
-          object[header] = values[index]
-          return object
-        }, {})
-        return obj
-      }
-    })
-
-    array.splice(array.length - 1) //split하면서 마지막 행에 빈 값 들어있어서 자름
-    setDataArray(array)
-    // setUploadedData({ ...uploadedData, content: array })
-    // console.log('array:', array)
-  }
 
   const handleSave = () => {
     const dataFile = uploadedData.file
@@ -136,19 +63,19 @@ const DataImportModal = (props: any) => {
         },
       })
     } else {
-      const url = process.env.REACT_APP_NEW_API_SERVER_URL + `/api/save/${userInfo.user_id}?user_id=${userInfo.user_id}`
-      const config = {
-        headers: {
-          'content-type': 'application/x-www-form-urlencoded',
-        },
-      }
       if (dataFile) {
         const formData = new FormData()
 
         formData.append('com_id', userInfo.com_id)
         formData.append('date_col', inputOption.date_col)
+        formData.append('target_y', inputOption.target_y)
         formData.append('name', inputOption.name)
         formData.append('desc', inputOption.desc.length === 0 ? null : inputOption.desc)
+
+        // key/value 쌍이 담긴 리스트
+        // for (const [name, value] of formData) {
+        //   console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
+        // }
 
         if (inputOption.date_col.length === 0) {
           message.open({
@@ -174,44 +101,33 @@ const DataImportModal = (props: any) => {
     setImportOpen(false)
   }
 
-  const handleCancelClick = () => {
-    // console.log('param:', param)
-    resetUploadFileState()
-  }
-
   return (
     <>
       <Modal
         className="rounded-corners"
-        width="700px"
+        width="400px"
         open={importOpen}
-        title="Data Import"
+        title={
+          <>
+            <img style={{ margin: '10px 0 5px 0' }} src={logo_xs} />
+            <p style={{ fontSize: '30px' }}>Data Import</p>
+          </>
+        }
         footer={null}
         onCancel={handleCancel}
       >
-        <Uploader onSelectedFile={handleSelectedFile} onCancelClick={handleCancelClick} />
+        {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
 
-        <DataProperties />
-        <DataSummary />
-        <div style={{ marginTop: '20px', textAlign: 'right' }}>
-          <div style={{ width: '40%', display: 'inline-block' }}>
-            {/* <Button
-              type="default"
-              onClick={handleCancel}
-              style={{ width: '100px', height: '30px', borderRadius: '10px', marginRight: '10px' }}
-            >
-              CANCEL
-            </Button> */}
-            <UploadButton
-              className="custom-btn custom-btn-primary"
-              // type="primary"
-              // loading={saving}
-              visible={buttonVisible}
-              onClick={handleSave}
-            >
-              Upload
-            </UploadButton>
-          </div>
+        <div>
+          <CancelButton onClick={handleCancel}>Cancel</CancelButton>
+          <UploadButton
+            // className="block ant-btn ant-btn-primary"
+            // loading={saving}
+            disabled={btnDisabled}
+            onClick={handleSave}
+          >
+            Save
+          </UploadButton>
         </div>
       </Modal>
     </>
@@ -220,8 +136,27 @@ const DataImportModal = (props: any) => {
 
 export default DataImportModal
 
-const UploadButton = styled.button<{ visible: boolean }>`
+// const Button = styled.button`
+//   width: 100%;
+//   height: 46px;
+// `
+
+const UploadButton = styled.button<{ disabled: boolean }>`
   width: 100%;
-  height: 30px;
-  display: ${(props: any) => (props.visible ? 'block' : 'none')};
+  height: 46px;
+  background-color: ${(props: any) => (props.disabled ? '#C3CADB' : '#4338f7')};
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 15px;
+`
+
+const CancelButton = styled.button`
+  block;
+  m-auto;
+  width: 100%;
+  height: 46px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  color: #002d65;
+  font-size: 13px;
 `

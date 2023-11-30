@@ -85,7 +85,7 @@ export const globalStyles = {
       body: {
         overflowX: 'hidden',
         bg: mode('secondaryGray.300', 'navy.600')(props),
-        fontFamily: 'DM Sans',
+        fontFamily: 'Helvetica Neue',
         letterSpacing: '-0.5px',
       },
       input: {
