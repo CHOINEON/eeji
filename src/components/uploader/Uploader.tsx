@@ -1,30 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
-import ico_upload_button from 'assets/img/ineeji/ico_upload_button.png'
+import ico_upload_button from 'assets/img/dataAnalysis/upload_circle.svg'
 import { useRecoilValue } from 'recoil'
 import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
-import Title from 'antd/es/typography/Title'
 import { CloseOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
-
-const UploadComponentWrapper = styled.div`
-  // background: transparent url('img/사각형 2439.png') 0% 0% no-repeat padding-box;
-  box-shadow: 0px 5px 20px #4338f733;
-  border-radius: 18px;
-  opacity: 1;
-  padding: 1vw;
-  margin-top: 1vw;
-`
-
-const UploadButton = styled.button`
-  // top: 278px;
-  // left: 703px;
-  width: 150px;
-  height: 150px;
-  background: transparent url(${ico_upload_button}) 0% 0% no-repeat padding-box;
-  background-size: cover;
-  opacity: 1;
-`
 
 /**https://www.filestack.com/fileschool/react/react-file-upload/ */
 const Uploader = (props: any) => {
@@ -131,47 +110,51 @@ const Uploader = (props: any) => {
     setFile(null)
   }
 
-  const renderFileList = () => {
-    return (
-      <>
-        <div>
-          파일명 : {file.name} <CloseOutlined onClick={handleCancel} />
-        </div>
-        <div>
-          크기 :{' '}
-          {file.size / 1024 < 1024 ? Math.round(file.size / 1024) + ' KB' : Math.round(file.size / 1024 / 1024) + ' MB'}
-        </div>
-      </>
-    )
-  }
+  // const renderFileList = () => {
+  //   return (
+  //     <>
+  //       <div>
+  //         파일명 : {file.name} <CloseOutlined onClick={handleCancel} />
+  //       </div>
+  //       <div>
+  //         크기 :{' '}
+  //         {file.size / 1024 < 1024 ? Math.round(file.size / 1024) + ' KB' : Math.round(file.size / 1024 / 1024) + ' MB'}
+  //       </div>
+  //     </>
+  //   )
+  // }
 
   return (
-    <div className="App">
-      <UploadComponentWrapper>
-        <input
-          style={{ display: 'none' }}
-          ref={inputRef}
-          type="file"
-          onChange={handleChange}
-          accept=".csv, .xls, .xlsx"
-          id="input-file-upload"
-        />
-        <div className="flex-container">
-          <div style={{ flex: 1 }}>
-            <label htmlFor="input-file-upload" ref={dragRef}>
-              <UploadButton onClick={handleUploadClick} />
-            </label>
-          </div>
-          <div style={{ padding: '10px', width: '70%', float: 'left' }}>
-            <Title level={4} style={{ color: '#002D65' }}>
-              Upload Dataset
-            </Title>
-            {file && renderFileList()}
-          </div>
-        </div>
-      </UploadComponentWrapper>
-    </div>
+    <UploadIconContainer>
+      <input
+        style={{ display: 'none' }}
+        ref={inputRef}
+        type="file"
+        onChange={handleChange}
+        accept=".csv, .xls, .xlsx"
+        id="input-file-upload"
+      />
+      <div style={{ lineHeight: '550px', textAlign: 'center' }}>
+        <label htmlFor="input-file-upload" ref={dragRef}>
+          <UploadButton onClick={handleUploadClick} />
+        </label>
+        {/* {file && renderFileList()} */}
+      </div>
+    </UploadIconContainer>
   )
 }
 
 export default Uploader
+
+const UploadIconContainer = styled.div`
+  width: 100%;
+  height: 450px;
+`
+
+const UploadButton = styled.button`
+  width: 150px;
+  height: 150px;
+  background: transparent url(${ico_upload_button}) 0% 0% no-repeat padding-box;
+  background-size: cover;
+  opacity: 1;
+`

@@ -1,14 +1,13 @@
-// import { Spinner } from '@chakra-ui/react'
-import { Spin } from 'antd'
-import React, { ReactElement } from 'react'
 import { useIsFetching, useIsMutating } from 'react-query'
-import { Spinner, Text } from '@chakra-ui/react'
+import { Spinner } from '@chakra-ui/react'
+import { Spin } from 'antd'
+import React, { ReactElement, useEffect } from 'react'
+// import { Spinner, Text } from '@chakra-ui/react'
 //현재 fetching 중인 쿼리의 개수를 return하는 hook
 
-export const Loading = () => {
+export const Loading = (props: any) => {
   const isFetching = useIsFetching()
   const isMutating = useIsMutating()
-  // console.log('isFetching::', isFetching)
   const display = isFetching || isMutating ? 'inherit' : 'none'
 
   return (
@@ -22,11 +21,11 @@ export const Loading = () => {
       position="fixed"
       zIndex="9999"
       top="50%"
-      left="50%"
+      left="55%"
       transform="translate(-50%, -50%)"
       display={display}
     >
-      <Text>Loading...</Text>
+      {/* <Text>{text}</Text> */}
     </Spinner>
 
     // <Spin tip="Loading..." spinning={true} size="large" />

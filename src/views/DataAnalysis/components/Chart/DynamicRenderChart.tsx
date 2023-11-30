@@ -9,8 +9,8 @@ const DynamicRenderChart = ({ type, data }: any) => {
   const [selectedOption, setSelectedOption] = useState()
 
   useEffect(() => {
-    // console.log('DynamicRenderChart type--------:', type)
-    // console.log('DynamicRenderChart data=-------:', data)
+    console.log('DynamicRenderChart type--------:', type)
+    console.log('DynamicRenderChart data=-------:', data)
 
     //for Select
     if (data.length > 1 || Object.keys(data).length > 0) {
@@ -75,6 +75,10 @@ const DynamicRenderChart = ({ type, data }: any) => {
     //   })
     // }
   }
+
+  useEffect(() => {
+    console.log('chartData:', chartData)
+  }, [chartData])
 
   const bindChartData = (data: any) => {
     if (options.length > 0) {

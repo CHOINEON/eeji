@@ -8,12 +8,6 @@
   flex-direction: column;
 }
 
-.test-header {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-size: 13px;
-  margin-bottom: 1rem;
-}
-
 .property-panel-section {
   color: black;
 }
@@ -197,4 +191,16 @@ template {
   color: #fff;
   /* font-size: 1vw; */
   border-radius: 100px;
+}
+
+/* tab */
+
+.ant-tabs-nav {
+  margin: 0 0 0 20px !important;
+  height: 28px;
+}
+
+.ant-modal-content {
+  border-radius: 25px !important;
+  box-shadow: 0px 0px 10px #5951db33 !important;
 }

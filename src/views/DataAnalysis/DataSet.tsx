@@ -10,10 +10,8 @@ import { selectedDataState, userInfoState } from './store/dataset/atom'
 import { stepCountStore } from './store/global/atom'
 import { usedVariableStore, variableStore } from './store/variable/atom'
 import useGetDatasets from 'hooks/queries/useGetDatasets'
-import { useToast } from 'hooks/useToast'
-import { App } from 'antd'
 import DataEditModal from './components/DataInfo/DataEditModal'
-import { toast } from 'react-hot-toast'
+import { analysisResponseAtom } from './store/response/atoms'
 
 const DataSet = () => {
   //상태 저장
@@ -21,7 +19,7 @@ const DataSet = () => {
   const setUserInfo = useSetRecoilState(userInfoState)
   const setSelectedData = useSetRecoilState(selectedDataState)
   const setVariableList = useSetRecoilState(variableStore) //최초 변수 리스트 렌더링
-
+  const resetAnalysisResponse = useResetRecoilState(analysisResponseAtom)
   const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
 
@@ -29,6 +27,8 @@ const DataSet = () => {
   const { data } = useGetDatasets(localStorage.getItem('userId'))
 
   useEffect(() => {
+    //데이터셋 페이지 나갔다 오면 초기화
+    // resetAnalysisResponse()
     setUserInfo({ user_id: localStorage.getItem('userId'), com_id: localStorage.getItem('companyId') })
   }, [])
 
@@ -40,7 +40,6 @@ const DataSet = () => {
     console.log('Dataset selected ::', data)
 
     setUsedVariable([])
-
     setSelectedData({
       ds_id: data.ds_id,
       name: data.name,
@@ -50,7 +49,9 @@ const DataSet = () => {
       startDate: data.start_date,
       endDate: data.end_date,
       dateCol: data.date_col,
+      targetY: data.target_y,
     })
+    //태그리스트 드롭다운 바인딩
     setFeatureList(data.name, JSON.parse(data.col_list))
   }
 
@@ -74,41 +75,6 @@ const DataSet = () => {
       setUsedVariable(result)
       setActiveStep(1)
     }
-  }
-
-  const handleActionInViewMore = (param: object) => {
-    console.log('handleActionInViewMore:', param)
-
-    // if (param) fetchDataSetList()
-
-    // axios
-    //   .delete(
-    //     process.env.REACT_APP_API_SERVER_URL +
-    //       '/api/dataset?com_id=' +
-    //       com_id +
-    //       '&dataset_id=' +
-    //       ds_id +
-    //       '&user_id=' +
-    //       user_id
-    //   )
-    //   .then(
-    //     (response) => {
-    //       // console.log(response)
-    //       if (response.status === 200) {
-    //         messageApi.open({
-    //           type: 'success',
-    //           content: '선택된 데이터셋 삭제',
-    //           duration: 2,
-    //           style: {
-    //             margin: 'auto',
-    //           },
-    //         })
-    //       }
-    //     },
-    //     (error) => {
-    //       alert(error)
-    //     }
-    //   )
   }
 
   const handleEdit = (ds_id: string) => {
