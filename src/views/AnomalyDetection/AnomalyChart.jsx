@@ -1,38 +1,110 @@
 import { Box } from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
 import Plot from 'react-plotly.js'
-import { Space, Button, Card, Statistic, Col, Row, Select, Input, Slider } from 'antd'
+import { Space, Button, Card, Statistic, Select } from 'antd'
 import { QuestionCircleOutlined } from '@ant-design/icons'
-// import FeatureSlider from './components/Slider'
 import CSS from './components/style.module.css'
-import { useRecoilState } from 'recoil'
-import { sliderValueState } from './atom'
+import styled from 'styled-components'
 import ThreSlider from './components/ThrSlider'
 
 const AdvancedChart = () => {
   const originURL = 'ws://34.64.90.171:9001/ws/web'
   const [socketData, setSocketData] = useState({})
-  const [chartData, setChartData] = useState([])
   const [index, setIndex] = useState([])
   const [dataArr, setDataArr] = useState([])
-  const [subData, setSubData] = useState([])
   const [anomalyScoreArr, setAnomalyScoreArr] = useState([])
   const [thresholdArr, setThresholdArr] = useState([])
+  const [modelArr, setModelArr] = useState([])
+  const [tableArr, setTableArr] = useState([])
+  const [symbolArr, setSymbolArr] = useState([])
+
   //Object로 바꿀것
   const [anomalyPointsX, setAnomalyPointsX] = useState([])
   const [anomalyPointsY, setAnomalyPointsY] = useState([])
-  //   const [resetChart, setResetChart] = useState(false)
-
   const [selectedModel, setSelectedModel] = useState('PCA')
   const [selectedTable, setSelectedTable] = useState('EODHD_DAILY')
-  const [selectedSymbol, setSelectedSymbol] = useState('DJI.INDX')
+  const [SYMBOL, setSelectedSymbol] = useState('DJI.INDX')
 
-  // Control panel을 위한 useState
   const [indexSize, setIndexSize] = useState([])
-  const [price, setPrice] = useState([])
   const [volume, setVolume] = useState([])
+  const [features, setFeatures] = useState([])
   const [clickedPoint, setClickedPoint] = useState({ x: null, y: null })
   const [threHovering, setThreHovering] = useState(0)
+
+  const StyledChartCard = styled(Card)`
+    width: auto;
+    height: 400px;
+    border-radius: 25px;
+    opacity: 1;
+    box-shadow: 0px 0px 10px #5951db33;
+    border: 1px solid #d5dcef;
+    margin-top: 10px;
+  `
+  const StyledCard = styled(Card)`
+    width: auto;
+    height: 400px;
+    border-radius: 25px;
+    opacity: 1;
+    box-shadow: 0px 0px 10px #5951db33;
+    border: 1px solid #d5dcef;
+    margin-top: 10px;
+  `
+
+  useEffect(() => {
+    const fetchDatabaseInfo = async () => {
+      const URL = 'http://34.64.90.171:9001/get_db_info'
+      try {
+        const response = await fetch(URL)
+        const data = await response.json()
+        const modelsOptions = []
+        for (let i = 0; i < data.models.length; i++) {
+          modelsOptions.push(data.models[i])
+        }
+        const modelsOptions_Value = modelsOptions.map((model) => ({
+          value: model,
+          label: model,
+        }))
+
+        const tableOptions = []
+        for (let i = 0; i < data.tables.length; i++) {
+          tableOptions.push(data.tables[i])
+        }
+        const tableOptions_Value = tableOptions.map((item) => ({
+          value: item,
+          labe: item,
+        }))
+
+        const symbolOptions = []
+        for (const key in data.symbols) {
+          if (Object.hasOwnProperty.call(data.symbols, key)) {
+            const values = data.symbols[key]
+            const formattedValues = values.map((value) => ({
+              value,
+              label: value,
+            }))
+            symbolOptions.push({
+              key,
+              values: formattedValues,
+            })
+          }
+        }
+
+        setModelArr(modelsOptions_Value)
+        setTableArr(tableOptions_Value)
+        setSymbolArr(symbolOptions)
+
+        console.log('DatabaseInfo:', symbolOptions)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+    fetchDatabaseInfo()
+    console.log('selectedSymbol:', SYMBOL)
+  }, [])
+
+  const getSymbolOptions = () => {
+    return selectedTable ? symbolArr.find((item) => item.key === selectedTable)?.values || [] : []
+  }
 
   const handleChartClick = (data) => {
     for (const point of data.points) {
@@ -45,8 +117,7 @@ const AdvancedChart = () => {
 
   useEffect(() => {
     if (socketData.data) {
-      setChartData(socketData.data)
-      console.log('socektData:', socketData)
+      //console.log('InitialData:', socketData)
 
       let initial_DataArr = []
       for (let i = 0; i < socketData.data.length; i++) {
@@ -60,6 +131,8 @@ const AdvancedChart = () => {
         return [...prev, ...socketData.index]
       })
 
+      setFeatures(socketData.feature_names)
+
       let initial_AnomalyScoreArr = []
       for (let j = 0; j < socketData.anomaly_pred.length; j++) {
         initial_AnomalyScoreArr.push(socketData.anomaly_pred[0])
@@ -67,23 +140,24 @@ const AdvancedChart = () => {
       setAnomalyScoreArr((prev) => {
         return [...prev, ...initial_AnomalyScoreArr]
       })
-      console.log('anomalyscore:', initial_AnomalyScoreArr)
 
       let initial_Threshold = []
       for (let k = 0; k < socketData.thr.length; k++) {
-        initial_Threshold.push(socketData.thr[k][0])
+        initial_Threshold.push(socketData.thr[0])
       }
-      console.log('initial_Thre:', initial_Threshold)
 
       setThresholdArr((prev) => {
-        return [...prev, socketData.thr[0]]
+        return [...prev, ...initial_Threshold]
       })
 
-      if (Array.isArray(socketData.feature_names) && socketData.feature_names.length > 0) {
-        setPrice(socketData.feature_names[0])
-        setVolume(socketData.feature_names[4])
-      } else {
+      let initial_Volume = []
+      for (let i = 0; i < socketData.data.length; i++) {
+        initial_Volume.push(socketData.data[i][4])
       }
+      setVolume((prev) => {
+        return [...prev, ...initial_Volume]
+      })
+
       setIndexSize(socketData.index_size)
 
       if (socketData.is_anormaly[0]) {
@@ -92,6 +166,17 @@ const AdvancedChart = () => {
       }
     }
   }, [socketData])
+
+  useEffect(() => {
+    setDataArr([])
+    setIndex([])
+    setAnomalyScoreArr([])
+    setThresholdArr([])
+    setAnomalyPointsX([])
+    setAnomalyPointsY([])
+    setClickedPoint({ x: null, y: null })
+    setThreHovering(0)
+  }, [selectedModel])
 
   const plotData = [
     {
@@ -126,7 +211,6 @@ const AdvancedChart = () => {
       },
       mode: 'lines',
       yaxis: 'y2',
-      // visible: isVisible,
       hovertemplate: '<b>Anomaly Score</b><br>Index: %{x}<br>Score: %{y}',
     },
     {
@@ -145,7 +229,6 @@ const AdvancedChart = () => {
         dash: 'dash',
       },
       yaxis: 'y2',
-      // visible: yesVisible,
       hovertemplate: '<b>Threshold</b><br>Index: %{x}<br>Threshold: %{y}',
     },
     {
@@ -171,7 +254,7 @@ const AdvancedChart = () => {
   const layout = {
     title: 'Anomaly Detection Plot',
     titlefont: { size: 20 },
-    height: '100%',
+
     xaxis: {
       title: 'Index',
       titlefont: { size: 20 },
@@ -190,8 +273,8 @@ const AdvancedChart = () => {
       zeroline: false,
     },
     margin: {
-      t: 80,
-      b: 100,
+      t: 30,
+      b: 150,
       l: 110,
       r: 100,
     },
@@ -200,7 +283,6 @@ const AdvancedChart = () => {
     autosize: true,
   }
   const subLayout = {
-    height: '100%',
     xaxis: {
       title: 'Index',
       titlefont: { size: 20 },
@@ -218,12 +300,14 @@ const AdvancedChart = () => {
       side: 'right',
       zeroline: false,
     },
+
     margin: {
-      t: 40,
-      b: 100,
+      t: 10,
+      b: 40,
       l: 110,
       r: 30,
     },
+
     responsive: true,
     useResizeHandler: true,
     autosize: true,
@@ -259,102 +343,40 @@ const AdvancedChart = () => {
     }
   }, [])
 
-  // async function load_shap_plot(event) {
-  //   event.preventDefault()
-
-  //   try {
-  //     const response = await fetch('http://222.121.66.49:8001/load_shap_plot', {
-  //       method: 'GET',
-  //     })
-  //     // console.log('test:', response)
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! Status: ${response.status}`)
-  //     }
-
-  //     const result = await response.text()
-
-  //     const shapPlotContainer = document.getElementById('shapPlotContainer')
-  //     shapPlotContainer.innerHTML = getHtmlElement(result) //html 요소만 잘라옴
-
-  //     addScriptToDom(result)
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error)
-  //   }
+  // const symbolOptions = {
+  //   EODHD_DAILY: [
+  //     { value: 'DJI.INDX', label: 'DJI.INDX' },
+  //     { value: 'DXY.InDX', label: 'DXY.InDX' },
+  //     { value: 'EURUSD>FOREX', label: 'EURUSD>FOREX' },
+  //     { value: 'GSPC.INDX', label: 'GSPC.INDX' },
+  //     { value: 'IXIC.INDX', label: 'IXIC>INDX' },
+  //     { value: 'NYA.INDX', label: 'NYA>INDX' },
+  //     { value: 'BCOMCL.INDX', label: 'BCOMCL.INDX' },
+  //     { value: 'BCOMCO.INDX', label: 'BCOMCO.INDX' },
+  //     { value: 'BCOMGC.INDX', label: 'BCOMGC.INDX' },
+  //     { value: 'BCOMNG.INDX', label: 'BCOMNG.INDX' },
+  //     { value: 'XAX.INDX', label: 'XAX.INDX' },
+  //     { value: 'BCOMHG.INDX', label: 'BCOMHG.IHDX' },
+  //   ],
+  //   EODHD_REALTIME: [
+  //     { value: 'BTC-USD', label: 'BTC-USD' },
+  //     { value: 'ETH-USD', label: 'ETH-USD' },
+  //   ],
   // }
+  // const datasetOptions = [
+  //   { value: 'EODHD_DAILY', label: 'EODHD_DAILY' },
+  //   { value: 'EODHD_REALTIME', label: 'EODHD_REALTIME' },
+  // ]
+  // // const modelOptions = [
+  //   { value: 'PCA', label: 'PCA' },
+  //   { value: 'ffff', label: 'ffff' },
+  //   { value: 'USAD', label: 'USAD' },
+  //   { value: 'ANOMALY TRANSFORMER', label: 'ANOMALY TRANSFORMER' },
+  // ]
 
-  // function getHtmlElement(text) {
-  //   // var scripts = ''
-  //   // var cleaned = text.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, function () {
-  //   //   scripts += arguments[1] + '\n'
-  //   //   return ''
-  //   // })
-  //   // return cleaned
-
-  //   return text.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, '')
-  // }
-
-  // function addScriptToDom(text) {
-  //   let scripts = ''
-  //   text.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, function () {
-  //     scripts += arguments[1] + '\n'
-  //   })
-
-  //   // console.log('window.execScript:', window.execScript)
-  //   // if (window.execScript) {
-  //   //   window.execScript(scripts)
-  //   //   console.log('hi')
-  //   // } else {
-
-  //   var head = document.getElementsByTagName('head')[0]
-  //   var scriptElement = document.createElement('script') //public/index
-
-  //   scriptElement.setAttribute('type', 'text/javascript')
-  //   scriptElement.innerText = scripts
-
-  //   head.appendChild(scriptElement)
-  //   head.removeChild(scriptElement)
-  // }
-
-  const [sliderValue, setSliderValue] = useRecoilState(sliderValueState)
-  //             body: JSON.stringify({
-  //                   revised_values: [[sliderValue.price, sliderValue.volume]]
-
-  const symbolOptions = {
-    EODHD_DAILY: [
-      { value: 'DJI.INDX', label: 'DJI.INDX' },
-      { value: 'DXY.InDX', label: 'DXY.InDX' },
-      { value: 'EURUSD>FOREX', label: 'EURUSD>FOREX' },
-      { value: 'GSPC.INDX', label: 'GSPC.INDX' },
-      { value: 'IXIC.INDX', label: 'IXIC>INDX' },
-      { value: 'NYA.INDX', label: 'NYA>INDX' },
-      { value: 'BCOMCL.INDX', label: 'BCOMCL.INDX' },
-      { value: 'BCOMCO.INDX', label: 'BCOMCO.INDX' },
-      { value: 'BCOMGC.INDX', label: 'BCOMGC.INDX' },
-      { value: 'BCOMNG.INDX', label: 'BCOMNG.INDX' },
-      { value: 'XAX.INDX', label: 'XAX.INDX' },
-      { value: 'BCOMHG.INDX', label: 'BCOMHG.IHDX' },
-    ],
-    EODHD_REALTIME: [
-      { value: 'BTC-USD', label: 'BTC-USD' },
-      { value: 'ETH-USD', label: 'ETH-USD' },
-    ],
-  }
-  const datasetOptions = [
-    { value: 'EODHD_DAILY', label: 'EODHD_DAILY' },
-    { value: 'EODHD_REALTIME', label: 'EODHD_REALTIME' },
-  ]
-  const modelOptions = [
-    { value: 'PCA', label: 'PCA' },
-    { value: 'IFOREST', label: 'IFOREST' },
-    { value: 'USAD', label: 'USAD' },
-    { value: 'ANOMALY TRANSFORMER', label: 'ANOMALY TRANSFORMER' },
-  ]
-
-  const onSearch = (value) => {
-    console.log('search:', options)
-  }
   const onModelChange = (value) => {
     setSelectedModel(value)
+    console.log('selectedModel:', selectedModel)
   }
   const onTableChange = (value) => {
     setSelectedTable(value)
@@ -364,28 +386,21 @@ const AdvancedChart = () => {
   }
 
   const model_DBconfig = () => {
-    const URL = 'http://34.64.90.177:9001/set_db_config'
-    fetch(URL, {
+    const setURL = 'http://34.64.90.177:9001/set_db_config'
+    fetch(setURL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ MODEL_NAME: selectedModel, TABLE_NAME: selectedTable, SYMBOL: selectedSymbol }),
+      body: JSON.stringify({ MODEL_NAME: selectedModel, TABLE_NAME: selectedTable, SYMBOL: SYMBOL }),
     })
       .then((response) => response.json())
       .then((data) => {
-        // Handle the response from the server
         console.log('Response from the server:', data)
       })
       .catch((error) => {
         console.error('Error:', error)
       })
-  }
-
-  const getSymbolOptions = () => {
-    // return selectedTable === 'EODHD_DAILY' ? symbolOptions_Daily : symbolOptions_Realtime;
-    console.log(symbolOptions[selectedTable] || [])
-    return symbolOptions[selectedTable] || []
   }
 
   return (
@@ -402,7 +417,6 @@ const AdvancedChart = () => {
       }}
     >
       <Space direction="horizontal">
-        {/*Model Selection*/}
         <div style={{ width: '100%' }}>
           <Select
             style={{
@@ -412,12 +426,10 @@ const AdvancedChart = () => {
               borderRadius: '10px',
             }}
             defaultValue={selectedModel}
-            options={modelOptions}
+            options={modelArr}
             onSelect={onModelChange}
           />
         </div>
-
-        {/*DB TABLE Selection*/}
         <div style={{ width: '150px' }}>
           <Select
             style={{
@@ -426,13 +438,11 @@ const AdvancedChart = () => {
               border: '1px solid #A3AFCF',
               borderRadius: '10px',
             }}
-            defaultValue={datasetOptions[0]}
-            options={datasetOptions}
+            defaultValue={selectedTable}
+            options={tableArr}
             onSelect={onTableChange}
           />
         </div>
-
-        {/*Symbol Selection*/}
         <div style={{ width: '150px' }}>
           <Select
             style={{
@@ -441,97 +451,97 @@ const AdvancedChart = () => {
               border: '1px solid #A3AFCF',
               borderRadius: '10px',
             }}
-            defaultValue={getSymbolOptions()[0].value}
+            defaultValue={SYMBOL}
             options={getSymbolOptions()}
             onSelect={onSymbolChange}
           />
         </div>
 
         <div>
-          <Button onClick={model_DBconfig} type="primary">
+          <Button onClick={model_DBconfig} style={{ background: '#4338F7', color: '#fff' }}>
             {' '}
             SUBMIT
           </Button>
         </div>
       </Space>
-
       <div className={CSS.Top}>
-        <Plot
-          data={plotData}
-          layout={layout}
-          style={{ width: '100%', height: '80%', marginTop: 5 }}
-          config={config}
-          onClick={handleChartClick}
-        />
+        <StyledChartCard>
+          <Plot
+            data={plotData}
+            layout={layout}
+            style={{ width: '100%', height: '100%' }}
+            config={config}
+            onClick={handleChartClick}
+          />
+        </StyledChartCard>
       </div>
-      <div style={{ display: 'flex', marginTop: '10px' }}>
-        <Plot
-          data={subPlotData}
-          layout={subLayout}
-          style={{ width: '100%', height: '80%' }}
-          config={config}
-          onClick={handleChartClick}
-        />
-        <div className={CSS.sendThr}>
-          <Card
-            style={{
-              width: '90%',
-              height: '100%',
-              marginBottom: 20,
-              marginLeft: 5,
-              responsive: true,
-              useResizeHandler: true,
-              autosize: true,
-            }}
-          >
-            <Space direction="Horizontal">
-              <Statistic
-                value="THRESHOLD"
-                valueStyle={{
-                  fontWeight: 500,
-                  fontSize: 20,
-                  marginBottom: 10,
-                  responsive: true,
-                  useResizeHandler: true,
-                  autosize: true,
-                }}
-              />
-              <Button
-                onMouseOver={() => setThreHovering(1)}
-                onMouseOut={() => setThreHovering(0)}
-                style={{
-                  borderColor: '#fff',
-                  justifyContent: 'center',
-                  marginLeft: '2px',
-                }}
-              >
-                <QuestionCircleOutlined />
-              </Button>
-              {threHovering ? (
-                <span
+      <StyledCard>
+        <div style={{ display: 'flex', marginTop: '10px' }}>
+          <Plot
+            data={subPlotData}
+            layout={subLayout}
+            style={{ width: '100%' }}
+            config={config}
+            onClick={handleChartClick}
+          />
+          <div className={CSS.sendThr}>
+            <Card
+              style={{
+                width: '100%',
+                marginLeft: 5,
+                responsive: true,
+                useResizeHandler: true,
+                autosize: true,
+              }}
+            >
+              <Space direction="Horizontal">
+                <Statistic
+                  value="THRESHOLD"
+                  valueStyle={{
+                    fontWeight: 500,
+                    fontSize: 20,
+                    marginBottom: 10,
+                    responsive: true,
+                    useResizeHandler: true,
+                    autosize: true,
+                  }}
+                />
+                {/* <Button
+                  onMouseOver={() => setThreHovering(1)}
+                  onMouseOut={() => setThreHovering(0)}
                   style={{
-                    display: 'block',
-                    position: 'absolute',
-                    top: '5%',
-                    right: '55%',
-                    backgroundColor: '#4299e1',
-                    opacity: '0.7',
-                    zIndex: '1',
-                    color: '#fff',
+                    borderColor: '#fff',
+                    justifyContent: 'center',
+                    marginLeft: '2px',
                   }}
                 >
-                  자세히 알아보기
-                </span>
-              ) : (
-                ''
-              )}
-            </Space>
-            <Statistic value={socketData.thr} />
-            <ThreSlider currentThr={socketData.thr} stlye={{ marginLeft: '20px' }} />
-          </Card>
+                  <QuestionCircleOutlined />
+                </Button> */}
+                {threHovering ? (
+                  <span
+                    style={{
+                      display: 'block',
+                      position: 'absolute',
+                      top: '5%',
+                      right: '55%',
+                      backgroundColor: '#4299e1',
+                      opacity: '0.7',
+                      zIndex: '1',
+                      color: '#fff',
+                    }}
+                  >
+                    자세히 알아보기
+                  </span>
+                ) : (
+                  ''
+                )}
+              </Space>
+              {/*<Statistic value={socketData.thr} />*/}
+              <ThreSlider currentThr={socketData.thr} stlye={{ marginLeft: '20px' }} />
+            </Card>
+          </div>
         </div>
-      </div>
-
+      </StyledCard>
       {/* <Card style={{ 
                     width : '100%',
                     height : '90%',
@@ -592,7 +602,6 @@ const AdvancedChart = () => {
         </Col>
           <Col span={2}><Statistic  value={indexSize} /></Col>
       </Card> */}
-
       {/* <div className= {CSS.featureBox}>          
     <Col span={12}>
               <Statistic title="DATA" value={thresholdArr[0]}

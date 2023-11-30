@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react'
-import { Col, InputNumber, Row, Slider, Card, Statistic, Button, Space } from 'antd'
+import { Col, InputNumber, Row, Slider, Card, Statistic, Button } from 'antd'
 import CSS from './style.module.css'
 import { useRecoilState } from 'recoil'
 import { ThreValueState } from '../atom'
@@ -46,58 +46,47 @@ const DecimalStep = (props) => {
     <Row>
       <Col span={22}>
         <Slider
+          defaultValue={minMax[0]}
           min={minMax[0] * 0.9}
           max={minMax[1] * 1.1}
           onChange={onChange}
           value={thrValu}
           step={0.01}
-          defaultValue={minMax[0]}
-          style={{ marginLeft: '20px', marginTop: '20px', marginBottom: '20px' }}
+          style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '10px' }}
         />
       </Col>
-      <Col span={4}>
-        <Space direction="Horizontal">
-          {/* <InputNumber
-                min={minMax[0] * 0.9}
-                max={minMax[1] * 1.1}
-                style={{
-                    margin: '16 16px',
-                }}
-                step={0.01}
-                value={inputValue}
-                onChange={onChange}
-                /> */}
-          <Button
-            type="primary"
-            onClick={ThrSend}
+      {/* <Col span={4}>
+        <Space direction="Horizontal"> */}
+      {/* <InputNumber
+            min={minMax[0] * 0.9}
+            max={minMax[1] * 1.1}
             style={{
-              justifyContent: 'center',
-              alignItems: 'center',
+              margin: '16 16px',
             }}
-          >
-            {' '}
-            SUBMIT
-          </Button>
-        </Space>
-      </Col>
+            step={0.01}
+            value={inputValue}
+            onChange={onChange}
+          /> */}
+      <Button
+        type="primary"
+        onClick={ThrSend}
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {' '}
+        SUBMIT
+      </Button>
+      {/* </Space> */}
+      {/* </Col> */}
     </Row>
   )
 }
 const ThreSlider = ({ currentThr }) => {
   return (
     <div className={CSS.slider}>
-      <Card
-        style={{
-          height: '100%',
-          responsive: true,
-          useResizeHandler: true,
-          autosize: true,
-          width: '100%',
-          marginTop: 10,
-        }}
-      >
-        <DecimalStep currentThr={currentThr} style={{ marginLeft: '10px' }}></DecimalStep>
-      </Card>
+      <DecimalStep currentThr={currentThr} style={{ marginLeft: '10px', width: '100%' }}></DecimalStep>
     </div>
   )
 }

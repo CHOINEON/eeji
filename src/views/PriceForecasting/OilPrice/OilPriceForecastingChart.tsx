@@ -195,12 +195,43 @@
 // }
 
 // export default OilPriceChart
-import { Select } from 'antd'
-import axios from 'axios'
+import { Select, Card } from 'antd'
+import styled from 'styled-components'
 import React, { useEffect, useState } from 'react'
 import Plot from 'react-plotly.js'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation } from 'react-query'
 import fetchChartData from '../../../apis/PriceForecastApi'
+
+const StyledCard = styled(Card)`
+  width: auto;
+  height: 550px;
+  border-radius: 25px;
+  opacity: 1;
+  box-shadow: 0px 0px 10px #5951db33;
+  border: 1px solid #d5dcef;
+`
+
+const StyledSelect = styled(Select)`
+  border: 1px solid #d5dcef;
+  border-radius: 10px;
+  background: #fff;
+`
+const StyledDiv = styled.div`
+  color: #002d65;
+  margin-left: 10px;
+  @font-face {
+    font-family: 'Helvetica Neue';
+    src: url('https://fonts.cdnfonts.com/css/helvetica-neue-9');
+  }
+  font-family: 'Helvetica Neue', sans-serif;
+`
+const Styledfont = styled.div`
+  @font-face {
+    font-family: 'Helvetica Neue';
+    src: url('https://fonts.cdnfonts.com/css/helvetica-neue-9');
+  }
+  font-family: 'Helvetica Neue', sans-serif;
+`
 
 const OilPriceChart = () => {
   const [data, setData] = useState([])
@@ -245,10 +276,11 @@ const OilPriceChart = () => {
 
     const newLayout = {
       title: `${title} Price Forecasting`,
+
       font: {
-        // family: 'sans-serif',
-        // size: 14,
-        // color: '#7f7f7f',
+        family: 'Helvatica Neue',
+        size: 14,
+        color: '#002D65',
       },
       showlegent: true,
       responsive: true,
@@ -268,6 +300,7 @@ const OilPriceChart = () => {
           },
         },
       ],
+
       annotations: [
         {
           xref: 'paper',
@@ -309,7 +342,8 @@ const OilPriceChart = () => {
         mode: 'lines',
         connectgaps: true,
         line: {
-          color: '#003953',
+          //'#003953','
+          color: '#FC8800',
         },
       }
 
@@ -319,9 +353,12 @@ const OilPriceChart = () => {
         y: data[selectedOption].pred_hist,
         mode: 'lines',
         line: {
-          color: '#2397d2',
+          //'#2397d2',
+          color: '#4338F7',
         },
         connectgaps: true,
+        //fill: 'tozeroy',
+        fillcolor: 'rgba(0, 0, 255, 0.1)',
       }
 
       //원본 데이터에서 마지막 날짜가 몇번째 데이터인지 찾아서 예측 점선의 첫번째에 넣으려고 사전작업
@@ -375,15 +412,18 @@ const OilPriceChart = () => {
   return (
     <>
       <div className="w-100">
-        <div style={{ width: '200px', height: '50px' }}>
-          <Select
-            style={{ width: 120, backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-            defaultValue={options[0]}
-            options={options}
-            onSelect={handleSelect}
-          />
-        </div>
-        <Plot style={{ width: '100%' }} config={config} data={chartData} layout={layout} />
+        <StyledCard>
+          <div style={{ width: '200px', height: '60px' }}>
+            <StyledDiv>Dataset Name</StyledDiv>
+            <StyledSelect
+              style={{ width: 120, backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
+              defaultValue={options[0]}
+              options={options}
+              onSelect={handleSelect}
+            />
+          </div>
+          <Plot style={{ width: '100%' }} config={config} data={chartData} layout={layout} />
+        </StyledCard>
       </div>
     </>
   )
