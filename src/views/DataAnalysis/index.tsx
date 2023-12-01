@@ -8,17 +8,16 @@ import { theme } from './theme/theme'
 import { useRecoilState } from 'recoil'
 import { stepCountStore } from './store/global/atom'
 import DataSet from './DataSet'
-import CorrelationView from './CorrelationView'
 import './style/styles.css'
-import CustomTools from './CustomTools'
 import { notification } from 'antd'
+import TempDataAnalysis from 'views/NewDataAnalysis/TempDataAnalysis'
 // import ModelSetting from './ModelSetting_삭제예정'
 
 const Context = React.createContext({ name: 'Default' })
 
 const DataAnalysis = () => {
   const [api, contextHolder] = notification.useNotification()
-  const steps = ['Upload Data', 'Generate model(작업중)']
+  const steps = ['Upload Data', 'Data Analysis']
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean
@@ -34,7 +33,12 @@ const DataAnalysis = () => {
       ),
     })
   }
+
   const contextValue = useMemo(() => ({ name: 'Ant Design' }), [])
+
+  useEffect(() => {
+    setActiveStep(0)
+  }, [])
 
   const totalSteps = () => {
     return steps.length
@@ -78,8 +82,8 @@ const DataAnalysis = () => {
       <Context.Provider value={contextValue}>
         {contextHolder}
         <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
-          <Box margin={5}>
-            <Stepper nonLinear activeStep={activeStep}>
+          <Box>
+            <Stepper nonLinear activeStep={activeStep} style={{ display: 'none' }}>
               {steps.map((label, index) => (
                 <Step key={label} completed={completed[index]}>
                   <StepButton color="inherit" onClick={handleStep(index)}>
@@ -89,10 +93,10 @@ const DataAnalysis = () => {
               ))}
             </Stepper>
           </Box>
-          <Box padding={5}>
+          <Box>
             {activeStep === 0 && <DataSet />}
             {/* {activeStep === 1 && <CorrelationView />} */}
-            {activeStep === 1 && <CustomTools />}
+            {activeStep === 1 && <TempDataAnalysis />}
 
             {/* <Box> {activeStep === 3 && <ModelSetting />}</Box>  */}
           </Box>

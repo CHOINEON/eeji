@@ -1,38 +1,151 @@
 import { Carousel } from 'antd'
 import Title from 'antd/es/typography/Title'
 import React, { useEffect, useState } from 'react'
+import Plot from 'react-plotly.js'
 import { styled } from 'styled-components'
 import LineChart from './components/Chart/LineChart'
 import InfoCircle from './components/Icon/InfoCircle'
+import { Chart, ArcElement, CategoryScale, LinearScale, registerables } from 'chart.js'
+import { Doughnut, Bar } from 'react-chartjs-2'
+import zoomPlugin from 'chartjs-plugin-zoom'
+import { colors, colorsForDoughnut } from './components/Chart/colors'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { selectModelState } from './store/userOption/atom'
+import { analysisResponseAtom } from './store/response/atoms'
+
+Chart.register(ArcElement, CategoryScale, LinearScale, zoomPlugin, ...registerables)
 
 const FeatureImportance = ({ data }: any) => {
-  const [page, setPage] = useState(1)
-  //   useEffect(() => console.log('FeatureImportance:', data), [data])
+  const [chartData, setChartData] = useState([])
+  const analysisResponse = useRecoilValue(analysisResponseAtom)
+  const [selectedModel, setSelectedModel] = useRecoilState(selectModelState)
 
-  const onChange = (currentSlide: number) => {
-    // console.log(currentSlide)
+  useEffect(() => {
+    // console.log('selectedModel:', selectedModel)
+    // console.log('analysisResponse:', analysisResponse)
+
+    setChartData(analysisResponse[parseInt(selectedModel)]['data']['feature_piechart_data'])
+  }, [selectedModel])
+
+  const labels = chartData[0]?.labels
+
+  const doughnutData = {
+    labels: chartData[0]?.labels,
+    datasets: [
+      {
+        label: '% of importance',
+        data: chartData[0]?.values,
+        backgroundColor: colorsForDoughnut.slice(0, labels?.length),
+        borderColor: labels?.map(() => '#F6F8FF'),
+        borderWidth: 3,
+      },
+    ],
   }
 
-  // useEffect(() => {
-  //   console.log('FeatureImportance data:', data)
-  // }, [data])
+  const barData = {
+    labels: chartData[0]?.labels,
+    datasets: [
+      {
+        label: '',
+        data: chartData[0]?.values?.map((val: any) => val * 100),
+        barThickness: 18,
+        // borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: colorsForDoughnut.slice(0, labels?.length),
+      },
+    ],
+  }
+
+  ///bar
+  const barOptions = {
+    maintainAspectRatio: false, //to obey the custom size
+    indexAxis: 'y' as const,
+    elements: {
+      bar: {
+        borderWidth: 1,
+      },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: false,
+        text: 'TOP 3 Features',
+      },
+    },
+    scales: {
+      // to remove the labels
+      x: {
+        ticks: {
+          display: false,
+        },
+
+        // to remove the x-axis grid
+        grid: {
+          drawBorder: true,
+          display: false,
+        },
+      },
+      // to remove the y-axis labels
+      y: {
+        ticks: {
+          display: true,
+          beginAtZero: true,
+        },
+        // to remove the y-axis grid
+        grid: {
+          drawBorder: false,
+          display: false,
+        },
+      },
+    },
+  }
+
+  const doughnutOptions = {
+    maintainAspectRatio: false,
+    indexAxis: 'y' as const,
+    elements: {
+      bar: {
+        borderWidth: 2,
+      },
+    },
+    responsive: true,
+    plugins: {
+      //왜 안되냐고....
+      datalabels: {
+        display: true,
+        backgroundColor: '#ccc',
+        borderRadius: 3,
+        font: {
+          color: 'red',
+          weight: 'bold',
+        },
+      },
+      legend: {
+        display: false,
+      },
+      title: {
+        display: false,
+        text: 'TOP 3 Features',
+      },
+    },
+    // pointLabels: {
+    //   fontSize: 20,
+    //   fontColor: 'ff0000',
+    // },
+  }
 
   return (
-    <RoundedBox style={{ height: '635px' }}>
-      <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
-        Feature Importance
-        <InfoCircle content="변수 중요도가 높을 수록 예측 모델에 대한 영향력이 큽니다." />
-      </Title>
-      {/* <Pagination defaultCurrent={1} total={50} /> */}
-      <Carousel autoplay afterChange={onChange} style={{ marginTop: '40px', padding: '10px' }}>
-        {data &&
-          Object.entries(data).map((d: any, index: number) => {
-            const title = d[0]
-            const data = d[1]
-            return <LineChart key={index} chartData={data} />
-          })}
-      </Carousel>
-    </RoundedBox>
+    <div style={{ width: '100%', height: '500px', marginTop: '30px' }}>
+      <div className="inline-block float-left" style={{ marginLeft: '20px', width: '50%', height: '200px !important' }}>
+        <Bar data={barData} options={barOptions} width={'100%'} height={'200px'} />
+      </div>
+
+      <div className="inline-block float-left" style={{ width: '45%' }}>
+        <Doughnut data={doughnutData} options={doughnutOptions} />
+      </div>
+    </div>
   )
 }
 

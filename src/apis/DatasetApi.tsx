@@ -16,8 +16,9 @@ const DatasetApi = {
         'content-type': 'multipart/form-data',
       },
     }
+
     const { data } = await axiosPrivate.post(
-      `/api/upload/${payload.user_id}?user_id=${payload.user_id}`,
+      `/api/upload_new/${payload.user_id}?user_id=${payload.user_id}`,
       payload.formData,
       config
     )
@@ -32,7 +33,7 @@ const DatasetApi = {
       },
     }
     const { data } = await axiosPrivate.post(
-      `/api/save/${payload.user_id}?user_id=${payload.user_id}`,
+      `/api/save_new/${payload.user_id}?user_id=${payload.user_id}`,
       payload.formData,
       config
     )

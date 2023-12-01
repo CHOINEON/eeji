@@ -33,7 +33,7 @@ export const inputOptionListState = atom({
     dataset_id: '',
     start_date: null,
     end_date: null,
-    x_value: [],
+    x_value: null,
     y_value: '',
     type_missing: null,
     number_missing: null,
@@ -86,4 +86,9 @@ export const userInputOptionState = selector({
     number_epoch: get(inputOptionListState).number_epoch,
     number_beyssian: get(inputOptionListState).number_beyssian,
   }),
+})
+
+export const selectModelState = atom({
+  key: 'selectModelState',
+  default: '0',
 })
