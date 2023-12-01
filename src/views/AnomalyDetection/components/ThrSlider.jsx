@@ -68,11 +68,12 @@ const DecimalStep = (props) => {
             onChange={onChange}
           /> */}
       <Button
-        type="primary"
         onClick={ThrSend}
         style={{
           justifyContent: 'center',
           alignItems: 'center',
+          background: '#4338F7',
+          color: '#fff',
         }}
       >
         {' '}
