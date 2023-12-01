@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import PredictionResult from 'views/DataAnalysis/PredictionResult'
 // import RegressionCoefficient from 'views/DataAnalysis/RegressionCoefficient'
 import { useMutation } from 'react-query'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import { selectedDataState } from 'views/DataAnalysis/store/dataset/atom'
 import { inputOptionListState } from 'views/DataAnalysis/store/userOption/atom'
 import ModelApi from 'apis/ModelApi'
@@ -15,12 +15,13 @@ import FeatureSelectModal from './FeatureSelectModal'
 import { featureSelectModalState } from 'views/DataAnalysis/store/modal/atom'
 import { v4 } from 'uuid'
 import { analysisResponseAtom } from 'views/DataAnalysis/store/response/atoms'
-import { Loading } from 'components/common/Loading'
 
 const TabChild = () => {
   const [loading, setLoading] = useState(false)
   const selectedData = useRecoilValue(selectedDataState)
   const [userInputOption, setUserInputOption] = useRecoilState(inputOptionListState)
+  const resetSelectedData = useResetRecoilState(selectedDataState)
+
   const [modalState, setModalState] = useRecoilState(featureSelectModalState)
   const [analysisResponse, setAnalysisResponse] = useRecoilState(analysisResponseAtom)
   const [featureImportanceData, setFeatureImportanceData] = useState([])
@@ -29,7 +30,7 @@ const TabChild = () => {
 
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: (result: any) => {
-      console.log('mutate result:', result)
+      // console.log('mutate result:', result)
       setLoading(false)
       setAnalysisResponse([...analysisResponse, { key: v4(), data: result, input: result['selected_input'] }])
 
@@ -68,31 +69,38 @@ const TabChild = () => {
     // setLoading(true)
 
     // console.log('selectedData:', selectedData)
-    const payload = {
-      set_auto: true,
-      user_id: localStorage.getItem('userId'),
-      com_id: localStorage.getItem('companyId'),
-      dataset_id: selectedData.ds_id,
-      date_col: selectedData.dateCol,
-      start_date: selectedData.startDate,
-      end_date: selectedData.endDate,
-      x_value: userInputOption.x_value || null,
-      y_value: selectedData.targetY || '',
-      type_missing: userInputOption.type_missing,
-      number_missing: userInputOption.number_missing,
-      type_outlier: userInputOption.type_outlier,
-      number_std: userInputOption.number_std,
-      number_perc: userInputOption.number_perc,
-      type_scaling: userInputOption.type_scaling,
-      number_ma: userInputOption.number_ma,
-      type_model: userInputOption.type_model,
-      number_epoch: userInputOption.number_epoch,
-      number_beyssian: userInputOption.number_beyssian,
+    //Dataset list 컴포넌트 로드될 때 chaining effect 차단하기 위해 분기 처리
+    if (selectedData.name !== '') {
+      const payload = {
+        set_auto: true,
+        user_id: localStorage.getItem('userId'),
+        com_id: localStorage.getItem('companyId'),
+        dataset_id: selectedData.ds_id,
+        date_col: selectedData.dateCol,
+        start_date: selectedData.startDate,
+        end_date: selectedData.endDate,
+        x_value: userInputOption.x_value || null,
+        y_value: selectedData.targetY || '',
+        type_missing: userInputOption.type_missing,
+        number_missing: userInputOption.number_missing,
+        type_outlier: userInputOption.type_outlier,
+        number_std: userInputOption.number_std,
+        number_perc: userInputOption.number_perc,
+        type_scaling: userInputOption.type_scaling,
+        number_ma: userInputOption.number_ma,
+        type_model: userInputOption.type_model,
+        number_epoch: userInputOption.number_epoch,
+        number_beyssian: userInputOption.number_beyssian,
+      }
+      const controller = new AbortController()
+      // setController(controller)
+      // console.log('payload:', payload)
+      mutateRunning({ type: 'request', payload, controller })
     }
-    const controller = new AbortController()
-    // setController(controller)
-    // console.log('payload:', payload)
-    mutateRunning({ type: 'request', payload, controller })
+
+    return () => {
+      resetSelectedData()
+    }
   }, [])
 
   const handleRegenerate = () => {
@@ -108,17 +116,20 @@ const TabChild = () => {
             <Title>Prediction Result of {selectedData.targetY}</Title>
             <InfoCircle content="모델의 예측 결과" />
           </div>
-          <ButtonSave onClick={handleRegenerate}>사용자 모델 재생성</ButtonSave>
+          {analysisResponse && analysisResponse.length > 0 && (
+            <ButtonSave onClick={handleRegenerate}>사용자 모델 재생성</ButtonSave>
+          )}
+
           <p className="w-full block float-left font-semibold text-[18px] text-[#A3AFCF]">{selectedData.name}</p>
         </div>
 
         {analysisResponse && analysisResponse.length > 0 && (
           <>
             {/* <Spin tip="예측 모델 생성중..." spinning={loading}> */}
-            <div style={{ width: '70%', marginTop: '20px', display: 'block', float: 'left' }}>
+            <div style={{ width: '70%', marginTop: '30px', display: 'block', float: 'left' }}>
               <PredictionResult data={predictionData} />
             </div>
-            <div style={{ width: '30%', marginTop: '40px', display: 'block', float: 'left' }}>
+            <div style={{ width: '30%', marginTop: '50px', display: 'block', float: 'left' }}>
               <FeatureAnalysis data={featureImportanceData} input={selectedFeatureX} />
             </div>
             {/* </Spin> */}
@@ -157,7 +168,7 @@ const ComponentContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-evenly;
   background-color: #ffffff;
-  height: 750px;
+  height: 700px;
   box-shadow: 0px 0px 10px #5951db33;
   border: 1px solid #d5dcef;
   border-radius: 25px;

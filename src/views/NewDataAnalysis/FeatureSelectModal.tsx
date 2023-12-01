@@ -40,6 +40,7 @@ const FeatureSelectModal = ({ data }: any) => {
   useEffect(() => {
     setOptions(variableList.filter((x) => x.value !== selectedData.targetY))
   }, [])
+
   const handleOk = () => {
     setIsModalOpen(false)
   }

@@ -10,6 +10,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  ScriptableContext,
 } from 'chart.js'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import { Line } from 'react-chartjs-2'
@@ -28,21 +29,18 @@ const PredictionResult = ({ data }: any) => {
   const [dataset, setDataset] = useState([])
 
   useEffect(() => {
-    console.log('data:', data)
-  }, [data])
-
-  useEffect(() => {
-    console.log('pred:', analysisResponse)
+    // console.log('pred:', analysisResponse)
 
     const arr: Array<any> = []
     analysisResponse.map((_d: any, i: number) => {
       if (i === 0) {
-        arr.push(generateSeries(`truth`, analysisResponse[i].data['prediction_data']['truth'], colors[0]))
+        arr.push(generateSeries(`Truth`, analysisResponse[i].data['prediction_data']['truth'], 'rgb(87,220,49)'))
+        arr.push(generateSeries(`INEEJI pred`, analysisResponse[i].data['prediction_data']['pred'], '#4A40F7'))
+      } else {
+        arr.push(generateSeries(`Prediction${i}`, analysisResponse[i].data['prediction_data']['pred'], colors[i]))
       }
-      arr.push(generateSeries(`pred${i + 1}`, analysisResponse[i].data['prediction_data']['pred'], colors[i + 1]))
     })
 
-    console.log('arr:', arr)
     setDataset(arr)
   }, [analysisResponse])
 
@@ -52,9 +50,18 @@ const PredictionResult = ({ data }: any) => {
       type: 'line' as const,
       label: label === 'truth' ? `${label} (${selectedData.targetY})` : label,
       borderColor: color,
-      backgroundColor: color,
-      borderWidth: label === 'truth' ? 2 : 1,
-      fill: false,
+      backgroundColor:
+        label === 'INEEJI pred'
+          ? (context: ScriptableContext<'line'>) => {
+              const ctx = context.chart.ctx
+              const gradient = ctx.createLinearGradient(0, 0, 0, 400)
+              gradient.addColorStop(0, 'rgba(69,58,246,1)')
+              gradient.addColorStop(1, 'rgba(69,58,246,0)')
+              return gradient
+            }
+          : color,
+      borderWidth: label === 'truth' ? 1 : 1,
+      fill: label === 'INEEJI pred' ? true : false,
       data: dataArr,
     }
   }
@@ -64,6 +71,7 @@ const PredictionResult = ({ data }: any) => {
   }
 
   const options = {
+    radius: 2,
     layout: {
       padding: 20,
     },

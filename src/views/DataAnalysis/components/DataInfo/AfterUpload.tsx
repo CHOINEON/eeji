@@ -89,7 +89,7 @@ const AfterUpload = () => {
             top: '30%',
             left: '50%',
             marginTop: '-41px',
-            marginLeft: '-86px',
+            marginLeft: '-52px',
           }}
         >
           <img src={thumbnailImg} style={{ margin: '0 auto' }} />

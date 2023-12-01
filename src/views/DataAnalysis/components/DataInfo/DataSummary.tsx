@@ -95,7 +95,7 @@ const DataSummary = () => {
       <Row>
         <Col span={12}>
           <Title style={{ width: '35%' }}>∙ Row</Title>
-          <Text>{uploadedData.rowCount}</Text>
+          <Text>{uploadedData.rowCount > 0 ? uploadedData.rowCount : ''}</Text>
         </Col>
         <Col span={12}>
           <Title style={{ width: '25%' }}>∙ Start</Title>
@@ -105,7 +105,7 @@ const DataSummary = () => {
       <Row>
         <Col span={12}>
           <Title style={{ width: '35%' }}>∙ Column</Title>
-          <Text>{uploadedData.colCount}</Text>
+          <Text>{uploadedData.colCount > 0 ? uploadedData.colCount : ''}</Text>
         </Col>
         <Col span={12}>
           <Title style={{ width: '25%' }}>∙ End</Title>

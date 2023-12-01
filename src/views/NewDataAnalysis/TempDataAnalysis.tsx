@@ -3,31 +3,35 @@ import React, { useEffect, useState } from 'react'
 import tw from 'tailwind-styled-components'
 import TabChild from './TabChild'
 import { v4 } from 'uuid'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { selectedDataState } from 'views/DataAnalysis/store/dataset/atom'
 
 const TabTitle = tw.p`
   text-sm
-  text-[#002D65]
+  text-[#FFFFFF]
   text-center
+  // color:'black'
 `
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string
 
-const defaultPanes = new Array(1).fill(null).map((_, index) => {
-  const id = String(index + 1)
-  const key = v4()
-
-  return {
-    label: <TabTitle>{`Data Analysis ${id}`}</TabTitle>,
-    children: <TabChild key={key} />,
-    key: key,
-    // closable: index == 0 ? false : true,
-  }
-})
-
 const TempDataAnalysis = () => {
+  const defaultPanes = Array(1)
+    .fill(null)
+    .map((_, index) => {
+      const id = String(index + 1)
+      const key = v4()
+
+      return {
+        label: <TabTitle>{`Data Analysis ${id}`}</TabTitle>,
+        children: <TabChild key={key} />,
+        key: key,
+        // closable: index == 0 ? false : true,
+      }
+    })
+
   const [activeKey, setActiveKey] = useState(defaultPanes[0].key)
   const [items, setItems] = useState(defaultPanes)
-
   const onChange = (key: string) => {
     setActiveKey(key)
   }

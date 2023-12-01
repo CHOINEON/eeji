@@ -17,7 +17,7 @@ const DataSet = () => {
   //상태 저장
   const setActiveStep = useSetRecoilState(stepCountStore)
   const setUserInfo = useSetRecoilState(userInfoState)
-  const setSelectedData = useSetRecoilState(selectedDataState)
+  const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
   const setVariableList = useSetRecoilState(variableStore) //최초 변수 리스트 렌더링
   const resetAnalysisResponse = useResetRecoilState(analysisResponseAtom)
   const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
@@ -28,7 +28,8 @@ const DataSet = () => {
 
   useEffect(() => {
     //데이터셋 페이지 나갔다 오면 초기화
-    // resetAnalysisResponse()
+    resetAnalysisResponse()
+    // resetSelectedData()  //타이밍이 한발 늦어서 다른데로 옮김
     setUserInfo({ user_id: localStorage.getItem('userId'), com_id: localStorage.getItem('companyId') })
   }, [])
 
@@ -51,6 +52,7 @@ const DataSet = () => {
       dateCol: data.date_col,
       targetY: data.target_y,
     })
+
     //태그리스트 드롭다운 바인딩
     setFeatureList(data.name, JSON.parse(data.col_list))
   }
