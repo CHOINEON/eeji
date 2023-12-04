@@ -300,7 +300,7 @@ const AdvancedChart = () => {
       side: 'right',
       zeroline: false,
     },
-
+    height: '50%',
     margin: {
       t: 10,
       b: 40,
@@ -480,10 +480,11 @@ const AdvancedChart = () => {
           <Plot
             data={subPlotData}
             layout={subLayout}
-            style={{ width: '100%' }}
+            style={{ width: '100%', height: '100%' }}
             config={config}
             onClick={handleChartClick}
           />
+
           <div className={CSS.sendThr}>
             <Card
               style={{
