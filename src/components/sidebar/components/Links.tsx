@@ -45,12 +45,13 @@ export function SidebarLinks(props: { routes: RoutesType[] }) {
                       </Box>
                       <Text
                         me="auto"
+                        fontSize="lg"
                         color={activeRoute(route.path.toLowerCase()) ? activeColor : textColor}
                         fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}
                       >
                         {route.name}
                       </Text>
-                    </Flex> 
+                    </Flex>
                     <Box
                       h="36px"
                       w="4px"

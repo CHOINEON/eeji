@@ -93,7 +93,7 @@ const DataAnalysis = () => {
               ))}
             </Stepper>
           </Box>
-          <Box>
+          <Box style={{ margin: '0 8px' }}>
             {activeStep === 0 && <DataSet />}
             {/* {activeStep === 1 && <CorrelationView />} */}
             {activeStep === 1 && <TempDataAnalysis />}

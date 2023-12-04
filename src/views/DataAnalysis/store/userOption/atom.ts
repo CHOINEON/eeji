@@ -90,5 +90,5 @@ export const userInputOptionState = selector({
 
 export const selectModelState = atom({
   key: 'selectModelState',
-  default: '0',
+  default: 0,
 })

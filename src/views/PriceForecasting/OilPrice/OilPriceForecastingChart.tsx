@@ -319,7 +319,7 @@ const OilPriceChart = () => {
 
   const { mutate: mutateChartData } = useMutation(fetchChartData, {
     onSuccess: (result: any) => {
-      console.log('mutate result:', result)
+      // console.log('mutate result:', result)
 
       setData(result)
 
@@ -422,6 +422,7 @@ const OilPriceChart = () => {
               onSelect={handleSelect}
             />
           </div>
+          {/* <Line options={options} data={chartData} /> */}
           <Plot style={{ width: '100%' }} config={config} data={chartData} layout={layout} />
         </StyledCard>
       </div>

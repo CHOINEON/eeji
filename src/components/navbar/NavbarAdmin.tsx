@@ -26,7 +26,8 @@ export default function AdminNavbar(props: {
 
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
   let mainText = useColorModeValue('navy.700', 'white')
-  let secondaryText = useColorModeValue('gray.700', 'white')
+  // let secondaryText = useColorModeValue('gray.700', 'white')
+  let secondaryText = '#A3AFCF'
   let navbarPosition = 'fixed' as const
   let navbarFilter = 'none'
   let navbarBackdrop = 'blur(20px)'
@@ -118,7 +119,7 @@ export default function AdminNavbar(props: {
             bg="inherit"
             borderRadius="inherit"
             fontWeight="bold"
-            fontSize="34px"
+            fontSize="38px"
             _hover={{ color: { mainText } }}
             _active={{
               bg: 'inherit',

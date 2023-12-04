@@ -12,9 +12,9 @@ import { selectModelState } from 'views/DataAnalysis/store/userOption/atom'
 const FeatureAnalysis = ({ data, input }: any) => {
   // const selectedData = useRecoilValue(selectedDataState)
   const analysisResponse = useRecoilValue(analysisResponseAtom)
-  const [selectedModel, setSelectedModel] = useRecoilState(selectModelState)
+  const [modelIdx, setModelIdx] = useRecoilState(selectModelState)
   const [options, setOptions] = useState([])
-  const [chartData, setChartData] = useState([])
+  const [chartData, setChartData] = useState({ labels: [], values: [] })
   // const [contents, setContents] = useState([])
 
   // const onChange = (currentSlide: number) => {
@@ -23,25 +23,23 @@ const FeatureAnalysis = ({ data, input }: any) => {
   // }
 
   useEffect(() => {
+    // console.log('analysisResponse:', analysisResponse)
     if (analysisResponse.length > 0) {
       const newOption: Array<any> = []
       analysisResponse.map((value: any, index: number) => {
-        newOption.push({ value: index, label: `pred ${index + 1}` })
+        newOption.push({ value: index, label: index === 0 ? 'INEEJI Pred' : `Prediction ${index}` })
       })
 
       setOptions(newOption)
     }
+
+    setChartData(analysisResponse[modelIdx]['data']['feature_piechart_data'][0])
   }, [analysisResponse])
 
-  const contents = [
-    `현재 예측 모델에서 대상인 가장 영향력이 큰 변수는 <b>${data && data.length > 0 && data[0]?.labels[0]}</b>입니다.`,
-    // `현재 자동 추천된 변수 X는 ${data && analysisResponse[0].input.join()}`,
-  ]
-
   const handleChange = (value: string) => {
-    console.log(`selected ${value}`)
-
-    setSelectedModel(value)
+    // console.log(`selected ${value}`)
+    setChartData(analysisResponse[parseInt(value)]['data']['feature_piechart_data'][0])
+    setModelIdx(parseInt(value))
   }
 
   return (
@@ -49,9 +47,11 @@ const FeatureAnalysis = ({ data, input }: any) => {
       <SubTitle>
         Feature Importance
         <InfoCircle content="변수 중요도가 높을 수록 예측 모델에 대한 영향력이 큽니다." />
-        <div style={{ width: '120px', display: 'inline-block' }}>
-          <Select style={{ width: 120 }} options={options} onChange={handleChange} defaultValue={options[0]} />
-        </div>
+        {options.length > 1 && (
+          <div style={{ width: '120px', display: 'inline-block' }}>
+            <Select style={{ width: 120 }} options={options} onChange={handleChange} defaultValue={options[0]?.value} />
+          </div>
+        )}
       </SubTitle>
       <div>
         {/* {contents.map((value: any) => {
@@ -60,20 +60,43 @@ const FeatureAnalysis = ({ data, input }: any) => {
             <span style={{ color: '#002D65', fontSize: '12px', marginBottom: '5px' }}>{value}</span>
           </p>
         })} */}
-        <p>
+        <div className="block float-left">
           <AIbutton>AI</AIbutton>
-          <span style={{ color: '#002D65', fontSize: '12px', marginBottom: '5px' }}>
-            현재 예측 모델에서 가장 영향력이 큰 변수는 <b>{data && data.length > 0 && data[0]?.labels[0]}</b>
+          <div
+            style={{
+              width: '84%',
+              display: 'inline-block',
+              marginRight: '10px',
+              float: 'right',
+              color: '#002D65',
+              fontSize: '12px',
+              marginBottom: '5px',
+            }}
+          >
+            현재 예측 모델에서 가장 영향력이 큰 변수는 <b>{chartData?.labels[0]}</b>
             입니다.
-          </span>
-        </p>
-        <p>
+          </div>
+        </div>
+        <div className="block float-left">
           <AIbutton>AI</AIbutton>
-          <span style={{ color: '#002D65', fontSize: '12px', marginBottom: '5px' }}>
-            현재 추천된 변수 X는 <b>{input && input.join(', ')}</b> 입니다.
-          </span>
-        </p>
-        <FeatureImportance data={data} />
+          <div
+            style={{
+              width: '84%',
+              display: 'inline-block',
+              marginRight: '10px',
+              float: 'right',
+              color: '#002D65',
+              fontSize: '12px',
+              marginBottom: '5px',
+            }}
+          >
+            현재 {modelIdx === 0 ? '자동 추천으로 ' : ''}입력된 원인 변수 X는{' '}
+            <b>{analysisResponse[modelIdx]?.input?.join(', ')}</b> 입니다.
+          </div>
+        </div>
+        <div className="block float-left w-100">
+          <FeatureImportance data={chartData} />
+        </div>
       </div>
     </ComponentContainer>
   )
