@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import DataProperties from './DataProperties'
 import DataSummary from './DataSummary'
 import thumbnailImg from 'assets/img/dataAnalysis/thumbnail_circle.svg'
 import { useRecoilState } from 'recoil'
 import { uploadedDataState } from 'views/DataAnalysis/store/dataset/atom'
-import { message } from 'antd'
+import { message, Spin } from 'antd'
 
 const AfterUpload = () => {
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
@@ -86,10 +86,8 @@ const AfterUpload = () => {
           style={{
             // border: '1px solid red',
             position: 'absolute',
-            top: '30%',
-            left: '50%',
-            marginTop: '-41px',
-            marginLeft: '-52px',
+            width: '352px',
+            marginTop: '10px',
           }}
         >
           <img src={thumbnailImg} style={{ margin: '0 auto' }} />

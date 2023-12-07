@@ -36,20 +36,21 @@ const routes = [
   //   icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
   //   component: AIModelManagement,
   // },
+  // {
+  //   name: 'Anomaly Detection',
+  //   layout: '/admin',
+  //   path: '/anomalyDetection',
+  //   icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+  //   component: Test,
+  // },
   {
-    name: 'Price Forecast',
+    name: 'Price Forecasting',
     layout: '/admin',
     path: '/price-forecast',
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
     component: PriceForecasting,
   },
-  {
-    name: 'Anomaly Detection',
-    layout: '/admin',
-    path: '/anomalyDetection',
-    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
-    component: Test,
-  },
+
   // {
   //   name: 'Configuration',
   //   layout: '/admin',

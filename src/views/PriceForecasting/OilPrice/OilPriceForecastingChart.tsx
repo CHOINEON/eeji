@@ -1,214 +1,322 @@
-// import { Select } from 'antd'
-// import axios from 'axios'
-// import React, { useEffect, useState } from 'react'
-// import Plot from 'react-plotly.js'
-
-// const OilPriceChart = () => {
-//   const [data, setData] = useState([])
-//   const [selectedOption, setSelectedOption] = useState('brent')
-//   const [priceList, setPriceList] = useState([
-//     { key: 'brent', min: 400, max: 600, title: 'Brent Oil', unit: '($/b)' },
-//     { key: 'wti', min: 80, max: 100, title: 'WTI Oil', unit: '($/b)' },
-//     { key: 'henry', min: 0, max: 0.15, title: 'Henry Hub', unit: '(USD/MMBtu)' },
-//   ])
-
-//   const options = [
-//     { value: 'brent', label: 'Brent' },
-//     { value: 'wti', label: 'WTI' },
-//     { value: 'henry', label: 'Henry' },
-//   ]
-
-//   //chart
-//   const config = { displaylogo: false, responsive: true, useResizeHandler: true }
-
-//   const [chartData, setChartData] = useState([])
-//   const [layout, setLayout] = useState({
-//     responsive: true,
-//     useResizeHandler: true,
-//     autosize: true,
-//   })
-
-//   useEffect(() => {
-//     fetchChartData()
-//   }, [])
-
-//   // useEffect(() => {
-//   //   console.log('minMax:', minMax)
-//   // }, [minMax])
-
-//   useEffect(() => {
-//     if (data) formatChartData(data)
-//   }, [data, selectedOption])
-
-//   const setLayoutOnChart = (item: string, datetime: any) => {
-//     const title = priceList.find((x) => x.key === item).title
-//     const unit = priceList.find((x) => x.key === item).unit
-
-//     const newLayout = {
-//       title: `${title} Price Forecasting`,
-//       font: {
-//         // family: 'sans-serif',
-//         // size: 14,
-//         // color: '#7f7f7f',
-//       },
-//       showlegent: true,
-//       responsive: true,
-//       useResizeHandler: true,
-//       autosize: true,
-//       shapes: [
-//         {
-//           type: 'line',
-//           x0: datetime.toString(),
-//           y0: priceList.find((x) => x.key === item).min,
-//           x1: datetime.toString(),
-//           y1: priceList.find((x) => x.key === item).max,
-//           line: {
-//             color: 'darkgrey',
-//             width: 1,
-//             dash: 'dash',
-//           },
-//         },
-//       ],
-//       annotations: [
-//         {
-//           xref: 'paper',
-//           yref: 'paper',
-//           x: 0,
-//           xanchor: 'right',
-//           y: 1.1,
-//           yanchor: 'bottom',
-//           text: { unit },
-//           showarrow: false,
-//         },
-//       ],
-//     }
-//     setLayout(newLayout)
-//   }
-
-//   const fetchChartData = () => {
-//     const param = {
-//       user_id: localStorage.getItem('userId'),
-//     }
-
-//     axios
-//       .post(process.env.REACT_APP_API_SERVER_URL + '/api/oil_predict', param)
-//       .then((response) => {
-//         console.log('response', response.data)
-//         const respData = response.data
-//         setData(respData)
-
-//         //초기 레이아웃 (brent)
-//         const lastDayOfHistoryData = respData[selectedOption].index_hist.slice(-1)
-//         setLayoutOnChart('brent', lastDayOfHistoryData)
-//       })
-//       .catch((error) => console.log('error:', error))
-//   }
-
-//   const formatChartData = (data: any) => {
-//     if (data[selectedOption]) {
-//       //실제 원유값(과거~현재)
-//       const realPrice = {
-//         name: `${selectedOption} Price`,
-//         x: data[selectedOption].index_hist,
-//         y: data[selectedOption].gt_hist,
-//         mode: 'lines',
-//         connectgaps: true,
-//         line: {
-//           color: '#003953',
-//         },
-//       }
-
-//       const pred_hist = {
-//         name: `${selectedOption} price forecast`,
-//         x: data[selectedOption].index_hist,
-//         y: data[selectedOption].pred_hist,
-//         mode: 'lines',
-//         line: {
-//           color: '#2397d2',
-//         },
-//         connectgaps: true,
-//       }
-
-//       //원본 데이터에서 마지막 날짜가 몇번째 데이터인지 찾아서 예측 점선의 첫번째에 넣으려고 사전작업
-//       //(json parsing하면서 순서 섞이는 경우 있어서 다시 정렬함)
-//       const dateArr: Array<any> = pred_hist.x
-//       dateArr.sort((a, b) => {
-//         return new Date(b).getTime() - new Date(a).getTime()
-//       })
-
-//       //pred_hist의 마지막 값을 미래 예측값 배열의 첫번째에 넣어서 이어진것처럼 보이게
-//       const index = data[selectedOption].index_hist.indexOf(dateArr[0])
-//       const first_prediction = { x: dateArr[0], y: data[selectedOption].pred_hist[index] }
-
-//       const predict_x = data[selectedOption].index_pred
-//       const predict_y = data[selectedOption].predict
-
-//       predict_x.unshift(first_prediction.x), predict_y.unshift(first_prediction.y)
-
-//       const prediction = {
-//         name: 'prediction',
-//         x: predict_x,
-//         y: predict_y,
-//         mode: 'lines',
-//         connectgaps: true,
-//         line: {
-//           color: '#2397d2',
-//           dash: 'dot',
-//           // color:
-//         },
-//       }
-//       setChartData([realPrice, pred_hist, prediction])
-
-//       //y축 min, max 세팅
-//       // const min_y = Math.min.apply(null, predict_y)
-//       // const max_y = Math.max.apply(null, predict_y)
-
-//       // console.log(min_y)
-//       // console.log(max_y)
-//     }
-//   }
-
-//   const handleSelect = (item: any) => {
-//     // console.log('select item:', item)
-//     setSelectedOption(item)
-
-//     //선택된 옵션에 따라 레이아웃 다시 그림
-//     const lastDayOfHistoryData = data[item].index_hist.slice(-1)
-//     setLayoutOnChart(item, lastDayOfHistoryData)
-//   }
-
-//   return (
-//     <>
-//       <div className="w-100">
-//         <div style={{ width: '200px', height: '50px' }}>
-//           <Select
-//             style={{ width: 120, backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-//             defaultValue={options[0]}
-//             options={options}
-//             onSelect={handleSelect}
-//           />
-//         </div>
-//         <Plot style={{ width: '100%' }} config={config} data={chartData} layout={layout} />
-//       </div>
-//     </>
-//   )
-// }
-
-// export default OilPriceChart
-import { Select, Card } from 'antd'
+import { Select, Card, Typography } from 'antd'
 import styled from 'styled-components'
 import React, { useEffect, useState } from 'react'
-import Plot from 'react-plotly.js'
+import { Chart as ChartJS } from 'chart.js'
+import annotationPlugin from 'chartjs-plugin-annotation'
 import { useMutation } from 'react-query'
 import fetchChartData from '../../../apis/PriceForecastApi'
+import { Line } from 'react-chartjs-2'
+import { Title } from 'views/NewDataAnalysis/components/Title'
 
-const StyledCard = styled(Card)`
-  width: auto;
-  height: 550px;
-  border-radius: 25px;
-  opacity: 1;
+const { Text, Link } = Typography
+
+ChartJS.register(annotationPlugin)
+
+type OilDataType = {
+  [index: string]: IDataTypes
+}
+
+type IDataTypes = {
+  real_price: object
+  pred_price: object
+  prediction: object
+}
+
+const OilPriceChart = () => {
+  const [selectedOption, setSelectedOption] = useState('brent')
+  const [priceList, setPriceList] = useState([
+    {
+      key: 'brent',
+      min: 400,
+      max: 600,
+      title: 'Brent Oil',
+      unit: '($/b)',
+      source: 'Bloomberg Brent Crude Subindex',
+      subtext: '(Prediction update at about 08:15)',
+      link: 'https://www.bloomberg.com/quote/BCOMCL:IND',
+    },
+    {
+      key: 'wti',
+      min: 80,
+      max: 100,
+      title: 'WTI Oil',
+      unit: '($/b)',
+      source: 'Bloomberg WTI Crude Oil Subindex',
+      subtext: '(Prediction update at about 08:10)',
+      link: 'https://www.bloomberg.com/quote/BCOMCOT:IND',
+    },
+    {
+      key: 'henry',
+      min: 0,
+      max: 0.15,
+      title: 'Henry Hub',
+      unit: '(USD/MMBtu)',
+      source: 'Bloomberg Natural Gas Subindex',
+      subtext: '(Prediction update at about 08:20)',
+      link: 'https://www.bloomberg.com/quote/BCOMNG:IND',
+    },
+  ])
+
+  const options = [
+    {
+      label: '에너지',
+      options: [
+        { value: 'brent', label: 'Brent' },
+        { value: 'wti', label: 'WTI' },
+        { value: 'henry', label: 'Henry' },
+        { value: '석탄', label: '석탄', disabled: true },
+        { value: '휘발유', label: '휘발유', disabled: true },
+        { value: '난방유', label: '난방유', disabled: true },
+      ],
+    },
+
+    {
+      label: '금속',
+      options: [
+        { value: '스크랩', label: '스크랩', disabled: true },
+        { value: '철광석', label: '철광석', disabled: true },
+        { value: '금', label: '금', disabled: true },
+        { value: '은', label: '은', disabled: true },
+        { value: '백금', label: '백금', disabled: true },
+        { value: '구리', label: '구리', disabled: true },
+      ],
+    },
+  ]
+
+  const [chartData, setChartData] = useState({ datasets: [] })
+  const [data, setData] = useState<OilDataType>()
+  const { mutate: mutateChartData } = useMutation(fetchChartData, {
+    onSuccess: (result: any) => {
+      // console.log('mutate result:', result)
+      formatChartData(result)
+    },
+    onError: (error) => {
+      console.error('Error fetching chart data:', error)
+      // Handle the error as needed
+    },
+  })
+
+  useEffect(() => {
+    mutateChartData()
+  }, [])
+
+  useEffect(() => {
+    if (data) {
+      const dataToRender = {
+        datasets: [
+          {
+            label: `${selectedOption} price`,
+            data: data[selectedOption]?.real_price,
+            backgroundColor: ['rgb(87,220,49)'],
+            borderColor: ['rgb(87,220,49)'],
+            borderWidth: 1,
+          },
+          {
+            label: `${selectedOption} price forecast`,
+            data: data[selectedOption]?.pred_price,
+            backgroundColor: ['rgb(67,56,247)'],
+            borderColor: ['rgb(67,56,247)'],
+            borderWidth: 1,
+          },
+          {
+            label: 'prediction',
+            data: data[selectedOption]?.prediction,
+            borderWidth: 1,
+            borderDash: [5],
+            backgroundColor: ['rgba(74,64,245, 0.3)'],
+            borderColor: ['rgb(67,56,247)'],
+            fill: false,
+          },
+        ],
+      }
+      setChartData(dataToRender)
+      // console.log('data for render:', dataForRender)
+    }
+  }, [data, selectedOption])
+
+  const formatChartData = (data: any) => {
+    const obj: any = {}
+    const typeArr = Object.keys(data) //['wti', 'brent', 'henry']
+
+    typeArr.map((key) => {
+      obj[key] = formattingData(data[key])
+    })
+    setData(obj)
+
+    function formattingData(data: any) {
+      const dataObj: any = {}
+
+      //실제 과거 값
+      const realPrice: Array<any> = []
+      data['index_hist'].map((_d: any, i: number) => {
+        const value = { x: {}, y: {} }
+        value.x = data['index_hist'][i]
+        value.y = data['gt_hist'][i]
+
+        realPrice.push(value)
+      })
+
+      //과거 예측 값
+      const predPrice: Array<any> = []
+      data['index_hist'].map((_d: any, i: number) => {
+        const value = { x: {}, y: {} }
+        value.x = data['index_hist'][i]
+        value.y = data['pred_hist'][i]
+
+        predPrice.push(value)
+      })
+
+      //미래 예측 값
+      const prediction: Array<any> = []
+      data['index_pred'].map((_d: any, i: number) => {
+        const value = { x: {}, y: {} }
+        value.x = data['index_pred'][i]
+        value.y = data['predict'][i]
+
+        prediction.push(value)
+      })
+
+      dataObj['real_price'] = realPrice
+      dataObj['pred_price'] = predPrice
+      dataObj['prediction'] = prediction
+
+      return dataObj
+    }
+  }
+
+  const handleSelect = (item: any) => {
+    setSelectedOption(item)
+    // //선택된 옵션에 따라 레이아웃 다시 그림
+    // const lastDayOfHistoryData = data[item].index_hist.slice(-1)
+    // setLayoutOnChart(item, lastDayOfHistoryData)
+  }
+
+  function getToday() {
+    const date = new Date()
+    const year = date.getFullYear()
+    const month = ('0' + (date.getMonth() + 1)).slice(-2)
+    const day = ('0' + (date.getDate() - 1)).slice(-2)
+    const today = `${year}-${month}-${day}`
+
+    return today
+  }
+
+  const lastDay = chartData.datasets.filter((x) => x.label === 'prediction')[0]?.data[0].x
+
+  const annotation1 = {
+    type: 'line' as const,
+    borderDash: [2],
+    borderColor: 'black',
+    borderWidth: 2,
+    click: function ({ chart, element }: any) {
+      console.log('Line annotation clicked')
+    },
+    label: {
+      backgroundColor: 'black',
+      content: '',
+      display: true,
+    },
+    scaleID: 'x',
+    value: lastDay,
+  }
+
+  const chartOptions = {
+    layout: {
+      padding: 20,
+      margin: 'auto',
+    },
+    responsive: true,
+    plugins: {
+      annotation: {
+        annotations: {
+          annotation1,
+        },
+      },
+    },
+    interaction: {
+      mode: 'index' as const,
+      intersect: false,
+    },
+    scales: {
+      x: {
+        display: true,
+        title: {
+          display: true,
+          // text: priceList[0].unit,
+          padding: { top: 20, left: 0, right: 0, bottom: 0 },
+        },
+      },
+      y: {
+        display: true,
+        title: {
+          display: true,
+          text: selectedOption === 'henry' ? priceList[2].unit : priceList[0].unit,
+          padding: { top: 30, left: 0, right: 30, bottom: 0 },
+        },
+      },
+    },
+  }
+
+  return (
+    <>
+      <ComponentContainer
+        style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      >
+        <div className="mt-[30px] ml-[30px] w-full h-[47px]">
+          <Title>Commodity Index Forecasting </Title>
+        </div>
+
+        <div style={{ width: '75%', height: '80%' }}>
+          <Line data={chartData} options={chartOptions} />
+        </div>
+
+        <InnerContainer style={{ width: '20%', padding: '30px' }}>
+          <div style={{ height: '80%' }}>
+            <StyledDiv>Dataset Name</StyledDiv>
+            <StyledSelect
+              style={{ width: 100, backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
+              defaultValue={options[0].options[0]}
+              options={options}
+              onSelect={handleSelect}
+            />
+          </div>
+          <div style={{ display: 'block', float: 'right', width: '100%' }}>
+            <p>* 자료출처</p>
+            <Link href={priceList.find((x) => x.key === selectedOption).link} target="_blank">
+              {priceList.find((x) => x.key === selectedOption).source}
+            </Link>
+            <Text type="secondary"> {priceList.find((x) => x.key === selectedOption).subtext}</Text>
+          </div>
+        </InnerContainer>
+      </ComponentContainer>
+    </>
+  )
+}
+
+export default OilPriceChart
+
+const ComponentContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  background-color: #ffffff;
+  height: 700px;
   box-shadow: 0px 0px 10px #5951db33;
   border: 1px solid #d5dcef;
+  border-radius: 25px;
+  opacity: 1;
+`
+
+const InnerContainer = styled.div`
+  border: 1px solid red;
+  display: block;
+  float: left;
+  width: 90%;
+  height: 60%;
+  background-color: #f6f8ff;
+  border: 1px solid #a3afcf;
+  border-radius: 10px;
+  opacity: 1;
 `
 
 const StyledSelect = styled(Select)`
@@ -225,209 +333,3 @@ const StyledDiv = styled.div`
   }
   font-family: 'Helvetica Neue', sans-serif;
 `
-const Styledfont = styled.div`
-  @font-face {
-    font-family: 'Helvetica Neue';
-    src: url('https://fonts.cdnfonts.com/css/helvetica-neue-9');
-  }
-  font-family: 'Helvetica Neue', sans-serif;
-`
-
-const OilPriceChart = () => {
-  const [data, setData] = useState([])
-  const [selectedOption, setSelectedOption] = useState('brent')
-  const [priceList, setPriceList] = useState([
-    { key: 'brent', min: 400, max: 600, title: 'Brent Oil', unit: '($/b)' },
-    { key: 'wti', min: 80, max: 100, title: 'WTI Oil', unit: '($/b)' },
-    { key: 'henry', min: 0, max: 0.15, title: 'Henry Hub', unit: '(USD/MMBtu)' },
-  ])
-
-  const options = [
-    { value: 'brent', label: 'Brent' },
-    { value: 'wti', label: 'WTI' },
-    { value: 'henry', label: 'Henry' },
-  ]
-
-  //chart
-  const config = { displaylogo: false, responsive: true, useResizeHandler: true }
-
-  const [chartData, setChartData] = useState([])
-  const [layout, setLayout] = useState({
-    responsive: true,
-    useResizeHandler: true,
-    autosize: true,
-  })
-
-  useEffect(() => {
-    mutateChartData()
-  }, [])
-
-  // useEffect(() => {
-  //   console.log('minMax:', minMax)
-  // }, [minMax])
-
-  useEffect(() => {
-    if (data) formatChartData(data)
-  }, [data, selectedOption])
-
-  const setLayoutOnChart = (item: string, datetime: any) => {
-    const title = priceList.find((x) => x.key === item).title
-    const unit = priceList.find((x) => x.key === item).unit
-
-    const newLayout = {
-      title: `${title} Price Forecasting`,
-
-      font: {
-        family: 'Helvatica Neue',
-        size: 14,
-        color: '#002D65',
-      },
-      showlegent: true,
-      responsive: true,
-      useResizeHandler: true,
-      autosize: true,
-      shapes: [
-        {
-          type: 'line',
-          x0: datetime.toString(),
-          y0: priceList.find((x) => x.key === item).min,
-          x1: datetime.toString(),
-          y1: priceList.find((x) => x.key === item).max,
-          line: {
-            color: 'darkgrey',
-            width: 1,
-            dash: 'dash',
-          },
-        },
-      ],
-
-      annotations: [
-        {
-          xref: 'paper',
-          yref: 'paper',
-          x: 0,
-          xanchor: 'right',
-          y: 1.1,
-          yanchor: 'bottom',
-          text: { unit },
-          showarrow: false,
-        },
-      ],
-    }
-    setLayout(newLayout)
-  }
-
-  const { mutate: mutateChartData } = useMutation(fetchChartData, {
-    onSuccess: (result: any) => {
-      // console.log('mutate result:', result)
-
-      setData(result)
-
-      const lastDayOfHistoryData = result[selectedOption].index_hist.slice(-1)
-      setLayoutOnChart(selectedOption, lastDayOfHistoryData)
-    },
-    onError: (error) => {
-      console.error('Error fetching chart data:', error)
-      // Handle the error as needed
-    },
-  })
-
-  const formatChartData = (data: any) => {
-    if (data[selectedOption]) {
-      //실제 원유값(과거~현재)
-      const realPrice = {
-        name: `${selectedOption} Price`,
-        x: data[selectedOption].index_hist,
-        y: data[selectedOption].gt_hist,
-        mode: 'lines',
-        connectgaps: true,
-        line: {
-          //'#003953','
-          color: '#FC8800',
-        },
-      }
-
-      const pred_hist = {
-        name: `${selectedOption} price forecast`,
-        x: data[selectedOption].index_hist,
-        y: data[selectedOption].pred_hist,
-        mode: 'lines',
-        line: {
-          //'#2397d2',
-          color: '#4338F7',
-        },
-        connectgaps: true,
-        //fill: 'tozeroy',
-        fillcolor: 'rgba(0, 0, 255, 0.1)',
-      }
-
-      //원본 데이터에서 마지막 날짜가 몇번째 데이터인지 찾아서 예측 점선의 첫번째에 넣으려고 사전작업
-      //(json parsing하면서 순서 섞이는 경우 있어서 다시 정렬함)
-      const dateArr: Array<any> = pred_hist.x
-      dateArr.sort((a, b) => {
-        return new Date(b).getTime() - new Date(a).getTime()
-      })
-
-      //pred_hist의 마지막 값을 미래 예측값 배열의 첫번째에 넣어서 이어진것처럼 보이게
-      const index = data[selectedOption].index_hist.indexOf(dateArr[0])
-      const first_prediction = { x: dateArr[0], y: data[selectedOption].pred_hist[index] }
-
-      const predict_x = data[selectedOption].index_pred
-      const predict_y = data[selectedOption].predict
-
-      predict_x.unshift(first_prediction.x), predict_y.unshift(first_prediction.y)
-
-      const prediction = {
-        name: 'prediction',
-        x: predict_x,
-        y: predict_y,
-        mode: 'lines',
-        connectgaps: true,
-        line: {
-          color: '#2397d2',
-          dash: 'dot',
-          // color:
-        },
-      }
-      setChartData([realPrice, pred_hist, prediction])
-
-      //y축 min, max 세팅
-      // const min_y = Math.min.apply(null, predict_y)
-      // const max_y = Math.max.apply(null, predict_y)
-
-      // console.log(min_y)
-      // console.log(max_y)
-    }
-  }
-
-  const handleSelect = (item: any) => {
-    // console.log('select item:', item)
-    setSelectedOption(item)
-
-    //선택된 옵션에 따라 레이아웃 다시 그림
-    const lastDayOfHistoryData = data[item].index_hist.slice(-1)
-    setLayoutOnChart(item, lastDayOfHistoryData)
-  }
-
-  return (
-    <>
-      <div className="w-100">
-        <StyledCard>
-          <div style={{ width: '200px', height: '60px' }}>
-            <StyledDiv>Dataset Name</StyledDiv>
-            <StyledSelect
-              style={{ width: 120, backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-              defaultValue={options[0]}
-              options={options}
-              onSelect={handleSelect}
-            />
-          </div>
-          {/* <Line options={options} data={chartData} /> */}
-          <Plot style={{ width: '100%' }} config={config} data={chartData} layout={layout} />
-        </StyledCard>
-      </div>
-    </>
-  )
-}
-
-export default OilPriceChart

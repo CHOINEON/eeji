@@ -1,26 +1,19 @@
-import { DownOutlined } from '@ant-design/icons'
+import { InfoCircleOutlined } from '@ant-design/icons'
 import styled from '@emotion/styled'
-import { Carousel, Dropdown, MenuProps, Select } from 'antd'
+import { Select, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import InfoCircle from 'views/DataAnalysis/components/Icon/InfoCircle'
 import FeatureImportance from 'views/DataAnalysis/FeatureImportance'
-import { selectedDataState } from 'views/DataAnalysis/store/dataset/atom'
 import { analysisResponseAtom } from 'views/DataAnalysis/store/response/atoms'
 import { selectModelState } from 'views/DataAnalysis/store/userOption/atom'
 
 const FeatureAnalysis = ({ data, input }: any) => {
-  // const selectedData = useRecoilValue(selectedDataState)
   const analysisResponse = useRecoilValue(analysisResponseAtom)
   const [modelIdx, setModelIdx] = useRecoilState(selectModelState)
   const [options, setOptions] = useState([])
   const [chartData, setChartData] = useState({ labels: [], values: [] })
-  // const [contents, setContents] = useState([])
-
-  // const onChange = (currentSlide: number) => {
-  //   console.log(currentSlide)
-
-  // }
+  const [error, setError] = useState({ MAE: 0, MSE: 0, RMSE: 0 })
 
   useEffect(() => {
     // console.log('analysisResponse:', analysisResponse)
@@ -32,21 +25,34 @@ const FeatureAnalysis = ({ data, input }: any) => {
 
       setOptions(newOption)
     }
-
+    setError(analysisResponse[modelIdx].error)
     setChartData(analysisResponse[modelIdx]['data']['feature_piechart_data'][0])
   }, [analysisResponse])
 
   const handleChange = (value: string) => {
     // console.log(`selected ${value}`)
     setChartData(analysisResponse[parseInt(value)]['data']['feature_piechart_data'][0])
+    setError(analysisResponse[modelIdx].error)
     setModelIdx(parseInt(value))
   }
+
+  const content = (
+    <div>
+      <p>MAE : {error.MAE}</p>
+      <p>MSE : {error.MSE}</p>
+      <p>RMSE : {error.RMSE}</p>
+    </div>
+  )
 
   return (
     <ComponentContainer>
       <SubTitle>
         Feature Importance
         <InfoCircle content="변수 중요도가 높을 수록 예측 모델에 대한 영향력이 큽니다." />
+        <Tooltip title={content}>
+          <InfoCircleOutlined style={{ margin: '0 10px', fontSize: '15px', color: '#453af6' }} />
+          {/* <Icon type="info-circle-o" style={{ margin: '0 10px', fontSize: '15px', color: 'grey' }} /> */}
+        </Tooltip>
         {options.length > 1 && (
           <div style={{ width: '120px', display: 'inline-block' }}>
             <Select style={{ width: 120 }} options={options} onChange={handleChange} defaultValue={options[0]?.value} />
@@ -60,14 +66,14 @@ const FeatureAnalysis = ({ data, input }: any) => {
             <span style={{ color: '#002D65', fontSize: '12px', marginBottom: '5px' }}>{value}</span>
           </p>
         })} */}
-        <div className="block float-left">
+        <div className="block float-left w-100">
           <AIbutton>AI</AIbutton>
           <div
             style={{
-              width: '84%',
-              display: 'inline-block',
-              marginRight: '10px',
-              float: 'right',
+              // width: '84%',
+              display: 'block',
+              float: 'left',
+              marginRight: '6px',
               color: '#002D65',
               fontSize: '12px',
               marginBottom: '5px',
@@ -77,21 +83,21 @@ const FeatureAnalysis = ({ data, input }: any) => {
             입니다.
           </div>
         </div>
-        <div className="block float-left">
+        <div className="block float-left w-100">
           <AIbutton>AI</AIbutton>
           <div
             style={{
-              width: '84%',
-              display: 'inline-block',
+              width: '80%',
+              display: 'block',
+              float: 'left',
               marginRight: '10px',
-              float: 'right',
               color: '#002D65',
               fontSize: '12px',
               marginBottom: '5px',
             }}
           >
             현재 {modelIdx === 0 ? '자동 추천으로 ' : ''}입력된 원인 변수 X는{' '}
-            <b>{analysisResponse[modelIdx]?.input?.join(', ')}</b> 입니다.
+            <b>{analysisResponse[modelIdx]?.input?.join(', ')}</b>입니다.
           </div>
         </div>
         <div className="block float-left w-100">
@@ -107,7 +113,7 @@ export default FeatureAnalysis
 const ComponentContainer = styled.div`
   display: block;
   float: left;
-  margin: 25px;
+  margin: 38px 15px;
   width: 90%;
   height: 60%;
   background-color: #f6f8ff;
@@ -135,6 +141,8 @@ const ContentsTitle = styled(Title)`
 `
 
 const AIbutton = styled.button`
+  display: block;
+  float: left;
   background-color: #31d600;
   width: 20px;
   height: 20px;

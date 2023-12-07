@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Modal, App } from 'antd'
+import { Modal, App, Spin } from 'antd'
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import { dataPropertyState, uploadedDataState, userInfoState } from 'views/DataAnalysis/store/dataset/atom'
@@ -15,6 +15,7 @@ const DataImportModal = (props: any) => {
   const userInfo = useRecoilValue(userInfoState)
   const queryClient = useQueryClient()
 
+  const [saving, setSaving] = useState(false)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const resetUploadFileState = useResetRecoilState(uploadedDataState)
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
@@ -88,7 +89,7 @@ const DataImportModal = (props: any) => {
           })
         } else {
           // setSummaryFetch('requested')
-          // setSaving(true)
+          setSaving(true)
 
           const user_id = localStorage.getItem('userId').toString()
           mutate({ user_id, formData })
@@ -116,19 +117,19 @@ const DataImportModal = (props: any) => {
         footer={null}
         onCancel={handleCancel}
       >
-        {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
-
-        <div>
-          <CancelButton onClick={handleCancel}>Cancel</CancelButton>
-          <UploadButton
-            // className="block ant-btn ant-btn-primary"
-            // loading={saving}
-            disabled={btnDisabled}
-            onClick={handleSave}
-          >
-            Save
-          </UploadButton>
-        </div>
+        <Spin tip="데이터 업로드 중 ..." spinning={saving}>
+          {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
+          <div>
+            <CancelButton onClick={handleCancel}>Cancel</CancelButton>
+            <UploadButton
+              // className="block ant-btn ant-btn-primary"
+              disabled={btnDisabled}
+              onClick={handleSave}
+            >
+              Save
+            </UploadButton>
+          </div>
+        </Spin>
       </Modal>
     </>
   )

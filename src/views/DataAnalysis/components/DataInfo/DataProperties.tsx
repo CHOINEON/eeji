@@ -10,14 +10,6 @@ import { useApiError } from 'hooks/useApiError'
 import { useToast } from 'hooks/useToast'
 import ColumnLabel from 'components/fields/ColumnLabel'
 
-const DataPropertiesContainer = styled.div`
-  // border: 1px solid red;
-  display: block;
-  float: left;
-  margin-top: 20px;
-  width: 100%;
-`
-
 const DataProperties = () => {
   const { fireToast } = useToast()
   const userInfo = useRecoilValue(userInfoState)
@@ -30,7 +22,7 @@ const DataProperties = () => {
   const { handleError } = useApiError()
   const { mutate } = useMutation(DatasetApi.uploadDataset, {
     onSuccess: (response: any) => {
-      // console.log('uploadDataset success:', response)
+      console.log('uploadDataset success:', response)
       // setSummaryFetch('completed')
       fireToast('request success')
       saveDataSummary(response['1'])
@@ -182,3 +174,11 @@ const DataProperties = () => {
 }
 
 export default DataProperties
+
+const DataPropertiesContainer = styled.div`
+  // border: 1px solid red;
+  display: block;
+  float: left;
+  margin-top: 20px;
+  width: 100%;
+`

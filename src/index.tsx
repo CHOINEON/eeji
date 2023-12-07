@@ -55,14 +55,36 @@ ReactDOM.render(
           colorPrimary: '#4338F7',
           fontFamily: 'Helvetica Neue',
           borderRadius: 7,
+          colorBgContainer: '#FFFFFF',
           // colorBgContainer: '#002D65',
           // colorBgContainerDisabled: '#5951DB33',
+        },
+        components: {
+          Button: {
+            colorPrimary: '#4338f7',
+            borderRadius: 100,
+          },
+          Modal: {
+            borderRadius: 10,
+          },
+          Input: {
+            // colorBgContainer: '#FFFFFF',
+            // colorBorderBg: '1px solid #A3AFCF',
+            borderRadius: 7,
+          },
+          Select: {
+            // colorPrimary: '#4338f7',
+            // colorBgBase: '#FFFFFF',
+            // colorBgContainer: '#FFFFFF',
+            // colorBorderBg: '1px solid #A3AFCF',
+            borderRadius: 10,
+          },
         },
       }}
     >
       <ChakraProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          <Loading />
+          {/* <Loading /> */}
           <Antd>
             <App />
           </Antd>
