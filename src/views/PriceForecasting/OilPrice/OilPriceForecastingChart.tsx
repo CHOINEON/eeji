@@ -6,7 +6,7 @@ import annotationPlugin from 'chartjs-plugin-annotation'
 import { useMutation } from 'react-query'
 import fetchChartData from '../../../apis/PriceForecastApi'
 import { Line } from 'react-chartjs-2'
-import { Title } from 'views/NewDataAnalysis/components/Title'
+import { SubTitle, Title } from 'views/NewDataAnalysis/components/Title'
 
 const { Text, Link } = Typography
 
@@ -232,6 +232,9 @@ const OilPriceChart = () => {
           annotation1,
         },
       },
+      // legend: {
+      //   position: 'right' as const,
+      // },
     },
     interaction: {
       mode: 'index' as const,
@@ -262,17 +265,9 @@ const OilPriceChart = () => {
       <ComponentContainer
         style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       >
-        <div className="mt-[30px] ml-[30px] w-full h-[47px]">
+        <div className="my-[30px] ml-[30px] w-full h-[47px]">
           <Title>Commodity Index Forecasting </Title>
-        </div>
-
-        <div style={{ width: '75%', height: '80%' }}>
-          <Line data={chartData} options={chartOptions} />
-        </div>
-
-        <InnerContainer style={{ width: '20%', padding: '30px' }}>
-          <div style={{ height: '80%' }}>
-            <StyledDiv>Dataset Name</StyledDiv>
+          <div style={{ display: 'block', float: 'left', width: '200px', margin: '8px 30px' }}>
             <StyledSelect
               style={{ width: 100, backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
               defaultValue={options[0].options[0]}
@@ -280,14 +275,23 @@ const OilPriceChart = () => {
               onSelect={handleSelect}
             />
           </div>
-          <div style={{ display: 'block', float: 'right', width: '100%' }}>
-            <p>* 자료출처</p>
-            <Link href={priceList.find((x) => x.key === selectedOption).link} target="_blank">
-              {priceList.find((x) => x.key === selectedOption).source}
-            </Link>
-            <Text type="secondary"> {priceList.find((x) => x.key === selectedOption).subtext}</Text>
+        </div>
+        <div style={{ width: '75%', height: '80%' }}>
+          <Line data={chartData} options={chartOptions} />
+        </div>
+
+        {/* <InnerContainer style={{ width: '20%', padding: '30px' }}>
+          <div style={{ height: '80%' }}>
+            <SubTitle>XAI</SubTitle>
           </div>
-        </InnerContainer>
+        </InnerContainer> */}
+        <div style={{ display: 'block', float: 'right', width: '95%', textAlign: 'right', marginBottom: '30px' }}>
+          <span>* 자료출처 : </span>
+          <Link href={priceList.find((x) => x.key === selectedOption).link} target="_blank">
+            {priceList.find((x) => x.key === selectedOption).source}
+          </Link>
+          <Text type="secondary"> {priceList.find((x) => x.key === selectedOption).subtext}</Text>
+        </div>
       </ComponentContainer>
     </>
   )

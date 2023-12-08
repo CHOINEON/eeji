@@ -1,4 +1,4 @@
-import { Col, Input, Row, Select, Typography, message } from 'antd'
+import { Col, Input, Row, Select, Typography, message, Spin } from 'antd'
 import React, { useEffect, useState } from 'react'
 import TextArea from 'antd/es/input/TextArea'
 import { dataPropertyState, uploadedDataState, userInfoState } from 'views/DataAnalysis/store/dataset/atom'
@@ -12,6 +12,7 @@ import ColumnLabel from 'components/fields/ColumnLabel'
 
 const DataProperties = () => {
   const { fireToast } = useToast()
+  const [uploading, setUploading] = useState(false)
   const userInfo = useRecoilValue(userInfoState)
   const [summaryLoaded, setSummaryLoaded] = useState(false)
   const [inputOption, setInputOption] = useRecoilState(dataPropertyState)
@@ -22,10 +23,11 @@ const DataProperties = () => {
   const { handleError } = useApiError()
   const { mutate } = useMutation(DatasetApi.uploadDataset, {
     onSuccess: (response: any) => {
-      console.log('uploadDataset success:', response)
+      console.log('-----uploadDataset success:', response)
       // setSummaryFetch('completed')
       fireToast('request success')
       saveDataSummary(response['1'])
+      setUploading(false)
       setSummaryLoaded(true)
     },
     onError: (error: any) => {
@@ -64,13 +66,17 @@ const DataProperties = () => {
   }
 
   useEffect(() => {
-    // console.log('c  ---inputOption::', inputOption)
-    // console.log('c  ---uploadedData::', uploadedData)
-    // console.log('c  ---summaryLoaded::', summaryLoaded)
+    console.log('   inputOption::', inputOption)
+    console.log('   uploadedData::', uploadedData)
+    console.log('   summaryLoaded::', summaryLoaded)
 
     if (uploadedData.file && !summaryLoaded && Object.keys(inputOption).length > 0) {
       getFileDescription()
     }
+
+    // if (inputOption.name.length > 0 && inputOption.date_col.length > 0 && inputOption.target_y.length > 0) {
+    //   setUploading(true)
+    // }
   }, [inputOption])
 
   const getFileDescription = () => {
@@ -111,65 +117,67 @@ const DataProperties = () => {
   }
 
   return (
-    <DataPropertiesContainer>
-      <Row gutter={[32, 4]}>
-        <Col span={24}>
-          <ColumnLabel required={true} label="Dataset Name" />
-          <Input
-            style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-            placeholder="Dataset Name"
-            maxLength={20}
-            onChange={handleChange}
-            value={inputOption.name}
-            allowClear
-          />
-        </Col>
-        <Col span={24}>
-          <ColumnLabel required={true} label="Timestamp" />
-          <Select
-            style={{
-              width: 120,
-              backgroundColor: '#fff !important',
-              border: '1px solid #A3AFCF',
-              borderRadius: '10px',
-            }}
-            value={inputOption.date_col}
-            placeholder="Timestamp Column"
-            options={options}
-            // defaultValue={options[0]}
-            onSelect={handleSelectDateCol}
-          />
-        </Col>
-        <Col span={24}>
-          <ColumnLabel required={true} label=" Target Variable" />
-          <Select
-            style={{
-              width: 120,
-              backgroundColor: '#fff !important',
-              border: '1px solid #A3AFCF',
-              borderRadius: '10px',
-            }}
-            value={inputOption.target_y}
-            placeholder="Timestamp Column"
-            options={options}
-            // defaultValue={options[0]}
-            onSelect={handleSelectY}
-          />
-        </Col>
-        <Col span={24}>
-          <ColumnLabel required={false} label=" Description(Optional)" />
-          <TextArea
-            style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-            value={inputOption.desc}
-            onChange={(e) => setInputOption({ ...inputOption, desc: e.target.value })}
-            placeholder="Description"
-            maxLength={50}
-            allowClear
-            autoSize={{ minRows: 3, maxRows: 2 }}
-          />
-        </Col>
-      </Row>
-    </DataPropertiesContainer>
+    <Spin tip="업로드 파일 분석 중 ..." spinning={uploading} style={{ marginTop: '100px' }}>
+      <DataPropertiesContainer>
+        <Row gutter={[32, 4]}>
+          <Col span={24}>
+            <ColumnLabel required={true} label="Dataset Name" />
+            <Input
+              style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
+              placeholder="Dataset Name"
+              maxLength={20}
+              onChange={handleChange}
+              value={inputOption.name}
+              allowClear
+            />
+          </Col>
+          <Col span={24}>
+            <ColumnLabel required={true} label="Timestamp" />
+            <Select
+              style={{
+                width: 120,
+                backgroundColor: '#fff !important',
+                border: '1px solid #A3AFCF',
+                borderRadius: '10px',
+              }}
+              value={inputOption.date_col}
+              placeholder="Timestamp Column"
+              options={options}
+              // defaultValue={options[0]}
+              onSelect={handleSelectDateCol}
+            />
+          </Col>
+          <Col span={24}>
+            <ColumnLabel required={true} label=" Target Variable" />
+            <Select
+              style={{
+                width: 120,
+                backgroundColor: '#fff !important',
+                border: '1px solid #A3AFCF',
+                borderRadius: '10px',
+              }}
+              value={inputOption.target_y}
+              placeholder="Timestamp Column"
+              options={options}
+              // defaultValue={options[0]}
+              onSelect={handleSelectY}
+            />
+          </Col>
+          <Col span={24}>
+            <ColumnLabel required={false} label=" Description(Optional)" />
+            <TextArea
+              style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
+              value={inputOption.desc}
+              onChange={(e) => setInputOption({ ...inputOption, desc: e.target.value })}
+              placeholder="Description"
+              maxLength={50}
+              allowClear
+              autoSize={{ minRows: 3, maxRows: 2 }}
+            />
+          </Col>
+        </Row>
+      </DataPropertiesContainer>
+    </Spin>
   )
 }
 

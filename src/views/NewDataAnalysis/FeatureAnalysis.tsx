@@ -50,11 +50,10 @@ const FeatureAnalysis = ({ data, input }: any) => {
         Feature Importance
         <InfoCircle content="변수 중요도가 높을 수록 예측 모델에 대한 영향력이 큽니다." />
         <Tooltip title={content}>
-          <InfoCircleOutlined style={{ margin: '0 10px', fontSize: '15px', color: '#453af6' }} />
-          {/* <Icon type="info-circle-o" style={{ margin: '0 10px', fontSize: '15px', color: 'grey' }} /> */}
+          <InfoCircleOutlined style={{ fontSize: '15px', color: '#453af6' }} />
         </Tooltip>
         {options.length > 1 && (
-          <div style={{ width: '120px', display: 'inline-block' }}>
+          <div style={{ width: '120px', margin: '0 10px', display: 'inline-block' }}>
             <Select style={{ width: 120 }} options={options} onChange={handleChange} defaultValue={options[0]?.value} />
           </div>
         )}
@@ -73,7 +72,7 @@ const FeatureAnalysis = ({ data, input }: any) => {
               // width: '84%',
               display: 'block',
               float: 'left',
-              marginRight: '6px',
+              // marginRight: '10px',
               color: '#002D65',
               fontSize: '12px',
               marginBottom: '5px',
@@ -90,7 +89,7 @@ const FeatureAnalysis = ({ data, input }: any) => {
               width: '80%',
               display: 'block',
               float: 'left',
-              marginRight: '10px',
+              // marginRight: '10px',
               color: '#002D65',
               fontSize: '12px',
               marginBottom: '5px',
@@ -134,10 +133,6 @@ const Title = styled.div`
 const SubTitle = styled(Title)`
   font-size: 22px;
   width: 100%;
-`
-
-const ContentsTitle = styled(Title)`
-  font-size: 20px;
 `
 
 const AIbutton = styled.button`

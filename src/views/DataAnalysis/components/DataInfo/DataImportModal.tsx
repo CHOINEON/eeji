@@ -40,6 +40,7 @@ const DataImportModal = (props: any) => {
     if (!importOpen) {
       //선택 초기화
       resetUploadFileState()
+      setSaving(false)
     }
   }, [importOpen])
 

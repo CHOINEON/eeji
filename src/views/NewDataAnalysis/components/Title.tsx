@@ -8,3 +8,8 @@ export const Title = styled.span`
   font-weight: bolder;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
 `
+
+export const SubTitle = styled(Title)`
+  font-size: 22px;
+  width: 100%;
+`
