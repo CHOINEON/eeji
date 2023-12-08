@@ -191,6 +191,7 @@ export default PredictionResult
 const ComponentContainer = styled.div`
   // display: ${(props: any) => (props.toggle ? 'block' : 'none')};
   // border: 1px solid pink;
+  position: relative;
   float: left;
   width: 100%;
   height: 100%;

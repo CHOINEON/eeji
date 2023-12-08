@@ -134,8 +134,8 @@ const Uploader = (props: any) => {
         accept=".csv, .xls, .xlsx"
         id="input-file-upload"
       />
-      <div style={{ lineHeight: '550px', textAlign: 'center' }}>
-        <label htmlFor="input-file-upload" ref={dragRef}>
+      <div ref={dragRef} style={{ lineHeight: '550px', textAlign: 'center' }}>
+        <label htmlFor="input-file-upload">
           <UploadButton onClick={handleUploadClick} />
         </label>
         {/* {file && renderFileList()} */}

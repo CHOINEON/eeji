@@ -51,6 +51,8 @@ interface IDataset {
   descr?: string
   dateCol?: string
   targetY?: string
+  non_numeric_cols?: string | null
+  numeric_cols?: string | null
 }
 
 export const selectedDataState = atom({
@@ -66,6 +68,8 @@ export const selectedDataState = atom({
     descr: '',
     dateCol: '',
     targetY: '',
+    non_numeric_cols: '',
+    numeric_cols: '',
   } as IDataset,
 })
 

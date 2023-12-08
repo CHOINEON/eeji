@@ -34,7 +34,7 @@ export function SidebarBrand() {
   // console.log(logoColor);
 
   const ToMain = () => {
-    window.location.href = '/home'
+    window.location.href = '/admin/data-analysis'
   }
 
   return (

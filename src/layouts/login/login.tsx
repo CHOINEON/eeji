@@ -220,7 +220,8 @@ export const Login: React.FC = () => {
           window.localStorage.setItem('userPosition', response.data[0].user_position)
         })
         .catch((error) => {
-          console.log(error.response)
+          // console.log(error.response)
+          alert(error.response.data.message)
           // error('아이디 또는 비밀번호가 틀립니다.')
         })
     }
@@ -263,7 +264,7 @@ export const Login: React.FC = () => {
       })
       .then((response) => {
         console.log('[ axios response data ] : ')
-        // console.log(response.data)
+        console.log(response.data)
 
         for (let i = 0, len = response.data.length; i < len; i++) {
           Obj.value = response.data[i].com_id

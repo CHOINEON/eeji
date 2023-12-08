@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import DescriptionBox, { DescriptionBoxProps } from './components/DataInfo/DescriptionBox'
-import { Button, Col, Row, message } from 'antd'
+import { Button, Col, Row, message, Spin } from 'antd'
 import DataImportModal from './components/DataInfo/DataImportModal'
 import './style/styles.css'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
@@ -14,7 +14,7 @@ import DataEditModal from './components/DataInfo/DataEditModal'
 import { analysisResponseAtom } from './store/response/atoms'
 
 const DataSet = () => {
-  //상태 저장
+  const [loading, setLoading] = useState(false)
   const setActiveStep = useSetRecoilState(stepCountStore)
   const setUserInfo = useSetRecoilState(userInfoState)
   const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
@@ -33,12 +33,17 @@ const DataSet = () => {
     setUserInfo({ user_id: localStorage.getItem('userId'), com_id: localStorage.getItem('companyId') })
   }, [])
 
+  useEffect(() => {
+    // console.log('data:', data)
+    if (data) setLoading(false)
+    else setLoading(true)
+  }, [data])
   const handleClick = () => {
     setImportOpen(true)
   }
 
   const handleSelect = (data: any) => {
-    console.log('Dataset selected ::', data)
+    // console.log('Dataset selected ::', data)
 
     setUsedVariable([])
     setSelectedData({
@@ -51,6 +56,8 @@ const DataSet = () => {
       endDate: data.end_date,
       dateCol: data.date_col,
       targetY: data.target_y,
+      numeric_cols: data.numeric_cols,
+      non_numeric_cols: data.non_numeric_cols,
     })
 
     //태그리스트 드롭다운 바인딩
@@ -79,24 +86,21 @@ const DataSet = () => {
     }
   }
 
-  const handleEdit = (ds_id: string) => {
-    //
-    console.log('handleEdig:', ds_id)
-  }
-
   return (
     <>
       <div style={{ width: '100%', display: 'block', float: 'right', margin: '20px 0' }}>
         <DatasetAddButton className="ant-btn ant-btn-primary" onClick={handleClick}>
           + NEW DATASET
         </DatasetAddButton>
-        <Row gutter={[16, 16]}>
-          {data?.data.map((data: any, index: number) => (
-            <Col span={12} key={index}>
-              <DescriptionBox data={data} onSelect={handleSelect} />
-            </Col>
-          ))}
-        </Row>
+        <Spin tip="데이터셋 로드 중..." spinning={loading} style={{ marginTop: '100px' }}>
+          <Row gutter={[16, 16]}>
+            {data?.data.map((data: any, index: number) => (
+              <Col span={12} key={index}>
+                <DescriptionBox data={data} onSelect={handleSelect} />
+              </Col>
+            ))}
+          </Row>
+        </Spin>
       </div>
       <DataImportModal />
       <DataEditModal />
@@ -112,7 +116,7 @@ const DatasetAddButton = styled.button`
   margin: 20px 0;
   border-radius: 10px;
   font-size: 17px;
-  color: #fff;
+  color: #fff !important;
   background-color: #4338f7;
   box-shadow: 0 2px 0 rgba(55, 5, 255, 0.06);
 `

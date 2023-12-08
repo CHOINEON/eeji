@@ -10,9 +10,9 @@ const BeforeUpload = () => {
   const [dataArray, setDataArray] = useState([])
   const resetUploadFileState = useResetRecoilState(uploadedDataState)
 
-  useEffect(() => {
-    console.log('uploaded data:', uploadedData)
-  }, [uploadedData])
+  // useEffect(() => {
+  //   console.log('uploaded data:', uploadedData)
+  // }, [uploadedData])
 
   //컴포넌트 unmounted 상태로 바뀌면서 실행 타이밍 늦어짐
   // const readFile = (file: any) => {
@@ -73,7 +73,7 @@ const BeforeUpload = () => {
   // }
 
   const handleSelectedFile = (file: any) => {
-    console.log('handleSelectedFile:', file)
+    // console.log('handleSelectedFile:', file)
 
     if (file) {
       if (file.size <= 209715200) {

@@ -1,41 +1,19 @@
-import { Carousel } from 'antd'
-import Title from 'antd/es/typography/Title'
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
-import { Chart, ArcElement, CategoryScale, LinearScale, registerables } from 'chart.js'
+import { Chart, ArcElement, CategoryScale, LinearScale, registerables, Tooltip } from 'chart.js'
 import { Doughnut, Bar } from 'react-chartjs-2'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import { colors, colorsForDoughnut } from './components/Chart/colors'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { selectModelState } from './store/userOption/atom'
-import { analysisResponseAtom } from './store/response/atoms'
 
-Chart.register(ArcElement, CategoryScale, LinearScale, zoomPlugin, ...registerables)
+Chart.register(ArcElement, CategoryScale, LinearScale, zoomPlugin, Tooltip, ...registerables)
 
 const FeatureImportance = ({ data }: any) => {
-  const [chartData, setChartData] = useState([])
-  const analysisResponse = useRecoilValue(analysisResponseAtom)
-  const [selectedModel, setSelectedModel] = useRecoilState(selectModelState)
-
-  useEffect(() => {
-    console.log('FeatureImportance data:', data)
-  }, [data])
-
-  // useEffect(() => {
-  //   // console.log('selectedModel:', selectedModel)
-  //   // console.log('analysisResponse:', analysisResponse)
-
-  //   setChartData(analysisResponse[parseInt(selectedModel)]['data']['feature_piechart_data'])
-  // }, [selectedModel])
-
-  // const labels = data?.labels
-
   const doughnutData = {
     labels: data?.labels,
     datasets: [
       {
-        label: '% of importance',
-        data: data?.values,
+        label: '',
+        data: data?.values?.map((val: any) => val * 100),
         backgroundColor: colorsForDoughnut.slice(0, data?.labels?.length),
         borderColor: data?.labels?.map(() => '#F6F8FF'),
         borderWidth: 3,
@@ -54,6 +32,10 @@ const FeatureImportance = ({ data }: any) => {
         backgroundColor: colorsForDoughnut.slice(0, data?.labels?.length),
       },
     ],
+  }
+
+  const footer = (tooptipItems: any) => {
+    return tooptipItems + '%'
   }
 
   ///bar
@@ -138,7 +120,7 @@ const FeatureImportance = ({ data }: any) => {
   }
 
   return (
-    <div style={{ width: '100%', height: '500px', marginTop: '1.5vw' }}>
+    <div style={{ width: '100%', height: '500px', marginTop: '30px' }}>
       <div className="inline-block float-left" style={{ marginLeft: '20px', width: '59%', height: '200px !important' }}>
         <Bar data={barData} options={barOptions} width={'100%'} height={'200px'} />
       </div>

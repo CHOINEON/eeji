@@ -10,7 +10,7 @@ const useGetDatasets = (user_id: string) => {
     () => DatasetApi.getDatasetList(user_id),
     {
       refetchOnWindowFocus: false,
-      retry: false,
+      retry: true,
       refetchIntervalInBackground: false,
     }
   )
