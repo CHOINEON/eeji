@@ -40,20 +40,21 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
     },
   })
 
-  useEffect(() => {
-    if (isModalOpen) {
-      if (selectedData.numeric_cols !== '') {
-        // const numeric_cols = JSON.parse(selectedData.numeric_cols)
-        // const non_numeric_cols = JSON.parse(selectedData.non_numeric_cols)
+  // useEffect(() => {
+  //   if (isModalOpen) {
+  //     if (selectedData.numeric_cols !== '') {
+  //       // const numeric_cols = JSON.parse(selectedData.numeric_cols)
+  //       // const non_numeric_cols = JSON.parse(selectedData.non_numeric_cols)
 
-        console.log(selectedData)
-        // console.log(non_numeric_cols)
-      }
-    }
-  }, [isModalOpen])
+  //       console.log(selectedData)
+  //       // console.log(non_numeric_cols)
+  //     }
+  //   }
+  // }, [isModalOpen])
 
   useEffect(() => {
-    // console.log('selectedData:', selectedData)
+    console.log('selectedData:', selectedData)
+
     if (selectedData.non_numeric_cols && selectedData?.numeric_cols) {
       const numeric_cols = JSON.parse(selectedData.numeric_cols)
       const non_numeric_cols = JSON.parse(selectedData.non_numeric_cols)

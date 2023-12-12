@@ -1,13 +1,14 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import '../../style/uploader.css'
-import { Dropdown, MenuProps, App, Typography } from 'antd'
+import { Dropdown, MenuProps, App, Typography, Button, Tag } from 'antd'
 import { ExclamationCircleFilled, MoreOutlined } from '@ant-design/icons'
 import { useRecoilState } from 'recoil'
 import { datasetEditModalState } from 'views/DataAnalysis/store/modal/atom'
 import { selectedDataState } from 'views/DataAnalysis/store/dataset/atom'
 import { useMutation, useQueryClient } from 'react-query'
 import DatasetApi from 'apis/DatasetApi'
+import { Title, SubTitle, FileName } from 'views/NewDataAnalysis/components/Title'
 
 export interface DescriptionBoxProps {
   ds_id?: string
@@ -95,46 +96,82 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
 
   return (
     <>
-      <DescBoxContainer onClick={handleClick} role="button">
+      <DescBoxContainer onClick={handleClick}>
+        <div
+          style={{
+            display: 'block',
+            float: 'left',
+            width: '50px',
+            height: '100%',
+            textAlign: 'center',
+            lineHeight: '69px',
+          }}
+        >
+          <label>
+            <input
+              type="checkbox"
+              disabled={true} //체크해서 뭐할건지 정의 안되어있음
+              // checked={checked}
+              // onChange={({ target: { checked } }) => onChange(checked)}
+            />
+            {/* {children} */}
+          </label>
+        </div>
+
         <TitleWrapper>
-          <Typography.Title level={4} style={{ display: 'inline-block' }}>
-            {data?.name}
-          </Typography.Title>
-          <Dropdown menu={{ items, onClick }}>
-            <MoreOutlined style={{ float: 'right' }} size={16} />
-          </Dropdown>
+          <FileName style={{ display: 'inline-block' }}>{data?.name}</FileName>
         </TitleWrapper>
         <div
           className="container"
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'space-evenly',
-          }}
+          // style={{
+          //   display: 'flex',
+          //   flexDirection: 'row',
+          //   flexWrap: 'wrap',
+          //   justifyContent: 'space-evenly',
+          // }}
         >
           <Content>
-            <div>Total Size</div>
+            <div>
+              <Tag color="#FE7E0D">{data?.target_y}</Tag>
+            </div>
+          </Content>
+          <Content>
             <div>
               {data?.size / 1024 < 1024
                 ? Math.round(data?.size / 1024) + ' KB'
                 : Math.round(data?.size / 1024 / 1024) + ' MB'}
             </div>
           </Content>
-          <Content>
-            {' '}
-            <div>Created</div>
+
+          <DateContent>
             <div>{data?.create_date}</div>
-          </Content>
-          <Content>
-            {' '}
-            <div>Updated</div>
+          </DateContent>
+          <DateContent>
             <div>{data?.update_date}</div>
-          </Content>
+          </DateContent>
           <Content>
-            {' '}
-            <div>Created by</div>
-            <div>{'admin'}</div>
+            <div>{data?.user_id}</div>
+          </Content>
+          <ButtonContent>
+            <button
+              style={{
+                borderRadius: '10px',
+                backgroundColor: '#4338F7',
+                color: 'white',
+                display: 'inline-block',
+                width: '100px',
+                height: '30px',
+                lineHeight: '30px',
+                fontWeight: 500,
+              }}
+            >
+              Run
+            </button>
+          </ButtonContent>
+          <Content style={{ float: 'right' }}>
+            <Dropdown menu={{ items, onClick }}>
+              <MoreOutlined style={{ display: 'block', textAlign: 'center', lineHeight: '69px' }} size={16} />
+            </Dropdown>
           </Content>
         </div>
       </DescBoxContainer>
@@ -149,25 +186,42 @@ const DescBoxContainer = styled.div`
   float: left;
   background-color: #fff;
   width: 100%;
-  height: 150px;
-  border: 1px solid lightgray;
-  border-radius: 18px;
+  border: 1px solid #d5dcef;
+  border-radius: 15px;
   box-shadow: 0px 0px 10px #0000001a;
-  &:hover {
-    // cursor: pointer;
-    color: #0d99ff;
-    background-color: #91caff69;
-  }
+
+  margin: 10px 0;
 `
 const Content = styled.div`
+  // border: 1px solid blue;
   display: block;
+  float: left;
   color: gray;
-  font-size: 15px;
+  font-size: 13px;
+  color: #002d65;
+  height: 69px;
+  text-align: center;
+  line-height: 69px;
+  width: 100px;
+  text-align: center;
 `
+
+const ButtonContent = styled(Content)`
+  width: 15%;
+`
+
+const DateContent = styled(Content)`
+  width: 200px;
+`
+
 const TitleWrapper = styled.div`
+  // border: 1px solid red;
   display: block;
-  margin: 20px;
-  &:hover {
-    cursor: pointer;
-  }
+  min-width: 400px;
+  float: left;
+  height: 69px;
+  line-height: 69px;
+  // &:hover {
+  //   cursor: pointer;
+  // }
 `

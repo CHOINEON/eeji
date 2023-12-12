@@ -218,7 +218,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 
       <Menu>
         <MenuButton p="0px">
-          <Icon mt="6px" as={MdLanguage} color={navbarIconBlue} w="20px" h="18px" me="10px" />
+          <Icon mt="0px" as={MdLanguage} color={navbarIconBlue} w="20px" h="18px" me="10px" />
         </MenuButton>
         <MenuList
           boxShadow={shadow}

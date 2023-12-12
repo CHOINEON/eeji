@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import DescriptionBox, { DescriptionBoxProps } from './components/DataInfo/DescriptionBox'
 import { Button, Col, Row, message, Spin } from 'antd'
+import UploadIcon from 'assets/img/ineeji/ico_upload_mini.svg'
+import ico_line from 'assets/img/ineeji/ico_line.png'
 import DataImportModal from './components/DataInfo/DataImportModal'
 import './style/styles.css'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
@@ -34,10 +36,11 @@ const DataSet = () => {
   }, [])
 
   useEffect(() => {
-    // console.log('data:', data)
+    console.log('data:', data)
     if (data) setLoading(false)
     else setLoading(true)
   }, [data])
+
   const handleClick = () => {
     setImportOpen(true)
   }
@@ -88,18 +91,34 @@ const DataSet = () => {
 
   return (
     <>
-      <div style={{ width: '100%', display: 'block', float: 'right', margin: '20px 0' }}>
-        <DatasetAddButton className="ant-btn ant-btn-primary" onClick={handleClick}>
-          + NEW DATASET
-        </DatasetAddButton>
+      <div style={{ width: '100%', display: 'block', float: 'right', margin: '50px 0' }}>
+        <Row>
+          <Col flex="451px"></Col>
+          <Col style={{ textAlign: 'center' }} flex="100px">
+            Target
+          </Col>
+          <Col style={{ textAlign: 'center' }} flex="100px">
+            Total Size
+          </Col>
+          <Col style={{ textAlign: 'center' }} flex="200px">
+            Created
+          </Col>
+          <Col style={{ textAlign: 'center' }} flex="200px">
+            Updated
+          </Col>
+          <Col style={{ textAlign: 'center' }} flex="100px">
+            Created by
+          </Col>
+        </Row>
+
         <Spin tip="데이터셋 로드 중..." spinning={loading} style={{ marginTop: '100px' }}>
-          <Row gutter={[16, 16]}>
+          <div>
             {data?.data.map((data: any, index: number) => (
-              <Col span={12} key={index}>
+              <Col key={index}>
                 <DescriptionBox data={data} onSelect={handleSelect} />
               </Col>
             ))}
-          </Row>
+          </div>
         </Spin>
       </div>
       <DataImportModal />
@@ -109,14 +128,3 @@ const DataSet = () => {
 }
 
 export default DataSet
-
-const DatasetAddButton = styled.button`
-  width: 100%;
-  height: 50px;
-  margin: 20px 0;
-  border-radius: 10px;
-  font-size: 17px;
-  color: #fff !important;
-  background-color: #4338f7;
-  box-shadow: 0 2px 0 rgba(55, 5, 255, 0.06);
-`
