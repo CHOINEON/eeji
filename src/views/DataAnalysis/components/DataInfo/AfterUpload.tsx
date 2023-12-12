@@ -11,6 +11,7 @@ const AfterUpload = () => {
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
 
   useEffect(() => {
+    console.log('after upload:', uploadedData)
     //처음 로드할 때 안에 content 파싱해서 넣음
     if (uploadedData.file) {
       if (uploadedData.file.size <= 209715200) {

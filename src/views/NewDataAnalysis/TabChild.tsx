@@ -97,7 +97,7 @@ const TabChild = () => {
       }
       const controller = new AbortController()
       // setController(controller)
-      console.log('tab child / payload:', payload)
+      // console.log('tab child / payload:', payload)
       mutateRunning({ type: 'request', payload, controller })
     }
 
@@ -112,7 +112,7 @@ const TabChild = () => {
   }
 
   const handleGenerate = (param: any) => {
-    console.log('handleGenerate:', param)
+    // console.log('handleGenerate:', param)
     setLoading({ showing: param, text: '사용자 모델 생성 중...' })
   }
 

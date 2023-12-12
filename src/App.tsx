@@ -9,9 +9,25 @@ import NotFound from 'components/common/NotFound'
 import { Loading } from 'components/common/Loading'
 import NetworkError from 'components/common/NetworkError'
 
+function PrivateRoute({ component: Component, isAuthenticated, ...rest }: any) {
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        isAuthenticated ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+        )
+      }
+    />
+  )
+}
+
 export function App() {
   const { handleError } = useApiError()
   const queryClient = useQueryClient()
+  const isAuthenticated = localStorage.getItem('userId') ? true : false
 
   queryClient.setDefaultOptions({
     queries: {
@@ -33,7 +49,7 @@ export function App() {
       <BrowserRouter>
         <Switch>
           <Route path={`/auth`} component={AuthLayout} />
-          <Route path={`/admin`} component={AdminLayout} />
+          <PrivateRoute path={`/admin`} component={AdminLayout} isAuthenticated={isAuthenticated} />
           <Route path={`/login`} component={Login} />
           <Route path={`/404`} component={NotFound} />
           <Route path={`/500`} component={NetworkError} />

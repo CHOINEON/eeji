@@ -10,6 +10,11 @@ export const Title = styled.span`
 `
 
 export const SubTitle = styled(Title)`
-  font-size: 22px;
+  font-size: 20px;
+  width: 100%;
+`
+
+export const FileName = styled(Title)`
+  font-size: 17px;
   width: 100%;
 `
