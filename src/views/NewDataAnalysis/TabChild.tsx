@@ -29,7 +29,7 @@ const TabChild = () => {
 
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: (result: any) => {
-      // console.log('mutate result:', result)
+      console.log('mutate result:', result)
       setLoading({ showing: false, text: '' })
 
       setAnalysisResponse([

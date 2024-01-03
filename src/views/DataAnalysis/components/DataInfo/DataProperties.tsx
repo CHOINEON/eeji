@@ -1,4 +1,4 @@
-import { Col, Input, Row, Select, Typography, message, Spin } from 'antd'
+import { Col, Input, Row, Select, Typography, message, Spin, Radio, RadioChangeEvent } from 'antd'
 import React, { useEffect, useState } from 'react'
 import TextArea from 'antd/es/input/TextArea'
 import { dataPropertyState, uploadedDataState, userInfoState } from 'views/DataAnalysis/store/dataset/atom'
@@ -23,7 +23,7 @@ const DataProperties = () => {
   const { handleError } = useApiError()
   const { mutate } = useMutation(DatasetApi.uploadDataset, {
     onSuccess: (response: any) => {
-      console.log('-----uploadDataset success:', response)
+      console.log(' /api/upload/{user_id}', response)
       // setSummaryFetch('completed')
       fireToast('request success')
       saveDataSummary(response['1'])
@@ -31,7 +31,7 @@ const DataProperties = () => {
       setSummaryLoaded(true)
     },
     onError: (error: any) => {
-      console.log('DataProperties/ onError :', error)
+      // console.log('DataProperties/ onError :', error)
       handleError(error)
     },
   })
@@ -53,7 +53,7 @@ const DataProperties = () => {
 
   const clearInputs = () => {
     setOptions([{ value: '', label: '' }])
-    setInputOption({ name: '', date_col: '', target_y: '', desc: '' })
+    setInputOption({ algo_type: 1, date_format: '', name: '', date_col: '', target_y: '', desc: '' })
     setSummaryLoaded(false)
   }
 
@@ -66,9 +66,9 @@ const DataProperties = () => {
   }
 
   useEffect(() => {
-    console.log('   inputOption::', inputOption)
-    console.log('   uploadedData::', uploadedData)
-    console.log('   summaryLoaded::', summaryLoaded)
+    // console.log('   inputOption::', inputOption)
+    // console.log('   uploadedData::', uploadedData)
+    // console.log('   summaryLoaded::', summaryLoaded)
 
     if (uploadedData.file && !summaryLoaded && Object.keys(inputOption).length > 0) {
       getFileDescription()
@@ -112,14 +112,33 @@ const DataProperties = () => {
     })
   }
 
+  // useEffect(() => {
+  //   console.log('inputOption::', inputOption)
+  // }, [inputOption])
+
   const handleChange = (e: any) => {
     setInputOption({ ...inputOption, name: e.target.value })
+  }
+
+  const onChangeRadio = (e: RadioChangeEvent) => {
+    setInputOption({ ...inputOption, algo_type: e.target.value })
+  }
+
+  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputOption({ ...inputOption, date_format: e.target.value })
   }
 
   return (
     <Spin tip="업로드 파일 분석 중 ..." spinning={uploading} style={{ marginTop: '100px' }}>
       <DataPropertiesContainer>
         <Row gutter={[32, 4]}>
+          <Col span={24}>
+            <ColumnLabel required={true} label="Algorithm Type" />
+            <Radio.Group onChange={onChangeRadio} value={inputOption.algo_type}>
+              <Radio value={1}>Classification</Radio>
+              <Radio value={2}>Regression</Radio>
+            </Radio.Group>
+          </Col>
           <Col span={24}>
             <ColumnLabel required={true} label="Dataset Name" />
             <Input
@@ -131,7 +150,8 @@ const DataProperties = () => {
               allowClear
             />
           </Col>
-          <Col span={24}>
+
+          <Col span={24} style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }}>
             <ColumnLabel required={true} label="Timestamp" />
             <Select
               style={{
@@ -147,6 +167,11 @@ const DataProperties = () => {
               onSelect={handleSelectDateCol}
             />
           </Col>
+          <Col span={24} style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }}>
+            <ColumnLabel required={true} label="Timestamp Format" />
+            <Input defaultValue="yyyy-mm-dd HH:MM:SS" onChange={onChangeInput} />
+          </Col>
+
           <Col span={24}>
             <ColumnLabel required={true} label=" Target Variable" />
             <Select

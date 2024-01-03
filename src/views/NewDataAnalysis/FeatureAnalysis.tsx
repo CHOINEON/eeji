@@ -67,37 +67,17 @@ const FeatureAnalysis = ({ data, input }: any) => {
         })} */}
         <div className="block float-left w-100">
           <AIbutton>AI</AIbutton>
-          <div
-            style={{
-              // width: '84%',
-              display: 'block',
-              float: 'left',
-              // marginRight: '10px',
-              color: '#002D65',
-              fontSize: '12px',
-              marginBottom: '5px',
-            }}
-          >
+          <AITextContainer>
             현재 예측 모델에서 가장 영향력이 큰 변수는 <b>{chartData?.labels[0]}</b>
             입니다.
-          </div>
+          </AITextContainer>
         </div>
         <div className="block float-left w-100">
           <AIbutton>AI</AIbutton>
-          <div
-            style={{
-              width: '80%',
-              display: 'block',
-              float: 'left',
-              // marginRight: '10px',
-              color: '#002D65',
-              fontSize: '12px',
-              marginBottom: '5px',
-            }}
-          >
+          <AITextContainer>
             현재 {modelIdx === 0 ? '자동 추천으로 ' : ''}입력된 원인 변수 X는{' '}
             <b>{analysisResponse[modelIdx]?.input?.join(', ')}</b>입니다.
-          </div>
+          </AITextContainer>
         </div>
         <div className="block float-left w-100">
           <FeatureImportance data={chartData} />
@@ -146,4 +126,13 @@ const AIbutton = styled.button`
   font-weight: 500;
   margin-left: 20px;
   margin-right: 10px;
+`
+
+const AITextContainer = styled.div`
+  width: 80%;
+  display: block;
+  float: left;
+  color: #002d65;
+  fontsize: 12px;
+  marginbottom: 5px;
 `

@@ -24,7 +24,7 @@ export interface DescriptionBoxProps {
 }
 
 export interface IDescriptionBox {
-  data: DescriptionBoxProps
+  data: DescriptionBoxProps | Array<any>
   onSelect: any
   // onViewMore: any
 }
@@ -202,12 +202,12 @@ const Content = styled.div`
   height: 69px;
   text-align: center;
   line-height: 69px;
-  width: 100px;
+  width: 120px;
   text-align: center;
 `
 
 const ButtonContent = styled(Content)`
-  width: 15%;
+  width: 10%;
 `
 
 const DateContent = styled(Content)`

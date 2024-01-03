@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import DescriptionBox, { DescriptionBoxProps } from './components/DataInfo/DescriptionBox'
 import { Button, Col, Row, message, Spin } from 'antd'
-import UploadIcon from 'assets/img/ineeji/ico_upload_mini.svg'
-import ico_line from 'assets/img/ineeji/ico_line.png'
 import DataImportModal from './components/DataInfo/DataImportModal'
 import './style/styles.css'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
-import { importModalAtom } from './store/modal/atom'
-import styled from '@emotion/styled'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
 import { stepCountStore } from './store/global/atom'
 import { usedVariableStore, variableStore } from './store/variable/atom'
 import useGetDatasets from 'hooks/queries/useGetDatasets'
 import DataEditModal from './components/DataInfo/DataEditModal'
 import { analysisResponseAtom } from './store/response/atoms'
+import { Empty } from 'antd'
 
 const DataSet = () => {
   const [loading, setLoading] = useState(false)
@@ -23,10 +20,10 @@ const DataSet = () => {
   const setVariableList = useSetRecoilState(variableStore) //최초 변수 리스트 렌더링
   const resetAnalysisResponse = useResetRecoilState(analysisResponseAtom)
   const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
-  const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
 
   //모든 데이터셋 가져오기
   const { data } = useGetDatasets(localStorage.getItem('userId'))
+  const columnNames = ['Target', 'Total Size', 'Created', 'Updated', 'Created by']
 
   useEffect(() => {
     //데이터셋 페이지 나갔다 오면 초기화
@@ -36,14 +33,9 @@ const DataSet = () => {
   }, [])
 
   useEffect(() => {
-    console.log('data:', data)
     if (data) setLoading(false)
     else setLoading(true)
   }, [data])
-
-  const handleClick = () => {
-    setImportOpen(true)
-  }
 
   const handleSelect = (data: any) => {
     // console.log('Dataset selected ::', data)
@@ -92,25 +84,28 @@ const DataSet = () => {
   return (
     <>
       <div style={{ width: '100%', display: 'block', float: 'right', margin: '50px 0' }}>
-        <Row>
-          <Col flex="451px"></Col>
-          <Col style={{ textAlign: 'center' }} flex="100px">
-            Target
-          </Col>
-          <Col style={{ textAlign: 'center' }} flex="100px">
-            Total Size
-          </Col>
-          <Col style={{ textAlign: 'center' }} flex="200px">
-            Created
-          </Col>
-          <Col style={{ textAlign: 'center' }} flex="200px">
-            Updated
-          </Col>
-          <Col style={{ textAlign: 'center' }} flex="100px">
-            Created by
-          </Col>
-        </Row>
-
+        {data?.data.length > 0 ? (
+          <Row>
+            <Col flex="451px"></Col>
+            <Col style={{ textAlign: 'center' }} flex="100px">
+              Target
+            </Col>
+            <Col style={{ textAlign: 'center' }} flex="160px">
+              Total Size
+            </Col>
+            <Col style={{ textAlign: 'center' }} flex="170px">
+              Created
+            </Col>
+            <Col style={{ textAlign: 'center' }} flex="170px">
+              Updated
+            </Col>
+            <Col style={{ textAlign: 'center' }} flex="100px">
+              Created by
+            </Col>
+          </Row>
+        ) : (
+          !loading && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: '200px' }} />
+        )}
         <Spin tip="데이터셋 로드 중..." spinning={loading} style={{ marginTop: '100px' }}>
           <div>
             {data?.data.map((data: any, index: number) => (
@@ -121,6 +116,7 @@ const DataSet = () => {
           </div>
         </Spin>
       </div>
+
       <DataImportModal />
       <DataEditModal />
     </>
