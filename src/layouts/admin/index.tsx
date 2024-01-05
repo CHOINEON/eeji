@@ -1,13 +1,16 @@
 // Chakra imports
 import { Portal, Box, useDisclosure } from '@chakra-ui/react'
 import Footer from 'components/footer/FooterAdmin'
+import NavBar from 'components/navbar/NavBar'
+import AdminNavbar from 'components/navbar/NavbarAdmin'
 // Layout components
-import Navbar from 'components/navbar/NavbarAdmin'
+// import Navbar from 'components/navbar/NavbarAdmin'
 import Sidebar from 'components/sidebar/Sidebar'
 import { SidebarContext } from 'contexts/SidebarContext'
 import { useState } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import routes from 'routes'
+import Main from 'views/Main'
 
 // Custom Chakra theme
 export default function Dashboard(props: { [x: string]: any }) {
@@ -17,8 +20,9 @@ export default function Dashboard(props: { [x: string]: any }) {
   const [toggleSidebar, setToggleSidebar] = useState(false)
   // functions for changing the states from components
   const getRoute = () => {
-    return window.location.pathname !== '/admin/full-screen-maps'
+    return window.location.pathname !== '/admin/main'
   }
+
   const getActiveRoute = (routes: RoutesType[]): string => {
     const activeRoute = 'Default Brand Text'
     for (let i = 0; i < routes.length; i++) {
@@ -57,6 +61,7 @@ export default function Dashboard(props: { [x: string]: any }) {
   }
   document.documentElement.dir = 'ltr'
   const { onOpen } = useDisclosure()
+
   return (
     <Box>
       <SidebarContext.Provider
@@ -65,22 +70,27 @@ export default function Dashboard(props: { [x: string]: any }) {
           setToggleSidebar,
         }}
       >
-        <Sidebar routes={routes} display="none" {...rest} />
-        <Box
+        {/* <Sidebar routes={routes} display="none" {...rest} /> */}
+        <NavBar routes={routes} />
+
+        {/* <Box
+          // border="1px solid red"
           float="right"
           minHeight="100vh"
+          width="100%"
           height="100%"
           overflow="auto"
           position="relative"
-          maxHeight="100%"
-          w={{ base: '100%', xl: 'calc( 100% - 290px )' }}
-          maxWidth={{ base: '100%', xl: 'calc( 100% - 290px )' }}
+          // maxHeight="100%"
+          // w={{ base: '100%', xl: 'calc( 100% - 290px )' }}
+          // maxWidth={{ base: '100%', xl: 'calc( 100% - 290px )' }}
           transition="all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)"
           transitionDuration=".2s, .2s, .35s"
           transitionProperty="top, bottom, width"
           transitionTimingFunction="linear, linear, ease"
-        >
-          <Portal>
+          background={'linear-gradient( to left, #4338F7, #000000 )'}
+        > */}
+        {/* <Portal>
             <Box>
               <Navbar
                 onOpen={onOpen}
@@ -92,18 +102,29 @@ export default function Dashboard(props: { [x: string]: any }) {
                 {...rest}
               />
             </Box>
-          </Portal>
+          </Portal> */}
 
-          {getRoute() ? (
-            <Box mx="auto" p={{ base: '20px', md: '30px' }} pe="20px" minH="100vh" pt="50px">
-              <Switch>
-                {getRoutes(routes)}
-                <Redirect from="/" to="/admin/default" />
-              </Switch>
-            </Box>
-          ) : null}
-          <Box>{/* <Footer /> */}</Box>
-        </Box>
+        {getRoute() ? (
+          <Box mx="auto" p={{ base: '20px', md: '30px' }} pe="20px" minH="90vh" pt="50px">
+            <Switch>
+              {getRoutes(routes)}
+              <Redirect from="/" to="/admin/default" />
+            </Switch>
+          </Box>
+        ) : (
+          <Box
+            mx="auto"
+            p={{ base: '20px', md: '40px' }}
+            pe="20px"
+            minH="95vh"
+            maxH="100vh"
+            pt="50px"
+            background={'linear-gradient(to left, #4338f7, #000000)'}
+          >
+            <Main />
+            <Footer />
+          </Box>
+        )}
       </SidebarContext.Provider>
     </Box>
   )

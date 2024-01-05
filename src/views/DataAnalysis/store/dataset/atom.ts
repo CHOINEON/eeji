@@ -74,10 +74,10 @@ export const selectedDataState = atom({
 })
 
 interface IOption {
-  algo_type: number
+  algo_type?: number
   date_format: string
   name: string
-  date_col: string
+  date_col?: string
   target_y: string
   desc: string
 }

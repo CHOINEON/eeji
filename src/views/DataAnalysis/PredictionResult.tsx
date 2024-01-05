@@ -25,11 +25,10 @@ ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, zoomPlug
 const PredictionResult = ({ data }: any) => {
   const analysisResponse = useRecoilValue(analysisResponseAtom)
   const selectedData = useRecoilValue(selectedDataState)
-
   const [dataset, setDataset] = useState([])
 
   useEffect(() => {
-    // console.log('pred:', analysisResponse)
+    // console.log('analysisResponse:', analysisResponse)
 
     const arr: Array<any> = []
     analysisResponse.map((_d: any, i: number) => {
@@ -65,6 +64,10 @@ const PredictionResult = ({ data }: any) => {
       data: dataArr,
     }
   }
+
+  useEffect(() => {
+    console.log('dataset:', dataset)
+  }, [dataset])
 
   const chartData = {
     datasets: dataset,

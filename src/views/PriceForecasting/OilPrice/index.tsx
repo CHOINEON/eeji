@@ -6,7 +6,7 @@ import styled from '@emotion/styled'
 
 const PriceForecasting = () => {
   return (
-    <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
+    <Box pt={{ base: '130px', md: '40px', xl: '40px' }} style={{ position: 'relative', zIndex: 1000 }}>
       {/* <RoundBox> */}
       <OilPriceChart />
       {/* </RoundBox> */}

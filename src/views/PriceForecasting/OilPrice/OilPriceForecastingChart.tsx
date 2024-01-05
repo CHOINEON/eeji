@@ -2,6 +2,7 @@ import { Select, Card, Typography, Spin } from 'antd'
 import styled from 'styled-components'
 import React, { useEffect, useState } from 'react'
 import { Chart as ChartJS } from 'chart.js'
+import zoomPlugin from 'chartjs-plugin-zoom'
 import annotationPlugin, { AnnotationOptions, AnnotationPluginOptions } from 'chartjs-plugin-annotation'
 import { useMutation } from 'react-query'
 import fetchChartData from '../../../apis/PriceForecastApi'
@@ -13,7 +14,7 @@ import { Point } from 'chart.js/dist/core/core.controller'
 
 const { Text, Link } = Typography
 
-ChartJS.register(annotationPlugin)
+ChartJS.register(zoomPlugin, annotationPlugin)
 
 type DataType = {
   [key: string]: IDataTypes
@@ -35,9 +36,11 @@ const OilPriceChart = () => {
   const [loading, setLoading] = useState(false)
   const [selectedOption, setSelectedOption] = useState('')
   const [chartData, setChartData] = useState({ datasets: [] })
-  const [chartOptions, setChartOptions] = useState({})
-  const [lastDay, setLastDay] = useState('')
-  const options = [
+  const [dataSource, setDataSource] = useState({}) //DB에서 받아온 데이터
+  const [selectedData, setSelectedData] = useState<DataType>() //전체 지표 중 사용자가 선택한 데이터만 저장
+
+  //TODO. 서버에서 보내주는 데이터에 맞게 자동으로 select option 생성하도록 코드 수정해야 함
+  const selectOptions = [
     {
       label: 'energy',
       options: [
@@ -58,50 +61,9 @@ const OilPriceChart = () => {
     },
   ]
 
-  // const chartOptions: ChartOptions<any> = {
-  //   layout: {
-  //     padding: 20,
-  //     margin: 'auto',
-  //   },
-  //   responsive: true,
-  //   plugins: {
-  //     annotation: {
-  //       annotation,
-  //     },
-  //     // legend: {
-  //     //   position: 'right' as const,
-  //     // },
-  //   },
-  //   interaction: {
-  //     mode: 'index' as const,
-  //     intersect: false,
-  //   },
-  //   scales: {
-  //     x: {
-  //       display: true,
-  //       title: {
-  //         display: true,
-  //         text: 'x text',
-  //         padding: { top: 20, left: 0, right: 0, bottom: 0 },
-  //       },
-  //     },
-  //     y: {
-  //       display: true,
-  //       title: {
-  //         display: true,
-  //         text: 'y text',
-  //         padding: { top: 30, left: 0, right: 30, bottom: 0 },
-  //       },
-  //     },
-  //   },
-  // }
-
-  const [dataSource, setDataSource] = useState({}) //DB에서 받아온 데이터
-  const [selectedData, setSelectedData] = useState<DataType>() //전체 지표 중 사용자가 선택한 데이터만 저장
-
   const { mutate: mutateChartData } = useMutation(fetchChartData, {
     onSuccess: (result: any) => {
-      // console.log('mutate result:', result)
+      console.log('mutate result:', result)
       setLoading(false)
       setDataSource(result)
       // formatChartData(result)
@@ -136,7 +98,7 @@ const OilPriceChart = () => {
         index_hist: filtered[0][1]['index_hist'],
         predict: filtered[0][1]['predict'],
         index_pred: filtered[0][1]['index_pred'],
-        currency: filtered[0][1]['currency'],
+        currency: filtered[0][1]['currency'][0],
       }
       setSelectedData(newObj)
       // setChartData(formattingData(newObj))
@@ -144,9 +106,7 @@ const OilPriceChart = () => {
   }, [dataSource, selectedOption])
 
   useEffect(() => {
-    console.log('selectedOption:', selectedOption)
-    console.log('selectedData:', selectedData)
-
+    // console.log('selectedOption:', selectedOption)
     if (selectedData && selectedData) {
       function formattingData(data: any) {
         const dataObj: any = {}
@@ -191,7 +151,7 @@ const OilPriceChart = () => {
         return dataObj
       }
       const reformattedData = formattingData(selectedData)
-      console.log('reformattedData:', reformattedData)
+      // console.log('reformattedData:', reformattedData)
 
       const dataToRender = {
         datasets: [
@@ -222,8 +182,6 @@ const OilPriceChart = () => {
       }
 
       setChartData(dataToRender)
-      setChartOptions(GenerateChartOptions(reformattedData.lastDay))
-      // console.log('reformattedData::', reformattedData)
     }
   }, [selectedOption, selectedData])
 
@@ -231,63 +189,70 @@ const OilPriceChart = () => {
     setSelectedOption(item)
   }
 
-  function GenerateChartOptions(lastDay: string) {
-    const annotation: AnnotationOptions = {
-      type: 'line' as const,
-      borderDash: [2],
-      borderColor: 'black',
-      borderWidth: 2,
-      click: function ({ chart, element }: any) {
-        console.log('Line annotation clicked')
-      },
-      label: {
-        backgroundColor: 'black',
-        content: '',
-        display: true,
-      },
-      scaleID: 'x',
-      value: lastDay,
-    }
+  const lastDay = chartData.datasets.filter((x) => x.label === 'prediction')[0]?.data[0].x
 
-    const options: any = {
-      layout: {
-        padding: 20,
-        margin: 'auto',
-      },
-      responsive: true,
-      plugins: {
-        annotation: {
-          annotation,
-        },
-        // legend: {
-        //   position: 'right' as const,
-        // },
-      },
-      interaction: {
-        mode: 'index' as const,
-        intersect: false,
-      },
-      scales: {
-        x: {
-          display: true,
-          title: {
-            display: true,
-            // text: 'x text',
-            padding: { top: 20, left: 0, right: 0, bottom: 0 },
-          },
-        },
-        y: {
-          display: true,
-          title: {
-            display: true,
-            text: selectedData.currency,
-            padding: { top: 30, left: 0, right: 30, bottom: 0 },
-          },
-        },
-      },
-    }
-    return options
+  const annotation1: AnnotationOptions = {
+    type: 'line' as const,
+    borderDash: [2],
+    borderColor: 'black',
+    borderWidth: 2,
+    click: function ({ chart, element }: any) {
+      console.log('Line annotation clicked')
+    },
+    label: {
+      backgroundColor: 'black',
+      content: '',
+      display: true,
+    },
+    scaleID: 'x',
+    value: lastDay,
   }
+
+  const chartOptions: any = {
+    layout: {
+      padding: 20,
+      margin: 'auto',
+    },
+    responsive: true,
+    plugins: {
+      annotation: {
+        annotations: {
+          annotation1,
+        },
+      },
+      // legend: {
+      //   position: 'right' as const,
+      // },
+    },
+    interaction: {
+      mode: 'index' as const,
+      intersect: false,
+    },
+    scales: {
+      x: {
+        display: true,
+        title: {
+          display: true,
+          // text: 'x text',
+          padding: { top: 20, left: 0, right: 0, bottom: 0 },
+        },
+      },
+      y: {
+        display: true,
+        title: {
+          display: true,
+          text: selectedData?.currency || 'USD',
+          padding: { top: 30, left: 0, right: 30, bottom: 0 },
+        },
+      },
+    },
+  }
+
+  // function GenerateChartOptions(lastDay: string) {
+
+  //   setChartOptions(options)
+  //   // return options
+  // }
 
   return (
     <>
@@ -302,7 +267,7 @@ const OilPriceChart = () => {
                 style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
                 // defaultValue={options[0].options[0].value}
                 value={selectedOption}
-                options={options}
+                options={selectOptions}
                 onChange={handleSelect}
               />
             </div>

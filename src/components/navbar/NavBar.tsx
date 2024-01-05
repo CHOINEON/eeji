@@ -1,0 +1,183 @@
+import { Avatar, Box, Button, Flex, HStack, Link, Stack, Text, useColorModeValue } from '@chakra-ui/react'
+import styled from '@emotion/styled'
+import React, { useEffect } from 'react'
+import { useRecoilState } from 'recoil'
+import { stepCountStore } from 'views/DataAnalysis/store/global/atom'
+import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
+import Logo from './Logo'
+import logoutBtnImage from 'assets/img/icons/logout_off.svg'
+import settingOffImage from 'assets/img/icons/setting_off.svg'
+import settingOverImage from 'assets/img/icons/setting_over.svg'
+import logoutImage from 'assets/img/icons/lock.svg'
+import UploadIcon from 'assets/img/ineeji/ico_upload_mini.svg'
+import { useHistory } from 'react-router-dom'
+
+const NavBar = (props: { routes: RoutesType[] }) => {
+  const history = useHistory()
+  const { routes } = props
+
+  const [UserName, setUserName] = React.useState<any>(
+    JSON.parse(window.localStorage.getItem('userData'))[0]?.user_nm || 'TEST'
+  )
+  const userBg = useColorModeValue('#676a68', '#676a68')
+
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
+  const toggle = () => setIsOpen(!isOpen)
+  const [activeStep, setActiveStep] = useRecoilState(stepCountStore)
+
+  const handleClick = () => {
+    setImportOpen(true)
+  }
+
+  const handleLogout = () => {
+    history.replace('/login')
+  }
+
+  return (
+    <NavBarContainer {...props}>
+      <Logo w="100px" color={['primary.500', 'primary.500']} style={{ flexShrink: 0, width: '15%' }} />
+      {/* <MenuToggle toggle={toggle} isOpen={isOpen} /> */}
+      {/* <Box style={{ height: '66px', padding: '30px 0px 0px 20px' }}>
+        <DatasetAddButton
+          className="ant-btn ant-btn-primary"
+          style={{ display: activeStep === 0 && location.pathname == '/admin/data-analysis' ? 'block' : 'none' }}
+          onClick={handleClick}
+        >
+          <span style={{ marginLeft: '30px', letterSpacing: '0.5px', fontSize: '14px', fontWeight: 500 }}>Upload</span>
+          <img style={{ top: '-22px', left: '14px', position: 'relative' }} src={UploadIcon} />
+        </DatasetAddButton>
+      </Box> */}
+      <MenuLinks isOpen={isOpen} style={{ flexGrow: 1 }} />
+      <div>
+        {createLinks(routes)}
+        <HStack spacing="13">
+          <Button
+            backgroundImage={logoutBtnImage}
+            backgroundSize="contain"
+            size="sm"
+            rounded="md"
+            bg={'rgba(92, 87, 177, 0.6)'}
+            _hover={{
+              bg: ['primary.100', 'primary.100', 'primary.600', 'primary.600'],
+            }}
+            width="82px"
+            height="31px"
+            onClick={handleLogout}
+          ></Button>
+          <Button
+            backgroundImage={settingOffImage}
+            backgroundSize="contain"
+            size="sm"
+            rounded="md"
+            bg={'rgba(92, 87, 177, 0.6)'}
+            _hover={{
+              bg: ['primary.100', 'primary.100', 'primary.600', 'primary.600'],
+              // backgroundImage: { settingOverImage },
+            }}
+            width="32px"
+            height="32px"
+          ></Button>
+          <Avatar
+            _hover={{ cursor: 'pointer' }}
+            color="white"
+            name={UserName}
+            bg={userBg}
+            size="sm"
+            w="40px"
+            h="40px"
+          />
+        </HStack>
+      </div>
+    </NavBarContainer>
+  )
+}
+
+const createLinks = (routes: RoutesType[]) => {
+  return routes.map((route: RoutesType, index: number) => {
+    if (window.localStorage.getItem('userPosition') === 'admin') {
+      return (
+        <MenuItem to={route.layout + route.path} index={index}>
+          {route.name}
+        </MenuItem>
+      )
+    }
+  })
+}
+
+//verifies if routeName is the one active(in browser input)
+const activeRoute = (routeName: string) => {
+  return location.pathname.includes(routeName)
+}
+
+const MenuItem = ({ children, isLast, to, ...rest }: any) => {
+  return (
+    <Link href={to}>
+      <Text
+        display="block"
+        {...rest}
+        opacity={activeRoute(to.toLowerCase()) ? 1 : 0.5}
+        fontWeight={activeRoute(to.toLowerCase()) ? 'bold' : 'normal'}
+        letterSpacing="0.5px"
+        fontSize={17}
+        // color={activeRoute(to.toLowerCase()) ? activeColor : inactiveColor}
+      >
+        {children}
+      </Text>
+    </Link>
+  )
+}
+
+const MenuLinks = ({ isOpen }: any) => {
+  return (
+    <Box display={{ base: isOpen ? 'block' : 'none', md: 'block' }} flexBasis={{ base: '100%', md: 'auto' }}>
+      <Stack
+        spacing={8}
+        align="center"
+        justify={['center', 'space-between', 'flex-end', 'flex-end']}
+        direction={['column', 'row', 'row', 'row']}
+        pt={[4, 4, 0, 0]}
+      >
+        <MenuItem to="/admin/data-analysis">Data Analysis</MenuItem>
+        <MenuItem to="#">XAI</MenuItem>
+        <MenuItem to="/admin/price-forecast">Commodity Index Forecasting</MenuItem>
+        <MenuItem to="#">REST API </MenuItem>
+      </Stack>
+    </Box>
+  )
+}
+
+const NavBarContainer = ({ children, ...props }: any) => {
+  return (
+    <Flex
+      as="nav"
+      align="center"
+      justify="space-between"
+      wrap="nowrap"
+      w="100%"
+      h="5vh"
+      // mb={8}
+      p={8}
+      bg={'#242185'}
+      color={['white', 'white', 'primary.700', 'primary.700']}
+      background={'linear-gradient( to left, #4338F7, #000000 )'}
+      {...props}
+    >
+      {children}
+    </Flex>
+  )
+}
+export default NavBar
+
+const DatasetAddButton = styled.button`
+  width: 140px;
+  height: 35px;
+  padding: 5px 3px 5px 0;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff !important;
+  background-color: #4338f7;
+  box-shadow: 0 2px 0 rgba(55, 5, 255, 0.06);
+  margin-bottom: 20px;
+`

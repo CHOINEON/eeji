@@ -1,9 +1,6 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import googleSigninBtn from 'assets/img/components/Google_G_logo.svg'
-import googleBtn from 'assets/img/components/web_light_sq_SI@2x.png'
-import { url } from 'inspector'
-import { Button } from 'antd'
 import styled from '@emotion/styled'
 
 const GoogleSignin = () => {
@@ -24,7 +21,7 @@ const GoogleSignin = () => {
   return (
     <GoogleLoginBtn onClick={handleGoogleLogin}>
       <GoogleIcon />
-      <span> Sign in with Google</span>
+      <LoginButtonText> Sign in with Google</LoginButtonText>
     </GoogleLoginBtn>
   )
 }
@@ -41,9 +38,18 @@ const GoogleLoginBtn = styled.button`
 `
 
 const GoogleIcon = styled.image`
-  // display: block;
-  // float: left;
-  // width: 34px;
-  // background-size: cover;
+  display: block;
+  float: left;
+  width: 30px;
+  height: 30px;
+  margin: 4px;
   background-image: url(${googleSigninBtn});
+  background-size: 30px 30px;
+`
+
+const LoginButtonText = styled.span`
+  color: #002d65;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 37px;
 `

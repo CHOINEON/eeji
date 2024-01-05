@@ -88,6 +88,7 @@ const DataProperties = () => {
 
       formData.append('com_id', userInfo.com_id)
       formData.append('date_col', inputOption.date_col)
+      formData.append('if_classification', inputOption.algo_type.toString())
       formData.append('target_y', inputOption.target_y)
       formData.append('files', uploadedData.file)
 
@@ -151,7 +152,7 @@ const DataProperties = () => {
             />
           </Col>
 
-          <Col span={24} style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }}>
+          <Col span={24} /*style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }} */>
             <ColumnLabel required={true} label="Timestamp" />
             <Select
               style={{
@@ -167,10 +168,11 @@ const DataProperties = () => {
               onSelect={handleSelectDateCol}
             />
           </Col>
-          <Col span={24} style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }}>
+
+          {/* <Col span={24} style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }}>
             <ColumnLabel required={true} label="Timestamp Format" />
             <Input defaultValue="yyyy-mm-dd HH:MM:SS" onChange={onChangeInput} />
-          </Col>
+          </Col> */}
 
           <Col span={24}>
             <ColumnLabel required={true} label=" Target Variable" />

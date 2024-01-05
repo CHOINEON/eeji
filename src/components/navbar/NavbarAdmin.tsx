@@ -3,7 +3,6 @@
 import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Flex, Link, Text, useColorModeValue } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import AdminNavbarLinks from 'components/navbar/NavbarLinksAdmin'
-import UploadIcon from 'assets/img/ineeji/ico_upload_mini.svg'
 import styled from '@emotion/styled'
 import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import { useRecoilState } from 'recoil'
@@ -19,7 +18,7 @@ export default function AdminNavbar(props: {
   onOpen: (...args: any[]) => any
 }) {
   const [scrolled, setScrolled] = useState(false)
-  const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
+
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore)
   let location = useLocation()
 
@@ -52,12 +51,6 @@ export default function AdminNavbar(props: {
     } else {
       setScrolled(false)
     }
-  }
-
-  //버튼 컴포넌트
-
-  const handleClick = () => {
-    setImportOpen(true)
   }
 
   return (
@@ -148,18 +141,7 @@ export default function AdminNavbar(props: {
             {brandText}
           </Link>
         </Box>
-        <Box style={{ height: '66px', padding: '30px 0px 0px 20px' }}>
-          <DatasetAddButton
-            className="ant-btn ant-btn-primary"
-            style={{ display: activeStep === 0 && location.pathname == '/admin/data-analysis' ? 'block' : 'none' }}
-            onClick={handleClick}
-          >
-            <span style={{ marginLeft: '30px', letterSpacing: '0.5px', fontSize: '14px', fontWeight: 500 }}>
-              Upload
-            </span>
-            <img style={{ top: '-22px', left: '14px', position: 'relative' }} src={UploadIcon} />
-          </DatasetAddButton>
-        </Box>
+
         <Box ms="auto" w={{ sm: '100%', md: 'unset' }}>
           <AdminNavbarLinks onOpen={props.onOpen} secondary={props.secondary} fixed={props.fixed} />
         </Box>
@@ -167,16 +149,3 @@ export default function AdminNavbar(props: {
     </Box>
   )
 }
-
-const DatasetAddButton = styled.button`
-  width: 140px;
-  height: 35px;
-  padding: 5px 3px 5px 0;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #fff !important;
-  background-color: #4338f7;
-  box-shadow: 0 2px 0 rgba(55, 5, 255, 0.06);
-  margin-bottom: 20px;
-`
