@@ -7,6 +7,9 @@ import UploadIcon from 'assets/img/ineeji/ico_upload_mini.svg'
 import styled from '@emotion/styled'
 import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import { useRecoilState } from 'recoil'
+import { stepCountStore } from 'views/DataAnalysis/store/global/atom'
+import { useLocation } from 'react-router-dom'
+
 export default function AdminNavbar(props: {
   secondary: boolean
   message: string | boolean
@@ -17,6 +20,8 @@ export default function AdminNavbar(props: {
 }) {
   const [scrolled, setScrolled] = useState(false)
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
+  const [activeStep, setActiveStep] = useRecoilState(stepCountStore)
+  let location = useLocation()
 
   useEffect(() => {
     window.addEventListener('scroll', changeNavbar)
@@ -144,7 +149,11 @@ export default function AdminNavbar(props: {
           </Link>
         </Box>
         <Box style={{ height: '66px', padding: '30px 0px 0px 20px' }}>
-          <DatasetAddButton className="ant-btn ant-btn-primary" onClick={handleClick}>
+          <DatasetAddButton
+            className="ant-btn ant-btn-primary"
+            style={{ display: activeStep === 0 && location.pathname == '/admin/data-analysis' ? 'block' : 'none' }}
+            onClick={handleClick}
+          >
             <span style={{ marginLeft: '30px', letterSpacing: '0.5px', fontSize: '14px', fontWeight: 500 }}>
               Upload
             </span>

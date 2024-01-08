@@ -4,7 +4,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 // chakra imports
 import { Box, Flex, HStack, Text, useColorModeValue, Icon } from '@chakra-ui/react'
 import { RxTriangleDown, RxTriangleUp } from 'react-icons/rx'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 export function SidebarLinks(props: { routes: RoutesType[] }) {
   const [toggleIcon, setToggleIcon] = React.useState('0')

@@ -6,16 +6,20 @@ import thumbnailImg from 'assets/img/dataAnalysis/thumbnail_circle.svg'
 import { useRecoilState } from 'recoil'
 import { uploadedDataState } from 'views/DataAnalysis/store/dataset/atom'
 import { message, Spin } from 'antd'
+import languageEncoding from 'detect-file-encoding-and-language'
+import jschardet from 'jschardet'
 
 const AfterUpload = () => {
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
+  const [encoding, setEncoding] = useState('UTF-8')
 
   useEffect(() => {
-    console.log('after upload:', uploadedData)
+    // console.log('after upload:', uploadedData)
     //처음 로드할 때 안에 content 파싱해서 넣음
     if (uploadedData.file) {
       if (uploadedData.file.size <= 209715200) {
         setUploadedData({ ...uploadedData, file: uploadedData.file, name: uploadedData.file.name, content: [] })
+        onDetectEncoding(uploadedData.file)
         readFile(uploadedData.file)
       } else {
         message.open({
@@ -30,20 +34,48 @@ const AfterUpload = () => {
     }
   }, [])
 
+  async function getEncoding(file: any) {
+    const fileInfo = await languageEncoding(file)
+    console.log('fileinfo', fileInfo)
+    setEncoding(fileInfo.encoding)
+    return fileInfo.encoding
+  }
+
+  const onDetectEncoding = (file: any) => {
+    const fileReader = new FileReader()
+
+    if (file.name) {
+      fileReader.onload = (e: any) => {
+        const csvResult = e.target.result.split('/\r|\n|\r\n/')[0]
+        // console.log('csvResult', csvResult)
+        // console.log('result:', jschardet.detect(csvResult))
+      }
+    }
+    fileReader.readAsBinaryString(file)
+  }
+
   const readFile = (file: any) => {
     const fileReader = new FileReader()
-    const fileFormat = file.name.split('.', 2)[1]
+    const fileFormat = file.name.split('.').pop()
     const acceptedFormats = ['csv', 'xls', 'xlsx']
 
     if (file.name) {
+      // const encodingOption = async () => {
+      //   const encoding = await getEncoding()
+      //   console.log('encoding:', encoding)
+      // }
       if (acceptedFormats.includes(fileFormat)) {
         fileReader.onload = function (event: any) {
           const text = event.target.result
 
-          const content = csvFileToArray(file.name, file.size, text)
-          console.log('content:', content)
+          csvFileToArray(file.name, file.size, text)
+          // console.log('content:', content)
           // setUploadedData({ ...uploadedData, content: content })
         }
+        // const encoding = getEncoding(file)
+        // console.log('encoding:', encoding)
+
+        // console.log('encoding:', fileInfo ? fileInfo : 'utf8')
         fileReader.readAsText(file)
       } else {
         message.open({
@@ -59,6 +91,8 @@ const AfterUpload = () => {
   }
 
   const csvFileToArray = (name: string, size: number, string: string) => {
+    // const decoder = new TextDecoder('utf-8')
+
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',')
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n')
 

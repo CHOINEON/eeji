@@ -17,7 +17,7 @@ import login_icon from './img/login_icon.png'
 import date from './img/date.png'
 import axios from 'axios'
 import { FormControl, FormLabel, Button, Input } from '@chakra-ui/react'
-import { Select } from 'antd'
+import { message, Select } from 'antd'
 import './style/style.css'
 import { Alert } from 'views/hmid/components/Modal/Alert'
 
@@ -26,8 +26,248 @@ import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
 
 import SidebarBrand from 'components/sidebar/components/Brand'
 import { userInfoState } from 'views/DataAnalysis/store/dataset/atom'
+import GoogleSignin from './components/GoogleSigninBtn'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
+
+export const Login: React.FC = () => {
+  const [messageApi, contextHolder] = message.useMessage()
+  const [id, setId] = React.useState()
+  const [password, setPassword] = React.useState()
+  const [company, setCompany] = React.useState<any>('')
+  const [companyList, setCompanyList] = React.useState<any>()
+  const setShowAlertModal = useSetRecoilState(AlertRecoil.AlertModalState)
+  const setAlarmMessage = useSetRecoilState(AlertRecoil.AlertMessageState)
+
+  React.useEffect(() => {
+    RenderCompanyList()
+
+    //로그인 후 redirect된 URL에서 구글 인가코드 추출하여 백엔드로 전달하여 token발급받음
+    const params = new URLSearchParams(window.location.search)
+    const code = params.get('code')
+
+    // console.log('CODE:', code)
+    if (code) {
+      axios
+        .post(process.env.REACT_APP_NEW_API_SERVER_URL + '/login/google', { code })
+        .then((response) => {
+          // console.log('response: ', response)
+          if (response.data.user_info) {
+            //로그인 상태 확인되면 localStorage에 user정보 저장 ->  datasetList 페이지로 redirect
+            localStorage.setItem('userId', response.data.user_info.email)
+            localStorage.setItem('userData', JSON.stringify(response.data.user_info))
+
+            localStorage.setItem('userPicture', response.data.user_info.picture)
+
+            // setIsAuthenticated(true)
+            window.location.href = '/admin/data-analysis'
+          }
+        })
+        .catch((error) => {
+          console.log('error: ' + error)
+        })
+    }
+  }, [])
+
+  const setLogin = (id: string, password: string) => {
+    // console.log(company)
+    if (company.length === 0 || company === undefined) {
+      messageApi.open({
+        type: 'error',
+        content: '회사를 선택해주세요',
+      })
+      //setAlarmMessage('회사를 선택 해주세요.')
+      //setShowAlertModal(true)
+    } else {
+      axios
+        .get(
+          process.env.REACT_APP_NEW_API_SERVER_URL +
+            '/api/user/info?com_id=' +
+            company +
+            '&user_id=' +
+            id +
+            '&user_pass=' +
+            password,
+          {
+            headers: {
+              Accept: '*/*',
+              'Content-Type': 'application/x-www-form-urlencoded;',
+            },
+            timeout: 5000,
+          }
+        )
+        .then((response) => {
+          // getCompanyInfo(company)
+          window.localStorage.setItem('userData', JSON.stringify(response.data))
+          window.localStorage.setItem('companyId', company)
+          window.localStorage.setItem('userId', response.data[0].user_id)
+          window.localStorage.setItem('userPosition', response.data[0].user_position)
+          window.location.href = '/admin/data-analysis'
+        })
+        .catch((error) => {
+          console.log(error)
+          messageApi.open({
+            type: 'error',
+            content: error.response?.data.detail,
+          })
+          // error('아이디 또는 비밀번호가 틀립니다.')
+        })
+    }
+  }
+
+  const ChangeId = (e: any) => {
+    setId(e.target.value)
+  }
+
+  const ChangePassword = (e: any) => {
+    setPassword(e.target.value)
+  }
+
+  const onEnterLogin = (e: any) => {
+    if (e.keyCode === 13) {
+      setLogin(id, password)
+    }
+  }
+
+  const onEnterId = (e: any) => {
+    //Need validation of id/pw value
+    if (e.keyCode === 13) {
+      setAlarmMessage('패스워드를 입력해주세요.')
+      setShowAlertModal(true)
+    }
+  }
+
+  // 회사 리스트
+  function RenderCompanyList() {
+    const Arr: any = []
+    let Obj: any = new Object()
+
+    axios
+      .get(process.env.REACT_APP_NEW_API_SERVER_URL + '/api/company', {
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/x-www-form-urlencoded;',
+        },
+        timeout: 5000,
+      })
+      .then((response) => {
+        // console.log('/api/company resp:', response.data)
+
+        for (let i = 0, len = response.data.length; i < len; i++) {
+          Obj.value = response.data[i].com_id
+          Obj.label = response.data[i].com_nm
+          Arr.push(Obj)
+          Obj = new Object()
+        }
+
+        // console.log('company List::',Arr)
+        setCompanyList(Arr)
+      })
+      .catch((error) => {
+        console.log(error.response)
+      })
+  }
+
+  //selectbox 변경 이벤트
+  const handleChange = (value: string | string[]) => {
+    // console.log(`Compnay Selected: ${value}`)
+    setCompany(value)
+  }
+
+  // //회사 정보를 불러오는 함수
+  // const getCompanyInfo = (companyId: string) => {
+  //   // console.log(companyId)
+  //   axios
+  //     .get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/company/info?company_id=' + companyId, {
+  //       headers: {
+  //         Accept: '*/*',
+  //         'Content-Type': 'application/x-www-form-urlencoded;',
+  //       },
+  //       timeout: 5000,
+  //     })
+  //     .then((response) => {
+  //       console.log('[ get Company Info axios response data ] : ')
+  //       console.log(response.data)
+
+  //       window.localStorage.setItem('company_info', JSON.stringify(response.data[0]))
+  //       window.location.href = '/admin/data-analysis'
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.response)
+  //     })
+  // }
+
+  return (
+    <>
+      {contextHolder}
+      <Wrapper />
+      <Home_Bg />
+      {/* <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
+        <Logo />
+      </div> */}
+      <SidebarBrand />
+      <Title />
+      <BottomBox>
+        <Circle />
+        <BottomTitleParent>
+          <TopBox>
+            <div></div>
+            <Date />
+          </TopBox>
+          <BottomTitle />
+          <BottomCotents>
+            is Prediction solution for ENERGY SAVING based on time series data that enables companies to realize
+            productivity improvement, production energy cost reduction and quality improvement through process
+            optimization of industrial processes.
+          </BottomCotents>
+        </BottomTitleParent>
+      </BottomBox>
+      <FormWrap>
+        <LoginTitle>LOGIN</LoginTitle>
+        <LoginSubTitle>Enter Your ID and password to sign in.</LoginSubTitle>
+        <LoginIcon />
+
+        <FormControl id="text">
+          <Select
+            size={'large'}
+            placeholder={'Select Company'}
+            onChange={handleChange}
+            style={{ width: '100%', marginBottom: '1vw', border: 0 }}
+            options={companyList}
+          />
+          <Input
+            color={'black'}
+            type="text"
+            placeholder={'ID'}
+            onChange={(e: any) => ChangeId(e)}
+            // onKeyDown={(e: any) => onEnterId(e)}
+            style={{ width: '100%', marginBottom: '1vw', backgroundColor: '#f4f7fe', border: 0 }}
+          />
+          <Input
+            color={'black'}
+            type="password"
+            placeholder={'Password'}
+            onChange={(e: any) => ChangePassword(e)}
+            onKeyDown={(e: unknown) => onEnterLogin(e)}
+            style={{ width: '100%', marginBottom: '1.5vw', backgroundColor: '#f4f7fe', border: 0 }}
+          />
+        </FormControl>
+        <Button
+          mt={4}
+          type="submit"
+          onClick={() => setLogin(id, password)}
+          style={{ backgroundColor: '#4338f7', color: '#fff', width: '100%', borderRadius: '7px' }}
+        >
+          Login
+        </Button>
+        <GoogleSignin />
+      </FormWrap>
+      <Alert />
+    </>
+  )
+}
+
+export default Login
 
 const Wrapper = styled.div`
   position: fixed;
@@ -57,7 +297,7 @@ const Home_Bg = styled(BgStyle)`
 
 const FormWrap = styled.div`
   width: 20vw;
-  height: 60vh;
+  height: 65vh;
   padding: 2vw;
   position: fixed;
   right: 10%;
@@ -176,206 +416,3 @@ const LoginIcon = styled.div`
   margin: 0 auto;
   margin-bottom: 0.5vw;
 `
-
-export const Login: React.FC = () => {
-  const [id, setId] = React.useState()
-  const [password, setPassword] = React.useState()
-  const [company, setCompany] = React.useState<any>('')
-  const [companyList, setCompanyList] = React.useState<any>()
-  const setShowAlertModal = useSetRecoilState(AlertRecoil.AlertModalState)
-  const setAlarmMessage = useSetRecoilState(AlertRecoil.AlertMessageState)
-
-  React.useEffect(() => {
-    RenderCompanyList()
-  }, [])
-
-  const setLogin = (id: string, password: string) => {
-    console.log(company)
-    if (company.length === 0 || company === undefined) {
-      //setAlarmMessage('회사를 선택 해주세요.')
-      //setShowAlertModal(true)
-    } else {
-      axios
-        .get(
-          process.env.REACT_APP_API_SERVER_URL +
-            '/api/user/info?com_id=' +
-            company +
-            '&user_id=' +
-            id +
-            '&user_pass=' +
-            password,
-          {
-            headers: {
-              Accept: '*/*',
-              'Content-Type': 'application/x-www-form-urlencoded;',
-            },
-            timeout: 5000,
-          }
-        )
-        .then((response) => {
-          getCompanyInfo(company)
-          window.localStorage.setItem('userData', JSON.stringify(response.data))
-          window.localStorage.setItem('companyId', company)
-          window.localStorage.setItem('userId', response.data[0].user_id)
-          window.localStorage.setItem('userPosition', response.data[0].user_position)
-        })
-        .catch((error) => {
-          // console.log(error.response)
-          alert(error.response.data.message)
-          // error('아이디 또는 비밀번호가 틀립니다.')
-        })
-    }
-  }
-
-  const ChangeId = (e: any) => {
-    setId(e.target.value)
-  }
-
-  const ChangePassword = (e: any) => {
-    setPassword(e.target.value)
-  }
-
-  const onEnterLogin = (e: any) => {
-    console.log(e.keyCode)
-    if (e.keyCode === 13) {
-      setLogin(id, password)
-    }
-  }
-
-  const onEnterId = (e: any) => {
-    if (e.keyCode === 13) {
-      setAlarmMessage('패스워드를 입력해주세요.')
-      setShowAlertModal(true)
-    }
-  }
-
-  // 회사 리스트
-  function RenderCompanyList() {
-    const Arr: any = []
-    let Obj: any = new Object()
-
-    axios
-      .get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/company', {
-        headers: {
-          Accept: '*/*',
-          'Content-Type': 'application/x-www-form-urlencoded;',
-        },
-        timeout: 5000,
-      })
-      .then((response) => {
-        console.log('[ axios response data ] : ')
-        console.log(response.data)
-
-        for (let i = 0, len = response.data.length; i < len; i++) {
-          Obj.value = response.data[i].com_id
-          Obj.label = response.data[i].com_nm
-          Arr.push(Obj)
-          Obj = new Object()
-        }
-
-        console.log(Arr)
-        setCompanyList(Arr)
-      })
-      .catch((error) => {
-        console.log(error.response)
-      })
-  }
-
-  //selectbox 변경 이벤트
-  const handleChange = (value: string | string[]) => {
-    // console.log(`Compnay Selected: ${value}`)
-    setCompany(value)
-  }
-
-  //회사 정보를 불러오는 함수
-  const getCompanyInfo = (companyId: string) => {
-    // console.log(companyId)
-    axios
-      .get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/company/info?company_id=' + companyId, {
-        headers: {
-          Accept: '*/*',
-          'Content-Type': 'application/x-www-form-urlencoded;',
-        },
-        timeout: 5000,
-      })
-      .then((response) => {
-        console.log('[ get Company Info axios response data ] : ')
-        console.log(response.data)
-
-        window.localStorage.setItem('company_info', JSON.stringify(response.data[0]))
-
-        window.location.href = '/admin/data-analysis'
-      })
-      .catch((error) => {
-        console.log(error.response)
-      })
-  }
-
-  return (
-    <>
-      <Wrapper />
-      <Home_Bg />
-      {/* <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
-        <Logo />
-      </div> */}
-      <SidebarBrand />
-      <Title />
-      <BottomBox>
-        <Circle />
-        <BottomTitleParent>
-          <TopBox>
-            <div></div>
-            <Date />
-          </TopBox>
-          <BottomTitle />
-          <BottomCotents>
-            is Prediction solution for ENERGY SAVING based on time series data that enables companies to realize
-            productivity improvement, production energy cost reduction and quality improvement through process
-            optimization of industrial processes.
-          </BottomCotents>
-        </BottomTitleParent>
-      </BottomBox>
-      <FormWrap>
-        <LoginTitle>LOGIN</LoginTitle>
-        <LoginSubTitle>Enter Your ID and password to sign in.</LoginSubTitle>
-        <LoginIcon />
-        <FormControl id="text">
-          <Select
-            size={'large'}
-            placeholder={'Select Company'}
-            onChange={handleChange}
-            style={{ width: '100%', marginBottom: '1vw', border: 0 }}
-            options={companyList}
-          />
-          <Input
-            color={'black'}
-            type="text"
-            placeholder={'ID'}
-            onChange={(e: any) => ChangeId(e)}
-            onKeyDown={(e: any) => onEnterId(e)}
-            style={{ width: '100%', marginBottom: '1vw', backgroundColor: '#f4f7fe', border: 0 }}
-          />
-          <Input
-            color={'black'}
-            type="password"
-            placeholder={'Password'}
-            onChange={(e: any) => ChangePassword(e)}
-            onKeyDown={(e: unknown) => onEnterLogin(e)}
-            style={{ width: '100%', marginBottom: '1.5vw', backgroundColor: '#f4f7fe', border: 0 }}
-          />
-        </FormControl>
-        <Button
-          mt={4}
-          type="submit"
-          onClick={() => setLogin(id, password)}
-          style={{ backgroundColor: '#4338f7', color: '#fff', width: '100%', borderRadius: '7px' }}
-        >
-          Login
-        </Button>
-      </FormWrap>
-      <Alert />
-    </>
-  )
-}
-
-export default Login

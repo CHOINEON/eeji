@@ -53,7 +53,7 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
   // }, [isModalOpen])
 
   useEffect(() => {
-    console.log('selectedData:', selectedData)
+    // console.log('selectedData:', selectedData)
 
     if (selectedData.non_numeric_cols && selectedData?.numeric_cols) {
       const numeric_cols = JSON.parse(selectedData.numeric_cols)

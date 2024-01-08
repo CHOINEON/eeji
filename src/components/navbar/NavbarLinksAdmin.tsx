@@ -34,6 +34,7 @@ import ico_us from './img/ico_us.png'
 import BarBg from './img/side_bar_bg.png'
 
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
 
 const LangParentBox = styled.div`
   display: flex;
@@ -65,6 +66,7 @@ const LangUS = styled(LangBox)`
 `
 
 export default function HeaderLinks(props: { secondary: boolean }) {
+  const history = useHistory()
   const { secondary } = props
   const { colorMode, toggleColorMode } = useColorMode()
   // Chakra Color Mode
@@ -84,22 +86,24 @@ export default function HeaderLinks(props: { secondary: boolean }) {
   )
   const navbarIconBlue = useColorModeValue('brand.500', 'white')
 
-  const [UserName, setUserName] = React.useState<any>(JSON.parse(window.localStorage.getItem('userData'))[0].user_nm)
+  const [UserName, setUserName] = React.useState<any>(
+    JSON.parse(window.localStorage.getItem('userData'))[0]?.user_nm || 'TEST'
+  )
   const [UserCompany, setUserCompnay] = React.useState<any>(
-    JSON.parse(window.localStorage.getItem('company_info')).com_nm
+    JSON.parse(window.localStorage.getItem('company_info'))?.com_nm || 'TEST'
   )
   const [UserCompanyEmail, setCompanyEmail] = React.useState<any>(
-    JSON.parse(window.localStorage.getItem('company_info')).com_email
+    JSON.parse(window.localStorage.getItem('company_info'))?.com_email || 'TEST'
   )
   const [UserCompanyTel, setCompnayTel] = React.useState<any>(
-    JSON.parse(window.localStorage.getItem('company_info')).com_tel
+    JSON.parse(window.localStorage.getItem('company_info'))?.com_tel || 'TEST'
   )
 
   React.useEffect(() => {
-    setUserName(JSON.parse(window.localStorage.getItem('userData'))[0].user_nm)
-    setUserCompnay(JSON.parse(window.localStorage.getItem('company_info')).com_nm)
-    setCompanyEmail(JSON.parse(window.localStorage.getItem('company_info')).com_email)
-    setCompnayTel(JSON.parse(window.localStorage.getItem('company_info')).com_tel)
+    setUserName(JSON.parse(window.localStorage.getItem('userData'))[0]?.user_nm)
+    setUserCompnay(JSON.parse(window.localStorage.getItem('company_info'))?.com_nm)
+    setCompanyEmail(JSON.parse(window.localStorage.getItem('company_info'))?.com_email)
+    setCompnayTel(JSON.parse(window.localStorage.getItem('company_info'))?.com_tel)
   }, [window.localStorage])
 
   const { t, i18n } = useTranslation('main')
@@ -112,7 +116,12 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     }
   }
 
+  const handleLogout = () => {
+    history.replace('/login')
+  }
+
   const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200')
+
   return (
     <Flex
       w={{ sm: '100%', md: 'auto' }}
@@ -341,12 +350,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
               <Text fontSize="sm">Newsletter Settings</Text>
             </MenuItem> */}
             <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} color="red.400" borderRadius="8px" px="14px">
-              <Text
-                fontSize="sm"
-                onClick={() => {
-                  window.location.href = '/login'
-                }}
-              >
+              <Text fontSize="sm" onClick={handleLogout}>
                 Log out
               </Text>
             </MenuItem>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useApiError } from './hooks/useApiError'
 import { useQueryClient } from 'react-query'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
@@ -6,7 +6,6 @@ import AuthLayout from './layouts/auth'
 import AdminLayout from './layouts/admin'
 import Login from './layouts/login/login'
 import NotFound from 'components/common/NotFound'
-import { Loading } from 'components/common/Loading'
 import NetworkError from 'components/common/NetworkError'
 
 function PrivateRoute({ component: Component, isAuthenticated, ...rest }: any) {
@@ -28,6 +27,7 @@ export function App() {
   const { handleError } = useApiError()
   const queryClient = useQueryClient()
   const isAuthenticated = localStorage.getItem('userId') ? true : false
+  // const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('userId') ? true : false)
 
   queryClient.setDefaultOptions({
     queries: {
