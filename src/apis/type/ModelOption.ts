@@ -18,7 +18,7 @@ export interface IModelOptionReq {
   type_model?: string
   number_epoch?: number
   number_beyssian?: number
-  if_classification?: boolean
+  is_classification?: boolean
 }
 
 export interface IModelPostReq {

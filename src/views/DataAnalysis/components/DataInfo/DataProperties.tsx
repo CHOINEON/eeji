@@ -88,7 +88,7 @@ const DataProperties = () => {
 
       formData.append('com_id', userInfo.com_id)
       formData.append('date_col', inputOption.date_col)
-      formData.append('if_classification', inputOption.algo_type.toString())
+      // formData.append('is_classification', inputOption.algo_type.toString())
       formData.append('target_y', inputOption.target_y)
       formData.append('files', uploadedData.file)
 
@@ -97,7 +97,8 @@ const DataProperties = () => {
       // }
 
       const user_id = localStorage.getItem('userId').toString()
-      mutate({ user_id, formData })
+      const is_classification = inputOption.algo_type
+      mutate({ user_id, is_classification, formData })
     }
   }
 
@@ -108,8 +109,8 @@ const DataProperties = () => {
       ...uploadedData,
       rowCount: data.row_count,
       colCount: data.column_count,
-      startDate: data.start_date,
-      endDate: data.end_date,
+      startDate: data.start_date !== 'null' ? data.start_date : '-',
+      endDate: data.end_date !== 'null' ? data.end_date : '-',
     })
   }
 

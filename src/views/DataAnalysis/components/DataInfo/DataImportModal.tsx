@@ -31,6 +31,7 @@ const DataImportModal = (props: any) => {
       setImportOpen(false)
     },
     onError: (error: any, query: any) => {
+      // setSaving(false)
       message.error(error)
       // console.error(error)
     },
@@ -73,12 +74,12 @@ const DataImportModal = (props: any) => {
         formData.append('target_y', inputOption.target_y)
         formData.append('name', inputOption.name)
         formData.append('desc', inputOption.desc.length === 0 ? null : inputOption.desc)
-        formData.append('if_classification', inputOption.algo_type.toString())
+        formData.append('is_classification', inputOption.algo_type.toString())
 
         // key/value 쌍이 담긴 리스트
-        for (const [name, value] of formData) {
-          console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
-        }
+        // for (const [name, value] of formData) {
+        //   console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
+        // }
 
         if (inputOption.algo_type === 2 && inputOption.date_col.length === 0) {
           message.open({

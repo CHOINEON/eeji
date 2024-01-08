@@ -38,7 +38,7 @@ const TabChild = () => {
       ])
 
       setFeatureImportanceData(result['feature_piechart_data'])
-      setPredictionData(result['prediction_data'])
+      setPredictionData(JSON.parse(result['prediction_data']))
       setSelectedFeatureX(result['selected_input'])
 
       // formatterForBestPlot(result['best_plot'])
@@ -47,6 +47,8 @@ const TabChild = () => {
       // setPreprocessingData(result['preprocessing_graphs'])
     },
     onError: (error: any) => {
+      setLoading({ showing: false, text: '' })
+
       if (error.message === 'canceled') {
         alert('request canceled')
       } else {
@@ -94,7 +96,7 @@ const TabChild = () => {
         type_model: userInputOption.type_model,
         number_epoch: userInputOption.number_epoch,
         number_beyssian: userInputOption.number_beyssian,
-        if_classification: true,
+        if_classification: selectedData.isClassification,
       }
       const controller = new AbortController()
       // setController(controller)
