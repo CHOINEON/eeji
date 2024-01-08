@@ -1,6 +1,7 @@
 /*eslint-disable*/
 
 import { Flex, Link, List, ListItem, Text, useColorModeValue } from '@chakra-ui/react'
+import ineeji_logo from 'assets/img/ineeji/ineeji_logo_main.svg'
 
 export default function Footer() {
   const textColor = useColorModeValue('gray.400', 'white')
@@ -15,9 +16,10 @@ export default function Footer() {
         base: 'center',
         xl: 'start',
       }}
-      justifyContent="space-between"
+      justifyContent="center"
       px={{ base: '30px', md: '50px' }}
       pb="30px"
+      pt="40px"
     >
       <Text
         color={textColor}
@@ -28,15 +30,15 @@ export default function Footer() {
         mb={{ base: '20px', xl: '0px' }}
       >
         {' '}
-        &copy; {new Date().getFullYear()}
+        {/* &copy; {new Date().getFullYear()} */}
         <Text as="span" fontWeight="500" ms="4px">
-          Horizon UI. All Rights Reserved. Made with love by
-          <Link mx="3px" color={textColor} href="https://www.simmmple.com" target="_blank" fontWeight="700">
-            Simmmple!
+          <Link mx="3px" color={textColor} href="https://www.ineeji.com" target="_blank" fontWeight="700">
+            <img src={ineeji_logo} />
           </Link>
+          ⒸINEEJI Corp. All rights reserved.
         </Text>
       </Text>
-      <List display="flex">
+      {/* <List display="flex">
         <ListItem
           me={{
             base: '20px',
@@ -72,7 +74,7 @@ export default function Footer() {
             Blog
           </Link>
         </ListItem>
-      </List>
+      </List> */}
     </Flex>
   )
 }

@@ -96,10 +96,10 @@ const DataSet = () => {
             <Col style={{ textAlign: 'center' }} flex="170px">
               Created
             </Col>
-            <Col style={{ textAlign: 'center' }} flex="170px">
+            <Col style={{ textAlign: 'center' }} flex="200px">
               Updated
             </Col>
-            <Col style={{ textAlign: 'center' }} flex="100px">
+            <Col style={{ textAlign: 'center' }} flex="150px">
               Created by
             </Col>
           </Row>

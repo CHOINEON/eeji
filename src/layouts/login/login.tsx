@@ -10,7 +10,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import main_bg from './img/bg.jpg'
 import main_font from './img/main_font.svg'
-import logo from './img/logo.svg'
+import logo from 'assets/img/ineeji/logo_wh.svg'
 import circle from './img/package.png'
 import bottom_title from './img/bottom_title.png'
 import login_icon from './img/login_icon.png'
@@ -102,7 +102,7 @@ export const Login: React.FC = () => {
           window.localStorage.setItem('companyId', company)
           window.localStorage.setItem('userId', response.data[0].user_id)
           window.localStorage.setItem('userPosition', response.data[0].user_position)
-          window.location.href = '/admin/data-analysis'
+          window.location.href = '/admin/main'
         })
         .catch((error) => {
           console.log(error)
@@ -202,18 +202,12 @@ export const Login: React.FC = () => {
       {contextHolder}
       <Wrapper />
       <Home_Bg />
-      {/* <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
-        <Logo />
-      </div> */}
+      <Logo />
       <SidebarBrand />
       <Title />
       <BottomBox>
         <Circle />
         <BottomTitleParent>
-          <TopBox>
-            <div></div>
-            <Date />
-          </TopBox>
           <BottomTitle />
           <BottomCotents>
             is Prediction solution for ENERGY SAVING based on time series data that enables companies to realize
@@ -221,6 +215,9 @@ export const Login: React.FC = () => {
             optimization of industrial processes.
           </BottomCotents>
         </BottomTitleParent>
+        <TopBox>
+          <Date />
+        </TopBox>
       </BottomBox>
       <FormWrap>
         <LoginTitle>LOGIN</LoginTitle>
@@ -284,15 +281,16 @@ const BgStyle = styled.div`
 `
 
 const Home_Bg = styled(BgStyle)`
-  background-size: cover;
-  background-image: url(${main_bg});
+  // background-size: cover;
+  // background-image: url(${main_bg});
+  // filter: brightness(56%);
+  background-color: #4338f7;
   position: fixed;
   opacity: 1;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
-  filter: brightness(56%);
 `
 
 const FormWrap = styled.div`
@@ -323,8 +321,10 @@ const Title = styled(BgStyle)`
 const Logo = styled(BgStyle)`
   background-image: url(${logo});
   position: fixed;
-  // left: 7vw;
-  // top: 4vw;
+  width: 11vw;
+  height: 2vw;
+  left: 7vw;
+  top: 4vw;
   // width: 9vw;
   // height: 2vw;
   z-index: 999;

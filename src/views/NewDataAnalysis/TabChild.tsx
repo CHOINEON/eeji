@@ -94,6 +94,7 @@ const TabChild = () => {
         type_model: userInputOption.type_model,
         number_epoch: userInputOption.number_epoch,
         number_beyssian: userInputOption.number_beyssian,
+        if_classification: true,
       }
       const controller = new AbortController()
       // setController(controller)

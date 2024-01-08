@@ -18,6 +18,7 @@ import HmidInterval from 'views/hmid_interval'
 import PriceDetection from 'views/AnomalyDetection/PriceDetection.tsx'
 import XAIsimulator from 'views/DataAnalysis/components/Unused/XAIsimulator'
 import TempDataAnalysis from 'views/NewDataAnalysis/TempDataAnalysis'
+import Main from 'views/Main'
 
 // Auth Imports
 
@@ -29,13 +30,13 @@ const routes = [
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
     component: DataAnalysis,
   },
-  // {
-  //   name: 'Model Management',
-  //   layout: '/admin',
-  //   path: '/model',
-  //   icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
-  //   component: AIModelManagement,
-  // },
+  {
+    name: 'Main',
+    layout: '/admin',
+    path: '/main',
+    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+    component: Main,
+  },
   // {
   //   name: 'Anomaly Detection',
   //   layout: '/admin',
