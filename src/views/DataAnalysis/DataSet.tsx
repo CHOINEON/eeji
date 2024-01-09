@@ -53,6 +53,7 @@ const DataSet = () => {
       targetY: data.target_y,
       numeric_cols: data.numeric_cols,
       non_numeric_cols: data.non_numeric_cols,
+      isClassification: data.is_classification,
     })
 
     //태그리스트 드롭다운 바인딩

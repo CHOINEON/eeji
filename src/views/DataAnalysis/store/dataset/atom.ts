@@ -53,6 +53,7 @@ interface IDataset {
   targetY?: string
   non_numeric_cols?: string | null
   numeric_cols?: string | null
+  isClassification?: number
 }
 
 export const selectedDataState = atom({
@@ -70,6 +71,7 @@ export const selectedDataState = atom({
     targetY: '',
     non_numeric_cols: '',
     numeric_cols: '',
+    isClassification: 1,
   } as IDataset,
 })
 

@@ -47,9 +47,10 @@ const GoogleIcon = styled.image`
   background-size: 30px 30px;
 `
 
-const LoginButtonText = styled.span`
+const LoginButtonText = styled.p`
   color: #002d65;
   font-weight: bold;
   font-size: 15px;
   line-height: 37px;
+  display: inline-block;
 `

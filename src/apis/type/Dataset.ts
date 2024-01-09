@@ -29,6 +29,7 @@ export type IDatasetList = Array<IDatasetRes>
 
 export interface IDataUploadReq {
   user_id: string
+  is_classification: number
   formData: FormData
 }
 
