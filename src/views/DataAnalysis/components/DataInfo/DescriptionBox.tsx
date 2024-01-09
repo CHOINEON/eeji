@@ -149,9 +149,9 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
           <DateContent>
             <div>{data?.update_date}</div>
           </DateContent>
-          <Content>
+          <UserContent>
             <div>{data?.user_id}</div>
-          </Content>
+          </UserContent>
           <ButtonContent>
             <button
               style={{
@@ -202,7 +202,7 @@ const Content = styled.div`
   height: 69px;
   text-align: center;
   line-height: 69px;
-  width: 120px;
+  width: 100px;
   text-align: center;
 `
 
@@ -212,6 +212,10 @@ const ButtonContent = styled(Content)`
 
 const DateContent = styled(Content)`
   width: 200px;
+`
+
+const UserContent = styled(Content)`
+  width: 230px;
 `
 
 const TitleWrapper = styled.div`

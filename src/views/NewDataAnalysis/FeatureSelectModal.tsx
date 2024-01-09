@@ -28,7 +28,13 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
 
       setAnalysisResponse([
         ...analysisResponse,
-        { key: v4(), data: result, input: result['selected_input'], error: result['metrics'] },
+        {
+          key: v4(),
+          pred_data: JSON.parse(result['prediction_data']),
+          feature_data: result['feature_piechart_data'],
+          input: result['selected_input'],
+          error: result['metrics'],
+        },
       ])
     },
     onError: (error: any) => {
@@ -119,6 +125,7 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
         type_model: userInputOption.type_model,
         number_epoch: userInputOption.number_epoch,
         number_beyssian: userInputOption.number_beyssian,
+        if_classification: selectedData.isClassification,
       }
       const controller = new AbortController()
       // setController(controller)

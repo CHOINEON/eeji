@@ -13,6 +13,7 @@ import { featureSelectModalState } from 'views/DataAnalysis/store/modal/atom'
 import { v4 } from 'uuid'
 import { analysisResponseAtom } from 'views/DataAnalysis/store/response/atoms'
 import { Spin } from 'antd'
+import tempData from './classificationData.json'
 
 const TabChild = () => {
   const [loading, setLoading] = useState({ showing: false, text: '데이터 분석 중...' })
@@ -24,7 +25,7 @@ const TabChild = () => {
   const [modalState, setModalState] = useRecoilState(featureSelectModalState)
   const [analysisResponse, setAnalysisResponse] = useRecoilState(analysisResponseAtom)
   const [featureImportanceData, setFeatureImportanceData] = useState([])
-  const [predictionData, setPredictionData] = useState({})
+  // const [predictionData, setPredictionData] = useState({})
   const [selectedFeatureX, setSelectedFeatureX] = useState([])
 
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
@@ -34,11 +35,17 @@ const TabChild = () => {
 
       setAnalysisResponse([
         ...analysisResponse,
-        { key: v4(), data: result, input: result['selected_input'], error: result['metrics'] },
+        {
+          key: v4(),
+          pred_data: JSON.parse(result['prediction_data']),
+          feature_data: result['feature_piechart_data'],
+          input: result['selected_input'],
+          error: result['metrics'],
+        },
       ])
 
       setFeatureImportanceData(result['feature_piechart_data'])
-      setPredictionData(JSON.parse(result['prediction_data']))
+      // setPredictionData(JSON.parse(result['prediction_data']))
       setSelectedFeatureX(result['selected_input'])
 
       // formatterForBestPlot(result['best_plot'])
@@ -52,28 +59,31 @@ const TabChild = () => {
       if (error.message === 'canceled') {
         alert('request canceled')
       } else {
-        console.error(error)
+        alert(error.message)
       }
     },
   })
 
-  // useEffect(() => {
-  //   console.log('tab child id:', key)
-  // }, [key])
-
-  // useEffect(() => {
-  //   console.log('analysisResponse:', analysisResponse)
-  // }, [analysisResponse])
-
   useEffect(() => {
+    // console.log('selectedData:', selectedData)
     //임시 데이터로 처리
+    // setAnalysisResponse([
+    //   ...analysisResponse,
+    //   {
+    //     key: v4(),
+    //     pred_data: JSON.parse(tempData['prediction_data']),
+    //     feature_data: tempData['feature_piechart_data'],
+    //     input: tempData['selected_input'],
+    //     error: tempData['metrics'],
+    //   },
+    // ])
     // setFeatureImportanceData(data['feature_piechart_data'])
     // setPredictionData(data['prediction_data'])
     // setSelectedFeatureX(data['selected_input'])
 
+    //0109 false
     setLoading({ showing: true, text: '데이터 분석 중...' })
 
-    // console.log('selectedData:', selectedData)
     //Dataset list 컴포넌트 로드될 때 chaining effect 차단하기 위해 분기 처리
     if (selectedData.name !== '') {
       const payload = {
@@ -101,13 +111,15 @@ const TabChild = () => {
       const controller = new AbortController()
       // setController(controller)
       // console.log('tab child / payload:', payload)
+
+      //주석함(0109)
       mutateRunning({ type: 'request', payload, controller })
     }
 
     return () => {
       resetSelectedData()
     }
-  }, [])
+  }, [selectedData])
 
   const handleRegenerate = () => {
     // selectedFeatureX
@@ -137,8 +149,18 @@ const TabChild = () => {
           {analysisResponse && analysisResponse.length > 0 && (
             <>
               {/* <Spin tip="예측 모델 생성중..." spinning={loading}> */}
-              <div style={{ width: '70%', marginTop: '30px', display: 'block', float: 'left' }}>
-                <PredictionResult data={predictionData} />
+              <div
+                style={{
+                  // border: '1px solid red',
+                  width: '63%',
+                  height: 'auto',
+                  marginTop: '30px',
+                  display: 'block',
+                  float: 'left',
+                  // padding: '20px',
+                }}
+              >
+                <PredictionResult />
               </div>
               <div style={{ width: '30%', marginTop: '50px', display: 'block', float: 'left' }}>
                 <FeatureAnalysis />
@@ -180,7 +202,7 @@ const ComponentContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-evenly;
   background-color: #ffffff;
-  height: 700px;
+  height: 730px;
   box-shadow: 0px 0px 10px #5951db33;
   border: 1px solid #d5dcef;
   border-radius: 25px;

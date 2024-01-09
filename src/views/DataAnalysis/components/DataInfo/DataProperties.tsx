@@ -83,7 +83,7 @@ const DataProperties = () => {
     // console.log('uploadData:', uploadedData)
     // console.log('inputOption:', inputOption)
 
-    if (uploadedData.file && inputOption.date_col !== '' && inputOption.target_y !== '') {
+    if (uploadedData.file && inputOption.target_y !== '') {
       const formData = new FormData()
 
       formData.append('com_id', userInfo.com_id)
@@ -119,6 +119,7 @@ const DataProperties = () => {
   // }, [inputOption])
 
   const handleChange = (e: any) => {
+    console.log('name changed:', e.target.value)
     setInputOption({ ...inputOption, name: e.target.value })
   }
 
@@ -138,7 +139,7 @@ const DataProperties = () => {
             <ColumnLabel required={true} label="Algorithm Type" />
             <Radio.Group onChange={onChangeRadio} value={inputOption.algo_type}>
               <Radio value={1}>Classification</Radio>
-              <Radio value={2}>Regression</Radio>
+              <Radio value={0}>Regression</Radio>
             </Radio.Group>
           </Col>
           <Col span={24}>
@@ -154,7 +155,7 @@ const DataProperties = () => {
           </Col>
 
           <Col span={24} /*style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }} */>
-            <ColumnLabel required={true} label="Timestamp" />
+            <ColumnLabel required={false} label="Timestamp" />
             <Select
               style={{
                 width: 120,

@@ -138,10 +138,10 @@ const MenuLinks = ({ isOpen }: any) => {
         direction={['column', 'row', 'row', 'row']}
         pt={[4, 4, 0, 0]}
       >
-        <MenuItem to="/admin/data-analysis">Data Analysis</MenuItem>
-        <MenuItem to="#">XAI</MenuItem>
-        <MenuItem to="/admin/price-forecast">Commodity Index Forecasting</MenuItem>
-        <MenuItem to="#">REST API </MenuItem>
+        <MenuItem to="/admin/data-analysis">AI Model Generator</MenuItem>
+        <MenuItem to="#">Explainable AI</MenuItem>
+        <MenuItem to="/admin/price-forecast">Commodity Index Prediction</MenuItem>
+        <MenuItem to="#">Predictions APIs</MenuItem>
       </Stack>
     </Box>
   )

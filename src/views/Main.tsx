@@ -33,16 +33,16 @@ const CardList = () => {
       <Center>
         <HStack spacing="30" alignContent={'center'}>
           <Card image={DataAnalysisImg} onClick={() => (window.location.href = '/admin/data-analysis')}>
-            <TextOnCard color="#FFFFFF">Data Analysis</TextOnCard>
+            <TextOnCard color="#FFFFFF">AI Model Generator</TextOnCard>
           </Card>
           <Card image={XaiImg}>
-            <TextOnCard color="#002D65">XAI</TextOnCard>
+            <TextOnCard color="#002D65">Explainable AI</TextOnCard>
           </Card>
           <Card image={PriceForecastingImg} onClick={() => (window.location.href = '/admin/price-forecasting')}>
-            <TextOnCard color="#FFFFFF">지수 예측</TextOnCard>
+            <TextOnCard color="#FFFFFF">Commodity Index Prediction</TextOnCard>
           </Card>
           <Card image={ApiImg}>
-            <TextOnCard color="#FFFFFF">온라인 예측</TextOnCard>
+            <TextOnCard color="#FFFFFF">Predictions APIs</TextOnCard>
           </Card>
         </HStack>
       </Center>

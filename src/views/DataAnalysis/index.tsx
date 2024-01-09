@@ -90,7 +90,7 @@ const DataAnalysis = () => {
     <ThemeProvider theme={theme}>
       <Context.Provider value={contextValue}>
         {contextHolder}
-        <Box style={{ height: '66px', padding: '30px 0px 0px 20px', float: 'right' }}>
+        <Box style={{ height: '20px', float: 'right' }}>
           <DatasetAddButton
             className="ant-btn ant-btn-primary"
             style={{ display: activeStep === 0 && location.pathname == '/admin/data-analysis' ? 'block' : 'none' }}
@@ -122,7 +122,7 @@ const DataAnalysis = () => {
               ))}
             </Stepper>
           </Box>
-          <Box style={{ margin: '0 8px' }}>
+          <Box style={{ margin: '10px 8px' }}>
             {activeStep === 0 && <DataSet />}
             {/* {activeStep === 1 && <CorrelationView />} */}
             {activeStep === 1 && <TempDataAnalysis />}
@@ -147,5 +147,4 @@ const DatasetAddButton = styled.button`
   color: #fff !important;
   background-color: #4338f7;
   box-shadow: 0 2px 0 rgba(55, 5, 255, 0.06);
-  margin-bottom: 20px;
 `
