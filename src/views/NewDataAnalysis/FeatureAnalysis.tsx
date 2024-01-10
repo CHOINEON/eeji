@@ -26,12 +26,12 @@ const FeatureAnalysis = ({ data, input }: any) => {
       setOptions(newOption)
     }
     setError(analysisResponse[modelIdx].error)
-    setChartData(analysisResponse[modelIdx]['data']['feature_piechart_data'][0])
+    setChartData(analysisResponse[modelIdx]['feature_data'][0])
   }, [analysisResponse])
 
   const handleChange = (value: string) => {
     // console.log(`selected ${value}`)
-    setChartData(analysisResponse[parseInt(value)]['data']['feature_piechart_data'][0])
+    setChartData(analysisResponse[parseInt(value)]['feature_data'][0])
     setError(analysisResponse[modelIdx].error)
     setModelIdx(parseInt(value))
   }
@@ -93,7 +93,7 @@ const ComponentContainer = styled.div`
   display: block;
   float: left;
   margin: 38px 15px;
-  width: 90%;
+  width: 91%;
   height: 60%;
   background-color: #f6f8ff;
   border: 1px solid #a3afcf;

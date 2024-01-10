@@ -38,7 +38,7 @@ const DataSet = () => {
   }, [data])
 
   const handleSelect = (data: any) => {
-    // console.log('Dataset selected ::', data)
+    console.log('Dataset selected ::', data)
 
     setUsedVariable([])
     setSelectedData({
@@ -91,16 +91,16 @@ const DataSet = () => {
             <Col style={{ textAlign: 'center' }} flex="100px">
               Target
             </Col>
-            <Col style={{ textAlign: 'center' }} flex="160px">
+            <Col style={{ textAlign: 'center' }} flex="100px">
               Total Size
             </Col>
-            <Col style={{ textAlign: 'center' }} flex="170px">
+            <Col style={{ textAlign: 'center' }} flex="200px">
               Created
             </Col>
             <Col style={{ textAlign: 'center' }} flex="200px">
               Updated
             </Col>
-            <Col style={{ textAlign: 'center' }} flex="150px">
+            <Col style={{ textAlign: 'center' }} flex="230px">
               Created by
             </Col>
           </Row>

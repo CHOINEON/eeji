@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react'
 import tw from 'tailwind-styled-components'
 import TabChild from './TabChild'
 import { v4 } from 'uuid'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { selectedDataState } from 'views/DataAnalysis/store/dataset/atom'
 
 const TabTitle = tw.p`
   text-sm

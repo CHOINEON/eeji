@@ -70,27 +70,30 @@ const DataImportModal = (props: any) => {
         const formData = new FormData()
 
         formData.append('com_id', userInfo.com_id)
-        formData.append('date_col', inputOption.date_col.length === 0 ? null : inputOption.date_col)
+        //TODO: 공백으로 보낼 수가 없음...백엔드와 협의 필요
+        formData.append('date_col', inputOption.date_col.length === 0 ? 'undefined' : inputOption.date_col)
         formData.append('target_y', inputOption.target_y)
         formData.append('name', inputOption.name)
         formData.append('desc', inputOption.desc.length === 0 ? null : inputOption.desc)
         formData.append('is_classification', inputOption.algo_type.toString())
 
         // key/value 쌍이 담긴 리스트
-        // for (const [name, value] of formData) {
-        //   console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
-        // }
+        for (const [name, value] of formData) {
+          console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
+        }
 
-        if (inputOption.algo_type === 2 && inputOption.date_col.length === 0) {
-          message.open({
-            type: 'error',
-            content: 'Timestamp column is not selected.',
-            duration: 5,
-            style: {
-              margin: 'auto',
-            },
-          })
-        } else if (inputOption.target_y.length === 0) {
+        // if (inputOption.algo_type === 2 && inputOption.date_col.length === 0) {
+        //   message.open({
+        //     type: 'error',
+        //     content: 'Timestamp column is not selected.',
+        //     duration: 5,
+        //     style: {
+        //       margin: 'auto',
+        //     },
+        //   })
+        // } else
+
+        if (inputOption.target_y.length === 0) {
           message.open({
             type: 'error',
             content: 'Target variable is not selected.',
