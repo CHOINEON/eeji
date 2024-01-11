@@ -11,6 +11,7 @@ import settingOverImage from 'assets/img/icons/setting_over.svg'
 import logoutImage from 'assets/img/icons/lock.svg'
 import UploadIcon from 'assets/img/ineeji/ico_upload_mini.svg'
 import { useHistory } from 'react-router-dom'
+import './style/style.css'
 
 const NavBar = (props: { routes: RoutesType[] }) => {
   const history = useHistory()
@@ -36,7 +37,7 @@ const NavBar = (props: { routes: RoutesType[] }) => {
 
   return (
     <NavBarContainer {...props}>
-      <Logo w="100px" color={['primary.500', 'primary.500']} style={{ flexShrink: 0, width: '15%' }} />
+      <Logo w="100px" color={['primary.500', 'primary.500']} style={{ flexShrink: 0, width: '15%', minWidth: 252 }} />
       {/* <MenuToggle toggle={toggle} isOpen={isOpen} /> */}
       {/* <Box style={{ height: '66px', padding: '30px 0px 0px 20px' }}>
         <DatasetAddButton
@@ -114,12 +115,13 @@ const MenuItem = ({ children, isLast, to, ...rest }: any) => {
   return (
     <Link href={to}>
       <Text
+        className="text-menu"
         display="block"
         {...rest}
         opacity={activeRoute(to.toLowerCase()) ? 1 : 0.5}
         fontWeight={activeRoute(to.toLowerCase()) ? 'bold' : 'normal'}
         letterSpacing="0.5px"
-        fontSize={17}
+        fontSize={15}
         // color={activeRoute(to.toLowerCase()) ? activeColor : inactiveColor}
       >
         {children}

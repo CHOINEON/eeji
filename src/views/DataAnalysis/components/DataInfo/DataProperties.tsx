@@ -10,25 +10,42 @@ import { useApiError } from 'hooks/useApiError'
 import { useToast } from 'hooks/useToast'
 import ColumnLabel from 'components/fields/ColumnLabel'
 
+interface Option {
+  value: string
+  label: string
+  disabled: boolean
+}
+
 const DataProperties = () => {
   const { fireToast } = useToast()
   const [uploading, setUploading] = useState(false)
-  const userInfo = useRecoilValue(userInfoState)
-  const [summaryLoaded, setSummaryLoaded] = useState(false)
   const [inputOption, setInputOption] = useRecoilState(dataPropertyState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
 
-  const [options, setOptions] = useState([{ value: '', label: '' }])
+  const [options, setOptions] = useState(Array<Option>)
 
   const { handleError } = useApiError()
   const { mutate } = useMutation(DatasetApi.uploadDataset, {
     onSuccess: (response: any) => {
       console.log(' /api/upload/{user_id}', response)
-      // setSummaryFetch('completed')
+
+      const summaryData = response['1']
+      const columnData = response['2']
+
       fireToast('request success')
-      saveDataSummary(response['1'])
+
+      setUploadedData({
+        ...uploadedData,
+        rowCount: summaryData.row_count,
+        colCount: summaryData.column_count,
+        startDate: summaryData.start_date !== 'null' ? summaryData.start_date : '-',
+        endDate: summaryData.end_date !== 'null' ? summaryData.end_date : '-',
+      })
+
+      //Select Box 옵션 데이터 바인딩
+      generateOptions(summaryData)
+
       setUploading(false)
-      setSummaryLoaded(true)
     },
     onError: (error: any) => {
       // console.log('DataProperties/ onError :', error)
@@ -37,24 +54,59 @@ const DataProperties = () => {
   })
 
   useEffect(() => {
-    // console.log('------------Data property -------:', uploadedData)
-    if (uploadedData && uploadedData.content.length > 0) {
-      const defaultName = uploadedData.file?.name.split('.', 2)[0]
-      setInputOption({ ...inputOption, name: defaultName })
+    clearInputs()
+    setInputOption({
+      ...inputOption,
+      name: uploadedData.file?.name.split('.', 2)[0],
+      target_y: '',
+    })
+  }, [])
 
-      const ObjectFormatter = function (param: string) {
-        return { value: param, label: param }
-      }
-      setOptions(Object.keys(uploadedData.content[0]).map(ObjectFormatter))
-    } else {
-      clearInputs()
+  useEffect(() => {
+    console.log('inputOption.algo_type:', inputOption.algo_type)
+    fetchFileDescription()
+  }, [inputOption.algo_type])
+
+  const fetchFileDescription = () => {
+    setUploading(true)
+
+    const formData = new FormData()
+    formData.append('files', uploadedData.file)
+
+    const user_id = localStorage.getItem('userId').toString()
+    const is_classification = inputOption.algo_type
+
+    mutate({ user_id, is_classification, formData })
+  }
+
+  function generateOptions(data: any) {
+    // console.log('data:', data)
+
+    const col_list = data['col_list']
+    const non_numeric_cols = data['non_numeric_cols']
+    const numeric_cols = data['numeric_cols']
+
+    const newOption: Array<any> = []
+
+    if (inputOption.algo_type === 0) {
+      //regression 과 classification 타입에 따라 선택 가능한 컬럼 바인딩
+      col_list.map((value: string) => {
+        if (numeric_cols.includes(value)) {
+          newOption.push({ value: value, label: value })
+        } else if (non_numeric_cols.includes(value)) {
+          newOption.push({ value: value, label: `${value} (non-numeric column)`, disabled: true })
+        }
+      })
+    } else if (inputOption.algo_type === 1) {
+      //classification(numeric 무관함)
+      col_list.map((value: string) => newOption.push({ value: value, label: value }))
     }
-  }, [uploadedData])
+    setOptions(newOption)
+  }
 
   const clearInputs = () => {
-    setOptions([{ value: '', label: '' }])
+    setOptions([{ value: '', label: '', disabled: false }])
     setInputOption({ algo_type: 1, date_format: '', name: '', date_col: '', target_y: '', desc: '' })
-    setSummaryLoaded(false)
   }
 
   const handleSelectDateCol = (param: any) => {
@@ -65,61 +117,8 @@ const DataProperties = () => {
     setInputOption({ ...inputOption, target_y: param })
   }
 
-  useEffect(() => {
-    // console.log('   inputOption::', inputOption)
-    // console.log('   uploadedData::', uploadedData)
-    // console.log('   summaryLoaded::', summaryLoaded)
-
-    if (uploadedData.file && !summaryLoaded && Object.keys(inputOption).length > 0) {
-      getFileDescription()
-    }
-
-    // if (inputOption.name.length > 0 && inputOption.date_col.length > 0 && inputOption.target_y.length > 0) {
-    //   setUploading(true)
-    // }
-  }, [inputOption])
-
-  const getFileDescription = () => {
-    // console.log('uploadData:', uploadedData)
-    // console.log('inputOption:', inputOption)
-
-    if (uploadedData.file && inputOption.target_y !== '') {
-      const formData = new FormData()
-
-      formData.append('com_id', userInfo.com_id)
-      formData.append('date_col', inputOption.date_col)
-      // formData.append('is_classification', inputOption.algo_type.toString())
-      formData.append('target_y', inputOption.target_y)
-      formData.append('files', uploadedData.file)
-
-      // for (const [name, value] of formData) {
-      //   console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
-      // }
-
-      const user_id = localStorage.getItem('userId').toString()
-      const is_classification = inputOption.algo_type
-      mutate({ user_id, is_classification, formData })
-    }
-  }
-
-  const saveDataSummary = (data: any) => {
-    // console.log('saveDataSummary:', data)
-
-    setUploadedData({
-      ...uploadedData,
-      rowCount: data.row_count,
-      colCount: data.column_count,
-      startDate: data.start_date !== 'null' ? data.start_date : '-',
-      endDate: data.end_date !== 'null' ? data.end_date : '-',
-    })
-  }
-
-  // useEffect(() => {
-  //   console.log('inputOption::', inputOption)
-  // }, [inputOption])
-
   const handleChange = (e: any) => {
-    console.log('name changed:', e.target.value)
+    // console.log('name changed:', e.target.value)
     setInputOption({ ...inputOption, name: e.target.value })
   }
 
@@ -154,23 +153,6 @@ const DataProperties = () => {
             />
           </Col>
 
-          <Col span={24} /*style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }} */>
-            <ColumnLabel required={false} label="Timestamp" />
-            <Select
-              style={{
-                width: 120,
-                backgroundColor: '#fff !important',
-                border: '1px solid #A3AFCF',
-                borderRadius: '10px',
-              }}
-              value={inputOption.date_col}
-              placeholder="Timestamp Column"
-              options={options}
-              // defaultValue={options[0]}
-              onSelect={handleSelectDateCol}
-            />
-          </Col>
-
           {/* <Col span={24} style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }}>
             <ColumnLabel required={true} label="Timestamp Format" />
             <Input defaultValue="yyyy-mm-dd HH:MM:SS" onChange={onChangeInput} />
@@ -192,6 +174,23 @@ const DataProperties = () => {
               onSelect={handleSelectY}
             />
           </Col>
+          <Col span={24} /*style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }} */>
+            <ColumnLabel required={false} label="Timestamp" />
+            <Select
+              style={{
+                width: 120,
+                backgroundColor: '#fff !important',
+                border: '1px solid #A3AFCF',
+                borderRadius: '10px',
+              }}
+              value={inputOption.date_col}
+              placeholder="Timestamp Column"
+              options={options}
+              // defaultValue={options[0]}
+              onSelect={handleSelectDateCol}
+            />
+          </Col>
+
           <Col span={24}>
             <ColumnLabel required={false} label=" Description(Optional)" />
             <TextArea
