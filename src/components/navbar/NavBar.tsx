@@ -49,9 +49,9 @@ const NavBar = (props: { routes: RoutesType[] }) => {
           <img style={{ top: '-22px', left: '14px', position: 'relative' }} src={UploadIcon} />
         </DatasetAddButton>
       </Box> */}
-      <MenuLinks isOpen={isOpen} style={{ flexGrow: 1 }} />
+      <MenuLinks isOpen={isOpen} routes={routes} style={{ flexGrow: 1 }} />
       <div>
-        {createLinks(routes)}
+        {/* {createLinks(routes)} */}
         <HStack spacing="13">
           <Button
             backgroundImage={logoutBtnImage}
@@ -94,17 +94,18 @@ const NavBar = (props: { routes: RoutesType[] }) => {
   )
 }
 
-const createLinks = (routes: RoutesType[]) => {
-  return routes.map((route: RoutesType, index: number) => {
-    if (window.localStorage.getItem('userPosition') === 'admin') {
-      return (
-        <MenuItem to={route.layout + route.path} index={index}>
-          {route.name}
-        </MenuItem>
-      )
-    }
-  })
-}
+// const createLinks = (routes: RoutesType[]) => {
+//   console.log('routes:', routes)
+//   return routes.map((route: RoutesType, index: number) => {
+//     if (window.localStorage.getItem('userPosition') === 'admin') {
+//       return (
+//         <MenuItem to={route.layout + route.path} index={index}>
+//           {route.name}
+//         </MenuItem>
+//       )
+//     }
+//   })
+// }
 
 //verifies if routeName is the one active(in browser input)
 const activeRoute = (routeName: string) => {
@@ -130,7 +131,7 @@ const MenuItem = ({ children, isLast, to, ...rest }: any) => {
   )
 }
 
-const MenuLinks = ({ isOpen }: any) => {
+const MenuLinks = ({ isOpen, routes }: any) => {
   return (
     <Box display={{ base: isOpen ? 'block' : 'none', md: 'block' }} flexBasis={{ base: '100%', md: 'auto' }}>
       <Stack
@@ -140,10 +141,13 @@ const MenuLinks = ({ isOpen }: any) => {
         direction={['column', 'row', 'row', 'row']}
         pt={[4, 4, 0, 0]}
       >
-        <MenuItem to="/admin/data-analysis">AI Model Generator</MenuItem>
+        {routes.map((value: any) => {
+          if (value.path !== '/main') return <MenuItem to={value.layout + value.path}>{value.name}</MenuItem>
+        })}
+        {/* <MenuItem to="/admin/data-analysis">AI Model Generator</MenuItem>
         <MenuItem to="#">Explainable AI</MenuItem>
         <MenuItem to="/admin/price-forecast">Commodity Index Prediction</MenuItem>
-        <MenuItem to="#">Predictions APIs</MenuItem>
+        <MenuItem to="#">Predictions APIs</MenuItem> */}
       </Stack>
     </Box>
   )

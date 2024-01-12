@@ -34,15 +34,23 @@ const CardList = () => {
         <HStack spacing="30" alignContent={'center'}>
           <Card image={DataAnalysisImg} onClick={() => (window.location.href = '/admin/data-analysis')}>
             <TextOnCard color="#FFFFFF">AI Model Generator</TextOnCard>
+            <SubTextOnCard color="#FFFFFF">AI 모델 생성</SubTextOnCard>
           </Card>
-          <Card image={XaiImg}>
-            <TextOnCard color="#002D65">Explainable AI</TextOnCard>
+          <Card image={XaiImg} onClick={() => alert('준비 중인 서비스입니다')}>
+            <TextOnCard color="#002D65" isSingleLine={true}>
+              Explainable AI
+            </TextOnCard>
+            <SubTextOnCard color="#002D65">설명가능 인공지능</SubTextOnCard>
           </Card>
-          <Card image={PriceForecastingImg} onClick={() => (window.location.href = '/admin/price-forecasting')}>
-            <TextOnCard color="#FFFFFF">Commodity Index Prediction</TextOnCard>
+          <Card image={PriceForecastingImg} onClick={() => (window.location.href = '/admin/price-forecast')}>
+            <TextOnCard color="#FFFFFF">Commodity Index Forecast</TextOnCard>
+            <SubTextOnCard color="#002D65">주요 지표 예측</SubTextOnCard>
           </Card>
-          <Card image={ApiImg}>
-            <TextOnCard color="#FFFFFF">Predictions APIs</TextOnCard>
+          <Card image={ApiImg} onClick={() => alert('준비 중인 서비스입니다')}>
+            <TextOnCard color="#FFFFFF" isSingleLine={true}>
+              Prediction API
+            </TextOnCard>
+            <SubTextOnCard color="#FFFFFF">REST API 서비스</SubTextOnCard>
           </Card>
         </HStack>
       </Center>
@@ -74,19 +82,28 @@ const Card = styled.button<{ image: any }>`
   border-radius: 30px;
 `
 
-const TextOnCard = styled.span<{ color: string }>`
+const TextOnCard = styled.div<{ color: string; isSingleLine?: boolean }>`
   width: 245px;
   position: absolute;
   font-family: 'ITC Avant Garde Gothic Pro';
-  top: 400px;
-  left: 2vw;
-  zindex: 1;
+  top: ${(props) => (props.isSingleLine ? '393px' : '370px')};
+  left: 37.5px;
+  // zindex: 1;
   font-size: 30px;
-  font-weight: 100;
+  font-weight: 300;
   letter-spacing: 2px;
-  -webkit-text-stroke: 1px ${(props) => props.color};
-  // text-shadow: 1px 1px 1px ${(props) => props.color};
+  // -webkit-text-stroke: 1px ${(props) => props.color};
+  text-shadow: 1px 1px 1px ${(props) => props.color};
   color: transparent;
   // color: white;
   // opacity: 1;
+`
+
+const SubTextOnCard = styled.div<{ color: string }>`
+  font-family: 'ITC Avant Garde Gothic Pro';
+  position: absolute;
+  width: 100%;
+  bottom: 20px;
+  color: ${(props) => props.color};
+  text-align: center;
 `

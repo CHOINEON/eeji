@@ -27,7 +27,7 @@ const DataProperties = () => {
   const { handleError } = useApiError()
   const { mutate } = useMutation(DatasetApi.uploadDataset, {
     onSuccess: (response: any) => {
-      console.log(' /api/upload/{user_id}', response)
+      // console.log(' /api/upload/{user_id}', response)
 
       const summaryData = response['1']
       const columnData = response['2']

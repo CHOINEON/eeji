@@ -200,7 +200,7 @@ const ComponentContainer = styled.div`
   display: block;
   justify-content: space-evenly;
   background-color: #ffffff;
-  height: 800px;
+  height: 770px;
   box-shadow: 0px 0px 10px #5951db33;
   border: 1px solid #d5dcef;
   // border: 1px solid red;

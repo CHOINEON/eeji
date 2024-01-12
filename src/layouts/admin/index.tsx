@@ -108,7 +108,7 @@ export default function Dashboard(props: { [x: string]: any }) {
           <Box mx="auto" p={{ base: '20px', md: '30px' }} pe="20px" minH="90vh" pt="50px">
             <Switch>
               {getRoutes(routes)}
-              <Redirect from="/" to="/admin/default" />
+              <Redirect from="/" to="/admin/main" />
             </Switch>
           </Box>
         ) : (
