@@ -44,14 +44,16 @@ export const Login: React.FC = () => {
 
     //로그인 후 redirect된 URL에서 구글 인가코드 추출하여 백엔드로 전달하여 token발급받음
     const params = new URLSearchParams(window.location.search)
+    console.log('params:', params)
     const code = params.get('code')
 
-    // console.log('CODE:', code)
+    alert(code)
+
     if (code) {
       axios
         .post(process.env.REACT_APP_NEW_API_SERVER_URL + '/login/google', { code })
         .then((response) => {
-          // console.log('response: ', response)
+          console.log('response: ', response.data)
           if (response.data.user_info) {
             //로그인 상태 확인되면 localStorage에 user정보 저장 ->  datasetList 페이지로 redirect
             localStorage.setItem('userId', response.data.user_info.email)
@@ -60,7 +62,7 @@ export const Login: React.FC = () => {
             localStorage.setItem('userPicture', response.data.user_info.picture)
 
             // setIsAuthenticated(true)
-            window.location.href = '/admin/data-analysis'
+            // window.location.href = '/admin/data-analysis'
           }
         })
         .catch((error) => {

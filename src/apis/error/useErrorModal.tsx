@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { App, Button, Space } from 'antd'
-import useModal from 'hooks/useModal'
+// import useModal from 'hooks/useModal'
 import toast from 'react-hot-toast'
 
 export type TErrorCode = 'Auth-0000' | 'Auth-0001' | 'Auth-9000' | 'Auth-5000' | 'Auth-0002'
@@ -12,7 +12,7 @@ const errorMessage = {
 const useErrorModal = (props?: any) => {
   useEffect(() => console.log('useErrorModal props:', props), [props])
 
-  const { openModal, closeModal } = useModal()
+  // const { openModal, closeModal } = useModal()
   const openErrorModal = (error: any) => {
     //console.log('show !!:', openErrorModal)
     toast('Something went wrong')

@@ -1,20 +1,29 @@
 import { Box } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { Col, Row, Tag } from 'antd'
+import { Button, Col, Row, Tag } from 'antd'
 import Title from 'antd/es/typography/Title'
 import axios from 'axios'
 
-import React, { useEffect, useState } from 'react'
+import React, { MouseEventHandler, useEffect, useState } from 'react'
 import Global from 'views/XAI-simulator/Global'
 import Local from 'views/XAI-simulator/Local'
 import PdpResult from 'views/XAI-simulator/PDP'
-import InfoCircle from '../Icon/InfoCircle'
-import data from '../../../XAI-simulator/data.json'
+import InfoCircle from '../DataAnalysis/components/Icon/InfoCircle'
+import data from './data.json'
+import ModelImport from '../DataAnalysis/components/Modal/ModelImport'
+import useModal from 'hooks/useModal'
 
 const XAIsimulator = () => {
+  const { openModal, closeModal } = useModal()
   const [globalData, setGlobalData] = useState([])
   const [localData, setLocalData] = useState([])
   const [pdpResult, setPdpResult] = useState({})
+
+  const modalData = {
+    title: 'Data Upload',
+    content: 'Modal Content',
+    callback: () => alert('modal callback()'),
+  }
 
   useEffect(() => {
     // fetchXaiResults()
@@ -33,35 +42,37 @@ const XAIsimulator = () => {
       .catch((error) => console.log(error))
   }
 
+  const handleClick = () => {
+    openModal({
+      modalTitle: 'Modal Import',
+      modalType: 'ModelImport',
+      modalProps: {
+        onClick: () => {
+          closeModal()
+        },
+      },
+    })
+  }
+
   return (
-    <Box pt={{ base: '130px', md: '80px', xl: '80px' }} style={{ position: 'relative', zIndex: 1000 }}>
+    <Box style={{ position: 'relative', zIndex: 1000 }}>
+      <Button onClick={handleClick}>UPLOAD</Button>
       <Container>
         <Row gutter={[8, 8]} style={{ width: '100%' }}>
           <Col span={18}>
             <Row>
-              <RoundedBox width={'100%'} height={'400px'}>
-                <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
+              <RoundedBox width={'100%'} height={'80vh'}>
+                <Title style={{ color: '#002D65', display: 'inline-block', width: '80%', fontWeight: 400 }}>
                   XAI simulator
                   <InfoCircle content="。。。" />
                 </Title>
               </RoundedBox>
             </Row>
-            <Row style={{ marginTop: '10px' }}>
-              <Col span={8}>
-                <Global data={globalData} />
-              </Col>
-              <Col span={8}>
-                <Local data={localData} />
-              </Col>
-              <Col span={8}>
-                <PdpResult data={pdpResult} />
-              </Col>
-            </Row>
           </Col>
           <Col span={6}>
-            <RoundedBox height={'780px'}>
+            <RoundedBox height={'80vh'}>
               <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
-                Control panel
+                Feature Importance
                 <InfoCircle content="。。。" />
               </Title>
             </RoundedBox>

@@ -141,8 +141,13 @@ const MenuLinks = ({ isOpen, routes }: any) => {
         direction={['column', 'row', 'row', 'row']}
         pt={[4, 4, 0, 0]}
       >
-        {routes.map((value: any) => {
-          if (value.path !== '/main') return <MenuItem to={value.layout + value.path}>{value.name}</MenuItem>
+        {routes.map((value: any, i: number) => {
+          if (value.path !== '/main')
+            return (
+              <MenuItem key={i} to={value.layout + value.path}>
+                {value.name}
+              </MenuItem>
+            )
         })}
         {/* <MenuItem to="/admin/data-analysis">AI Model Generator</MenuItem>
         <MenuItem to="#">Explainable AI</MenuItem>

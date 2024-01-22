@@ -6,12 +6,13 @@ import styled from '@emotion/styled'
 
 const GoogleSignin = () => {
   const location = useLocation()
-
   const GOOGLE_ID = '42578919430-p1so0e8e9s3ovojrc7a24c3kn6oq89g1.apps.googleusercontent.com'
-  const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URL + '/admin/main'
-  const GoogleURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.email`
 
   const oAuthHandler = (): void => {
+    const REDIRECT_URI = `${process.env.REACT_APP_REDIRECT_URL}/admin/main`
+    console.log('REDIRECT_URI:', REDIRECT_URI)
+    const GoogleURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.email`
+
     window.location.assign(GoogleURL)
   }
 

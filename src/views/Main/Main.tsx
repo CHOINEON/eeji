@@ -4,7 +4,8 @@ import DataAnalysisImg from 'assets/img/icons/DataAnalysis.jpg'
 import XaiImg from 'assets/img/icons/Xai.jpg'
 import PriceForecastingImg from 'assets/img/icons/PriceForecasting.jpg'
 import ApiImg from 'assets/img/icons/Api.jpg'
-import { Box, Center, Container, HStack, Link } from '@chakra-ui/react'
+import { Box, Center, Container, HStack, Link, Wrap, WrapItem } from '@chakra-ui/react'
+import './style.css'
 
 const Main = () => {
   return (
@@ -20,9 +21,9 @@ const Main = () => {
           processes.
         </SubText>
       </Box>
-      <div>
+      <Box>
         <CardList />
-      </div>
+      </Box>
     </>
   )
 }
@@ -30,30 +31,43 @@ const Main = () => {
 const CardList = () => {
   return (
     <>
-      <Center>
-        <HStack spacing="30" alignContent={'center'}>
-          <Card image={DataAnalysisImg} onClick={() => (window.location.href = '/admin/data-analysis')}>
+      <Wrap spacing="30px" justify="center">
+        {/* <HStack spacing="30" alignContent={'center'}> */}
+        <WrapItem>
+          <Card className="parent" onClick={() => (window.location.href = '/admin/data-analysis')}>
+            <img className="child" src={DataAnalysisImg} />
             <TextOnCard color="#FFFFFF">AI Model Generator</TextOnCard>
             <SubTextOnCard color="#FFFFFF">AI 모델 생성</SubTextOnCard>
           </Card>
-          <Card image={XaiImg} onClick={() => alert('준비 중인 서비스입니다')}>
+        </WrapItem>
+        <WrapItem>
+          <Card className="parent" onClick={() => alert('준비 중인 서비스입니다')}>
+            <img className="child" src={XaiImg} />
             <TextOnCard color="#002D65" isSingleLine={true}>
               Explainable AI
             </TextOnCard>
             <SubTextOnCard color="#002D65">설명가능 인공지능</SubTextOnCard>
           </Card>
-          <Card image={PriceForecastingImg} onClick={() => (window.location.href = '/admin/price-forecast')}>
+        </WrapItem>
+        <WrapItem>
+          <Card className="parent" onClick={() => (window.location.href = '/admin/price-forecast')}>
+            <img className="child" src={PriceForecastingImg} />
             <TextOnCard color="#FFFFFF">Commodity Index Forecast</TextOnCard>
             <SubTextOnCard color="#002D65">주요 지표 예측</SubTextOnCard>
           </Card>
-          <Card image={ApiImg} onClick={() => alert('준비 중인 서비스입니다')}>
+        </WrapItem>
+        <WrapItem>
+          <Card className="parent" onClick={() => alert('준비 중인 서비스입니다')}>
+            <img className="child" src={ApiImg} />
             <TextOnCard color="#FFFFFF" isSingleLine={true}>
               Prediction API
             </TextOnCard>
             <SubTextOnCard color="#FFFFFF">REST API 서비스</SubTextOnCard>
           </Card>
-        </HStack>
-      </Center>
+        </WrapItem>
+
+        {/* </HStack> */}
+      </Wrap>
     </>
   )
 }
@@ -74,12 +88,12 @@ const SubText = styled.p`
   color: #ffffff;
 `
 
-const Card = styled.button<{ image: any }>`
+const Card = styled.div`
   position: relative;
-  width: 320px;
-  height: 510px;
-  background-image: url(${(props) => props.image});
-  border-radius: 30px;
+
+  @media (max-width: 1400px) {
+    height: 300px;
+  }
 `
 
 const TextOnCard = styled.div<{ color: string; isSingleLine?: boolean }>`
@@ -90,13 +104,17 @@ const TextOnCard = styled.div<{ color: string; isSingleLine?: boolean }>`
   left: 37.5px;
   // zindex: 1;
   font-size: 30px;
-  font-weight: 300;
+  font-weight: 500;
   letter-spacing: 2px;
   // -webkit-text-stroke: 1px ${(props) => props.color};
   text-shadow: 1px 1px 1px ${(props) => props.color};
   color: transparent;
   // color: white;
   // opacity: 1;
+
+  @media (max-width: 1400px) {
+    display: none;
+  }
 `
 
 const SubTextOnCard = styled.div<{ color: string }>`

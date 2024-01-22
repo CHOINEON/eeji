@@ -16,9 +16,9 @@ import HmidIntervalD3 from 'views/hmid-interval-d3fc'
 // import Anomalyd3chart from 'views/AnomalyDetection/anomaly_d3chart-test'
 import HmidInterval from 'views/hmid_interval'
 import PriceDetection from 'views/AnomalyDetection/PriceDetection.tsx'
-import XAIsimulator from 'views/DataAnalysis/components/Unused/XAIsimulator'
+import XAIsimulator from 'views/XAI-simulator/XAIsimulator'
 import TempDataAnalysis from 'views/NewDataAnalysis/TempDataAnalysis'
-import Main from 'views/Main'
+import Main from 'views/Main/Main'
 import ApiService from 'views/ApiService/ApiService'
 
 // Auth Imports

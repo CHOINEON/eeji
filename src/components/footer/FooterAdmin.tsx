@@ -17,8 +17,8 @@ export default function Footer() {
         xl: 'start',
       }}
       justifyContent="center"
-      px={{ base: '30px', md: '50px' }}
-      pb="30px"
+      px={{ base: '40px', md: '50px' }}
+      // pb="30px"
       pt="40px"
     >
       <Text
