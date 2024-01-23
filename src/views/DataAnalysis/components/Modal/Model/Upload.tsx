@@ -27,7 +27,7 @@ const ModelUpload = (props: ModelUploadProps) => {
     //
   }
 
-  useEffect(() => console.log('props:', props), [props])
+  // useEffect(() => console.log('props:', props), [props])
 
   return (
     <>
@@ -52,7 +52,7 @@ const ModelUpload = (props: ModelUploadProps) => {
           ref={inputRef}
           type="file"
           onChange={handleChange}
-          accept=".pickle"
+          // accept=".pickle,.py"
           id="input-file"
         />
       </Wrapper>

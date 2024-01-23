@@ -15,9 +15,6 @@ import useModal from 'hooks/useModal'
 
 const XAIsimulator = () => {
   const { openModal, closeModal } = useModal()
-  const [globalData, setGlobalData] = useState([])
-  const [localData, setLocalData] = useState([])
-  const [pdpResult, setPdpResult] = useState({})
 
   const modalData = {
     title: 'Data Upload',
@@ -25,26 +22,9 @@ const XAIsimulator = () => {
     callback: () => alert('modal callback()'),
   }
 
-  useEffect(() => {
-    // fetchXaiResults()
-
-    setGlobalData([{ x: data.columns, y: data.global, type: 'bar' }])
-    setLocalData([{ x: data.columns, y: data.global, type: 'bar' }])
-    setPdpResult({ name: data.columns, img: data.pdp })
-  }, [])
-
-  const fetchXaiResults = () => {
-    axios
-      .post('http://222.121.66.49:8000/get_xai_results')
-      .then((response) => {
-        console.log('response:', response)
-      })
-      .catch((error) => console.log(error))
-  }
-
   const handleClick = () => {
     openModal({
-      modalTitle: 'Modal Import',
+      modalTitle: 'Model Data Import',
       modalType: 'ModelImport',
       modalProps: {
         onClick: () => {
