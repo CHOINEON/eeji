@@ -261,7 +261,7 @@ const OilPriceChart = () => {
           style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
         >
           <div className="my-[30px] ml-[30px] w-full h-[47px]">
-            <Title>Commodity Index Forecasting </Title>
+            <Title>Commodity Index Forecast </Title>
             <div style={{ display: 'block', float: 'left', width: '300px', margin: '8px 30px' }}>
               <Select
                 style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}

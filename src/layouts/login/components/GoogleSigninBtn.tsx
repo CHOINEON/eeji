@@ -1,16 +1,18 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import googleSigninBtn from 'assets/img/components/Google_G_logo.svg'
+import googleSigninBtn_sm from 'assets/img/components/web_light_sq_na.svg'
 import styled from '@emotion/styled'
 
 const GoogleSignin = () => {
   const location = useLocation()
-
   const GOOGLE_ID = '42578919430-p1so0e8e9s3ovojrc7a24c3kn6oq89g1.apps.googleusercontent.com'
-  const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URL + '/login'
-  const GoogleURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.email`
 
   const oAuthHandler = (): void => {
+    const REDIRECT_URI = `${process.env.REACT_APP_REDIRECT_URL}/admin/main`
+    console.log('REDIRECT_URI:', REDIRECT_URI)
+    const GoogleURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.email`
+
     window.location.assign(GoogleURL)
   }
 
@@ -21,7 +23,7 @@ const GoogleSignin = () => {
   return (
     <GoogleLoginBtn onClick={handleGoogleLogin}>
       <GoogleIcon />
-      <LoginButtonText> Sign in with Google</LoginButtonText>
+      <LoginButtonText> Continue with Google</LoginButtonText>
     </GoogleLoginBtn>
   )
 }
@@ -53,4 +55,8 @@ const LoginButtonText = styled.p`
   font-size: 15px;
   line-height: 37px;
   display: inline-block;
+
+  @media (max-width: 1200px) {
+    display: none;
+  }
 `

@@ -11,6 +11,7 @@ import settingOverImage from 'assets/img/icons/setting_over.svg'
 import logoutImage from 'assets/img/icons/lock.svg'
 import UploadIcon from 'assets/img/ineeji/ico_upload_mini.svg'
 import { useHistory } from 'react-router-dom'
+import './style/style.css'
 
 const NavBar = (props: { routes: RoutesType[] }) => {
   const history = useHistory()
@@ -36,7 +37,7 @@ const NavBar = (props: { routes: RoutesType[] }) => {
 
   return (
     <NavBarContainer {...props}>
-      <Logo w="100px" color={['primary.500', 'primary.500']} style={{ flexShrink: 0, width: '15%' }} />
+      <Logo w="100px" color={['primary.500', 'primary.500']} style={{ flexShrink: 0, width: '15%', minWidth: 252 }} />
       {/* <MenuToggle toggle={toggle} isOpen={isOpen} /> */}
       {/* <Box style={{ height: '66px', padding: '30px 0px 0px 20px' }}>
         <DatasetAddButton
@@ -48,9 +49,9 @@ const NavBar = (props: { routes: RoutesType[] }) => {
           <img style={{ top: '-22px', left: '14px', position: 'relative' }} src={UploadIcon} />
         </DatasetAddButton>
       </Box> */}
-      <MenuLinks isOpen={isOpen} style={{ flexGrow: 1 }} />
+      <MenuLinks isOpen={isOpen} routes={routes} style={{ flexGrow: 1 }} />
       <div>
-        {createLinks(routes)}
+        {/* {createLinks(routes)} */}
         <HStack spacing="13">
           <Button
             backgroundImage={logoutBtnImage}
@@ -93,17 +94,18 @@ const NavBar = (props: { routes: RoutesType[] }) => {
   )
 }
 
-const createLinks = (routes: RoutesType[]) => {
-  return routes.map((route: RoutesType, index: number) => {
-    if (window.localStorage.getItem('userPosition') === 'admin') {
-      return (
-        <MenuItem to={route.layout + route.path} index={index}>
-          {route.name}
-        </MenuItem>
-      )
-    }
-  })
-}
+// const createLinks = (routes: RoutesType[]) => {
+//   console.log('routes:', routes)
+//   return routes.map((route: RoutesType, index: number) => {
+//     if (window.localStorage.getItem('userPosition') === 'admin') {
+//       return (
+//         <MenuItem to={route.layout + route.path} index={index}>
+//           {route.name}
+//         </MenuItem>
+//       )
+//     }
+//   })
+// }
 
 //verifies if routeName is the one active(in browser input)
 const activeRoute = (routeName: string) => {
@@ -114,12 +116,13 @@ const MenuItem = ({ children, isLast, to, ...rest }: any) => {
   return (
     <Link href={to}>
       <Text
+        className="text-menu"
         display="block"
         {...rest}
         opacity={activeRoute(to.toLowerCase()) ? 1 : 0.5}
         fontWeight={activeRoute(to.toLowerCase()) ? 'bold' : 'normal'}
         letterSpacing="0.5px"
-        fontSize={17}
+        fontSize={15}
         // color={activeRoute(to.toLowerCase()) ? activeColor : inactiveColor}
       >
         {children}
@@ -128,7 +131,7 @@ const MenuItem = ({ children, isLast, to, ...rest }: any) => {
   )
 }
 
-const MenuLinks = ({ isOpen }: any) => {
+const MenuLinks = ({ isOpen, routes }: any) => {
   return (
     <Box display={{ base: isOpen ? 'block' : 'none', md: 'block' }} flexBasis={{ base: '100%', md: 'auto' }}>
       <Stack
@@ -138,10 +141,18 @@ const MenuLinks = ({ isOpen }: any) => {
         direction={['column', 'row', 'row', 'row']}
         pt={[4, 4, 0, 0]}
       >
-        <MenuItem to="/admin/data-analysis">AI Model Generator</MenuItem>
+        {routes.map((value: any, i: number) => {
+          if (value.path !== '/main')
+            return (
+              <MenuItem key={i} to={value.layout + value.path}>
+                {value.name}
+              </MenuItem>
+            )
+        })}
+        {/* <MenuItem to="/admin/data-analysis">AI Model Generator</MenuItem>
         <MenuItem to="#">Explainable AI</MenuItem>
         <MenuItem to="/admin/price-forecast">Commodity Index Prediction</MenuItem>
-        <MenuItem to="#">Predictions APIs</MenuItem>
+        <MenuItem to="#">Predictions APIs</MenuItem> */}
       </Stack>
     </Box>
   )

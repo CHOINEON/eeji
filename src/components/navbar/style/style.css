@@ -1,0 +1,13 @@
+@media (max-width: 1200px) {
+  .text-menu {
+    display: none !important;
+  }
+}
+
+.text-menu {
+  transition: 0.1s;
+  &:hover {
+    filter: inver(100%);
+    /* filter: hue-rotate(160deg); */
+  }
+}

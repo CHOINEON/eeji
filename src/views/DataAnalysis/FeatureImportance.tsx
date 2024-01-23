@@ -120,7 +120,7 @@ const FeatureImportance = ({ data }: any) => {
   }
 
   return (
-    <div style={{ width: '100%', height: '500px', marginTop: '30px' }}>
+    <div style={{ width: '100%', marginTop: '30px' }}>
       <div className="inline-block float-left" style={{ marginLeft: '20px', width: '59%', height: '200px !important' }}>
         <Bar data={barData} options={barOptions} width={'100%'} height={'200px'} />
       </div>

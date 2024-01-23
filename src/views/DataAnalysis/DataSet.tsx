@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DescriptionBox, { DescriptionBoxProps } from './components/DataInfo/DescriptionBox'
 import { Button, Col, Row, message, Spin } from 'antd'
 import DataImportModal from './components/DataInfo/DataImportModal'
-import './style/styles.css'
+import './style/data-analysis-style.css'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
 import { stepCountStore } from './store/global/atom'
@@ -86,7 +86,7 @@ const DataSet = () => {
     <>
       <div style={{ width: '100%', display: 'block', float: 'right', margin: '50px 0' }}>
         {data?.data.length > 0 ? (
-          <Row>
+          <Row className="row-column-title">
             <Col flex="451px"></Col>
             <Col style={{ textAlign: 'center' }} flex="100px">
               Target

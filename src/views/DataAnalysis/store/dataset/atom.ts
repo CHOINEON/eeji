@@ -76,17 +76,24 @@ export const selectedDataState = atom({
 })
 
 interface IOption {
-  algo_type?: number
+  algo_type: number
   date_format: string
   name: string
   date_col?: string
   target_y: string
-  desc: string
+  desc?: string
 }
 
 export const dataPropertyState = atom({
   key: 'dataProperty',
-  default: {} as IOption,
+  default: {
+    algo_type: 1,
+    date_format: '',
+    name: '',
+    date_col: '',
+    target_y: '',
+    desc: '',
+  } as IOption,
 })
 
 //사용자가 입력한 properties 저장소

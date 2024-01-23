@@ -153,8 +153,7 @@ const TabChild = () => {
                 style={{
                   // border: '1px solid red',
                   width: '63%',
-                  height: 'auto',
-                  marginTop: '30px',
+                  margin: '30px',
                   display: 'block',
                   float: 'left',
                   // padding: '20px',
@@ -162,7 +161,7 @@ const TabChild = () => {
               >
                 <PredictionResult />
               </div>
-              <div style={{ width: '30%', marginTop: '50px', display: 'block', float: 'left' }}>
+              <div style={{ width: '30%', margin: '25px 0', display: 'block', float: 'left' }}>
                 <FeatureAnalysis />
               </div>
               {/* </Spin> */}
@@ -198,13 +197,13 @@ const ButtonSave = styled.button`
   font-weight: bolder;
 `
 const ComponentContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: block;
   justify-content: space-evenly;
   background-color: #ffffff;
-  height: 730px;
+  height: 770px;
   box-shadow: 0px 0px 10px #5951db33;
   border: 1px solid #d5dcef;
+  // border: 1px solid red;
   border-radius: 25px;
   opacity: 1;
 `

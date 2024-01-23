@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider, QueryCache } from 'react-query'
 import App from './App'
 import { App as Antd } from 'antd'
 import { Loading } from 'components/common/Loading'
+import GlobalModal from 'views/DataAnalysis/components/Modal/GlobalModal'
 // import toast, { Toaster } from 'react-hot-toast'
 // import { App } from 'antd'
 //https://ant.design/docs/react/customize-theme
@@ -87,6 +88,7 @@ ReactDOM.render(
           {/* <Loading /> */}
           <Antd>
             <App />
+            <GlobalModal />
           </Antd>
           {/* <Toaster /> */}
           {/* <BrowserRouter>

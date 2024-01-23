@@ -58,7 +58,7 @@ const FeatureAnalysis = ({ data, input }: any) => {
           </div>
         )}
       </SubTitle>
-      <div>
+      <div style={{ minHeight: '40vh' }}>
         {/* {contents.map((value: any) => {
           ;<p>
             <AIbutton>AI</AIbutton>

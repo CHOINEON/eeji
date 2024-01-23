@@ -15,6 +15,8 @@ export const SubTitle = styled(Title)`
 `
 
 export const FileName = styled(Title)`
+  display: inline-block;
   font-size: 17px;
   width: 100%;
+  // text-align: center;
 `

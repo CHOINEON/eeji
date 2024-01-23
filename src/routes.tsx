@@ -16,20 +16,14 @@ import HmidIntervalD3 from 'views/hmid-interval-d3fc'
 // import Anomalyd3chart from 'views/AnomalyDetection/anomaly_d3chart-test'
 import HmidInterval from 'views/hmid_interval'
 import PriceDetection from 'views/AnomalyDetection/PriceDetection.tsx'
-import XAIsimulator from 'views/DataAnalysis/components/Unused/XAIsimulator'
+import XAIsimulator from 'views/XAI-simulator/XAIsimulator'
 import TempDataAnalysis from 'views/NewDataAnalysis/TempDataAnalysis'
-import Main from 'views/Main'
+import Main from 'views/Main/Main'
+import ApiService from 'views/ApiService/ApiService'
 
 // Auth Imports
 
 const routes = [
-  {
-    name: 'Data Analysis',
-    layout: '/admin',
-    path: '/data-analysis',
-    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
-    component: DataAnalysis,
-  },
   {
     name: 'Main',
     layout: '/admin',
@@ -37,21 +31,34 @@ const routes = [
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
     component: Main,
   },
-  // {
-  //   name: 'Anomaly Detection',
-  //   layout: '/admin',
-  //   path: '/anomalyDetection',
-  //   icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
-  //   component: Test,
-  // },
   {
-    name: 'Price Forecasting',
+    name: 'AI Model Generator',
+    layout: '/admin',
+    path: '/data-analysis',
+    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+    component: DataAnalysis,
+  },
+  {
+    name: 'Explainable AI',
+    layout: '/admin',
+    path: '/xai-simulator',
+    icon: <Icon as={MdOutlineModelTraining} width="20px" height="20px" color="inherit" />,
+    component: XAIsimulator,
+  },
+  {
+    name: 'Commodity Index Forecast',
     layout: '/admin',
     path: '/price-forecast',
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
     component: PriceForecasting,
   },
-
+  {
+    name: 'Prediction API',
+    layout: '/admin',
+    path: '/api-service',
+    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+    component: ApiService,
+  },
   // {
   //   name: 'Configuration',
   //   layout: '/admin',
@@ -59,13 +66,7 @@ const routes = [
   //   icon: <Icon as={MdSettings} width="20px" height="20px" color="inherit" />,
   //   component: Configuration,
   // },
-  // {
-  //   name: 'XAI',
-  //   layout: '/admin',
-  //   path: '/xai-simulator',
-  //   icon: <Icon as={MdOutlineModelTraining} width="20px" height="20px" color="inherit" />,
-  //   component: XAIsimulator,
-  // },
+
   // {
   //   name: 'New DataAnalysis',
   //   layout: '/admin',

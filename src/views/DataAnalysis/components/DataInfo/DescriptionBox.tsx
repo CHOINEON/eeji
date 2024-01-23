@@ -119,7 +119,7 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
         </div>
 
         <TitleWrapper>
-          <FileName style={{ display: 'inline-block' }}>{data?.name}</FileName>
+          <FileName>{data?.name}</FileName>
         </TitleWrapper>
         <div
           className="container"

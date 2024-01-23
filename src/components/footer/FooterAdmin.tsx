@@ -17,8 +17,8 @@ export default function Footer() {
         xl: 'start',
       }}
       justifyContent="center"
-      px={{ base: '30px', md: '50px' }}
-      pb="30px"
+      px={{ base: '40px', md: '50px' }}
+      // pb="30px"
       pt="40px"
     >
       <Text
@@ -33,9 +33,9 @@ export default function Footer() {
         {/* &copy; {new Date().getFullYear()} */}
         <Text as="span" fontWeight="500" ms="4px">
           <Link mx="3px" color={textColor} href="https://www.ineeji.com" target="_blank" fontWeight="700">
-            <img src={ineeji_logo} />
+            <img src={ineeji_logo} style={{ marginLeft: '7px' }} />
           </Link>
-          ⒸINEEJI Corp. All rights reserved.
+          Ⓒ INEEJI Corp. All rights reserved.
         </Text>
       </Text>
       {/* <List display="flex">

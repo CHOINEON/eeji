@@ -10,7 +10,7 @@ import { SidebarContext } from 'contexts/SidebarContext'
 import { useState } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import routes from 'routes'
-import Main from 'views/Main'
+import Main from 'views/Main/Main'
 
 // Custom Chakra theme
 export default function Dashboard(props: { [x: string]: any }) {
@@ -63,7 +63,7 @@ export default function Dashboard(props: { [x: string]: any }) {
   const { onOpen } = useDisclosure()
 
   return (
-    <Box>
+    <Box position="fixed" left={0} right={0} top={0} bottom={0}>
       <SidebarContext.Provider
         value={{
           toggleSidebar,
@@ -108,17 +108,18 @@ export default function Dashboard(props: { [x: string]: any }) {
           <Box mx="auto" p={{ base: '20px', md: '30px' }} pe="20px" minH="90vh" pt="50px">
             <Switch>
               {getRoutes(routes)}
-              <Redirect from="/" to="/admin/default" />
+              <Redirect from="/" to="/admin/main" />
             </Switch>
           </Box>
         ) : (
           <Box
             mx="auto"
+            h="100vh"
             p={{ base: '20px', md: '40px' }}
-            pe="20px"
-            minH="95vh"
-            maxH="100vh"
-            pt="50px"
+            // pe="20px"
+            // minH="94vh"
+            // maxH="90vh"
+            // pt="50px"
             background={'linear-gradient(to left, #4338f7, #000000)'}
           >
             <Main />
