@@ -1,6 +1,6 @@
 import { axiosPrivate } from './axios'
 import { TResponseType } from './type/commonResponse'
-import { IModelOptionReq, IModelOptionRes, IModelPostReq } from './type/ModelOption'
+import { IModelOptionReq, IModelOptionRes, IModelPostReq, IModelDataReq } from './type/ModelOption'
 
 const controller = new AbortController()
 const signal = controller.signal
@@ -20,6 +20,29 @@ const ModelApi = {
 
   cancelPostModel: async (): Promise<any> => {
     controller.abort()
+  },
+
+  //모델 및 데이터셋 파일 업로드 => 컬럼 리턴(column file 업로드 한 경우만)
+  uploadModelwithData: async (payload: IModelDataReq): Promise<TResponseType<object>> => {
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    }
+    const { data } = await axiosPrivate.post(`api/upload_custom_model_new/${payload.user_id}`, payload.formData, config)
+    return data
+  },
+
+  //모델 저장
+  saveModelwithColumns: async (payload: IModelDataReq): Promise<TResponseType<object>> => {
+    const config = {
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+    }
+
+    const { data } = await axiosPrivate.post(`api/save_custom_model_new/${payload.user_id}`, payload.formData, config)
+    return data
   },
 }
 

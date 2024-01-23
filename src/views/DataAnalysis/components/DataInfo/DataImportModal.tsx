@@ -158,7 +158,7 @@ export default DataImportModal
 //   height: 46px;
 // `
 
-const UploadButton = styled.button<{ disabled: boolean }>`
+export const UploadButton = styled.button<{ disabled: boolean }>`
   width: 100%;
   height: 46px;
   background-color: ${(props: any) => (props.disabled ? '#C3CADB' : '#4338f7')};
@@ -167,7 +167,7 @@ const UploadButton = styled.button<{ disabled: boolean }>`
   font-size: 15px;
 `
 
-const CancelButton = styled.button`
+export const CancelButton = styled.button`
   block;
   m-auto;
   width: 100%;

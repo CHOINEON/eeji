@@ -43,3 +43,8 @@ export interface IModelOptionRes {
   sorted_results_df: string
   best_plot: string
 }
+
+export interface IModelDataReq {
+  user_id: string
+  formData: FormData
+}
