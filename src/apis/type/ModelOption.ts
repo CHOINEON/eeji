@@ -1,3 +1,5 @@
+import { URLSearchParams } from 'url'
+
 export interface IModelOptionReq {
   set_auto: boolean
   user_id: string
@@ -44,7 +46,16 @@ export interface IModelOptionRes {
   best_plot: string
 }
 
+export interface IModelVariablePostReq {
+  user_id: string
+  com_id: string
+  uuid: string
+  x_value: Array<string>
+}
+
 export interface IModelDataReq {
   user_id: string
-  formData: FormData
+  formData?: FormData
+  params?: URLSearchParams
+  payload?: IModelVariablePostReq
 }
