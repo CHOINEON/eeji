@@ -47,8 +47,6 @@ export const Login: React.FC = () => {
     console.log('params:', params)
     const code = params.get('code')
 
-    alert(code)
-
     if (code) {
       axios
         .post(process.env.REACT_APP_NEW_API_SERVER_URL + '/login/google', { code })

@@ -41,7 +41,7 @@ const CardList = () => {
           </Card>
         </WrapItem>
         <WrapItem>
-          <Card className="parent" onClick={() => alert('준비 중인 서비스입니다')}>
+          <Card className="parent" onClick={() => (window.location.href = '/admin/xai-simulator')}>
             <img className="child" src={XaiImg} />
             <TextOnCard color="#002D65" isSingleLine={true}>
               Explainable AI
@@ -88,9 +88,8 @@ const SubText = styled.p`
   color: #ffffff;
 `
 
-const Card = styled.div`
+const Card = styled.button`
   position: relative;
-
   @media (max-width: 1400px) {
     height: 300px;
   }
@@ -111,7 +110,7 @@ const TextOnCard = styled.div<{ color: string; isSingleLine?: boolean }>`
   color: transparent;
   // color: white;
   // opacity: 1;
-
+  text-align: center;
   @media (max-width: 1400px) {
     display: none;
   }
@@ -123,5 +122,6 @@ const SubTextOnCard = styled.div<{ color: string }>`
   width: 100%;
   bottom: 20px;
   color: ${(props) => props.color};
+  font-size: 13px;
   text-align: center;
 `

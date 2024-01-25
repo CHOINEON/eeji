@@ -7,7 +7,9 @@ const fetchChartData = async () => {
       user_id: localStorage.getItem('userId'),
     }
 
-    const response = await axios.post(process.env.REACT_APP_NEW_API_SERVER_URL + '/api/index_predict', param)
+    const response = await axios.get(
+      process.env.REACT_APP_NEW_API_SERVER_URL + `/api/index_predict?user_id=${param.user_id}`
+    )
     return response.data
   } catch (error) {
     console.error('error:', error)

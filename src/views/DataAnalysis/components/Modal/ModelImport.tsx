@@ -18,6 +18,12 @@ interface IDataObj {
   type: any
 }
 
+interface IParamObj {
+  uuid: string
+  variable_list: Array<string>
+  selected_var: Array<string>
+}
+
 const TestResponse = {
   uuid: '55abedc3e63c4aaaad4655d4faec7a06',
   variable_list: [
@@ -43,7 +49,7 @@ const ModelImport = () => {
 
   const [saving, setSaving] = useState(false)
   const [data, setData] = useState<IDataObj>() //upload(step1) 요청 시 필요한 데이터
-  const [params, setParams] = useState({ uuid: '', variable_list: [], selected_var: [] }) //save(step2) 요청 시 필요한 파라메터
+  const [response, setResponse] = useState<IParamObj>() //save(step2) 요청 시 필요한 파라메터
   const [modal, setModal] = useRecoilState(modalState)
 
   const { mutate: mutateUpload } = useMutation(ModelApi.uploadModelwithData, {
@@ -57,7 +63,7 @@ const ModelImport = () => {
         },
       })
 
-      setParams({ ...response, uuid: response.uuid, variable_list: response['variable_list'] })
+      setResponse({ ...response, uuid: response.uuid, variable_list: response['variable_list'] })
       setSaving(false)
     },
     onError: (error: any, query: any) => {
@@ -67,7 +73,15 @@ const ModelImport = () => {
   })
   const { mutate: mutateSave } = useMutation(ModelApi.saveModelwithColumns, {
     onSuccess: (response: any) => {
-      console.log('resp:', response)
+      message.open({
+        type: 'success',
+        content: response,
+        duration: 1,
+        style: {
+          margin: 'auto',
+        },
+      })
+      setModal(null)
     },
     onError: (error: any, query: any) => {
       console.error(error)
@@ -81,12 +95,12 @@ const ModelImport = () => {
 
   useEffect(() => {
     // console.log('data:', data)
-    if (data?.model && data?.data && data?.type && data.column) {
+    if (data?.model && data?.data && data.column) {
       const formData = new FormData()
 
       formData.append('weight', data.model)
       formData.append('input_data', data.data)
-      formData.append('model_type', data.type)
+      formData.append('model_type', !data.type ? 'pytorch' : data.type)
       formData.append('columns', data.column || null)
 
       mutateUpload({ user_id, formData })
@@ -108,17 +122,23 @@ const ModelImport = () => {
     setData({ ...data, type: param })
   }
   const handleSelectColumn = (param: Array<any>) => {
-    setParams({ ...params, selected_var: param })
+    setResponse({ ...response, selected_var: param })
   }
   //
   const handleSave = () => {
-    const formData = new FormData()
+    // const params = new URLSearchParams()
 
-    formData.append('com_id', com_id)
-    formData.append('uuid', params.uuid)
-    // formData.append('x_value', params.selected_var)
+    // params.append('com_id', com_id)
+    // params.append('uuid', response.uuid)
+    // params.append('x_value', JSON.stringify(response.selected_var))
 
-    mutateSave({ user_id, formData })
+    const payload = {
+      user_id: user_id,
+      com_id: com_id,
+      uuid: response.uuid,
+      x_value: response.selected_var,
+    }
+    mutateSave({ user_id, payload })
   }
 
   return (
@@ -130,8 +150,10 @@ const ModelImport = () => {
           <ModelUpload label="분석할 데이터" onChange={handleChangeData} selectedFile={data?.data?.name} />
           <ModelUpload label="Column(Optional)" onChange={handleChangeColumn} selectedFile={data?.column?.name} />
         </div>
-        <div style={{ width: '100%', height: 200, overflow: 'auto' }}>
-          <ColumnList data={params.variable_list} onSelect={handleSelectColumn} />
+        <div
+          style={{ width: '100%', height: 200, overflow: 'auto', display: response?.variable_list ? 'block' : 'none' }}
+        >
+          <ColumnList data={response?.variable_list} onSelect={handleSelectColumn} />
         </div>
 
         <div style={{ marginBottom: '35px' }}>

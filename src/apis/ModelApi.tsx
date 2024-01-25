@@ -23,25 +23,19 @@ const ModelApi = {
   },
 
   //모델 및 데이터셋 파일 업로드 => 컬럼 리턴(column file 업로드 한 경우만)
-  uploadModelwithData: async (payload: IModelDataReq): Promise<TResponseType<object>> => {
+  uploadModelwithData: async (params: IModelDataReq): Promise<TResponseType<object>> => {
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
       },
     }
-    const { data } = await axiosPrivate.post(`api/upload_custom_model_new/${payload.user_id}`, payload.formData, config)
+    const { data } = await axiosPrivate.post(`api/upload_custom_model_new/${params.user_id}`, params.formData, config)
     return data
   },
 
   //모델 저장
-  saveModelwithColumns: async (payload: IModelDataReq): Promise<TResponseType<object>> => {
-    const config = {
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded',
-      },
-    }
-
-    const { data } = await axiosPrivate.post(`api/save_custom_model_new/${payload.user_id}`, payload.formData, config)
+  saveModelwithColumns: async (params: IModelDataReq): Promise<TResponseType<object>> => {
+    const { data } = await axiosPrivate.post(`api/save_custom_model_new/${params.user_id}`, params.payload)
     return data
   },
 }
