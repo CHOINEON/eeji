@@ -5,11 +5,12 @@ import ModelUpload from './Model/Upload'
 import ModelApi from 'apis/ModelApi'
 import { useMutation } from 'react-query'
 import { CancelButton, CustomButton } from '../DataInfo/DataImportModal'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
 import { message } from 'antd'
 import ColumnList from './Model/ColumnList'
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
+import { CheckOutlined, CloseOutlined, TrademarkOutlined } from '@ant-design/icons'
+import { customModelStore } from 'views/XAI-simulator/store/analyze/atom'
 
 interface IDataObj {
   model: any
@@ -30,23 +31,25 @@ const ModelImport = () => {
 
   const [saving, setSaving] = useState(false)
   const [data, setData] = useState<IDataObj>() //upload(step1) 요청 시 필요한 데이터
-  const [response, setResponse] = useState<IParamObj>() //save(step2) 요청 시 필요한 파라메터
+  // const [response, setResponse] = useState<IParamObj>() //save(step2) 요청 시 필요한 파라메터
   const [modal, setModal] = useRecoilState(modalState)
   const [isDisabled, setIsDisabled] = useState(true)
   const [haveColumn, setHaveColumn] = useState(false)
+  const [result, setResult] = useRecoilState(customModelStore)
 
   const { mutate: mutateUpload } = useMutation(ModelApi.uploadModelwithData, {
     onSuccess: (response: any) => {
-      message.open({
-        type: 'success',
-        content: response.message,
-        duration: 1,
-        style: {
-          margin: 'auto',
-        },
-      })
+      console.log('mutateUpload;', response)
+      // message.open({
+      //   type: 'success',
+      //   content: response.message,
+      //   duration: 1,
+      //   style: {
+      //     margin: 'auto',
+      //   },
+      // })
 
-      setResponse({ ...response, uuid: response.uuid, variable_list: response['variable_list'] })
+      setResult({ ...result, uuid: response.uuid, variable_list: response['variable_list'] })
       setSaving(false)
     },
     onError: (error: any, query: any) => {
@@ -56,17 +59,18 @@ const ModelImport = () => {
   })
   const { mutate: mutateSave } = useMutation(ModelApi.saveModelwithColumns, {
     onSuccess: (response: any) => {
-      message.open({
-        type: 'success',
-        content: response,
-        duration: 1,
-        style: {
-          margin: 'auto',
-        },
-      })
-      setModal(null)
-      //세션 스토리지에 uuid 저장
-      sessionStorage.setItem('uuid', response.uuid)
+      // message.open({
+      //   type: 'success',
+      //   content: response,
+      //   duration: 1,
+      //   style: {
+      //     margin: 'auto',
+      //   },
+      // })
+      setSaving(false)
+
+      //결과 데이터 받아오기 위해 다시 요청
+      fetchGetResult(response.uuid)
     },
     onError: (error: any, query: any) => {
       console.error(error)
@@ -76,7 +80,10 @@ const ModelImport = () => {
 
   const { mutate: mutateGetResult } = useMutation(ModelApi.getXaiAnalysisResult, {
     onSuccess: (result: any) => {
-      //
+      console.log('mutateGetResult:', result)
+      setResult({ ...result, data: result })
+      setSaving(false)
+      setModal(null)
     },
     onError: (error: any, query: any) => {
       //
@@ -92,8 +99,6 @@ const ModelImport = () => {
     // console.log('haveColumn:', haveColumn)
 
     if (!data?.model || !data?.data) {
-      console.log('model:', data?.model)
-      console.log('data:', data?.data)
       setIsDisabled(true) //버튼 활성화
     } else {
       setIsDisabled(false)
@@ -114,7 +119,7 @@ const ModelImport = () => {
     setData({ ...data, type: param })
   }
   const handleSelectColumn = (param: Array<any>) => {
-    setResponse({ ...response, selected_var: param })
+    setResult({ ...result, selected_var: param })
   }
 
   const handleUpload = () => {
@@ -133,14 +138,26 @@ const ModelImport = () => {
   }
 
   const handleSave = () => {
+    setSaving(true)
     const payload = {
       user_id: user_id,
       com_id: com_id,
-      uuid: response.uuid,
-      x_value: response.selected_var,
+      uuid: result.uuid,
+      x_value: result.selected_var,
     }
 
     mutateSave({ user_id, payload })
+  }
+
+  const fetchGetResult = (uuid: string) => {
+    setSaving(true)
+    const payload = {
+      user_id: user_id,
+      com_id: com_id,
+      uuid: uuid,
+    }
+    console.log('payload:', payload)
+    mutateGetResult({ user_id, payload })
   }
 
   return (
@@ -188,21 +205,26 @@ const ModelImport = () => {
           {/* ) : null} */}
         </div>
         <div
-          style={{ width: '100%', height: 200, overflow: 'auto', display: response?.variable_list ? 'block' : 'none' }}
+          style={{
+            width: '100%',
+            height: 200,
+            overflow: 'auto',
+            display: result?.variable_list?.length > 0 ? 'block' : 'none',
+          }}
         >
-          <ColumnList data={response?.variable_list} onSelect={handleSelectColumn} />
+          <ColumnList data={result?.variable_list} onSelect={handleSelectColumn} />
         </div>
         <div style={{ margin: '25px 0' }}>
           <CancelButton onClick={() => setModal(null)}>Cancel</CancelButton>
           <CustomButton
             // className="block ant-btn ant-btn-primary"
-            visible={response?.uuid ? false : true}
+            visible={result?.uuid ? false : true}
             disabled={isDisabled}
             onClick={handleUpload}
           >
             Upload
           </CustomButton>
-          <CustomButton visible={response?.uuid ? true : false} onClick={handleSave}>
+          <CustomButton visible={result?.uuid ? true : false} onClick={handleSave}>
             Model Save
           </CustomButton>
         </div>

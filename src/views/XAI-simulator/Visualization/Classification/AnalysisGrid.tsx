@@ -1,5 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
+import { useRecoilValue } from 'recoil'
+import { customModelStore } from 'views/XAI-simulator/store/analyze/atom'
 import HorizontalStackedBarChart from './HorizontalStackedBarChart'
 
 const single_data = [
@@ -25,9 +27,9 @@ const RowItem = (item: any) => {
   return (
     <Row>
       <div style={{ width: '2%' }}>{itemObj.no}</div>
-      <div style={{ width: '10%' }}>{itemObj.name}</div>
-      <div style={{ width: '10%' }}>{itemObj.age}</div>
-      <div style={{ width: '10%' }}>{itemObj.status}</div>
+      <div style={{ width: '10%' }}>{itemObj?.name}</div>
+      <div style={{ width: '10%' }}>{itemObj?.age}</div>
+      <div style={{ width: '10%' }}>{itemObj?.status}</div>
       <div style={{ height: '50px !important' }}>
         <HorizontalStackedBarChart data={itemObj.result} />
       </div>
@@ -36,12 +38,13 @@ const RowItem = (item: any) => {
 }
 
 const AnalysisGrid = () => {
+  const analysisResult = useRecoilValue(customModelStore)
   return (
-    <>
-      {single_data.map((value: any) => {
+    <div style={{ height: '100%' }}>
+      {analysisResult.data.map((value: any) => {
         return <RowItem item={value} />
       })}
-    </>
+    </div>
   )
 }
 

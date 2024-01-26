@@ -1,70 +1,49 @@
-import { Box } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { Button, Col, Row, Tag } from 'antd'
+import Title from 'antd/es/typography/Title'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
-import useModal from 'hooks/useModal'
+import InfoCircle from '../DataAnalysis/components/Icon/InfoCircle'
+import AnalysisGrid from '../XAI-simulator/Visualization/Classification/AnalysisGrid'
 
-const XAIsimulator = () => {
-  const uuid = sessionStorage.getItem('uuid')
-
-  const { openModal, closeModal } = useModal()
-
-  const modalData = {
-    title: 'Data Upload',
-    content: 'Modal Content',
-    callback: () => alert('modal callback()'),
-  }
-
-  const handleClick = () => {
-    openModal({
-      modalTitle: 'Model Data Import',
-      modalType: 'ModelImport',
-      modalProps: {
-        onClick: () => {
-          closeModal()
-        },
-      },
-    })
-  }
-
+const AnalysisResult = () => {
   return (
-    <Box style={{ position: 'relative', zIndex: 1000, backgroundColor: 'yellow', width: '100%', height: '100%' }}>
-      <UploadContainer>
-        <TextMain>업로드된 데이터가 없습니다.</TextMain>
-        <TextSub>분석을 위해 데이터를 업로드하세요.</TextSub>
-        <div style={{ width: '100%', textAlign: 'center', marginTop: 32 }}>
-          <UploadButton onClick={handleClick}>Data Upload</UploadButton>
-        </div>
-      </UploadContainer>
-      {/* <Container>
+    <div>
+      <Container>
         <Row gutter={[8, 8]} style={{ width: '100%' }}>
+          <Title
+            style={{
+              color: '#002D65',
+              display: 'inline-block',
+              width: '80%',
+              fontWeight: 'bold',
+              fontSize: '32px',
+              marginLeft: 20,
+            }}
+          >
+            Classification Result
+            <InfoCircle content="。。。" />
+          </Title>
           <Col span={18}>
             <Row>
-              <RoundedBox width={'100%'} height={'80vh'}>
-                <Title style={{ color: '#002D65', display: 'inline-block', width: '80%', fontWeight: 400 }}>
-                  XAI simulator
-                  <InfoCircle content="。。。" />
-                </Title>
+              <RoundedBox width={'100%'} height={'70vh'}>
+                <AnalysisGrid />
               </RoundedBox>
             </Row>
           </Col>
           <Col span={6}>
-            <RoundedBox height={'80vh'}>
-              <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>
-                Feature Importance
-                <InfoCircle content="。。。" />
-              </Title>
+            <RoundedBox height={'70vh'}>
+              {/* <FeatureAnalysis />  안에 컨텐츠만 따로 div에 담도록 모듈 수정해야됨*/}
             </RoundedBox>
           </Col>
         </Row>
         <Row style={{ width: '100%' }}></Row>
         <Col span={6}></Col>
-      </Container> */}
-    </Box>
+      </Container>
+    </div>
   )
 }
 
-export default XAIsimulator
+export default AnalysisResult
 
 interface Container {
   width?: any
