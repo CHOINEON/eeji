@@ -40,15 +40,29 @@ const DatasetApi = {
     return data
   },
 
-  //데이터셋 수정하기(edit)
+  //데이터셋 수정하기(edit)  --- 24.01.25 백엔드 요청에 따라 QueryString으로 변경함
+  // editDataset: async (payload: IDatasetEditReq): Promise<TResponseType<string>> => {
+  //   const { data } = await axiosPrivate.patch(`/api/edit_data/${payload.user_id}`, payload)
+  //   return data
+  // },'
+
   editDataset: async (payload: IDatasetEditReq): Promise<TResponseType<string>> => {
-    const { data } = await axiosPrivate.patch(`/api/edit_data/${payload.user_id}`, payload)
+    const { data } = await axiosPrivate.patch(
+      `/api/edit_data/${payload.user_id}?com_id=${payload.com_id}&ds_id=${payload.ds_id}&ds_name=${payload.ds_name}&ds_desc=${payload.ds_desc}`
+    )
     return data
   },
 
-  //데이터셋 삭제하기(delete)
+  //데이터셋 삭제하기(delete) --- 24.01.25 백엔드 요청에 따라 QueryString으로 변경함
+  // deleteDataset: async (payload: IDatasetReq): Promise<TResponseType<string>> => {
+  //   const { data } = await axiosPrivate.delete(`/api/delete_data/${payload.user_id}`, { data: payload })
+  //   return data
+  // },
+
   deleteDataset: async (payload: IDatasetReq): Promise<TResponseType<string>> => {
-    const { data } = await axiosPrivate.delete(`/api/delete_data/${payload.user_id}`, { data: payload })
+    const { data } = await axiosPrivate.delete(
+      `/api/delete_data/${payload.user_id}?com_id=${payload.com_id}&ds_id=${payload.ds_id}`
+    )
     return data
   },
 }
