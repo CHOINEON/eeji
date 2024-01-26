@@ -38,6 +38,12 @@ const ModelApi = {
     const { data } = await axiosPrivate.post(`api/save_custom_model_new/${params.user_id}`, params.payload)
     return data
   },
+
+  //XAI- classification analysis result
+  getXaiAnalysisResult: async (params: IModelDataReq): Promise<TResponseType<object>> => {
+    const { data } = await axiosPrivate.post(`api/get_xai_result/${params.user_id}`, params.payload)
+    return data
+  },
 }
 
 export default ModelApi

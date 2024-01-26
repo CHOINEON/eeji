@@ -1,15 +1,15 @@
-import { Modal, Radio, Spin, Table } from 'antd'
+import { Checkbox, Modal, Radio, Spin, Switch, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
-import RadioButtonGroup from '../DataEntry/RadioButtonGroup'
 import ModelTypeRadio from './Model/ModelTypeRadio'
 import ModelUpload from './Model/Upload'
 import ModelApi from 'apis/ModelApi'
 import { useMutation } from 'react-query'
-import { CancelButton, UploadButton } from '../DataInfo/DataImportModal'
+import { CancelButton, CustomButton } from '../DataInfo/DataImportModal'
 import { useRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
 import { message } from 'antd'
 import ColumnList from './Model/ColumnList'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 
 interface IDataObj {
   model: any
@@ -24,25 +24,6 @@ interface IParamObj {
   selected_var: Array<string>
 }
 
-const TestResponse = {
-  uuid: '55abedc3e63c4aaaad4655d4faec7a06',
-  variable_list: [
-    'K6 KILN SPEED 1',
-    'K6 TEMP INLET',
-    'K6 AUX COAL FD TH',
-    'K6 INLET O2',
-    'K6 INLET CO',
-    'K6 INLET NOX',
-    'K6 WGAS O2',
-    'K6 WGAS CO',
-    'K6 H FUEL TH',
-    'K6 RISING DUCT',
-    'K6 CFW FLOW',
-    'K6 RDF CFW FEED',
-  ],
-  message: 'File uploaded successfully',
-}
-
 const ModelImport = () => {
   const com_id = localStorage.getItem('companyId')
   const user_id = localStorage.getItem('userId').toString()
@@ -51,6 +32,8 @@ const ModelImport = () => {
   const [data, setData] = useState<IDataObj>() //upload(step1) 요청 시 필요한 데이터
   const [response, setResponse] = useState<IParamObj>() //save(step2) 요청 시 필요한 파라메터
   const [modal, setModal] = useRecoilState(modalState)
+  const [isDisabled, setIsDisabled] = useState(true)
+  const [haveColumn, setHaveColumn] = useState(false)
 
   const { mutate: mutateUpload } = useMutation(ModelApi.uploadModelwithData, {
     onSuccess: (response: any) => {
@@ -82,6 +65,8 @@ const ModelImport = () => {
         },
       })
       setModal(null)
+      //세션 스토리지에 uuid 저장
+      sessionStorage.setItem('uuid', response.uuid)
     },
     onError: (error: any, query: any) => {
       console.error(error)
@@ -89,27 +74,34 @@ const ModelImport = () => {
     },
   })
 
+  const { mutate: mutateGetResult } = useMutation(ModelApi.getXaiAnalysisResult, {
+    onSuccess: (result: any) => {
+      //
+    },
+    onError: (error: any, query: any) => {
+      //
+    },
+  })
+
   useEffect(() => {
-    setData({ ...data, model: 'pytorch' })
+    setData({ ...data, model: 'pytorch', data: undefined, column: undefined })
   }, [])
 
   useEffect(() => {
-    // console.log('data:', data)
-    if (data?.model && data?.data && data.column) {
-      const formData = new FormData()
+    // console.log('useEffect:', data)
+    // console.log('haveColumn:', haveColumn)
 
-      formData.append('weight', data.model)
-      formData.append('input_data', data.data)
-      formData.append('model_type', !data.type ? 'pytorch' : data.type)
-      formData.append('columns', data.column || null)
-
-      mutateUpload({ user_id, formData })
-
-      setSaving(true)
+    if (!data?.model || !data?.data) {
+      console.log('model:', data?.model)
+      console.log('data:', data?.data)
+      setIsDisabled(true) //버튼 활성화
+    } else {
+      setIsDisabled(false)
     }
-  }, [data])
+  }, [data, haveColumn])
 
   const handleChangeModel = (param: any) => {
+    // console.log('handle change:', param)
     setData({ ...data, model: param })
   }
   const handleChangeData = (param: any) => {
@@ -124,20 +116,30 @@ const ModelImport = () => {
   const handleSelectColumn = (param: Array<any>) => {
     setResponse({ ...response, selected_var: param })
   }
-  //
+
+  const handleUpload = () => {
+    setSaving(true)
+
+    if (data?.model && data?.data) {
+      const formData = new FormData()
+
+      formData.append('weight', data.model)
+      formData.append('input_data', data.data)
+      formData.append('model_type', !data.type ? 'pytorch' : data.type)
+      formData.append('columns', data.column || null)
+
+      mutateUpload({ user_id, formData })
+    }
+  }
+
   const handleSave = () => {
-    // const params = new URLSearchParams()
-
-    // params.append('com_id', com_id)
-    // params.append('uuid', response.uuid)
-    // params.append('x_value', JSON.stringify(response.selected_var))
-
     const payload = {
       user_id: user_id,
       com_id: com_id,
       uuid: response.uuid,
       x_value: response.selected_var,
     }
+
     mutateSave({ user_id, payload })
   }
 
@@ -146,25 +148,63 @@ const ModelImport = () => {
       <Spin tip="데이터 업로드 중 ..." spinning={saving}>
         <div>
           <ModelTypeRadio onChange={handleChangeType} />
-          <ModelUpload label="예측모델 파일 업로드" onChange={handleChangeModel} selectedFile={data?.model?.name} />
-          <ModelUpload label="분석할 데이터" onChange={handleChangeData} selectedFile={data?.data?.name} />
-          <ModelUpload label="Column(Optional)" onChange={handleChangeColumn} selectedFile={data?.column?.name} />
+          <ModelUpload
+            required={true}
+            label="예측모델 파일 업로드"
+            onChange={handleChangeModel}
+            selectedFile={data?.model?.name}
+          />
+          <ModelUpload
+            required={true}
+            label="분석할 데이터"
+            onChange={handleChangeData}
+            selectedFile={data?.data?.name}
+          />
+          {/* <Switch
+            defaultChecked
+            checkedChildren={
+              <>
+                <span>Column </span>
+                <CheckOutlined />
+              </>
+            }
+            unCheckedChildren={
+              <>
+                <span>Column </span>
+                <CloseOutlined />
+              </>
+            }
+          /> */}
+          {/* <Checkbox style={{ color: '#002d65', fontSize: '13px' }} onChange={(e) => setHaveColumn(e.target.checked)}>
+            Do you have columns to upload?
+          </Checkbox>
+          {haveColumn ? ( */}
+          <ModelUpload
+            required={false}
+            label="Column(Optional인데 아직은 필수 입력)"
+            onChange={handleChangeColumn}
+            selectedFile={data?.column?.name}
+          />
+          {/* ) : null} */}
         </div>
         <div
           style={{ width: '100%', height: 200, overflow: 'auto', display: response?.variable_list ? 'block' : 'none' }}
         >
           <ColumnList data={response?.variable_list} onSelect={handleSelectColumn} />
         </div>
-
-        <div style={{ marginBottom: '35px' }}>
+        <div style={{ margin: '25px 0' }}>
           <CancelButton onClick={() => setModal(null)}>Cancel</CancelButton>
-          <UploadButton
+          <CustomButton
             // className="block ant-btn ant-btn-primary"
-            disabled={false}
-            onClick={handleSave}
+            visible={response?.uuid ? false : true}
+            disabled={isDisabled}
+            onClick={handleUpload}
           >
             Upload
-          </UploadButton>
+          </CustomButton>
+          <CustomButton visible={response?.uuid ? true : false} onClick={handleSave}>
+            Model Save
+          </CustomButton>
         </div>
       </Spin>
     </>

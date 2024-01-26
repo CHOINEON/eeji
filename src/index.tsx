@@ -56,7 +56,7 @@ ReactDOM.render(
           colorPrimary: '#4338F7',
           fontFamily: 'Helvetica Neue',
           borderRadius: 7,
-          colorBgContainer: '#FFFFFF',
+          // colorBgContainer: '#FFFFFF',
           // colorBgContainer: '#002D65',
           // colorBgContainerDisabled: '#5951DB33',
         },

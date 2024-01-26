@@ -137,13 +137,13 @@ const DataImportModal = (props: any) => {
           {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
           <div>
             <CancelButton onClick={handleCancel}>Cancel</CancelButton>
-            <UploadButton
+            <CustomButton
               // className="block ant-btn ant-btn-primary"
               disabled={btnDisabled}
               onClick={handleSave}
             >
               Save
-            </UploadButton>
+            </CustomButton>
           </div>
         </Spin>
       </Modal>
@@ -158,10 +158,11 @@ export default DataImportModal
 //   height: 46px;
 // `
 
-export const UploadButton = styled.button<{ disabled: boolean }>`
+export const CustomButton = styled.button<{ disabled?: boolean; visible?: boolean }>`
   width: 100%;
   height: 46px;
   background-color: ${(props: any) => (props.disabled ? '#C3CADB' : '#4338f7')};
+  display: ${(props: any) => (props.visible ? 'block' : 'none')};
   border-radius: 10px;
   color: #ffffff;
   font-size: 15px;
@@ -172,8 +173,8 @@ export const CancelButton = styled.button`
   m-auto;
   width: 100%;
   height: 46px;
-  background-color: #ffffff;
   border-radius: 10px;
+  background-color: #ffffff;
   color: #002d65;
   font-size: 13px;
 `

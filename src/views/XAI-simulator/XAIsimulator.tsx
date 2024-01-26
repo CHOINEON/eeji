@@ -1,19 +1,12 @@
 import { Box } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { Button, Col, Row, Tag } from 'antd'
-import Title from 'antd/es/typography/Title'
-import axios from 'axios'
-
 import React, { MouseEventHandler, useEffect, useState } from 'react'
-import Global from 'views/XAI-simulator/Global'
-import Local from 'views/XAI-simulator/Local'
-import PdpResult from 'views/XAI-simulator/PDP'
-import InfoCircle from '../DataAnalysis/components/Icon/InfoCircle'
-import data from './data.json'
-import ModelImport from '../DataAnalysis/components/Modal/ModelImport'
 import useModal from 'hooks/useModal'
 
 const XAIsimulator = () => {
+  const uuid = sessionStorage.getItem('uuid')
+
   const { openModal, closeModal } = useModal()
 
   const modalData = {
