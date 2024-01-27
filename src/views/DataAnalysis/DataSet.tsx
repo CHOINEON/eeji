@@ -87,7 +87,7 @@ const DataSet = () => {
       <div style={{ width: '100%', display: 'block', float: 'right', margin: '50px 0' }}>
         {data?.data.length > 0 ? (
           <Row className="row-column-title">
-            <Col flex="451px"></Col>
+            {/* <Col flex="451px"></Col>
             <Col style={{ textAlign: 'center' }} flex="100px">
               Target
             </Col>
@@ -102,7 +102,7 @@ const DataSet = () => {
             </Col>
             <Col style={{ textAlign: 'center' }} flex="230px">
               Created by
-            </Col>
+            </Col> */}
           </Row>
         ) : (
           !loading && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: '200px' }} />

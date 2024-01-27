@@ -39,7 +39,7 @@ const GlobalModal = () => {
         title={
           <>
             <img style={{ margin: '10px 0 5px 0' }} src={logo_xs} />
-            <p style={{ fontSize: '30px', fontWeight: 'bold', marginBottom: 50 }}>{modalTitle}</p>
+            <p style={{ fontSize: '30px', fontWeight: 'bold', marginBottom: 30 }}>{modalTitle}</p>
           </>
         }
         footer={null}
