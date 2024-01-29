@@ -123,6 +123,7 @@ const MenuItem = ({ children, isLast, to, ...rest }: any) => {
         fontWeight={activeRoute(to.toLowerCase()) ? 'bold' : 'normal'}
         letterSpacing="0.5px"
         fontSize={15}
+        fontFamily="Helvetica Neue"
         // color={activeRoute(to.toLowerCase()) ? activeColor : inactiveColor}
       >
         {children}
@@ -171,7 +172,7 @@ const NavBarContainer = ({ children, ...props }: any) => {
       p={8}
       bg={'#242185'}
       color={['white', 'white', 'primary.700', 'primary.700']}
-      background={'linear-gradient( to left, #4338F7, #000000 )'}
+      background={'linear-gradient( to left, #332bbf, #000000 )'}
       {...props}
     >
       {children}

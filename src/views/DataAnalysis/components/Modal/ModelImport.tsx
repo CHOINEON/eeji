@@ -162,7 +162,7 @@ const ModelImport = () => {
 
   return (
     <>
-      <Spin tip="데이터 업로드 중 ..." spinning={saving}>
+      <Spin tip="업로드 중 ..." spinning={saving}>
         <div>
           <ModelTypeRadio onChange={handleChangeType} />
           <ModelUpload

@@ -27,6 +27,7 @@ import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
 import SidebarBrand from 'components/sidebar/components/Brand'
 import { userInfoState } from 'views/DataAnalysis/store/dataset/atom'
 import GoogleSignin from './components/GoogleSigninBtn'
+import AvailableServiceIcon from './components/AvailableServiceIcon'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -215,9 +216,7 @@ export const Login: React.FC = () => {
             optimization of industrial processes.
           </BottomCotents>
         </BottomTitleParent>
-        <TopBox>
-          <Date />
-        </TopBox>
+        <AvailableServiceIcon />
       </BottomBox>
       <FormWrap>
         <LoginTitle>LOGIN</LoginTitle>
@@ -333,34 +332,40 @@ const Logo = styled(BgStyle)`
 const BottomBox = styled.div`
   position: fixed;
   left: 7vw;
-  bottom: 8vw;
+  bottom: 2vw;
   border-top: 1px solid #fff;
   padding: 0.5vw;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  // display: flex;
+  // align-items: center;
+  // justify-content: space-between;
   z-index: 999;
   width: 50vw;
+  display: block;
+  float: left;
 `
 
 const Circle = styled(BgStyle)`
   background-image: url(${circle});
   background-size: 88% auto;
   background-position: center top 2vw;
-  width: 7vw;
-  height: 7.5vw;
+  width: 10vw;
+  height: 12vw;
+  display: inline-block;
+  float: left;
 `
 
 const TopBox = styled.div`
-  display: flex;
+  display: inline-flex;
   align-items: center;
   margin-bottom: 0.5vw;
   justify-content: space-between;
 `
 
 const BottomTitleParent = styled.div`
-  width: 45vw;
-  margin-left: 3vw;
+  display: inline-block;
+  float: left;
+  width: 35vw;
+  margin: 3vh 2vw;
 `
 
 const Date = styled(BgStyle)`
@@ -380,10 +385,6 @@ const BottomCotents = styled.div`
   font-size: 0.7vw;
   line-height: 1vw;
   color: #fff;
-  @font-face {
-    font-family: 'Helvetica Neue';
-    src: url('https://fonts.cdnfonts.com/css/helvetica-neue-9');
-  }
   font-family: 'Helvetica Neue', sans-serif;
 `
 

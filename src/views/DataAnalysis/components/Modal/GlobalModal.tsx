@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import logo_xs from 'assets/img/ineeji/logo_xs.svg'
 import { useRecoilState } from 'recoil'
-import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import { modalState } from 'stores/modal'
 import ModelImport from './ModelImport'
-import styled from '@emotion/styled'
 import { Modal } from 'antd'
+import SendFeedback from './SendFeedback'
 
 export const MODAL_TYPES = {
   ModelImport: 'ModelImport',
   DataImport: 'DataImport',
+  SendFeedback: 'SendFeedback',
 }
 
 const ModalComponents: any = {
   [MODAL_TYPES.ModelImport]: ModelImport,
+  [MODAL_TYPES.SendFeedback]: SendFeedback,
 }
 
 const GlobalModal = () => {

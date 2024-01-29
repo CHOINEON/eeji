@@ -20,6 +20,7 @@ const DataImportModal = (props: any) => {
   const resetUploadFileState = useResetRecoilState(uploadedDataState)
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
   const inputOption = useRecoilValue(dataPropertyState)
+  const resetInputOption = useResetRecoilState(dataPropertyState)
 
   const [btnDisabled, setBtnDisabled] = useState(true)
 
@@ -41,6 +42,7 @@ const DataImportModal = (props: any) => {
     if (!importOpen) {
       //선택 초기화
       resetUploadFileState()
+      resetInputOption()
       setSaving(false)
     }
   }, [importOpen])
@@ -139,6 +141,7 @@ const DataImportModal = (props: any) => {
             <CancelButton onClick={handleCancel}>Cancel</CancelButton>
             <CustomButton
               // className="block ant-btn ant-btn-primary"
+              visible={true}
               disabled={btnDisabled}
               onClick={handleSave}
             >

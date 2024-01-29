@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './assets/css/App.css'
 import { ChakraProvider } from '@chakra-ui/react'
-import { ConfigProvider } from 'antd'
+import { ConfigProvider, FloatButton } from 'antd'
 import theme from './theme/theme'
 import { RecoilRoot } from 'recoil'
 import './locales'
@@ -11,6 +11,8 @@ import App from './App'
 import { App as Antd } from 'antd'
 import { Loading } from 'components/common/Loading'
 import GlobalModal from 'views/DataAnalysis/components/Modal/GlobalModal'
+import Feedback from 'components/common/Feedback'
+
 // import toast, { Toaster } from 'react-hot-toast'
 // import { App } from 'antd'
 //https://ant.design/docs/react/customize-theme
@@ -89,6 +91,7 @@ ReactDOM.render(
           <Antd>
             <App />
             <GlobalModal />
+            <Feedback />
           </Antd>
           {/* <Toaster /> */}
           {/* <BrowserRouter>
