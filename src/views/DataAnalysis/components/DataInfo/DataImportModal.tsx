@@ -169,6 +169,7 @@ export const CustomButton = styled.button<{ disabled?: boolean; visible?: boolea
   border-radius: 10px;
   color: #ffffff;
   font-size: 15px;
+  font-face: 'Helvetica Neue';
 `
 
 export const CancelButton = styled.button`
