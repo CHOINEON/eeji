@@ -21,9 +21,9 @@ const GlobalModal = () => {
   const [modal, setModal] = useRecoilState(modalState)
   const { modalType, modalProps, modalTitle } = modal || {}
 
-  useEffect(() => {
-    console.log('GlobalModal:', modal)
-  }, [modal])
+  // useEffect(() => {
+  //   console.log('GlobalModal:', modal)
+  // }, [modal])
 
   const renderComponent = () => {
     if (!modalType) {

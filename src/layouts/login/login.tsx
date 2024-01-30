@@ -45,7 +45,7 @@ export const Login: React.FC = () => {
 
     //로그인 후 redirect된 URL에서 구글 인가코드 추출하여 백엔드로 전달하여 token발급받음
     const params = new URLSearchParams(window.location.search)
-    console.log('params:', params)
+    console.log('URL search params:', params)
     const code = params.get('code')
 
     if (code) {

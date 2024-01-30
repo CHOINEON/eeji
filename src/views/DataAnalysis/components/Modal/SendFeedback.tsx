@@ -72,7 +72,7 @@ export default SendFeedback
 
 const InputLabel = styled.div`
   color: #002d65;
-  font-family: Helvetica Neue;
+  font-family: 'Helvetica Neue';
   font-size: 14px;
   margin: 5px 3px;
 `
