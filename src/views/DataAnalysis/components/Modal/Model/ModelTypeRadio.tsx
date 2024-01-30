@@ -1,4 +1,5 @@
 import { Radio } from 'antd'
+import ColumnLabel from 'components/fields/ColumnLabel'
 import { Label, Wrapper } from 'components/fields/Wrapper'
 import React from 'react'
 
@@ -16,7 +17,10 @@ const ModelTypeRadio = (props: IModelTypeRadio) => {
   return (
     <>
       <Wrapper>
-        <Label hasFileName={false}>Model Type</Label>
+        <Label hasFileName={false}>
+          <span className={'text-red-500'}>* </span>
+          <span>모델 유형</span>
+        </Label>
         <Radio.Group
           onChange={handleChange}
           optionType="button"

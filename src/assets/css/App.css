@@ -8,8 +8,10 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+@import 'assets/fonts/fontStyle.css';
+
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Sans', sans-serif, 'ITC Avant Garde Gothic Pro';
   /* background-color:#f4f7fe !important; */
 }
 

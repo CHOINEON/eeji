@@ -47,9 +47,10 @@ const HorizontalStackedBarChart = (props: any) => {
     setData({
       labels: [''],
       datasets: [
-        { label: 'a', data: [props.data.age], backgroundColor: '#4169e1' },
-        { label: 'b', data: [props.data.weight], backgroundColor: '#87ceeb' },
-        { label: 'c', data: [props.data.smoke], backgroundColor: '#b0e0e6' },
+        { label: 'a', data: [props.data['0']], backgroundColor: '#4169e1' },
+        { label: 'b', data: [props.data['1']], backgroundColor: '#87ceeb' },
+        { label: 'c', data: [props.data['2']], backgroundColor: '#b0e0e6' },
+        { label: 'd', data: [props.data['3']], backgroundColor: '#8582a2' },
       ],
     })
   }, [props])

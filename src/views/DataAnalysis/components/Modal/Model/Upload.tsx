@@ -1,6 +1,5 @@
-import { CloseCircleOutlined } from '@ant-design/icons'
+import { CloseCircleOutlined, CloseOutlined } from '@ant-design/icons'
 import styled from '@emotion/styled'
-import { Button } from 'antd'
 import { Label, UploadBtn, Wrapper } from 'components/fields/Wrapper'
 import React, { useState, useRef, useEffect } from 'react'
 
@@ -8,10 +7,11 @@ interface ModelUploadProps {
   selectedFile: string
   label: string
   onChange?: any
+  required?: boolean
 }
 
 const ModelUpload = (props: ModelUploadProps) => {
-  const { selectedFile, label, onChange } = props
+  const { selectedFile, label, onChange, required } = props
   const inputRef = useRef(null)
 
   const handleChange = (e: any) => {
@@ -24,7 +24,7 @@ const ModelUpload = (props: ModelUploadProps) => {
   }
 
   const handleRemove = () => {
-    //
+    onChange(undefined)
   }
 
   // useEffect(() => console.log('props:', props), [props])
@@ -33,12 +33,13 @@ const ModelUpload = (props: ModelUploadProps) => {
     <>
       <Wrapper>
         <Label hasFileName={selectedFile ? true : false}>
-          {label}
+          <span className={required ? 'text-red-500' : 'hidden'}>* </span>
+          <span>{label}</span>
           <FileNameLabel hasFileName={selectedFile ? true : false}>
             <div>
               <span> {selectedFile} </span>
-              <span onClick={handleRemove}>
-                <CloseCircleOutlined />
+              <span role="button" onClick={handleRemove}>
+                <CloseOutlined />
               </span>
             </div>
           </FileNameLabel>

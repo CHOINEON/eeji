@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import logo_xs from 'assets/img/ineeji/logo_xs.svg'
 import { useRecoilState } from 'recoil'
-import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import { modalState } from 'stores/modal'
 import ModelImport from './ModelImport'
-import styled from '@emotion/styled'
 import { Modal } from 'antd'
+import SendFeedback from './SendFeedback'
 
 export const MODAL_TYPES = {
   ModelImport: 'ModelImport',
   DataImport: 'DataImport',
+  SendFeedback: 'SendFeedback',
 }
 
 const ModalComponents: any = {
   [MODAL_TYPES.ModelImport]: ModelImport,
+  [MODAL_TYPES.SendFeedback]: SendFeedback,
 }
 
 const GlobalModal = () => {
@@ -39,7 +40,7 @@ const GlobalModal = () => {
         title={
           <>
             <img style={{ margin: '10px 0 5px 0' }} src={logo_xs} />
-            <p style={{ fontSize: '30px', fontWeight: 'bold', marginBottom: 50 }}>{modalTitle}</p>
+            <p style={{ fontSize: '30px', fontWeight: 'bold', marginBottom: 30 }}>{modalTitle}</p>
           </>
         }
         footer={null}

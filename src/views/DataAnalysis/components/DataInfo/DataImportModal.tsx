@@ -20,6 +20,7 @@ const DataImportModal = (props: any) => {
   const resetUploadFileState = useResetRecoilState(uploadedDataState)
   const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
   const inputOption = useRecoilValue(dataPropertyState)
+  const resetInputOption = useResetRecoilState(dataPropertyState)
 
   const [btnDisabled, setBtnDisabled] = useState(true)
 
@@ -41,6 +42,7 @@ const DataImportModal = (props: any) => {
     if (!importOpen) {
       //선택 초기화
       resetUploadFileState()
+      resetInputOption()
       setSaving(false)
     }
   }, [importOpen])
@@ -137,13 +139,14 @@ const DataImportModal = (props: any) => {
           {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
           <div>
             <CancelButton onClick={handleCancel}>Cancel</CancelButton>
-            <UploadButton
+            <CustomButton
               // className="block ant-btn ant-btn-primary"
+              visible={true}
               disabled={btnDisabled}
               onClick={handleSave}
             >
               Save
-            </UploadButton>
+            </CustomButton>
           </div>
         </Spin>
       </Modal>
@@ -158,10 +161,11 @@ export default DataImportModal
 //   height: 46px;
 // `
 
-export const UploadButton = styled.button<{ disabled: boolean }>`
+export const CustomButton = styled.button<{ disabled?: boolean; visible?: boolean }>`
   width: 100%;
   height: 46px;
   background-color: ${(props: any) => (props.disabled ? '#C3CADB' : '#4338f7')};
+  display: ${(props: any) => (props.visible ? 'block' : 'none')};
   border-radius: 10px;
   color: #ffffff;
   font-size: 15px;
@@ -172,8 +176,8 @@ export const CancelButton = styled.button`
   m-auto;
   width: 100%;
   height: 46px;
-  background-color: #ffffff;
   border-radius: 10px;
+  background-color: #ffffff;
   color: #002d65;
   font-size: 13px;
 `

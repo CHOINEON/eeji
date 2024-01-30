@@ -48,10 +48,14 @@ const ColumnList = (props: IColumnData) => {
 
   return (
     <>
-      {columnData && <p> 변수명</p>}
-      {columnData?.map((value: string, index: number) => {
-        return <ColumnItem key={index} item={value.toString()} />
-      })}
+      {columnData?.length > 0 && (
+        <>
+          <p> 변수명</p>
+          {columnData?.map((value: string, index: number) => {
+            return <ColumnItem key={index} item={value.toString()} />
+          })}
+        </>
+      )}
     </>
   )
 }

@@ -1,6 +1,5 @@
 import { useQuery } from 'react-query'
 import DatasetApi from 'apis/DatasetApi'
-import { AxiosError } from 'axios'
 import { IDatasetList } from 'apis/type/Dataset'
 import { TResponseType } from 'apis/type/commonResponse'
 

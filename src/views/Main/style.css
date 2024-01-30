@@ -1,4 +1,4 @@
-.parent {
+/* .parent {
   width: 320px;
   height: 510px;
   overflow: hidden;
@@ -15,13 +15,9 @@
   -moz-transition: all 0.5s;
   -o-transition: all 0.5s;
   transition: all 0.5s;
-  /* -webkit-transform: scale(1);
-  transform: scale(1);
-  -webkit-transition: 0.3s ease-in-out;
-  transition: 0.3s ease-in-out; */
 }
 
 .parent:hover .child,
 .parent:focus .child {
   transform: scale(1.1);
-}
+} */
