@@ -9,7 +9,7 @@ import HistorySidebar from 'components/sidebar/HistorySidebar'
 import Sidebar from 'components/sidebar/Sidebar'
 import { SidebarContext } from 'contexts/SidebarContext'
 import { useState } from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import routes from 'routes'
 import Main from 'views/Main/Main'
 
@@ -20,6 +20,9 @@ export default function Dashboard(props: { [x: string]: any }) {
   const [fixed] = useState(false)
   const [toggleSidebar, setToggleSidebar] = useState(false)
   // functions for changing the states from components
+
+  const location = useLocation()
+
   const getRoute = () => {
     return window.location.pathname !== '/admin/main'
   }
@@ -106,14 +109,22 @@ export default function Dashboard(props: { [x: string]: any }) {
           </Portal> */}
 
         {getRoute() ? (
-          <Box mx="auto" p={{ base: '20px', md: '30px' }} pe="20px" minH="90vh" pt="50px">
-            <p>test</p>
-            <HistorySidebar />
-            <Switch>
-              {getRoutes(routes)}
-              <Redirect from="/" to="/admin/main" />
-            </Switch>
-          </Box>
+          location.pathname === '/admin/data-analysis' ? (
+            <Box ml="290px" p={{ base: '20px', md: '30px' }} pe="20px" minH="90vh" pt="50px">
+              <HistorySidebar />
+              <Switch>
+                {getRoutes(routes)}
+                <Redirect from="/" to="/admin/main" />
+              </Switch>
+            </Box>
+          ) : (
+            <Box mx="auto" p={{ base: '20px', md: '30px' }} pe="20px" minH="90vh" pt="50px">
+              <Switch>
+                {getRoutes(routes)}
+                <Redirect from="/" to="/admin/main" />
+              </Switch>
+            </Box>
+          )
         ) : (
           <>
             <Box

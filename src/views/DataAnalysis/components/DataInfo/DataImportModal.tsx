@@ -8,7 +8,6 @@ import DatasetApi from 'apis/DatasetApi'
 import { useMutation, useQueryClient } from 'react-query'
 import BeforeUpload from './BeforeUpload'
 import AfterUpload from './AfterUpload'
-import logo_xs from 'assets/img/ineeji/logo_xs.svg'
 
 const DataImportModal = (props: any) => {
   const { message } = App.useApp()
@@ -122,7 +121,7 @@ const DataImportModal = (props: any) => {
 
   return (
     <>
-      <Modal
+      {/* <Modal
         className="rounded-corners"
         width="400px"
         open={importOpen}
@@ -134,32 +133,27 @@ const DataImportModal = (props: any) => {
         }
         footer={null}
         onCancel={handleCancel}
-      >
-        <Spin tip="데이터 업로드 중 ..." spinning={saving}>
-          {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
-          <div>
-            <CancelButton onClick={handleCancel}>Cancel</CancelButton>
-            <CustomButton
-              // className="block ant-btn ant-btn-primary"
-              visible={true}
-              disabled={btnDisabled}
-              onClick={handleSave}
-            >
-              Save
-            </CustomButton>
-          </div>
-        </Spin>
-      </Modal>
+      > */}
+      <Spin tip="데이터 업로드 중 ..." spinning={saving}>
+        {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
+        <div>
+          <CancelButton onClick={handleCancel}>Cancel</CancelButton>
+          <CustomButton
+            // className="block ant-btn ant-btn-primary"
+            visible={true}
+            disabled={btnDisabled}
+            onClick={handleSave}
+          >
+            Save
+          </CustomButton>
+        </div>
+      </Spin>
+      {/* </Modal> */}
     </>
   )
 }
 
 export default DataImportModal
-
-// const Button = styled.button`
-//   width: 100%;
-//   height: 46px;
-// `
 
 export const CustomButton = styled.button<{ disabled?: boolean; visible?: boolean }>`
   width: 100%;

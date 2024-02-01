@@ -80,8 +80,8 @@ const MenuItem = styled.div`
 
 const IconContainer = styled.button`
   display: block;
-  width: 150px;
-  height: 150px;
+  // width: 150px;
+  // height: 150px;
   margin: auto;
 `
 const TitleContainer = styled.div`

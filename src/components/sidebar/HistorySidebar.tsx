@@ -1,58 +1,137 @@
 import styled from '@emotion/styled'
 import { Collapse } from 'antd'
 import type { CollapseProps } from 'antd'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { CustomButton } from 'views/DataAnalysis/components/DataInfo/DataImportModal'
 import { MenuList } from 'views/Main/menuList'
-import CustomCollapse from './components/Collapse/CustomCollapse'
+import CustomCollapse, { CollapseItem } from './components/Collapse/CustomCollapse'
+import { useRecoilState } from 'recoil'
+import { modalState } from 'stores/modal'
+import useModal from 'hooks/useModal'
 
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`
-
-const items: CollapseProps['items'] = [
+const items: Array<CollapseItem> = [
   {
-    key: '1',
-    label: <p style={{ color: 'white', fontWeight: 'bold' }}>Now Processing</p>,
-    children: <p style={{ color: 'white' }}>{text}</p>,
+    index: 1,
+    id: 'aaaaa',
+    label: 'Now Processing',
+    children: [
+      {
+        id: 'model1',
+        label: 'Test Model 1',
+        created: '2024.01.31 10:00:00', //datetime으로 주셔도 됨
+        progress: 88,
+        starred: true,
+      },
+      {
+        id: 'model2',
+        label: 'Test Model 2',
+        created: '2024.01.31 10:00:00',
+        progress: 100,
+        starred: false,
+      },
+    ],
   },
   {
-    key: '2',
-    label: 'This is panel header 2',
-    children: <p>{text}</p>,
+    index: 2,
+    id: 'bbbb',
+    label: 'Fixed',
+    children: [
+      {
+        id: 'Fixed model1',
+        label: 'Test Model 1',
+        created: '2024.01.31 10:00:00',
+        progress: 100,
+        starred: false,
+      },
+    ],
   },
   {
-    key: '3',
-    label: 'This is panel header 3',
-    children: <p>{text}</p>,
+    index: 3,
+    id: 'cccc',
+    label: 'Today',
+    children: [
+      {
+        id: "Today's model",
+        label: 'Today Model 1',
+        created: '2024.01.31 10:00:00',
+        progress: 100,
+        starred: false,
+      },
+    ],
+  },
+  {
+    index: 4,
+    id: 'dddd',
+    label: 'Yesterday',
+    children: [
+      {
+        id: "Yesterday's model",
+        label: 'Yesterday Model 1',
+        created: '2024.01.31 10:00:00',
+        progress: 100,
+        starred: false,
+      },
+    ],
+  },
+  {
+    index: 5,
+    id: 'eeee',
+    label: 'Previous 30 days',
+    children: [
+      {
+        id: 'Old model',
+        label: 'Old Model 1',
+        created: '2024.01.31 10:00:00',
+        progress: 100,
+        starred: false,
+      },
+    ],
   },
 ]
 
+const SidebarHeader = (props: any) => {
+  const { value } = props
+  const { openModal, closeModal } = useModal()
+
+  const handleClick = () => {
+    openModal({
+      modalTitle: 'Data Upload',
+      modalType: 'DataImport',
+      modalProps: {
+        onClick: () => {
+          closeModal()
+        },
+      },
+    })
+  }
+
+  return (
+    <HeaderWrapper>
+      <div>
+        <IconImage src={value.icon_inbox} />
+        <div>
+          <Title>{value.title}</Title>
+          <SubTitle>{value.title_KR} </SubTitle>
+        </div>
+        <CustomButton
+          visible={true}
+          style={{ width: 134, height: 28, margin: '20px auto', fontSize: 13, fontWeight: 'bold' }}
+          onClick={handleClick}
+        >
+          Data Upload
+        </CustomButton>
+      </div>
+    </HeaderWrapper>
+  )
+}
+
 const HistorySidebar = () => {
   const item = MenuList[0]
+
   return (
     <SidebarContainer>
-      <>
-        <TitleWrapper>
-          <div>
-            <IconImage src={item.icon_inbox} />
-            <div>
-              <Title>{item.title}</Title>
-              <SubTitle>{item.title_KR} </SubTitle>
-            </div>
-            <CustomButton
-              visible={true}
-              style={{ width: 134, height: 28, margin: '20px auto', fontSize: 13, fontWeight: 'bold' }}
-            >
-              Data Upload
-            </CustomButton>
-          </div>
-        </TitleWrapper>
-        {/* <Collapse defaultActiveKey={['1']} ghost items={items} expandIconPosition="end" />; */}
-        <CustomCollapse />
-      </>
+      <SidebarHeader value={item} />
+      <CustomCollapse item={items} />
     </SidebarContainer>
   )
 }
@@ -69,7 +148,7 @@ const SidebarContainer = styled.div`
   background: linear-gradient(90deg, #3e34e6, #000000);
 `
 
-const TitleWrapper = styled.div`
+const HeaderWrapper = styled.div`
   // border: 1px solid white;
   width: 100%;
   height: 150px;
@@ -88,7 +167,7 @@ const SubTitle = styled.p`
   font-size: 10px;
   color: white;
 `
-const IconImage = styled.image<{ src: any }>`
+const IconImage = styled.img<{ src: any }>`
   display: inline-block;
   width: 40px;
   height: 40px;

@@ -1,20 +1,25 @@
 import { CaretDownFilled, DownOutlined, EllipsisOutlined, MoreOutlined } from '@ant-design/icons'
 import styled from '@emotion/styled'
 import { Button, Dropdown, MenuProps } from 'antd'
-import React from 'react'
+import React, { ForwardedRef, forwardRef } from 'react'
 
-const CollapseItem = () => {
-  const items: MenuProps['items'] = [
-    {
-      label: 'Edit',
-      key: '1',
-    },
-    {
-      label: 'Delete',
-      key: '2',
-    },
-  ]
+interface CollapseItemProps {
+  items: Array<any>
+}
 
+const CollapseItem = ({ items }: CollapseItemProps, ref: ForwardedRef<HTMLDivElement>) => {
+  // const { items } = props
+
+  // const items: MenuProps['items'] = [
+  //   {
+  //     label: '고정하기',
+  //     key: '1',
+  //   },
+  //   {
+  //     label: '삭제',
+  //     key: '2',
+  //   },
+  // ]
   const onClick: MenuProps['onClick'] = ({ key }) => {
     if (key === '1') {
       //   setModalState(true)
@@ -44,41 +49,39 @@ const CollapseItem = () => {
     )
   }
 
-  const StatusIcon = () => {
-    return <StatusIconWrapper>●</StatusIconWrapper>
+  const StatusIcon = (props: any) => {
+    return <StatusIconWrapper> {props.value < 100 ? '●' : null}</StatusIconWrapper>
   }
 
-  const Progress = () => {
-    return <ProgressWrapper>88%</ProgressWrapper>
+  const Progress = (props: any) => {
+    return <ProgressWrapper>{props.value} %</ProgressWrapper>
   }
 
   return (
-    <>
-      {Array(2)
-        .fill(null)
-        .map(() => {
-          return (
-            <ItemRow>
-              <StatusIcon />
-              <div style={{ width: '75%', display: 'block', float: 'left' }}>
-                <div style={{ width: '70%', display: 'block', float: 'left' }}>
-                  <Title>회귀예측모델 케이스</Title>
-                  <DatetimeText>2024.00.00 10:00:00</DatetimeText>
-                </div>
-                <Progress />
+    <div ref={ref}>
+      {items.map((item: any) => {
+        return (
+          <ItemRow key={item.id}>
+            <StatusIcon value={item.progress} />
+            <div style={{ width: '75%', display: 'block', float: 'left' }}>
+              <div style={{ width: '70%', display: 'block', float: 'left' }}>
+                <Title>{item.label}</Title>
+                <DatetimeText>{item.created}</DatetimeText>
               </div>
-              <Ellipsis />
-            </ItemRow>
-          )
-        })}
-    </>
+              <Progress value={item.progress} />
+            </div>
+            <Ellipsis />
+          </ItemRow>
+        )
+      })}
+    </div>
   )
 }
 
-export default CollapseItem
+export default forwardRef<HTMLDivElement, CollapseItemProps>(CollapseItem)
 
 const ItemRow = styled.div`
-  // border: '1px solid red'
+  // border: 1px solid red;
   display: inline-block;
   width: '100%';
   margin: 5px 0px;
@@ -111,8 +114,8 @@ const StatusIconWrapper = styled.div`
 
 const EllipsisWrapper = styled.div`
   //   border: '1px solid white';
-  display: 'block';
-  float: 'left';
+  display: block;
+  float: left;
 `
 
 const ProgressWrapper = styled.div`

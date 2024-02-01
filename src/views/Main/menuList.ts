@@ -1,12 +1,12 @@
-import icon_ModelGenerator from 'assets/img/icons/menu_01_AI_modelGenerator.svg'
-import icon_Xai from 'assets/img/icons/menu_02_xai.svg'
-import icon_IndexForecast from 'assets/img/icons/menu_03_IndexForecast.svg'
-import icon_PredictionApi from 'assets/img/icons/menu_04_PredictionApi.svg'
+import icon_ModelGenerator from 'assets/img/icons/icon_01_a.png'
+import icon_Xai from 'assets/img/icons/icon_02_a.png'
+import icon_IndexForecast from 'assets/img/icons/icon_03_a.png'
+import icon_PredictionApi from 'assets/img/icons/icon_04_a.png'
 
-import icon_01_b from 'assets/img/icons/icon_01_b.svg'
-import icon_02_b from 'assets/img/icons/icon_02_b.svg'
-import icon_03_b from 'assets/img/icons/icon_03_b.svg'
-import icon_04_b from 'assets/img/icons/icon_04_b.svg'
+import icon_01_b from 'assets/img/icons/icon_01_b.png'
+import icon_02_b from 'assets/img/icons/icon_02_b.png'
+import icon_03_b from 'assets/img/icons/icon_03_b.png'
+import icon_04_b from 'assets/img/icons/icon_04_b.png'
 
 export const MenuList = [
   {
