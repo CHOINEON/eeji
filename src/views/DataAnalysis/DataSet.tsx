@@ -84,7 +84,7 @@ const DataSet = () => {
 
   return (
     <>
-      <div style={{ width: '100%', display: 'block', float: 'right', margin: '50px 0' }}>
+      <div>
         {data?.data.length > 0 ? (
           <Row className="row-column-title">
             {/* <Col flex="451px"></Col>
@@ -117,8 +117,7 @@ const DataSet = () => {
           </div>
         </Spin>
       </div>
-
-      <DataImportModal />
+      {/* <DataImportModal /> */}
       <DataEditModal />
     </>
   )

@@ -39,7 +39,7 @@ const GoogleLoginBtn = styled.button`
   opacity: 1;
 `
 
-const GoogleIcon = styled.image`
+const GoogleIcon = styled.div`
   display: block;
   float: left;
   width: 30px;

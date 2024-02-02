@@ -3,12 +3,13 @@ import { Portal, Box, useDisclosure } from '@chakra-ui/react'
 import Footer from 'components/footer/FooterAdmin'
 import NavBar from 'components/navbar/NavBar'
 import AdminNavbar from 'components/navbar/NavbarAdmin'
+import HistorySidebar from 'components/sidebar/HistorySidebar'
 // Layout components
 // import Navbar from 'components/navbar/NavbarAdmin'
 import Sidebar from 'components/sidebar/Sidebar'
 import { SidebarContext } from 'contexts/SidebarContext'
 import { useState } from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import routes from 'routes'
 import Main from 'views/Main/Main'
 
@@ -19,6 +20,9 @@ export default function Dashboard(props: { [x: string]: any }) {
   const [fixed] = useState(false)
   const [toggleSidebar, setToggleSidebar] = useState(false)
   // functions for changing the states from components
+
+  const location = useLocation()
+
   const getRoute = () => {
     return window.location.pathname !== '/admin/main'
   }
@@ -105,26 +109,38 @@ export default function Dashboard(props: { [x: string]: any }) {
           </Portal> */}
 
         {getRoute() ? (
-          <Box mx="auto" p={{ base: '20px', md: '30px' }} pe="20px" minH="90vh" pt="50px">
-            <Switch>
-              {getRoutes(routes)}
-              <Redirect from="/" to="/admin/main" />
-            </Switch>
-          </Box>
+          location.pathname === '/admin/data-analysis' ? (
+            <Box ml="290px" p={{ base: '20px', md: '30px' }} pe="20px" minH="90vh" pt="50px">
+              <HistorySidebar />
+              <Switch>
+                {getRoutes(routes)}
+                <Redirect from="/" to="/admin/main" />
+              </Switch>
+            </Box>
+          ) : (
+            <Box mx="auto" p={{ base: '20px', md: '30px' }} pe="20px" minH="90vh" pt="50px">
+              <Switch>
+                {getRoutes(routes)}
+                <Redirect from="/" to="/admin/main" />
+              </Switch>
+            </Box>
+          )
         ) : (
-          <Box
-            mx="auto"
-            h="100vh"
-            p={{ base: '20px', md: '40px' }}
-            // pe="20px"
-            // minH="94vh"
-            // maxH="90vh"
-            // pt="50px"
-            background={'linear-gradient(to left, #4338f7, #000000)'}
-          >
-            <Main />
-            <Footer />
-          </Box>
+          <>
+            <Box
+              mx="auto"
+              h="100vh"
+              p={{ base: '20px', md: '40px' }}
+              // pe="20px"
+              // minH="94vh"
+              // maxH="90vh"
+              // pt="50px"
+              background={'linear-gradient(to left, #4338f7, #000000)'}
+            >
+              <Main />
+              <Footer />
+            </Box>
+          </>
         )}
       </SidebarContext.Provider>
     </Box>

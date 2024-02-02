@@ -5,6 +5,7 @@ import { modalState } from 'stores/modal'
 import ModelImport from './ModelImport'
 import { Modal } from 'antd'
 import SendFeedback from './SendFeedback'
+import DataImportModal from '../DataInfo/DataImportModal'
 
 export const MODAL_TYPES = {
   ModelImport: 'ModelImport',
@@ -13,6 +14,7 @@ export const MODAL_TYPES = {
 }
 
 const ModalComponents: any = {
+  [MODAL_TYPES.DataImport]: DataImportModal,
   [MODAL_TYPES.ModelImport]: ModelImport,
   [MODAL_TYPES.SendFeedback]: SendFeedback,
 }
@@ -21,9 +23,9 @@ const GlobalModal = () => {
   const [modal, setModal] = useRecoilState(modalState)
   const { modalType, modalProps, modalTitle } = modal || {}
 
-  useEffect(() => {
-    console.log('GlobalModal:', modal)
-  }, [modal])
+  // useEffect(() => {
+  //   console.log('GlobalModal:', modal)
+  // }, [modal])
 
   const renderComponent = () => {
     if (!modalType) {

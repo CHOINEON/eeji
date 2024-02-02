@@ -7,9 +7,9 @@ const AvailableServiceIcon = () => {
   return (
     <div style={{ display: 'block', float: 'left', marginLeft: '20px' }}>
       <Wrap spacing="1px" justify="left">
-        {MenuList.map((item: any) => {
+        {MenuList.map((item: any, idx: number) => {
           return (
-            <MenuItem>
+            <MenuItem key={idx}>
               <IconContainer>
                 <img src={item.icon_src} />
               </IconContainer>

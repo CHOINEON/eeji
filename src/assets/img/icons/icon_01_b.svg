@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="214" height="200" viewBox="0 0 214 200">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.035" x2="0.969" y2="0.971" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#3d73b4"/>
+      <stop offset="1" stop-color="#010339"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.2" y1="0.113" x2="0.855" y2="0.839" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#049eff"/>
+      <stop offset="1" stop-color="#002ecb"/>
+    </linearGradient>
+    <filter id="패스_13613" x="54" y="30" width="160" height="160" filterUnits="userSpaceOnUse">
+      <feOffset dx="10" dy="10" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feFlood flood-opacity="0.251"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="사각형_4048" x="4" y="30" width="160" height="160" filterUnits="userSpaceOnUse">
+      <feOffset dx="10" dy="10" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="10" result="blur-2"/>
+      <feFlood/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <linearGradient id="linear-gradient-3" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#b5ddff"/>
+    </linearGradient>
+    <filter id="사각형_4049" x="39.5" y="85.5" width="17" height="37" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="1.5" result="blur-3"/>
+      <feFlood flood-color="#049eff" flood-opacity="0.251"/>
+      <feComposite operator="in" in2="blur-3"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="사각형_4050" x="78.5" y="85.5" width="17" height="37" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="1.5" result="blur-4"/>
+      <feFlood flood-color="#049eff" flood-opacity="0.251"/>
+      <feComposite operator="in" in2="blur-4"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="사각형_4051" x="65.5" y="77.5" width="17" height="53" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="1.5" result="blur-5"/>
+      <feFlood flood-color="#049eff" flood-opacity="0.251"/>
+      <feComposite operator="in" in2="blur-5"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="사각형_4052" x="52.5" y="91.5" width="17" height="25" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="1.5" result="blur-6"/>
+      <feFlood flood-color="#049eff" flood-opacity="0.251"/>
+      <feComposite operator="in" in2="blur-6"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="사각형_4053" x="91.5" y="91.5" width="17" height="25" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="1.5" result="blur-7"/>
+      <feFlood flood-color="#049eff" flood-opacity="0.251"/>
+      <feComposite operator="in" in2="blur-7"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="icon_01_b" transform="translate(-373 -797)">
+    <g id="패스_13616" data-name="패스 13616" transform="translate(373 797)" fill="url(#linear-gradient)">
+      <path d="M46,0H154a46,46,0,0,1,46,46V154a46,46,0,0,1-46,46H46A46,46,0,0,1,0,154V46A46,46,0,0,1,46,0Z" stroke="none"/>
+      <path d="M 46 1 C 39.92460632324219 1 34.03144836425781 2.189651489257812 28.48426818847656 4.535919189453125 C 23.12580871582031 6.802337646484375 18.313232421875 10.04716491699219 14.18019104003906 14.18019104003906 C 10.04716491699219 18.313232421875 6.802337646484375 23.12580871582031 4.535919189453125 28.48426818847656 C 2.189651489257812 34.03144836425781 1 39.92460632324219 1 46 L 1 154 C 1 160.0753936767578 2.189651489257812 165.9685516357422 4.535919189453125 171.5157318115234 C 6.802337646484375 176.8741760253906 10.04716491699219 181.686767578125 14.18019104003906 185.8198089599609 C 18.313232421875 189.9528350830078 23.12580871582031 193.1976623535156 28.48426818847656 195.4640808105469 C 34.03144836425781 197.8103485107422 39.92460632324219 199 46 199 L 154 199 C 160.0753936767578 199 165.9685516357422 197.8103485107422 171.5157318115234 195.4640808105469 C 176.8741760253906 193.1976623535156 181.686767578125 189.9528350830078 185.8198089599609 185.8198089599609 C 189.9528350830078 181.686767578125 193.1976623535156 176.8741760253906 195.4640808105469 171.5157318115234 C 197.8103485107422 165.9685516357422 199 160.0753936767578 199 154 L 199 46 C 199 39.92460632324219 197.8103485107422 34.03144836425781 195.4640808105469 28.48426818847656 C 193.1976623535156 23.12580871582031 189.9528350830078 18.313232421875 185.8198089599609 14.18019104003906 C 181.686767578125 10.04716491699219 176.8741760253906 6.802337646484375 171.5157318115234 4.535919189453125 C 165.9685516357422 2.189651489257812 160.0753936767578 1 154 1 L 46 1 M 46 0 L 154 0 C 179.4051055908203 0 200 20.59489440917969 200 46 L 200 154 C 200 179.4051055908203 179.4051055908203 200 154 200 L 46 200 C 20.59489440917969 200 0 179.4051055908203 0 154 L 0 46 C 0 20.59489440917969 20.59489440917969 0 46 0 Z" stroke="none" fill="rgba(144,212,255,0.25)"/>
+    </g>
+    <g id="그룹_7028" data-name="그룹 7028" transform="translate(-32 410)">
+      <g transform="matrix(1, 0, 0, 1, 405, 387)" filter="url(#패스_13613)">
+        <path id="패스_13613-2" data-name="패스 13613" d="M50,0A50,50,0,1,1,0,50,50,50,0,0,1,50,0Z" transform="translate(74 50)" fill="url(#linear-gradient-2)"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 405, 387)" filter="url(#사각형_4048)">
+        <g id="사각형_4048-2" data-name="사각형 4048" transform="translate(24 50)" fill="#5a7fff" stroke="rgba(255,255,255,0.1)" stroke-width="1">
+          <rect width="100" height="100" rx="50" stroke="none"/>
+          <rect x="0.5" y="0.5" width="99" height="99" rx="49.5" fill="none"/>
+        </g>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 405, 387)" filter="url(#사각형_4049)">
+        <g id="사각형_4049-2" data-name="사각형 4049" transform="translate(52 87) rotate(90)" stroke="rgba(255,255,255,0.5)" stroke-width="1" fill="url(#linear-gradient-3)">
+          <rect width="28" height="8" rx="4" stroke="none"/>
+          <rect x="0.5" y="0.5" width="27" height="7" rx="3.5" fill="none"/>
+        </g>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 405, 387)" filter="url(#사각형_4050)">
+        <g id="사각형_4050-2" data-name="사각형 4050" transform="translate(91 87) rotate(90)" stroke="rgba(255,255,255,0.5)" stroke-width="1" fill="url(#linear-gradient-3)">
+          <rect width="28" height="8" rx="4" stroke="none"/>
+          <rect x="0.5" y="0.5" width="27" height="7" rx="3.5" fill="none"/>
+        </g>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 405, 387)" filter="url(#사각형_4051)">
+        <g id="사각형_4051-2" data-name="사각형 4051" transform="translate(78 79) rotate(90)" stroke="rgba(255,255,255,0.5)" stroke-width="1" fill="url(#linear-gradient-3)">
+          <rect width="44" height="8" rx="4" stroke="none"/>
+          <rect x="0.5" y="0.5" width="43" height="7" rx="3.5" fill="none"/>
+        </g>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 405, 387)" filter="url(#사각형_4052)">
+        <g id="사각형_4052-2" data-name="사각형 4052" transform="translate(65 93) rotate(90)" stroke="rgba(255,255,255,0.5)" stroke-width="1" fill="url(#linear-gradient-3)">
+          <rect width="16" height="8" rx="4" stroke="none"/>
+          <rect x="0.5" y="0.5" width="15" height="7" rx="3.5" fill="none"/>
+        </g>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 405, 387)" filter="url(#사각형_4053)">
+        <g id="사각형_4053-2" data-name="사각형 4053" transform="translate(104 93) rotate(90)" stroke="rgba(255,255,255,0.5)" stroke-width="1" fill="url(#linear-gradient-3)">
+          <rect width="16" height="8" rx="4" stroke="none"/>
+          <rect x="0.5" y="0.5" width="15" height="7" rx="3.5" fill="none"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

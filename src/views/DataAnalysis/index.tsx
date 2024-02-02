@@ -91,7 +91,7 @@ const DataAnalysis = () => {
       <Context.Provider value={contextValue}>
         {contextHolder}
         <Box style={{ height: '20px', float: 'right' }}>
-          <DatasetAddButton
+          {/* <DatasetAddButton
             className="ant-btn ant-btn-primary"
             style={{ display: activeStep === 0 && location.pathname == '/admin/data-analysis' ? 'block' : 'none' }}
             onClick={handleClick}
@@ -108,7 +108,7 @@ const DataAnalysis = () => {
               Upload
             </span>
             <img style={{ top: '-22px', left: '14px', position: 'relative' }} src={UploadIcon} />
-          </DatasetAddButton>
+          </DatasetAddButton> */}
         </Box>
         <Box style={{ position: 'relative', zIndex: 1000 /**pt={{ base: '130px', md: '80px', xl: '80px' }} */ }}>
           <Box>

@@ -4,7 +4,13 @@ import { IFeedbackDataReq, IFeedbackRes } from './type/CustomerService'
 
 const CustomerServiceApi = {
   postCustomerFeedback: async (payload: IFeedbackDataReq): Promise<TResponseType<IFeedbackRes>> => {
-    const { data } = await axiosPrivate.post(`/api/cutomer/feedback`, payload)
+    const config = {
+      headers: {
+        'content-type': 'application/json',
+      },
+    }
+
+    const { data } = await axiosPrivate.post(`/api/customer/feedback`, payload, config)
     return data
   },
 }
