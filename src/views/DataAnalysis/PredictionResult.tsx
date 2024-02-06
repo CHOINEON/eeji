@@ -137,7 +137,7 @@ const PredictionResult = ({ data }: any) => {
         containerID: 'legend-container',
       },
       legend: {
-        display: true,
+        display: false,
       },
       title: {
         display: false,
@@ -148,6 +148,16 @@ const PredictionResult = ({ data }: any) => {
       mode: 'index' as const,
       intersect: false,
     },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         beginAtZero: true,
+    //         padding: 25,
+    //       },
+    //     },
+    //   ],
+    // },
   }
 
   const optionsForClassification = {
@@ -163,7 +173,7 @@ const PredictionResult = ({ data }: any) => {
         containerID: 'legend-container',
       },
       legend: {
-        display: true,
+        display: false,
       },
       title: {
         display: false,
@@ -191,6 +201,7 @@ const PredictionResult = ({ data }: any) => {
         ticks: {
           // forces step size to be 50 units
           stepSize: 1,
+          padding: 10,
         },
       },
     },
@@ -203,15 +214,16 @@ const PredictionResult = ({ data }: any) => {
 
   const getOrCreateLegendList = (chart: any, id: any) => {
     const legendContainer = document.getElementById(id)
-    console.log('legendContainer:', legendContainer)
     let listContainer = legendContainer.querySelector('ul')
 
     if (!listContainer) {
       listContainer = document.createElement('ul')
       listContainer.style.display = 'flex'
       listContainer.style.flexDirection = 'row'
-      // listContainer.style.margin = 0;
-      // listContainer.style.padding = 0;
+      listContainer.style.justifyContent = 'right'
+      listContainer.style.margin = '15px'
+
+      // listContainer.style.padding = '100px'
 
       legendContainer.appendChild(listContainer)
     }
@@ -219,70 +231,89 @@ const PredictionResult = ({ data }: any) => {
     return listContainer
   }
 
-  // const htmlLegendPlugin = {
-  //   id: 'htmlLegend',
-  //   afterUpdate(chart: any, args: any, options: any) {
-  //     console.log('options.containerID:', options.containerID)
-  //     const ul = getOrCreateLegendList(chart, options.containerID)
-  //     console.log('ul:', ul)
-  //     // Remove old legend items
-  //     while (ul.firstChild) {
-  //       ul.firstChild.remove()
-  //     }
+  const htmlLegendPlugin: any = {
+    id: 'htmlLegend',
+    afterUpdate(chart: any, args: any, options: any) {
+      const ul = getOrCreateLegendList(chart, options.containerID)
 
-  //     // Reuse the built-in legendItems generator
-  //     // const items = chart.options.plugins.legend.labels.generateLabels(chart)
+      console.log('ul::', ul)
 
-  //     // items.forEach((item: any) => {
-  //     //   const li = document.createElement('li')
-  //     //   li.style.alignItems = 'center'
-  //     //   li.style.cursor = 'pointer'
-  //     //   li.style.display = 'flex'
-  //     //   li.style.flexDirection = 'row'
-  //     //   li.style.marginLeft = '10px'
+      // Remove old legend items
+      while (ul.firstChild) {
+        ul.firstChild.remove()
+      }
 
-  //     //   li.onclick = () => {
-  //     //     const { type } = chart.config
-  //     //     if (type === 'pie' || type === 'doughnut') {
-  //     //       // Pie and doughnut charts only have a single dataset and visibility is per item
-  //     //       chart.toggleDataVisibility(item.index)
-  //     //     } else {
-  //     //       chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex))
-  //     //     }
-  //     //     chart.update()
-  //     //   }
+      // Reuse the built-in legendItems generator
+      const items = chart.options.plugins.legend.labels.generateLabels(chart)
 
-  //     //   // Color box
-  //     //   const boxSpan = document.createElement('span')
-  //     //   boxSpan.style.background = item.fillStyle
-  //     //   boxSpan.style.borderColor = item.strokeStyle
-  //     //   boxSpan.style.borderWidth = item.lineWidth + 'px'
-  //     //   boxSpan.style.display = 'inline-block'
-  //     //   // boxSpan.style.flexShrink = 0
-  //     //   boxSpan.style.height = '20px'
-  //     //   boxSpan.style.marginRight = '10px'
-  //     //   boxSpan.style.width = '20px'
+      console.log('items:', items)
+      items.forEach((item: any) => {
+        const li = document.createElement('li')
+        li.style.alignItems = 'center'
+        li.style.cursor = 'pointer'
+        li.style.display = 'flex'
+        li.style.flexDirection = 'row'
+        li.style.marginLeft = '40px'
 
-  //     //   // Text
-  //     //   const textContainer = document.createElement('p')
-  //     //   textContainer.style.color = item.fontColor
-  //     //   // textContainer.style.margin = 0
-  //     //   // textContainer.style.padding = 0
-  //     //   textContainer.style.textDecoration = item.hidden ? 'line-through' : ''
+        li.onclick = () => {
+          const { type } = chart.config
+          if (type === 'pie' || type === 'doughnut') {
+            // Pie and doughnut charts only have a single dataset and visibility is per item
+            chart.toggleDataVisibility(item.index)
+          } else {
+            chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex))
+          }
+          chart.update()
+        }
 
-  //     //   const text = document.createTextNode(item.text)
-  //     //   textContainer.appendChild(text)
+        // Color box
+        const boxSpan = document.createElement('span')
+        boxSpan.style.background = item.fillStyle
+        boxSpan.style.borderColor = item.strokeStyle
+        boxSpan.style.borderWidth = item.lineWidth + 'px'
+        boxSpan.style.display = 'inline-block'
+        boxSpan.style.marginRight = '10px'
+        boxSpan.style.borderRadius = '20px'
+        // boxSpan.style.flexShrink = 0
 
-  //     //   li.appendChild(boxSpan)
-  //     //   li.appendChild(textContainer)
-  //     //   ul.appendChild(li)
-  //     // })
-  //   },
-  // }
+        if (selectedData.isClassification === 1) {
+          if (item.text === 'INEEJI prediction') {
+            boxSpan.style.height = '20px'
+            boxSpan.style.width = '20px'
+          } else {
+            boxSpan.style.height = '10px'
+            boxSpan.style.width = '10px'
+          }
+        } else {
+          boxSpan.style.height = '3px'
+          boxSpan.style.width = '60px'
+        }
+
+        // Text
+        const textContainer = document.createElement('p')
+        textContainer.style.color = item.fontColor
+        // textContainer.style.margin = 0
+        // textContainer.style.padding = 0
+        textContainer.style.textDecoration = item.hidden ? 'line-through' : ''
+
+        const text = document.createTextNode(item.text)
+        textContainer.appendChild(text)
+
+        li.appendChild(boxSpan)
+        li.appendChild(textContainer)
+        ul.appendChild(li)
+      })
+    },
+  }
 
   return (
     <ChartWrapper /**isClassification={selectedData.isClassification} */>
-      <Line options={selectedData.isClassification === 1 ? optionsForClassification : options} data={chartData} />
+      <div id="legend-container"></div>
+      <Line
+        options={selectedData.isClassification === 1 ? optionsForClassification : options}
+        data={chartData}
+        plugins={[htmlLegendPlugin]}
+      />
     </ChartWrapper>
   )
 }

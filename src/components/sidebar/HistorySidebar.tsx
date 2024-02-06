@@ -1,15 +1,13 @@
 import styled from '@emotion/styled'
-import { Collapse } from 'antd'
-import type { CollapseProps } from 'antd'
 import React, { useEffect } from 'react'
 import { CustomButton } from 'views/DataAnalysis/components/DataInfo/DataImportModal'
 import { MenuList } from 'views/Main/menuList'
 import CustomCollapse, { CollapseItem } from './components/Collapse/CustomCollapse'
-import { useRecoilState } from 'recoil'
-import { modalState } from 'stores/modal'
 import useModal from 'hooks/useModal'
+import { useRecoilState } from 'recoil'
+import { SideBarState } from 'stores/sidebar'
 
-const items: Array<CollapseItem> = [
+export const mockData: Array<CollapseItem> = [
   {
     index: 1,
     id: 'aaaaa',
@@ -20,31 +18,34 @@ const items: Array<CollapseItem> = [
         label: 'Test Model 1',
         created: '2024.01.31 10:00:00', //datetime으로 주셔도 됨
         progress: 88,
-        starred: true,
-      },
-      {
-        id: 'model2',
-        label: 'Test Model 2',
-        created: '2024.01.31 10:00:00',
-        progress: 100,
         starred: false,
+        deleteYN: false,
       },
+      // {
+      //   id: 'model3',
+      //   label: 'Test Model 3',
+      //   created: '2024.01.31 10:00:00',
+      //   progress: 100,
+      //   starred: true,
+      //   deleteYN: false,
+      // },
     ],
   },
-  {
-    index: 2,
-    id: 'bbbb',
-    label: 'Fixed',
-    children: [
-      {
-        id: 'Fixed model1',
-        label: 'Test Model 1',
-        created: '2024.01.31 10:00:00',
-        progress: 100,
-        starred: false,
-      },
-    ],
-  },
+  // {
+  //   index: 2,
+  //   id: 'bbbb',
+  //   label: 'Fixed',
+  //   children: [
+  //     {
+  //       id: 'model2',
+  //       label: 'Test Model 2',
+  //       created: '2024.01.31 10:00:00',
+  //       progress: 100,
+  //       starred: true,
+  //       deleteYN: false,
+  //     },
+  //   ],
+  // },
   {
     index: 3,
     id: 'cccc',
@@ -56,6 +57,7 @@ const items: Array<CollapseItem> = [
         created: '2024.01.31 10:00:00',
         progress: 100,
         starred: false,
+        deleteYN: false,
       },
     ],
   },
@@ -70,6 +72,7 @@ const items: Array<CollapseItem> = [
         created: '2024.01.31 10:00:00',
         progress: 100,
         starred: false,
+        deleteYN: false,
       },
     ],
   },
@@ -84,6 +87,7 @@ const items: Array<CollapseItem> = [
         created: '2024.01.31 10:00:00',
         progress: 100,
         starred: false,
+        deleteYN: false,
       },
     ],
   },
@@ -127,11 +131,20 @@ const SidebarHeader = (props: any) => {
 
 const HistorySidebar = () => {
   const item = MenuList[0]
+  const [sidebarItem, setSidebarItem] = useRecoilState(SideBarState)
+
+  useEffect(() => {
+    setSidebarItem(mockData)
+  }, [])
+
+  useEffect(() => {
+    console.log('sidebarItem updated:', sidebarItem)
+  }, [sidebarItem])
 
   return (
     <SidebarContainer>
       <SidebarHeader value={item} />
-      <CustomCollapse item={items} />
+      <CustomCollapse item={sidebarItem} />
     </SidebarContainer>
   )
 }

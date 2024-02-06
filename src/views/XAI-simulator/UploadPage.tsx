@@ -4,10 +4,10 @@ import React from 'react'
 
 const UploadPage = () => {
   const { openModal, closeModal } = useModal()
-  const handleClick = () => {
+  const handleClick = (type: string) => {
     openModal({
-      modalTitle: 'Model Data Import',
-      modalType: 'ModelImport',
+      modalTitle: 'Model Import',
+      modalType: type,
       modalProps: {
         onClick: () => {
           closeModal()
@@ -19,10 +19,11 @@ const UploadPage = () => {
   return (
     <>
       <UploadContainer>
-        <TextMain>업로드된 데이터가 없습니다.</TextMain>
+        <TextMain>시작하기</TextMain>
         <TextSub>분석을 위해 데이터를 업로드하세요.</TextSub>
-        <div style={{ width: '100%', textAlign: 'center', marginTop: 32 }}>
-          <UploadButton onClick={handleClick}>Data Upload</UploadButton>
+        <div style={{ width: '100%', textAlign: 'center', marginTop: 32, flexDirection: 'row' }}>
+          <UploadButton onClick={() => handleClick('CustomModelImport')}>사용자 생성 모델</UploadButton>
+          <UploadButton onClick={() => handleClick('SavedModelImport')}>INFINITE OPTIMAL MODEL</UploadButton>
         </div>
       </UploadContainer>
     </>
@@ -41,7 +42,7 @@ interface Container {
 const UploadContainer = styled.div`
   // border: 1px solid red;
   position: absolute;
-  width: 400px;
+  width: 100%;
   height: 400px;
   padding: 100px 30px;
   top: 50%;
@@ -93,4 +94,5 @@ const UploadButton = styled.button`
   font-family: 'Helvetica Neue';
   font-weight: Bold;
   font-size: 17px;
+  margin-left: 20px;
 `

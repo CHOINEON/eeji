@@ -28,8 +28,8 @@ const AvailableServiceIcon = () => {
 export default AvailableServiceIcon
 
 const MenuItem = styled.div`
-  width: 110px;
-  height: 90px;
+  // height: 90px;
+  width: 117px;
   display: flex;
   flex-direction: column;
 `
@@ -43,14 +43,15 @@ const IconContainer = styled.div`
 const TitleContainer = styled.div`
   display: block;
   text-align: center;
-  margin: 10px 0px;
+  // margin: 10px 0px;
 `
 
 const Title_EN = styled.p`
-  font-family: 'ITC Avant Garde Gothic';
+  font-family: 'ITC Avant Garde Gothic Light';
   font-size: 9px;
+  letter-spacing: 0.02vw;
   color: #ffffff;
-  margin: 2px 0;
+  margin: 1px 0;
 `
 
 const Title_KR = styled.p`
