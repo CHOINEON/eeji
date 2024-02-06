@@ -1,6 +1,9 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
-import googleSigninBtn from 'assets/img/components/Google_G_logo.svg'
+import GoogleBtn from 'assets/img/components/google.svg'
+import kakaoBtn from 'assets/img/components/kakao.svg'
+import AppleBtn from 'assets/img/components/apple.svg'
+
 import googleSigninBtn_sm from 'assets/img/components/web_light_sq_na.svg'
 import styled from '@emotion/styled'
 
@@ -21,42 +24,55 @@ const GoogleSignin = () => {
   }
 
   return (
-    <GoogleLoginBtn onClick={handleGoogleLogin}>
-      <GoogleIcon />
-      <LoginButtonText> Continue with Google</LoginButtonText>
-    </GoogleLoginBtn>
+    <>
+      <GoogleLoginBtn onClick={handleGoogleLogin}>
+        {/* <GoogleIcon />
+      <LoginButtonText> Continue with Google</LoginButtonText> */}
+      </GoogleLoginBtn>
+      <KakaoLoginBtn onClick={() => alert('준비중인 서비스입니다.')} />
+      <AppleLoginBtn onClick={() => alert('준비중인 서비스입니다.')} />
+    </>
   )
 }
 
 export default GoogleSignin
 
-const GoogleLoginBtn = styled.button`
-  width: 100%;
-  height: 40px;
-  margin-top: 15px;
-  border: 1px solid #a3afcf;
-  border-radius: 10px;
-  opacity: 1;
-`
-
-const GoogleIcon = styled.div`
-  display: block;
-  float: left;
-  width: 30px;
-  height: 30px;
-  margin: 4px;
-  background-image: url(${googleSigninBtn});
-  background-size: 30px 30px;
-`
-
-const LoginButtonText = styled.p`
-  color: #002d65;
-  font-weight: bold;
-  font-size: 15px;
-  line-height: 37px;
+const LoginButton = styled.button`
   display: inline-block;
-
-  @media (max-width: 1200px) {
-    display: none;
-  }
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  margin-right: 15px;
 `
+
+const GoogleLoginBtn = styled(LoginButton)`
+  background-image: url(${GoogleBtn});
+`
+const KakaoLoginBtn = styled(LoginButton)`
+  background-image: url(${kakaoBtn});
+`
+const AppleLoginBtn = styled(LoginButton)`
+  background-image: url(${AppleBtn});
+`
+
+// const GoogleIcon = styled.div`
+//   display: block;
+//   float: left;
+//   width: 30px;
+//   height: 30px;
+//   margin: 4px;
+//   background-image: url(${googleSigninBtn});
+//   background-size: 30px 30px;
+// `
+
+// const LoginButtonText = styled.p`
+//   color: #002d65;
+//   font-weight: bold;
+//   font-size: 15px;
+//   line-height: 37px;
+//   display: inline-block;
+
+//   @media (max-width: 1200px) {
+//     display: none;
+//   }
+// `

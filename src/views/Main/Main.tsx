@@ -35,7 +35,7 @@ const IconList = () => {
       <Wrap spacing="30px" justify="center" height={200} margin={'15vh 0'}>
         {MenuList.map((item: any) => {
           return (
-            <MenuItem>
+            <MenuItem key={item.title}>
               <IconContainer onClick={() => (window.location.href = `/admin${item.path}`)}>
                 <img src={item.icon_src} style={{ opacity: 1 }} />
               </IconContainer>

@@ -1,49 +1,78 @@
 import { CaretDownFilled, DownOutlined, EllipsisOutlined, MoreOutlined } from '@ant-design/icons'
 import styled from '@emotion/styled'
 import { Button, Dropdown, MenuProps } from 'antd'
-import React, { ForwardedRef, forwardRef } from 'react'
+import { mockData } from 'components/sidebar/HistorySidebar'
+import React, { ForwardedRef, forwardRef, useEffect, useState } from 'react'
+import { useRecoilState } from 'recoil'
+import { SideBarState } from 'stores/sidebar'
+import { ItemChild } from './CustomCollapse'
 
 interface CollapseItemProps {
-  items: Array<any>
+  children: Array<any>
 }
 
-const CollapseItem = ({ items }: CollapseItemProps, ref: ForwardedRef<HTMLDivElement>) => {
+const CollapseItem = ({ children }: CollapseItemProps, ref: ForwardedRef<HTMLDivElement>) => {
   // const { items } = props
 
-  // const items: MenuProps['items'] = [
-  //   {
-  //     label: '고정하기',
-  //     key: '1',
-  //   },
-  //   {
-  //     label: '삭제',
-  //     key: '2',
-  //   },
-  // ]
-  const onClick: MenuProps['onClick'] = ({ key }) => {
+  const [sidebarItem, setSidebarItem] = useRecoilState(SideBarState)
+  const [data, setData] = useState(mockData)
+  const [starredItem, setStarredItem] = useState<Array<ItemChild>>([])
+
+  const items: MenuProps['items'] = [
+    {
+      label: '고정하기',
+      key: '1',
+    },
+    {
+      label: '삭제',
+      key: '2',
+    },
+  ]
+
+  // Modify onClick to accept id parameter
+  const onClick: any = (key: string, id: any) => {
     if (key === '1') {
-      //   setModalState(true)
-    }
-    if (key === '2') {
-      //   modal.confirm({
-      //     title: 'Do you want to delete this dataset?',
-      //     icon: <ExclamationCircleFilled />,
-      //     content: `Deletion is permanent and you will not be able to undo it.`,
-      //     onOk() {
-      //       handleDelete(data.ds_id)
-      //     },
-      //     onCancel() {
-      //       console.log('Cancel')
-      //     },
-      //   })
+      const indexToUpdate = data.findIndex((item: any) => item.label === 'Fixed')
+      // console.log(indexToUpdate)
+
+      if (indexToUpdate !== -1) {
+        const updatedData = [...data]
+
+        //별 붙이고 싶은 대상 모델(한개) 찾기
+        const childToStar = sidebarItem
+          .map((item: any) => item.children.find((child: any) => child.id === id))
+          .filter((element: any) => element !== undefined)
+
+        // console.log('child to start:', childToStar[0])
+        //원래 fix되었던 값들
+        const original = updatedData[indexToUpdate].children
+
+        //Fixed children render only it's not included already
+        const newChildren = [...original, childToStar[0]]
+        // console.log('newChildren:', newChildren)
+        updatedData[indexToUpdate] = {
+          ...updatedData[indexToUpdate],
+          children: newChildren,
+        }
+
+        // console.log('??:', updatedData)
+        // const test = updatedData.map((item: any) => ({
+        //   ...item,
+        //   children: item.children.filter((child: any) => child.id !== childToStar[0].id),
+        // }))
+
+        // console.log('---test:', test)
+
+        // setSidebarItem(updatedDataFiltered)
+      }
     }
   }
 
-  const Ellipsis = () => {
+  const Ellipsis = ({ id }: any) => {
     return (
       <EllipsisWrapper>
-        <Dropdown menu={{ items, onClick }}>
-          <EllipsisOutlined style={{ lineHeight: '69px', color: '#fff', fontSize: 20 }} size={16} />
+        <Dropdown menu={{ items, onClick: (e) => onClick(e.key, id) }}>
+          <EllipsisOutlined style={{ lineHeight: '69px', color: '#fff', fontSize: 20, float: 'right' }} size={14} />
         </Dropdown>
       </EllipsisWrapper>
     )
@@ -54,23 +83,29 @@ const CollapseItem = ({ items }: CollapseItemProps, ref: ForwardedRef<HTMLDivEle
   }
 
   const Progress = (props: any) => {
-    return <ProgressWrapper>{props.value} %</ProgressWrapper>
+    return (
+      <ProgressWrapper>
+        {props.value}
+        <span style={{ fontSize: '12px' }}>%</span>
+      </ProgressWrapper>
+    )
   }
 
   return (
     <div ref={ref}>
-      {items.map((item: any) => {
+      {children?.map((item: ItemChild) => {
         return (
           <ItemRow key={item.id}>
             <StatusIcon value={item.progress} />
-            <div style={{ width: '75%', display: 'block', float: 'left' }}>
-              <div style={{ width: '70%', display: 'block', float: 'left' }}>
+            <div style={{ width: '75%', float: 'left' }}>
+              <div style={{ width: '75%', display: 'inline-block', float: 'left' }}>
                 <Title>{item.label}</Title>
                 <DatetimeText>{item.created}</DatetimeText>
               </div>
+
               <Progress value={item.progress} />
             </div>
-            <Ellipsis />
+            <Ellipsis id={item.id} />
           </ItemRow>
         )
       })}
@@ -83,22 +118,22 @@ export default forwardRef<HTMLDivElement, CollapseItemProps>(CollapseItem)
 const ItemRow = styled.div`
   // border: 1px solid red;
   display: inline-block;
-  width: '100%';
+  width: 100%;
   margin: 5px 0px;
 `
 
-const Title = styled.div`
+const Title = styled.button`
   font-family: 'Helvetica Neue';
-  font-weight: bold;
   size: 15px;
+  font-weight: bold;
   color: #fff;
   float: left;
   display: inline-block;
 `
 
-const DatetimeText = styled.div`
+const DatetimeText = styled.p`
   font-family: 'Helvetica Neue';
-  size: 10px;
+  font-size: 11px;
   color: #fff;
   float: left;
   display: inline-block;
@@ -107,23 +142,23 @@ const DatetimeText = styled.div`
 const StatusIconWrapper = styled.div`
   //   border: '1px solid white',
   color: #31d600;
-  margin: 0 8px 15px 15px;
+  margin: 0 8px 15px 8px;
   float: left;
   width: 5%;
 `
 
 const EllipsisWrapper = styled.div`
-  //   border: '1px solid white';
-  display: block;
   float: left;
+  // border: 1px solid white;
+  // position: relative;
 `
 
 const ProgressWrapper = styled.div`
-  // border: '1px solid red',
-
-  display: block;
+  // border: 1px solid red;
+  display: inline-block;
   float: left;
   color: #31d600;
-  font-size: 15;
-  font-weight: 'bold';
+  font-size: 15px;
+  font-weight: bold;
+  width: 37px;
 `

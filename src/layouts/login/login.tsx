@@ -228,7 +228,7 @@ export const Login: React.FC = () => {
             size={'large'}
             placeholder={'Select Company'}
             onChange={handleChange}
-            style={{ width: '100%', marginBottom: '1vw', border: 0 }}
+            style={{ width: '100%', marginBottom: '1.5vh', border: 0 }}
             options={companyList}
           />
           <Input
@@ -237,7 +237,7 @@ export const Login: React.FC = () => {
             placeholder={'ID'}
             onChange={(e: any) => ChangeId(e)}
             // onKeyDown={(e: any) => onEnterId(e)}
-            style={{ width: '100%', marginBottom: '1vw', backgroundColor: '#f4f7fe', border: 0 }}
+            style={{ width: '100%', marginBottom: '1.5vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
           />
           <Input
             color={'black'}
@@ -245,18 +245,26 @@ export const Login: React.FC = () => {
             placeholder={'Password'}
             onChange={(e: any) => ChangePassword(e)}
             onKeyDown={(e: unknown) => onEnterLogin(e)}
-            style={{ width: '100%', marginBottom: '1.5vw', backgroundColor: '#f4f7fe', border: 0 }}
+            style={{ width: '100%', marginBottom: '1.5vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
           />
         </FormControl>
         <Button
-          mt={4}
+          // mt={4}
           type="submit"
           onClick={() => setLogin(id, password)}
-          style={{ backgroundColor: '#4338f7', color: '#fff', width: '100%', borderRadius: '7px' }}
+          style={{
+            fontFamily: 'Noto Sans',
+            backgroundColor: '#4338f7',
+            color: '#fff',
+            width: '100%',
+            borderRadius: '7px',
+          }}
         >
           Login
         </Button>
-        <GoogleSignin />
+        <div style={{ marginTop: '29px', textAlign: 'center' }}>
+          <GoogleSignin />
+        </div>
       </FormWrap>
       <Alert />
     </>
@@ -293,11 +301,12 @@ const Home_Bg = styled(BgStyle)`
 `
 
 const FormWrap = styled.div`
+  // min-width: 250px;
+  // height: 65vh;
   width: 20vw;
-  height: 65vh;
   padding: 2vw;
   position: fixed;
-  right: 10%;
+  right: 6vw;
   top: 52%;
   z-index: 999;
   background-color: #fff;
@@ -348,7 +357,7 @@ const Circle = styled(BgStyle)`
   background-image: url(${circle});
   background-size: 88% auto;
   background-position: center top 2vw;
-  width: 10vw;
+  width: 8vw;
   height: 12vw;
   display: inline-block;
   float: left;
@@ -364,8 +373,8 @@ const TopBox = styled.div`
 const BottomTitleParent = styled.div`
   display: inline-block;
   float: left;
-  width: 35vw;
-  margin: 3vh 2vw;
+  width: 38vw;
+  margin: 2vh 0 2vh 2vw;
 `
 
 const Date = styled(BgStyle)`
@@ -389,21 +398,16 @@ const BottomCotents = styled.div`
 `
 
 const LoginTitle = styled.div`
+  font-family: 'Helvetica Bold';
   font-size: 1.5vw;
-  font-weight: 700;
   color: #4338f7;
-  margin-bottom: 0.1vw;
-  @font-face {
-    font-family: 'Helvetica 65 Medium';
-    src: url('https://fonts.cdnfonts.com/css/helvetica-neue-9');
-  }
-  font-family: 'Helvetica 65 Medium', sans-serif;
 `
 
 const LoginSubTitle = styled.div`
-  font-size: 0.5vw;
+  font-family: 'Noto Sans';
+  font-size: 0.6vw;
   color: #afafaf;
-  letter-spacing: 0.05vw;
+  letter-spacing: 0.03vw;
   margin-bottom: 1vw;
 `
 
@@ -415,5 +419,5 @@ const LoginIcon = styled.div`
   background-size: 100% auto;
   background-repeat: no-repeat;
   margin: 0 auto;
-  margin-bottom: 0.5vw;
+  margin-bottom: 2vw;
 `

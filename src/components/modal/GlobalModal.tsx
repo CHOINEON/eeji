@@ -2,20 +2,23 @@ import React, { useEffect, useState } from 'react'
 import logo_xs from 'assets/img/ineeji/logo_xs.svg'
 import { useRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
-import ModelImport from './ModelImport'
+import UserModelImport from '../../views/XAI-simulator/components/UserModelImport'
 import { Modal } from 'antd'
-import SendFeedback from './SendFeedback'
-import DataImportModal from '../DataInfo/DataImportModal'
+import SendFeedback from '../../views/Main/SendFeedback'
+import DataImportModal from '../../views/DataAnalysis/components/DataInfo/DataImportModal'
+import SavedModelImport from '../../views/XAI-simulator/components/SavedModelImport'
 
 export const MODAL_TYPES = {
-  ModelImport: 'ModelImport',
+  UserModelImport: 'UserModelImport',
+  SavedModelImport: 'SavedModelImport',
   DataImport: 'DataImport',
   SendFeedback: 'SendFeedback',
 }
 
 const ModalComponents: any = {
   [MODAL_TYPES.DataImport]: DataImportModal,
-  [MODAL_TYPES.ModelImport]: ModelImport,
+  [MODAL_TYPES.UserModelImport]: UserModelImport,
+  [MODAL_TYPES.SavedModelImport]: SavedModelImport,
   [MODAL_TYPES.SendFeedback]: SendFeedback,
 }
 

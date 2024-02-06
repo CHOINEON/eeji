@@ -8,7 +8,16 @@ export interface CollapseItem {
   index: number
   id: string
   label: string
-  children: Array<unknown>
+  children: Array<ItemChild>
+}
+
+export interface ItemChild {
+  id: string
+  label: string
+  created: string
+  progress: number
+  starred: boolean
+  deleteYN: boolean
 }
 
 interface CollapsProps {
@@ -17,21 +26,24 @@ interface CollapsProps {
 
 const CustomCollapse = ({ item }: CollapsProps) => {
   //Manage Individual Collapse States
-  const initialCollapseState = item.reduce((acc: any, currentItem) => {
-    acc[currentItem.id] = false
-    return acc
-  }, {})
-
-  const [collapseStates, setCollapseStates] = useState(initialCollapseState)
+  const [collapseStates, setCollapseStates] = useState()
 
   const parentRefs = useRef<Array<HTMLDivElement>>([])
   const childRefs = useRef<Array<HTMLDivElement>>([])
+
+  useEffect(() => {
+    const initialCollapseState = item?.reduce((acc: any, currentItem) => {
+      acc[currentItem.id] = false
+      return acc
+    }, {})
+
+    setCollapseStates(initialCollapseState)
+  }, [item])
 
   //버튼 클릭 -> DOM에 접근해 contents 영역 계산한 다음 컨텐츠 높이만큼 세팅
   const handleButtonClick = useCallback(
     (index: number, id: string) => (event: any) => {
       event.stopPropagation()
-
       const parent = parentRefs.current[index]
       const child = childRefs.current[index]
 
@@ -54,21 +66,30 @@ const CustomCollapse = ({ item }: CollapsProps) => {
 
   return (
     <>
-      {item.map((item: any, index: number) => {
-        const buttonIcon = collapseStates[item.id] ? <UpOutlined /> : <DownOutlined />
-        return (
-          <CollapseContainer key={item.id}>
-            <Header>
-              <div style={{ width: '90%', display: 'inline-block' }}>{item.label}</div>
-              <Button onClick={handleButtonClick(index, item.id)} icon={buttonIcon} type="text" />
-            </Header>
-            <SingleLine />
-            <ContentsWrapper ref={(el) => (parentRefs.current[index] = el)}>
-              <CollapseItem ref={(el) => (childRefs.current[index] = el)} items={item.children} />
-            </ContentsWrapper>
-          </CollapseContainer>
-        )
-      })}
+      {collapseStates &&
+        item?.map((item: any, index: number) => {
+          const buttonIcon = collapseStates[item.id] ? <UpOutlined /> : <DownOutlined />
+          return (
+            <CollapseContainer key={item.id}>
+              <Header>
+                <label htmlFor={`collapse-label-${item.id}`} role="button">
+                  <div style={{ width: '220px', lineHeight: '32px' }}>{item.label}</div>
+                </label>
+                <Button
+                  id={`collapse-label-${item.id}`}
+                  onClick={handleButtonClick(index, item.id)}
+                  icon={buttonIcon}
+                  type="text"
+                  style={{ position: 'absolute', right: 15 }}
+                />
+              </Header>
+              <SingleLine />
+              <ContentsWrapper ref={(el) => (parentRefs.current[index] = el)}>
+                <CollapseItem ref={(el) => (childRefs.current[index] = el)} children={item.children} />
+              </ContentsWrapper>
+            </CollapseContainer>
+          )
+        })}
     </>
   )
 }
@@ -102,7 +123,6 @@ const Header = styled.div`
 `
 const SingleLine = styled.hr`
   color: #ffffff;
-  width: 88%;
-  margin: 0 5px 5px 20px;
+  margin: 0 25px;
   opacity: 0.25;
 `

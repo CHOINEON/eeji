@@ -58,7 +58,7 @@ const FeatureAnalysis = ({ data, input }: any) => {
           </div>
         )}
       </SubTitle>
-      <div style={{ minHeight: '40vh' }}>
+      <>
         {/* {contents.map((value: any) => {
           ;<p>
             <AIbutton>AI</AIbutton>
@@ -82,7 +82,7 @@ const FeatureAnalysis = ({ data, input }: any) => {
         <div className="block float-left w-100">
           <FeatureImportance data={chartData} />
         </div>
-      </div>
+      </>
     </ComponentContainer>
   )
 }
@@ -93,8 +93,7 @@ const ComponentContainer = styled.div`
   display: block;
   float: left;
   margin: 38px 15px;
-  width: 91%;
-  height: 60%;
+  // height: 60%;
   background-color: #f6f8ff;
   border: 1px solid #a3afcf;
   border-radius: 10px;
@@ -106,7 +105,7 @@ const Title = styled.div`
   float: left;
   color: #002d65;
   font-weight: bold;
-  margin: 25px 25px 15px 25px;
+  padding: 25px 25px 15px 25px;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
 `
 

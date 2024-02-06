@@ -1,14 +1,14 @@
 import { Checkbox, Modal, Radio, Spin, Switch, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
-import ModelTypeRadio from './Model/ModelTypeRadio'
-import ModelUpload from './Model/Upload'
+import ModelTypeRadio from './ModelSelect/ModelTypeRadio'
+import ModelUpload from './ModelSelect/Upload'
 import ModelApi from 'apis/ModelApi'
 import { useMutation } from 'react-query'
-import { CancelButton, CustomButton } from '../DataInfo/DataImportModal'
+import { CancelButton, CustomButton } from '../../DataAnalysis/components/DataInfo/DataImportModal'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
 import { message } from 'antd'
-import ColumnList from './Model/ColumnList'
+import ColumnList from './ModelSelect/ColumnList'
 import { CheckOutlined, CloseOutlined, TrademarkOutlined } from '@ant-design/icons'
 import { customModelStore } from 'views/XAI-simulator/store/analyze/atom'
 
@@ -25,7 +25,7 @@ interface IParamObj {
   selected_var: Array<string>
 }
 
-const ModelImport = () => {
+const UserModelImport = () => {
   const com_id = localStorage.getItem('companyId')
   const user_id = localStorage.getItem('userId').toString()
 
@@ -233,4 +233,4 @@ const ModelImport = () => {
   )
 }
 
-export default ModelImport
+export default UserModelImport

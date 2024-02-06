@@ -15,6 +15,25 @@ body {
   /* background-color:#f4f7fe !important; */
 }
 
+/* Chrome, Whale, Edge */
+
+/* 스크롤바 전체 기본 꾸미기 */
+body::-webkit-scrollbar {
+  background: #d5dcef;
+  border-radius: 12px;
+  width: 12px;
+}
+
+/* 스크롤바 막대 꾸미기 */
+body::-webkit-scrollbar-thumb {
+  background: #332bbf;
+}
+
+/* 스크롤바 트랙 꾸미기 */
+body::-webkit-scrollbar-track {
+  background: #d5dcef;
+}
+
 option {
   color: black;
 }

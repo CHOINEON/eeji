@@ -6,6 +6,7 @@ type SideBarItem = {
   created: string
   progress: number
   starred: boolean
+  deleteYN: boolean
 }
 
 export type SideBarContents = {
