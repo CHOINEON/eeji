@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useReducer, useMemo } from 'react'
 import { Box } from '@chakra-ui/react'
 import { ThemeProvider } from '@mui/material/styles'
+import { theme } from './theme/theme'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
 import StepButton from '@mui/material/StepButton'
-import { theme } from './theme/theme'
 import { useRecoilState } from 'recoil'
 import { stepCountStore } from './store/global/atom'
 import DataSet from './DataSet'
@@ -12,8 +12,6 @@ import './style/styles.css'
 import { notification } from 'antd'
 import TempDataAnalysis from 'views/NewDataAnalysis/TempDataAnalysis'
 import { importModalAtom } from './store/modal/atom'
-import UploadIcon from 'assets/img/ineeji/ico_upload_mini.svg'
-import styled from '@emotion/styled'
 
 const Context = React.createContext({ name: 'Default' })
 
@@ -90,26 +88,6 @@ const DataAnalysis = () => {
     <ThemeProvider theme={theme}>
       <Context.Provider value={contextValue}>
         {contextHolder}
-        <Box style={{ height: '20px', float: 'right' }}>
-          {/* <DatasetAddButton
-            className="ant-btn ant-btn-primary"
-            style={{ display: activeStep === 0 && location.pathname == '/admin/data-analysis' ? 'block' : 'none' }}
-            onClick={handleClick}
-          >
-            <span
-              style={{
-                marginLeft: '30px',
-                letterSpacing: '0.5px',
-                fontSize: '14px',
-                fontWeight: 500,
-                color: 'white',
-              }}
-            >
-              Upload
-            </span>
-            <img style={{ top: '-22px', left: '14px', position: 'relative' }} src={UploadIcon} />
-          </DatasetAddButton> */}
-        </Box>
         <Box style={{ position: 'relative', zIndex: 1000 /**pt={{ base: '130px', md: '80px', xl: '80px' }} */ }}>
           <Box>
             <Stepper nonLinear activeStep={activeStep} style={{ display: 'none' }}>
@@ -136,15 +114,3 @@ const DataAnalysis = () => {
 }
 
 export default DataAnalysis
-
-const DatasetAddButton = styled.button`
-  width: 140px;
-  height: 35px;
-  padding: 5px 3px 5px 0;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #fff !important;
-  background-color: #4338f7;
-  box-shadow: 0 2px 0 rgba(55, 5, 255, 0.06);
-`

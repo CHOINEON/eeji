@@ -1,8 +1,11 @@
 import styled from '@emotion/styled'
+import { Button } from 'antd'
+import { ConfirmContext } from 'components/dialogs/ConfirmContext'
 import useModal from 'hooks/useModal'
-import React from 'react'
+import React, { useContext } from 'react'
 
 const UploadPage = () => {
+  const { confirm } = useContext(ConfirmContext)
   const { openModal, closeModal } = useModal()
   const handleClick = (type: string) => {
     openModal({
@@ -16,6 +19,11 @@ const UploadPage = () => {
     })
   }
 
+  const handleDialogOpen = async () => {
+    const result = await confirm('Are you sure?')
+    // console.log('handleDialogOpenresult:', result)
+  }
+
   return (
     <>
       <UploadContainer>
@@ -24,7 +32,11 @@ const UploadPage = () => {
         <div style={{ width: '100%', textAlign: 'center', marginTop: 32, flexDirection: 'row' }}>
           <UploadButton onClick={() => handleClick('CustomModelImport')}>사용자 생성 모델</UploadButton>
           <UploadButton onClick={() => handleClick('SavedModelImport')}>INFINITE OPTIMAL MODEL</UploadButton>
+          <Button type="text" onClick={handleDialogOpen}>
+            Dialog Test
+          </Button>
         </div>
+        <div></div>
       </UploadContainer>
     </>
   )

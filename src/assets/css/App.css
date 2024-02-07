@@ -21,7 +21,7 @@ body {
 body::-webkit-scrollbar {
   background: #d5dcef;
   border-radius: 12px;
-  width: 12px;
+  width: 4px;
 }
 
 /* 스크롤바 막대 꾸미기 */

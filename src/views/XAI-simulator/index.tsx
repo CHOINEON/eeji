@@ -14,9 +14,9 @@ import HistorySidebar from 'components/sidebar/HistorySidebar'
 const XAIsimulator = () => {
   const analysisResult = useRecoilValue(customModelStore)
 
-  useEffect(() => {
-    console.log('result:', analysisResult.data)
-  }, [analysisResult])
+  // useEffect(() => {
+  //   console.log('result:', analysisResult.data)
+  // }, [analysisResult])
 
   return (
     <>
