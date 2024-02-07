@@ -64,22 +64,19 @@ const ModelListWrapper = styled.div`
 
   &::-webkit-scrollbar {
     background: #332bbf;
-    border-radius: 12px;
+    border-radius: 30%; //width가 너무 작아서 안보임..
     width: 4px;
     display: flex;
     overflow: auto;
   }
   &::-webkit-scrollbar-thumb {
     background: #332bbf;
-    border-radius: 12px !important;
+    border-radius: 10%;
   }
 
   &::-webkit-scrollbar-track {
     background: #d5dcef;
-    border-radius: 12px;
-  }
-  &::-webkit-scrollbar-track-piece {
-    border-radius: 12px;
+    border-radius: 10%;
   }
 `
 

@@ -159,19 +159,6 @@ template {
   border-radius: 10px;
 }
 
-.ant-btn {
-  /* border: 1px solid #4338f7 !important; */
-  /* color: #4338f7 !important; */
-  border-radius: 10px;
-  color:white;
-}
-
-.ant-btn:hover {
-  /* background-color: #4338f7 !important; */
-  color: #fff !important;
-  /* border: 1px solid #4338f7 !important; */
-}
-
 .custom-input {
   background-color: '#fff' !important;
   border: '1px solid #A3AFCF' !important;

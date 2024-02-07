@@ -13,79 +13,66 @@ import { Loading } from 'components/common/Loading'
 import GlobalModal from 'components/modal/GlobalModal'
 import Feedback from 'components/common/Feedback'
 
-// import toast, { Toaster } from 'react-hot-toast'
-// import { App } from 'antd'
-//https://ant.design/docs/react/customize-theme
-
 const antdCustomTheme = {
   token: {
-    colorPrimary: '#4338F7',
     fontFamily: 'Helvetica Neue',
-    borderRadius: 7,
-    // colorBgContainer: '#FFFFFF',
-    // colorBgContainer: '#002D65',
-    // colorBgContainerDisabled: '#5951DB33',
+    colorPrimary: '#1677ff',
+    borderRadius: 6,
   },
   components: {
     Button: {
       colorPrimary: '#4338f7',
-      borderRadius: 100,
-    },
-    Modal: {
-      borderRadius: 10,
-    },
-    Input: {
-      colorBgContainer: '#FFFFFF',
-      colorBorderBg: '1px solid #F5F8FF',
-      borderRadius: 7,
-    },
-    Select: {
-      // colorPrimary: '#4338f7',
-      // colorBgBase: '#FFFFFF',
-      // colorBgContainer: '#FFFFFF',
-      // colorBorderBg: '1px solid #A3AFCF',
-      borderRadius: 10,
     },
   },
 }
+// token: {
+//   colorPrimary: '#4338F7',
+//   fontFamily: 'Helvetica Neue',
+//   borderRadius: 7,
+//   // colorBgContainer: '#FFFFFF',
+//   colorBgContainer: '#002D65',
+//   colorBgContainerDisabled: '#5951DB33',
+// },
+// components: {
+//   Button: {
+//     colorPrimary: '#00B96B',
+//     // algorithm: true,
+//     // borderRadius: 100,
+//   },
+//   Modal: {
+//     borderRadius: 10,
+//   },
+//   Input: {
+//     colorBgContainer: '#FFFFFF',
+//     colorBorderBg: '1px solid #F5F8FF',
+//     borderRadius: 7,
+//   },
+//   Select: {
+//     // colorPrimary: '#4338f7',
+//     // colorBgBase: '#FFFFFF',
+//     // colorBgContainer: '#FFFFFF',
+//     // colorBorderBg: '1px solid #A3AFCF',
+//     borderRadius: 10,
+//   },
+// },
 
 const queryClient = new QueryClient()
 
 ReactDOM.render(
   <RecoilRoot>
     <ConfigProvider
-      theme={antdCustomTheme}
-      // theme={{
-      //   token: {
-      //     colorPrimary: '#4338F7',
-      //     fontFamily: 'Helvetica Neue',
-      //     borderRadius: 7,
-      //     // colorBgContainer: '#FFFFFF',
-      //     // colorBgContainer: '#002D65',
-      //     // colorBgContainerDisabled: '#5951DB33',
-      //   },
-      //   components: {
-      //     Button: {
-      //       colorPrimary: '#4338f7',
-      //       borderRadius: 100,
-      //     },
-      //     Modal: {
-      //       borderRadius: 10,
-      //     },
-      //     Input: {
-      //       // colorBgContainer: '#FFFFFF',
-      //       // colorBorderBg: '1px solid #A3AFCF',
-      //       borderRadius: 7,
-      //     },
-      //     Select: {
-      //       // colorPrimary: '#4338f7',
-      //       // colorBgBase: '#FFFFFF',
-      //       // colorBgContainer: '#FFFFFF',
-      //       // colorBorderBg: '1px solid #A3AFCF',
-      //       borderRadius: 10,
-      //     },
-      //   },
-      // }}
+      theme={{
+        token: {
+          fontFamily: 'Helvetica Neue',
+          colorPrimary: '#1677ff',
+          borderRadius: 6,
+        },
+        components: {
+          Button: {
+            colorPrimary: '#4338f7',
+          },
+        },
+      }}
     >
       <ChakraProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
