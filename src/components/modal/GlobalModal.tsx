@@ -31,6 +31,8 @@ const GlobalModal = () => {
   // }, [modal])
 
   const renderComponent = () => {
+    // console.log('modalType:', modalType)
+
     if (!modalType) {
       return null
     }
@@ -50,7 +52,7 @@ const GlobalModal = () => {
         }
         footer={null}
       >
-        <ModalComponent {...modalProps} />
+        {ModalComponent && <ModalComponent {...modalProps} />}
       </Modal>
     )
   }

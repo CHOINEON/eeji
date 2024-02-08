@@ -24,8 +24,6 @@ const Confirm = ({ message, onClickOK, onClickCancel }: Props) => {
       {' '}
       <Dimmer onClick={() => onClickCancel()} />
       <DialogContainer>
-        {/* <Dimmer onClickCapture={(e) => e.stopPropagation()} /> */}
-
         <Contents>
           <Title></Title>
           <Text>{message}</Text>

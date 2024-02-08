@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
+import process_icon from 'assets/img/components/processing.svg'
 
-//https://javascript.plainenglish.io/build-a-progress-bar-with-react-js-48228ab53f57
-//declare with interface to have the benefits of "extends" in the future...(sorry for my TMI)
 interface ProgressbarProps {
   currentValue: number
   maxValue: number
@@ -15,6 +14,7 @@ const Progressbar = ({ currentValue, maxValue, label }: ProgressbarProps) => {
       <label htmlFor="progress-bar">{label}</label>
       <ProgressBar id="progress-bar" value={currentValue} max={maxValue} data-label={currentValue + ' %'}>
         {currentValue}%
+        <Marker icon={process_icon} />
       </ProgressBar>
     </>
   )
@@ -38,8 +38,8 @@ const ProgressBar = styled.progress`
     font-weight: bold;
     vertical-align: 0;
     position: absolute;
-    left: 1em;
-    right: 0;
+    left: 0;
+    right: 8em;
   }
 
   /* Chrome and Safari */
@@ -66,6 +66,11 @@ const ProgressBar = styled.progress`
     // border-bottom-left-radius: 100px;
   }
 `
-const ProgressDone = styled.span<{ value: any }>`
-  opacity: 1;
+
+const Marker = styled.div<{ icon: any }>`
+  position: absolute;
+  left: 0;
+  right: 8em;
+  background-image: url(${(props: any) => props.icon});
+  background-size: contain;
 `

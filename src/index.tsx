@@ -64,7 +64,7 @@ ReactDOM.render(
       theme={{
         token: {
           fontFamily: 'Helvetica Neue',
-          colorPrimary: '#1677ff',
+          colorPrimary: '#4338f7',
           borderRadius: 6,
         },
         components: {

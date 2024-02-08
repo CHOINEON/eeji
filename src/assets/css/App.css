@@ -14,7 +14,9 @@ body {
   font-family: 'DM Sans', sans-serif, 'ITC Avant Garde Gothic Pro';
   /* background-color:#f4f7fe !important; */
 }
-
+img {
+  border: none;
+}
 /* Chrome, Whale, Edge */
 
 /* 스크롤바 전체 기본 꾸미기 */
