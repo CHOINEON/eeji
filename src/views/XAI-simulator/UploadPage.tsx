@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Button } from 'antd'
 import { ConfirmContext } from 'components/dialogs/ConfirmContext'
+import Progressbar from 'components/progressbar/Progressbar'
 import useModal from 'hooks/useModal'
 import React, { useContext } from 'react'
 
@@ -36,7 +37,9 @@ const UploadPage = () => {
             Dialog Test
           </Button>
         </div>
-        <div></div>
+        <div>
+          <Progressbar currentValue={60} maxValue={100} />
+        </div>
       </UploadContainer>
     </>
   )
