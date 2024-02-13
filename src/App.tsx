@@ -7,8 +7,6 @@ import AdminLayout from './layouts/admin'
 import Login from './layouts/login/login'
 import NotFound from 'components/common/NotFound'
 import NetworkError from 'components/common/NetworkError'
-import Feedback from 'components/common/Feedback'
-import ConfirmDialog from 'components/dialogs/ConfirmDialog'
 
 function PrivateRoute({ component: Component, isAuthenticated, ...rest }: any) {
   return (

@@ -7,9 +7,7 @@ import { useMutation } from 'react-query'
 import { CancelButton, CustomButton } from '../../DataAnalysis/components/DataInfo/DataImportModal'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
-import { message } from 'antd'
 import ColumnList from './ModelSelect/ColumnList'
-import { CheckOutlined, CloseOutlined, TrademarkOutlined } from '@ant-design/icons'
 import { customModelStore } from 'views/XAI-simulator/store/analyze/atom'
 
 interface IDataObj {
