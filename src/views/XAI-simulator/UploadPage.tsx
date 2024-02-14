@@ -7,6 +7,7 @@ import React, { useContext } from 'react'
 import CardButton from './components/button/CardButton'
 import IconServerUpload from 'assets/img/icons/XAI/upload_b_io.png'
 import IconCustomerUpload from 'assets/img/icons/XAI/upload_b_user.png'
+import ProgressbarSimple from 'components/progressbar/ProgressbarSimple'
 
 const UploadPage = () => {
   const { confirm } = useContext(ConfirmContext)
@@ -61,10 +62,12 @@ const UploadPage = () => {
             marginTop: '100px',
           }}
         >
-          <Progressbar currentValue={60} maxValue={100} />
-          <Button type="text" onClick={handleDialogOpen}>
+          <div style={{ width: 300, margin: 'auto' }}>
+            <ProgressbarSimple currentValue={70} maxValue={100} />
+          </div>
+          {/* <Button type="text" onClick={handleDialogOpen}>
             Dialog Test
-          </Button>
+          </Button> */}
         </div>
       </UploadContainer>
     </>

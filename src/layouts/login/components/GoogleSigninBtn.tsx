@@ -6,8 +6,11 @@ import AppleBtn from 'assets/img/components/apple.svg'
 
 import googleSigninBtn_sm from 'assets/img/components/web_light_sq_na.svg'
 import styled from '@emotion/styled'
+import { App } from 'antd'
 
 const GoogleSignin = () => {
+  const { message } = App.useApp()
+
   const location = useLocation()
   const GOOGLE_ID = '42578919430-p1so0e8e9s3ovojrc7a24c3kn6oq89g1.apps.googleusercontent.com'
 
@@ -29,8 +32,8 @@ const GoogleSignin = () => {
         {/* <GoogleIcon />
       <LoginButtonText> Continue with Google</LoginButtonText> */}
       </GoogleLoginBtn>
-      <KakaoLoginBtn onClick={() => alert('준비중인 서비스입니다.')} />
-      <AppleLoginBtn onClick={() => alert('준비중인 서비스입니다.')} />
+      <KakaoLoginBtn onClick={() => message.error('준비중인 서비스입니다.')} />
+      <AppleLoginBtn onClick={() => message.error('준비중인 서비스입니다.')} />
     </>
   )
 }

@@ -1,6 +1,8 @@
-import { axiosPrivate } from './axios'
+import { axiosPrivate, axiosProgress } from './axios'
 import { IDatasetList, IDataUploadReq, IDatasetReq, IDatasetEditReq } from './type/Dataset'
 import { TResponseType } from './type/commonResponse'
+import { useSetRecoilState } from 'recoil'
+import { ProgressState } from 'stores/progress'
 
 const DatasetApi = {
   //전체 데이터셋 리스트 가져오기
@@ -31,12 +33,18 @@ const DatasetApi = {
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
       },
+      // onUploadProgress: (e: any) => {
+      //   const percentCompleted = Math.round((e.loaded / e.total) * 100)
+      //   setProgressValue({ progress: percentCompleted, isLoading: percentCompleted ? true : false })
+      // },
     }
-    const { data } = await axiosPrivate.post(
+    const progressAxiosInstance = axiosProgress()
+    const { data } = await progressAxiosInstance.post(
       `/api/save_new/${payload.user_id}?user_id=${payload.user_id}`,
       payload.formData,
       config
     )
+
     return data
   },
 

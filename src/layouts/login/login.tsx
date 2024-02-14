@@ -20,12 +20,10 @@ import { FormControl, FormLabel, Button, Input } from '@chakra-ui/react'
 import { message, Select } from 'antd'
 import './style/style.css'
 import { Alert } from 'views/hmid/components/Modal/Alert'
-
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
 
 import SidebarBrand from 'components/sidebar/components/Brand'
-import { userInfoState } from 'views/DataAnalysis/store/dataset/atom'
 import GoogleSignin from './components/GoogleSigninBtn'
 import AvailableServiceIcon from './components/AvailableServiceIcon'
 
@@ -305,9 +303,9 @@ const FormWrap = styled.div`
   // height: 65vh;
   width: 20vw;
   padding: 2vw;
-  position: fixed;
-  right: 6vw;
-  top: 52%;
+  position: absolute;
+  right: 4vw;
+  top: 50vh;
   z-index: 999;
   background-color: #fff;
   border-radius: 15px;

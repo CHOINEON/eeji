@@ -3,15 +3,17 @@ import { styled } from 'styled-components'
 import DataProperties from './DataProperties'
 import DataSummary from './DataSummary'
 import thumbnailImg from 'assets/img/dataAnalysis/thumbnail_circle.svg'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { uploadedDataState } from 'views/DataAnalysis/store/dataset/atom'
 import { message, Spin } from 'antd'
 import languageEncoding from 'detect-file-encoding-and-language'
 import jschardet from 'jschardet'
+import { ProgressState } from 'stores/progress'
 
 const AfterUpload = () => {
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const [encoding, setEncoding] = useState('UTF-8')
+  const progress = useRecoilValue(ProgressState)
 
   useEffect(() => {
     // console.log('after upload:', uploadedData)
@@ -33,6 +35,10 @@ const AfterUpload = () => {
       }
     }
   }, [])
+
+  useEffect(() => {
+    console.log('After upload progress:', progress)
+  }, [progress])
 
   async function getEncoding(file: any) {
     const fileInfo = await languageEncoding(file)
