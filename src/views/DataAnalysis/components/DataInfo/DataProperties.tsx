@@ -63,7 +63,7 @@ const DataProperties = () => {
   }, [])
 
   useEffect(() => {
-    console.log('inputOption.algo_type:', inputOption.algo_type)
+    // console.log('inputOption.algo_type:', inputOption.algo_type)
     fetchFileDescription()
   }, [inputOption.algo_type])
 

@@ -116,24 +116,13 @@ const DataImportModal = (props: any) => {
   }
 
   const handleCancel = () => {
+    setSaving(false)
+    setUploadedData({})
     setImportOpen(false)
   }
 
   return (
     <>
-      {/* <Modal
-        className="rounded-corners"
-        width="400px"
-        open={importOpen}
-        title={
-          <>
-            <img style={{ margin: '10px 0 5px 0' }} src={logo_xs} />
-            <p style={{ fontSize: '30px' }}>Data Import</p>
-          </>
-        }
-        footer={null}
-        onCancel={handleCancel}
-      > */}
       <Spin tip="데이터 업로드 중 ..." spinning={saving}>
         {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
         <div>
@@ -148,7 +137,6 @@ const DataImportModal = (props: any) => {
           </CustomButton>
         </div>
       </Spin>
-      {/* </Modal> */}
     </>
   )
 }
