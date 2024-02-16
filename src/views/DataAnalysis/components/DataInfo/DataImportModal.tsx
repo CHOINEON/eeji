@@ -8,27 +8,54 @@ import DatasetApi from 'apis/DatasetApi'
 import { useMutation, useQueryClient } from 'react-query'
 import BeforeUpload from './BeforeUpload'
 import AfterUpload from './AfterUpload'
+import axios from 'axios'
+import { axiosProgress } from 'apis/axios'
+import useAxiosInterceptor from 'hooks/useAxiosInterceptor'
+import { ProgressState } from 'stores/progress'
+import { modalState } from 'stores/modal'
 
 const DataImportModal = (props: any) => {
   const { message } = App.useApp()
+  const [modal, setModal] = useRecoilState(modalState)
+
   const userInfo = useRecoilValue(userInfoState)
+  const inputOption = useRecoilValue(dataPropertyState)
+  const progress = useRecoilValue(ProgressState)
+
   const queryClient = useQueryClient()
 
   const [saving, setSaving] = useState(false)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
-  const resetUploadFileState = useResetRecoilState(uploadedDataState)
-  const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
-  const inputOption = useRecoilValue(dataPropertyState)
-  const resetInputOption = useResetRecoilState(dataPropertyState)
+  // const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
 
+  const resetInputOption = useResetRecoilState(dataPropertyState)
+  const resetUploadedData = useResetRecoilState(uploadedDataState)
   const [btnDisabled, setBtnDisabled] = useState(true)
 
-  const { mutate } = useMutation(DatasetApi.saveDataset, {
+  useAxiosInterceptor(axiosProgress)
+
+  const fetchData = async (payload: any) => {
+    const config = {
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+    }
+
+    const { data } = await axiosProgress.post(
+      `/api/save_new/${payload.user_id}?user_id=${payload.user_id}`,
+      payload.formData,
+      config
+    )
+    return data
+  }
+
+  const { mutate } = useMutation(fetchData, {
     onSuccess: (response: any) => {
+      // console.log('useMutation response：', response)
       message.success(response.message)
+
       //refetching
       queryClient.invalidateQueries('datasets')
-      setImportOpen(false)
     },
     onError: (error: any, query: any) => {
       // setSaving(false)
@@ -38,13 +65,17 @@ const DataImportModal = (props: any) => {
   })
 
   useEffect(() => {
-    if (!importOpen) {
+    if (progress.isLoading === true) setBtnDisabled(true)
+  }, [progress.isLoading])
+
+  useEffect(() => {
+    return () => {
       //선택 초기화
-      resetUploadFileState()
+      resetUploadedData()
       resetInputOption()
       setSaving(false)
     }
-  }, [importOpen])
+  }, [])
 
   useEffect(() => {
     if (inputOption.target_y.length > 0) {
@@ -117,26 +148,26 @@ const DataImportModal = (props: any) => {
 
   const handleCancel = () => {
     setSaving(false)
-    setUploadedData({})
-    setImportOpen(false)
+    resetUploadedData()
+    setModal(null)
   }
 
   return (
     <>
-      <Spin tip="데이터 업로드 중 ..." spinning={saving}>
-        {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
-        <div>
-          <CancelButton onClick={handleCancel}>Cancel</CancelButton>
-          <CustomButton
-            // className="block ant-btn ant-btn-primary"
-            visible={true}
-            disabled={btnDisabled}
-            onClick={handleSave}
-          >
-            Save
-          </CustomButton>
-        </div>
-      </Spin>
+      {/* <Spin tip="데이터 업로드 중 ..." spinning={saving}> */}
+      {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
+      <div>
+        <CancelButton onClick={handleCancel}>Cancel</CancelButton>
+        <CustomButton
+          // className="block ant-btn ant-btn-primary"
+          visible={true}
+          disabled={btnDisabled}
+          onClick={handleSave}
+        >
+          Save
+        </CustomButton>
+      </div>
+      {/* </Spin> */}
     </>
   )
 }

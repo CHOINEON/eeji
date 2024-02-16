@@ -8,12 +8,19 @@ import FeatureImportance from 'views/DataAnalysis/FeatureImportance'
 import { analysisResponseAtom } from 'views/DataAnalysis/store/response/atoms'
 import { selectModelState } from 'views/DataAnalysis/store/userOption/atom'
 
+type ScoreType = {
+  MAE?: number
+  MSE?: number
+  RMSE?: number
+  F1_SCORE?: number
+}
+
 const FeatureAnalysis = ({ data, input }: any) => {
   const analysisResponse = useRecoilValue(analysisResponseAtom)
   const [modelIdx, setModelIdx] = useRecoilState(selectModelState)
   const [options, setOptions] = useState([])
   const [chartData, setChartData] = useState({ labels: [], values: [] })
-  const [error, setError] = useState({ MAE: 0, MSE: 0, RMSE: 0 })
+  const [error, setError] = useState<ScoreType>({})
 
   useEffect(() => {
     // console.log('analysisResponse:', analysisResponse)
@@ -25,6 +32,7 @@ const FeatureAnalysis = ({ data, input }: any) => {
 
       setOptions(newOption)
     }
+
     setError(analysisResponse[modelIdx].error)
     setChartData(analysisResponse[modelIdx]['feature_data'][0])
   }, [analysisResponse])
@@ -38,9 +46,10 @@ const FeatureAnalysis = ({ data, input }: any) => {
 
   const content = (
     <div>
-      <p>MAE : {error.MAE}</p>
-      <p>MSE : {error.MSE}</p>
-      <p>RMSE : {error.RMSE}</p>
+      {error.MAE ? <p>MAE : {error.MAE}</p> : null}
+      {error.MSE ? <p>MSE : {error.MSE}</p> : null}
+      {error.RMSE ? <p>RMSE : {error.RMSE}</p> : null}
+      {error.F1_SCORE ? <p>F1_SCORE : {error.F1_SCORE}</p> : null}
     </div>
   )
 
@@ -93,7 +102,7 @@ const ComponentContainer = styled.div`
   display: block;
   float: left;
   margin: 38px 15px;
-  // height: 60%;
+  min-height: 460px;
   background-color: #f6f8ff;
   border: 1px solid #a3afcf;
   border-radius: 10px;

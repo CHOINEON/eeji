@@ -10,6 +10,8 @@ interface ProgressbarProps {
 
 const Progressbar = ({ currentValue, maxValue, label }: ProgressbarProps) => {
   // const barWidth = (currentValue / maxValue) * 100
+
+  // console.log('currentValue:', currentValue)
   return (
     <>
       <label htmlFor="progress-bar">{label}</label>
@@ -71,18 +73,18 @@ const ProgressBar = styled.progress<{ value: number; max: number }>`
   }
 
   /* Adding the process_icon */
-  &::after {
-    content: '';
-    position: absolute;
-    top: 1px;
-    left: ${(props: any) => `${(props.value / props.max) * 100 - 10}%`};
-    width: 30px; /* Adjust width and height as needed */
-    height: 19px; /* Adjust width and height as needed */
-    background-image: url(${process_icon});
-    background-size: contain;
-    background-repeat: no-repeat;
-    border-radius: 50%;
-  }
+  // &::after {
+  //   content: '';
+  //   position: absolute;
+  //   top: 1px;
+  //   left: ${(props: any) => `${(props.value / 100) * 337 - 30}px`};
+  //   width: 30px; /* Adjust width and height as needed */
+  //   height: 19px; /* Adjust width and height as needed */
+  //   background-image: url(${process_icon});
+  //   background-size: contain;
+  //   background-repeat: no-repeat;
+  //   border-radius: 50%;
+  // }
 `
 
 const Marker = styled.div<{ icon: any }>`

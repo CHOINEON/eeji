@@ -81,7 +81,15 @@ export default function Dashboard(props: { [x: string]: any }) {
         <NavBar routes={routes} />
         {getRoute() ? (
           location.pathname === '/admin/data-analysis' ? (
-            <Box ml="290px" p={{ base: '20px', md: '30px' }} pe="20px" minH="90vh" pt="50px">
+            <Box
+              ml="290px"
+              p={{ base: '20px', md: '30px' }}
+              pe="20px"
+              minH="90vh"
+              pt="50px"
+              overflow="auto"
+              height="90vh"
+            >
               <HistorySidebar />
               <Switch>
                 {getRoutes(routes)}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Input, Radio, Space, Table } from 'antd'
+import { Button, Input, message, Radio, Space, Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 
 interface DataType {
@@ -43,7 +43,8 @@ const data: DataType[] = [
 const ApiService = () => {
   return (
     <>
-      <div style={{ textAlign: 'right', margin: '30px 0px' }}>
+      <p style={{ textAlign: 'center' }}>서비스 준비중입니다</p>
+      {/* <div style={{ textAlign: 'right', margin: '30px 0px' }}>
         <Button type="primary">Model Upload</Button>
       </div>
       <Table
@@ -53,7 +54,7 @@ const ApiService = () => {
           expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p>,
         }}
         dataSource={data}
-      />
+      /> */}
     </>
   )
 }

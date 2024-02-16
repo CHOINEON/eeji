@@ -28,8 +28,8 @@ const PredictionResult = ({ data }: any) => {
   const [dataset, setDataset] = useState([])
 
   useEffect(() => {
-    console.log('selectedData.isClassification:', selectedData.isClassification)
-    console.log('analysisResponse:', analysisResponse)
+    // console.log('selectedData.isClassification:', selectedData.isClassification)
+    // console.log('analysisResponse:', analysisResponse)
     const arr: Array<any> = []
 
     //TODO: 일단 Classification 은 50개만 보여주게 slice 처리함
@@ -37,10 +37,10 @@ const PredictionResult = ({ data }: any) => {
       analysisResponse.map((_d: any, i: number) => {
         if (i === 0) {
           arr.push(
-            generateSeriesForClassification(`Ground-truth`, analysisResponse[i]['pred_data']['truth'], 'rgb(87,220,49)')
+            generateSeriesForClassification(`Ground-truth`, analysisResponse[i]['pred_data']['truth'], '#617EFF')
           )
           arr.push(
-            generateSeriesForClassification(`INEEJI prediction`, analysisResponse[i]['pred_data']['pred'], '#4A40F7')
+            generateSeriesForClassification(`INEEJI prediction`, analysisResponse[i]['pred_data']['pred'], '#000000')
           )
         } else {
           arr.push(
@@ -52,7 +52,7 @@ const PredictionResult = ({ data }: any) => {
       analysisResponse.map((_d: any, i: number) => {
         if (i === 0) {
           arr.push(generateSeries(`Ground-truth`, analysisResponse[i]['pred_data']['truth'], 'rgb(87,220,49)'))
-          arr.push(generateSeries(`INEEJI pred prediction`, analysisResponse[i]['pred_data']['pred'], '#4A40F7'))
+          arr.push(generateSeries(`INEEJI prediction`, analysisResponse[i]['pred_data']['pred'], '#4A40F7'))
         } else {
           arr.push(generateSeries(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'], colors[i]))
         }
@@ -94,7 +94,7 @@ const PredictionResult = ({ data }: any) => {
       borderWidth: label === 'truth' ? 1 : 1,
       fill: label === 'INEEJI prediction' ? true : false,
       data: dataArr,
-      pointRadius: label === 'INEEJI prediction' ? 5 : 3,
+      pointRadius: label === 'INEEJI prediction' ? 5 : 2,
     }
   }
 
@@ -236,7 +236,7 @@ const PredictionResult = ({ data }: any) => {
     afterUpdate(chart: any, args: any, options: any) {
       const ul = getOrCreateLegendList(chart, options.containerID)
 
-      console.log('ul::', ul)
+      // console.log('ul::', ul)
 
       // Remove old legend items
       while (ul.firstChild) {

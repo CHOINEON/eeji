@@ -133,76 +133,74 @@ const DataProperties = () => {
   return (
     <Spin tip="업로드 파일 분석 중 ..." spinning={uploading} style={{ marginTop: '100px' }}>
       <DataPropertiesContainer>
-        <Row gutter={[32, 4]}>
-          <Col span={24}>
-            <ColumnLabel required={true} label="Algorithm Type" />
-            <Radio.Group onChange={onChangeRadio} value={inputOption.algo_type}>
-              <Radio value={1}>Classification</Radio>
-              <Radio value={0}>Regression</Radio>
-            </Radio.Group>
-          </Col>
-          <Col span={24}>
-            <ColumnLabel required={true} label="Dataset Name" />
-            <Input
-              style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-              placeholder="Dataset Name"
-              maxLength={20}
-              onChange={handleChange}
-              value={inputOption.name}
-              allowClear
-            />
-          </Col>
+        <Row>
+          <ColumnLabel required={true} label="Algorithm Type" />
+          <Radio.Group onChange={onChangeRadio} value={inputOption.algo_type}>
+            <Radio value={1}>Classification</Radio>
+            <Radio value={0}>Regression</Radio>
+          </Radio.Group>
+        </Row>
+        <Row>
+          <ColumnLabel required={true} label="Dataset Name" />
+          <Input
+            style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
+            placeholder="Dataset Name"
+            maxLength={20}
+            onChange={handleChange}
+            value={inputOption.name}
+            allowClear
+          />
+        </Row>
 
-          {/* <Col span={24} style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }}>
+        {/* <Col span={24} style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }}>
             <ColumnLabel required={true} label="Timestamp Format" />
             <Input defaultValue="yyyy-mm-dd HH:MM:SS" onChange={onChangeInput} />
           </Col> */}
 
-          <Col span={24}>
-            <ColumnLabel required={true} label=" Target Variable" />
-            <Select
-              style={{
-                width: 120,
-                backgroundColor: '#fff !important',
-                border: '1px solid #A3AFCF',
-                borderRadius: '10px',
-              }}
-              value={inputOption.target_y}
-              placeholder="Timestamp Column"
-              options={options}
-              // defaultValue={options[0]}
-              onSelect={handleSelectY}
-            />
-          </Col>
-          <Col span={24} /*style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }} */>
-            <ColumnLabel required={false} label="Timestamp" />
-            <Select
-              style={{
-                width: 120,
-                backgroundColor: '#fff !important',
-                border: '1px solid #A3AFCF',
-                borderRadius: '10px',
-              }}
-              value={inputOption.date_col}
-              placeholder="Timestamp Column"
-              options={options}
-              // defaultValue={options[0]}
-              onSelect={handleSelectDateCol}
-            />
-          </Col>
+        <Row>
+          <ColumnLabel required={true} label=" Target Variable" />
+          <Select
+            style={{
+              width: 120,
+              backgroundColor: '#fff !important',
+              border: '1px solid #A3AFCF',
+              borderRadius: '10px',
+            }}
+            value={inputOption.target_y}
+            placeholder="Timestamp Column"
+            options={options}
+            // defaultValue={options[0]}
+            onSelect={handleSelectY}
+          />
+        </Row>
+        <Row /*style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }} */>
+          <ColumnLabel required={false} label="Timestamp" />
+          <Select
+            style={{
+              width: 120,
+              backgroundColor: '#fff !important',
+              border: '1px solid #A3AFCF',
+              borderRadius: '10px',
+            }}
+            value={inputOption.date_col}
+            placeholder="Timestamp Column"
+            options={options}
+            // defaultValue={options[0]}
+            onSelect={handleSelectDateCol}
+          />
+        </Row>
 
-          <Col span={24}>
-            <ColumnLabel required={false} label=" Description(Optional)" />
-            <TextArea
-              style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-              value={inputOption.desc}
-              onChange={(e) => setInputOption({ ...inputOption, desc: e.target.value })}
-              placeholder="Description"
-              maxLength={50}
-              allowClear
-              autoSize={{ minRows: 3, maxRows: 2 }}
-            />
-          </Col>
+        <Row>
+          <ColumnLabel required={false} label=" Description(Optional)" />
+          <TextArea
+            style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
+            value={inputOption.desc}
+            onChange={(e) => setInputOption({ ...inputOption, desc: e.target.value })}
+            placeholder="Description"
+            maxLength={50}
+            allowClear
+            autoSize={{ minRows: 3, maxRows: 2 }}
+          />
         </Row>
       </DataPropertiesContainer>
     </Spin>
@@ -217,4 +215,25 @@ const DataPropertiesContainer = styled.div`
   float: left;
   margin-top: 20px;
   width: 100%;
+  height: 276px;
+
+  overflow-y: scroll;
+  overflow: -moz-scrollbars-vertical;
+
+  &::-webkit-scrollbar {
+    background: #332bbf;
+    border-radius: 30%; //width가 너무 작아서 안보임..
+    width: 4px;
+    display: flex;
+    overflow: auto;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #332bbf;
+    border-radius: 10%;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #d5dcef;
+    border-radius: 10%;
+  }
 `

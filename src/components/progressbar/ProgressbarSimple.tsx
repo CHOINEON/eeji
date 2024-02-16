@@ -1,14 +1,19 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Progressbar from './Progressbar'
 
 interface ProgressbarProps {
   currentValue: number
   maxValue: number
   label?: string
+  onCompleted?: () => void
 }
 
-const ProgressbarSimple = ({ currentValue, maxValue, label }: ProgressbarProps) => {
+const ProgressbarSimple = ({ currentValue, maxValue, label, onCompleted }: ProgressbarProps) => {
+  useEffect(() => {
+    if (currentValue === 100) onCompleted()
+  })
+
   return (
     <Wrapper>
       {' '}
@@ -22,9 +27,13 @@ const ProgressbarSimple = ({ currentValue, maxValue, label }: ProgressbarProps) 
 export default ProgressbarSimple
 
 const Wrapper = styled.div`
-  border: 1px solid red;
-  padding: 1%;
+  // border: 1px solid red;
+  padding: 20% 2%;
+  width: 100%;
   text-align: center;
+  display: block;
+  float: left;
+  height: 276px;
 `
 
 const Text = styled.p`

@@ -28,7 +28,7 @@ const PredictionResult = ({ data }: any) => {
   const [dataset, setDataset] = useState([])
 
   useEffect(() => {
-    console.log('analysisResponse:', analysisResponse)
+    // console.log('analysisResponse:', analysisResponse)
     const arr: Array<any> = []
 
     //TODO: 일단 Classification 은 50개만 보여주게 slice 처리함

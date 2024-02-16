@@ -9,11 +9,15 @@ import { message, Spin } from 'antd'
 import languageEncoding from 'detect-file-encoding-and-language'
 import jschardet from 'jschardet'
 import { ProgressState } from 'stores/progress'
+import ProgressbarSimple from 'components/progressbar/ProgressbarSimple'
+import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
+import { modalState } from 'stores/modal'
 
 const AfterUpload = () => {
+  const [modal, setModal] = useRecoilState(modalState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
-  const [encoding, setEncoding] = useState('UTF-8')
   const progress = useRecoilValue(ProgressState)
+  // const [encoding, setEncoding] = useState('UTF-8')
 
   useEffect(() => {
     // console.log('after upload:', uploadedData)
@@ -36,14 +40,10 @@ const AfterUpload = () => {
     }
   }, [])
 
-  useEffect(() => {
-    console.log('After upload progress:', progress)
-  }, [progress])
-
   async function getEncoding(file: any) {
     const fileInfo = await languageEncoding(file)
-    console.log('fileinfo', fileInfo)
-    setEncoding(fileInfo.encoding)
+    // console.log('fileinfo', fileInfo)
+    // setEncoding(fileInfo.encoding)
     return fileInfo.encoding
   }
 
@@ -120,6 +120,11 @@ const AfterUpload = () => {
     setUploadedData({ ...uploadedData, content: array.slice(0, -1) })
   }
 
+  const handleProgressComplete = () => {
+    setTimeout(() => setModal(null), 1000)
+    // setModal(null)
+  }
+
   return (
     <>
       <DatasetImageContainer>
@@ -139,7 +144,11 @@ const AfterUpload = () => {
         </div>
       </DatasetImageContainer>
       <DataSummary />
-      <DataProperties />
+      {progress.percent === 0 ? (
+        <DataProperties />
+      ) : (
+        <ProgressbarSimple currentValue={progress.percent} maxValue={100} onCompleted={handleProgressComplete} />
+      )}
     </>
   )
 }
