@@ -6,6 +6,7 @@ import CustomCollapse, { CollapseItem } from './components/Collapse/CustomCollap
 import useModal from 'hooks/useModal'
 import { useRecoilState } from 'recoil'
 import { SideBarState } from 'stores/sidebar'
+import UploadIcon from 'assets/img/icons/icon_upload.svg'
 
 export const mockData: Array<CollapseItem> = [
   {

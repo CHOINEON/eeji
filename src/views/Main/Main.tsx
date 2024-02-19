@@ -1,11 +1,6 @@
 import styled from '@emotion/styled'
 import React from 'react'
-import DataAnalysisImg from 'assets/img/icons/DataAnalysis.jpg'
-import XaiImg from 'assets/img/icons/Xai.jpg'
-import PriceForecastingImg from 'assets/img/icons/PriceForecasting.jpg'
-import ApiImg from 'assets/img/icons/Api.jpg'
-import { Box, Center, Container, HStack, Link, Wrap, WrapItem } from '@chakra-ui/react'
-import './style.css'
+import { Box, Wrap } from '@chakra-ui/react'
 import { MenuList } from './menuList'
 
 const Main = () => {

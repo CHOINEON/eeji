@@ -18,7 +18,6 @@ import date from './img/date.png'
 import axios from 'axios'
 import { FormControl, FormLabel, Button, Input } from '@chakra-ui/react'
 import { message, Select } from 'antd'
-import './style/style.css'
 import { Alert } from 'views/hmid/components/Modal/Alert'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
@@ -29,7 +28,6 @@ import AvailableServiceIcon from './components/AvailableServiceIcon'
 import { useMutation, useQuery } from 'react-query'
 import UserApi from 'apis/UserApi'
 import useGetCompanies from 'hooks/queries/useGetCompanies'
-import { ICompanyInfo, ICompanyList } from 'apis/type/User'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -46,10 +44,11 @@ export const Login: React.FC = () => {
   const { mutate: mutateLogin } = useMutation(UserApi.login, {
     onSuccess: (response: any) => {
       console.log('response:', response)
-      window.localStorage.setItem('userData', JSON.stringify(response.data))
+
+      window.localStorage.setItem('userData', JSON.stringify(response))
       window.localStorage.setItem('companyId', company)
-      window.localStorage.setItem('userId', response.data[0].user_id)
-      window.localStorage.setItem('userPosition', response.data[0].user_position)
+      window.localStorage.setItem('userId', response[0].user_id)
+      window.localStorage.setItem('userPosition', response[0].user_position)
       window.location.href = '/admin/main'
     },
     onError: (error: any) => {
