@@ -137,6 +137,7 @@ const AIbutton = styled.button`
 `
 
 const AITextContainer = styled.div`
+  font-family: 'Helvetica Neue';
   width: 80%;
   display: block;
   float: left;

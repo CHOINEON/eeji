@@ -21,7 +21,8 @@ const XAIsimulator = () => {
   return (
     <>
       <Box style={{ position: 'relative', zIndex: 1000, width: '100%', height: '100%' }}>
-        {analysisResult.data.length > 0 ? <AnalysisResult /> : <UploadPage />}
+        <AnalysisResult />
+        {/* {analysisResult.data.length > 0 ? <AnalysisResult /> : <UploadPage />} */}
       </Box>
     </>
   )

@@ -61,8 +61,8 @@ export const Login: React.FC = () => {
   })
 
   useEffect(() => {
+    console.log('company list data:', data)
     if (data) {
-      console.log('data:', data)
       // setCompanyList(data)
       RenderCompanyList(data)
     }
