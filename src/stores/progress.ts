@@ -8,7 +8,7 @@ import { atom } from 'recoil'
 export const ProgressState = atom({
   key: 'progress',
   default: {
-    progress: 0,
+    percent: 0,
     isLoading: false,
   },
 })

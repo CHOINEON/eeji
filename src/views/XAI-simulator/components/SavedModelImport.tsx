@@ -2,7 +2,7 @@ import { Spin } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
-import { CancelButton, CustomButton } from '../../DataAnalysis/components/DataInfo/DataImportModal'
+import { CancelButton, CustomButton } from '../../AIModelGenerator/components/DataInfo/DataImportModal'
 import useGetDatasets from 'hooks/queries/useGetDatasets'
 import ModelList from './ModelSelect/ModelList'
 

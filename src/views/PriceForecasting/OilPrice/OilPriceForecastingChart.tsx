@@ -7,10 +7,7 @@ import annotationPlugin, { AnnotationOptions, AnnotationPluginOptions } from 'ch
 import { useMutation } from 'react-query'
 import fetchChartData from '../../../apis/PriceForecastApi'
 import { Line } from 'react-chartjs-2'
-import { SubTitle, Title } from 'views/NewDataAnalysis/components/Title'
-import testData from './response.json'
-import { ChartProps } from 'react-chartjs-2/dist/types'
-import { Point } from 'chart.js/dist/core/core.controller'
+import { Title } from 'views/AnalysisResult/components/Title'
 
 const { Text, Link } = Typography
 

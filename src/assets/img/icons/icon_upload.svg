@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="17" viewBox="0 0 22 17">
+  <defs>
+    <linearGradient id="linear-gradient" y1="0.518" x2="1" y2="0.515" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#7d79fd"/>
+      <stop offset="1" stop-color="#3158db"/>
+    </linearGradient>
+  </defs>
+  <g id="icon_upload" transform="translate(-44 -168)">
+    <g id="사각형_4367" data-name="사각형 4367" transform="translate(44 168)" stroke="#fff" stroke-width="0.5" fill="url(#linear-gradient)">
+      <rect width="22" height="17" rx="2" stroke="none"/>
+      <rect x="0.25" y="0.25" width="21.5" height="16.5" rx="1.75" fill="none"/>
+    </g>
+    <g id="사각형_4368" data-name="사각형 4368" transform="translate(44 168)" fill="#fff" stroke="#fff" stroke-width="0.5">
+      <path d="M2,0H20a2,2,0,0,1,2,2V4a0,0,0,0,1,0,0H0A0,0,0,0,1,0,4V2A2,2,0,0,1,2,0Z" stroke="none"/>
+      <path d="M2,.25H20A1.75,1.75,0,0,1,21.75,2V3.75a0,0,0,0,1,0,0H.25a0,0,0,0,1,0,0V2A1.75,1.75,0,0,1,2,.25Z" fill="none"/>
+    </g>
+    <path id="패스_13817" data-name="패스 13817" d="M109.5,2.678a1,1,0,1,1-1-1,1,1,0,0,1,1,1" transform="translate(-44.285 167.447)" fill="#4338f7"/>
+    <path id="패스_13818" data-name="패스 13818" d="M3.6,0,0,2.881,1.933,2.9V8.7L5.3,8.706,5.282,2.9h1.98Z" transform="translate(51.369 174.075)" fill="#fff"/>
+  </g>
+</svg>

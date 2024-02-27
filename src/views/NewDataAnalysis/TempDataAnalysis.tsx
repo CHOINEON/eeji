@@ -1,8 +1,8 @@
-import { Button, Tabs } from 'antd'
 import React, { useEffect, useState } from 'react'
+import { Button, Tabs } from 'antd'
 import tw from 'tailwind-styled-components'
-import TabChild from './TabChild'
 import { v4 } from 'uuid'
+import TabChild from 'views/AnalysisResult/TabChild'
 
 const TabTitle = tw.p`
   text-sm
@@ -13,7 +13,7 @@ const TabTitle = tw.p`
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string
 
-const TempDataAnalysis = () => {
+const AnalysisResult = () => {
   const defaultPanes = Array(1)
     .fill(null)
     .map((_, index) => {
@@ -61,4 +61,4 @@ const TempDataAnalysis = () => {
   )
 }
 
-export default TempDataAnalysis
+export default AnalysisResult

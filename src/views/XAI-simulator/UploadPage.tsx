@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import { ConfirmContext } from 'components/dialogs/ConfirmContext'
 import Progressbar from 'components/progressbar/Progressbar'
 import useModal from 'hooks/useModal'
@@ -29,6 +29,7 @@ const UploadPage = () => {
   ]
 
   function handleClick(type: string) {
+    // message.info('3월 서비스 예정입니다')
     openModal({
       modalTitle: 'Model Import',
       modalType: type,
@@ -62,9 +63,6 @@ const UploadPage = () => {
             marginTop: '100px',
           }}
         >
-          <div style={{ width: 300, margin: 'auto' }}>
-            <ProgressbarSimple currentValue={70} maxValue={100} />
-          </div>
           {/* <Button type="text" onClick={handleDialogOpen}>
             Dialog Test
           </Button> */}
@@ -82,6 +80,19 @@ interface Container {
   minHeight?: any
   position?: string
 }
+
+// const Overlay = styled.div`
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   z-index: 2;
+//   width: 100%;
+//   height: 100%;
+//   background: rgba(0, 0, 0, 0.7);
+//   opacity: 0;
+//   visibility: hidden;
+//   transition: 0.3s linear;
+// `
 
 const UploadContainer = styled.div`
   // border: 1px solid red;

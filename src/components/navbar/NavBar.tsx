@@ -1,9 +1,6 @@
 import { Avatar, Box, Button, Flex, HStack, Link, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import React, { useEffect } from 'react'
-import { useRecoilState } from 'recoil'
-import { stepCountStore } from 'views/DataAnalysis/store/global/atom'
-import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import Logo from './Logo'
 import logoutBtnImage from 'assets/img/icons/logout_off.svg'
 import settingOffImage from 'assets/img/icons/setting_off.svg'
@@ -14,19 +11,12 @@ const NavBar = (props: { routes: RoutesType[] }) => {
   const history = useHistory()
   const { routes } = props
 
+  const userBg = useColorModeValue('#676a68', '#676a68')
   const [UserName, setUserName] = React.useState<any>(
     JSON.parse(window.localStorage.getItem('userData'))[0]?.user_nm || 'TEST'
   )
-  const userBg = useColorModeValue('#676a68', '#676a68')
 
   const [isOpen, setIsOpen] = React.useState(false)
-  const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
-  const toggle = () => setIsOpen(!isOpen)
-  const [activeStep, setActiveStep] = useRecoilState(stepCountStore)
-
-  const handleClick = () => {
-    setImportOpen(true)
-  }
 
   const handleLogout = () => {
     history.replace('/login')

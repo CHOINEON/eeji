@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Input, Rate } from 'antd'
-import { CustomButton } from '../DataAnalysis/components/DataInfo/DataImportModal'
+import { CustomButton } from '../AIModelGenerator/components/DataInfo/DataImportModal'
 import styled from '@emotion/styled'
 import ColumnLabel from 'components/fields/ColumnLabel'
 import CustomerServiceApi from 'apis/CustomerServiceApi'

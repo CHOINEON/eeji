@@ -18,10 +18,29 @@ const antdCustomTheme = {
     fontFamily: 'Helvetica Neue',
     colorPrimary: '#1677ff',
     borderRadius: 6,
+    colorBgContainer: '#FFFFFF',
+    colorBgContainerDisabled: '#5951DB33',
   },
   components: {
     Button: {
       colorPrimary: '#4338f7',
+      // algorithm: true,
+      borderRadius: 100,
+    },
+    Modal: {
+      borderRadius: 10,
+    },
+    Input: {
+      colorBgContainer: '#FFFFFF',
+      colorBorderBg: '1px solid #F5F8FF',
+      borderRadius: 7,
+    },
+    Select: {
+      colorPrimary: '#4338f7',
+      colorBgBase: '#FFFFFF',
+      colorBgContainer: '#FFFFFF',
+      colorBorderBg: '1px solid #A3AFCF',
+      borderRadius: 10,
     },
   },
 }
@@ -29,7 +48,7 @@ const antdCustomTheme = {
 //   colorPrimary: '#4338F7',
 //   fontFamily: 'Helvetica Neue',
 //   borderRadius: 7,
-//   // colorBgContainer: '#FFFFFF',
+//   colorBgContainer: '#FFFFFF',
 //   colorBgContainer: '#002D65',
 //   colorBgContainerDisabled: '#5951DB33',
 // },
@@ -60,20 +79,7 @@ const queryClient = new QueryClient()
 
 ReactDOM.render(
   <RecoilRoot>
-    <ConfigProvider
-      theme={{
-        token: {
-          fontFamily: 'Helvetica Neue',
-          colorPrimary: '#4338f7',
-          borderRadius: 6,
-        },
-        components: {
-          Button: {
-            colorPrimary: '#4338f7',
-          },
-        },
-      }}
-    >
+    <ConfigProvider theme={antdCustomTheme}>
       <ChakraProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
           {/* <Loading /> */}

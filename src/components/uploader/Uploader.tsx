@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import ico_upload_button from 'assets/img/dataAnalysis/upload_circle.svg'
 import { useRecoilValue } from 'recoil'
-import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
-import { CloseOutlined } from '@ant-design/icons'
+import { importModalAtom } from 'views/AIModelGenerator/store/modal/atom'
 
 /**https://www.filestack.com/fileschool/react/react-file-upload/ */
 const Uploader = (props: any) => {

@@ -6,7 +6,7 @@
  * 개발자 : 박윤희 (BAK YUN HEE)
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from '@emotion/styled'
 import main_bg from './img/bg.jpg'
 import main_font from './img/main_font.svg'
@@ -18,7 +18,6 @@ import date from './img/date.png'
 import axios from 'axios'
 import { FormControl, FormLabel, Button, Input } from '@chakra-ui/react'
 import { message, Select } from 'antd'
-import './style/style.css'
 import { Alert } from 'views/hmid/components/Modal/Alert'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
@@ -26,6 +25,9 @@ import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
 import SidebarBrand from 'components/sidebar/components/Brand'
 import GoogleSignin from './components/GoogleSigninBtn'
 import AvailableServiceIcon from './components/AvailableServiceIcon'
+import { useMutation, useQuery } from 'react-query'
+import UserApi from 'apis/UserApi'
+import useGetCompanies from 'hooks/queries/useGetCompanies'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -38,12 +40,42 @@ export const Login: React.FC = () => {
   const setShowAlertModal = useSetRecoilState(AlertRecoil.AlertModalState)
   const setAlarmMessage = useSetRecoilState(AlertRecoil.AlertMessageState)
 
+  const { data } = useGetCompanies()
+  const { mutate: mutateLogin } = useMutation(UserApi.login, {
+    onSuccess: (response: any) => {
+      console.log('response:', response)
+
+      window.localStorage.setItem('userData', JSON.stringify(response))
+      window.localStorage.setItem('companyId', company)
+      window.localStorage.setItem('userId', response[0].user_id)
+      window.localStorage.setItem('userPosition', response[0].user_position)
+      window.location.href = '/admin/main'
+    },
+    onError: (error: any) => {
+      console.error(error)
+      messageApi.open({
+        type: 'error',
+        content: error.response?.data.detail,
+      })
+    },
+  })
+
+  useEffect(() => {
+    if (data) {
+      console.log('data:', data)
+      // setCompanyList(data)
+      RenderCompanyList(data)
+    }
+  }, [data])
+
   React.useEffect(() => {
-    RenderCompanyList()
+    // RenderCompanyList()
+
+    // if (companies?.length > 0) RenderCompanyList(companies)
 
     //로그인 후 redirect된 URL에서 구글 인가코드 추출하여 백엔드로 전달하여 token발급받음
     const params = new URLSearchParams(window.location.search)
-    console.log('URL search params:', params)
+    // console.log('URL search params:', params)
     const code = params.get('code')
 
     if (code) {
@@ -78,39 +110,46 @@ export const Login: React.FC = () => {
       //setAlarmMessage('회사를 선택 해주세요.')
       //setShowAlertModal(true)
     } else {
-      axios
-        .get(
-          process.env.REACT_APP_NEW_API_SERVER_URL +
-            '/api/user/info?com_id=' +
-            company +
-            '&user_id=' +
-            id +
-            '&user_pass=' +
-            password,
-          {
-            headers: {
-              Accept: '*/*',
-              'Content-Type': 'application/x-www-form-urlencoded;',
-            },
-            timeout: 5000,
-          }
-        )
-        .then((response) => {
-          // getCompanyInfo(company)
-          window.localStorage.setItem('userData', JSON.stringify(response.data))
-          window.localStorage.setItem('companyId', company)
-          window.localStorage.setItem('userId', response.data[0].user_id)
-          window.localStorage.setItem('userPosition', response.data[0].user_position)
-          window.location.href = '/admin/main'
-        })
-        .catch((error) => {
-          console.log(error)
-          messageApi.open({
-            type: 'error',
-            content: error.response?.data.detail,
-          })
-          // error('아이디 또는 비밀번호가 틀립니다.')
-        })
+      const payload = {
+        com_id: company,
+        user_id: id,
+        user_pass: password,
+      }
+      mutateLogin(payload)
+
+      // axios
+      //   .get(
+      //     process.env.REACT_APP_NEW_API_SERVER_URL +
+      //       '/api/user/info?com_id=' +
+      //       company +
+      //       '&user_id=' +
+      //       id +
+      //       '&user_pass=' +
+      //       password,
+      //     {
+      //       headers: {
+      //         Accept: '*/*',
+      //         'Content-Type': 'application/x-www-form-urlencoded;',
+      //       },
+      //       // timeout: 5000,
+      //     }
+      //   )
+      //   .then((response) => {
+      //     // getCompanyInfo(company)
+      //     window.localStorage.setItem('userData', JSON.stringify(response.data))
+      //     window.localStorage.setItem('companyId', company)
+      //     window.localStorage.setItem('userId', response.data[0].user_id)
+      //     window.localStorage.setItem('userPosition', response.data[0].user_position)
+      //     window.location.href = '/admin/main'
+      //   })
+      //   .catch((error) => {
+      //     console.log(error)
+      //     messageApi.open({
+      //       type: 'error',
+      //       content: error.response?.data.detail,
+      //     })
+      //     // error('아이디 또는 비밀번호가 틀립니다.')
+      //   })
     }
   }
 
@@ -137,34 +176,18 @@ export const Login: React.FC = () => {
   }
 
   // 회사 리스트
-  function RenderCompanyList() {
+  function RenderCompanyList(companyList: any) {
     const Arr: any = []
     let Obj: any = new Object()
 
-    axios
-      .get(process.env.REACT_APP_NEW_API_SERVER_URL + '/api/company', {
-        headers: {
-          Accept: '*/*',
-          'Content-Type': 'application/x-www-form-urlencoded;',
-        },
-        timeout: 5000,
-      })
-      .then((response) => {
-        // console.log('/api/company resp:', response.data)
+    for (let i = 0, len = companyList.length; i < len; i++) {
+      Obj.value = companyList[i].com_id
+      Obj.label = companyList[i].com_nm
+      Arr.push(Obj)
+      Obj = new Object()
+    }
 
-        for (let i = 0, len = response.data.length; i < len; i++) {
-          Obj.value = response.data[i].com_id
-          Obj.label = response.data[i].com_nm
-          Arr.push(Obj)
-          Obj = new Object()
-        }
-
-        // console.log('company List::',Arr)
-        setCompanyList(Arr)
-      })
-      .catch((error) => {
-        console.log(error.response)
-      })
+    setCompanyList(Arr)
   }
 
   //selectbox 변경 이벤트

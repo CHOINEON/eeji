@@ -1,6 +1,7 @@
 export type TResponseType<T> = {
   statusCode?: number
   success?: boolean
-  data: T
+  data?: T
   controller?: AbortController
+  // progress?: number
 }

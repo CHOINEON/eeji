@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import process_icon from 'assets/img/components/processing.svg'
 
 interface ProgressbarProps {
@@ -9,11 +9,27 @@ interface ProgressbarProps {
 }
 
 const Progressbar = ({ currentValue, maxValue, label }: ProgressbarProps) => {
+  const [progressValue, setProgressValue] = useState(0)
   // const barWidth = (currentValue / maxValue) * 100
+
+  // console.log('currentValue:', currentValue)
+
+  useEffect(() => {
+    if (isNaN(currentValue)) return
+
+    if (currentValue > 99) {
+      setProgressValue(99)
+    } else if (currentValue < 5) {
+      setProgressValue(55)
+    } else {
+      setProgressValue(currentValue)
+    }
+  }, [currentValue])
+
   return (
     <>
       <label htmlFor="progress-bar">{label}</label>
-      <ProgressBar id="progress-bar" value={currentValue} max={maxValue} data-label="Processing">
+      <ProgressBar id="progress-bar" value={progressValue} max={maxValue} data-label="Processing">
         {currentValue}%
       </ProgressBar>
       <Marker icon={process_icon} />
@@ -71,18 +87,18 @@ const ProgressBar = styled.progress<{ value: number; max: number }>`
   }
 
   /* Adding the process_icon */
-  &::after {
-    content: '';
-    position: absolute;
-    top: 1px;
-    left: ${(props: any) => `${(props.value / props.max) * 100 - 10}%`};
-    width: 30px; /* Adjust width and height as needed */
-    height: 19px; /* Adjust width and height as needed */
-    background-image: url(${process_icon});
-    background-size: contain;
-    background-repeat: no-repeat;
-    border-radius: 50%;
-  }
+  // &::after {
+  //   content: '';
+  //   position: absolute;
+  //   top: 1px;
+  //   left: ${(props: any) => `${(props.value / 100) * 337 - 30}px`};
+  //   width: 30px; /* Adjust width and height as needed */
+  //   height: 19px; /* Adjust width and height as needed */
+  //   background-image: url(${process_icon});
+  //   background-size: contain;
+  //   background-repeat: no-repeat;
+  //   border-radius: 50%;
+  // }
 `
 
 const Marker = styled.div<{ icon: any }>`

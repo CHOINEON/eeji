@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Button, Col, Row, Tag } from 'antd'
 import Title from 'antd/es/typography/Title'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
-import InfoCircle from '../DataAnalysis/components/Icon/InfoCircle'
+import InfoCircle from '../AIModelGenerator/components/Icon/InfoCircle'
 import AnalysisGrid from '../XAI-simulator/Visualization/Classification/AnalysisGrid'
 
 const AnalysisResult = () => {
