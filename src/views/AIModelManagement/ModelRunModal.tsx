@@ -5,7 +5,7 @@ import { runModalAtom } from './store/atom'
 import { DotChartOutlined, UploadOutlined } from '@ant-design/icons'
 import type { UploadFile, UploadProps } from 'antd'
 import { Button, message, Upload } from 'antd'
-import LineChart from 'views/DataAnalysis/components/Chart/LineChart'
+import LineChart from 'views/AIModelGenerator/components/Chart/LineChart'
 import axios from 'axios'
 import styled from '@emotion/styled'
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Tabs } from 'antd'
 import tw from 'tailwind-styled-components'
+import TabChild from './TabChild'
 import { v4 } from 'uuid'
-import TabChild from 'views/AnalysisResult/TabChild'
 
 const TabTitle = tw.p`
   text-sm

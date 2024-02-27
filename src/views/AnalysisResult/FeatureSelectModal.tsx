@@ -5,11 +5,11 @@ import React, { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { v4 } from 'uuid'
-import { selectedDataState } from 'views/DataAnalysis/store/dataset/atom'
-import { featureSelectModalState } from 'views/DataAnalysis/store/modal/atom'
-import { analysisResponseAtom } from 'views/DataAnalysis/store/response/atoms'
-import { inputOptionListState } from 'views/DataAnalysis/store/userOption/atom'
-import { variableStore } from 'views/DataAnalysis/store/variable/atom'
+import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { featureSelectModalState } from 'views/AIModelGenerator/store/modal/atom'
+import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
+import { inputOptionListState } from 'views/AIModelGenerator/store/userOption/atom'
+import { variableStore } from 'views/AIModelGenerator/store/variable/atom'
 
 const FeatureSelectModal = ({ data, onRunning }: any) => {
   const [isModalOpen, setIsModalOpen] = useRecoilState(featureSelectModalState)
@@ -46,18 +46,6 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
     },
   })
 
-  // useEffect(() => {
-  //   if (isModalOpen) {
-  //     if (selectedData.numeric_cols !== '') {
-  //       // const numeric_cols = JSON.parse(selectedData.numeric_cols)
-  //       // const non_numeric_cols = JSON.parse(selectedData.non_numeric_cols)
-
-  //       console.log(selectedData)
-  //       // console.log(non_numeric_cols)
-  //     }
-  //   }
-  // }, [isModalOpen])
-
   useEffect(() => {
     // console.log('selectedData:', selectedData)
 
@@ -90,7 +78,6 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
   }
 
   const handleChange = (value: string[]) => {
-    // console.log(value)
     setSelectedFeatures(value)
     // console.log('new arr:', value.split(', '))
   }

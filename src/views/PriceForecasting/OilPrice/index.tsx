@@ -1,8 +1,6 @@
 import React from 'react'
 import { Box } from '@chakra-ui/react'
-import ForecastVisualization from '../ForecastVisualization'
 import OilPriceChart from './OilPriceForecastingChart'
-import styled from '@emotion/styled'
 
 const PriceForecasting = () => {
   return (

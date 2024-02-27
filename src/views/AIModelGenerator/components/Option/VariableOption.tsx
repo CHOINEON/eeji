@@ -1,5 +1,5 @@
-import { Col, Collapse, Row } from 'antd'
 import React, { useEffect, useState } from 'react'
+import { Row } from 'antd'
 import NewTagSelect from '../TagTree/NewTagSelect'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import {
@@ -7,9 +7,8 @@ import {
   selectedVarStoreY,
   usedVariableStore,
   variableStore,
-} from 'views/DataAnalysis/store/variable/atom'
-import { inputOptionListState } from 'views/DataAnalysis/store/userOption/atom'
-import { uploadedDataState } from 'views/DataAnalysis/store/dataset/atom'
+} from 'views/AIModelGenerator/store/variable/atom'
+import { inputOptionListState } from 'views/AIModelGenerator/store/userOption/atom'
 
 const VariableOption = () => {
   //최초 리스트
@@ -20,7 +19,6 @@ const VariableOption = () => {
   const [selectedVarX, setSelectedVarX] = useRecoilState(selectedVarStoreX)
   const [selectedVarY, setSelectedVarY] = useRecoilState(selectedVarStoreY)
 
-  const uploadedData = useRecoilValue(uploadedDataState)
   const [userInputOption, setUserInputOption] = useRecoilState(inputOptionListState)
   const [defaultOption, setDefaultOption] = useState([])
 
@@ -104,16 +102,6 @@ const VariableOption = () => {
   }
 
   return (
-    // <Collapse
-    //   ghost
-    //   size="small"
-    //   collapsible="header"
-    //   defaultActiveKey={['1']}
-    //   items={[
-    //     {
-    //       key: '1',
-    //       label: 'Data',
-    //       children: (
     <Row gutter={[0, 16]}>
       <NewTagSelect
         style={{ width: '100%', margin: 'auto' }}
@@ -134,10 +122,6 @@ const VariableOption = () => {
         selectOptions={defaultOption}
       />
     </Row>
-    // ),
-    //     },
-    //   ]}
-    // />
   )
 }
 

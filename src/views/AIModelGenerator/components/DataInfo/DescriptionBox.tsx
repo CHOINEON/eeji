@@ -1,14 +1,14 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import '../../style/uploader.css'
-import { Dropdown, MenuProps, App, Typography, Button, Tag } from 'antd'
+import { Dropdown, MenuProps, App, Tag } from 'antd'
 import { ExclamationCircleFilled, MoreOutlined } from '@ant-design/icons'
 import { useRecoilState } from 'recoil'
-import { datasetEditModalState } from 'views/DataAnalysis/store/modal/atom'
-import { selectedDataState } from 'views/DataAnalysis/store/dataset/atom'
+import { datasetEditModalState } from 'views/AIModelGenerator/store/modal/atom'
+import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { useMutation, useQueryClient } from 'react-query'
 import DatasetApi from 'apis/DatasetApi'
-import { Title, SubTitle, FileName } from 'views/NewDataAnalysis/components/Title'
+import { FileName } from 'views/AnalysisResult/components/Title'
 
 export interface DescriptionBoxProps {
   ds_id?: string

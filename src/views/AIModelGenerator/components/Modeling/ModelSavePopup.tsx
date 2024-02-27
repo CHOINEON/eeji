@@ -2,29 +2,11 @@ import { Button, Input, Modal, Space, message } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { saveModalAtom } from 'views/DataAnalysis/store/modal/atom'
+import { saveModalAtom } from 'views/AIModelGenerator/store/modal/atom'
 import { modelListAtom } from 'views/AIModelManagement/store/atom'
 
 import axios from 'axios'
 import * as common from 'utils/DateFunction'
-
-// const getNowDateTime = () => {
-//   const now = new Date()
-//   const year = now.getFullYear()
-
-//   let month: any = now.getMonth() + 1
-//   if (month.toString().length === 1) month = '0' + month
-//   let date: any = now.getDate()
-//   if (date.toString().length === 1) date = '0' + date
-//   let hour: any = now.getHours()
-//   if (hour.toString().length === 1) hour = '0' + hour
-//   let minutes: any = now.getMinutes()
-//   if (minutes.toString().length === 1) minutes = '0' + minutes
-//   let seconds: any = now.getSeconds()
-//   if (seconds.toString().length === 1) seconds = '0' + seconds
-
-//   return year + month + date + hour + minutes + seconds
-// }
 
 function ModelSavePopup(props: any) {
   const { onSave, data } = props

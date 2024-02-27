@@ -1,14 +1,14 @@
-import { Col, Input, Row, Select, Typography, message, Spin, Radio, RadioChangeEvent } from 'antd'
 import React, { useEffect, useState } from 'react'
+import { Input, Row, Select, Spin, Radio, RadioChangeEvent } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
-import { dataPropertyState, uploadedDataState, userInfoState } from 'views/DataAnalysis/store/dataset/atom'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { dataPropertyState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import styled from '@emotion/styled'
-import { QueryClient, useMutation, useQueryClient } from 'react-query'
+import { useMutation } from 'react-query'
 import DatasetApi from 'apis/DatasetApi'
 import { useApiError } from 'hooks/useApiError'
 import { useToast } from 'hooks/useToast'
 import ColumnLabel from 'components/fields/ColumnLabel'
+import { useRecoilState } from 'recoil'
 
 interface Option {
   value: string

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import process_icon from 'assets/img/components/processing.svg'
 
 interface ProgressbarProps {
@@ -9,13 +9,27 @@ interface ProgressbarProps {
 }
 
 const Progressbar = ({ currentValue, maxValue, label }: ProgressbarProps) => {
+  const [progressValue, setProgressValue] = useState(0)
   // const barWidth = (currentValue / maxValue) * 100
 
   // console.log('currentValue:', currentValue)
+
+  useEffect(() => {
+    if (isNaN(currentValue)) return
+
+    if (currentValue > 99) {
+      setProgressValue(99)
+    } else if (currentValue < 5) {
+      setProgressValue(55)
+    } else {
+      setProgressValue(currentValue)
+    }
+  }, [currentValue])
+
   return (
     <>
       <label htmlFor="progress-bar">{label}</label>
-      <ProgressBar id="progress-bar" value={currentValue} max={maxValue} data-label="Processing">
+      <ProgressBar id="progress-bar" value={progressValue} max={maxValue} data-label="Processing">
         {currentValue}%
       </ProgressBar>
       <Marker icon={process_icon} />

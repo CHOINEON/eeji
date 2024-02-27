@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
-import { Col, Collapse, DatePicker, DatePickerProps, Input, InputNumber, Row, Select, Space } from 'antd'
+import { DatePicker, DatePickerProps, InputNumber, Row, Select, Space } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
 import dayjs from 'dayjs'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { uploadedDataState, selectedDataState } from 'views/DataAnalysis/store/dataset/atom'
-// import { optionListState } from 'views/DataAnalysis/store/base/atom'
-import { inputOptionListState, userInputOptionState } from 'views/DataAnalysis/store/userOption/atom'
+import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+// import { optionListState } from 'views/AIModelGenerator/store/base/atom'
+import { inputOptionListState, userInputOptionState } from 'views/AIModelGenerator/store/userOption/atom'
 
 const LabelBox = styled.div`
   //   text-align: center;

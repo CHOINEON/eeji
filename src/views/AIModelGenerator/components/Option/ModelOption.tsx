@@ -1,9 +1,8 @@
-import styled from '@emotion/styled'
-import { Col, Collapse, DatePicker, DatePickerProps, Input, InputNumber, Row, Select, Space } from 'antd'
-import { RangePickerProps } from 'antd/es/date-picker'
 import React, { useEffect, useState } from 'react'
+import styled from '@emotion/styled'
+import { InputNumber, Row, Select } from 'antd'
 import { useRecoilState } from 'recoil'
-import { inputOptionListState, userInputOptionState } from 'views/DataAnalysis/store/userOption/atom'
+import { inputOptionListState, userInputOptionState } from 'views/AIModelGenerator/store/userOption/atom'
 
 const LabelBox = styled.div`
   //   text-align: center;

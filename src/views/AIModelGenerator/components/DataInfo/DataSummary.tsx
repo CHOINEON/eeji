@@ -2,7 +2,7 @@ import { Spin, Table, Typography, message, Row, Col } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { dataPropertyState, uploadedDataState } from 'views/DataAnalysis/store/dataset/atom'
+import { dataPropertyState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import styled from '@emotion/styled'
 
 interface DataType {

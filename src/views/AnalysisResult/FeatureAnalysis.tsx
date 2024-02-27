@@ -3,10 +3,10 @@ import styled from '@emotion/styled'
 import { Select, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import InfoCircle from 'views/DataAnalysis/components/Icon/InfoCircle'
-import FeatureImportance from 'views/DataAnalysis/FeatureImportance'
-import { analysisResponseAtom } from 'views/DataAnalysis/store/response/atoms'
-import { selectModelState } from 'views/DataAnalysis/store/userOption/atom'
+import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
+import FeatureImportance from 'views/AIModelGenerator/FeatureImportance'
+import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
+import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
 
 type ScoreType = {
   MAE?: number

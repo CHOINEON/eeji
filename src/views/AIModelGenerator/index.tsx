@@ -10,16 +10,14 @@ import { stepCountStore } from './store/global/atom'
 import DataSet from './DataSet'
 import './style/styles.css'
 import { notification } from 'antd'
-import TempDataAnalysis from 'views/NewDataAnalysis/TempDataAnalysis'
-import { importModalAtom } from './store/modal/atom'
+import AnalysisResult from 'views/AnalysisResult'
 
 const Context = React.createContext({ name: 'Default' })
 
-const DataAnalysis = () => {
+const AIModelGenerator = () => {
   const [api, contextHolder] = notification.useNotification()
   const steps = ['Upload Data', 'Data Analysis']
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
-  const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean
   }>({})
@@ -77,12 +75,6 @@ const DataAnalysis = () => {
     if (step === 1) openNotification()
   }
 
-  //버튼 컴포넌트
-
-  const handleClick = () => {
-    setImportOpen(true)
-  }
-
   // https://mui.com/material-ui/react-stepper/
   return (
     <ThemeProvider theme={theme}>
@@ -103,7 +95,7 @@ const DataAnalysis = () => {
           <Box style={{ margin: '10px 8px' }}>
             {activeStep === 0 && <DataSet />}
             {/* {activeStep === 1 && <CorrelationView />} */}
-            {activeStep === 1 && <TempDataAnalysis />}
+            {activeStep === 1 && <AnalysisResult />}
 
             {/* <Box> {activeStep === 3 && <ModelSetting />}</Box>  */}
           </Box>
@@ -113,4 +105,4 @@ const DataAnalysis = () => {
   )
 }
 
-export default DataAnalysis
+export default AIModelGenerator

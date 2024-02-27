@@ -15,7 +15,7 @@ import {
   variableStoreY,
   selectedVarStoreX,
   selectedVarStoreY,
-} from 'views/DataAnalysis/store/variable/atom'
+} from 'views/AIModelGenerator/store/variable/atom'
 import { cloneDeep } from 'lodash'
 
 const ITEM_HEIGHT = 50

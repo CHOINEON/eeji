@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import Title from 'antd/es/typography/Title'
-import InfoCircle from 'views/DataAnalysis/components/Icon/InfoCircle'
+import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 import { Col, Image, Row, Skeleton, Tag } from 'antd'
 
 const { CheckableTag } = Tag

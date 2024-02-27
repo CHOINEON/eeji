@@ -5,7 +5,7 @@ import { modalState } from 'stores/modal'
 import UserModelImport from '../../views/XAI-simulator/components/UserModelImport'
 import { Modal } from 'antd'
 import SendFeedback from '../../views/Main/SendFeedback'
-import DataImportModal from '../../views/DataAnalysis/components/DataInfo/DataImportModal'
+import DataImportModal from '../../views/AIModelGenerator/components/DataInfo/DataImportModal'
 import SavedModelImport from '../../views/XAI-simulator/components/SavedModelImport'
 
 export const MODAL_TYPES = {
@@ -61,36 +61,3 @@ const GlobalModal = () => {
 }
 
 export default GlobalModal
-
-// const Modal = styled.div`
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 100%;
-//   z-index: 9;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-// `
-
-// const Overlay = styled.div`
-//   background-color: rgba(0, 0, 0, 0.8);
-//   /* -webkit-backdrop-filter: blur(5px);
-//   backdrop-filter: blur(5px); */
-//   position: absolute;
-//   width: 100%;
-//   height: 100%;
-// `
-
-// const Container = styled.div`
-//   z-index: 10;
-//   width: 100%;
-//   max-width: 400px;
-//   margin: 36px;
-//   height: 360px;
-//   background-color: white;
-//   border-radius: 8px;
-
-//   box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.25);
-// `
