@@ -10,6 +10,7 @@ import AnalysisResult from './AnalysisResult'
 import { customModelStore } from './store/analyze/atom'
 import UploadPage from './UploadPage'
 import HistorySidebar from 'components/sidebar/HistorySidebar'
+import Page from 'components/progressbar/page'
 
 const XAIsimulator = () => {
   const analysisResult = useRecoilValue(customModelStore)
@@ -22,6 +23,7 @@ const XAIsimulator = () => {
     <>
       <Box style={{ position: 'relative', zIndex: 1000, width: '100%', height: '100%' }}>
         {analysisResult.data.length > 0 ? <AnalysisResult /> : <UploadPage />}
+        {/* <Page /> */}
       </Box>
     </>
   )

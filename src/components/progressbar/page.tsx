@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import Progressbar from './Progressbar'
+import process_icon from 'assets/img/components/processing.svg'
 
 const Page = () => {
   const [per, setPer] = useState(0)
@@ -41,9 +43,12 @@ const Page = () => {
             className={`top-0 h-[22px] top-[2px] ml-[3px] bg-gradient-to-r from-[#4338F724] to-[#4338F79A] duration-700 transition-all relative rounded-full`}
           >
             <div className="absolute top-[1px] right-0">
-              <img src="/img/tmp/logo.svg" alt="" className="max-w-[30px] max-h-[20px]" />
+              <img src={process_icon} alt="" className="max-w-[30px] max-h-[20px]" />
             </div>
           </div>
+        </div>
+        <div className="w-[550px] h-[28px]  relative  overflow-hidden mt-3">
+          <Progressbar currentValue={tmpPer} maxValue={100} />
         </div>
       </div>
     </section>
