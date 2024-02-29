@@ -161,10 +161,7 @@ const DataProperties = () => {
           <ColumnLabel required={true} label=" Target Variable" />
           <Select
             style={{
-              width: 120,
-              backgroundColor: '#fff !important',
-              border: '1px solid #A3AFCF',
-              borderRadius: '10px',
+              width: '100%',
             }}
             value={inputOption.target_y}
             placeholder="Timestamp Column"
@@ -177,10 +174,7 @@ const DataProperties = () => {
           <ColumnLabel required={false} label="Timestamp" />
           <Select
             style={{
-              width: 120,
-              backgroundColor: '#fff !important',
-              border: '1px solid #A3AFCF',
-              borderRadius: '10px',
+              width: '100%',
             }}
             value={inputOption.date_col}
             placeholder="Timestamp Column"
@@ -189,11 +183,9 @@ const DataProperties = () => {
             onSelect={handleSelectDateCol}
           />
         </Row>
-
         <Row>
           <ColumnLabel required={false} label=" Description(Optional)" />
           <TextArea
-            style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
             value={inputOption.desc}
             onChange={(e) => setInputOption({ ...inputOption, desc: e.target.value })}
             placeholder="Description"
@@ -216,7 +208,7 @@ const DataPropertiesContainer = styled.div`
   margin-top: 20px;
   width: 100%;
   height: 276px;
-
+  padding: 1em;
   overflow-y: scroll;
   overflow: -moz-scrollbars-vertical;
 

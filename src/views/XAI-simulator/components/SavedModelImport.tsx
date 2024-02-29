@@ -34,7 +34,8 @@ const SavedModelImport = () => {
   }, [data])
 
   const handleRunModel = () => {
-    fetchGetResult('08b1a60fa2ef44149e1444ca3c18d08a')
+    // '1be13733ed4e48338c92e6a74fea9f40'  // feature length : 4
+    fetchGetResult('1be13733ed4e48338c92e6a74fea9f40') //feature length: 12
   }
 
   const fetchGetResult = (uuid: string) => {
