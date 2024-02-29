@@ -18,13 +18,13 @@ const UploadPage = () => {
       title: 'INFINITE OPTIMAL',
       description: 'INFINITE OPTIMAL에서 모델 데이터를 가져옵니다.',
       icon: IconServerUpload,
-      handleClick: () => handleClick('UserModelImport'),
+      handleClick: () => handleClick('SavedModelImport'),
     },
     {
       title: 'USER',
       description: '사용자의 PC에 저장된 모델 데이터를 가져옵니다.',
       icon: IconCustomerUpload,
-      handleClick: () => handleClick('SavedModelImport'),
+      handleClick: () => handleClick('UserModelImport'),
     },
   ]
 
