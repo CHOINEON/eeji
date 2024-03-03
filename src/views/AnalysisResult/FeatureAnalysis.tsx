@@ -23,7 +23,7 @@ const FeatureAnalysis = ({ data, input }: any) => {
   const [error, setError] = useState<ScoreType>({})
 
   useEffect(() => {
-    // console.log('analysisResponse:', analysisResponse)
+    console.log('analysisResponse:', analysisResponse)
     if (analysisResponse.length > 0) {
       const newOption: Array<any> = []
       analysisResponse.map((value: any, index: number) => {
