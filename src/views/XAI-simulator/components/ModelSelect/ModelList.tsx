@@ -36,7 +36,7 @@ const ModelRow = ({ item }: any) => {
 
   return (
     <>
-      <Row>
+      <Row role="button">
         <ModelTitle>{item.name}</ModelTitle>
         <TargetText>{item.target_y}</TargetText>
         <ModelType isClassification={item.is_classification}></ModelType>
@@ -48,8 +48,8 @@ const ModelRow = ({ item }: any) => {
 const ModelList = ({ data }: any) => {
   return (
     <ModelListWrapper>
-      {data?.map((item: any) => (
-        <ModelRow item={item} />
+      {data?.map((item: any, index: number) => (
+        <ModelRow item={item} key={index} />
       ))}
     </ModelListWrapper>
   )
