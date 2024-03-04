@@ -21,28 +21,41 @@ const single_data = [
   },
 ]
 
-const RowItem = (item: any) => {
-  const itemObj = item.item
+const RowItem = (props: any) => {
+  // console.log('props', props)
+  // const itemObj = item.item
 
   return (
     <Row>
-      <div style={{ width: '2%' }}>{itemObj.no}</div>
-      <div style={{ width: '10%' }}>{itemObj?.name}</div>
+      {/* {columns.map((col: any, i: number) => {
+        return <div style={{ width: '100px', border: '1px solid red' }}>{columns[i]}</div>
+      })} */}
+      <div style={{ width: '10%' }}>{props.number}</div>
+      <div style={{ width: '10%' }}>{props.pred}</div>
+      <div style={{ height: '50px !important' }}>
+        <HorizontalStackedBarChart {...props} />
+      </div>
+      {/* <div style={{ width: '10%' }}>{itemObj?.name}</div>
       <div style={{ width: '10%' }}>{itemObj?.age}</div>
       <div style={{ width: '10%' }}>{itemObj?.status}</div>
       <div style={{ height: '50px !important' }}>
         <HorizontalStackedBarChart data={itemObj.result} />
-      </div>
+      </div> */}
     </Row>
   )
 }
 
-const AnalysisGrid = () => {
-  const analysisResult = useRecoilValue(customModelStore)
+const AnalysisGrid = ({ localWeight, localValue, columns }: any) => {
+  // console.log('predResult:', predResult)
+  // console.log('columns:', columns)
+
+  // const analysisResult = useRecoilValue(customModelStore)
+
+  //pred={predResult[i]}
   return (
     <div style={{ height: '100%' }}>
-      {analysisResult.data.map((value: any) => {
-        return <RowItem item={value} />
+      {localWeight.map((value: any, i: number) => {
+        return <RowItem key={i} number={i} value={localValue} weight={value} columns={columns} />
       })}
     </div>
   )

@@ -48,6 +48,7 @@ const routes = [
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
     component: ApiService,
   },
+
   // {
   //   name: 'Configuration',
   //   layout: '/admin',

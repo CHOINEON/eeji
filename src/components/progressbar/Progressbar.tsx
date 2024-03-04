@@ -12,15 +12,14 @@ const Progressbar = ({ currentValue, maxValue, label }: ProgressbarProps) => {
   const [progressValue, setProgressValue] = useState(0)
   // const barWidth = (currentValue / maxValue) * 100
 
-  // console.log('currentValue:', currentValue)
-
   useEffect(() => {
+    // console.log('currentValue:', currentValue)
     if (isNaN(currentValue)) return
 
     if (currentValue > 99) {
       setProgressValue(99)
     } else if (currentValue < 5) {
-      setProgressValue(55)
+      setProgressValue(5.5)
     } else {
       setProgressValue(currentValue)
     }
@@ -29,9 +28,22 @@ const Progressbar = ({ currentValue, maxValue, label }: ProgressbarProps) => {
   return (
     <>
       <label htmlFor="progress-bar">{label}</label>
-      <ProgressBar id="progress-bar" value={progressValue} max={maxValue} data-label="Processing">
-        {currentValue}%
-      </ProgressBar>
+      <div className="w-[550px] h-[28px] border border-[#4338F7] rounded-full relative overflow-hidden">
+        <div
+          style={{ width: `${progressValue}%` }}
+          className={`top-0 h-[22px] top-[2px] ml-[3px] bg-gradient-to-r from-[#4338F724] to-[#4338F79A] duration-700 transition-all relative rounded-full`}
+        >
+          <div className="absolute top-[1px] right-0">
+            <img src={process_icon} alt="" className="max-w-[30px] max-h-[20px]" />
+          </div>
+        </div>
+        {/* <ProgressBar id="progress-bar" value={progressValue} max={maxValue} data-label="Processing">
+          {currentValue}%
+          <div className="absolute top-[1px] right-0">
+            <img src={process_icon} alt="" className="max-w-[30px] max-h-[20px]" />
+          </div>
+        </ProgressBar> */}
+      </div>
       <Marker icon={process_icon} />
     </>
   )
@@ -57,8 +69,11 @@ const ProgressBar = styled.progress<{ value: number; max: number }>`
     font-weight: bold;
     vertical-align: 0;
     position: absolute;
-    left: 1em;
-    // right: 0em;
+    right: 0;
+
+    background-image: url(${process_icon});
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   /* Chrome and Safari */

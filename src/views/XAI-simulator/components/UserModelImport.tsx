@@ -9,6 +9,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
 import ColumnList from './ModelSelect/ColumnList'
 import { customModelStore } from 'views/XAI-simulator/store/analyze/atom'
+import XaiApi from 'apis/XaiApi'
 
 interface IDataObj {
   model: any
@@ -35,7 +36,7 @@ const UserModelImport = () => {
   const [haveColumn, setHaveColumn] = useState(false)
   const [result, setResult] = useRecoilState(customModelStore)
 
-  const { mutate: mutateUpload } = useMutation(ModelApi.uploadModelwithData, {
+  const { mutate: mutateUpload } = useMutation(XaiApi.uploadModelwithData, {
     onSuccess: (response: any) => {
       console.log('mutateUpload;', response)
       // message.open({
@@ -68,23 +69,10 @@ const UserModelImport = () => {
       setSaving(false)
 
       //결과 데이터 받아오기 위해 다시 요청
-      fetchGetResult(response.uuid)
     },
     onError: (error: any, query: any) => {
       console.error(error)
       setSaving(false)
-    },
-  })
-
-  const { mutate: mutateGetResult } = useMutation(ModelApi.getXaiAnalysisResult, {
-    onSuccess: (result: any) => {
-      console.log('mutateGetResult:', result)
-      setResult({ ...result, data: result })
-      setSaving(false)
-      setModal(null)
-    },
-    onError: (error: any, query: any) => {
-      //
     },
   })
 
@@ -145,17 +133,6 @@ const UserModelImport = () => {
     }
 
     mutateSave({ user_id, payload })
-  }
-
-  const fetchGetResult = (uuid: string) => {
-    setSaving(true)
-    const payload = {
-      user_id: user_id,
-      com_id: com_id,
-      uuid: uuid,
-    }
-    console.log('payload:', payload)
-    mutateGetResult({ user_id, payload })
   }
 
   return (

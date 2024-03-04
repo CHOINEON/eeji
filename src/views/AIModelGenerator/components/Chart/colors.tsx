@@ -31,3 +31,5 @@ export const colorsForDoughnut = [
   '#8779ED',
   '#893CC1',
 ]
+
+export const colorsForStackedBarChart = ['#4169e1', '#87ceeb', '#b0e0e6', '#012D65', '#893CC1']
