@@ -4,9 +4,13 @@ import Title from 'antd/es/typography/Title'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
 import InfoCircle from '../AIModelGenerator/components/Icon/InfoCircle'
 import AnalysisGrid from '../XAI-simulator/Visualization/Classification/AnalysisGrid'
+import { useRecoilValue } from 'recoil'
+import { xaiResultStore } from './store/analyze/atom'
 
-const AnalysisResult = ({ data }: any) => {
-  const [transformedData, setTransformedData] = useState({ xai_local: [], local_value: [] })
+const AnalysisResult = () => {
+  const data = useRecoilValue(xaiResultStore)
+
+  const [transformedData, setTransformedData] = useState({ xai_local: [], local_value: [], pred_result: {} })
   // const [transformedData, setTransformedData] = useState({ xai_local: [], local_value: [], pred_result: [] })
 
   useEffect(() => {
@@ -15,13 +19,17 @@ const AnalysisResult = ({ data }: any) => {
     setTransformedData({
       xai_local: transformDataByRow(data.xai_local),
       local_value: transformDataByRow(data.input_data),
-      // pred_result: transformPredData(data.predict_result.predict_result),
+      pred_result: transformPredData(data.predict_result.predict_result),
     })
 
     // transformDataByRow(data.input_data)
 
     //xai-local formatting
   }, [data])
+
+  useEffect(() => {
+    console.log('transformedData', transformedData)
+  }, [transformedData])
 
   const transformDataByRow = (rawData: any) => {
     const sample_size = data.sample_size //1200
@@ -39,19 +47,20 @@ const AnalysisResult = ({ data }: any) => {
   }
 
   const transformPredData = (rawData: any) => {
-    const sample_size = data.sample_size //1200
-    const transformedData = []
+    // console.log('rawData:', rawData)
+    // const sample_size = data.sample_size //1200
+    // const transformedData = []
 
-    for (let i = 0; i < sample_size; i++) {
-      const newDataPoint: any = {}
+    // for (let i = 0; i < sample_size; i++) {
+    //   const newDataPoint: any = {}
 
-      for (const feature of data.feature_list) {
-        newDataPoint[feature] = rawData[i]
-      }
-      console.log('newDataPoint:', newDataPoint)
-      transformedData.push(newDataPoint)
-    }
-    return transformedData
+    //   for (const feature of data.feature_list) {
+    //     newDataPoint[feature] = rawData[i]
+    //   }
+    //   console.log('newDataPoint:', newDataPoint)
+    //   transformedData.push(newDataPoint)
+    // }
+    return rawData
   }
 
   return (
@@ -77,7 +86,7 @@ const AnalysisResult = ({ data }: any) => {
                 <AnalysisGrid
                   localWeight={transformedData.xai_local}
                   localValue={transformedData.local_value}
-                  // predResult={transformedData.pred_result}
+                  predResult={transformedData.pred_result}
                   columns={Object.keys(data.input_data)}
                 />
               </RoundedBox>

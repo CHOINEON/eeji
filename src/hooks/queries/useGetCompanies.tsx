@@ -8,7 +8,6 @@ const useGetCompanies = () => {
   const { status, data } = useQuery<TResponseType<ICompanyList>, unknown>(['companyList'], () =>
     UserApi.getCompanyList()
   )
-
   return { status, data }
 }
 

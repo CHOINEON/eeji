@@ -100,10 +100,6 @@ const FeatureImportance = ({ data }: any) => {
         display: true,
         backgroundColor: '#ccc',
         borderRadius: 3,
-        font: {
-          color: 'red',
-          weight: 'bold',
-        },
       },
       legend: {
         display: false,
