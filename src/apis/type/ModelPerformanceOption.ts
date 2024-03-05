@@ -1,23 +1,28 @@
-import { URLSearchParams } from 'url'
-
-export interface IModelOptionReq {
+export interface ModelOptionReq {
   user_id: string
-  is_classification?: boolean
-  data?: any
-  mae?: any
-  mse?: any
-  rsme?: any
+  algo_type: string
+  controller: any
 }
 
-export interface ModelPostReq {
-  type: string
-  payload?: IModelOptionReq
-  controller?: AbortController
-  algo_type?: string
+export interface ModelGetReq {
+  algo_type: string
+  payload: ModelOptionReq
+  controller: AbortController
 }
-//return 되는 부분
-export interface ModelOptionRes {
-  mae: any
-  mse: any
-  rsme: any
+
+export interface ModelGetRes {
+  modelaccuracy?: string
+  mae?: string
+  mse?: string
+  rmse?: string
+}
+
+export interface PerformanceModel {
+  [key: string]: PerformanceModelTyeps
+}
+type PerformanceModelTyeps = {
+  modelaccuracy?: string
+  mae?: string
+  mse?: string
+  rmse?: string
 }

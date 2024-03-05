@@ -1,28 +1,25 @@
-import { axiosPrivate } from './axios'
-import { ModelOptionRes, ModelPostReq } from './type/ModelPerformanceOption'
+import { ModelOptionReq, ModelGetRes } from './type/ModelPerformanceOption'
+import axios from 'axios'
 
-const controller = new AbortController()
-// const signal = controller.signal
-const ModelPerformanceApi = {
-  postModelwithOption: async (params: ModelPostReq): Promise<ModelOptionRes> => {
-    // postModelwithOption: async (params: any): Promise<any> => {
-    let requestUrl = ''
-    let payload = {}
+const ModelPerformanceApi = async (params: ModelOptionReq): Promise<ModelGetRes> => {
+  try {
+    let responseData = {}
     if (params.algo_type === '1') {
-      requestUrl = `api/get_model_option/${params.payload.user_id}`
-      payload = { modelaccuracy: params.payload.data }
+      const response = await axios.get(
+        process.env.REACT_APP_NEW_API_SERVER_URL + `/api/index_predict?user_id=${params.user_id}`
+      )
+      responseData = { modelaccuracy: response.data.modelaccuracy }
     } else if (params.algo_type === '0') {
-      requestUrl = `api/get_model_option/${params.payload.user_id}`
-      payload = {
-        mae: params.payload.mae,
-        mse: params.payload.mse,
-        rsme: params.payload.rsme,
-      }
+      const response = await axios.get(
+        process.env.REACT_APP_NEW_API_SERVER_URL + `/api/index_predict?user_id=${params.user_id}`
+      )
+      responseData = { mae: response.data.mae, mse: response.data.mse, rmse: response.data.rmse }
     }
-    const { data } = await axiosPrivate.post(requestUrl, payload, {
-      signal: params.controller.signal,
-    })
-    return data
-  },
+    return responseData
+    // return { mae: '123', mse: '123123', rmse: '1213' }
+  } catch (error) {
+    console.error('error:', error)
+    throw error
+  }
 }
 export default ModelPerformanceApi
