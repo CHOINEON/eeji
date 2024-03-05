@@ -8,7 +8,7 @@ import { useMutation } from 'react-query'
 import fetchChartData from '../../../apis/PriceForecastApi'
 import { Line } from 'react-chartjs-2'
 import { Title } from 'views/AnalysisResult/components/Title'
-
+import ModelPerformance from '../../XAI-simulator/ModelPerformance'
 const { Text, Link } = Typography
 
 ChartJS.register(zoomPlugin, annotationPlugin)
@@ -258,7 +258,8 @@ const OilPriceChart = () => {
           style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
         >
           <div className="my-[30px] ml-[30px] w-full h-[47px]">
-            <Title>Commodity Index Forecast </Title>
+            <ModelPerformance />
+            <Title>Commodity Index Forecast</Title>
             <div style={{ display: 'block', float: 'left', width: '300px', margin: '8px 30px' }}>
               <Select
                 style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
