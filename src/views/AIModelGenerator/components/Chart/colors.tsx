@@ -32,4 +32,4 @@ export const colorsForDoughnut = [
   '#893CC1',
 ]
 
-export const colorsForStackedBarChart = ['#4169e1', '#87ceeb', '#b0e0e6', '#012D65', '#893CC1']
+export const colorsForStackedBarChart = ['#1B73FF', '#63C1FA', '#617EFF', '#012D65', '#877AED']

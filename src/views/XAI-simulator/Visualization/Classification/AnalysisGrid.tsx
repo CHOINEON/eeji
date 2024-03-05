@@ -25,27 +25,29 @@ const RowItem = (props: any) => {
   // console.log('props', props)
   // const itemObj = item.item
 
+  ////////24.03.05 Backend 요청으로 input data가 모두 0인 row를 걸러냄
   return (
-    <Row>
-      {/* {columns.map((col: any, i: number) => {
-        return <div style={{ width: '100px', border: '1px solid red' }}>{columns[i]}</div>
-      })} */}
-      <div style={{ width: '10%' }}>{props.number}</div>
-      <div style={{ width: '10%' }}>{props.pred}</div>
-      <div style={{ height: '50px !important' }}>
-        <HorizontalStackedBarChart {...props} />
-      </div>
-      {/* <div style={{ width: '10%' }}>{itemObj?.name}</div>
+    !Object.values(props.weight).every((val: any) => val == 0) && (
+      <Row>
+        <div style={{ width: '10%' }}>{props.number}</div>
+        <div style={{ width: '30%' }}>
+          pred : <b>{Object.values(props.predResult)[props.number]}</b>
+        </div>
+        <div style={{ width: '60%', height: '50px !important' }}>
+          <HorizontalStackedBarChart {...props} />
+        </div>
+        {/* <div style={{ width: '10%' }}>{itemObj?.name}</div>
       <div style={{ width: '10%' }}>{itemObj?.age}</div>
       <div style={{ width: '10%' }}>{itemObj?.status}</div>
       <div style={{ height: '50px !important' }}>
         <HorizontalStackedBarChart data={itemObj.result} />
       </div> */}
-    </Row>
+      </Row>
+    )
   )
 }
 
-const AnalysisGrid = ({ localWeight, localValue, columns }: any) => {
+const AnalysisGrid = ({ localWeight, localValue, columns, predResult }: any) => {
   // console.log('predResult:', predResult)
   // console.log('columns:', columns)
 
@@ -55,7 +57,9 @@ const AnalysisGrid = ({ localWeight, localValue, columns }: any) => {
   return (
     <div style={{ height: '100%' }}>
       {localWeight.map((value: any, i: number) => {
-        return <RowItem key={i} number={i} value={localValue} weight={value} columns={columns} />
+        return (
+          <RowItem key={i} number={i} value={localValue} weight={value} columns={columns} predResult={predResult} />
+        )
       })}
     </div>
   )

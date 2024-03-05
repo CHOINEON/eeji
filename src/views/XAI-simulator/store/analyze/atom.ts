@@ -4,3 +4,17 @@ export const customModelStore = atom({
   key: 'customModelSaveResult',
   default: { uuid: '', variable_list: [], selected_var: [], data: [] },
 })
+
+export const xaiResultStore = atom({
+  key: 'xaiResultStore',
+  default: {
+    sample_size: 0,
+    feature_length: 0,
+    feature_list: [],
+    predict_result: { predict_result: {} },
+    input_data: {},
+    xai_local: {},
+    xai_global: [],
+    xai_pdp: {},
+  },
+})
