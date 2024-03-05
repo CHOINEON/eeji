@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
-import 'views/DataAnalysis/style/xai.css'
+import 'views/AIModelGenerator/style/xai.css'
 
 interface IColumnData {
   data: Array<any>

@@ -1,22 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { Icon } from '@chakra-ui/react'
-import { MdDashboard, MdSettings, MdOutlineModelTraining, MdDisplaySettings, MdOutlineAnalytics } from 'react-icons/md'
+import { MdOutlineModelTraining, MdOutlineAnalytics } from 'react-icons/md'
 
 // Admin Imports
-import Configuration from 'views/configuration'
-import DataAnalysis from 'views/DataAnalysis'
-import Test from 'views/ImportChart/AnomalyChartImport'
+import AIModelGenerator from 'views/AIModelGenerator'
 import PriceForecasting from 'views/PriceForecasting/OilPrice'
-import AIModelManagement from 'views/AIModelManagement'
-import MainDashboard from 'views/hmid'
-import DashboardConfig from 'views/hmid_config'
-import LayoutList from 'views/hmid_list'
-import ModelMaintenance from 'views/ModelMaintenance'
-import HmidIntervalD3 from 'views/hmid-interval-d3fc'
-// import Anomalyd3chart from 'views/AnomalyDetection/anomaly_d3chart-test'
-import HmidInterval from 'views/hmid_interval'
-import PriceDetection from 'views/AnomalyDetection/PriceDetection.tsx'
-import TempDataAnalysis from 'views/NewDataAnalysis/TempDataAnalysis'
 import XAIsimulator from 'views/XAI-simulator'
 import Main from 'views/Main/Main'
 import ApiService from 'views/ApiService/ApiService'
@@ -34,9 +22,9 @@ const routes = [
   {
     name: 'AI Model Generator',
     layout: '/admin',
-    path: '/data-analysis',
+    path: '/ai-model-generator',
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
-    component: DataAnalysis,
+    component: AIModelGenerator,
   },
   {
     name: 'Explainable AI',
@@ -59,6 +47,7 @@ const routes = [
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
     component: ApiService,
   },
+
   // {
   //   name: 'Configuration',
   //   layout: '/admin',

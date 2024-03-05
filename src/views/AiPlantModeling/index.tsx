@@ -27,7 +27,7 @@ import React from 'react'
 import ReactLoading from 'react-loading'
 import styled from '@emotion/styled'
 import thumb from '/img/thumbnail_01.png'
-import LineChart from 'views/DataAnalysis/components/Chart/LineChart'
+import LineChart from 'views/AIModelGenerator/components/Chart/LineChart'
 
 export default function AIModeling() {
   //권한

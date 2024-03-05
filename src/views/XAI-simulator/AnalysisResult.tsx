@@ -2,10 +2,67 @@ import styled from '@emotion/styled'
 import { Button, Col, Row, Tag } from 'antd'
 import Title from 'antd/es/typography/Title'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
-import InfoCircle from '../DataAnalysis/components/Icon/InfoCircle'
+import InfoCircle from '../AIModelGenerator/components/Icon/InfoCircle'
 import AnalysisGrid from '../XAI-simulator/Visualization/Classification/AnalysisGrid'
+import { useRecoilValue } from 'recoil'
+import { xaiResultStore } from './store/analyze/atom'
 
 const AnalysisResult = () => {
+  const data = useRecoilValue(xaiResultStore)
+
+  const [transformedData, setTransformedData] = useState({ xai_local: [], local_value: [], pred_result: {} })
+  // const [transformedData, setTransformedData] = useState({ xai_local: [], local_value: [], pred_result: [] })
+
+  useEffect(() => {
+    // console.log('data', data)
+
+    setTransformedData({
+      xai_local: transformDataByRow(data.xai_local),
+      local_value: transformDataByRow(data.input_data),
+      pred_result: transformPredData(data.predict_result.predict_result),
+    })
+
+    // transformDataByRow(data.input_data)
+
+    //xai-local formatting
+  }, [data])
+
+  useEffect(() => {
+    console.log('transformedData', transformedData)
+  }, [transformedData])
+
+  const transformDataByRow = (rawData: any) => {
+    const sample_size = data.sample_size //1200
+    const transformedData = []
+
+    for (let i = 0; i < sample_size; i++) {
+      const newDataPoint: any = {}
+
+      for (const feature of data.feature_list) {
+        newDataPoint[feature] = rawData[feature][i]
+      }
+      transformedData.push(newDataPoint)
+    }
+    return transformedData
+  }
+
+  const transformPredData = (rawData: any) => {
+    // console.log('rawData:', rawData)
+    // const sample_size = data.sample_size //1200
+    // const transformedData = []
+
+    // for (let i = 0; i < sample_size; i++) {
+    //   const newDataPoint: any = {}
+
+    //   for (const feature of data.feature_list) {
+    //     newDataPoint[feature] = rawData[i]
+    //   }
+    //   console.log('newDataPoint:', newDataPoint)
+    //   transformedData.push(newDataPoint)
+    // }
+    return rawData
+  }
+
   return (
     <div>
       <Container>
@@ -20,13 +77,18 @@ const AnalysisResult = () => {
               marginLeft: 20,
             }}
           >
-            Classification Result
+            XAI
             <InfoCircle content="。。。" />
           </Title>
           <Col span={18}>
             <Row>
               <RoundedBox width={'100%'} height={'70vh'}>
-                <AnalysisGrid />
+                <AnalysisGrid
+                  localWeight={transformedData.xai_local}
+                  localValue={transformedData.local_value}
+                  predResult={transformedData.pred_result}
+                  columns={Object.keys(data.input_data)}
+                />
               </RoundedBox>
             </Row>
           </Col>
@@ -96,6 +158,7 @@ const RoundedBox = styled.div<Container>`
   height: ${(props) => (props.height ? props.height : 'auto')};
   min-height: ${(props) => (props.minHeight ? props.minHeight : 'auto')};
   position: ${(props) => (props.position ? props.position : 'relative')};
+  overflow: auto;
 `
 
 const UploadButton = styled.button`

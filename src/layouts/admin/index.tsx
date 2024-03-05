@@ -80,7 +80,7 @@ export default function Dashboard(props: { [x: string]: any }) {
         {/* <Sidebar routes={routes} display="none" {...rest} /> */}
         <NavBar routes={routes} />
         {getRoute() ? (
-          location.pathname === '/admin/data-analysis' ? (
+          location.pathname === '/admin/ai-model-generator' ? (
             <Box
               ml="290px"
               p={{ base: '20px', md: '30px' }}

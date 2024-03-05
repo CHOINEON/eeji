@@ -15,7 +15,7 @@ export const MenuList = [
     title_KR: 'AI 모델 생성',
     icon_src: icon_ModelGenerator,
     icon_inbox: icon_01_b,
-    path: '/data-analysis',
+    path: '/ai-model-generator',
   },
   {
     id: 2,

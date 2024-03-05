@@ -1,7 +1,7 @@
 import React from 'react'
 import { Badge, Button, Input, message, Radio, Space, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { CustomButton } from 'views/DataAnalysis/components/DataInfo/DataImportModal'
+import { CustomButton } from 'views/AIModelGenerator/components/DataInfo/DataImportModal'
 
 interface DataType {
   key: React.Key

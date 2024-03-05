@@ -1,12 +1,10 @@
 /* eslint-disable */
 // Chakra Imports
-import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Flex, Link, Text, useColorModeValue } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Flex, Link, Text, useColorModeValue } from '@chakra-ui/react'
 import AdminNavbarLinks from 'components/navbar/NavbarLinksAdmin'
-import styled from '@emotion/styled'
-import { importModalAtom } from 'views/DataAnalysis/store/modal/atom'
 import { useRecoilState } from 'recoil'
-import { stepCountStore } from 'views/DataAnalysis/store/global/atom'
+import { stepCountStore } from 'views/AIModelGenerator/store/global/atom'
 import { useLocation } from 'react-router-dom'
 
 export default function AdminNavbar(props: {
