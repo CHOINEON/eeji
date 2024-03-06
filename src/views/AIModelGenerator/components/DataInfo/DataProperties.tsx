@@ -64,7 +64,7 @@ const DataProperties = () => {
 
   useEffect(() => {
     // console.log('inputOption.algo_type:', inputOption.algo_type)
-    if (inputOption.algo_type) fetchFileDescription()
+    if (inputOption.algo_type !== undefined) fetchFileDescription()
   }, [inputOption.algo_type])
 
   const fetchFileDescription = () => {
@@ -76,6 +76,7 @@ const DataProperties = () => {
     const user_id = localStorage.getItem('userId').toString()
     const is_classification = inputOption.algo_type
 
+    // console.log('fetch;', is_classification)
     mutate({ user_id, is_classification, formData })
   }
 

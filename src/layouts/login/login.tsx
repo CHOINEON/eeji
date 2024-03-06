@@ -90,11 +90,13 @@ export const Login: React.FC = () => {
 
             localStorage.setItem('userPicture', response.data.user_info.picture)
 
+            window.location.href = '/admin/main'
             // setIsAuthenticated(true)
             // window.location.href = '/admin/data-analysis'
           }
         })
         .catch((error) => {
+          alert(error)
           console.log('error: ' + error)
         })
     }

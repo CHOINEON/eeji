@@ -7,6 +7,7 @@ import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 import FeatureImportance from 'views/AIModelGenerator/FeatureImportance'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
+import ModelPerformance from 'views/XAI-simulator/ModelPerformance'
 
 type ScoreType = {
   MAE?: number
@@ -54,45 +55,53 @@ const FeatureAnalysis = ({ data, input }: any) => {
   )
 
   return (
-    <ComponentContainer>
-      <SubTitle>
-        Feature Importance
-        <InfoCircle content="변수 중요도가 높을 수록 예측 모델에 대한 영향력이 큽니다." />
-        <Tooltip title={content}>
-          <InfoCircleOutlined style={{ fontSize: '15px', color: '#453af6' }} />
-        </Tooltip>
-        {options.length > 1 && (
-          <div style={{ width: '120px', margin: '0 10px', display: 'inline-block' }}>
-            <Select style={{ width: 120 }} options={options} onChange={handleChange} defaultValue={options[0]?.value} />
-          </div>
-        )}
-      </SubTitle>
-      <>
-        {/* {contents.map((value: any) => {
+    <>
+      <ModelPerformance data={error} />
+      <ComponentContainer>
+        <SubTitle>
+          Feature Importance
+          <InfoCircle content="변수 중요도가 높을 수록 예측 모델에 대한 영향력이 큽니다." />
+          <Tooltip title={content}>
+            <InfoCircleOutlined style={{ fontSize: '15px', color: '#453af6' }} />
+          </Tooltip>
+          {options.length > 1 && (
+            <div style={{ width: '120px', margin: '0 10px', display: 'inline-block' }}>
+              <Select
+                style={{ width: 120 }}
+                options={options}
+                onChange={handleChange}
+                defaultValue={options[0]?.value}
+              />
+            </div>
+          )}
+        </SubTitle>
+        <>
+          {/* {contents.map((value: any) => {
           ;<p>
             <AIbutton>AI</AIbutton>
             <span style={{ color: '#002D65', fontSize: '12px', marginBottom: '5px' }}>{value}</span>
           </p>
         })} */}
-        <div className="block float-left w-100">
-          <AIbutton>AI</AIbutton>
-          <AITextContainer>
-            현재 예측 모델에서 가장 영향력이 큰 변수는 <b>{chartData?.labels[0]}</b>
-            입니다.
-          </AITextContainer>
-        </div>
-        <div className="block float-left w-100">
-          <AIbutton>AI</AIbutton>
-          <AITextContainer>
-            현재 {modelIdx === 0 ? '자동 추천으로 ' : ''}입력된 원인 변수 X는{' '}
-            <b>{analysisResponse[modelIdx]?.input?.join(', ')}</b>입니다.
-          </AITextContainer>
-        </div>
-        <div className="block float-left w-100">
-          <FeatureImportance data={chartData} />
-        </div>
-      </>
-    </ComponentContainer>
+          <div className="block float-left w-100">
+            <AIbutton>AI</AIbutton>
+            <AITextContainer>
+              현재 예측 모델에서 가장 영향력이 큰 변수는 <b>{chartData?.labels[0]}</b>
+              입니다.
+            </AITextContainer>
+          </div>
+          <div className="block float-left w-100">
+            <AIbutton>AI</AIbutton>
+            <AITextContainer>
+              현재 {modelIdx === 0 ? '자동 추천으로 ' : ''}입력된 원인 변수 X는{' '}
+              <b>{analysisResponse[modelIdx]?.input?.join(', ')}</b>입니다.
+            </AITextContainer>
+          </div>
+          <div className="block float-left w-100">
+            <FeatureImportance data={chartData} />
+          </div>
+        </>
+      </ComponentContainer>
+    </>
   )
 }
 

@@ -8,10 +8,10 @@ import { useMutation } from 'react-query'
 import fetchChartData from '../../../apis/PriceForecastApi'
 import { Line } from 'react-chartjs-2'
 import { Title } from 'views/AnalysisResult/components/Title'
-import ModelPerformance from '../../XAI-simulator/ModelPerformance'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 const { Text, Link } = Typography
 
-ChartJS.register(zoomPlugin, annotationPlugin)
+ChartJS.register(zoomPlugin, annotationPlugin, ChartDataLabels)
 
 type DataType = {
   [key: string]: IDataTypes
@@ -212,6 +212,10 @@ const OilPriceChart = () => {
     },
     responsive: true,
     plugins: {
+      //왜 안되냐고....
+      datalabels: {
+        display: false,
+      },
       annotation: {
         annotations: {
           annotation1,
@@ -222,8 +226,9 @@ const OilPriceChart = () => {
       // },
     },
     interaction: {
-      mode: 'index' as const,
+      mode: 'nearest', //as const,
       intersect: false,
+      axis: 'x',
     },
     scales: {
       x: {
@@ -258,7 +263,6 @@ const OilPriceChart = () => {
           style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
         >
           <div className="my-[30px] ml-[30px] w-full h-[47px]">
-            <ModelPerformance />
             <Title>Commodity Index Forecast</Title>
             <div style={{ display: 'block', float: 'left', width: '300px', margin: '8px 30px' }}>
               <Select
