@@ -51436,7 +51436,8 @@ const data_short = {
     ],
   },
 }
-const XAIsimulator = () => {
+
+const PDP_Plot = () => {
   const analysisResult = useRecoilValue(customModelStore)
 
   const short_pdp_keys = Object.keys(data_short.xai_pdp)
@@ -51456,7 +51457,7 @@ const XAIsimulator = () => {
   })
   const handleChange = (value: string) => {
     setSelectedOption(value)
-    const selectedData = data_short.xai_pdp[value]
+    const selectedData = short_pdp_values[value]
     setMyData({
       datasets: [
         {
@@ -51494,7 +51495,7 @@ const XAIsimulator = () => {
   )
 }
 
-export default XAIsimulator
+export default PDP_Plot
 
 const ChartWrapper = styled.div`
   // display: ${(props: any) => (props.toggle ? 'block' : 'none')};
