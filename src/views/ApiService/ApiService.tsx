@@ -74,7 +74,9 @@ const ApiService = () => {
     <>
       {/* <p style={{ textAlign: 'center' }}>서비스 준비중입니다</p> */}
       <div style={{ textAlign: 'right', margin: '30px 0px', width: 200, display: 'block', float: 'right' }}>
-        <CustomButton visible={true}>Model Upload</CustomButton>
+        <CustomButton visible={true} onClick={() => message.info('서비스 준비중입니다')}>
+          Model Upload
+        </CustomButton>
       </div>
       <Table
         columns={columns}

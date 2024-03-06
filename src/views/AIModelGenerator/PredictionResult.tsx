@@ -144,6 +144,9 @@ const PredictionResult = ({ data }: any) => {
     responsive: true,
     // maintainAspectRatio: false,
     plugins: {
+      datalabels: {
+        display: false,
+      },
       htmlLegend: {
         // ID of the container to put the legend in
         containerID: 'legend-container',

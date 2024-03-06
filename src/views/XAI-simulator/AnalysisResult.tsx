@@ -13,16 +13,21 @@ import FeatureImportance from 'views/AIModelGenerator/FeatureImportance'
 const AnalysisResult = () => {
   const data = useRecoilValue(xaiResultStore)
 
-  const [transformedData, setTransformedData] = useState({ xai_local: [], local_value: [], pred_result: {} })
-  // const [transformedData, setTransformedData] = useState({ xai_local: [], local_value: [], pred_result: [] })
+  const [transformedData, setTransformedData] = useState({
+    xai_local: [],
+    local_value: [],
+    pred_result: {},
+    xai_pdp: {},
+  })
 
   useEffect(() => {
-    console.log('data', data)
+    // console.log('data', data)
 
     setTransformedData({
       xai_local: transformDataByRow(data.xai_local),
       local_value: transformDataByRow(data.input_data),
       pred_result: transformPredData(data.predict_result.predict_result),
+      xai_pdp: data.xai_pdp,
     })
 
     // transformDataByRow(data.input_data)

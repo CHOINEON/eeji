@@ -56,7 +56,7 @@ const FeatureAnalysis = ({ data, input }: any) => {
 
   return (
     <>
-      <ModelPerformance data={error} />
+      {/* <ModelPerformance data={error} /> */}
       <ComponentContainer>
         <SubTitle>
           Feature Importance

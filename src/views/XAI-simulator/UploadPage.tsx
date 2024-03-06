@@ -29,16 +29,16 @@ const UploadPage = () => {
   ]
 
   function handleClick(type: string) {
-    // message.info('3월 서비스 예정입니다')
-    openModal({
-      modalTitle: 'Model Import',
-      modalType: type,
-      modalProps: {
-        onClick: () => {
-          closeModal()
-        },
-      },
-    })
+    message.info('3월 11일부터 서비스 예정입니다')
+    // openModal({
+    //   modalTitle: 'Model Import',
+    //   modalType: type,
+    //   modalProps: {
+    //     onClick: () => {
+    //       closeModal()
+    //     },
+    //   },
+    // })
   }
 
   const handleDialogOpen = async () => {
