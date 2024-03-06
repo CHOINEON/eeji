@@ -4,8 +4,9 @@ import { Chart, ArcElement, CategoryScale, LinearScale, registerables, Tooltip }
 import { Doughnut, Bar } from 'react-chartjs-2'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import { colors, colorsForDoughnut } from './components/Chart/colors'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 
-Chart.register(ArcElement, CategoryScale, LinearScale, zoomPlugin, Tooltip, ...registerables)
+Chart.register(ArcElement, CategoryScale, LinearScale, ChartDataLabels, zoomPlugin, Tooltip, ...registerables)
 
 const FeatureImportance = ({ data }: any) => {
   const doughnutData = {
@@ -13,7 +14,7 @@ const FeatureImportance = ({ data }: any) => {
     datasets: [
       {
         label: '',
-        data: data?.values?.map((val: any) => val * 100),
+        data: data?.values?.map((val: any) => (val * 100).toFixed(1)),
         backgroundColor: colorsForDoughnut.slice(0, data?.labels?.length),
         borderColor: data?.labels?.map(() => '#F6F8FF'),
         borderWidth: 3,
@@ -26,7 +27,7 @@ const FeatureImportance = ({ data }: any) => {
     datasets: [
       {
         label: '',
-        data: data?.values?.map((val: any) => val * 100),
+        data: data?.values?.map((val: any) => (val * 100).toFixed(1)),
         barThickness: 18,
         borderColor: data?.labels?.map(() => '#F6F8FF'),
         backgroundColor: colorsForDoughnut.slice(0, data?.labels?.length),
@@ -97,7 +98,7 @@ const FeatureImportance = ({ data }: any) => {
     plugins: {
       //왜 안되냐고....
       datalabels: {
-        display: true,
+        display: false,
         backgroundColor: '#ccc',
         borderRadius: 3,
       },

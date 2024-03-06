@@ -1,46 +1,32 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import { dataPropertyState } from 'views/AIModelGenerator/store/dataset/atom'
 import styled from 'styled-components'
 import { useMutation } from 'react-query'
-import ModelPerformanceApi from 'apis/ModelPerformanceApi'
-import { ModelStore } from './store/analyze/ModelStore'
-import IcoPerformance from 'assets/img/icons/XAI/icon_perfromanceModel.png'
-import { PerformanceModel } from 'apis/type/ModelPerformanceOption'
 
-const ModelPerformance = () => {
-  const [customModel, setCustomModel] = useRecoilState<PerformanceModel>(ModelStore)
+import IcoPerformance from 'assets/img/icons/XAI/icon_perfromanceModel.png'
+import { PerformanceModel, PerformanceModelTyeps } from 'apis/type/ModelPerformanceOption'
+
+// type dataType = {
+//   fscore: number
+//   mae: number
+//   mse: number
+//   rmse: number
+// }
+
+const data: { [key: string]: string } = {
+  mae: '0.412',
+  mse: '0.512',
+  rmse: '0.714',
+  fscore: '0',
+}
+
+const ModelPerformance = ({ data }: any) => {
   const dataProperty = useRecoilValue(dataPropertyState)
 
-  const { mutate: mutatePerformance } = useMutation(ModelPerformanceApi, {
-    onSuccess: (result: PerformanceModel) => {
-      console.log('mutate result202222:', result, typeof result)
-      setCustomModel(result)
-    },
-    onError: (error) => {
-      console.error('Error fetching chart data:', error)
-    },
-  })
-
-  useEffect(() => {
-    if (dataProperty.algo_type === 1 || dataProperty.algo_type === 0) {
-      const controller = new AbortController()
-      const { signal } = controller
-      // const queryParams = {
-      //   user_id: localStorage.getItem('userId').toString(),
-      //   algo_type: dataProperty.algo_type,
-      // }
-
-      mutatePerformance({
-        user_id: localStorage.getItem('userId'),
-        algo_type: dataProperty.algo_type.toString(),
-        controller: signal,
-      })
-
-      // mutatePerformance({ payload: queryParams, controller: { signal } })
-      return () => controller.abort()
-    }
-  }, [dataProperty.algo_type, mutatePerformance])
+  const handleSave = () => {
+    //mutation()
+  }
 
   return (
     <>
@@ -48,33 +34,33 @@ const ModelPerformance = () => {
         <div>
           <ComponentContainer>
             <PerformanceTitleImgWrap>
-              <PerformanceTitle>모델 성능</PerformanceTitle>
+              <PerformanceTitle>모델 성능(classification)</PerformanceTitle>
               <div>
                 <img src={IcoPerformance} alt="Performance Icon" />
               </div>
             </PerformanceTitleImgWrap>
-            <div>Ineeji-sensor-2024.00.00.csv의 데이터를 분석했습니다.</div>
+            <div>의 데이터를 분석했습니다.</div>
             <PerformanceContentsWrap>
               <PerformanceContentsBox>
                 <PerformanceContents>AI 모델</PerformanceContents>
-                <PerformanceModelValue>XAI</PerformanceModelValue>
+                <PerformanceModelValue>INEEJI_1</PerformanceModelValue>
               </PerformanceContentsBox>
               <PerformanceContentsBox>
                 <PerformanceContents>AI 모델 정확도</PerformanceContents>
-                {Object.keys(customModel).map((key) => {
+                {Object.keys(data).map((key: string) => {
                   const modelKey = key as keyof PerformanceModel
                   console.log('modelKey', modelKey)
                   return (
                     <PerformanceContentsBox>
-                      <PerformanceValue>{customModel[modelKey]}</PerformanceValue>
+                      <PerformanceValue>{data[modelKey]}</PerformanceValue>
                     </PerformanceContentsBox>
                   )
                 })}
               </PerformanceContentsBox>
             </PerformanceContentsWrap>
             <PerformanceButtonWrap>
-              <PerformanceButton className="firstButton">SAVE</PerformanceButton>
-              <PerformanceButton className="secondButton">REPORT</PerformanceButton>
+              <SaveButton>SAVE</SaveButton>
+              <ExportButton>REPORT</ExportButton>
             </PerformanceButtonWrap>
           </ComponentContainer>
         </div>
@@ -90,7 +76,7 @@ const ModelPerformance = () => {
 
             <div>Ineeji-sensor-2024.00.00.csv의 데이터를 분석했습니다.</div>
             <PerformanceContentsWrap>
-              {Object.keys(customModel).map((key, index) => {
+              {Object.keys(data).map((key, index) => {
                 const modelKey = key as keyof PerformanceModel
                 const isFirstItem = index === 0
                 const boxStyle = isFirstItem ? {} : { borderLeft: '1px solid red', paddingLeft: '10px' }
@@ -99,15 +85,15 @@ const ModelPerformance = () => {
                   <PerformanceContentsBox style={boxStyle}>
                     <div key={modelKey}>
                       <PerformanceContents>{modelKey.toString().toUpperCase()}</PerformanceContents>
-                      <PerformanceValue>{customModel[modelKey]}</PerformanceValue>
+                      <PerformanceValue>{data[modelKey]}</PerformanceValue>
                     </div>
                   </PerformanceContentsBox>
                 )
               })}
             </PerformanceContentsWrap>
             <PerformanceButtonWrap>
-              <PerformanceButton className="firstButton">SAVE</PerformanceButton>
-              <PerformanceButton className="secondButton">REPORT</PerformanceButton>
+              <SaveButton onClick={handleSave}>SAVE</SaveButton>
+              <ExportButton>REPORT</ExportButton>
             </PerformanceButtonWrap>
           </ComponentContainer>
         </div>
@@ -170,13 +156,22 @@ const PerformanceButton = styled.button`
   line-height: 46px;
   width: 208px;
   font-weight: bold;
-  &.firstButton {
-    margin-right: 5px;
-  }
-  &.secondButton {
-    margin-left: 5px;
-  }
+  // &.firstButton {
+  //   margin-right: 5px;
+  // }
+  // &.secondButton {
+  //   margin-left: 5px;
+  // }
 `
+
+const SaveButton = styled(PerformanceButton)`
+  margin-right: 5px;
+`
+
+const ExportButton = styled(PerformanceButton)`
+  margin-left: 5px;
+`
+
 const PerformanceTitleImgWrap = styled.div`
   display: flex;
   justify-content: space-between;

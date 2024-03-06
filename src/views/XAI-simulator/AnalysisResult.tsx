@@ -6,6 +6,9 @@ import InfoCircle from '../AIModelGenerator/components/Icon/InfoCircle'
 import AnalysisGrid from '../XAI-simulator/Visualization/Classification/AnalysisGrid'
 import { useRecoilValue } from 'recoil'
 import { xaiResultStore } from './store/analyze/atom'
+import ModelPerformance from './ModelPerformance'
+import FeatureAnalysis from 'views/AnalysisResult/FeatureAnalysis'
+import FeatureImportance from 'views/AIModelGenerator/FeatureImportance'
 
 const AnalysisResult = () => {
   const data = useRecoilValue(xaiResultStore)
@@ -14,7 +17,7 @@ const AnalysisResult = () => {
   // const [transformedData, setTransformedData] = useState({ xai_local: [], local_value: [], pred_result: [] })
 
   useEffect(() => {
-    // console.log('data', data)
+    console.log('data', data)
 
     setTransformedData({
       xai_local: transformDataByRow(data.xai_local),
@@ -94,7 +97,7 @@ const AnalysisResult = () => {
           </Col>
           <Col span={6}>
             <RoundedBox height={'70vh'}>
-              {/* <FeatureAnalysis />  안에 컨텐츠만 따로 div에 담도록 모듈 수정해야됨*/}
+              <FeatureImportance data={data?.xai_global[0]} />
             </RoundedBox>
           </Col>
         </Row>

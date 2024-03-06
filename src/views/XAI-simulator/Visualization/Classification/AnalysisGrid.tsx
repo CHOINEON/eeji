@@ -28,12 +28,12 @@ const RowItem = (props: any) => {
   ////////24.03.05 Backend 요청으로 input data가 모두 0인 row를 걸러냄
   return (
     !Object.values(props.weight).every((val: any) => val == 0) && (
-      <Row>
-        <div style={{ width: '10%' }}>{props.number}</div>
-        <div style={{ width: '30%' }}>
+      <Row style={{ padding: '0 2%' }}>
+        <div style={{ width: '10%', textAlign: 'center' }}>{props.number}</div>
+        <div style={{ width: '20%', textAlign: 'center' }}>
           pred : <b>{Object.values(props.predResult)[props.number]}</b>
         </div>
-        <div style={{ width: '60%', height: '50px !important' }}>
+        <div style={{ width: '70%', height: '50px !important' }}>
           <HorizontalStackedBarChart {...props} />
         </div>
         {/* <div style={{ width: '10%' }}>{itemObj?.name}</div>
@@ -56,6 +56,11 @@ const AnalysisGrid = ({ localWeight, localValue, columns, predResult }: any) => 
   //pred={predResult[i]}
   return (
     <div style={{ height: '100%' }}>
+      <div style={{ display: 'block', width: '100%', padding: '0 2%' }}>
+        <ColumnHeader width={'10%'}>No</ColumnHeader>
+        <ColumnHeader width={'20%'}>예측결과</ColumnHeader>
+        <ColumnHeader width={'70%'}>입력변수</ColumnHeader>
+      </div>
       {localWeight.map((value: any, i: number) => {
         return (
           <RowItem key={i} number={i} value={localValue} weight={value} columns={columns} predResult={predResult} />
@@ -79,6 +84,14 @@ const Row = styled.div`
   border: 1px solid #d5dcef;
   border-radius: 10px;
   margin: 10px 0;
+`
+
+const ColumnHeader = styled.div<{ width: string }>`
+  display: inline-block;
+  text-align: center;
+  width: ${(props: any) => (props.width ? props.width : '100%')};
+  color: #002d65;
+  font-family: 'Helvetica Neue';
 `
 
 const Idx = styled.div`

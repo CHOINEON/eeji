@@ -20,8 +20,8 @@ export interface ModelGetRes {
 export interface PerformanceModel {
   [key: string]: PerformanceModelTyeps
 }
-type PerformanceModelTyeps = {
-  modelaccuracy?: string
+export type PerformanceModelTyeps = {
+  fscore?: string
   mae?: string
   mse?: string
   rmse?: string

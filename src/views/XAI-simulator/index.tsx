@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 import { Box } from '@chakra-ui/react'
-import styled from '@emotion/styled'
-import { Button, Col, Row, Tag } from 'antd'
-import Title from 'antd/es/typography/Title'
-import axios from 'axios'
-
 import React, { MouseEventHandler, useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import AnalysisResult from './AnalysisResult'
