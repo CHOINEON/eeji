@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 import { Box } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { Button, Col, Row, Tag, Select, Card, SelectProps } from 'antd'
+import { Select, Card, SelectProps } from 'antd'
 import Title from 'antd/es/typography/Title'
-import axios from 'axios'
 import { Line } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
@@ -18,13 +17,6 @@ import {
 } from 'chart.js'
 import { ChartData } from 'chart.js'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
-import { useRecoilValue } from 'recoil'
-import AnalysisResult from './AnalysisResult'
-import { customModelStore } from './store/analyze/atom'
-import UploadPage from './UploadPage'
-import HistorySidebar from 'components/sidebar/HistorySidebar'
-import PDP_DynamicRenderChart from 'views/AIModelGenerator/components/Chart/PDP_Plot/PDP_DynamicRenderChart'
-import Page from 'components/progressbar/page'
 
 const data_long = {
   sample_size: 1994,
@@ -51438,8 +51430,6 @@ const data_short = {
 }
 
 const PDP_Plot = () => {
-  const analysisResult = useRecoilValue(customModelStore)
-
   const short_pdp_keys = Object.keys(data_short.xai_pdp)
   const short_pdp_values = Object.values(data_short.xai_pdp)
   const { Option } = Select
@@ -51485,7 +51475,6 @@ const PDP_Plot = () => {
             <Title style={{ fontSize: '20px', fontColor: '#002D65' }}> Partical Dependence Plot CO </Title>
             <Select style={{ width: '60%' }} onChange={handleChange} options={options} />
           </div>{' '}
-          {/* {analysisResult.data.length > 0 ? <AnalysisResult /> : <UploadPage />} */}
           <ChartWrapper>
             <Line data={myData} />
           </ChartWrapper>
