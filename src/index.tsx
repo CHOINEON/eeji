@@ -24,7 +24,7 @@ const antdCustomTheme = {
   components: {
     Button: {
       // colorPrimaryActive: '#4338f7',
-      colorPrimary: '#4338f7',
+      colorPrimary: '#4338f7 !important',
       // colorBorder: '#4338F7',
       // borderRadius: '10px',
     },
