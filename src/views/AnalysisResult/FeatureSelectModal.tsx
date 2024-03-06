@@ -144,7 +144,7 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
         <ColumnLabel required={true} label=" 원인 변수 (2개 이상)" />
         <Select
           style={{
-            width: 120,
+            width: '100%',
             backgroundColor: '#fff !important',
             border: '1px solid #A3AFCF',
             borderRadius: '10px',
