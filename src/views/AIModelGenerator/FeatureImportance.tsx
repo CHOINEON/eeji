@@ -50,6 +50,9 @@ const FeatureImportance = ({ data }: any) => {
     },
     responsive: true,
     plugins: {
+      datalabels: {
+        display: false,
+      },
       legend: {
         display: false,
       },

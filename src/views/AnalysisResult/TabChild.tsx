@@ -214,10 +214,12 @@ const ButtonSave = styled.button`
 `
 const ComponentContainer = styled.div`
   display: block;
+  float: left;
   justify-content: space-evenly;
   background-color: #ffffff;
   min-height: 770px;
   height: 100%;
+  width:100%
   box-shadow: 0px 0px 10px #5951db33;
   border: 1px solid #d5dcef;
   // border: 1px solid red;

@@ -18,3 +18,13 @@ export const xaiResultStore = atom({
     xai_pdp: {},
   },
 })
+
+export const transformedXaiResultStore = atom({
+  key: 'transformedXaiResultStore',
+  default: {
+    xai_local: [],
+    local_value: [],
+    pred_result: {},
+    xai_pdp: {},
+  },
+})
