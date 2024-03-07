@@ -3,41 +3,40 @@ import { Button, Col, Row, Tag } from 'antd'
 import Title from 'antd/es/typography/Title'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
 import InfoCircle from '../AIModelGenerator/components/Icon/InfoCircle'
-import AnalysisGrid from '../XAI-simulator/Visualization/Classification/AnalysisGrid'
-import { useRecoilValue } from 'recoil'
-import { xaiResultStore } from './store/analyze/atom'
+import AnalysisGrid, { ColumnHeader, DataRow } from './Visualization/AnalysisGrid'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { transformedXaiResultStore, xaiResultStore } from './store/analyze/atom'
 import ModelPerformance from './ModelPerformance'
 import FeatureAnalysis from 'views/AnalysisResult/FeatureAnalysis'
 import FeatureImportance from 'views/AIModelGenerator/FeatureImportance'
+import GlobalFeatureImportance from './components/GlobalFeatureImportance'
 
 const AnalysisResult = () => {
   const data = useRecoilValue(xaiResultStore)
-
-  const [transformedData, setTransformedData] = useState({
-    xai_local: [],
-    local_value: [],
-    pred_result: {},
-    xai_pdp: {},
-  })
+  const [transformedData, setTransformedData] = useRecoilState(transformedXaiResultStore)
+  const [activeButtons, setActiveButtons] = useState([])
 
   useEffect(() => {
-    // console.log('data', data)
+    console.log('data', data)
 
     setTransformedData({
       xai_local: transformDataByRow(data.xai_local),
       local_value: transformDataByRow(data.input_data),
-      pred_result: transformPredData(data.predict_result.predict_result),
+      pred_result: data.predict_result.predict_result,
       xai_pdp: data.xai_pdp,
     })
 
-    // transformDataByRow(data.input_data)
-
-    //xai-local formatting
+    const newObj = data.feature_list.reduce((acc, curr) => {
+      console.log(curr)
+      const feature = curr
+      return { ...acc, curr: false }
+    })
+    console.log('newobj:', newObj)
   }, [data])
 
-  useEffect(() => {
-    console.log('transformedData', transformedData)
-  }, [transformedData])
+  // useEffect(() => {
+  //   console.log('transformedData', transformedData)
+  // }, [transformedData])
 
   const transformDataByRow = (rawData: any) => {
     const sample_size = data.sample_size //1200
@@ -52,23 +51,6 @@ const AnalysisResult = () => {
       transformedData.push(newDataPoint)
     }
     return transformedData
-  }
-
-  const transformPredData = (rawData: any) => {
-    // console.log('rawData:', rawData)
-    // const sample_size = data.sample_size //1200
-    // const transformedData = []
-
-    // for (let i = 0; i < sample_size; i++) {
-    //   const newDataPoint: any = {}
-
-    //   for (const feature of data.feature_list) {
-    //     newDataPoint[feature] = rawData[i]
-    //   }
-    //   console.log('newDataPoint:', newDataPoint)
-    //   transformedData.push(newDataPoint)
-    // }
-    return rawData
   }
 
   return (
@@ -89,8 +71,21 @@ const AnalysisResult = () => {
             <InfoCircle content="。。。" />
           </Title>
           <Col span={18}>
+            초기화 버튼
             <Row>
-              <RoundedBox width={'100%'} height={'70vh'}>
+              <RoundedBox width={'100%'} height={'75vh'}>
+                <VariableRow>
+                  <div className="w-1/7 text-left">
+                    <ColumnHeader width="100%">입력변수</ColumnHeader>
+                  </div>
+                  <div className="w-6/7">
+                    {data.feature_list.map((value: any, index) => (
+                      <Button key={index} type="primary" shape="round" className="m-1">
+                        변수{value}
+                      </Button>
+                    ))}
+                  </div>
+                </VariableRow>
                 <AnalysisGrid
                   localWeight={transformedData.xai_local}
                   localValue={transformedData.local_value}
@@ -101,9 +96,7 @@ const AnalysisResult = () => {
             </Row>
           </Col>
           <Col span={6}>
-            <RoundedBox height={'70vh'}>
-              <FeatureImportance data={data?.xai_global[0]} />
-            </RoundedBox>
+            <GlobalFeatureImportance data={data?.xai_global[0]} />
           </Col>
         </Row>
         <Row style={{ width: '100%' }}></Row>
@@ -122,6 +115,9 @@ interface Container {
   position?: string
 }
 
+const VariableRow = styled(DataRow)`
+  background-color: #ffffff;
+`
 const UploadContainer = styled.div`
   // border: 1px solid red;
   position: absolute;

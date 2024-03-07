@@ -1,13 +1,23 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 import { Box } from '@chakra-ui/react'
+import styled from '@emotion/styled'
+import { Select, Card, SelectProps } from 'antd'
+import Title from 'antd/es/typography/Title'
+import { Line } from 'react-chartjs-2'
+import {
+  Chart as ChartJS,
+  Colors,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend,
+  ScriptableContext,
+} from 'chart.js'
+import { ChartData } from 'chart.js'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
-import { useRecoilValue } from 'recoil'
-import AnalysisResult from './AnalysisResult'
-import { customModelStore, xaiResultStore } from './store/analyze/atom'
-import UploadPage from './UploadPage'
-import HistorySidebar from 'components/sidebar/HistorySidebar'
-import Page from 'components/progressbar/page'
-import PDP_Plot from './components/PDP_Plot'
+
 const data_long = {
   sample_size: 1994,
   feature_length: 12,
@@ -51418,23 +51428,79 @@ const data_short = {
     ],
   },
 }
-const XAIsimulator = () => {
-  const analysisResult = useRecoilValue(xaiResultStore)
 
-  // useEffect(() => {
-  //   console.log('result:', analysisResult.data)
-  // }, [analysisResult])
+const PDP_Plot = () => {
+  const short_pdp_keys = Object.keys(data_short.xai_pdp)
+  const short_pdp_values = Object.values(data_short.xai_pdp)
+  const { Option } = Select
+
+  const options: SelectProps['options'] = short_pdp_keys.map((key) => ({
+    value: key,
+    label: key,
+  }))
+
+  const [selectedOption, setSelectedOption] = useState<string | null>(null)
+
+  const [myData, setMyData] = useState<{ datasets: any[]; labels: string[] }>({
+    datasets: [
+      {
+        label: `Dataset 0`,
+        data: short_pdp_values[0],
+        borderColor: '#86C162',
+        backgroundColor: '#1B73FF69',
+      },
+    ],
+    labels: Array.from({ length: short_pdp_values[0].length }, (_, i) => `[${i * 11.11}]`),
+  })
+  const handleChange = (value: string) => {
+    setSelectedOption(value)
+    const selectedData = short_pdp_values[Number(value)]
+    setMyData({
+      datasets: [
+        {
+          label: `Dataset ${value}`,
+          data: selectedData,
+          borderColor: '#86C162',
+          backgroundColor: '#1B73FF69',
+        },
+      ],
+      labels: Array.from({ length: selectedData.length }, (_, i) => `[${i * 11.11}]`),
+    })
+  }
 
   return (
     <>
-      <Box style={{ position: 'relative', zIndex: 1000, width: '100%', height: '100%' }}>
-        {analysisResult?.sample_size > 0 ? <AnalysisResult /> : <UploadPage />}
-        {/* <AnalysisResult data={data_short} /> */}
-        {/* <Page /> */}
-        {/* <PDP_Plot /> */}
-      </Box>
+      <Card style={{ width: '100%' }}>
+        <Box
+          style={{
+            position: 'relative',
+            zIndex: 1000,
+            height: '100%',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Title style={{ fontSize: '20px', color: '#002D65' }}> Partical Dependence Plot CO </Title>
+            <Select style={{ width: '30%' }} defaultValue={['0']} onChange={handleChange} options={options} />
+          </div>{' '}
+          <ChartWrapper>
+            <Line data={myData} />
+          </ChartWrapper>
+        </Box>{' '}
+      </Card>
     </>
   )
 }
 
-export default XAIsimulator
+export default PDP_Plot
+
+const ChartWrapper = styled.div`
+  // display: ${(props: any) => (props.toggle ? 'block' : 'none')};
+  // border: 1px solid pink;
+  width: 100%;
+  height: 200px;
+  // width: ${(props: any) => (props.isClassification === 1 ? '200px' : '100%')};
+  // height: ${(props: any) => (props.isClassification === 1 ? '600px' : '100%')};
+  position: relative;
+  float: left;
+  margin: 10px;
+`

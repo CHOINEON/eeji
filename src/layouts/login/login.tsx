@@ -76,9 +76,9 @@ export const Login: React.FC = () => {
     const params = new URLSearchParams(window.location.search)
     // console.log('URL search params:', params)
     const code = params.get('code')
-    console.log('login mounted and the code is ::', code)
 
     if (code) {
+      console.log('login mounted and the code is ::', code)
       axios
         .post(process.env.REACT_APP_NEW_API_SERVER_URL + '/login/google', { code })
         .then((response) => {

@@ -8,14 +8,10 @@ const signal = controller.signal
 const ModelApi = {
   //모델 옵션 설정해서 실행하기
   postModelwithOption: async (params: IModelPostReq): Promise<IModelOptionRes> => {
-    if (params.type === 'request') {
-      const { data } = await axiosPrivate.post(`api/get_model_option/${params.payload.user_id}`, params.payload, {
-        signal: params.controller.signal,
-      })
-      return data
-    } else if (params.type === 'cancel') {
-      params.controller.abort()
-    }
+    const config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+    const { data } = await axiosPrivate.post(`api/get_model_option`, params.payload, config)
+
+    return data
   },
 
   cancelPostModel: async (): Promise<any> => {

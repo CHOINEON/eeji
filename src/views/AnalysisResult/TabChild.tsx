@@ -13,10 +13,29 @@ import { featureSelectModalState } from 'views/AIModelGenerator/store/modal/atom
 import { v4 } from 'uuid'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import { Spin } from 'antd'
+import { MdOutlineStayPrimaryLandscape } from 'react-icons/md'
+import PDP_DynamicRenderChart from 'views/AIModelGenerator/components/Chart/PDP_Plot/PDP_DynamicRenderChart'
 
 const TabChild = () => {
   const [loading, setLoading] = useState({ showing: false, text: '데이터 분석 중...' })
-
+  const [chartData, setChartData] = useState([
+    [
+      0.5335981249809265, 0.7968889474868774, 1.3384120464324951, 2.4175448417663574, 4.557618618011475,
+      8.800612449645996, 17.259397506713867, 34.15509033203125, 67.92066955566406, 135.4190216064453,
+    ],
+    [
+      0.4988256096839905, 0.6118679046630859, 0.7849935293197632, 1.0999717712402344, 1.707023024559021,
+      2.907533645629883, 5.292050361633301, 10.05984878540039, 19.594501495361328, 38.663185119628906,
+    ],
+    [
+      0.7170343995094299, 1.2933645248413086, 2.4239859580993652, 4.631820201873779, 8.962608337402344,
+      17.553211212158203, 34.663360595703125, 68.83564758300781, 137.1204071044922, 273.6230163574219,
+    ],
+    [
+      0.43038254976272583, 0.5029453039169312, 0.7003320455551147, 1.1245694160461426, 1.9931961297988892,
+      3.74906849861145, 7.255787372589111, 14.266334533691406, 28.287391662597656, 56.31697082519531,
+    ],
+  ])
   const selectedData = useRecoilValue(selectedDataState)
   const [userInputOption, setUserInputOption] = useRecoilState(inputOptionListState)
   const resetSelectedData = useResetRecoilState(selectedDataState)
@@ -195,10 +214,12 @@ const ButtonSave = styled.button`
 `
 const ComponentContainer = styled.div`
   display: block;
+  float: left;
   justify-content: space-evenly;
   background-color: #ffffff;
   min-height: 770px;
   height: 100%;
+  width:100%
   box-shadow: 0px 0px 10px #5951db33;
   border: 1px solid #d5dcef;
   // border: 1px solid red;
