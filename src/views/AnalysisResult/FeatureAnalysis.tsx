@@ -18,13 +18,14 @@ type ScoreType = {
 
 const FeatureAnalysis = ({ data, input }: any) => {
   const analysisResponse = useRecoilValue(analysisResponseAtom)
+
+  console.log('analysisResponse:', analysisResponse)
   const [modelIdx, setModelIdx] = useRecoilState(selectModelState)
   const [options, setOptions] = useState([])
   const [chartData, setChartData] = useState({ labels: [], values: [] })
   const [error, setError] = useState<ScoreType>({})
-
+  useEffect(() => console.log('error:', error), [error])
   useEffect(() => {
-    console.log('analysisResponse:', analysisResponse)
     if (analysisResponse.length > 0) {
       const newOption: Array<any> = []
       analysisResponse.map((value: any, index: number) => {

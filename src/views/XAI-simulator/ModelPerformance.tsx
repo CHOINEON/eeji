@@ -23,11 +23,15 @@ const data: { [key: string]: string } = {
 
 const ModelPerformance = ({ data }: any) => {
   const dataProperty = useRecoilValue(dataPropertyState)
+  console.log('data:', data)
 
   const handleSave = () => {
     //mutation()
   }
-
+  const handleReport = () => {
+    alert('서비스 준비 중입니다.')
+    //mutation()
+  }
   return (
     <>
       {dataProperty.algo_type === 1 ? (
@@ -47,7 +51,7 @@ const ModelPerformance = ({ data }: any) => {
               </PerformanceContentsBox>
               <PerformanceContentsBox>
                 <PerformanceContents>AI 모델 정확도</PerformanceContents>
-                {Object.keys(data).map((key: string) => {
+                {/* {Object.keys(data).map((key: string) => {
                   const modelKey = key as keyof PerformanceModel
                   console.log('modelKey', modelKey)
                   return (
@@ -55,12 +59,12 @@ const ModelPerformance = ({ data }: any) => {
                       <PerformanceValue>{data[modelKey]}</PerformanceValue>
                     </PerformanceContentsBox>
                   )
-                })}
+                })} */}
               </PerformanceContentsBox>
             </PerformanceContentsWrap>
             <PerformanceButtonWrap>
               <SaveButton>SAVE</SaveButton>
-              <ExportButton>REPORT</ExportButton>
+              <ExportButton onClick={handleReport}>REPORT</ExportButton>
             </PerformanceButtonWrap>
           </ComponentContainer>
         </div>
@@ -68,7 +72,41 @@ const ModelPerformance = ({ data }: any) => {
         <div>
           <ComponentContainer>
             <PerformanceTitleImgWrap>
-              <PerformanceTitle>모델 성능</PerformanceTitle>
+              <PerformanceTitle>모델 성능(classification)</PerformanceTitle>
+              <div>
+                <img src={IcoPerformance} alt="Performance Icon" />
+              </div>
+            </PerformanceTitleImgWrap>
+            {/* <div>`${sadsa}의 데이터를 분석했습니다.`</div> */}
+            <div>의 데이터를 분석했습니다.</div>
+
+            <PerformanceContentsWrap>
+              <PerformanceContentsBox>
+                <PerformanceContents>AI 모델</PerformanceContents>
+                <PerformanceModelValue>INEEJI_1</PerformanceModelValue>
+              </PerformanceContentsBox>
+              <PerformanceContentsBox>
+                <PerformanceContents>AI 모델 정확도</PerformanceContents>
+                {/* {Object.keys(data).map((key: string) => {
+                  const modelKey = key as keyof PerformanceModel
+                  console.log('modelKey', modelKey)
+                  return (
+                    <PerformanceContentsBox>
+                      <PerformanceValue>{data[modelKey]}</PerformanceValue>
+                    </PerformanceContentsBox>
+                  )
+                })} */}
+              </PerformanceContentsBox>
+            </PerformanceContentsWrap>
+            <PerformanceButtonWrap>
+              <SaveButton>SAVE</SaveButton>
+              <ExportButton onClick={handleReport}>REPORT</ExportButton>
+            </PerformanceButtonWrap>
+          </ComponentContainer>
+
+          <ComponentContainer>
+            <PerformanceTitleImgWrap>
+              <PerformanceTitle>모델 성능(classification)</PerformanceTitle>
               <div>
                 <img src={IcoPerformance} alt="Performance Icon" />
               </div>
@@ -76,7 +114,7 @@ const ModelPerformance = ({ data }: any) => {
 
             <div>Ineeji-sensor-2024.00.00.csv의 데이터를 분석했습니다.</div>
             <PerformanceContentsWrap>
-              {Object.keys(data).map((key, index) => {
+              {/* {Object.keys(data).map((key, index) => {
                 const modelKey = key as keyof PerformanceModel
                 const isFirstItem = index === 0
                 const boxStyle = isFirstItem ? {} : { borderLeft: '1px solid red', paddingLeft: '10px' }
@@ -89,11 +127,11 @@ const ModelPerformance = ({ data }: any) => {
                     </div>
                   </PerformanceContentsBox>
                 )
-              })}
+              })} */}
             </PerformanceContentsWrap>
             <PerformanceButtonWrap>
               <SaveButton onClick={handleSave}>SAVE</SaveButton>
-              <ExportButton>REPORT</ExportButton>
+              <ExportButton onClick={handleReport}>REPORT</ExportButton>
             </PerformanceButtonWrap>
           </ComponentContainer>
         </div>
@@ -112,13 +150,14 @@ const ComponentContainer = styled.div`
   border-radius: 18px;
   color: #ffffff;
   font-size: 15px;
-  font-face: 'Helvetica Neue';
+  font-family: 'Helvetica Neue';
   background-image: url('path/to/your/image.png');
   background-size: cover;
   background-position: center;
 `
 
 const PerformanceTitle = styled.span`
+  font-family: 'Helvetica Neue';
   color: #95eb61;
   font-weight: bold;
   margin-bottom: 7.5px;
@@ -146,6 +185,7 @@ const PerformanceValue = styled.div`
 `
 const PerformanceButtonWrap = styled.div`
   text-align: center;
+  display: flex;
 `
 const PerformanceButton = styled.button`
   border-radius: 9px;
@@ -154,14 +194,8 @@ const PerformanceButton = styled.button`
   font-size: 17px;
   height: 46px;
   line-height: 46px;
-  width: 208px;
+  flex: 1;
   font-weight: bold;
-  // &.firstButton {
-  //   margin-right: 5px;
-  // }
-  // &.secondButton {
-  //   margin-left: 5px;
-  // }
 `
 
 const SaveButton = styled(PerformanceButton)`
