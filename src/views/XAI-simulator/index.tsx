@@ -51428,10 +51428,10 @@ const XAIsimulator = () => {
   return (
     <>
       <Box style={{ position: 'relative', zIndex: 1000, width: '100%', height: '100%' }}>
-        {/* {analysisResult?.sample_size > 0 ? <AnalysisResult /> : <UploadPage />} */}
+        {analysisResult?.sample_size > 0 ? <AnalysisResult /> : <UploadPage />}
         {/* <AnalysisResult data={data_short} /> */}
         {/* <Page /> */}
-        <PDP_Plot />
+        {/* <PDP_Plot /> */}
       </Box>
     </>
   )
