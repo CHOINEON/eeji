@@ -22,38 +22,30 @@ const single_data = [
 ]
 
 const RowItem = (props: any) => {
-  // console.log('props', props)
+  // const { number, columns, predResult, value, weight } = props
+  console.log('props', props)
   // const itemObj = item.item
 
   ////////24.03.05 Backend 요청으로 input data가 모두 0인 row를 걸러냄
   return (
-    !Object.values(props.weight).every((val: any) => val == 0) && (
-      <DataRow style={{ padding: '0 2%', marginBottom: '1%' }}>
-        <div style={{ width: '10%', textAlign: 'center' }}>{props.number}</div>
-        <div style={{ width: '20%', textAlign: 'center' }}>
-          pred : <b>{Object.values(props.predResult)[props.number]}</b>
-        </div>
-        <div style={{ width: '70%', height: '50px !important' }}>
-          <HorizontalStackedBarChart {...props} />
-        </div>
-        {/* <div style={{ width: '10%' }}>{itemObj?.name}</div>
-      <div style={{ width: '10%' }}>{itemObj?.age}</div>
-      <div style={{ width: '10%' }}>{itemObj?.status}</div>
-      <div style={{ height: '50px !important' }}>
-        <HorizontalStackedBarChart data={itemObj.result} />
-      </div> */}
-      </DataRow>
-    )
+    <></>
+    // !Object.values(weight).every((val: any) => val == 0) && (
+    //   <DataRow style={{ padding: '0 2%', marginBottom: '1%' }}>
+    //     <div style={{ width: '10%', textAlign: 'center' }}>{number}</div>
+    //     <div style={{ width: '20%', textAlign: 'center' }}>
+    //       pred : <b>{predResult[number] || ''}</b>
+    //     </div>
+    //     <div style={{ width: '70%', height: '50px !important' }}>
+    //       <HorizontalStackedBarChart {...props} />
+    //     </div>
+    //   </DataRow>
+    // )
   )
 }
 
-const AnalysisGrid = ({ localWeight, localValue, columns, predResult }: any) => {
-  // console.log('predResult:', predResult)
-  // console.log('columns:', columns)
+const AnalysisGrid = ({ data }: any) => {
+  const { input_data, xai_local, predict_result, feature_list } = data
 
-  // const analysisResult = useRecoilValue(customModelStore)
-
-  //pred={predResult[i]}
   return (
     <>
       <div style={{ display: 'block', width: '100%', padding: '0 2%' }}>
@@ -61,10 +53,8 @@ const AnalysisGrid = ({ localWeight, localValue, columns, predResult }: any) => 
         <ColumnHeader width={'20%'}>예측결과</ColumnHeader>
         <ColumnHeader width={'70%'}>입력변수</ColumnHeader>
       </div>
-      {localWeight.map((value: any, i: number) => {
-        return (
-          <RowItem key={i} number={i} value={localValue} weight={value} columns={columns} predResult={predResult} />
-        )
+      {xai_local.map((value: any, i: number) => {
+        return <RowItem key={i} number={i} value={xai_local} />
       })}
     </>
   )

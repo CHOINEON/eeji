@@ -173,41 +173,46 @@ interface IDataset {
   backgroundColor: string
 }
 
-const HorizontalStackedBarChart = ({ value, weight, columns }: any) => {
-  // const [data, setData] = useState<ChartData<'bar'>>({
-  //   labels: [''],
-  //   datasets: [
-  //     { label: 'a', data: [0], backgroundColor: '#4169e1' },
-  //     { label: 'b', data: [0], backgroundColor: '#87ceeb' },
-  //     { label: 'c', data: [0], backgroundColor: '#b0e0e6' },
-  //   ],
-  // })
+interface IStackedBarChart {
+  value: any
+  weight: Array<any>
+  columns: Array<any>
+}
 
+const HorizontalStackedBarChart = (props: IStackedBarChart) => {
+  // console.log('HorizontalStackedBarChart props:', props)
+  const { weight, columns } = props
   const [chartData, setChartData] = useState<ChartData<'bar'>>({
     datasets: [],
   })
 
   useEffect(() => {
     // console.log('columns:', columns)
-    // console.log('localValue:', localValue)
+    // console.log('weight:', weight)
 
     const newArr: Array<IDataset> = []
 
     //datasets 안에 들어갈 내용
     columns.forEach((col: Array<any>, i: number) => {
-      // if (i < 10) {
+      const totalLocalValue: number = Object.values(weight).reduce((sum: number, value: number) => {
+        return (sum + value) as number
+      }, 0)
+      // console.log('total:', totalLocalValue)
+      // console.log('weight[i]:', weight[i])
+
       newArr.push({
         label: columns[i],
-        data: [weight[i] * 100],
+        data: [(weight[i] / totalLocalValue) * 100],
         backgroundColor: STACKED_BAR_CHART_COLORS[i],
       })
-      // }
     })
+    // console.log('newArr: ', newArr)
+
     setChartData({
       labels: [''],
       datasets: newArr,
     })
-  }, [])
+  }, [props])
 
   // const data = {
   //   labels: [''],
