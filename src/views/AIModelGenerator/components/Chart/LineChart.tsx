@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import Plot from 'react-plotly.js'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+import { Line } from 'react-chartjs-2'
 
 function LineChart(props: any) {
   // const { data, layout } = props?.chartData
