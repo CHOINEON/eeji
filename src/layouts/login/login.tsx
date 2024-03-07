@@ -43,7 +43,7 @@ export const Login: React.FC = () => {
   const { data } = useGetCompanies()
   const { mutate: mutateLogin } = useMutation(UserApi.login, {
     onSuccess: (response: any) => {
-      console.log('response:', response)
+      console.log('normal login response:', response)
 
       window.localStorage.setItem('userData', JSON.stringify(response))
       window.localStorage.setItem('companyId', company)
@@ -61,8 +61,8 @@ export const Login: React.FC = () => {
   })
 
   useEffect(() => {
+    console.log('company list data:', data)
     if (data) {
-      console.log('data:', data)
       // setCompanyList(data)
       RenderCompanyList(data)
     }
@@ -70,19 +70,19 @@ export const Login: React.FC = () => {
 
   React.useEffect(() => {
     // RenderCompanyList()
-
     // if (companies?.length > 0) RenderCompanyList(companies)
 
     //로그인 후 redirect된 URL에서 구글 인가코드 추출하여 백엔드로 전달하여 token발급받음
     const params = new URLSearchParams(window.location.search)
     // console.log('URL search params:', params)
     const code = params.get('code')
+    console.log('login mounted and the code is ::', code)
 
     if (code) {
       axios
         .post(process.env.REACT_APP_NEW_API_SERVER_URL + '/login/google', { code })
         .then((response) => {
-          console.log('response: ', response.data)
+          console.log('/login/google response: ', response.data)
           if (response.data.user_info) {
             //로그인 상태 확인되면 localStorage에 user정보 저장 ->  datasetList 페이지로 redirect
             localStorage.setItem('userId', response.data.user_info.email)
@@ -90,11 +90,13 @@ export const Login: React.FC = () => {
 
             localStorage.setItem('userPicture', response.data.user_info.picture)
 
+            window.location.href = '/admin/main'
             // setIsAuthenticated(true)
             // window.location.href = '/admin/data-analysis'
           }
         })
         .catch((error) => {
+          alert(error)
           console.log('error: ' + error)
         })
     }

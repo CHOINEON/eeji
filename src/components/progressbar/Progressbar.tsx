@@ -28,7 +28,7 @@ const Progressbar = ({ currentValue, maxValue, label }: ProgressbarProps) => {
   return (
     <>
       <label htmlFor="progress-bar">{label}</label>
-      <div className="w-[550px] h-[28px] border border-[#4338F7] rounded-full relative overflow-hidden">
+      <div className="w-[100%] h-[28px] border border-[#4338F7] rounded-full relative overflow-hidden">
         <div
           style={{ width: `${progressValue}%` }}
           className={`top-0 h-[22px] top-[2px] ml-[3px] bg-gradient-to-r from-[#4338F724] to-[#4338F79A] duration-700 transition-all relative rounded-full`}

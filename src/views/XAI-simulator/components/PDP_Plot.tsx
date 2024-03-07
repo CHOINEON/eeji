@@ -51442,12 +51442,19 @@ const PDP_Plot = () => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
 
   const [myData, setMyData] = useState<{ datasets: any[]; labels: string[] }>({
-    datasets: [],
-    labels: [],
+    datasets: [
+      {
+        label: `Dataset 0`,
+        data: short_pdp_values[0],
+        borderColor: '#86C162',
+        backgroundColor: '#1B73FF69',
+      },
+    ],
+    labels: Array.from({ length: short_pdp_values[0].length }, (_, i) => `[${i * 11.11}]`),
   })
   const handleChange = (value: string) => {
     setSelectedOption(value)
-    const selectedData = short_pdp_values[value]
+    const selectedData = short_pdp_values[Number(value)]
     setMyData({
       datasets: [
         {
@@ -51472,8 +51479,8 @@ const PDP_Plot = () => {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Title style={{ fontSize: '20px', fontColor: '#002D65' }}> Partical Dependence Plot CO </Title>
-            <Select style={{ width: '60%' }} onChange={handleChange} options={options} />
+            <Title style={{ fontSize: '20px', color: '#002D65' }}> Partical Dependence Plot CO </Title>
+            <Select style={{ width: '30%' }} defaultValue={['0']} onChange={handleChange} options={options} />
           </div>{' '}
           <ChartWrapper>
             <Line data={myData} />

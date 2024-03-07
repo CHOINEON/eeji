@@ -18,8 +18,19 @@ import { analysisResponseAtom } from './store/response/atoms'
 import { useRecoilValue } from 'recoil'
 import { selectedDataState } from './store/dataset/atom'
 import { colors } from './components/Chart/colors'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 
-ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, zoomPlugin, Title, Tooltip, Legend)
+ChartJS.register(
+  ChartDataLabels,
+  CategoryScale,
+  LinearScale,
+  LineElement,
+  PointElement,
+  zoomPlugin,
+  Title,
+  Tooltip,
+  Legend
+)
 
 //https://itwithruilan.tistory.com/77 커스텀
 const PredictionResult = ({ data }: any) => {
@@ -91,6 +102,7 @@ const PredictionResult = ({ data }: any) => {
       label: label === 'truth' ? `${label} (${selectedData.targetY})` : label,
       borderColor: color,
       backgroundColor: label === 'INEEJI prediction' ? 'rgba(69, 58, 246, 0)' : color,
+      // pointStyle: label === 'truth' ? 'circle' : 'triangle',
       borderWidth: label === 'truth' ? 1 : 1,
       fill: label === 'INEEJI prediction' ? true : false,
       data: dataArr,
@@ -132,6 +144,9 @@ const PredictionResult = ({ data }: any) => {
     responsive: true,
     // maintainAspectRatio: false,
     plugins: {
+      datalabels: {
+        display: false,
+      },
       htmlLegend: {
         // ID of the container to put the legend in
         containerID: 'legend-container',
@@ -168,6 +183,9 @@ const PredictionResult = ({ data }: any) => {
     responsive: true,
     // maintainAspectRatio: false,
     plugins: {
+      datalabels: {
+        display: false,
+      },
       htmlLegend: {
         // ID of the container to put the legend in
         containerID: 'legend-container',
@@ -180,6 +198,7 @@ const PredictionResult = ({ data }: any) => {
         text: '',
       },
       tooltip: {
+        usePointStyle: true,
         enabled: true,
         callbacks: {
           footer: footer,
@@ -206,11 +225,6 @@ const PredictionResult = ({ data }: any) => {
       },
     },
   }
-
-  // useEffect(() => {
-  //   // console.log('PredictionResult data:', data)
-  //   // setChartData(tempData)
-  // }, [data])
 
   const getOrCreateLegendList = (chart: any, id: any) => {
     const legendContainer = document.getElementById(id)

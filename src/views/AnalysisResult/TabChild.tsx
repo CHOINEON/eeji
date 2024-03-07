@@ -166,7 +166,6 @@ const TabChild = () => {
 
           {analysisResponse && analysisResponse.length > 0 && (
             <>
-              {/* <Spin tip="예측 모델 생성중..." spinning={loading}> */}
               <div
                 style={{
                   // border: '1px solid red',
@@ -174,7 +173,6 @@ const TabChild = () => {
                   padding: '30px',
                   display: 'block',
                   float: 'left',
-                  // padding: '20px',
                 }}
               >
                 <PredictionResult />

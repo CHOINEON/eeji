@@ -25,27 +25,29 @@ const RowItem = (props: any) => {
   // console.log('props', props)
   // const itemObj = item.item
 
+  ////////24.03.05 Backend 요청으로 input data가 모두 0인 row를 걸러냄
   return (
-    <Row>
-      {/* {columns.map((col: any, i: number) => {
-        return <div style={{ width: '100px', border: '1px solid red' }}>{columns[i]}</div>
-      })} */}
-      <div style={{ width: '10%' }}>{props.number}</div>
-      <div style={{ width: '10%' }}>{props.pred}</div>
-      <div style={{ height: '50px !important' }}>
-        <HorizontalStackedBarChart {...props} />
-      </div>
-      {/* <div style={{ width: '10%' }}>{itemObj?.name}</div>
+    !Object.values(props.weight).every((val: any) => val == 0) && (
+      <Row style={{ padding: '0 2%' }}>
+        <div style={{ width: '10%', textAlign: 'center' }}>{props.number}</div>
+        <div style={{ width: '20%', textAlign: 'center' }}>
+          pred : <b>{Object.values(props.predResult)[props.number]}</b>
+        </div>
+        <div style={{ width: '70%', height: '50px !important' }}>
+          <HorizontalStackedBarChart {...props} />
+        </div>
+        {/* <div style={{ width: '10%' }}>{itemObj?.name}</div>
       <div style={{ width: '10%' }}>{itemObj?.age}</div>
       <div style={{ width: '10%' }}>{itemObj?.status}</div>
       <div style={{ height: '50px !important' }}>
         <HorizontalStackedBarChart data={itemObj.result} />
       </div> */}
-    </Row>
+      </Row>
+    )
   )
 }
 
-const AnalysisGrid = ({ localWeight, localValue, columns }: any) => {
+const AnalysisGrid = ({ localWeight, localValue, columns, predResult }: any) => {
   // console.log('predResult:', predResult)
   // console.log('columns:', columns)
 
@@ -54,8 +56,15 @@ const AnalysisGrid = ({ localWeight, localValue, columns }: any) => {
   //pred={predResult[i]}
   return (
     <div style={{ height: '100%' }}>
+      <div style={{ display: 'block', width: '100%', padding: '0 2%' }}>
+        <ColumnHeader width={'10%'}>No</ColumnHeader>
+        <ColumnHeader width={'20%'}>예측결과</ColumnHeader>
+        <ColumnHeader width={'70%'}>입력변수</ColumnHeader>
+      </div>
       {localWeight.map((value: any, i: number) => {
-        return <RowItem key={i} number={i} value={localValue} weight={value} columns={columns} />
+        return (
+          <RowItem key={i} number={i} value={localValue} weight={value} columns={columns} predResult={predResult} />
+        )
       })}
     </div>
   )
@@ -75,6 +84,14 @@ const Row = styled.div`
   border: 1px solid #d5dcef;
   border-radius: 10px;
   margin: 10px 0;
+`
+
+const ColumnHeader = styled.div<{ width: string }>`
+  display: inline-block;
+  text-align: center;
+  width: ${(props: any) => (props.width ? props.width : '100%')};
+  color: #002d65;
+  font-family: 'Helvetica Neue';
 `
 
 const Idx = styled.div`

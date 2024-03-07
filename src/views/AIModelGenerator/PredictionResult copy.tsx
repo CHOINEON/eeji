@@ -199,9 +199,11 @@ const PredictionResult = ({ data }: any) => {
   // }
 
   return (
-    <ChartWrapper isClassification={selectedData.isClassification}>
-      <Line options={options} data={chartData} />
-    </ChartWrapper>
+    <>
+      <ChartWrapper isClassification={selectedData.isClassification}>
+        <Line options={options} data={chartData} />
+      </ChartWrapper>
+    </>
   )
 }
 

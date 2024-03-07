@@ -10,6 +10,7 @@ const UserApi = {
 
   getCompanyList: async (): Promise<TResponseType<ICompanyList>> => {
     const { data } = await axiosPrivate.get(`api/company`)
+    console.log('getCompanyList api call and response is::', data)
     return data
   },
 }

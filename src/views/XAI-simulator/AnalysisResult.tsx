@@ -4,10 +4,21 @@ import Title from 'antd/es/typography/Title'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
 import InfoCircle from '../AIModelGenerator/components/Icon/InfoCircle'
 import AnalysisGrid from '../XAI-simulator/Visualization/Classification/AnalysisGrid'
+import { useRecoilValue } from 'recoil'
+import { xaiResultStore } from './store/analyze/atom'
+import ModelPerformance from './ModelPerformance'
+import FeatureAnalysis from 'views/AnalysisResult/FeatureAnalysis'
+import FeatureImportance from 'views/AIModelGenerator/FeatureImportance'
 
-const AnalysisResult = ({ data }: any) => {
-  const [transformedData, setTransformedData] = useState({ xai_local: [], local_value: [] })
-  // const [transformedData, setTransformedData] = useState({ xai_local: [], local_value: [], pred_result: [] })
+const AnalysisResult = () => {
+  const data = useRecoilValue(xaiResultStore)
+
+  const [transformedData, setTransformedData] = useState({
+    xai_local: [],
+    local_value: [],
+    pred_result: {},
+    xai_pdp: {},
+  })
 
   useEffect(() => {
     // console.log('data', data)
@@ -15,13 +26,18 @@ const AnalysisResult = ({ data }: any) => {
     setTransformedData({
       xai_local: transformDataByRow(data.xai_local),
       local_value: transformDataByRow(data.input_data),
-      // pred_result: transformPredData(data.predict_result.predict_result),
+      pred_result: transformPredData(data.predict_result.predict_result),
+      xai_pdp: data.xai_pdp,
     })
 
     // transformDataByRow(data.input_data)
 
     //xai-local formatting
   }, [data])
+
+  useEffect(() => {
+    console.log('transformedData', transformedData)
+  }, [transformedData])
 
   const transformDataByRow = (rawData: any) => {
     const sample_size = data.sample_size //1200
@@ -39,19 +55,20 @@ const AnalysisResult = ({ data }: any) => {
   }
 
   const transformPredData = (rawData: any) => {
-    const sample_size = data.sample_size //1200
-    const transformedData = []
+    // console.log('rawData:', rawData)
+    // const sample_size = data.sample_size //1200
+    // const transformedData = []
 
-    for (let i = 0; i < sample_size; i++) {
-      const newDataPoint: any = {}
+    // for (let i = 0; i < sample_size; i++) {
+    //   const newDataPoint: any = {}
 
-      for (const feature of data.feature_list) {
-        newDataPoint[feature] = rawData[i]
-      }
-      console.log('newDataPoint:', newDataPoint)
-      transformedData.push(newDataPoint)
-    }
-    return transformedData
+    //   for (const feature of data.feature_list) {
+    //     newDataPoint[feature] = rawData[i]
+    //   }
+    //   console.log('newDataPoint:', newDataPoint)
+    //   transformedData.push(newDataPoint)
+    // }
+    return rawData
   }
 
   return (
@@ -77,7 +94,7 @@ const AnalysisResult = ({ data }: any) => {
                 <AnalysisGrid
                   localWeight={transformedData.xai_local}
                   localValue={transformedData.local_value}
-                  // predResult={transformedData.pred_result}
+                  predResult={transformedData.pred_result}
                   columns={Object.keys(data.input_data)}
                 />
               </RoundedBox>
@@ -85,7 +102,7 @@ const AnalysisResult = ({ data }: any) => {
           </Col>
           <Col span={6}>
             <RoundedBox height={'70vh'}>
-              {/* <FeatureAnalysis />  안에 컨텐츠만 따로 div에 담도록 모듈 수정해야됨*/}
+              <FeatureImportance data={data?.xai_global[0]} />
             </RoundedBox>
           </Col>
         </Row>

@@ -10,7 +10,7 @@ import { usedVariableStore, variableStore } from './store/variable/atom'
 import useGetDatasets from 'hooks/queries/useGetDatasets'
 import DataEditModal from './components/DataInfo/DataEditModal'
 import { analysisResponseAtom } from './store/response/atoms'
-import { Empty } from 'antd'
+import Empty from './components/Empty/Empty'
 
 const DataSet = () => {
   const [loading, setLoading] = useState(false)
@@ -84,38 +84,22 @@ const DataSet = () => {
 
   return (
     <>
-      <div>
+      <div style={{ textAlign: 'center', margin: 'auto' }}>
         {data?.data.length > 0 ? (
           <Row className="row-column-title">
-            {/* <Col flex="451px"></Col>
-            <Col style={{ textAlign: 'center' }} flex="100px">
-              Target
-            </Col>
-            <Col style={{ textAlign: 'center' }} flex="100px">
-              Total Size
-            </Col>
-            <Col style={{ textAlign: 'center' }} flex="200px">
-              Created
-            </Col>
-            <Col style={{ textAlign: 'center' }} flex="200px">
-              Updated
-            </Col>
-            <Col style={{ textAlign: 'center' }} flex="230px">
-              Created by
-            </Col> */}
+            <Spin tip="데이터셋 로드 중..." spinning={loading} style={{ marginTop: '100px' }}>
+              <div>
+                {data?.data.map((data: any, index: number) => (
+                  <Col key={index}>
+                    <DescriptionBox data={data} onSelect={handleSelect} />
+                  </Col>
+                ))}
+              </div>
+            </Spin>
           </Row>
         ) : (
-          !loading && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: '200px' }} />
+          !loading && <Empty />
         )}
-        <Spin tip="데이터셋 로드 중..." spinning={loading} style={{ marginTop: '100px' }}>
-          <div>
-            {data?.data.map((data: any, index: number) => (
-              <Col key={index}>
-                <DescriptionBox data={data} onSelect={handleSelect} />
-              </Col>
-            ))}
-          </div>
-        </Spin>
       </div>
       <DataEditModal />
     </>

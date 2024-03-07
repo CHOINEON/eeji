@@ -87,7 +87,7 @@ interface IOption {
 export const dataPropertyState = atom({
   key: 'dataProperty',
   default: {
-    algo_type: 1,
+    algo_type: undefined,
     date_format: '',
     name: '',
     date_col: '',

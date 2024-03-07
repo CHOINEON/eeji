@@ -1,25 +1,9 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 import { Box } from '@chakra-ui/react'
-import styled from '@emotion/styled'
-import { Button, Col, Row, Tag, Select, Card, SelectProps } from 'antd'
-import Title from 'antd/es/typography/Title'
-
-import {
-  Chart as ChartJS,
-  Colors,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Legend,
-  ScriptableContext,
-} from 'chart.js'
-import { ChartData } from 'chart.js'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import AnalysisResult from './AnalysisResult'
-import { customModelStore } from './store/analyze/atom'
+import { customModelStore, xaiResultStore } from './store/analyze/atom'
 import UploadPage from './UploadPage'
 import HistorySidebar from 'components/sidebar/HistorySidebar'
 import Page from 'components/progressbar/page'
@@ -51435,63 +51419,21 @@ const data_short = {
   },
 }
 const XAIsimulator = () => {
-  const analysisResult = useRecoilValue(customModelStore)
-  // const short_pdp_keys = Object.keys(data_short.xai_pdp)
-  // const short_pdp_values = Object.values(data_short.xai_pdp)
-  // const { Option } = Select
+  const analysisResult = useRecoilValue(xaiResultStore)
 
-  // const options: SelectProps['options'] = short_pdp_keys.map((key) => ({
-  //   value: key,
-  //   label: key,
-  // }))
-
-  // const [selectedOption, setSelectedOption] = useState<string | null>(null)
-
-  // const [myData, setMyData] = useState<{ datasets: any[]; labels: string[] }>({
-  //   datasets: [],
-  //   labels: [],
-  // })
-  // const handleChange = (value: string) => {
-  //   setSelectedOption(value)
-  //   const selectedData = data_short.xai_pdp[value]
-  //   setMyData({
-  //     datasets: [
-  //       {
-  //         label: `Dataset ${value}`,
-  //         data: selectedData,
-  //         borderColor: '#86C162',
-  //         backgroundColor: '#1B73FF69',
-  //       },
-  //     ],
-  //     labels: Array.from({ length: selectedData.length }, (_, i) => `[${i * 11.11}]`),
-  //   })
-  // }
+  // useEffect(() => {
+  //   console.log('result:', analysisResult.data)
+  // }, [analysisResult])
 
   return (
-    // <>
-    //   <Card style={{ width: '100%' }}>
-    //     <Box
-    //       style={{
-    //         position: 'relative',
-    //         zIndex: 1000,
-    //         height: '100%',
-    //       }}
-    //     >
-    //       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-    //         <Title style={{ fontSize: '20px', fontColor: '#002D65' }}> Partical Dependence Plot CO </Title>
-    //         <Select style={{ width: '60%' }} onChange={handleChange} options={options} />
-    //       </div>{' '}
-    //       {/* {analysisResult.data.length > 0 ? <AnalysisResult /> : <UploadPage />} */}
-    //       <ChartWrapper>
-    //         <Line data={myData} />
-    //       </ChartWrapper>
-    //     </Box>{' '}
-    //   </Card>
-    // </>
-
-    <Box style={{ position: 'relative', zIndex: 1000, width: '100%', height: '100%' }}>
-      {analysisResult?.sample_size > 0 ? <AnalysisResult /> : <UploadPage />}
-    </Box>
+    <>
+      <Box style={{ position: 'relative', zIndex: 1000, width: '100%', height: '100%' }}>
+        {/* {analysisResult?.sample_size > 0 ? <AnalysisResult /> : <UploadPage />} */}
+        {/* <AnalysisResult data={data_short} /> */}
+        {/* <Page /> */}
+        <PDP_Plot />
+      </Box>
+    </>
   )
 }
 
