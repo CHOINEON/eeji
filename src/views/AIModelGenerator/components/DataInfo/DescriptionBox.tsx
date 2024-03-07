@@ -219,6 +219,7 @@ const UserContent = styled(Content)`
 `
 
 const TitleWrapper = styled.div`
+  // text-align: center;
   // border: 1px solid red;
   display: block;
   min-width: 400px;

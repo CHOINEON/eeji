@@ -87,10 +87,10 @@ const DataImportModal = (props: any) => {
     const dataFile = uploadedData.file
     // console.log('dataFile::', dataFile)
 
-    if (dataFile && dataFile.size > 209715200) {
+    if (dataFile && dataFile.size > 33554432) {
       message.open({
         type: 'error',
-        content: '200MB 이상의 파일은 업로드 할 수 없습니다.',
+        content: '데이터가 너무 큽니다(최대 32MB)',
         duration: 1,
         style: {
           margin: 'auto',
