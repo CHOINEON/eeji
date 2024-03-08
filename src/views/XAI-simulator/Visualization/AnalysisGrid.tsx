@@ -1,59 +1,34 @@
 import styled from '@emotion/styled'
 import React from 'react'
-import { useRecoilValue } from 'recoil'
-import { customModelStore } from 'views/XAI-simulator/store/analyze/atom'
 import HorizontalStackedBarChart from './HorizontalStackedBarChart'
 
-const single_data = [
-  {
-    no: 1,
-    name: 'Mira JO',
-    age: 30,
-    status: 'Normal',
-    result: { age: 40, weight: 30, smoke: 30 },
-  },
-  {
-    no: 2,
-    name: 'Songhwan KIM',
-    age: 30,
-    status: 'Danger',
-    result: { age: 10, weight: 30, smoke: 60 },
-  },
-]
-
-const RowItem = (props: any) => {
-  // console.log('props', props)
+const RowItem = ({ number, value, weight, pred }: any) => {
+  // const { number, columns, predResult, value, weight } = props
+  // console.log('RowItem props', props)
   // const itemObj = item.item
 
   ////////24.03.05 Backend 요청으로 input data가 모두 0인 row를 걸러냄
   return (
-    !Object.values(props.weight).every((val: any) => val == 0) && (
-      <DataRow style={{ padding: '0 2%', marginBottom: '1%' }}>
-        <div style={{ width: '10%', textAlign: 'center' }}>{props.number}</div>
-        <div style={{ width: '20%', textAlign: 'center' }}>
-          pred : <b>{Object.values(props.predResult)[props.number]}</b>
-        </div>
-        <div style={{ width: '70%', height: '50px !important' }}>
-          <HorizontalStackedBarChart {...props} />
-        </div>
-        {/* <div style={{ width: '10%' }}>{itemObj?.name}</div>
-      <div style={{ width: '10%' }}>{itemObj?.age}</div>
-      <div style={{ width: '10%' }}>{itemObj?.status}</div>
-      <div style={{ height: '50px !important' }}>
-        <HorizontalStackedBarChart data={itemObj.result} />
-      </div> */}
-      </DataRow>
-    )
+    <>
+      {!Object.values(weight).every((val: any) => val == 0) && (
+        <DataRow style={{ padding: '0 2%', marginBottom: '1%' }}>
+          <div style={{ width: '10%', textAlign: 'center' }}>{number}</div>
+          <div style={{ width: '20%', textAlign: 'center' }}>
+            pred : <b>{pred}</b>
+          </div>
+          <div style={{ width: '70%', height: '50px !important' }}>
+            <HorizontalStackedBarChart weight={weight} value={value} />
+          </div>
+        </DataRow>
+      )}
+    </>
   )
 }
 
-const AnalysisGrid = ({ localWeight, localValue, columns, predResult }: any) => {
-  // console.log('predResult:', predResult)
-  // console.log('columns:', columns)
+const AnalysisGrid = (props: any) => {
+  // console.log('AnalysisGrid:', props)
+  const { localWeight, localValue, predResult } = props
 
-  // const analysisResult = useRecoilValue(customModelStore)
-
-  //pred={predResult[i]}
   return (
     <>
       <div style={{ display: 'block', width: '100%', padding: '0 2%' }}>
@@ -61,16 +36,14 @@ const AnalysisGrid = ({ localWeight, localValue, columns, predResult }: any) => 
         <ColumnHeader width={'20%'}>예측결과</ColumnHeader>
         <ColumnHeader width={'70%'}>입력변수</ColumnHeader>
       </div>
-      {localWeight.map((value: any, i: number) => {
-        return (
-          <RowItem key={i} number={i} value={localValue} weight={value} columns={columns} predResult={predResult} />
-        )
+      {localValue?.map((value: any, i: number) => {
+        return <RowItem key={i} number={i} value={value} weight={localWeight[i]} pred={predResult[i]} />
       })}
     </>
   )
 }
 
-export default AnalysisGrid
+export default React.memo(AnalysisGrid)
 
 export const DataRow = styled.div`
   display: flex;
@@ -87,11 +60,11 @@ export const DataRow = styled.div`
 `
 
 export const ColumnHeader = styled.div<{ width: string }>`
+  font-family: 'Helvetica Neue';
   display: inline-block;
   text-align: center;
   width: ${(props: any) => (props.width ? props.width : '100%')};
   color: #002d65;
-  font-family: 'Helvetica Neue';
 `
 
 const Idx = styled.div`

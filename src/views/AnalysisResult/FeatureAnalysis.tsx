@@ -8,6 +8,7 @@ import FeatureImportance from 'views/AIModelGenerator/FeatureImportance'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
 import ModelPerformance from 'views/XAI-simulator/ModelPerformance'
+import { colorsForDoughnut } from 'views/AIModelGenerator/components/Chart/colors'
 
 type ScoreType = {
   MAE?: number
@@ -18,13 +19,15 @@ type ScoreType = {
 
 const FeatureAnalysis = ({ data, input }: any) => {
   const analysisResponse = useRecoilValue(analysisResponseAtom)
+
+  console.log('analysisResponse:', analysisResponse)
   const [modelIdx, setModelIdx] = useRecoilState(selectModelState)
   const [options, setOptions] = useState([])
   const [chartData, setChartData] = useState({ labels: [], values: [] })
   const [error, setError] = useState<ScoreType>({})
-
+  useEffect(() => console.log('error:', error), [error])
   useEffect(() => {
-    console.log('analysisResponse:', analysisResponse)
+
     if (analysisResponse.length > 0) {
       const newOption: Array<any> = []
       analysisResponse.map((value: any, index: number) => {
@@ -97,7 +100,7 @@ const FeatureAnalysis = ({ data, input }: any) => {
             </AITextContainer>
           </div>
           <div className="block float-left w-100">
-            <FeatureImportance data={chartData} />
+            <FeatureImportance data={chartData} colors={colorsForDoughnut} />
           </div>
         </>
       </ComponentContainer>

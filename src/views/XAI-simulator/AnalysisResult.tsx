@@ -19,12 +19,13 @@ const AnalysisResult = () => {
   useEffect(() => {
     console.log('data', data)
 
-    setTransformedData({
-      xai_local: transformDataByRow(data.xai_local),
-      local_value: transformDataByRow(data.input_data),
-      pred_result: data.predict_result.predict_result,
-      xai_pdp: data.xai_pdp,
-    })
+    // setTransformedData({
+    //   ...transformedData,
+    //   xai_local: transformDataByRow(data.xai_local),
+    //   local_value: transformDataByRow(data.input_data),
+    //   pred_result: data.predict_result.predict_result,
+    //   xai_pdp: data.xai_pdp,
+    // })
 
     const newObj = data.feature_list.reduce((acc, curr) => {
       console.log(curr)
@@ -87,10 +88,10 @@ const AnalysisResult = () => {
                   </div>
                 </VariableRow>
                 <AnalysisGrid
-                  localWeight={transformedData.xai_local}
-                  localValue={transformedData.local_value}
-                  predResult={transformedData.pred_result}
-                  columns={Object.keys(data.input_data)}
+                // localWeight={transformedData.xai_local}
+                // localValue={transformedData.local_value}
+                // predResult={transformedData.pred_result}
+                // columns={Object.keys(data.input_data)}
                 />
               </RoundedBox>
             </Row>
