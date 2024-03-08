@@ -23,6 +23,12 @@ const ModelApi = {
     const { data } = await axiosPrivate.post(`api/save_custom_model_new/${params.user_id}`, params.payload)
     return data
   },
+
+  //특정 유저를 위해 모델 리스트를 db에서 갖고옴
+  postModelList: async (user_id: string): Promise<TResponseType<object>> => {
+    const { data } = await axiosPrivate.post(`/api/model_list/${user_id}`)
+    return data
+  },
 }
 
 export default ModelApi

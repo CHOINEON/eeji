@@ -7,10 +7,13 @@ import useGetDatasets from 'hooks/queries/useGetDatasets'
 import ModelList from './ModelSelect/ModelList'
 import { useMutation } from 'react-query'
 import XaiApi from 'apis/XaiApi'
+import ModelApi from 'apis/ModelApi'
+import { customModelStore, xaiResultStore } from '../store/analyze/atom'
 import { customModelStore, transformedXaiResultStore, xaiResultStore } from '../store/analyze/atom'
 import { transformDataByRow } from '../AnalysisResult_0308'
 // import { transformDataByRow } from '../AnalysisResult'
 import { colorsForStackedBarChart as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
+
 
 const SavedModelImport = () => {
   const [xaiResult, setXaiResult] = useRecoilState(xaiResultStore)
@@ -24,7 +27,7 @@ const SavedModelImport = () => {
   const [isDisabled, setIsDisabled] = useState(false)
 
   const { data } = useGetDatasets(localStorage.getItem('userId'))
-  const { mutate: mutateGetResult } = useMutation(XaiApi.getXaiAnalysisResult, {
+  const { mutate: mutateGetResult } = useMutation(ModelApi.postModelList, {
     onSuccess: (result: any) => {
       console.log('mutateGetResult:', result)
 
