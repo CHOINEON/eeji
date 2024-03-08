@@ -57,5 +57,20 @@ export interface IModelDataReq {
   user_id: string
   formData?: FormData
   params?: URLSearchParams
-  payload?: IModelVariablePostReq
+  payload?: IModelVariablePostReq | IModelSaveReqParams
+}
+
+export interface IModelReqParam {
+  user_id: string
+  com_id: string
+  uuid: string
+}
+
+export interface IModelSaveReqParams {
+  user_id: string
+  com_id: string
+  uuid: string
+  model_name: string
+  target_y: string
+  is_classification: boolean
 }

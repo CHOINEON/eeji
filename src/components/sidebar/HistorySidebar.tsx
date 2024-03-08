@@ -138,9 +138,9 @@ const HistorySidebar = () => {
     setSidebarItem(mockData)
   }, [])
 
-  useEffect(() => {
-    console.log('sidebarItem updated:', sidebarItem)
-  }, [sidebarItem])
+  // useEffect(() => {
+  //   console.log('sidebarItem updated:', sidebarItem)
+  // }, [sidebarItem])
 
   return (
     <SidebarContainer>

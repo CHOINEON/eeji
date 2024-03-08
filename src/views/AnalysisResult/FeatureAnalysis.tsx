@@ -1,90 +1,38 @@
-import { InfoCircleOutlined } from '@ant-design/icons'
 import styled from '@emotion/styled'
 import { Select, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 import FeatureImportance from 'views/AIModelGenerator/FeatureImportance'
-import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
+import { analysisResponseAtom, filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
 import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
 import ModelPerformance from 'views/XAI-simulator/ModelPerformance'
 import { colorsForDoughnut } from 'views/AIModelGenerator/components/Chart/colors'
-
-type ScoreType = {
-  MAE?: number
-  MSE?: number
-  RMSE?: number
-  F1_SCORE?: number
-}
+import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 
 const FeatureAnalysis = ({ data, input }: any) => {
   const analysisResponse = useRecoilValue(analysisResponseAtom)
+  // const selectedData = useRecoilValue(selectedDataState)
+  // const newdata = useRecoilValue(filteredResultState('feature_data'))
 
-  console.log('analysisResponse:', analysisResponse)
   const [modelIdx, setModelIdx] = useRecoilState(selectModelState)
-  const [options, setOptions] = useState([])
   const [chartData, setChartData] = useState({ labels: [], values: [] })
-  const [error, setError] = useState<ScoreType>({})
-  useEffect(() => console.log('error:', error), [error])
+
   useEffect(() => {
-
-    if (analysisResponse.length > 0) {
-      const newOption: Array<any> = []
-      analysisResponse.map((value: any, index: number) => {
-        newOption.push({ value: index, label: index === 0 ? 'INEEJI Pred' : `Prediction ${index}` })
-      })
-
-      setOptions(newOption)
-    }
-
-    setError(analysisResponse[modelIdx].error)
+    // console.log('selectedData:', selectedData)
+    // console.log('newdata:', newdata)
     setChartData(analysisResponse[modelIdx]['feature_data'][0])
-  }, [analysisResponse])
-
-  const handleChange = (value: string) => {
-    // console.log(`selected ${value}`)
-    setChartData(analysisResponse[parseInt(value)]['feature_data'][0])
-    setError(analysisResponse[modelIdx].error)
-    setModelIdx(parseInt(value))
-  }
-
-  const content = (
-    <div>
-      {error.MAE ? <p>MAE : {error.MAE}</p> : null}
-      {error.MSE ? <p>MSE : {error.MSE}</p> : null}
-      {error.RMSE ? <p>RMSE : {error.RMSE}</p> : null}
-      {error.F1_SCORE ? <p>F1_SCORE : {error.F1_SCORE}</p> : null}
-    </div>
-  )
+  }, [modelIdx])
 
   return (
     <>
-      <ModelPerformance data={error} />
+      <ModelPerformance />
       <ComponentContainer>
         <SubTitle>
           Feature Importance
           <InfoCircle content="변수 중요도가 높을 수록 예측 모델에 대한 영향력이 큽니다." />
-          <Tooltip title={content}>
-            <InfoCircleOutlined style={{ fontSize: '15px', color: '#453af6' }} />
-          </Tooltip>
-          {options.length > 1 && (
-            <div style={{ width: '120px', margin: '0 10px', display: 'inline-block' }}>
-              <Select
-                style={{ width: 120 }}
-                options={options}
-                onChange={handleChange}
-                defaultValue={options[0]?.value}
-              />
-            </div>
-          )}
         </SubTitle>
         <>
-          {/* {contents.map((value: any) => {
-          ;<p>
-            <AIbutton>AI</AIbutton>
-            <span style={{ color: '#002D65', fontSize: '12px', marginBottom: '5px' }}>{value}</span>
-          </p>
-        })} */}
           <div className="block float-left w-100">
             <AIbutton>AI</AIbutton>
             <AITextContainer>
@@ -113,8 +61,8 @@ export default FeatureAnalysis
 const ComponentContainer = styled.div`
   display: block;
   float: left;
-  margin: 38px 15px;
-  min-height: 460px;
+  margin: 5px;
+  min-height: 430px;
   background-color: #f6f8ff;
   border: 1px solid #a3afcf;
   border-radius: 10px;
@@ -126,7 +74,7 @@ const Title = styled.div`
   float: left;
   color: #002d65;
   font-weight: bold;
-  padding: 25px 25px 15px 25px;
+  padding: 20px;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
 `
 

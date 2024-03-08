@@ -213,7 +213,7 @@ export default PredictionResult
 
 const ChartWrapper = styled.div<{ isClassification: number }>`
   // display: ${(props: any) => (props.toggle ? 'block' : 'none')};
-  border: 1px solid pink;
+  // border: 1px solid pink;
   width: ${(props: any) => (props.isClassification === 1 ? '200px' : '100%')};
   height: ${(props: any) => (props.isClassification === 1 ? '600px' : '100%')};
   position: relative;

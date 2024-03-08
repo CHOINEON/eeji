@@ -112,6 +112,7 @@ const externalTooltipHandler = (context: any) => {
 }
 
 const options: ChartOptions<'bar'> = {
+  // barPercentage: 0.8,
   responsive: true,
   maintainAspectRatio: false, //will take up entire container
   indexAxis: 'y',
@@ -156,6 +157,7 @@ interface IDataset {
   label: string
   data: Array<any>
   backgroundColor: string
+  borderRadius: number
 }
 
 interface IStackedBarChart {
@@ -181,16 +183,19 @@ const HorizontalStackedBarChart = (props: IStackedBarChart) => {
 
     //datasets 안에 들어갈 내용
     Object.keys(weight).forEach((col: any, i: number) => {
+      // console.log('col:', col)
+
       const totalLocalValue: number = Object.values(weight).reduce((acc: number, curr: number) => {
         return (acc + curr) as number
       }, 0)
       // console.log('total:', totalLocalValue)
-      // console.log('weight[i]:', weight[i])
+      // console.log('weight[i]:', col[i])
 
       newArr.push({
-        label: `${col}의 실제값(` + value[i] + ')',
-        data: [(weight[i] / totalLocalValue) * 100],
+        label: `${col}의 실제값(` + value[col] + ')',
+        data: [(weight[col] / totalLocalValue) * 100],
         backgroundColor: STACKED_BAR_CHART_COLORS[i],
+        borderRadius: 5,
       })
     })
     // console.log('newArr: ', newArr)

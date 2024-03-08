@@ -57,9 +57,6 @@ export const localAttrState = selector({
     const filterValuesArray = Object.keys(activeList).filter((key) => !activeList[key])
     // console.log('filterValuesArray:', filterValuesArray)
 
-    //  { 0: true, 1: false, 2: false, 3: false }
-    // ['1','2','3']
-
     if (filterValuesArray.length > 0) {
       let newObj: Array<any> = []
       newObj = localAttr

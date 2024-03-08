@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import DescriptionBox, { DescriptionBoxProps } from './components/DataInfo/DescriptionBox'
 import { Button, Col, Row, message, Spin } from 'antd'
-import DataImportModal from './components/DataInfo/DataImportModal'
 import './style/data-analysis-style.css'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
@@ -38,7 +37,7 @@ const DataSet = () => {
   }, [data])
 
   const handleSelect = (data: any) => {
-    console.log('Dataset selected ::', data)
+    // console.log('Dataset selected ::', data)
 
     setUsedVariable([])
     setSelectedData({

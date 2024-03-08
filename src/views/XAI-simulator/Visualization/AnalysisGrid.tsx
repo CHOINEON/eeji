@@ -4,7 +4,7 @@ import HorizontalStackedBarChart from './HorizontalStackedBarChart'
 
 const RowItem = ({ number, value, weight, pred }: any) => {
   // const { number, columns, predResult, value, weight } = props
-  // console.log('RowItem props', props)
+  // console.log('RowItem weight', weight)
   // const itemObj = item.item
 
   ////////24.03.05 Backend 요청으로 input data가 모두 0인 row를 걸러냄
@@ -14,7 +14,7 @@ const RowItem = ({ number, value, weight, pred }: any) => {
         <DataRow style={{ padding: '0 2%', marginBottom: '1%' }}>
           <div style={{ width: '10%', textAlign: 'center' }}>{number}</div>
           <div style={{ width: '20%', textAlign: 'center' }}>
-            pred : <b>{pred}</b>
+            <b>{pred}</b>
           </div>
           <div style={{ width: '70%', height: '50px !important' }}>
             <HorizontalStackedBarChart weight={weight} value={value} />

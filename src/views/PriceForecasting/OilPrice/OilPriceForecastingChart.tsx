@@ -9,7 +9,6 @@ import fetchChartData from '../../../apis/PriceForecastApi'
 import { Line } from 'react-chartjs-2'
 import { Title } from 'views/AnalysisResult/components/Title'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
-import ModelPerformance from 'views/XAI-simulator/ModelPerformance'
 const { Text, Link } = Typography
 
 ChartJS.register(zoomPlugin, annotationPlugin, ChartDataLabels)
@@ -251,15 +250,8 @@ const OilPriceChart = () => {
     },
   }
 
-  // function GenerateChartOptions(lastDay: string) {
-
-  //   setChartOptions(options)
-  //   // return options
-  // }
-
   return (
     <>
-      <ModelPerformance></ModelPerformance>
       <Spin tip="지표 데이터 로드 중..." spinning={loading} style={{ marginTop: '100px' }}>
         <ComponentContainer
           style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
