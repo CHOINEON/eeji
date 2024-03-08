@@ -23,15 +23,24 @@ const SavedModelImport = () => {
   const { data } = useGetDatasets(localStorage.getItem('userId'))
   const { mutate: mutateGetResult } = useMutation(ModelApi.postModelList, {
     onSuccess: (result: any) => {
-      // console.log('mutateGetResult:', result)
+      console.log('result:', result.data[0])
       setXaiResult(result)
       setSaving(false)
       setModal(null)
     },
     onError: (error: any, query: any) => {
-      //
+      console.log('error: ', error)
     },
   })
+  console.log('mutateGetResult:', xaiResult)
+
+  ModelApi.postModelList('admin')
+    .then((result) => {
+      console.log('postModelList result type:', typeof result)
+    })
+    .catch((error) => {
+      console.error('postModelList error:', error)
+    })
 
   useEffect(() => {
     console.log('test:', modelId)
@@ -49,7 +58,7 @@ const SavedModelImport = () => {
       com_id: com_id,
       uuid: uuid,
     }
-    // console.log('payload:', payload)
+    console.log('payload:', payload)
     mutateGetResult({ user_id, payload })
   }
 
