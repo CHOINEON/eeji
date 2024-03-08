@@ -8,12 +8,11 @@ import ModelList from './ModelSelect/ModelList'
 import { useMutation } from 'react-query'
 import XaiApi from 'apis/XaiApi'
 import ModelApi from 'apis/ModelApi'
-import { customModelStore, xaiResultStore } from '../store/analyze/atom'
+// import { customModelStore, xaiResultStore } from '../store/analyze/atom'
 import { customModelStore, transformedXaiResultStore, xaiResultStore } from '../store/analyze/atom'
 import { transformDataByRow } from '../AnalysisResult_0308'
 // import { transformDataByRow } from '../AnalysisResult'
 import { colorsForStackedBarChart as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
-
 
 const SavedModelImport = () => {
   const [xaiResult, setXaiResult] = useRecoilState(xaiResultStore)
@@ -49,7 +48,7 @@ const SavedModelImport = () => {
       setModal(null)
     },
     onError: (error: any, query: any) => {
-      //
+      console.log('error: ', error)
     },
   })
 
@@ -65,7 +64,7 @@ const SavedModelImport = () => {
       com_id: com_id,
       uuid: uuid,
     }
-    // console.log('payload:', payload)
+    console.log('payload:', payload)
     mutateGetResult({ user_id, payload })
   }
 

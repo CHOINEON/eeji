@@ -1,7 +1,8 @@
 import React from 'react'
-import { CustomerServiceOutlined, QuestionCircleOutlined } from '@ant-design/icons'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 import useModal from 'hooks/useModal'
-import { FloatButton } from 'antd'
+import { Button } from 'antd'
+import CustomerService from './../icons/CustomerService.png'
 
 const Feedback = () => {
   const { openModal, closeModal } = useModal()
@@ -18,7 +19,20 @@ const Feedback = () => {
     })
   }
 
-  return <FloatButton icon={<CustomerServiceOutlined />} onClick={handleClick} style={{ right: 24 }} />
+  return (
+    <Button
+      onClick={handleClick}
+      style={{
+        top: '21px',
+        left: '1609px',
+        width: '82px',
+        height: '30px',
+        backgroundImage: `url(${CustomerService})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }}
+    ></Button>
+  )
 }
 
 export default Feedback
