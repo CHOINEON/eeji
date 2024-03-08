@@ -7,6 +7,7 @@ import useGetDatasets from 'hooks/queries/useGetDatasets'
 import ModelList from './ModelSelect/ModelList'
 import { useMutation } from 'react-query'
 import XaiApi from 'apis/XaiApi'
+import ModelApi from 'apis/ModelApi'
 import { customModelStore, xaiResultStore } from '../store/analyze/atom'
 
 const SavedModelImport = () => {
@@ -20,7 +21,7 @@ const SavedModelImport = () => {
   const [isDisabled, setIsDisabled] = useState(false)
 
   const { data } = useGetDatasets(localStorage.getItem('userId'))
-  const { mutate: mutateGetResult } = useMutation(XaiApi.getXaiAnalysisResult, {
+  const { mutate: mutateGetResult } = useMutation(ModelApi.postModelList, {
     onSuccess: (result: any) => {
       // console.log('mutateGetResult:', result)
       setXaiResult(result)
@@ -31,6 +32,18 @@ const SavedModelImport = () => {
       //
     },
   })
+
+  // const { mutate: mutateGetResult } = useMutation(XaiApi.getXaiAnalysisResult, {
+  //   onSuccess: (result: any) => {
+  //     // console.log('mutateGetResult:', result)
+  //     setXaiResult(result)
+  //     setSaving(false)
+  //     setModal(null)
+  //   },
+  //   onError: (error: any, query: any) => {
+  //     //
+  //   },
+  // })
 
   // useEffect(() => {
   //   console.log('SavedModelImport list:', data)
