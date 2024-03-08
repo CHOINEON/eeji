@@ -7,12 +7,14 @@ import { Modal } from 'antd'
 import SendFeedback from '../../views/Main/SendFeedback'
 import DataImportModal from '../../views/AIModelGenerator/components/DataInfo/DataImportModal'
 import SavedModelImport from '../../views/XAI-simulator/components/SavedModelImport'
+import ModelSaveModal from 'views/AIModelGenerator/components/Modal/ModelSaveModal'
 
 export const MODAL_TYPES = {
   UserModelImport: 'UserModelImport',
   SavedModelImport: 'SavedModelImport',
   DataImport: 'DataImport',
   SendFeedback: 'SendFeedback',
+  ModelSave: 'SaveModel',
 }
 
 const ModalComponents: any = {
@@ -20,15 +22,16 @@ const ModalComponents: any = {
   [MODAL_TYPES.UserModelImport]: UserModelImport,
   [MODAL_TYPES.SavedModelImport]: SavedModelImport,
   [MODAL_TYPES.SendFeedback]: SendFeedback,
+  [MODAL_TYPES.ModelSave]: ModelSaveModal,
 }
 
 const GlobalModal = () => {
   const [modal, setModal] = useRecoilState(modalState)
   const { modalType, modalProps, modalTitle } = modal || {}
 
-  // useEffect(() => {
-  //   console.log('GlobalModal:', modal)
-  // }, [modal])
+  useEffect(() => {
+    console.log('GlobalModal:', modalProps)
+  }, [modalProps])
 
   const renderComponent = () => {
     // console.log('modalType:', modalType)

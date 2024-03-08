@@ -33,14 +33,17 @@ ChartJS.register(
 )
 
 //https://itwithruilan.tistory.com/77 커스텀
-const PredictionResult = ({ data }: any) => {
+const PredictionResult = () => {
   const analysisResponse = useRecoilValue(analysisResponseAtom)
   const selectedData = useRecoilValue(selectedDataState)
   const [dataset, setDataset] = useState([])
 
   useEffect(() => {
-    // console.log('selectedData.isClassification:', selectedData.isClassification)
-    // console.log('analysisResponse:', analysisResponse)
+    console.log('selectedData:', selectedData)
+    console.log('PredictionResult analysisResponse:', analysisResponse)
+  }, [])
+
+  useEffect(() => {
     const arr: Array<any> = []
 
     //TODO: 일단 Classification 은 50개만 보여주게 slice 처리함
@@ -110,13 +113,9 @@ const PredictionResult = ({ data }: any) => {
     }
   }
 
-  useEffect(() => {
-    console.log('dataset:', dataset)
-  }, [dataset])
-
   const chartData = {
     labels:
-      selectedData.isClassification == 1
+      selectedData?.isClassification == 1
         ? [0, 1]
         : Array(analysisResponse[0]['pred_data']['pred'].length)
             .fill(null)
@@ -142,7 +141,7 @@ const PredictionResult = ({ data }: any) => {
       padding: 20,
     },
     responsive: true,
-    // maintainAspectRatio: false,
+    maintainAspectRatio: false,
     plugins: {
       datalabels: {
         display: false,
@@ -181,7 +180,7 @@ const PredictionResult = ({ data }: any) => {
       padding: 20,
     },
     responsive: true,
-    // maintainAspectRatio: false,
+    maintainAspectRatio: false,
     plugins: {
       datalabels: {
         display: false,
@@ -260,7 +259,7 @@ const PredictionResult = ({ data }: any) => {
       // Reuse the built-in legendItems generator
       const items = chart.options.plugins.legend.labels.generateLabels(chart)
 
-      console.log('items:', items)
+      // console.log('items:', items)
       items.forEach((item: any) => {
         const li = document.createElement('li')
         li.style.alignItems = 'center'
@@ -338,10 +337,11 @@ const ChartWrapper = styled.div`
   // display: ${(props: any) => (props.toggle ? 'block' : 'none')};
   // border: 1px solid pink;
   width: 100%;
-  height: 100%;
+  // height: 100%;
+  height: 600px;
   // width: ${(props: any) => (props.isClassification === 1 ? '200px' : '100%')};
   // height: ${(props: any) => (props.isClassification === 1 ? '600px' : '100%')};
   position: relative;
   float: left;
-  margin: 10px;
+  margin: 0 10px;
 `

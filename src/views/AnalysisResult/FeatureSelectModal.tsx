@@ -116,7 +116,8 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
       }
       const controller = new AbortController()
       // setController(controller)
-      console.log('custom model generate / payload:', payload)
+      // console.log('custom model generate / payload:', payload)
+
       mutateRunning({ type: 'request', payload, controller })
     }
   }

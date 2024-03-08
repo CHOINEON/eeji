@@ -342,7 +342,7 @@ const CustomTools = () => {
   return (
     <Container ref={componentRef}>
       <Row gutter={[24, 16]}>
-        <Col span={18}> {<PredictionResult data={predictionData} />}</Col>
+        {/* <Col span={18}> {<PredictionResult data={predictionData} />}</Col> */}
         <Col span={6}>
           {' '}
           <RoundedBox style={{ height: '635px', width: '350px' }}>

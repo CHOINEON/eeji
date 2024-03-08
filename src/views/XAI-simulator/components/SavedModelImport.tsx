@@ -8,30 +8,38 @@ import ModelList from './ModelSelect/ModelList'
 import { useMutation } from 'react-query'
 import XaiApi from 'apis/XaiApi'
 import ModelApi from 'apis/ModelApi'
-// import { customModelStore, xaiResultStore } from '../store/analyze/atom'
+
 import { customModelStore, transformedXaiResultStore, xaiResultStore } from '../store/analyze/atom'
-import { transformDataByRow } from '../AnalysisResult_0308'
+import { transformDataByRow } from '../AnalysisResult'
 // import { transformDataByRow } from '../AnalysisResult'
 import { colorsForStackedBarChart as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
 
 const SavedModelImport = () => {
   const [xaiResult, setXaiResult] = useRecoilState(xaiResultStore)
-  const [transformedData, setTransformedData] = useRecoilState(transformedXaiResultStore)
 
   const com_id = localStorage.getItem('companyId')
   const user_id = localStorage.getItem('userId').toString()
-  const [modelId, setModelId] = useState('1be13733ed4e48338c92e6a74fea9f40')
+
+  const [modelId, setModelId] = useState()
   const [saving, setSaving] = useState(false)
   const [modal, setModal] = useRecoilState(modalState)
   const [isDisabled, setIsDisabled] = useState(false)
+  const [data, setData] = useState([])
+  // const { data } = useGetDatasets(localStorage.getItem('userId'))
 
-  const { data } = useGetDatasets(localStorage.getItem('userId'))
-  const { mutate: mutateGetResult } = useMutation(ModelApi.postModelList, {
+  const { mutate: mutateGetModelList } = useMutation(XaiApi.getSavedModelList, {
     onSuccess: (result: any) => {
-      console.log('mutateGetResult:', result)
+      // console.log('mutateGetModelList:', result)
+      setData(result.data)
+    },
+    onError: (error: any, query: any) => {
+      //
+    },
+  })
 
-      //넣을때 포맷팅 해서 넣기..
-      // setXaiResult(result)
+  const { mutate: mutatePostResult } = useMutation(XaiApi.postModelForXaiResult, {
+    onSuccess: (result: any) => {
+      // console.log('mutateGetResult:', result)
 
       setXaiResult({
         sample_size: result.sample_size,
@@ -52,6 +60,10 @@ const SavedModelImport = () => {
     },
   })
 
+  useEffect(() => {
+    if (user_id) mutateGetModelList({ user_id: user_id })
+  }, [])
+
   const handleRunModel = () => {
     // '1be13733ed4e48338c92e6a74fea9f40'  // feature length : 4
     fetchGetResult(modelId) //feature length: 12
@@ -64,25 +76,23 @@ const SavedModelImport = () => {
       com_id: com_id,
       uuid: uuid,
     }
-    console.log('payload:', payload)
-    mutateGetResult({ user_id, payload })
+
+    // console.log('payload:', payload)
+    mutatePostResult(payload)
+  }
+
+  const handleSelect = (param: any) => {
+    setModelId(param)
+
   }
 
   return (
     <>
       <Spin tip="모델 로딩중 ..." spinning={saving}>
         <div>
-          <ModelList data={data?.data} />
+          <ModelList data={data} onSelect={handleSelect} />
         </div>
         <div style={{ margin: '25px 0' }}>
-          <p>**For developers</p>
-          <input
-            type="text"
-            value={modelId}
-            onInput={(e: any) => setModelId(e.target.value)}
-            placeholder="model uuid"
-            style={{ border: '1px soild red', width: '100%' }}
-          />
           <CancelButton onClick={() => setModal(null)}>Cancel</CancelButton>
           <CustomButton
             // className="block ant-btn ant-btn-primary"

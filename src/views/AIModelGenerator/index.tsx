@@ -7,10 +7,10 @@ import Step from '@mui/material/Step'
 import StepButton from '@mui/material/StepButton'
 import { useRecoilState } from 'recoil'
 import { stepCountStore } from './store/global/atom'
-import DataSet from './DataSet'
 import './style/styles.css'
 import { notification } from 'antd'
 import AnalysisResult from 'views/AnalysisResult'
+import DataSet from './DataSet'
 
 const Context = React.createContext({ name: 'Default' })
 
@@ -94,10 +94,7 @@ const AIModelGenerator = () => {
           </Box>
           <Box style={{ margin: '10px 8px' }}>
             {activeStep === 0 && <DataSet />}
-            {/* {activeStep === 1 && <CorrelationView />} */}
             {activeStep === 1 && <AnalysisResult />}
-
-            {/* <Box> {activeStep === 3 && <ModelSetting />}</Box>  */}
           </Box>
         </Box>
       </Context.Provider>

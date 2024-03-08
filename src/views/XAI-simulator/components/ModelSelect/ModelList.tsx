@@ -1,12 +1,9 @@
 import styled from '@emotion/styled'
 import { Tag } from 'antd'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 //모델명/타겟변수/모델유형
-
-const ModelRow = ({ item }: any) => {
-  // console.log('item:', item)
-
+const ModelRow = ({ item, active, onClick }: any) => {
   const ModelType = ({ isClassification }: any) => {
     const category = [
       { type: 'regression', isClassification: 0, color: '#2db7f5' },
@@ -34,14 +31,14 @@ const ModelRow = ({ item }: any) => {
     )
   }
 
-  const handleRowClick = (e: any) => {
-    console.log('handleRowClick:', e)
-  }
-
   return (
     <>
-      <Row role="button" onClick={handleRowClick}>
-        <ModelTitle>{item.name}</ModelTitle>
+      <Row
+        role="button"
+        onClick={onClick}
+        className={`hover:bg-[#D5DCEF] ${active === true ? 'bg-[#D5DCEF]' : 'bg-[#F6F8FF] '}`}
+      >
+        <ModelTitle>{item.model_name}</ModelTitle>
         <TargetText>{item.target_y}</TargetText>
         <ModelType isClassification={item.is_classification}></ModelType>
       </Row>
@@ -49,11 +46,18 @@ const ModelRow = ({ item }: any) => {
   )
 }
 
-const ModelList = ({ data }: any) => {
+const ModelList = ({ data, onSelect }: any) => {
+  const [btnActive, setBtnActive] = useState(0)
+
+  const toggleActive = (idx: number) => {
+    setBtnActive(idx)
+    onSelect(data[idx].model_id)
+  }
+
   return (
     <ModelListWrapper>
-      {data?.map((item: any, index: number) => (
-        <ModelRow item={item} key={index} />
+      {data?.map((item: any, idx: number) => (
+        <ModelRow key={idx} item={item} active={idx === btnActive} onClick={() => toggleActive(idx)} />
       ))}
     </ModelListWrapper>
   )
@@ -94,6 +98,7 @@ const Row = styled.div`
   padding: 5px 15px;
 `
 const ModelTitle = styled.div`
+  text-align: center;
   width: 56%;
   height: 100%;
   display: inline-block;

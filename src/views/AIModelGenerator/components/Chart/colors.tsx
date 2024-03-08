@@ -44,4 +44,5 @@ export const colorsForStackedBarChart = [
   '#FF9936',
   '#F77070',
   '#FF3D50',
+  '#A3AFCF',
 ]

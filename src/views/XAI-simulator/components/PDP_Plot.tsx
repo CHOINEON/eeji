@@ -9,6 +9,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels'
 ChartJS.register(ChartDataLabels)
 
 const PDP_Plot = ({ data }: any) => {
+  console.log('data:', data)
   const keys: Array<string> = Object.keys(data)
   const values: Array<Array<unknown>> = Object.values(data)
 
@@ -47,9 +48,10 @@ const PDP_Plot = ({ data }: any) => {
     labels: Array.from({ length: values[0]?.length }, (_, i) => `[${i * 11.11}]`),
   })
 
-  const handleChange = (value: string) => {
+  const handleChange = (value: any) => {
     setSelectedOption(value)
-    const selectedData = values[Number(value)]
+    const selectedData = data[value]
+    // console.log('selectedData:', selectedData)
 
     setChartData({
       datasets: [

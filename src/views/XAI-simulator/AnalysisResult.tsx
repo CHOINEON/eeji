@@ -1,57 +1,61 @@
 import styled from '@emotion/styled'
-import { Button, Col, Row, Tag } from 'antd'
+import { Badge, Button, Col, Row, Space, Tag } from 'antd'
 import Title from 'antd/es/typography/Title'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
 import InfoCircle from '../AIModelGenerator/components/Icon/InfoCircle'
 import AnalysisGrid, { ColumnHeader, DataRow } from './Visualization/AnalysisGrid'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { transformedXaiResultStore, xaiResultStore } from './store/analyze/atom'
-import ModelPerformance from './ModelPerformance'
-import FeatureAnalysis from 'views/AnalysisResult/FeatureAnalysis'
-import FeatureImportance from 'views/AIModelGenerator/FeatureImportance'
+import { activeVariables, localAttrState, transformedXaiResultStore, xaiResultStore } from './store/analyze/atom'
 import GlobalFeatureImportance from './components/GlobalFeatureImportance'
+import PDP_Plot from './components/PDP_Plot'
+import tw from 'tailwind-styled-components'
+import {
+  colorsForStackedBarChart,
+  colorsForStackedBarChart as STACKED_BAR_CHART_COLORS,
+} from 'views/AIModelGenerator/components/Chart/colors'
+
+interface IactiveButtons {
+  [key: string]: boolean
+}
+
+export const transformDataByRow = (count: number, rawData: any) => {
+  const sample_size = count //["1","2","3","4"]
+  const transformedData: Array<unknown> = []
+
+  for (let i = 0; i < sample_size; i++) {
+    const newDataPoint: any = {}
+
+    for (const feature in rawData) {
+      newDataPoint[feature] = rawData[feature][i]
+    }
+    transformedData.push(newDataPoint)
+  }
+  return transformedData
+}
 
 const AnalysisResult = () => {
-  const data = useRecoilValue(xaiResultStore)
-  const [transformedData, setTransformedData] = useRecoilState(transformedXaiResultStore)
-  const [activeButtons, setActiveButtons] = useState([])
+  const [data, setData] = useRecoilState(xaiResultStore)
+  const [activeVars, setActiveVars] = useRecoilState(activeVariables)
+  const filteredData = useRecoilValue(localAttrState)
 
   useEffect(() => {
-    console.log('data', data)
+    console.log('AnalysisResult  mounted data', data)
 
-    // setTransformedData({
-    //   ...transformedData,
-    //   xai_local: transformDataByRow(data.xai_local),
-    //   local_value: transformDataByRow(data.input_data),
-    //   pred_result: data.predict_result.predict_result,
-    //   xai_pdp: data.xai_pdp,
-    // })
+    //각 입력변수별로 활성화 여부를 담는 배열 세팅
+    const obj = data.feature_list.reduce((accumulator, value) => {
+      return { ...accumulator, [value]: true }
+    }, {})
 
-    const newObj = data.feature_list.reduce((acc, curr) => {
-      console.log(curr)
-      const feature = curr
-      return { ...acc, curr: false }
-    })
-    console.log('newobj:', newObj)
-  }, [data])
+    setActiveVars(obj)
+  }, [])
 
-  // useEffect(() => {
-  //   console.log('transformedData', transformedData)
-  // }, [transformedData])
+  useEffect(() => {
+    console.log('activeVars', activeVars)
+  }, [activeVars])
 
-  const transformDataByRow = (rawData: any) => {
-    const sample_size = data.sample_size //1200
-    const transformedData = []
-
-    for (let i = 0; i < sample_size; i++) {
-      const newDataPoint: any = {}
-
-      for (const feature of data.feature_list) {
-        newDataPoint[feature] = rawData[feature][i]
-      }
-      transformedData.push(newDataPoint)
-    }
-    return transformedData
+  const handleClick = (e: any) => {
+    const selectedVar = e.target.innerText
+    setActiveVars({ ...activeVars, [selectedVar]: !activeVars[selectedVar] })
   }
 
   return (
@@ -69,35 +73,51 @@ const AnalysisResult = () => {
             }}
           >
             XAI
-            <InfoCircle content="。。。" />
+            {/* <InfoCircle content="。。。" /> */}
           </Title>
           <Col span={18}>
-            초기화 버튼
             <Row>
               <RoundedBox width={'100%'} height={'75vh'}>
                 <VariableRow>
                   <div className="w-1/7 text-left">
                     <ColumnHeader width="100%">입력변수</ColumnHeader>
                   </div>
+
                   <div className="w-6/7">
-                    {data.feature_list.map((value: any, index) => (
-                      <Button key={index} type="primary" shape="round" className="m-1">
-                        변수{value}
-                      </Button>
+                    {data.feature_list.map((value: number, index) => (
+                      <button
+                        key={index}
+                        className={`${activeVars[value] ? 'bg-[#4338F7]' : 'bg-[#F6F8FF]'}  
+                        ${activeVars[value] ? 'text-[#FFFFFF]' : 'text-[#174274]'}
+                        ${activeVars[value] ? 'border-[#D5DCEF]' : ''}  
+                         px-4 rounded-full m-1 min-w-[70px] h-[28px] font-['Helvetica Neue']`}
+                        onClick={handleClick}
+                      >
+                        {value}
+                      </button>
                     ))}
                   </div>
                 </VariableRow>
+                <LegendContainer>
+                  <Space direction="horizontal">
+                    {data.feature_list.map((value: number, index) => (
+                      <Badge color={colorsForStackedBarChart[index]} text={value} />
+                    ))}
+                  </Space>
+                </LegendContainer>
+
                 <AnalysisGrid
-                // localWeight={transformedData.xai_local}
-                // localValue={transformedData.local_value}
-                // predResult={transformedData.pred_result}
-                // columns={Object.keys(data.input_data)}
+                  localWeight={filteredData}
+                  localValue={data.input_data}
+                  predResult={data.predict_result}
+                  // columns={Object.keys(data.input_data)}
                 />
               </RoundedBox>
             </Row>
           </Col>
-          <Col span={6}>
-            <GlobalFeatureImportance data={data?.xai_global[0]} />
+          <Col span={6} style={{ width: '100%', height: '75vh' }}>
+            <PDP_Plot data={data?.xai_pdp} />
+            <GlobalFeatureImportance data={data?.xai_global[0]} colors={data.colors} />
           </Col>
         </Row>
         <Row style={{ width: '100%' }}></Row>
@@ -107,7 +127,7 @@ const AnalysisResult = () => {
   )
 }
 
-export default AnalysisResult
+export default React.memo(AnalysisResult)
 
 interface Container {
   width?: any
@@ -118,6 +138,7 @@ interface Container {
 
 const VariableRow = styled(DataRow)`
   background-color: #ffffff;
+  margin-bottom: 50px;
 `
 const UploadContainer = styled.div`
   // border: 1px solid red;
@@ -147,7 +168,7 @@ const TextSub = styled.p`
 const Container = styled.div`
   width: 100%;
   height: 35vw;
-  margin-top: 2vw;
+  // margin-top: 2vw;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -175,4 +196,16 @@ const UploadButton = styled.button`
   font-family: 'Helvetica Neue';
   font-weight: Bold;
   font-size: 17px;
+`
+
+const VariableButton = tw.button<{ active: boolean }>`
+  m-1
+  px-4
+  py-2
+  rounded-full
+`
+
+const LegendContainer = styled.div`
+  // margin-bottom: 20px;
+  text-align: right;
 `
