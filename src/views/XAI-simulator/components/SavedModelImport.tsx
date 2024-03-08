@@ -7,10 +7,14 @@ import useGetDatasets from 'hooks/queries/useGetDatasets'
 import ModelList from './ModelSelect/ModelList'
 import { useMutation } from 'react-query'
 import XaiApi from 'apis/XaiApi'
-import { customModelStore, xaiResultStore } from '../store/analyze/atom'
+import { customModelStore, transformedXaiResultStore, xaiResultStore } from '../store/analyze/atom'
+import { transformDataByRow } from '../AnalysisResult_0308'
+// import { transformDataByRow } from '../AnalysisResult'
+import { colorsForStackedBarChart as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
 
 const SavedModelImport = () => {
   const [xaiResult, setXaiResult] = useRecoilState(xaiResultStore)
+  const [transformedData, setTransformedData] = useRecoilState(transformedXaiResultStore)
 
   const com_id = localStorage.getItem('companyId')
   const user_id = localStorage.getItem('userId').toString()
@@ -22,8 +26,22 @@ const SavedModelImport = () => {
   const { data } = useGetDatasets(localStorage.getItem('userId'))
   const { mutate: mutateGetResult } = useMutation(XaiApi.getXaiAnalysisResult, {
     onSuccess: (result: any) => {
-      // console.log('mutateGetResult:', result)
-      setXaiResult(result)
+      console.log('mutateGetResult:', result)
+
+      //넣을때 포맷팅 해서 넣기..
+      // setXaiResult(result)
+
+      setXaiResult({
+        sample_size: result.sample_size,
+        feature_length: result.feature_length,
+        feature_list: result.feature_list,
+        predict_result: result.predict_result?.predict_result,
+        input_data: transformDataByRow(result.sample_size, result.input_data),
+        xai_local: transformDataByRow(result.sample_size, result.xai_local),
+        xai_global: result.xai_global,
+        xai_pdp: result.xai_pdp,
+        colors: STACKED_BAR_CHART_COLORS,
+      })
       setSaving(false)
       setModal(null)
     },
@@ -31,10 +49,6 @@ const SavedModelImport = () => {
       //
     },
   })
-
-  useEffect(() => {
-    console.log('test:', modelId)
-  }, [modelId])
 
   const handleRunModel = () => {
     // '1be13733ed4e48338c92e6a74fea9f40'  // feature length : 4
