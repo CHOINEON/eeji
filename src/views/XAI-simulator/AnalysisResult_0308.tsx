@@ -1,16 +1,18 @@
 import styled from '@emotion/styled'
-import { Button, Col, Row, Tag } from 'antd'
+import { Badge, Button, Col, Row, Space, Tag } from 'antd'
 import Title from 'antd/es/typography/Title'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
 import InfoCircle from '../AIModelGenerator/components/Icon/InfoCircle'
 import AnalysisGrid, { ColumnHeader, DataRow } from './Visualization/AnalysisGrid'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { localAttrState, transformedXaiResultStore, xaiResultStore } from './store/analyze/atom'
-import ModelPerformance from './ModelPerformance'
-import FeatureAnalysis from 'views/AnalysisResult/FeatureAnalysis'
-import FeatureImportance from 'views/AIModelGenerator/FeatureImportance'
+import { activeVariables, localAttrState, transformedXaiResultStore, xaiResultStore } from './store/analyze/atom'
 import GlobalFeatureImportance from './components/GlobalFeatureImportance'
 import PDP_Plot from './components/PDP_Plot'
+import tw from 'tailwind-styled-components'
+import {
+  colorsForStackedBarChart,
+  colorsForStackedBarChart as STACKED_BAR_CHART_COLORS,
+} from 'views/AIModelGenerator/components/Chart/colors'
 
 interface IactiveButtons {
   [key: string]: boolean
@@ -33,59 +35,27 @@ export const transformDataByRow = (count: number, rawData: any) => {
 
 const AnalysisResult = () => {
   const [data, setData] = useRecoilState(xaiResultStore)
-  const [activeButtons, setActiveButtons] = useState<IactiveButtons>({})
-  const [filteredData, setFilteredData] = useRecoilState(localAttrState({}))
-
-  const [transformedData, setTransformedData] = useRecoilState(transformedXaiResultStore)
-
-  // useEffect(() => {
-  //   setTransformedData(data)
-  // }, [])
+  const [activeVars, setActiveVars] = useRecoilState(activeVariables)
+  const filteredData = useRecoilValue(localAttrState)
 
   useEffect(() => {
     console.log('AnalysisResult  mounted data', data)
 
-    //초기에 원본과 동일하게 세팅
-    // if (data.feature_length > 0) setTransformedData(data)
-
     //각 입력변수별로 활성화 여부를 담는 배열 세팅
-    // const obj = data.feature_list.reduce((accumulator, value) => {
-    //   return { ...accumulator, [value]: true }
-    // }, {})
+    const obj = data.feature_list.reduce((accumulator, value) => {
+      return { ...accumulator, [value]: true }
+    }, {})
 
-    // setActiveButtons(obj)
+    setActiveVars(obj)
   }, [])
 
   // useEffect(() => {
   //   console.log('filteredData', filteredData)
   // }, [filteredData])
 
-  useEffect(() => {
-    // console.log('activeButtons:', activeButtons)
-    // setFilteredData(activeButtons)
-    // console.log('activeButtons', activeButtons)
-    // const filterValuesArray = Object.keys(activeButtons).filter((key) => !activeButtons[key])
-    // console.log('filterValuesArray::', filterValuesArray)
-    // if (Object.keys(activeButtons).length > 0 && filterValuesArray.length === 0) {
-    //   // console.log('여기?')
-    //   //전부 true라서 필터링 할 게 없으면 다시 원본으로 복구
-    //   setTransformedData({ ...data })
-    // } else {
-    //   filterValuesArray.map((val: any) => {
-    //     // console.log('data?.xai_local:', data?.xai_local)
-    //     const newArr = transformedData?.xai_local?.map((item: any) => {
-    //       if (val in item) return { ...item, [val]: 0 }
-    //     })
-    //     console.log('newArr:', newArr)
-    //     setTransformedData({ ...transformedData, xai_local: newArr })
-    //   })
-    // }
-  }, [activeButtons])
-
   const handleClick = (e: any) => {
-    // console.log('e:', e.target.innerText)
     const selectedVar = e.target.innerText
-    setActiveButtons({ ...activeButtons, [selectedVar]: !activeButtons[selectedVar] })
+    setActiveVars({ ...activeVars, [selectedVar]: !activeVars[selectedVar] })
   }
 
   return (
@@ -103,42 +73,51 @@ const AnalysisResult = () => {
             }}
           >
             XAI
-            <InfoCircle content="。。。" />
+            {/* <InfoCircle content="。。。" /> */}
           </Title>
           <Col span={18}>
             <Row>
               <RoundedBox width={'100%'} height={'75vh'}>
-                {/* <VariableRow>
+                <VariableRow>
                   <div className="w-1/7 text-left">
                     <ColumnHeader width="100%">입력변수</ColumnHeader>
                   </div>
+
                   <div className="w-6/7">
-                    {data.feature_list.map((value: any, index) => (
+                    {data.feature_list.map((value: number, index) => (
                       <button
                         key={index}
-                        className={`bg-${activeButtons[value] ? 'blue-800' : 'white'} m-1 text-${
-                          activeButtons[value] ? 'white' : 'black'
-                        } px-4 py-2 rounded-full ${activeButtons[value] ? ' ' : 'border'}  `}
+                        className={`${activeVars[value] ? 'bg-[#4338F7]' : 'bg-[#F6F8FF]'}  
+                        ${activeVars[value] ? 'text-[#FFFFFF]' : 'text-[#174274]'}
+                        ${activeVars[value] ? 'border-[#D5DCEF]' : ''}  
+                         px-4 rounded-full m-1 min-w-[70px] h-[28px]`}
                         onClick={handleClick}
                       >
                         {value}
                       </button>
                     ))}
                   </div>
-                </VariableRow> */}
+                </VariableRow>
+                <LegendContainer>
+                  <Space direction="horizontal">
+                    {data.feature_list.map((value: number, index) => (
+                      <Badge color={colorsForStackedBarChart[index]} text={value} />
+                    ))}
+                  </Space>
+                </LegendContainer>
+
                 <AnalysisGrid
-                  data={data}
-                  // localWeight={data.xai_local}
-                  // localValue={data.input_data}
-                  // predResult={data.predict_result}
+                  localWeight={filteredData}
+                  localValue={data.input_data}
+                  predResult={data.predict_result}
                   // columns={Object.keys(data.input_data)}
                 />
               </RoundedBox>
             </Row>
           </Col>
-          <Col span={6}>
-            {/* <PDP_Plot data={data?.xai_pdp} /> */}
-            {/* <GlobalFeatureImportance data={data?.xai_global[0]} /> */}
+          <Col span={6} style={{ width: '100%', height: '75vh' }}>
+            <PDP_Plot data={data?.xai_pdp} />
+            <GlobalFeatureImportance data={data?.xai_global[0]} colors={data.colors} />
           </Col>
         </Row>
         <Row style={{ width: '100%' }}></Row>
@@ -159,6 +138,7 @@ interface Container {
 
 const VariableRow = styled(DataRow)`
   background-color: #ffffff;
+  margin-bottom: 50px;
 `
 const UploadContainer = styled.div`
   // border: 1px solid red;
@@ -216,4 +196,16 @@ const UploadButton = styled.button`
   font-family: 'Helvetica Neue';
   font-weight: Bold;
   font-size: 17px;
+`
+
+const VariableButton = tw.button<{ active: boolean }>`
+  m-1
+  px-4
+  py-2
+  rounded-full
+`
+
+const LegendContainer = styled.div`
+  margin-bottom: 20px;
+  text-align: right;
 `

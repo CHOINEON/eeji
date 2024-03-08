@@ -63,6 +63,7 @@ const externalTooltipHandler = (context: any) => {
 
     const tableBody = document.createElement('tbody')
     bodyLines.forEach((body: any, i: number) => {
+      // console.log('body:', body)
       const colors = tooltip.labelColors[i]
 
       const span = document.createElement('span')
@@ -82,7 +83,6 @@ const externalTooltipHandler = (context: any) => {
       // td.style.borderWidth = 0
 
       const text = document.createTextNode(body)
-
       td.appendChild(span)
       td.appendChild(text)
       tr.appendChild(td)
@@ -111,22 +111,7 @@ const externalTooltipHandler = (context: any) => {
   tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px'
 }
 
-// const footer = (tooltipItems: any) => {
-//   let sum = 0
-
-//   tooltipItems.forEach(function (tooltipItem: any) {
-//     sum += tooltipItem.parsed.y
-//   })
-//   return 'Sum: ' + sum
-// }
-
 const options: ChartOptions<'bar'> = {
-  // tooltip: {
-  //       enabled: false,
-  //       position: 'nearest',
-  //       external: externalTooltipHandler
-  //     }
-
   responsive: true,
   maintainAspectRatio: false, //will take up entire container
   indexAxis: 'y',
@@ -157,7 +142,7 @@ const options: ChartOptions<'bar'> = {
       position: 'average',
       external: externalTooltipHandler,
       // callbacks: {
-      // footer: footer,
+      //   footer: footer,
       // },
     },
   },
@@ -176,12 +161,12 @@ interface IDataset {
 interface IStackedBarChart {
   value: any
   weight: Array<any>
-  columns: Array<any>
+  // columns: Array<any>
 }
 
 const HorizontalStackedBarChart = (props: IStackedBarChart) => {
   // console.log('HorizontalStackedBarChart props:', props)
-  const { weight, columns } = props
+  const { weight, value } = props
   const [chartData, setChartData] = useState<ChartData<'bar'>>({
     datasets: [],
   })
@@ -192,16 +177,18 @@ const HorizontalStackedBarChart = (props: IStackedBarChart) => {
 
     const newArr: Array<IDataset> = []
 
+    //{0: 0.1176371392605699, 1: 0.01162381190864805, 2: 0.709188448090644, 3: 0.16155060074013808}
+
     //datasets 안에 들어갈 내용
-    columns.forEach((col: Array<any>, i: number) => {
-      const totalLocalValue: number = Object.values(weight).reduce((sum: number, value: number) => {
-        return (sum + value) as number
+    Object.keys(weight).forEach((col: any, i: number) => {
+      const totalLocalValue: number = Object.values(weight).reduce((acc: number, curr: number) => {
+        return (acc + curr) as number
       }, 0)
       // console.log('total:', totalLocalValue)
       // console.log('weight[i]:', weight[i])
 
       newArr.push({
-        label: columns[i],
+        label: `${col}의 실제값(` + value[i] + ')',
         data: [(weight[i] / totalLocalValue) * 100],
         backgroundColor: STACKED_BAR_CHART_COLORS[i],
       })

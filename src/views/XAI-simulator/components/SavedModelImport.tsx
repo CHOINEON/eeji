@@ -8,7 +8,9 @@ import ModelList from './ModelSelect/ModelList'
 import { useMutation } from 'react-query'
 import XaiApi from 'apis/XaiApi'
 import { customModelStore, transformedXaiResultStore, xaiResultStore } from '../store/analyze/atom'
+import { transformDataByRow } from '../AnalysisResult_0308'
 // import { transformDataByRow } from '../AnalysisResult'
+import { colorsForStackedBarChart as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
 
 const SavedModelImport = () => {
   const [xaiResult, setXaiResult] = useRecoilState(xaiResultStore)
@@ -29,16 +31,17 @@ const SavedModelImport = () => {
       //넣을때 포맷팅 해서 넣기..
       // setXaiResult(result)
 
-      // setTransformedData({
-      //   sample_size: result.sample_size,
-      //   feature_length: result.feature_length,
-      //   feature_list: result.feature_list,
-      //   predict_result: result.predict_result?.predict_result,
-      //   input_data: transformDataByRow(result.sample_size, result.input_data),
-      //   xai_local: transformDataByRow(result.sample_size, result.xai_local),
-      //   xai_global: result.xai_global,
-      //   xai_pdp: result.xai_pdp,
-      // })
+      setXaiResult({
+        sample_size: result.sample_size,
+        feature_length: result.feature_length,
+        feature_list: result.feature_list,
+        predict_result: result.predict_result?.predict_result,
+        input_data: transformDataByRow(result.sample_size, result.input_data),
+        xai_local: transformDataByRow(result.sample_size, result.xai_local),
+        xai_global: result.xai_global,
+        xai_pdp: result.xai_pdp,
+        colors: STACKED_BAR_CHART_COLORS,
+      })
       setSaving(false)
       setModal(null)
     },

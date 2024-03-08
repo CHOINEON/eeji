@@ -9,6 +9,15 @@ interface IPredictResult {
   predict_result: any
 }
 
+interface IActiveVariables {
+  [key: string]: number
+}
+
+export const activeVariables = atom({
+  key: 'activeVariables',
+  default: {} as IActiveVariables,
+})
+
 //original   DO NOT UPDATE THIS VALUE
 export const xaiResultStore = atom({
   key: 'xaiResultStore',
@@ -21,6 +30,7 @@ export const xaiResultStore = atom({
     xai_local: [] as Array<unknown>,
     xai_pdp: {},
     xai_global: [],
+    colors: {},
   },
 })
 
@@ -39,35 +49,29 @@ export const transformedXaiResultStore = atom({
   },
 })
 
-export const localAttrState = selectorFamily({
+export const localAttrState = selector({
   key: 'localAttrState',
-  get:
-    (params: any) =>
-    ({ get }: any) => {
-      const localAttr = get(xaiResultStore).xai_local
-      const filterValuesArray = Object.keys(params).filter((key) => !params[key])
-      // console.log('filterValuesArray:', filterValuesArray)
+  get: ({ get }: any) => {
+    const localAttr = get(xaiResultStore).xai_local
+    const activeList = get(activeVariables)
+    const filterValuesArray = Object.keys(activeList).filter((key) => !activeList[key])
+    // console.log('filterValuesArray:', filterValuesArray)
 
-      //  { 0: true, 1: false, 2: false, 3: false }
-      // ['1','2','3']
+    //  { 0: true, 1: false, 2: false, 3: false }
+    // ['1','2','3']
 
-      if (filterValuesArray.length > 0) {
-        let newObj: Array<any> = []
-        newObj = localAttr
+    if (filterValuesArray.length > 0) {
+      let newObj: Array<any> = []
+      newObj = localAttr
 
-        filterValuesArray.map((val: any) => {
-          newObj = newObj.map((item: any) => {
-            if (val in item) return { ...item, [val]: 0 }
-          })
+      filterValuesArray.map((val: any) => {
+        newObj = newObj.map((item: any) => {
+          if (val in item) return { ...item, [val]: 0 }
         })
-        return newObj
-      } else {
-        return localAttr
-      }
-    },
-  set:
-    (params) =>
-    ({ set }: any) => {
-      //
-    },
+      })
+      return newObj
+    } else {
+      return localAttr
+    }
+  },
 })

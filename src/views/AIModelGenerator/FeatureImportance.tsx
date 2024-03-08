@@ -3,19 +3,36 @@ import { styled } from 'styled-components'
 import { Chart, ArcElement, CategoryScale, LinearScale, registerables, Tooltip } from 'chart.js'
 import { Doughnut, Bar } from 'react-chartjs-2'
 import zoomPlugin from 'chartjs-plugin-zoom'
-import { colors, colorsForDoughnut } from './components/Chart/colors'
+import { chartColors, colorsForDoughnut } from './components/Chart/colors'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 
 Chart.register(ArcElement, CategoryScale, LinearScale, ChartDataLabels, zoomPlugin, Tooltip, ...registerables)
 
-const FeatureImportance = ({ data }: any) => {
+const FeatureImportance = ({ data, colors }: any) => {
+  const [colorChips, setColorChips] = useState([])
+
+  useEffect(() => {
+    if (colors) {
+      const colorOrder = data?.labels?.map((el: string) => data?.all_input_x?.indexOf(el))
+
+      const newColor: Array<any> = []
+      colorOrder.map((el: number) => {
+        if (el === -1) newColor.push('#F4F4F4')
+        else newColor.push(colors[el])
+      })
+      setColorChips(newColor)
+    } else {
+      setColorChips(chartColors.slice(0, data?.labels?.length))
+    }
+  }, [data])
+
   const doughnutData = {
     labels: data?.labels,
     datasets: [
       {
         label: '',
         data: data?.values?.map((val: any) => (val * 100).toFixed(1)),
-        backgroundColor: colorsForDoughnut.slice(0, data?.labels?.length),
+        backgroundColor: colorChips,
         borderColor: data?.labels?.map(() => '#F6F8FF'),
         borderWidth: 3,
       },
@@ -28,9 +45,9 @@ const FeatureImportance = ({ data }: any) => {
       {
         label: '',
         data: data?.values?.map((val: any) => (val * 100).toFixed(1)),
+        backgroundColor: colorChips,
         barThickness: 18,
         borderColor: data?.labels?.map(() => '#F6F8FF'),
-        backgroundColor: colorsForDoughnut.slice(0, data?.labels?.length),
       },
     ],
   }

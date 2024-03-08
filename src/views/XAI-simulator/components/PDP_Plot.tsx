@@ -1,123 +1,119 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
-import { Box } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { Select, Card, SelectProps } from 'antd'
-import Title from 'antd/es/typography/Title'
 import { Line } from 'react-chartjs-2'
-import {
-  Chart as ChartJS,
-  Colors,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Legend,
-  ScriptableContext,
-} from 'chart.js'
-import { ChartData } from 'chart.js'
+import { Chart as ChartJS } from 'chart.js'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 
 ChartJS.register(ChartDataLabels)
 
 const PDP_Plot = ({ data }: any) => {
-  console.log('data:', data)
+  const keys: Array<string> = Object.keys(data)
+  const values: Array<Array<unknown>> = Object.values(data)
 
-  const short_pdp_keys = Object.keys(data)
-  const short_pdp_values = Object.values(data)
+  const chartOptions = {
+    layout: {
+      padding: 20,
+      margin: 'auto',
+    },
+    responsive: true,
+    plugins: {
+      datalabels: {
+        display: false,
+      },
+      legend: {
+        display: false,
+      },
+    },
+  }
 
-  // const chartOptions = {
-  //   layout: {
-  //     padding: 20,
-  //     margin: 'auto',
-  //   },
-  //   responsive: true,
-  //   plugins: {
-  //     //왜 안되냐고....
-  //     datalabels: {
-  //       display: false,
-  //     },
-  //   },
-  //   // interaction: {
-  //   //   mode: 'nearest', //as const,
-  //   //   intersect: false,
-  //   //   axis: 'x',
-  //   // },
-  // }
+  const options: SelectProps['options'] = Object.keys(data).map((key) => ({
+    value: key,
+    label: key,
+  }))
 
-  // const { Option } = Select
+  const [selectedOption, setSelectedOption] = useState<string | null>(null)
 
-  // const options: SelectProps['options'] = short_pdp_keys.map((key) => ({
-  //   value: key,
-  //   label: key,
-  // }))
+  const [chartData, setChartData] = useState<{ datasets: any[]; labels: string[] }>({
+    datasets: [
+      {
+        label: `Dataset 0`,
+        data: Object.values(data)[0],
+        borderColor: '#86C162',
+        backgroundColor: '#1B73FF69',
+      },
+    ],
+    labels: Array.from({ length: values[0]?.length }, (_, i) => `[${i * 11.11}]`),
+  })
 
-  // const [selectedOption, setSelectedOption] = useState<string | null>(null)
+  const handleChange = (value: string) => {
+    setSelectedOption(value)
+    const selectedData = values[Number(value)]
 
-  // const [myData, setMyData] = useState<{ datasets: any[]; labels: string[] }>({
-  //   datasets: [
-  //     {
-  //       label: `Dataset 0`,
-  //       data: short_pdp_values[0],
-  //       borderColor: '#86C162',
-  //       backgroundColor: '#1B73FF69',
-  //     },
-  //   ],
-  //   labels: Array.from({ length: short_pdp_values[0].length }, (_, i) => `[${i * 11.11}]`),
-  // })
-
-  // const handleChange = (value: string) => {
-  //   setSelectedOption(value)
-  //   const selectedData = short_pdp_values[Number(value)]
-  //   setMyData({
-  //     datasets: [
-  //       {
-  //         label: `Dataset ${value}`,
-  //         data: selectedData,
-  //         borderColor: '#86C162',
-  //         backgroundColor: '#1B73FF69',
-  //       },
-  //     ],
-  //     labels: ['test'],
-
-  //     // labels: Array.from({ length: selectedData.length }, (_, i) => `[${i * 11.11}]`),
-  //   })
-  // }
+    setChartData({
+      datasets: [
+        {
+          label: `Dataset ${value}`,
+          data: selectedData,
+          borderColor: '#86C162',
+          backgroundColor: '#1B73FF69',
+        },
+      ],
+      labels: Array.from({ length: selectedData.length }, (_, i) => `[${i * 11.11}]`),
+    })
+  }
 
   return (
     <>
-      <Card style={{ width: '100%' }}>
-        <Box
-          style={{
-            position: 'relative',
-            zIndex: 1000,
-            height: '100%',
-          }}
-        >
-          {/* <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Title style={{ fontSize: '20px', color: '#002D65' }}> Partical Dependence Plot CO </Title>
-            <Select style={{ width: '30%' }} onChange={handleChange} options={options} />
-          </div>{' '}
-          <ChartWrapper>
-            <Line data={myData} options={chartOptions} />
-          </ChartWrapper> */}
-        </Box>{' '}
-      </Card>
+      <ComponentContainer>
+        <div className="mt-1 ml-[20px] w-[420px]">
+          <Title>Partical Dependence Plot</Title>
+          <Select
+            className="ml-5 w-[150px] bg-[#F5F8FF] border-[#D5DCEF]"
+            defaultValue={options[0].value}
+            onChange={handleChange}
+            options={options}
+          />
+          <div className="my-4 block float-left w-full">
+            <ChartWrapper>
+              <Line data={chartData} options={chartOptions} />
+            </ChartWrapper>
+          </div>
+        </div>
+      </ComponentContainer>
     </>
   )
 }
 
 export default PDP_Plot
 
-const ChartWrapper = styled.div`
-  // display: ${(props: any) => (props.toggle ? 'block' : 'none')};
-  // border: 1px solid pink;
-  width: 100%;
-  height: 200px;
-  // width: ${(props: any) => (props.isClassification === 1 ? '200px' : '100%')};
-  // height: ${(props: any) => (props.isClassification === 1 ? '600px' : '100%')};
-  position: relative;
+const ComponentContainer = styled.div`
+  // border: 1px solid red;
+  display: block;
   float: left;
-  margin: 10px;
+  justify-content: space-evenly;
+  padding: 5% 1%;
+  background-color: #ffffff;
+  width: 100%;
+  height: 49%;
+  box-shadow: 0px 0px 10px #5951db33;
+  border: 1px solid #d5dcef;
+  border-radius: 25px;
+  opacity: 1;
+`
+
+const Title = styled.div`
+  font-family: 'Helvetica Neue';
+  font-weight: bold;
+  color: #002d65;
+  font-size: 21px;
+  display: block;
+  float: left;
+`
+
+const ChartWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  margin-top: 30px;
 `

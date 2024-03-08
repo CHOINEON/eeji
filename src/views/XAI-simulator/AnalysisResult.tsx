@@ -87,12 +87,12 @@ const AnalysisResult = () => {
                     ))}
                   </div>
                 </VariableRow>
-                {/* <AnalysisGrid
-                  localWeight={transformedData.xai_local}
-                  localValue={transformedData.local_value}
-                  predResult={transformedData.pred_result}
-                  columns={Object.keys(data.input_data)}
-                /> */}
+                <AnalysisGrid
+                // localWeight={transformedData.xai_local}
+                // localValue={transformedData.local_value}
+                // predResult={transformedData.pred_result}
+                // columns={Object.keys(data.input_data)}
+                />
               </RoundedBox>
             </Row>
           </Col>
