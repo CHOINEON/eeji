@@ -1,7 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, message } from 'antd'
 import { ConfirmContext } from 'components/dialogs/ConfirmContext'
-import Progressbar from 'components/progressbar/Progressbar'
 import useModal from 'hooks/useModal'
 import React, { useContext } from 'react'
 import CardButton from './components/button/CardButton'
@@ -29,16 +27,16 @@ const UploadPage = () => {
   ]
 
   function handleClick(type: string) {
-    message.info('3월 11일부터 서비스 예정입니다')
-    // openModal({
-    //   modalTitle: 'Model Import',
-    //   modalType: type,
-    //   modalProps: {
-    //     onClick: () => {
-    //       closeModal()
-    //     },
-    //   },
-    // })
+    // message.info('3월 11일부터 서비스 예정입니다')
+    openModal({
+      modalTitle: 'Model Import',
+      modalType: type,
+      modalProps: {
+        onClick: () => {
+          closeModal()
+        },
+      },
+    })
   }
 
   const handleDialogOpen = async () => {

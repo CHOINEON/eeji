@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 //모델명/타겟변수/모델유형
 
 const ModelRow = ({ item }: any) => {
-  //   console.log('item:', item)
+  // console.log('item:', item)
 
   const ModelType = ({ isClassification }: any) => {
     const category = [
@@ -34,9 +34,13 @@ const ModelRow = ({ item }: any) => {
     )
   }
 
+  const handleRowClick = (e: any) => {
+    console.log('handleRowClick:', e)
+  }
+
   return (
     <>
-      <Row role="button">
+      <Row role="button" onClick={handleRowClick}>
         <ModelTitle>{item.name}</ModelTitle>
         <TargetText>{item.target_y}</TargetText>
         <ModelType isClassification={item.is_classification}></ModelType>

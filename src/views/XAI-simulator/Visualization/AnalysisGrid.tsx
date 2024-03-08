@@ -28,7 +28,7 @@ const RowItem = (props: any) => {
   ////////24.03.05 Backend 요청으로 input data가 모두 0인 row를 걸러냄
   return (
     !Object.values(props.weight).every((val: any) => val == 0) && (
-      <Row style={{ padding: '0 2%' }}>
+      <DataRow style={{ padding: '0 2%', marginBottom: '1%' }}>
         <div style={{ width: '10%', textAlign: 'center' }}>{props.number}</div>
         <div style={{ width: '20%', textAlign: 'center' }}>
           pred : <b>{Object.values(props.predResult)[props.number]}</b>
@@ -42,7 +42,7 @@ const RowItem = (props: any) => {
       <div style={{ height: '50px !important' }}>
         <HorizontalStackedBarChart data={itemObj.result} />
       </div> */}
-      </Row>
+      </DataRow>
     )
   )
 }
@@ -55,7 +55,7 @@ const AnalysisGrid = ({ localWeight, localValue, columns, predResult }: any) => 
 
   //pred={predResult[i]}
   return (
-    <div style={{ height: '100%' }}>
+    <>
       <div style={{ display: 'block', width: '100%', padding: '0 2%' }}>
         <ColumnHeader width={'10%'}>No</ColumnHeader>
         <ColumnHeader width={'20%'}>예측결과</ColumnHeader>
@@ -66,13 +66,13 @@ const AnalysisGrid = ({ localWeight, localValue, columns, predResult }: any) => 
           <RowItem key={i} number={i} value={localValue} weight={value} columns={columns} predResult={predResult} />
         )
       })}
-    </div>
+    </>
   )
 }
 
 export default AnalysisGrid
 
-const Row = styled.div`
+export const DataRow = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: space-evenly;
@@ -86,7 +86,7 @@ const Row = styled.div`
   margin: 10px 0;
 `
 
-const ColumnHeader = styled.div<{ width: string }>`
+export const ColumnHeader = styled.div<{ width: string }>`
   display: inline-block;
   text-align: center;
   width: ${(props: any) => (props.width ? props.width : '100%')};

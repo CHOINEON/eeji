@@ -56,7 +56,7 @@ const FeatureAnalysis = ({ data, input }: any) => {
 
   return (
     <>
-      {/* <ModelPerformance data={error} /> */}
+      <ModelPerformance data={error} />
       <ComponentContainer>
         <SubTitle>
           Feature Importance
@@ -132,7 +132,7 @@ const SubTitle = styled(Title)`
   width: 100%;
 `
 
-const AIbutton = styled.button`
+export const AIbutton = styled.button`
   display: block;
   float: left;
   background-color: #31d600;
@@ -145,7 +145,7 @@ const AIbutton = styled.button`
   margin-right: 10px;
 `
 
-const AITextContainer = styled.div`
+export const AITextContainer = styled.div`
   font-family: 'Helvetica Neue';
   width: 80%;
   display: block;

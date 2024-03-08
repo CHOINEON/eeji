@@ -84,19 +84,17 @@ const DataSet = () => {
 
   return (
     <>
-      <div style={{ textAlign: 'center', margin: 'auto' }}>
+      <div style={{ textAlign: 'center', width: '100%' }}>
         {data?.data.length > 0 ? (
-          <Row className="row-column-title">
+          <>
             <Spin tip="데이터셋 로드 중..." spinning={loading} style={{ marginTop: '100px' }}>
-              <div>
-                {data?.data.map((data: any, index: number) => (
-                  <Col key={index}>
-                    <DescriptionBox data={data} onSelect={handleSelect} />
-                  </Col>
-                ))}
-              </div>
+              {data?.data.map((data: any, index: number) => (
+                <Col key={index}>
+                  <DescriptionBox data={data} onSelect={handleSelect} />
+                </Col>
+              ))}
             </Spin>
-          </Row>
+          </>
         ) : (
           !loading && <Empty />
         )}
