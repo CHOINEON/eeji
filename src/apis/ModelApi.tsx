@@ -26,11 +26,11 @@ const ModelApi = {
     return data
   },
 
+
   //사용자가 갖고 있는 모델 파일 직접업로드(XAI)
   saveModelwithColumns: async (params: IModelDataReq): Promise<TResponseType<object>> => {
     const { data } = await axiosPrivate.post(`api/save_custom_model_new/${params.user_id}/`, params.payload)
-    return data
-  },
+
 
   //특정 유저를 위해 모델 리스트를 db에서 갖고옴
   // postModelList: async (user_id: string): Promise<TResponseType<object>> => {
