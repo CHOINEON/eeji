@@ -5,11 +5,11 @@ import styled from 'styled-components'
 import { useMutation } from 'react-query'
 import IcoPerformance from 'assets/img/icons/XAI/icon_perfromanceModel.png'
 import { PerformanceModel, PerformanceModelTyeps } from 'apis/type/ModelPerformanceOption'
-import ModelApi from 'apis/ModelApi'
 import { message } from 'antd'
 import { analysisResponseAtom, filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
 import { modalState } from 'stores/modal'
 import useModal from 'hooks/useModal'
+import ModelApi from 'apis/ModelApi'
 
 const ModelPerformance = () => {
   const [modal, setModal] = useRecoilState(modalState)

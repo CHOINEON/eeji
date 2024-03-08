@@ -5,13 +5,13 @@ import { useMutation } from 'react-query'
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { inputOptionListState, selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
-import ModelApi from 'apis/ModelApi'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 import FeatureAnalysis from './FeatureAnalysis'
 import FeatureSelectModal from './FeatureSelectModal'
 import { featureSelectModalState } from 'views/AIModelGenerator/store/modal/atom'
 import { analysisResponseAtom, filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
 import { Select, Spin } from 'antd'
+import ModelApi from 'apis/ModelApi'
 
 const TabChild = () => {
   const [loading, setLoading] = useState({ showing: false, text: '데이터 분석 중...' })

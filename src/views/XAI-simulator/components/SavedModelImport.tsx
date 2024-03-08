@@ -7,7 +7,6 @@ import useGetDatasets from 'hooks/queries/useGetDatasets'
 import ModelList from './ModelSelect/ModelList'
 import { useMutation } from 'react-query'
 import XaiApi from 'apis/XaiApi'
-import ModelApi from 'apis/ModelApi'
 
 import { customModelStore, transformedXaiResultStore, xaiResultStore } from '../store/analyze/atom'
 import { transformDataByRow } from '../AnalysisResult'
@@ -83,7 +82,6 @@ const SavedModelImport = () => {
 
   const handleSelect = (param: any) => {
     setModelId(param)
-
   }
 
   return (
