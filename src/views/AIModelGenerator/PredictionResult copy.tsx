@@ -17,7 +17,7 @@ import { Line } from 'react-chartjs-2'
 import { analysisResponseAtom } from './store/response/atoms'
 import { useRecoilValue } from 'recoil'
 import { selectedDataState } from './store/dataset/atom'
-import { colors } from './components/Chart/colors'
+import { chartColors } from './components/Chart/colors'
 
 ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, zoomPlugin, Title, Tooltip, Legend)
 
@@ -38,7 +38,9 @@ const PredictionResult = ({ data }: any) => {
           arr.push(generateSeries(`Truth`, analysisResponse[i]['pred_data']['truth'].slice(0, 30), 'rgb(87,220,49)'))
           arr.push(generateSeries(`INEEJI pred`, analysisResponse[i]['pred_data']['pred'].slice(0, 30), '#4A40F7'))
         } else {
-          arr.push(generateSeries(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'].slice(0, 30), colors[i]))
+          arr.push(
+            generateSeries(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'].slice(0, 30), chartColors[i])
+          )
         }
       })
     } else {
@@ -47,7 +49,7 @@ const PredictionResult = ({ data }: any) => {
           arr.push(generateSeries(`Truth`, analysisResponse[i]['pred_data']['truth'], 'rgb(87,220,49)'))
           arr.push(generateSeries(`INEEJI pred`, analysisResponse[i]['pred_data']['pred'], '#4A40F7'))
         } else {
-          arr.push(generateSeries(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'], colors[i]))
+          arr.push(generateSeries(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'], chartColors[i]))
         }
       })
     }

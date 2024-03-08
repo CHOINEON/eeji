@@ -17,7 +17,7 @@ import { Line } from 'react-chartjs-2'
 import { analysisResponseAtom } from './store/response/atoms'
 import { useRecoilValue } from 'recoil'
 import { selectedDataState } from './store/dataset/atom'
-import { colors } from './components/Chart/colors'
+import { chartColors } from './components/Chart/colors'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 
 ChartJS.register(
@@ -55,7 +55,7 @@ const PredictionResult = ({ data }: any) => {
           )
         } else {
           arr.push(
-            generateSeriesForClassification(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'], colors[i])
+            generateSeriesForClassification(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'], chartColors[i])
           )
         }
       })
@@ -65,7 +65,7 @@ const PredictionResult = ({ data }: any) => {
           arr.push(generateSeries(`Ground-truth`, analysisResponse[i]['pred_data']['truth'], 'rgb(87,220,49)'))
           arr.push(generateSeries(`INEEJI prediction`, analysisResponse[i]['pred_data']['pred'], '#4A40F7'))
         } else {
-          arr.push(generateSeries(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'], colors[i]))
+          arr.push(generateSeries(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'], chartColors[i]))
         }
       })
     }
