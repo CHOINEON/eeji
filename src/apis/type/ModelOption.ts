@@ -57,7 +57,7 @@ export interface IModelDataReq {
   user_id: string
   formData?: FormData
   params?: URLSearchParams
-  payload?: IModelVariablePostReq | IModelSaveReqParams
+  payload?: IModelVariablePostReq | IModelSaveReqParam
 }
 
 export interface IModelReqParam {
@@ -66,7 +66,7 @@ export interface IModelReqParam {
   uuid: string
 }
 
-export interface IModelSaveReqParams {
+export interface IModelSaveReqParam {
   user_id: string
   com_id: string
   uuid: string
