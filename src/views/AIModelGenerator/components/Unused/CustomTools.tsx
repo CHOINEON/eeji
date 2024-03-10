@@ -303,7 +303,7 @@ const CustomTools = () => {
       const payload = {
         set_auto: auto,
         user_id: localStorage.getItem('userId'),
-        com_id: localStorage.getItem('companyId'),
+        com_id: localStorage.getItem('companyId') || 'google',
         dataset_id: selectedData.ds_id,
         date_col: selectedData.dateCol,
 

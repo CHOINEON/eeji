@@ -51,7 +51,7 @@ const ModelSaveModal = (props: any) => {
   }
 
   return (
-    <Spin tip="Loading" size="large" spinning={true}>
+    <Spin tip="Loading" size="large" spinning={loading}>
       <div>
         <Row>
           {/* <Text type="danger">* </Text>

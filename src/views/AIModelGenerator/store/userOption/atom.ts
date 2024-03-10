@@ -88,7 +88,7 @@ export const userInputOptionState = selector({
   }),
 })
 
-//ai model generator 페이지에서 여러 모델 생성한 경우, 몇번째 모델 선택한 지 저장
+//ai model generator 페이지에서 여러 모델 생성한 경우, 사용자가 몇번째 모델 선택한지 저장
 export const selectModelState = atom({
   key: 'selectModelState',
   default: 0 as number,
