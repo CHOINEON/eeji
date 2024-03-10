@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Input, message, Row, Typography } from 'antd'
+import { Input, message, Row, Spin, Typography } from 'antd'
 import useModal from 'hooks/useModal'
 import React, { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
@@ -14,11 +14,12 @@ const ModelSaveModal = (props: any) => {
 
   const { openModal, closeModal } = useModal()
   const [name, setName] = useState(`Model_`)
+  const [loading, setLoading] = useState(false)
   const dataProperty = useRecoilValue(dataPropertyState)
   const { mutate: mutateSaveModel } = useMutation(ModelApi.saveGeneratedModel, {
     onSuccess: (response: any) => {
       console.log('save response:', response)
-
+      setLoading(false)
       message.success(response.message)
       closeModal()
     },
@@ -32,6 +33,8 @@ const ModelSaveModal = (props: any) => {
   }, [])
 
   const handleClick = () => {
+    setLoading(true)
+
     const userId = localStorage.getItem('userId')
     const companyId = localStorage.getItem('companyId')
 
@@ -43,33 +46,35 @@ const ModelSaveModal = (props: any) => {
       target_y: props.payload.target_y,
       is_classification: 0,
     }
-    console.log('save payload:', payload)
+    // console.log('save payload:', payload)
     mutateSaveModel(payload)
   }
 
   return (
-    <div>
-      <Row>
-        {/* <Text type="danger">* </Text>
+    <Spin tip="Loading" size="large" spinning={true}>
+      <div>
+        <Row>
+          {/* <Text type="danger">* </Text>
         <SubText> Model Name</SubText> */}
-        <Input
-          style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-          placeholder="Type model name here..."
-          // maxLength={30}
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-          allowClear
-        />
-      </Row>
+          <Input
+            style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
+            placeholder="Type model name here..."
+            // maxLength={30}
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            allowClear
+          />
+        </Row>
 
-      <CustomButton
-        visible={true}
-        style={{ width: 200, height: 40, margin: '20px auto', fontSize: 15, fontWeight: 'bold' }}
-        onClick={handleClick}
-      >
-        Save
-      </CustomButton>
-    </div>
+        <CustomButton
+          visible={true}
+          style={{ height: 40, marginTop: '30px', fontSize: 15, fontWeight: 'bold' }}
+          onClick={handleClick}
+        >
+          Save
+        </CustomButton>
+      </div>
+    </Spin>
   )
 }
 

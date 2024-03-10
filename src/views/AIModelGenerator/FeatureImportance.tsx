@@ -16,8 +16,8 @@ const FeatureImportance = ({ data, colors }: any) => {
       const colorOrder = data?.labels?.map((el: string) => data?.all_input_x?.indexOf(el))
 
       const newColor: Array<any> = []
-      colorOrder.map((el: number) => {
-        if (el === -1) newColor.push('#F4F4F4')
+      colorOrder?.map((el: number) => {
+        if (el === -1) newColor.push('#9E9E9E')
         else newColor.push(colors[el])
       })
       setColorChips(newColor)

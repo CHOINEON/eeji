@@ -6,6 +6,7 @@ import logoutBtnImage from 'assets/img/icons/logout_off.svg'
 import settingOffImage from 'assets/img/icons/setting_off.svg'
 import { useHistory } from 'react-router-dom'
 import './style/style.css'
+import Feedback from 'components/common/Feedback'
 
 const NavBar = (props: { routes: RoutesType[] }) => {
   const history = useHistory()
@@ -40,6 +41,7 @@ const NavBar = (props: { routes: RoutesType[] }) => {
       <div>
         {/* {createLinks(routes)} */}
         <HStack spacing="13">
+          <Feedback />
           <Button
             backgroundImage={logoutBtnImage}
             backgroundSize="contain"

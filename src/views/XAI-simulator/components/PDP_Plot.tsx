@@ -5,6 +5,7 @@ import { Line } from 'react-chartjs-2'
 import { Chart as ChartJS } from 'chart.js'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 
 ChartJS.register(ChartDataLabels)
 
@@ -19,6 +20,7 @@ const PDP_Plot = ({ data }: any) => {
       margin: 'auto',
     },
     responsive: true,
+    // maintainAspectRatio: false, //will take up entire container
     plugins: {
       datalabels: {
         display: false,
@@ -29,7 +31,7 @@ const PDP_Plot = ({ data }: any) => {
     },
   }
 
-  const options: SelectProps['options'] = Object.keys(data).map((key) => ({
+  const options: SelectProps['options'] = Object.keys(data)?.map((key) => ({
     value: key,
     label: key,
   }))
@@ -71,9 +73,10 @@ const PDP_Plot = ({ data }: any) => {
       <ComponentContainer>
         <div className="mt-1 ml-[20px] w-[420px]">
           <Title>Partical Dependence Plot</Title>
+          <InfoCircle content="하나의 변수가 예측 결과에 미치는 주변 효과" />
           <Select
-            className="ml-5 w-[150px] bg-[#F5F8FF] border-[#D5DCEF]"
-            defaultValue={options[0].value}
+            className="ml-2 w-[130px] bg-[#F5F8FF] border-[#D5DCEF]"
+            defaultValue={options[0]?.value}
             onChange={handleChange}
             options={options}
           />
@@ -98,7 +101,7 @@ const ComponentContainer = styled.div`
   padding: 5% 1%;
   background-color: #ffffff;
   width: 100%;
-  height: 49%;
+  height: 40%;
   box-shadow: 0px 0px 10px #5951db33;
   border: 1px solid #d5dcef;
   border-radius: 25px;

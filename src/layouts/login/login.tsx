@@ -16,7 +16,7 @@ import bottom_title from './img/bottom_title.png'
 import login_icon from './img/login_icon.png'
 import date from './img/date.png'
 import axios from 'axios'
-import { FormControl, FormLabel, Button, Input } from '@chakra-ui/react'
+import { FormControl, Button, Input } from '@chakra-ui/react'
 import { message, Select } from 'antd'
 import { Alert } from 'views/hmid/components/Modal/Alert'
 import { useRecoilState, useSetRecoilState } from 'recoil'
@@ -74,32 +74,32 @@ export const Login: React.FC = () => {
 
     //로그인 후 redirect된 URL에서 구글 인가코드 추출하여 백엔드로 전달하여 token발급받음
     const params = new URLSearchParams(window.location.search)
-    // console.log('URL search params:', params)
+    console.log('URL search params:', params)
     const code = params.get('code')
 
-    if (code) {
-      console.log('login mounted and the code is ::', code)
-      axios
-        .post(process.env.REACT_APP_NEW_API_SERVER_URL + '/login/google', { code })
-        .then((response) => {
-          console.log('/login/google response: ', response.data)
-          if (response.data.user_info) {
-            //로그인 상태 확인되면 localStorage에 user정보 저장 ->  datasetList 페이지로 redirect
-            localStorage.setItem('userId', response.data.user_info.email)
-            localStorage.setItem('userData', JSON.stringify(response.data.user_info))
+    // if (code) {
+    //   console.log('login mounted and the code is ::', code)
+    //   axios
+    //     .post(process.env.REACT_APP_NEW_API_SERVER_URL + '/login/google', { code })
+    //     .then((response) => {
+    //       console.log('/login/google response: ', response.data)
+    //       if (response.data.user_info) {
+    //         //로그인 상태 확인되면 localStorage에 user정보 저장 ->  datasetList 페이지로 redirect
+    //         localStorage.setItem('userId', response.data.user_info.email)
+    //         localStorage.setItem('userData', JSON.stringify(response.data.user_info))
+    //         localStorage.setItem('companyId', response.data.user_info.com_id)
+    //         localStorage.setItem('userPicture', response.data.user_info.picture)
 
-            localStorage.setItem('userPicture', response.data.user_info.picture)
-
-            window.location.href = '/admin/main'
-            // setIsAuthenticated(true)
-            // window.location.href = '/admin/data-analysis'
-          }
-        })
-        .catch((error) => {
-          alert(error)
-          console.log('error: ' + error)
-        })
-    }
+    //         window.location.href = '/admin/main'
+    //         // setIsAuthenticated(true)
+    //         // window.location.href = '/admin/data-analysis'
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       alert(error)
+    //       console.log('error: ' + error)
+    //     })
+    // }
   }, [])
 
   const setLogin = (id: string, password: string) => {

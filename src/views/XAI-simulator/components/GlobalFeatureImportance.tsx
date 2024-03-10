@@ -10,7 +10,7 @@ const GlobalFeatureImportance = ({ data, colors }: any) => {
         <div className="mt-1 ml-[20px] w-[420px]">
           <Title>Global Attribution</Title>
           <FeatureImportance data={data} colors={colors} />
-          <div className="my-4 block float-left w-full">
+          <div className="my-6 block float-left w-full">
             <AIbutton>AI</AIbutton>
             <AITextContainer>
               현재 예측 모델에서 가장 영향력이 큰 변수는 <b>{data?.labels[0]}</b>
@@ -28,7 +28,7 @@ export default GlobalFeatureImportance
 const ComponentContainer = styled.div`
   // border: 1px solid red;
   width: 100%;
-  height: 49%;
+  height: 57%;
   margin-top: 22px;
   display: block;
   float: left;
