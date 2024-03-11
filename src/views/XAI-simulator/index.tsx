@@ -1,18 +1,23 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 import { Box } from '@chakra-ui/react'
-import React from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import React, { MouseEventHandler, useEffect, useState } from 'react'
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import AnalysisResult from './AnalysisResult'
-import { xaiResultStore } from './store/analyze/atom'
+import { customModelStore, xaiResultStore } from './store/analyze/atom'
 import UploadPage from './UploadPage'
 
 const XAIsimulator = () => {
   const [analysisResult, setAnalysisResult] = useRecoilState(xaiResultStore)
+  const resetAnalysisResult = useResetRecoilState(xaiResultStore)
+
+  useEffect(() => {
+    resetAnalysisResult()
+  }, [])
 
   return (
     <>
       <Box style={{ position: 'relative', zIndex: 1000, width: '100%', height: '100%' }}>
-        {analysisResult.feature_length > 0 ? <AnalysisResult /> : <UploadPage />}
+        {analysisResult?.feature_length > 0 ? <AnalysisResult /> : <UploadPage />}
         {/* <AnalysisResult /> */}
         {/* <Page /> */}
       </Box>

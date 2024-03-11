@@ -16,7 +16,7 @@ import bottom_title from './img/bottom_title.png'
 import login_icon from './img/login_icon.png'
 import date from './img/date.png'
 import axios from 'axios'
-import { FormControl, FormLabel, Button, Input } from '@chakra-ui/react'
+import { FormControl, Button, Input } from '@chakra-ui/react'
 import { message, Select } from 'antd'
 import { Alert } from 'views/hmid/components/Modal/Alert'
 import { useRecoilState, useSetRecoilState } from 'recoil'
@@ -87,7 +87,7 @@ export const Login: React.FC = () => {
             //로그인 상태 확인되면 localStorage에 user정보 저장 ->  datasetList 페이지로 redirect
             localStorage.setItem('userId', response.data.user_info.email)
             localStorage.setItem('userData', JSON.stringify(response.data.user_info))
-
+            localStorage.setItem('companyId', response.data.user_info.com_id || 'google')
             localStorage.setItem('userPicture', response.data.user_info.picture)
 
             window.location.href = '/admin/main'

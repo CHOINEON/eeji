@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
-import styled from '@emotion/styled'
 import axios from 'axios'
 import { ThemeProvider } from '@mui/material/styles'
 import { theme } from './theme'
@@ -91,7 +90,7 @@ const ModelList = (props: any) => {
           user_id
       )
       .then((response) => {
-        console.log('response:', response)
+        // console.log('response:', response)
         if (response.status === 200) {
           messageApi.open({
             type: 'success',

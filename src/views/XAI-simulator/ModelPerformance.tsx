@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import { dataPropertyState, selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import styled from 'styled-components'
-import { useMutation } from 'react-query'
 import IcoPerformance from 'assets/img/icons/XAI/icon_perfromanceModel.png'
 import { PerformanceModel, PerformanceModelTyeps } from 'apis/type/ModelPerformanceOption'
 import { message } from 'antd'
@@ -10,6 +9,14 @@ import { analysisResponseAtom, filteredResultState } from 'views/AIModelGenerato
 import { modalState } from 'stores/modal'
 import useModal from 'hooks/useModal'
 import ModelApi from 'apis/ModelApi'
+import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
+
+const errorInfo: any = {
+  MAE: '평균절대오차. 모든 오차 절대값의 합을 평균. (0에 가까울 수록 좋은 모델)',
+  MSE: '평균제곱오차. 오차를 제곱한 값의 평균. (알고리즘이 예측한 값과 실제 정답과의 차이)',
+  RMSE: '평균 제곱근 오차. 예측 모델에서 예측한 값과 실제 값 사이의 평균 차이. 예측 모델이 목표 값(정확도)를 얼마나 잘 예측할 수 있는지 추정.',
+  f1_score: '정확성과 재현율을 균형있게 평가하는 성능 지표. (0~1 사이의 값을 가지며, 높을 수록 좋음)',
+}
 
 const ModelPerformance = () => {
   const [modal, setModal] = useRecoilState(modalState)
@@ -20,19 +27,9 @@ const ModelPerformance = () => {
   const data = useRecoilValue(filteredResultState('error'))
   const currentKey = useRecoilValue(filteredResultState('uuid'))
 
-  // console.log('ModelPerformance data::', data)
-  const { mutate: mutateSaveModel } = useMutation(ModelApi.saveGeneratedModel, {
-    onSuccess: (response: any) => {
-      //
-    },
-    onError: (error: any, query: any) => {
-      // console.error(error)
-    },
-  })
-
   const handleSave = () => {
-    console.log('selectedData:', selectedData)
-    console.log('currentKey:', currentKey)
+    // console.log('selectedData:', selectedData)
+    // console.log('currentKey:', currentKey)
 
     const userId = localStorage.getItem('userId')
     const companyId = localStorage.getItem('companyId')
@@ -94,7 +91,9 @@ const ModelPerformance = () => {
               <PerformanceModelValue>INEEJI_1</PerformanceModelValue>
             </PerformanceContentsBox>
             <PerformanceContentsBox>
-              <PerformanceContents>F-SCORE</PerformanceContents>
+              <PerformanceContents>
+                F-SCORE <InfoCircle content={errorInfo.f1_score} />
+              </PerformanceContents>
 
               {Object.keys(data[0]).map((key: string, idx: number) => {
                 const modelKey: any = key
@@ -118,7 +117,10 @@ const ModelPerformance = () => {
               return (
                 <PerformanceContentsBox style={boxStyle} key={modelKey}>
                   <div>
-                    <PerformanceContents>{modelKey.toString().toUpperCase()}</PerformanceContents>
+                    <PerformanceContents>
+                      {modelKey.toString().toUpperCase()}
+                      <InfoCircle content={errorInfo[modelKey]} />
+                    </PerformanceContents>
                     <PerformanceValue>{formatNumber(data[0][modelKey as keyof (typeof data)[0]])}</PerformanceValue>
                   </div>
                 </PerformanceContentsBox>
@@ -154,7 +156,7 @@ const PerformanceTitle = styled.span`
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
   color: #95eb61;
   font-weight: bold;
-  margin-bottom: 7.5px;
+  // margin-bottom: 7.5px;
   font-size: 20px;
 `
 const PerformanceContentsWrap = styled.div`
@@ -164,11 +166,13 @@ const PerformanceContentsWrap = styled.div`
 const PerformanceContentsBox = styled.div`
   flex: 1;
 `
-const PerformanceContents = styled.span`
+const PerformanceContents = styled.div`
+  // display: inline-block;
+  // float: left;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
   color: #fff;
   font-size: 20px;
-  padding-right: 10px;
+  // padding-right: 10px;
   font-weight: bold;
 `
 const PerformanceModelValue = styled.span`

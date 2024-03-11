@@ -11,7 +11,6 @@ import App from './App'
 import { App as Antd } from 'antd'
 import { Loading } from 'components/common/Loading'
 import GlobalModal from 'components/modal/GlobalModal'
-import Feedback from 'components/common/Feedback'
 
 const antdCustomTheme = {
   token: {
@@ -88,7 +87,6 @@ ReactDOM.render(
           <Antd>
             <App />
             <GlobalModal />
-            <Feedback />
           </Antd>
           {/* <Toaster /> */}
           {/* <BrowserRouter>

@@ -77,7 +77,7 @@ const TabChild = () => {
       const payload = {
         set_auto: true,
         user_id: localStorage.getItem('userId'),
-        com_id: localStorage.getItem('companyId'),
+        com_id: localStorage.getItem('companyId') || 'google',
         dataset_id: selectedData.ds_id,
         date_col: selectedData.dateCol,
         start_date: selectedData.startDate,

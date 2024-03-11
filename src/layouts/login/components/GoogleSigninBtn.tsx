@@ -16,7 +16,7 @@ const GoogleSignin = () => {
 
   const oAuthHandler = (): void => {
     const REDIRECT_URI = `${process.env.REACT_APP_REDIRECT_URL}/login`
-    console.log('REDIRECT_URI:', REDIRECT_URI)
+    // console.log('REDIRECT_URI:', REDIRECT_URI)
     const GoogleURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.email`
 
     window.location.assign(GoogleURL)

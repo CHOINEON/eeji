@@ -42,16 +42,12 @@ const AnalysisResult = () => {
     console.log('AnalysisResult  mounted data', data)
 
     //각 입력변수별로 활성화 여부를 담는 배열 세팅
-    const obj = data.feature_list.reduce((accumulator, value) => {
+    const obj = data?.feature_list.reduce((accumulator, value) => {
       return { ...accumulator, [value]: true }
     }, {})
 
     setActiveVars(obj)
   }, [])
-
-  useEffect(() => {
-    console.log('activeVars', activeVars)
-  }, [activeVars])
 
   const handleClick = (e: any) => {
     const selectedVar = e.target.innerText
@@ -105,7 +101,6 @@ const AnalysisResult = () => {
                     ))}
                   </Space>
                 </LegendContainer>
-
                 <AnalysisGrid
                   localWeight={filteredData}
                   localValue={data.input_data}
@@ -175,7 +170,7 @@ const Container = styled.div`
 `
 
 const RoundedBox = styled.div<Container>`
-  margin-right: 0.5vw;
+  // padding-right: 0.5vw;
   background-color: #fff;
   box-shadow: 0px 5px 10px #4338f733;
   border-radius: 20px;
