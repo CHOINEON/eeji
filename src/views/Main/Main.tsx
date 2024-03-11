@@ -9,12 +9,10 @@ const Main = () => {
       <Box my="60px">
         <MainTitle>INEEJI’s INFINITE OPTIMAL SERIES™</MainTitle>
         <SubText>
-          is Prediction solution for ENERGY SAVING based on time series data that enables companies to realize
-          productivity improvement,
+          is Prediction solution for time series data that enables companies to realize productivity improvement,
         </SubText>
         <SubText>
-          production energy cost reduction, and quality improvement through process optimization of industrial
-          processes.
+          production energy cost reduction and quality improvement through process optimization of industrial processes.
         </SubText>
       </Box>
       <Box>
@@ -27,7 +25,7 @@ const Main = () => {
 const IconList = () => {
   return (
     <>
-      <Wrap spacing="30px" justify="center" height={200} margin={'15vh 0'}>
+      <Wrap spacing="30px" justify="center" height={200} margin={'13vh 0'}>
         {MenuList.map((item: any) => {
           return (
             <MenuItem key={item.title}>
