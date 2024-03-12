@@ -7,6 +7,7 @@ const DatasetApi = {
   //전체 데이터셋 리스트 가져오기
   getDatasetList: async (user_id: string): Promise<TResponseType<IDatasetList>> => {
     const { data } = await axiosPrivate.post(`/api/dataset_list/${user_id}?user_id=${user_id}`)
+    console.log('data:', data)
 
     return data
   },

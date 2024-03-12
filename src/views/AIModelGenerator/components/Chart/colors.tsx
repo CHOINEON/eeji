@@ -1,17 +1,27 @@
 export const chartColors = [
+  '#FF9936',
+  '#FFE346',
+  '#893CC1',
   '#8779ED',
+  '#617EFF',
+  '#45E516',
   '#F77070',
-  '#FC8800',
-  // '#31D600',  연두색 - 하이라이트(실제값)
+  '#FF3D50',
+  '#52C2CC',
   '#63C1FA',
   '#1A73FF',
-  '#52C2CC',
+  '#FC8800',
+  // '#31D600',  연두색 - 하이라이트(실제값)
+  '#8779ED',
+  '#F77070',
   '#FFE346',
   '#FF9936',
   '#45E516',
+  '#63C1FA',
+  '#52C2CC',
   '#617EFF',
   '#893CC1',
-  '#FF3D50',
+  '#1A73FF',
 ]
 
 export const colorsForDoughnut = [
@@ -40,7 +50,6 @@ export const colorsForStackedBarChart = [
   '#893CC1',
   '#52C2CC',
   '#45E516',
-  '#FFE346',
   '#FF9936',
   '#F77070',
   '#FF3D50',
@@ -52,7 +61,7 @@ export const colorsForStackedBarChart = [
   '#893CC1',
   '#52C2CC',
   '#45E516',
-  '#FFE346',
+  // '#FFE346', //노란색 잘 안보임
   '#FF9936',
   '#F77070',
   '#FF3D50',

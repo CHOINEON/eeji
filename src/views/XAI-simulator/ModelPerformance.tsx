@@ -92,7 +92,7 @@ const ModelPerformance = () => {
             </PerformanceContentsBox>
             <PerformanceContentsBox>
               <PerformanceContents>
-                F-SCORE <InfoCircle content={errorInfo.f1_score} />
+                F-SCORE <InfoCircle content={errorInfo.f1_score} color="#F2F5FC" />
               </PerformanceContents>
 
               {Object.keys(data[0]).map((key: string, idx: number) => {
@@ -119,7 +119,7 @@ const ModelPerformance = () => {
                   <div>
                     <PerformanceContents>
                       {modelKey.toString().toUpperCase()}
-                      <InfoCircle content={errorInfo[modelKey]} />
+                      <InfoCircle content={errorInfo[modelKey]} color="#F2F5FC" />
                     </PerformanceContents>
                     <PerformanceValue>{formatNumber(data[0][modelKey as keyof (typeof data)[0]])}</PerformanceValue>
                   </div>

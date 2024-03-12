@@ -78,7 +78,6 @@ const AnalysisResult = () => {
                   <div className="w-1/7 text-left">
                     <ColumnHeader width="100%">입력변수</ColumnHeader>
                   </div>
-
                   <div className="w-6/7">
                     {data.feature_list.map((value: number, index) => (
                       <button
@@ -94,14 +93,17 @@ const AnalysisResult = () => {
                     ))}
                   </div>
                 </VariableRow>
-                <LegendContainer>
-                  <Space direction="horizontal">
-                    {data.feature_list.map((value: number, index) => (
-                      <Badge color={colorsForStackedBarChart[index]} text={value} />
-                    ))}
-                  </Space>
-                </LegendContainer>
+                <VariableRow>
+                  <LegendContainer>
+                    <Space direction="horizontal">
+                      {data.feature_list.map((value: number, index) => (
+                        <Badge color={colorsForStackedBarChart[index]} text={value} size="small" />
+                      ))}
+                    </Space>
+                  </LegendContainer>
+                </VariableRow>
                 <AnalysisGrid
+                  featureList={data.feature_list}
                   localWeight={filteredData}
                   localValue={data.input_data}
                   predResult={data.predict_result}

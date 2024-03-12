@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import React from 'react'
+import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 import FeatureImportance from 'views/AIModelGenerator/FeatureImportance'
 import { AITextContainer, AIbutton } from 'views/AnalysisResult/FeatureAnalysis'
 
@@ -8,7 +9,8 @@ const GlobalFeatureImportance = ({ data, colors }: any) => {
     <>
       <ComponentContainer>
         <div className="mt-1 ml-[20px] w-[420px]">
-          <Title>Global Attribution</Title>
+          <Title className="inline-block">변수 기여도 통계(평균)</Title>
+          <InfoCircle content="각 변수가 전체 예측에 미치는 영향도" color="#9E9E9E" />
           <FeatureImportance data={data} colors={colors} />
           <div className="my-6 block float-left w-full">
             <AIbutton>AI</AIbutton>
