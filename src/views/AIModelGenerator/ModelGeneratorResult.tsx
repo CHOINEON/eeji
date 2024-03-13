@@ -1,27 +1,24 @@
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
-import PredictionResult from 'views/AIModelGenerator/PredictionResult'
 import { useMutation } from 'react-query'
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { inputOptionListState, selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
-import FeatureAnalysis from './FeatureAnalysis'
-import FeatureSelectModal from './FeatureSelectModal'
+import FeatureSelectModal from './components/Modal/FeatureSelectModal'
 import { featureSelectModalState } from 'views/AIModelGenerator/store/modal/atom'
 import { analysisResponseAtom, filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
 import { Select, Spin } from 'antd'
 import ModelApi from 'apis/ModelApi'
+import ClassificationResult from './Visualization/Data/ClassificationResult'
+import RegressionResult from './Visualization/Data/RegressionResult'
 
-const TabChild = () => {
+const ModelGeneratorResult = () => {
   const [loading, setLoading] = useState({ showing: false, text: '데이터 분석 중...' })
   const [options, setOptions] = useState([])
-  // const newdata = useRecoilValue(filteredResultState('feature_piechart_data'))
-
   const [modelIdx, setModelIdx] = useRecoilState(selectModelState)
 
   const selectedData = useRecoilValue(selectedDataState)
-  const [userInputOption, setUserInputOption] = useRecoilState(inputOptionListState)
   const resetSelectedData = useResetRecoilState(selectedDataState)
 
   const [modalState, setModalState] = useRecoilState(featureSelectModalState)
@@ -44,7 +41,6 @@ const TabChild = () => {
         },
       ])
 
-      // setFeatureImportanceData(result['feature_piechart_data'])
       setSelectedFeatureX(result['selected_input'])
     },
     onError: (error: any) => {
@@ -82,23 +78,10 @@ const TabChild = () => {
         date_col: selectedData.dateCol,
         start_date: selectedData.startDate,
         end_date: selectedData.endDate,
-        x_value: userInputOption.x_value || null,
+        // x_value: null,
         y_value: selectedData.targetY || '',
-        type_missing: userInputOption.type_missing,
-        number_missing: userInputOption.number_missing,
-        type_outlier: userInputOption.type_outlier,
-        number_std: userInputOption.number_std,
-        number_perc: userInputOption.number_perc,
-        type_scaling: userInputOption.type_scaling,
-        number_ma: userInputOption.number_ma,
-        type_model: userInputOption.type_model,
-        number_epoch: userInputOption.number_epoch,
-        number_beyssian: userInputOption.number_beyssian,
         if_classification: selectedData.isClassification,
       }
-      const controller = new AbortController()
-      // setController(controller)
-      // console.log('tab child / payload:', payload)
 
       mutateRunning({ type: 'request', payload: payload })
     }
@@ -150,24 +133,8 @@ const TabChild = () => {
             <p className="w-full block float-left font-semibold text-[18px] text-[#A3AFCF]">{selectedData.name}</p>
           </div>
 
-          {analysisResponse && analysisResponse.length > 0 && (
-            <>
-              <div
-                style={{
-                  // border: '1px solid red',
-                  width: '68%',
-                  padding: '5px 30px',
-                  display: 'block',
-                  float: 'left',
-                }}
-              >
-                <PredictionResult />
-              </div>
-              <div style={{ width: '30%', marginTop: '-50px', display: 'inline-block', float: 'left' }}>
-                <FeatureAnalysis />
-              </div>
-            </>
-          )}
+          {analysisResponse.length > 0 &&
+            (selectedData.isClassification ? <ClassificationResult /> : <RegressionResult />)}
           <FeatureSelectModal data={selectedFeatureX} onRunning={handleGenerate} />
         </ComponentContainer>
       </Spin>
@@ -175,7 +142,7 @@ const TabChild = () => {
   )
 }
 
-export default TabChild
+export default ModelGeneratorResult
 
 const Title = styled.span`
   display: block;

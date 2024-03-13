@@ -8,7 +8,7 @@ export interface IModelOptionReq {
   date_col: string
   start_date: string
   end_date: string
-  x_value?: Array<string>
+  x_value?: Array<string> | null
   y_value: string
   type_missing?: string
   number_missing?: number

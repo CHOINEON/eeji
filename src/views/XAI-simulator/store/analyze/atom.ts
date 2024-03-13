@@ -10,7 +10,7 @@ interface IPredictResult {
 }
 
 interface IActiveVariables {
-  [key: string]: number
+  [key: string]: boolean
 }
 
 export const activeVariables = atom({

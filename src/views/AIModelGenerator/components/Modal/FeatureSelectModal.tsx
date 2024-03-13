@@ -16,7 +16,7 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
   const [variableList, setVariableList] = useRecoilState(variableStore) //전체
   const [analysisResponse, setAnalysisResponse] = useRecoilState(analysisResponseAtom)
   const selectedData = useRecoilValue(selectedDataState)
-  const userInputOption = useRecoilValue(inputOptionListState)
+  // const userInputOption = useRecoilValue(inputOptionListState)
 
   const [options, setOptions] = useState([])
   const [selectedFeatures, setSelectedFeatures] = useState([])
@@ -102,18 +102,20 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
         end_date: selectedData.endDate,
         x_value: selectedFeatures || null,
         y_value: selectedData.targetY || '',
-        type_missing: userInputOption.type_missing,
-        number_missing: userInputOption.number_missing,
-        type_outlier: userInputOption.type_outlier,
-        number_std: userInputOption.number_std,
-        number_perc: userInputOption.number_perc,
-        type_scaling: userInputOption.type_scaling,
-        number_ma: userInputOption.number_ma,
-        type_model: userInputOption.type_model,
-        number_epoch: userInputOption.number_epoch,
-        number_beyssian: userInputOption.number_beyssian,
+        // type_missing: userInputOption.type_missing,
+        // number_missing: userInputOption.number_missing,
+        // type_outlier: userInputOption.type_outlier,
+        // number_std: userInputOption.number_std,
+        // number_perc: userInputOption.number_perc,
+        // type_scaling: userInputOption.type_scaling,
+        // number_ma: userInputOption.number_ma,
+        // type_model: userInputOption.type_model,
+        // number_epoch: userInputOption.number_epoch,
+        // number_beyssian: userInputOption.number_beyssian,
         if_classification: selectedData.isClassification,
       }
+      // console.log('payload:', payload)
+
       const controller = new AbortController()
       // setController(controller)
       // console.log('custom model generate / payload:', payload)

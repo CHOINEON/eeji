@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Tabs } from 'antd'
 import tw from 'tailwind-styled-components'
-import TabChild from './TabChild'
+import TabChild from './ModelGeneratorResult'
 import { v4 } from 'uuid'
 
 const TabTitle = tw.p`
@@ -13,7 +13,7 @@ const TabTitle = tw.p`
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string
 
-const AnalysisResult = () => {
+const TabContainer = () => {
   const defaultPanes = Array(1)
     .fill(null)
     .map((_, index) => {
@@ -61,4 +61,4 @@ const AnalysisResult = () => {
   )
 }
 
-export default AnalysisResult
+export default TabContainer

@@ -2,7 +2,7 @@
 import { Box } from '@chakra-ui/react'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
-import AnalysisResult from './AnalysisResult'
+import XaiAnalysisResult from './XaiAnalysisResult'
 import { customModelStore, xaiResultStore } from './store/analyze/atom'
 import UploadPage from './UploadPage'
 
@@ -17,7 +17,7 @@ const XAIsimulator = () => {
   return (
     <>
       <Box style={{ position: 'relative', zIndex: 1000, width: '100%', height: '100%' }}>
-        {analysisResult?.feature_length > 0 ? <AnalysisResult /> : <UploadPage />}
+        {analysisResult?.feature_length > 0 ? <XaiAnalysisResult /> : <UploadPage />}
         {/* <AnalysisResult /> */}
         {/* <Page /> */}
       </Box>

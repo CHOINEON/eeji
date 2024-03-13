@@ -14,11 +14,12 @@ import {
 } from 'chart.js'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import { Line } from 'react-chartjs-2'
-import { analysisResponseAtom } from './store/response/atoms'
 import { useRecoilValue } from 'recoil'
-import { selectedDataState } from './store/dataset/atom'
-import { chartColors } from './components/Chart/colors'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
+import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { chartColors } from 'views/AIModelGenerator/components/Chart/colors'
+import FeatureAnalysis from '../Features/FeatureAnalysis'
 
 ChartJS.register(
   ChartDataLabels,
@@ -32,8 +33,7 @@ ChartJS.register(
   Legend
 )
 
-//https://itwithruilan.tistory.com/77 커스텀
-const PredictionResult = () => {
+const RegressionResult = () => {
   const analysisResponse = useRecoilValue(analysisResponseAtom)
   const selectedData = useRecoilValue(selectedDataState)
   const [dataset, setDataset] = useState([])
@@ -320,27 +320,38 @@ const PredictionResult = () => {
   }
 
   return (
-    <ChartWrapper /**isClassification={selectedData.isClassification} */>
-      <div id="legend-container"></div>
-      <Line
-        options={selectedData.isClassification === 1 ? optionsForClassification : options}
-        data={chartData}
-        plugins={[htmlLegendPlugin]}
-      />
-    </ChartWrapper>
+    <>
+      <div
+        style={{
+          // border: '1px solid red',
+          width: '68%',
+          padding: '5px 30px',
+          display: 'block',
+          float: 'left',
+        }}
+      >
+        <ChartWrapper /**isClassification={selectedData.isClassification} */>
+          <div id="legend-container"></div>
+          <Line
+            options={selectedData.isClassification === 1 ? optionsForClassification : options}
+            data={chartData}
+            plugins={[htmlLegendPlugin]}
+          />
+        </ChartWrapper>
+      </div>
+      <div style={{ width: '30%', marginTop: '-50px', display: 'inline-block', float: 'left' }}>
+        <FeatureAnalysis />
+      </div>
+    </>
   )
 }
 
-export default PredictionResult
+export default RegressionResult
 
 const ChartWrapper = styled.div`
-  // display: ${(props: any) => (props.toggle ? 'block' : 'none')};
   // border: 1px solid pink;
   width: 100%;
-  // height: 100%;
   height: 600px;
-  // width: ${(props: any) => (props.isClassification === 1 ? '200px' : '100%')};
-  // height: ${(props: any) => (props.isClassification === 1 ? '600px' : '100%')};
   position: relative;
   float: left;
   margin: 0 10px;

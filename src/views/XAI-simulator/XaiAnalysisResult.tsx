@@ -2,21 +2,14 @@ import styled from '@emotion/styled'
 import { Badge, Button, Col, Row, Space, Tag } from 'antd'
 import Title from 'antd/es/typography/Title'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
-import InfoCircle from '../AIModelGenerator/components/Icon/InfoCircle'
 import AnalysisGrid, { ColumnHeader, DataRow } from './Visualization/AnalysisGrid'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { activeVariables, localAttrState, transformedXaiResultStore, xaiResultStore } from './store/analyze/atom'
 import GlobalFeatureImportance from './components/GlobalFeatureImportance'
 import PDP_Plot from './components/PDP_Plot'
 import tw from 'tailwind-styled-components'
-import {
-  colorsForStackedBarChart,
-  colorsForStackedBarChart as STACKED_BAR_CHART_COLORS,
-} from 'views/AIModelGenerator/components/Chart/colors'
-
-interface IactiveButtons {
-  [key: string]: boolean
-}
+import { colorsForStackedBarChart } from 'views/AIModelGenerator/components/Chart/colors'
+import { UndoOutlined } from '@ant-design/icons'
 
 export const transformDataByRow = (count: number, rawData: any) => {
   const sample_size = count //["1","2","3","4"]
@@ -33,7 +26,7 @@ export const transformDataByRow = (count: number, rawData: any) => {
   return transformedData
 }
 
-const AnalysisResult = () => {
+const XaiAnalysisResult = () => {
   const [data, setData] = useRecoilState(xaiResultStore)
   const [activeVars, setActiveVars] = useRecoilState(activeVariables)
   const filteredData = useRecoilValue(localAttrState)
@@ -52,6 +45,14 @@ const AnalysisResult = () => {
   const handleClick = (e: any) => {
     const selectedVar = e.target.innerText
     setActiveVars({ ...activeVars, [selectedVar]: !activeVars[selectedVar] })
+  }
+
+  const handleClearFilter = (e: any) => {
+    console.log('activeVars:', activeVars)
+
+    for (const [key, value] of Object.entries(activeVars)) {
+      setActiveVars({ ...activeVars, [key]: true })
+    }
   }
 
   return (
@@ -76,7 +77,10 @@ const AnalysisResult = () => {
               <RoundedBox width={'100%'} height={'75vh'}>
                 <VariableRow>
                   <div className="w-1/7 text-left">
-                    <ColumnHeader width="100%">입력변수</ColumnHeader>
+                    <RowLabel>입력변수</RowLabel>
+                    <Button type="text" icon={<UndoOutlined />} onClick={handleClearFilter}>
+                      Clear Filter
+                    </Button>
                   </div>
                   <div className="w-6/7">
                     {data.feature_list.map((value: number, index) => (
@@ -97,7 +101,7 @@ const AnalysisResult = () => {
                   <LegendContainer>
                     <Space direction="horizontal">
                       {data.feature_list.map((value: number, index) => (
-                        <Badge color={colorsForStackedBarChart[index]} text={value} size="small" />
+                        <Badge color={colorsForStackedBarChart[index]} text={value} size="small" key={index} />
                       ))}
                     </Space>
                   </LegendContainer>
@@ -124,7 +128,7 @@ const AnalysisResult = () => {
   )
 }
 
-export default React.memo(AnalysisResult)
+export default React.memo(XaiAnalysisResult)
 
 interface Container {
   width?: any
@@ -135,8 +139,18 @@ interface Container {
 
 const VariableRow = styled(DataRow)`
   background-color: #ffffff;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
 `
+
+const RowLabel = styled.div`
+  font-family: 'Helvetica Neue';
+  display: inline-block;
+  text-align: center;
+  color: #002d65;
+  height: 32px;
+  line-height: 32px;
+`
+
 const UploadContainer = styled.div`
   // border: 1px solid red;
   position: absolute;

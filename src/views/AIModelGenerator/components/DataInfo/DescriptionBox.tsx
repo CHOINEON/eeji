@@ -8,7 +8,7 @@ import { datasetEditModalState } from 'views/AIModelGenerator/store/modal/atom'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { useMutation, useQueryClient } from 'react-query'
 import DatasetApi from 'apis/DatasetApi'
-import { FileName } from 'views/AnalysisResult/components/Title'
+import { FileName } from 'views/AIModelGenerator/components/Input/Title'
 
 export interface DescriptionBoxProps {
   ds_id?: string
