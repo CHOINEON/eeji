@@ -10,7 +10,7 @@ import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 ChartJS.register(ChartDataLabels)
 
 const PDP_Plot = ({ data }: any) => {
-  console.log('data:', data)
+  // console.log('data:', data)
   const keys: Array<string> = Object.keys(data)
   const values: Array<Array<unknown>> = Object.values(data)
 

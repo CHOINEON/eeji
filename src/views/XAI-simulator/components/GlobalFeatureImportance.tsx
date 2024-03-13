@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import React from 'react'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
-import FeatureImportance from 'views/AIModelGenerator/FeatureImportance'
-import { AITextContainer, AIbutton } from 'views/AnalysisResult/FeatureAnalysis'
+import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
+import { AITextContainer, AIbutton } from 'views/AIModelGenerator/Visualization/Features/FeatureAnalysis'
 
 const GlobalFeatureImportance = ({ data, colors }: any) => {
   return (

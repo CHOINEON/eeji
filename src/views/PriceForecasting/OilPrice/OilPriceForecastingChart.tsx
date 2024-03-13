@@ -7,7 +7,7 @@ import annotationPlugin, { AnnotationOptions, AnnotationPluginOptions } from 'ch
 import { useMutation } from 'react-query'
 import fetchChartData from '../../../apis/PriceForecastApi'
 import { Line } from 'react-chartjs-2'
-import { Title } from 'views/AnalysisResult/components/Title'
+import { Title } from 'views/AIModelGenerator/components/Input/Title'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 const { Text, Link } = Typography
 
