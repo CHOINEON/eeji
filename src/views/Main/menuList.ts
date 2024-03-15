@@ -27,7 +27,7 @@ export const MenuList = [
   },
   {
     id: 3,
-    title: 'Commodity Price Forecast',
+    title: 'Commodity Index Forecast',
     title_KR: '주요 경제 지표 예측',
     icon_src: icon_IndexForecast,
     icon_inbox: icon_03_b,

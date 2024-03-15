@@ -35,7 +35,7 @@ const routes = [
     component: XAIsimulator,
   },
   {
-    name: 'Commodity Price Forecast',
+    name: 'Commodity Index Forecast',
     layout: '/admin',
     path: '/price-forecast',
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,

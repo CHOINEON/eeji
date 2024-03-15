@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Input, message, Row, Spin, Typography } from 'antd'
+import { Input, App, Row, Spin, Typography } from 'antd'
 import useModal from 'hooks/useModal'
 import React, { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
@@ -12,6 +12,7 @@ import ModelApi from 'apis/ModelApi'
 const ModelSaveModal = (props: any) => {
   // console.log('ModelSaveModal modal:', props)
 
+  const { message } = App.useApp()
   const { openModal, closeModal } = useModal()
   const [name, setName] = useState(`Model_`)
   const [loading, setLoading] = useState(false)

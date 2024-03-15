@@ -21,8 +21,9 @@ export interface PerformanceModel {
   [key: string]: PerformanceModelTyeps
 }
 export type PerformanceModelTyeps = {
-  f1_score?: string
-  mae?: string
-  mse?: string
-  rmse?: string
+  f1_score?: number
+  accuracy?: number
+  mae?: number
+  mse?: number
+  rmse?: number
 }

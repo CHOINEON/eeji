@@ -1,23 +1,24 @@
 import { axiosPrivate, axiosPublic } from './axios'
 import { TResponseType } from './type/commonResponse'
-import { IModelDataReq, IModelOptionReq, IModelOptionRes, IModelPostReq, IModelSaveReqParam } from './type/ModelOption'
+import { IModelDataReq, IModelOptionRes, IModelPostReq, IModelSaveReqParam } from './type/ModelOption'
 
 const controller = new AbortController()
-const signal = controller.signal
+// const signal = controller.signal
 
 const ModelApi = {
   //모델 옵션 설정해서 실행하기
   postModelwithOption: async (params: IModelPostReq): Promise<IModelOptionRes> => {
-    const config = {
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded',
-      },
-    }
+    // const config = {
+    //   headers: {
+    //     'content-type': 'application/x-www-form-urlencoded',
+    //   },
+    // }
 
     console.log('postModelwithOption params:', params)
 
-    // const { data } = await axiosPrivate.post(`/get_model_option`, params.payload)
-    const { data } = await axiosPublic.post(`api/get_model_option`, params.payload, config)
+    //배포 전에 바꿔야됨!
+    // const { data } = await axiosPublic.post(`test/get_model_option1`, params.payload)
+    const { data } = await axiosPublic.post(`api/get_model_option`, params.payload)
 
     return data
   },

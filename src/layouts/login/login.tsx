@@ -19,13 +19,13 @@ import axios from 'axios'
 import { FormControl, Button, Input } from '@chakra-ui/react'
 import { message, Select } from 'antd'
 import { Alert } from 'views/hmid/components/Modal/Alert'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useSetRecoilState } from 'recoil'
 import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
 
 import SidebarBrand from 'components/sidebar/components/Brand'
 import GoogleSignin from './components/GoogleSigninBtn'
 import AvailableServiceIcon from './components/AvailableServiceIcon'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation } from 'react-query'
 import UserApi from 'apis/UserApi'
 import useGetCompanies from 'hooks/queries/useGetCompanies'
 
@@ -43,7 +43,7 @@ export const Login: React.FC = () => {
   const { data } = useGetCompanies()
   const { mutate: mutateLogin } = useMutation(UserApi.login, {
     onSuccess: (response: any) => {
-      console.log('normal login response:', response)
+      console.log('user login response:', response)
 
       window.localStorage.setItem('userData', JSON.stringify(response))
       window.localStorage.setItem('companyId', company)
@@ -52,7 +52,7 @@ export const Login: React.FC = () => {
       window.location.href = '/admin/main'
     },
     onError: (error: any) => {
-      console.error(error)
+      // console.error(error)
       messageApi.open({
         type: 'error',
         content: error.response?.data.detail,
@@ -61,7 +61,7 @@ export const Login: React.FC = () => {
   })
 
   useEffect(() => {
-    console.log('company list data:', data)
+    console.log('company list:', data)
     if (data) {
       // setCompanyList(data)
       RenderCompanyList(data)
