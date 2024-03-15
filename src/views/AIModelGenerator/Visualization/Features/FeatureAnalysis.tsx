@@ -9,7 +9,7 @@ import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
 import ModelPerformance from 'views/XAI-simulator/ModelPerformance'
 import { colorsForDoughnut } from 'views/AIModelGenerator/components/Chart/colors'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
-
+import FeatureClassPerformance from './FeatureClassPerformance'
 const FeatureAnalysis = ({ data, input }: any) => {
   const analysisResponse = useRecoilValue(analysisResponseAtom)
   // const selectedData = useRecoilValue(selectedDataState)
@@ -17,7 +17,7 @@ const FeatureAnalysis = ({ data, input }: any) => {
 
   const [modelIdx, setModelIdx] = useRecoilState(selectModelState)
   const [chartData, setChartData] = useState({ labels: [], values: [] })
-
+  console.log('analysisResponse:', analysisResponse)
   useEffect(() => {
     // console.log('selectedData:', selectedData)
     // console.log('newdata:', newdata)
@@ -27,6 +27,7 @@ const FeatureAnalysis = ({ data, input }: any) => {
   return (
     <>
       <ModelPerformance />
+      <FeatureClassPerformance />
       <ComponentContainer>
         <SubTitle>
           Feature Importance
