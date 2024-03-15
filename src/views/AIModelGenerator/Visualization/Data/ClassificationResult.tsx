@@ -27,8 +27,8 @@ const ClassificationResult = () => {
         </div> */}
         <CustomTable />
       </div>
-      <div style={{ width: '30%', marginTop: '-50px', position: 'absolute', right: '30px', top: '115px' }}>
-        <FeatureAnalysis />
+      <div style={{ width: '450px', marginTop: '-100px', position: 'absolute', right: '30px', top: '115px' }}>
+        <FeatureAnalysis textVisible={false} />
       </div>
     </>
   )

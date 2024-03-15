@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { Select, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
@@ -11,19 +10,16 @@ import { colorsForDoughnut } from 'views/AIModelGenerator/components/Chart/color
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import FeatureClassPerformance from './FeatureClassPerformance'
 
-
-const FeatureAnalysis = ({ data, input }: any) => {
-
+const FeatureAnalysis = ({ textVisible }: any) => {
   const analysisResponse = useRecoilValue(analysisResponseAtom)
   // const selectedData = useRecoilValue(selectedDataState)
   // const newdata = useRecoilValue(filteredResultState('feature_data'))
 
   const [modelIdx, setModelIdx] = useRecoilState(selectModelState)
   const [chartData, setChartData] = useState({ labels: [], values: [] })
-  console.log('analysisResponse:', analysisResponse)
+  // console.log('analysisResponse:', analysisResponse)
+
   useEffect(() => {
-    // console.log('selectedData:', selectedData)
-    // console.log('newdata:', newdata)
     setChartData(analysisResponse[modelIdx]['feature_data'][0])
   }, [modelIdx])
 
@@ -31,12 +27,12 @@ const FeatureAnalysis = ({ data, input }: any) => {
     <>
       <ModelPerformance />
       <FeatureClassPerformance />
-      <ComponentContainer>
+      <ComponentContainer textVisible={textVisible}>
         <SubTitle>
-          Feature Importance
+          변수 중요도
           <InfoCircle content="변수 중요도가 높을 수록 예측 모델에 대한 영향력이 큽니다." />
         </SubTitle>
-        <>
+        <div className={textVisible ? 'block' : 'hidden'}>
           <div className="block float-left w-100">
             <AIbutton>AI</AIbutton>
             <AITextContainer>
@@ -51,10 +47,10 @@ const FeatureAnalysis = ({ data, input }: any) => {
               <b>{analysisResponse[modelIdx]?.input?.join(', ')}</b>입니다.
             </AITextContainer>
           </div>
-          <div className="block float-left w-100">
-            <FeatureImportance data={chartData} colors={colorsForDoughnut} />
-          </div>
-        </>
+        </div>
+        <div className="block float-left w-100">
+          <FeatureImportance data={chartData} colors={colorsForDoughnut} />
+        </div>
       </ComponentContainer>
     </>
   )
@@ -62,15 +58,18 @@ const FeatureAnalysis = ({ data, input }: any) => {
 
 export default FeatureAnalysis
 
-const ComponentContainer = styled.div`
+const ComponentContainer = styled.div<{ textVisible: boolean }>`
   display: block;
   float: left;
   margin: 5px;
-  min-height: 430px;
+  min-height: ${(props: any) => (props.textVisible ? '350px' : '200px')};
   background-color: #f6f8ff;
   border: 1px solid #a3afcf;
   border-radius: 10px;
   opacity: 1;
+  // overflow: auto;
+  white-space: wrap;
+  padding: 20px 30px;
 `
 
 const Title = styled.div`
@@ -78,12 +77,12 @@ const Title = styled.div`
   float: left;
   color: #002d65;
   font-weight: bold;
-  padding: 20px;
+  // padding: 20px 20px 0 20px;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
 `
 
 const SubTitle = styled(Title)`
-  font-size: 22px;
+  font-size: 20px;
   width: 100%;
 `
 
@@ -96,7 +95,7 @@ export const AIbutton = styled.button`
   border-radius: 3px;
   color: white;
   font-weight: 500;
-  margin-left: 20px;
+  // margin-left: 20px;
   margin-right: 10px;
 `
 

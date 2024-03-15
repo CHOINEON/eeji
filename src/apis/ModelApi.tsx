@@ -8,18 +8,7 @@ const controller = new AbortController()
 const ModelApi = {
   //모델 옵션 설정해서 실행하기
   postModelwithOption: async (params: IModelPostReq): Promise<IModelOptionRes> => {
-    // const config = {
-    //   headers: {
-    //     'content-type': 'application/x-www-form-urlencoded',
-    //   },
-    // }
-
-    console.log('postModelwithOption params:', params)
-
-    //배포 전에 바꿔야됨!
-    // const { data } = await axiosPublic.post(`test/get_model_option1`, params.payload)
     const { data } = await axiosPublic.post(`api/get_model_option`, params.payload)
-
     return data
   },
 

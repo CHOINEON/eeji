@@ -4,6 +4,11 @@ export type IUserLoginReq = {
   user_pass: string
 }
 
+export type IUserLogoutReq = {
+  com_id: string
+  user_id: string
+}
+
 export interface ICompanyInfo {
   com_id: string
   com_nm: string

@@ -6,7 +6,7 @@
  * 개발자 : 박윤희 (BAK YUN HEE)
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import main_bg from './img/bg.jpg'
 import main_font from './img/main_font.svg'
@@ -17,7 +17,7 @@ import login_icon from './img/login_icon.png'
 import date from './img/date.png'
 import axios from 'axios'
 import { FormControl, Button, Input } from '@chakra-ui/react'
-import { message, Select } from 'antd'
+import { message, Modal, Select } from 'antd'
 import { Alert } from 'views/hmid/components/Modal/Alert'
 import { useSetRecoilState } from 'recoil'
 import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
@@ -33,6 +33,7 @@ axios.defaults.withCredentials = true // withCredentials 전역 설정
 
 export const Login: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage()
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [id, setId] = React.useState()
   const [password, setPassword] = React.useState()
   const [company, setCompany] = React.useState<any>('')
@@ -52,7 +53,38 @@ export const Login: React.FC = () => {
       window.location.href = '/admin/main'
     },
     onError: (error: any) => {
-      // console.error(error)
+      console.log('error::', error)
+
+      if (error.response.status === 403) {
+        Modal.warning({
+          title: '로그인 확인',
+          content: (
+            <div>
+              <p>다른 기기에 로그인되어 있습니다. </p>
+              <p>현재 pc에서 다시 로그인 하시겠습니까?</p>
+            </div>
+          ),
+          onOk() {
+            const payload = {
+              com_id: company,
+              user_id: id,
+              user_pass: password,
+            }
+            mutateLogout(payload)
+          },
+          // footer: () => <button>test</button>,
+        })
+      }
+    },
+  })
+
+  const { mutate: mutateLogout } = useMutation(UserApi.logout, {
+    onSuccess: (response: any) => {
+      console.log('logout response:', response)
+      setLogin(id, password)
+    },
+    onError: (error: any) => {
+      // console.log('error::', error)
       messageApi.open({
         type: 'error',
         content: error.response?.data.detail,
@@ -118,40 +150,6 @@ export const Login: React.FC = () => {
         user_pass: password,
       }
       mutateLogin(payload)
-
-      // axios
-      //   .get(
-      //     process.env.REACT_APP_NEW_API_SERVER_URL +
-      //       '/api/user/info?com_id=' +
-      //       company +
-      //       '&user_id=' +
-      //       id +
-      //       '&user_pass=' +
-      //       password,
-      //     {
-      //       headers: {
-      //         Accept: '*/*',
-      //         'Content-Type': 'application/x-www-form-urlencoded;',
-      //       },
-      //       // timeout: 5000,
-      //     }
-      //   )
-      //   .then((response) => {
-      //     // getCompanyInfo(company)
-      //     window.localStorage.setItem('userData', JSON.stringify(response.data))
-      //     window.localStorage.setItem('companyId', company)
-      //     window.localStorage.setItem('userId', response.data[0].user_id)
-      //     window.localStorage.setItem('userPosition', response.data[0].user_position)
-      //     window.location.href = '/admin/main'
-      //   })
-      //   .catch((error) => {
-      //     console.log(error)
-      //     messageApi.open({
-      //       type: 'error',
-      //       content: error.response?.data.detail,
-      //     })
-      //     // error('아이디 또는 비밀번호가 틀립니다.')
-      //   })
     }
   }
 
@@ -198,29 +196,6 @@ export const Login: React.FC = () => {
     setCompany(value)
   }
 
-  // //회사 정보를 불러오는 함수
-  // const getCompanyInfo = (companyId: string) => {
-  //   // console.log(companyId)
-  //   axios
-  //     .get(process.env.REACT_APP_API_SERVER_URL + '/api/hmid/company/info?company_id=' + companyId, {
-  //       headers: {
-  //         Accept: '*/*',
-  //         'Content-Type': 'application/x-www-form-urlencoded;',
-  //       },
-  //       timeout: 5000,
-  //     })
-  //     .then((response) => {
-  //       console.log('[ get Company Info axios response data ] : ')
-  //       console.log(response.data)
-
-  //       window.localStorage.setItem('company_info', JSON.stringify(response.data[0]))
-  //       window.location.href = '/admin/data-analysis'
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.response)
-  //     })
-  // }
-
   return (
     <>
       {contextHolder}
@@ -234,9 +209,9 @@ export const Login: React.FC = () => {
         <BottomTitleParent>
           <BottomTitle />
           <BottomCotents>
-            is Prediction solution for ENERGY SAVING based on time series data that enables companies to realize
-            productivity improvement, production energy cost reduction and quality improvement through process
-            optimization of industrial processes.
+            is Prediction solution for time series data that enables companies to realize productivity improvement,
+            production energy cost reduction and quality improvement through process optimization of industrial
+            processes.
           </BottomCotents>
         </BottomTitleParent>
         <AvailableServiceIcon />

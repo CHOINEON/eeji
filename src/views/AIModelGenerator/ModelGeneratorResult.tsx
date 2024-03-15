@@ -51,20 +51,20 @@ const ModelGeneratorResult = () => {
 
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: (result: any) => {
-      console.log('postModelwithOption result:', result)
+      // console.log('postModelwithOption result:', result)
       setLoading({ showing: false, text: '' })
 
       setAnalysisResponse([
         ...analysisResponse,
         {
           pred_data: JSON.parse(result['prediction_data']),
-          row_data: tempData['result_table'],
-          performance: tempData['peformance_table'],
+          row_data: result['result_table'],
+          performance: result['peformance_table'],
           feature_data: result['feature_piechart_data'],
           input: result['selected_input'],
           error: result['metrics'],
           uuid: result['get_uuid'],
-          classes: tempData['classes'],
+          classes: result['classes'],
         },
       ])
 
@@ -194,7 +194,7 @@ const ComponentContainer = styled.div`
   float: left;
   justify-content: space-evenly;
   background-color: #ffffff;
-  min-height: 770px;
+  min-height: 800px;
   height: 100%;
   width: 100%;
   box-shadow: 0px 0px 10px #5951db33;

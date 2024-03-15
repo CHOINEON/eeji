@@ -56,7 +56,15 @@ const TabContainer = () => {
 
   return (
     <>
-      <Tabs hideAdd activeKey={activeKey} type="editable-card" items={items} onChange={onChange} onEdit={onEdit} />
+      <Tabs
+        style={{ display: 'block', whiteSpace: 'nowrap' }}
+        hideAdd
+        activeKey={activeKey}
+        type="editable-card"
+        items={items}
+        onChange={onChange}
+        onEdit={onEdit}
+      />
     </>
   )
 }
