@@ -12,6 +12,7 @@ import { Select, Spin } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import ClassificationResult from './Visualization/Data/ClassificationResult'
 import RegressionResult from './Visualization/Data/RegressionResult'
+import tempData from './data/classificationData.json'
 
 const ModelGeneratorResult = () => {
   const [loading, setLoading] = useState({ showing: false, text: '데이터 분석 중...' })
@@ -25,19 +26,45 @@ const ModelGeneratorResult = () => {
   const [analysisResponse, setAnalysisResponse] = useRecoilState(analysisResponseAtom)
   const [selectedFeatureX, setSelectedFeatureX] = useState([])
 
+  //개발중
+  // useEffect(() => {
+  //   console.log('data:', analysisResponse)
+  //   // setAnalysisResponse(tempData as any)
+  //   setAnalysisResponse([
+  //     ...analysisResponse,
+  //     {
+  //       pred_data: JSON.parse(tempData['prediction_data']),
+  //       row_data: tempData['result_table'],
+  //       performance: tempData['peformance_table'],
+  //       feature_data: tempData['feature_piechart_data'],
+  //       input: tempData['selected_input'],
+  //       error: tempData['metrics'],
+  //       uuid: tempData['get_uuid'],
+  //       classes: tempData['classes'],
+  //     },
+  //   ])
+
+  //   return () => {
+  //     resetSelectedData()
+  //   }
+  // }, [])
+
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: (result: any) => {
-      console.log('mutate result:', result)
+      console.log('postModelwithOption result:', result)
       setLoading({ showing: false, text: '' })
 
       setAnalysisResponse([
         ...analysisResponse,
         {
           pred_data: JSON.parse(result['prediction_data']),
+          row_data: tempData['result_table'],
+          performance: tempData['peformance_table'],
           feature_data: result['feature_piechart_data'],
           input: result['selected_input'],
           error: result['metrics'],
           uuid: result['get_uuid'],
+          classes: tempData['classes'],
         },
       ])
 
@@ -67,7 +94,6 @@ const ModelGeneratorResult = () => {
 
   useEffect(() => {
     setLoading({ showing: true, text: '데이터 분석 중...' })
-
     //Dataset list 컴포넌트 로드될 때 chaining effect 차단하기 위해 분기 처리
     if (selectedData.name !== '') {
       const payload = {
@@ -82,10 +108,8 @@ const ModelGeneratorResult = () => {
         y_value: selectedData.targetY || '',
         if_classification: selectedData.isClassification,
       }
-
       mutateRunning({ type: 'request', payload: payload })
     }
-
     return () => {
       resetSelectedData()
     }
@@ -104,6 +128,7 @@ const ModelGeneratorResult = () => {
   const handleChange = (value: string) => {
     setModelIdx(parseInt(value))
   }
+
   return (
     <>
       <Spin tip={loading.text} spinning={loading.showing} style={{ marginTop: '300px' }}>

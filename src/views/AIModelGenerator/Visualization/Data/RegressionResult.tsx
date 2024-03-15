@@ -38,10 +38,10 @@ const RegressionResult = () => {
   const selectedData = useRecoilValue(selectedDataState)
   const [dataset, setDataset] = useState([])
 
-  useEffect(() => {
-    console.log('selectedData:', selectedData)
-    console.log('PredictionResult analysisResponse:', analysisResponse)
-  }, [])
+  // useEffect(() => {
+  //   console.log('selectedData:', selectedData)
+  //   console.log('PredictionResult analysisResponse:', analysisResponse)
+  // }, [])
 
   useEffect(() => {
     const arr: Array<any> = []

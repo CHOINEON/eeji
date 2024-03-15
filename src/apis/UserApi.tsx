@@ -10,7 +10,6 @@ const UserApi = {
 
   getCompanyList: async (): Promise<TResponseType<ICompanyList>> => {
     const { data } = await axiosPublic.get(`api/company`)
-    console.log('getCompanyList api call and response is::', data)
     return data
   },
 }

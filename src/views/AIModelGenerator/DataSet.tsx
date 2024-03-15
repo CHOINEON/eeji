@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import DescriptionBox, { DescriptionBoxProps } from './components/DataInfo/DescriptionBox'
-import { Button, Col, Row, message, Spin } from 'antd'
+import DescriptionBox from './components/DataInfo/DescriptionBox'
+import { Col, Spin } from 'antd'
 import './style/data-analysis-style.css'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
@@ -27,7 +27,6 @@ const DataSet = () => {
   useEffect(() => {
     //데이터셋 페이지 나갔다 오면 초기화
     resetAnalysisResponse()
-    // resetSelectedData()  //타이밍이 한발 늦어서 다른데로 옮김
     setUserInfo({ user_id: localStorage.getItem('userId'), com_id: localStorage.getItem('companyId') })
   }, [])
 
