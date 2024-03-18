@@ -1,11 +1,10 @@
-'use client'
-
 import domtoimage from 'dom-to-image'
 import { saveAs } from 'file-saver'
 // import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import ChartItem from './ChartItem'
-
+import ApexCharts from 'react-apexcharts'
+// import Chart from 'react-apexcharts'
 // const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 
 const Page = () => {
@@ -39,6 +38,7 @@ const Page = () => {
 
   const [layoutType, setLayoutType] = useState(1)
   const [isPopup, setIsPopup] = useState(false)
+  const [isReset, setIsReset] = useState(false)
 
   const handleLayout = (type: number) => {
     setIsPopup(false)
@@ -142,8 +142,9 @@ const Page = () => {
                 setCapture('/img/top_right/capture.svg')
               }}
               onClick={() => {
+                //localhost:3000/img/layout/layout_02_01_on.svg
                 // const node = document.getElementById('screen-body')
-                domtoimage.toBlob(document.querySelector('#screen-body')).then((blob: any) => {
+                http: domtoimage.toBlob(document.querySelector('#screen-body')).then((blob: any) => {
                   const saveConfirm = window.confirm('이미지를 저장하시겠습니까?')
                   if (saveConfirm === true) {
                     saveAs(blob, 'download.png')
@@ -152,6 +153,18 @@ const Page = () => {
               }}
               className="cursor-pointer"
             />
+
+            <div
+              className="border border-[#D5DCEF] bg-white ml-2 py-[7px] px-2 rounded-[10px] select-none cursor-pointer hover:text-[#372dd5] hover:border-[#372dd5] text-sm text-[#0f2c61]"
+              onClick={() => {
+                setIsReset(true)
+                setTimeout(() => {
+                  setIsReset(false)
+                }, 100)
+              }}
+            >
+              Reset
+            </div>
             <img
               src={setting}
               alt=""
@@ -170,7 +183,7 @@ const Page = () => {
         <div className="bg-white h-[calc(100%-65px)] rounded-2xl shadow-indigo-200 shadow-sm p-3 mt-2 relative ">
           {/* 레이아웃 팝업 시작 */}
           <div
-            className={`absolute right-[90px] top-[35px] bg-white popup transition-all duration-100 z-[100] ${
+            className={`absolute right-[90px] top-[35px] bg-white popup transition-all duration-100 z-[1001] ${
               // className={`fixed right-[110px] top-[110px] bg-white popup transition-all duration-100 z-[100] ${
               // isPopup ? 'visible translate-y-0 scale-100 slideInUp' : 'invisible -translate-y-3 scale-95 '
               isPopup ? 'slideInDown' : 'invisible'
@@ -226,6 +239,7 @@ const Page = () => {
                   </div>
                 </div>
               </div>
+
               <div className="flex items-center">
                 <div className="text-[#002D65] text-[13px] mr-2 w-[10px]">3</div>
                 <div className="flex">
@@ -575,255 +589,252 @@ const Page = () => {
                 {
                   1: (
                     <div className="grid grid-cols-1 gap-2 h-full">
-                      <ChartItem />
-                      {/* <ChartItem /> */}
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
                     </div>
                   ),
                   2: (
                     <div className="grid grid-cols-2 gap-2 h-full">
-                      <ChartItem />
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
                     </div>
                   ),
                   3: (
                     <div className="grid grid-rows-2 gap-2 h-full">
-                      <ChartItem />
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
                     </div>
                   ),
                   4: (
                     <div className="grid grid-rows-3 gap-2 h-full">
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
                     </div>
                   ),
                   5: (
                     <div className="grid grid-cols-3 gap-2 h-full">
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
                     </div>
                   ),
                   6: (
                     <div className="grid grid-cols-2 gap-2 h-full">
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
                       <div className="grid grid-rows-2 gap-2">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
                       </div>
                     </div>
                   ),
                   7: (
                     <div className="grid grid-rows-2 gap-2 h-full">
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
                       <div className="grid grid-cols-2 gap-2">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
                       </div>
                     </div>
                   ),
                   8: (
                     <div className="grid grid-cols-2 gap-2 h-full">
                       <div className="grid grid-rows-2 gap-2">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
                       </div>
-                      <ChartItem />
+                      <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
                     </div>
                   ),
                   9: (
                     <div className="grid grid-cols-2 gap-2 h-full">
                       <div className="grid grid-rows-2 gap-2">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
                       </div>
                       <div className="grid grid-rows-2 gap-2">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
                       </div>
                     </div>
                   ),
                   10: (
                     <div className="grid grid-cols-4 gap-2 h-full">
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
                     </div>
                   ),
                   11: (
                     <div className="grid grid-rows-4 gap-2 h-full">
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
                     </div>
                   ),
                   12: (
                     <div className="grid grid-cols-2 gap-2 h-full">
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
                       <div className="grid grid-rows-3 gap-2">
-                        <ChartItem />
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
                       </div>
                     </div>
                   ),
                   13: (
                     <div className="grid grid-rows-3 gap-2 h-full">
                       <div className="grid grid-cols-2 gap-2">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
                       </div>
-                      <ChartItem />
-                      <ChartItem />
+                      <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
                     </div>
                   ),
                   14: (
                     <div className="grid grid-rows-2 gap-2 h-full">
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
                       <div className="grid grid-cols-4 gap-2">
-                        <ChartItem />
-                        <ChartItem />
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-5" is_reset={`${isReset}`} />
                       </div>
                     </div>
                   ),
                   15: (
                     <div className="grid grid-cols-2 gap-2 h-full">
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
                       <div className="grid grid-rows-4 gap-2">
-                        <ChartItem />
-                        <ChartItem />
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-5" is_reset={`${isReset}`} />
                       </div>
                     </div>
                   ),
                   16: (
                     <div className="grid grid-rows-2 gap-2 h-full">
                       <div className="grid grid-cols-2 gap-2">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
                       </div>
                       <div className="grid grid-cols-3 gap-2">
-                        <ChartItem />
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-5" is_reset={`${isReset}`} />
                       </div>
                     </div>
                   ),
                   17: (
                     <div className="grid grid-cols-5 gap-2 h-full">
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-5" is_reset={`${isReset}`} />
                     </div>
                   ),
                   18: (
                     <div className="grid grid-rows-2 gap-2 h-full">
                       <div className="grid grid-cols-3 gap-2 h-full">
-                        <ChartItem />
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
                       </div>
                       <div className="grid grid-cols-3 gap-2 h-full">
-                        <ChartItem />
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-5" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-6" is_reset={`${isReset}`} />
                       </div>
                     </div>
                   ),
                   19: (
                     <div className="grid grid-rows-3 gap-2 h-full">
                       <div className="grid grid-cols-2 gap-2 h-full">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
                       </div>
                       <div className="grid grid-cols-2 gap-2 h-full">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
                       </div>
                       <div className="grid grid-cols-2 gap-2 h-full">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-5" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-6" is_reset={`${isReset}`} />
                       </div>
                     </div>
                   ),
                   20: (
                     <div className="grid grid-cols-6 gap-2 h-full">
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-5" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-6" is_reset={`${isReset}`} />
                     </div>
                   ),
                   21: (
                     <div className="grid grid-cols-7 gap-2 h-full">
-                      <ChartItem />
-                      <ChartItem />
-
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-5" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-6" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-7" is_reset={`${isReset}`} />
                     </div>
                   ),
                   22: (
                     <div className="grid grid-rows-2 gap-2 h-full">
                       <div className="grid grid-cols-4 gap-2 h-full">
-                        <ChartItem />
-                        <ChartItem />
-
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
                       </div>
                       <div className="grid grid-cols-4 gap-2 h-full">
                         {' '}
-                        <ChartItem />
-                        <ChartItem />
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-5" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-6" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-7" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-8" is_reset={`${isReset}`} />
                       </div>
                     </div>
                   ),
                   23: (
                     <div className="grid grid-rows-4 gap-2 h-full">
                       <div className="grid grid-cols-2 gap-2 h-full">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
                       </div>
                       <div className="grid grid-cols-2 gap-2 h-full">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
                       </div>
                       <div className="grid grid-cols-2 gap-2 h-full">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-5" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-6" is_reset={`${isReset}`} />
                       </div>
                       <div className="grid grid-cols-2 gap-2 h-full">
-                        <ChartItem />
-                        <ChartItem />
+                        <ChartItem chart_id="chart-7" is_reset={`${isReset}`} />
+                        <ChartItem chart_id="chart-8" is_reset={`${isReset}`} />
                       </div>
                     </div>
                   ),
                   24: (
                     <div className="grid grid-cols-8 gap-2 h-full">
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
-                      <ChartItem />
+                      <ChartItem chart_id="chart-1" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-2" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-3" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-4" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-5" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-6" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-7" is_reset={`${isReset}`} />
+                      <ChartItem chart_id="chart-8" is_reset={`${isReset}`} />
                     </div>
                   ),
                 }[layoutType]

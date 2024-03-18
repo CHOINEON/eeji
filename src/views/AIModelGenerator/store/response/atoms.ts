@@ -41,20 +41,19 @@ export const filterWithConstraint = selectorFamily({
       let selectedData = get(analysisResponseAtom)[modelIdx][param[0]?.data]
       // console.log('selectedData:', selectedData) //{data: 'row_data', filterKey: '실제', selectedValue: 4}
 
-      console.log('param:', param)
+      // console.log('param:', param)
       if (!param || param.length === 0) {
-        console.log('param 0일때  return :', selectedData)
         return selectedData
       } else {
         param.map((item: any, idx: number) => {
           const key = item.filterKey
           const value = item.filterValue
-          console.log('key:', key)
-          console.log('value:', value)
+          // console.log('key:', key)
+          // console.log('value:', value)
 
           // if (value) {
           selectedData = Object.values(selectedData).filter((el: any) => el[key] === value)
-          console.log('selectedData:', selectedData)
+          // console.log('selectedData:', selectedData)
           // }
           // else {
           //   //value === undefined ? clearFilter 새로운 값 다시 가져오기

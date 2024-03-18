@@ -84,14 +84,15 @@ const ModelPerformance = () => {
           <PerformanceContentsWrap>
             <PerformanceContentsBox>
               <PerformanceContents>예측 정확도</PerformanceContents>
-              <PerformanceModelValue>{(Number(data[0]['ACCURACY']) * 100).toFixed(2)} %</PerformanceModelValue>
+              <PerformanceModelValue>{(Number(data[0]['ACCURACY']) * 100).toFixed(0)} %</PerformanceModelValue>
             </PerformanceContentsBox>
             <PerformanceContentsBox>
               <PerformanceContents>
-                F-SCORE <InfoCircle content={errorInfo.f1_score} color="#F2F5FC" />
+                <InfoCircle content={errorInfo.f1_score} color="#F2F5FC" />
+                F-SCORE
               </PerformanceContents>
               <PerformanceContentsBox>
-                <PerformanceValueAccuracy>{(data[0]['F1_SCORE'] as number).toFixed(2)}</PerformanceValueAccuracy>
+                <PerformanceValueAccuracy>{Number(data[0]['F1_SCORE']).toFixed(2)}</PerformanceValueAccuracy>
               </PerformanceContentsBox>
 
               {/* {Object.keys(data[0]).map((key: string, idx: number) => {
@@ -162,10 +163,10 @@ const PerformanceContentsWrap = styled.div`
   display: flex;
   padding-top: 11.5px;
 `
-const PerformanceContentsBox = styled.div`
+const PerformanceContentsBox = styled.span`
   flex: 1;
 `
-const PerformanceContents = styled.div`
+const PerformanceContents = styled.span`
   // display: inline-block;
   // float: left;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
@@ -173,16 +174,17 @@ const PerformanceContents = styled.div`
   font-size: 20px;
   // padding-right: 10px;
   font-weight: bold;
+  margin-right: 10px;
 `
 const PerformanceModelValue = styled.span`
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
   color: #95eb61;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
 `
 const PerformanceValueAccuracy = styled.span`
   color: #95eb61;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
 `
 const PerformanceValue = styled.div`

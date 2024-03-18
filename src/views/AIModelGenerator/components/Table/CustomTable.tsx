@@ -16,6 +16,9 @@ export interface IConstraint {
   filterKey: string
   filterValue: number | string
 }
+export interface IStringKeyObject {
+  [key: string]: string | number
+}
 
 const CustomTable = () => {
   const rowData: any = useRecoilValue(filteredResultState('row_data'))[0]
@@ -31,7 +34,7 @@ const CustomTable = () => {
 
   useEffect(() => {
     // console.log('analysisResponse:', analysisResponse)
-    // console.log('rowData:', rowData)
+    // console.log('columns:', columns)
 
     setData(rowData)
     // renderTable(analysisResponse[0].row_data)
@@ -45,7 +48,7 @@ const CustomTable = () => {
   }, [])
 
   useEffect(() => {
-    console.log(filteredData)
+    // console.log(filteredData)
     if (filteredData) setData(filteredData)
     else setData(rowData)
   }, [filteredData])
@@ -79,14 +82,6 @@ const CustomTable = () => {
   }
 
   const handleClearFilter = () => {
-    // const result: any = []
-    // Object.values(constraint).map((value: any) => {
-    //   value.filterValue = undefined
-    //   result.push(value)
-    //   // setConstraint(value)
-    // })
-    // setConstraint(result)
-
     setConstraint([])
     setSelectValue({ 실제: { label: '', value: '' }, 예측결과: { label: '', value: '' } })
   }
@@ -134,14 +129,13 @@ const CustomTable = () => {
         </LabelContainer>
         <>
           {data &&
-            Object.values(data)?.map((item: any, idx: number) => {
-              // console.log('item:', item['실제']) // row 하나
+            Object.values(data)?.map((item: IStringKeyObject, idx: number) => {
               return (
                 <RowItem key={idx}>
                   <CellItem>{idx}</CellItem>
                   <CellItem>{item['실제']}</CellItem>
                   <CellItem>{item['예측결과']}</CellItem>
-                  {columns?.map((col: any, idx: number) => (
+                  {columns?.map((col: string, idx: number) => (
                     <CellItem key={idx}>{item[col]}</CellItem>
                   ))}
                 </RowItem>
@@ -149,7 +143,7 @@ const CustomTable = () => {
             })}
         </>
       </CustomTableContainer>
-      <p className="w-[1000px] text-right">Total row count : {Object.keys(data).length}</p>
+      <p>Total row count : {Object.keys(data).length}</p>
     </>
   )
 }

@@ -1,54 +1,60 @@
 import React, { useEffect, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
+import { useRecoilValue } from 'recoil'
 // import { Chart, ArcElement, CategoryScale, LinearScale, registerables, Tooltip } from 'chart.js'
 
 import styled from 'styled-components'
+import { filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
 
 const FeatureClassPerformance = (colors: any) => {
+  const performanceData: any = useRecoilValue(filteredResultState('performance'))[0]
+  // console.log('performanceData:', performanceData)
+
   interface PerformanceTable {
-    [key: string]: { Accuracy: number }
+    [key: string | number]: { Accuracy: number }
   }
-  const performanceTable: PerformanceTable = {
-    '0': { Accuracy: 0.9696969696969697 },
-    '1': { Accuracy: 1 },
-    '2': { Accuracy: 0.8787878787878788 },
-    '3': { Accuracy: 0.5 },
-    '4': { Accuracy: 0.9629629629629629 },
-    '5': { Accuracy: 0.9565217391304348 },
-    '6': { Accuracy: 0.8620689655172413 },
-  }
+
+  // const performanceTable: PerformanceTable = {
+  //   '0': { Accuracy: 0.9696969696969697 },
+  //   '1': { Accuracy: 1 },
+  //   '2': { Accuracy: 0.8787878787878788 },
+  //   '3': { Accuracy: 0.5 },
+  //   '4': { Accuracy: 0.9629629629629629 },
+  //   '5': { Accuracy: 0.9565217391304348 },
+  //   '6': { Accuracy: 0.8620689655172413 },
+  // }
 
   const dynamicColors = () => {
     const r = Math.floor(Math.random() * 255)
     const g = Math.floor(Math.random() * 255)
     const b = Math.floor(Math.random() * 255)
-    return 'rgba(' + r + ',' + g + ',' + b + ', 0.5)'
+    return 'rgba(' + r + ',' + g + ',' + b + ', 0.8)'
   }
 
   const [barData, setBarData] = useState({
-    labels: Object.keys(performanceTable),
+    labels: Object.keys(performanceData),
     datasets: [
       {
         label: '정확도',
-        data: Object.values(performanceTable).map((item) => item.Accuracy),
-        backgroundColor: Object.keys(performanceTable).map(() => dynamicColors()),
+        data: Object.values(performanceData).map((item: PerformanceTable) => item.Accuracy),
+        backgroundColor: Object.keys(performanceData).map(() => dynamicColors()),
         barThickness: 44,
         borderRadius: 5,
       },
     ],
   })
 
-  const { maxKey, minKey } = Object.keys(performanceTable).reduce(
+  const { maxKey, minKey } = Object.keys(performanceData).reduce(
     (acc, key) => {
-      if (performanceTable[key].Accuracy > performanceTable[acc.maxKey].Accuracy) {
+      if (performanceData[key].Accuracy > performanceData[acc.maxKey].Accuracy) {
         acc.maxKey = key
       }
-      if (performanceTable[key].Accuracy < performanceTable[acc.minKey].Accuracy) {
+      if (performanceData[key].Accuracy < performanceData[acc.minKey].Accuracy) {
         acc.minKey = key
       }
       return acc
     },
-    { maxKey: Object.keys(performanceTable)[0], minKey: Object.keys(performanceTable)[0] }
+    { maxKey: Object.keys(performanceData)[0], minKey: Object.keys(performanceData)[0] }
   )
 
   const barOptions = {
@@ -88,22 +94,24 @@ const FeatureClassPerformance = (colors: any) => {
   }
   return (
     <>
-      <ComponentContainer>
-        <PerformanceTitle>모델 분석</PerformanceTitle>
-        <PerformanceTitleWrap>
+      {Object.keys(performanceData).length > 0 && (
+        <ComponentContainer>
+          <PerformanceTitle>모델 분석</PerformanceTitle>
+          <PerformanceTitleWrap>
+            <div>
+              {/* <PerformanceSubTitle>3 INEEJI Kim</PerformanceSubTitle> */}
+              <AiIcon>AI</AiIcon>
+              <SubTitle>
+                {maxKey}에 대한 정확도가 가장 높고, {minKey}에 대한 정확도가 낮습니다.
+              </SubTitle>
+            </div>
+            {/* <PerformanceBox>{maxKey}</PerformanceBox> */}
+          </PerformanceTitleWrap>
           <div>
-            <PerformanceSubTitle>3 INEEJI Kim</PerformanceSubTitle>
-            <AiIcon>AI</AiIcon>
-            <SubTitle>
-              {maxKey}에 대한 정확도가 가장 높고 {minKey}에 대한 정확도가 낮습니다.
-            </SubTitle>
+            <Bar data={barData} options={barOptions} width={'100%'} height={'130px'} />
           </div>
-          <PerformanceBox>{maxKey}</PerformanceBox>
-        </PerformanceTitleWrap>
-        <div>
-          <Bar data={barData} options={barOptions} width={'100%'} height={'200px'} />
-        </div>
-      </ComponentContainer>
+        </ComponentContainer>
+      )}
     </>
   )
 }
@@ -133,6 +141,7 @@ const AiIcon = styled.span`
   color: #fff;
   font-size: 11px;
   display: inline-block;
+  margin-right: 10px;
 `
 const PerformanceBox = styled.div`
   background: #ff3d50 0% 0% no-repeat padding-box;
@@ -146,6 +155,7 @@ const PerformanceBox = styled.div`
 `
 const ComponentContainer = styled.div`
   margin: 5px;
+  white-space: wrap;
   padding: 20px 30px;
   box-shadow: 0px 0px 20px #0000001a;
   border: 1px solid #d5dcef;
