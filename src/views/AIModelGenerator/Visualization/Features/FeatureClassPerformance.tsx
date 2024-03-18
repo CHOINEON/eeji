@@ -1,34 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
 import { useRecoilValue } from 'recoil'
-// import { Chart, ArcElement, CategoryScale, LinearScale, registerables, Tooltip } from 'chart.js'
-
 import styled from 'styled-components'
 import { filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
+import { lowChromaticColorChips } from 'views/AIModelGenerator/components/Chart/colors'
 
 const FeatureClassPerformance = (colors: any) => {
   const performanceData: any = useRecoilValue(filteredResultState('performance'))[0]
-  // console.log('performanceData:', performanceData)
+  console.log('performanceData:', performanceData)
 
   interface PerformanceTable {
     [key: string | number]: { Accuracy: number }
   }
 
-  // const performanceTable: PerformanceTable = {
-  //   '0': { Accuracy: 0.9696969696969697 },
-  //   '1': { Accuracy: 1 },
-  //   '2': { Accuracy: 0.8787878787878788 },
-  //   '3': { Accuracy: 0.5 },
-  //   '4': { Accuracy: 0.9629629629629629 },
-  //   '5': { Accuracy: 0.9565217391304348 },
-  //   '6': { Accuracy: 0.8620689655172413 },
-  // }
+  const randomColors = () => {
+    // const r = Math.floor(Math.random() * 255)
+    // const g = Math.floor(Math.random() * 255)
+    // const b = Math.floor(Math.random() * 255)
+    // return 'rgba(' + r + ',' + g + ',' + b + ', 0.8)'
+    // console.log('test:', Math.floor(Math.random() * performanceData.length))
 
-  const dynamicColors = () => {
-    const r = Math.floor(Math.random() * 255)
-    const g = Math.floor(Math.random() * 255)
-    const b = Math.floor(Math.random() * 255)
-    return 'rgba(' + r + ',' + g + ',' + b + ', 0.8)'
+    return lowChromaticColorChips.slice(performanceData.length)
   }
 
   const [barData, setBarData] = useState({
@@ -37,7 +29,7 @@ const FeatureClassPerformance = (colors: any) => {
       {
         label: '정확도',
         data: Object.values(performanceData).map((item: PerformanceTable) => item.Accuracy),
-        backgroundColor: Object.keys(performanceData).map(() => dynamicColors()),
+        backgroundColor: lowChromaticColorChips.slice(performanceData.length), //Object.keys(performanceData).map(() => randomColors()),
         barThickness: 44,
         borderRadius: 5,
       },

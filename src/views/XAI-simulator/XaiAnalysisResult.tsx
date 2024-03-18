@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Badge, Button, Col, Row, Space, Tag } from 'antd'
-import Title from 'antd/es/typography/Title'
+// import Title from 'antd/es/typography/Title'
 import React, { MouseEventHandler, useEffect, useState } from 'react'
 import AnalysisGrid, { ColumnHeader, DataRow } from './Visualization/AnalysisGrid'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -8,7 +8,7 @@ import { activeVariables, localAttrState, transformedXaiResultStore, xaiResultSt
 import GlobalFeatureImportance from './components/GlobalFeatureImportance'
 import PDP_Plot from './components/PDP_Plot'
 import tw from 'tailwind-styled-components'
-import { colorsForStackedBarChart } from 'views/AIModelGenerator/components/Chart/colors'
+import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import { UndoOutlined } from '@ant-design/icons'
 
 export const transformDataByRow = (count: number, rawData: any) => {
@@ -32,7 +32,7 @@ const XaiAnalysisResult = () => {
   const filteredData = useRecoilValue(localAttrState)
 
   useEffect(() => {
-    console.log('AnalysisResult  mounted data', data)
+    // console.log('AnalysisResult  mounted data', data)
 
     //각 입력변수별로 활성화 여부를 담는 배열 세팅
     const obj = data?.feature_list.reduce((accumulator, value) => {
@@ -48,18 +48,25 @@ const XaiAnalysisResult = () => {
   }
 
   const handleClearFilter = (e: any) => {
-    console.log('activeVars:', activeVars)
+    // for (const [key, value] of Object.entries(activeVars)) {
+    //   // setActiveVars({ ...activeVars, [key]: true })
+    // }
 
-    for (const [key, value] of Object.entries(activeVars)) {
-      setActiveVars({ ...activeVars, [key]: true })
-    }
+    setActiveVars((prevState: any) => {
+      const updatedVars = { ...prevState }
+
+      for (const [key, value] of Object.entries(updatedVars)) {
+        updatedVars[key] = true
+      }
+      return updatedVars
+    })
   }
 
   return (
     <div>
       <Container>
         <Row gutter={[8, 8]} style={{ width: '100%' }}>
-          <Title
+          <p
             style={{
               color: '#002D65',
               display: 'inline-block',
@@ -71,48 +78,48 @@ const XaiAnalysisResult = () => {
           >
             XAI
             {/* <InfoCircle content="。。。" /> */}
-          </Title>
+          </p>
           <Col span={18}>
             <Row>
               <RoundedBox width={'100%'} height={'75vh'}>
+                <div className="w-1/7 text-left ">
+                  {/* <RowLabel>입력변수</RowLabel> */}
+                  <Title>입력변수 필터링</Title>
+                  <Button
+                    className="inline-block float-right"
+                    type="text"
+                    icon={<UndoOutlined />}
+                    onClick={handleClearFilter}
+                  >
+                    Clear
+                  </Button>
+                </div>
                 <VariableRow>
-                  <div className="w-1/7 text-left">
-                    <RowLabel>입력변수</RowLabel>
-                    <Button type="text" icon={<UndoOutlined />} onClick={handleClearFilter}>
-                      Clear Filter
-                    </Button>
-                  </div>
-                  <div className="w-6/7">
+                  <div className="w-6/7 p-3">
                     {data.feature_list.map((value: number, index) => (
-                      <button
+                      <DynamicBadgeButton
+                        className="px-4 rounded-full m-1 min-w-[70px] h-[28px] font-['Helvetica Neue']"
                         key={index}
-                        className={`${activeVars[value] ? 'bg-[#4338F7]' : 'bg-[#F6F8FF]'}  
-                        ${activeVars[value] ? 'text-[#FFFFFF]' : 'text-[#174274]'}
-                        ${activeVars[value] ? 'border-[#D5DCEF]' : ''}  
-                         px-4 rounded-full m-1 min-w-[70px] h-[28px] font-['Helvetica Neue']`}
+                        toggle={activeVars[value]}
+                        color={colorChips[index]}
                         onClick={handleClick}
                       >
+                        {activeVars[value] ? null : <Badge className="mr-[10px]" color={colorChips[index]} />}
                         {value}
-                      </button>
+                      </DynamicBadgeButton>
                     ))}
                   </div>
                 </VariableRow>
-                <VariableRow>
-                  <LegendContainer>
-                    <Space direction="horizontal">
-                      {data.feature_list.map((value: number, index) => (
-                        <Badge color={colorsForStackedBarChart[index]} text={value} size="small" key={index} />
-                      ))}
-                    </Space>
-                  </LegendContainer>
-                </VariableRow>
-                <AnalysisGrid
-                  featureList={data.feature_list}
-                  localWeight={filteredData}
-                  localValue={data.input_data}
-                  predResult={data.predict_result}
-                  // columns={Object.keys(data.input_data)}
-                />
+                <div className="mt-[50px]">
+                  <Title>예측모델 설명 결과</Title>
+                  <AnalysisGrid
+                    featureList={data.feature_list}
+                    localWeight={filteredData}
+                    localValue={data.input_data}
+                    predResult={data.predict_result}
+                    // columns={Object.keys(data.input_data)}
+                  />
+                </div>
               </RoundedBox>
             </Row>
           </Col>
@@ -130,6 +137,11 @@ const XaiAnalysisResult = () => {
 
 export default React.memo(XaiAnalysisResult)
 
+const DynamicBadgeButton = styled.button<{ color: string; toggle: boolean }>`
+  background-color: ${(props: any) => (props.toggle ? props.color : 'white')};
+  color: ${(props: any) => (props.toggle ? '#FFFFFF' : '#174274')};
+`
+
 interface Container {
   width?: any
   height?: any
@@ -137,9 +149,18 @@ interface Container {
   position?: string
 }
 
+const Title = styled.span`
+  color: #002d65;
+  font-family: 'Helvetica Neue';
+  font-size: 17px;
+  margin: 5px 3px;
+  font-weight: bold;
+`
+
 const VariableRow = styled(DataRow)`
-  background-color: #ffffff;
+  background-color: #f5f8ff;
   margin-bottom: 10px;
+  border: 1px solid #d5dcef;
 `
 
 const RowLabel = styled.div`

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
 import { ChartData, Chart as ChartJS, ChartOptions, Legend } from 'chart.js'
-import { colorsForStackedBarChart as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
+import { colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 
 ChartJS.register(Legend, ChartDataLabels)
@@ -122,8 +122,10 @@ const options: ChartOptions<'bar'> = {
     },
     datalabels: {
       formatter: (value, context) => {
+        // console.log('value:', value)
         // console.log('context:', context)
-        if (value > 0) return value.toFixed(1) + '%'
+
+        if (value > 3) return value.toFixed(1) + '%'
         else return ''
       },
       color: 'blue',
@@ -178,9 +180,6 @@ const HorizontalStackedBarChart = (props: IStackedBarChart) => {
     // console.log('weight:', weight)
 
     const newArr: Array<IDataset> = []
-
-    //{0: 0.1176371392605699, 1: 0.01162381190864805, 2: 0.709188448090644, 3: 0.16155060074013808}
-
     //datasets 안에 들어갈 내용
     Object.keys(weight).forEach((col: any, i: number) => {
       // console.log('col:', col)

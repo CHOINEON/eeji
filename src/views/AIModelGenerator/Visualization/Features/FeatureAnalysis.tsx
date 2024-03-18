@@ -6,8 +6,7 @@ import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/Fea
 import { analysisResponseAtom, filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
 import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
 import ModelPerformance from 'views/XAI-simulator/ModelPerformance'
-import { colorsForDoughnut } from 'views/AIModelGenerator/components/Chart/colors'
-import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import FeatureClassPerformance from './FeatureClassPerformance'
 
 const FeatureAnalysis = ({ textVisible }: any) => {
@@ -33,7 +32,7 @@ const FeatureAnalysis = ({ textVisible }: any) => {
           <InfoCircle content="변수 중요도가 높을 수록 예측 모델에 대한 영향력이 큽니다." />
         </SubTitle>
         <div className={textVisible ? 'block' : 'hidden'}>
-          <div className="block float-left w-100">
+          <div className="block float-left w-100 mt-2">
             <AIbutton>AI</AIbutton>
             <AITextContainer>
               현재 예측 모델에서 가장 영향력이 큰 변수는 <b>{chartData?.labels[0]}</b>
@@ -49,7 +48,7 @@ const FeatureAnalysis = ({ textVisible }: any) => {
           </div>
         </div>
         <div className="block float-left w-100">
-          <FeatureImportance data={chartData} colors={colorsForDoughnut} />
+          <FeatureImportance data={chartData} colors={colorChips} />
         </div>
       </ComponentContainer>
     </>

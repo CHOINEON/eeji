@@ -18,7 +18,7 @@ import { useRecoilValue } from 'recoil'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
-import { chartColors } from 'views/AIModelGenerator/components/Chart/colors'
+import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import FeatureAnalysis from '../Features/FeatureAnalysis'
 
 ChartJS.register(
@@ -58,7 +58,7 @@ const RegressionResult = () => {
           )
         } else {
           arr.push(
-            generateSeriesForClassification(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'], chartColors[i])
+            generateSeriesForClassification(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'], colorChips[i])
           )
         }
       })
@@ -68,7 +68,7 @@ const RegressionResult = () => {
           arr.push(generateSeries(`Ground-truth`, analysisResponse[i]['pred_data']['truth'], 'rgb(87,220,49)'))
           arr.push(generateSeries(`INEEJI prediction`, analysisResponse[i]['pred_data']['pred'], '#4A40F7'))
         } else {
-          arr.push(generateSeries(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'], chartColors[i]))
+          arr.push(generateSeries(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'], colorChips[i]))
         }
       })
     }

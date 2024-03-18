@@ -3,7 +3,7 @@ import { styled } from 'styled-components'
 import { Chart, ArcElement, CategoryScale, LinearScale, registerables, Tooltip } from 'chart.js'
 import { Doughnut, Bar } from 'react-chartjs-2'
 import zoomPlugin from 'chartjs-plugin-zoom'
-import { chartColors, colorsForDoughnut } from '../../components/Chart/colors'
+import { colorChips } from '../../components/Chart/colors'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 
 Chart.register(ArcElement, CategoryScale, LinearScale, ChartDataLabels, zoomPlugin, Tooltip, ...registerables)
@@ -22,7 +22,7 @@ const FeatureImportance = ({ data, colors }: any) => {
       })
       setColorChips(newColor)
     } else {
-      setColorChips(chartColors.slice(0, data?.labels?.length))
+      setColorChips(colorChips.slice(0, data?.labels?.length))
     }
   }, [data])
 
