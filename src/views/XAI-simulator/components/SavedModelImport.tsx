@@ -11,7 +11,7 @@ import XaiApi from 'apis/XaiApi'
 import { customModelStore, transformedXaiResultStore, xaiResultStore } from '../store/analyze/atom'
 import { transformDataByRow } from '../XaiAnalysisResult'
 // import { transformDataByRow } from '../AnalysisResult'
-import { colorsForStackedBarChart as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
+import { colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
 
 const SavedModelImport = () => {
   const [xaiResult, setXaiResult] = useRecoilState(xaiResultStore)

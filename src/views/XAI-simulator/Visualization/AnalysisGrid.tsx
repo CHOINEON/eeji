@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Badge, Space, Tooltip } from 'antd'
 import React from 'react'
-import { colorsForStackedBarChart } from 'views/AIModelGenerator/components/Chart/colors'
+import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import HorizontalStackedBarChart from './HorizontalStackedBarChart'
 
 const RowItem = ({ number, value, weight, pred }: any) => {
@@ -36,7 +36,7 @@ const AnalysisGrid = (props: any) => {
       <LegendContainer>
         <Space direction="horizontal">
           {feature_list?.map((value: number, index: any) => (
-            <Badge color={colorsForStackedBarChart[index]} text={value} />
+            <Badge color={colorChips[index]} text={value} />
           ))}
         </Space>
       </LegendContainer>
@@ -45,7 +45,7 @@ const AnalysisGrid = (props: any) => {
 
   return (
     <>
-      <div style={{ display: 'block', width: '100%', padding: '0 2%' }}>
+      <div style={{ display: 'block', width: '100%', padding: '0 2%', marginTop: 15 }}>
         <ColumnHeader width={'10%'}>No</ColumnHeader>
         <ColumnHeader width={'20%'}>예측결과</ColumnHeader>
         <ColumnHeader width={'70%'}>입력변수</ColumnHeader>

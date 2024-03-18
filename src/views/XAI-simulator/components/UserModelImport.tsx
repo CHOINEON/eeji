@@ -11,7 +11,7 @@ import ColumnList from './ModelSelect/ColumnList'
 import { customModelStore, xaiResultStore } from 'views/XAI-simulator/store/analyze/atom'
 import XaiApi from 'apis/XaiApi'
 import { transformDataByRow } from '../XaiAnalysisResult'
-import { colorsForStackedBarChart as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
+import { colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
 
 interface IDataObj {
   model: any

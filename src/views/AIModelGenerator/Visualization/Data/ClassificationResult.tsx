@@ -25,6 +25,7 @@ const ClassificationResult = () => {
           <img src={`/img/layout/layout_03_04${layoutType === 7 ? '_on' : ''}.svg`} alt="" className="icon-off" />
           <img src="/img/layout/layout_03_04_on.svg" alt="" className="icon-on" />
         </div> */}
+
         <CustomTable />
       </div>
       <div style={{ width: '450px', marginTop: '-100px', position: 'absolute', right: '30px', top: '115px' }}>

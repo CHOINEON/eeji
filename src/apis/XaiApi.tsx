@@ -16,7 +16,6 @@ const XaiApi = {
 
   //XAI - 저장된 모델 실행해서 XAI 결과 리턴
   postModelForXaiResult: async (params: IModelReqParam): Promise<TResponseType<object>> => {
-    console.log('params:', params)
     const { data } = await axiosPublic.post(`api/get_xai_result/${params.user_id}`, params)
     return data
   },

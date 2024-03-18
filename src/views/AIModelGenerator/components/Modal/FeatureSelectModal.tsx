@@ -34,6 +34,10 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
           feature_data: result['feature_piechart_data'],
           input: result['selected_input'],
           error: result['metrics'],
+          row_data: result['result_table'],
+          performance: result['peformance_table'],
+          uuid: result['get_uuid'],
+          classes: result['classes'],
         },
       ])
     },
