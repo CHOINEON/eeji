@@ -3,42 +3,47 @@ import icon_Xai from 'assets/img/icons/icon_02_a.png'
 import icon_IndexForecast from 'assets/img/icons/icon_03_a.png'
 import icon_PredictionApi from 'assets/img/icons/icon_04_a.png'
 
-import icon_01_b from 'assets/img/icons/icon_01_b.png'
-import icon_02_b from 'assets/img/icons/icon_02_b.png'
-import icon_03_b from 'assets/img/icons/icon_03_b.png'
-import icon_04_b from 'assets/img/icons/icon_04_b.png'
+import icon_01 from 'assets/img/icons/main/service_01.png'
+import icon_02 from 'assets/img/icons/main/service_02.png'
+import icon_03 from 'assets/img/icons/main/service_03.png'
+import icon_04 from 'assets/img/icons/main/service_04.png'
+
+// import icon_01_b from 'assets/img/icons/icon_01_b.png'
+// import icon_02_b from 'assets/img/icons/icon_02_b.png'
+// import icon_03_b from 'assets/img/icons/icon_03_b.png'
+// import icon_04_b from 'assets/img/icons/icon_04_b.png'
 
 export const MenuList = [
   {
     id: 1,
     title: 'AI Model Generator',
     title_KR: 'AI 모델 생성',
-    icon_src: icon_ModelGenerator,
-    icon_inbox: icon_01_b,
+    // icon_src: icon_ModelGenerator,
+    icon_inbox: icon_01,
     path: '/ai-model-generator',
   },
   {
     id: 2,
     title: 'Explainable AI',
     title_KR: '설명가능 인공지능',
-    icon_src: icon_Xai,
-    icon_inbox: icon_02_b,
+    // icon_src: icon_Xai,
+    icon_inbox: icon_02,
     path: '/xai-simulator',
   },
   {
     id: 3,
     title: 'Commodity Index Forecast',
     title_KR: '주요 경제 지표 예측',
-    icon_src: icon_IndexForecast,
-    icon_inbox: icon_03_b,
+    // icon_src: icon_IndexForecast,
+    icon_inbox: icon_03,
     path: '/price-forecast',
   },
   {
     id: 4,
     title: 'Prediction API',
     title_KR: 'REST API 서비스',
-    icon_src: icon_PredictionApi,
-    icon_inbox: icon_04_b,
+    // icon_src: icon_PredictionApi,
+    icon_inbox: icon_04,
     path: '/api-service',
   },
 ]

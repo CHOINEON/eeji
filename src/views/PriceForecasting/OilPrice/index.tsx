@@ -6,8 +6,8 @@ import Page from './page'
 const PriceForecasting = () => {
   return (
     <Box pt={{ base: '130px', md: '40px', xl: '40px' }} style={{ position: 'relative', zIndex: 1000 }}>
-      <OilPriceChart />
-      {/* <Page /> */}
+      {/* <OilPriceChart /> */}
+      <Page />
     </Box>
   )
 }
