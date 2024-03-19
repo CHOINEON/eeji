@@ -25,12 +25,12 @@ const Main = () => {
 const IconList = () => {
   return (
     <>
-      <Wrap spacing="30px" justify="center" height={200} margin={'13vh 0'}>
+      <Wrap spacing="30px" justify="center" height={200} margin={'15vh 0'}>
         {MenuList.map((item: any) => {
           return (
             <MenuItem key={item.title}>
               <IconContainer onClick={() => (window.location.href = `/admin${item.path}`)}>
-                <img src={item.icon_src} style={{ opacity: 1 }} />
+                <img src={item.icon_inbox} style={{ opacity: 1 }} width={100} />
               </IconContainer>
               <TitleContainer>
                 <Title_EN>{item.title}</Title_EN>
@@ -65,8 +65,8 @@ const SubText = styled.p`
 `
 
 const MenuItem = styled.div`
-  width: 200px;
-  height: 200px;
+  width: 210px;
+  height: 210px;
   display: flex;
   flex-direction: column;
 `

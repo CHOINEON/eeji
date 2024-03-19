@@ -98,14 +98,20 @@ const XaiAnalysisResult = () => {
                   <div className="w-6/7 p-3">
                     {data.feature_list.map((value: number, index) => (
                       <DynamicBadgeButton
-                        className="px-4 rounded-full m-1 min-w-[70px] h-[28px] font-['Helvetica Neue']"
+                        className="px-4 rounded-full m-1 min-w-[70px] h-[28px] font-['Helvetica Neue'] border-[#D5DCEF]}"
                         key={index}
                         toggle={activeVars[value]}
                         color={colorChips[index]}
                         onClick={handleClick}
                       >
-                        {activeVars[value] ? null : <Badge className="mr-[10px]" color={colorChips[index]} />}
+                        <Badge className="mr-4" color={colorChips[index]} />
                         {value}
+
+                        {/* <Badge
+                          className={`${activeVars[value] ? 'border-white' : `border-[${colorChips[index]}]`} mr-4`}
+                          color={activeVars[value] ? 'white' : colorChips[index]}
+                        />
+                        {value} */}
                       </DynamicBadgeButton>
                     ))}
                   </div>

@@ -17,7 +17,7 @@ import login_icon from './img/login_icon.png'
 import date from './img/date.png'
 import axios from 'axios'
 import { FormControl, Button, Input } from '@chakra-ui/react'
-import { message, Modal, Select } from 'antd'
+import { App, message, Modal, Select } from 'antd'
 import { Alert } from 'views/hmid/components/Modal/Alert'
 import { useSetRecoilState } from 'recoil'
 import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
@@ -32,8 +32,9 @@ import useGetCompanies from 'hooks/queries/useGetCompanies'
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
 export const Login: React.FC = () => {
-  const [messageApi, contextHolder] = message.useMessage()
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { modal, message } = App.useApp()
+
+  // const [messageApi, contextHolder] = message.useMessage()
   const [id, setId] = React.useState()
   const [password, setPassword] = React.useState()
   const [company, setCompany] = React.useState<any>('')
@@ -53,10 +54,10 @@ export const Login: React.FC = () => {
       window.location.href = '/admin/main'
     },
     onError: (error: any) => {
-      console.log('error::', error)
-
+      // console.log('error::', error)
+      console.clear()
       if (error.response.status === 403) {
-        Modal.warning({
+        modal.confirm({
           title: '로그인 확인',
           content: (
             <div>
@@ -72,6 +73,9 @@ export const Login: React.FC = () => {
             }
             mutateLogout(payload)
           },
+          onCancel() {
+            //
+          },
           // footer: () => <button>test</button>,
         })
       }
@@ -80,12 +84,11 @@ export const Login: React.FC = () => {
 
   const { mutate: mutateLogout } = useMutation(UserApi.logout, {
     onSuccess: (response: any) => {
-      console.log('logout response:', response)
       setLogin(id, password)
     },
     onError: (error: any) => {
       // console.log('error::', error)
-      messageApi.open({
+      message.open({
         type: 'error',
         content: error.response?.data.detail,
       })
@@ -93,7 +96,7 @@ export const Login: React.FC = () => {
   })
 
   useEffect(() => {
-    console.log('company list:', data)
+    // console.log('company list:', data)
     if (data) {
       // setCompanyList(data)
       RenderCompanyList(data)
@@ -129,7 +132,7 @@ export const Login: React.FC = () => {
         })
         .catch((error) => {
           alert(error)
-          console.log('error: ' + error)
+          // console.log('error: ' + error)
         })
     }
   }, [])
@@ -137,7 +140,7 @@ export const Login: React.FC = () => {
   const setLogin = (id: string, password: string) => {
     // console.log(company)
     if (company.length === 0 || company === undefined) {
-      messageApi.open({
+      message.open({
         type: 'error',
         content: '회사를 선택해주세요',
       })
@@ -198,7 +201,6 @@ export const Login: React.FC = () => {
 
   return (
     <>
-      {contextHolder}
       <Wrapper />
       <Home_Bg />
       <Logo />

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <g id="view_scatter_on" transform="translate(-1291 -308)">
+    <g id="사각형_4976" data-name="사각형 4976" transform="translate(1291 308)" fill="#e5ebff" stroke="#4338f7" stroke-width="1">
+      <rect width="36" height="36" rx="10" stroke="none"/>
+      <rect x="0.5" y="0.5" width="35" height="35" rx="9.5" fill="none"/>
+    </g>
+    <line id="선_1836" data-name="선 1836" y1="21.5" transform="translate(1298.5 316.5)" fill="none" stroke="#4338f7" stroke-width="1"/>
+    <line id="선_1837" data-name="선 1837" x2="21" transform="translate(1298.5 337.5)" fill="none" stroke="#4338f7" stroke-width="1"/>
+    <rect id="사각형_4977" data-name="사각형 4977" width="2" height="2" transform="translate(1302 332)" fill="#4338f7"/>
+    <rect id="사각형_4978" data-name="사각형 4978" width="2" height="2" transform="translate(1306 330)" fill="#4338f7"/>
+    <rect id="사각형_4979" data-name="사각형 4979" width="2" height="2" transform="translate(1308 326)" fill="#4338f7"/>
+    <rect id="사각형_4980" data-name="사각형 4980" width="2" height="2" transform="translate(1312 328)" fill="#4338f7"/>
+    <rect id="사각형_4983" data-name="사각형 4983" width="2" height="2" transform="translate(1316 319)" fill="#4338f7"/>
+    <rect id="사각형_4981" data-name="사각형 4981" width="2" height="2" transform="translate(1304 326)" fill="#4338f7"/>
+    <rect id="사각형_4982" data-name="사각형 4982" width="2" height="2" transform="translate(1310 322)" fill="#4338f7"/>
+    <rect id="사각형_4984" data-name="사각형 4984" width="2" height="2" transform="translate(1314 324)" fill="#4338f7"/>
+  </g>
+</svg>
