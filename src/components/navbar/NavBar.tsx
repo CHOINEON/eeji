@@ -7,6 +7,9 @@ import settingOffImage from 'assets/img/icons/setting_off.svg'
 import { useHistory } from 'react-router-dom'
 import './style/style.css'
 import Feedback from 'components/common/Feedback'
+import { useMutation } from 'react-query'
+import UserApi from 'apis/UserApi'
+import { message } from 'antd'
 
 const NavBar = (props: { routes: RoutesType[] }) => {
   const history = useHistory()
@@ -18,9 +21,26 @@ const NavBar = (props: { routes: RoutesType[] }) => {
   )
 
   const [isOpen, setIsOpen] = React.useState(false)
+  const { mutate: mutateLogout } = useMutation(UserApi.logout, {
+    onSuccess: (response: any) => {
+      console.log('logout response:', response)
+      message.open({
+        type: 'success',
+        content: response?.message,
+      })
+      history.replace('/login')
+    },
+    onError: (error: any) => {
+      // console.log('error::', error)
+    },
+  })
 
   const handleLogout = () => {
-    history.replace('/login')
+    const payload = {
+      com_id: localStorage.getItem('companyId'),
+      user_id: localStorage.getItem('userId'),
+    }
+    mutateLogout(payload)
   }
 
   return (

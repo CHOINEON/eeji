@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { useRecoilValue, useRecoilState } from 'recoil'
-import { dataPropertyState, selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import React from 'react'
+import { useRecoilValue } from 'recoil'
+import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import styled from 'styled-components'
 import IcoPerformance from 'assets/img/icons/XAI/icon_perfromanceModel.png'
-import { PerformanceModel, PerformanceModelTyeps } from 'apis/type/ModelPerformanceOption'
+import { PerformanceModel } from 'apis/type/ModelPerformanceOption'
 import { message } from 'antd'
-import { analysisResponseAtom, filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
-import { modalState } from 'stores/modal'
+import { filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
 import useModal from 'hooks/useModal'
-import ModelApi from 'apis/ModelApi'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 
 const errorInfo: any = {
@@ -19,9 +17,7 @@ const errorInfo: any = {
 }
 
 const ModelPerformance = () => {
-  const [modal, setModal] = useRecoilState(modalState)
   const { openModal, closeModal } = useModal()
-  // const dataProperty = useRecoilValue(dataPropertyState)
   const selectedData = useRecoilValue(selectedDataState)
 
   const data = useRecoilValue(filteredResultState('error'))
@@ -87,15 +83,19 @@ const ModelPerformance = () => {
         {selectedData.isClassification === 1 ? (
           <PerformanceContentsWrap>
             <PerformanceContentsBox>
-              <PerformanceContents>AI 모델</PerformanceContents>
-              <PerformanceModelValue>INEEJI_1</PerformanceModelValue>
+              <PerformanceContents>예측 정확도</PerformanceContents>
+              <PerformanceModelValue>{(Number(data[0]['ACCURACY']) * 100).toFixed(0)} %</PerformanceModelValue>
             </PerformanceContentsBox>
             <PerformanceContentsBox>
               <PerformanceContents>
-                F-SCORE <InfoCircle content={errorInfo.f1_score} />
+                <InfoCircle content={errorInfo.f1_score} color="#F2F5FC" />
+                F-SCORE
               </PerformanceContents>
+              <PerformanceContentsBox>
+                <PerformanceValueAccuracy>{Number(data[0]['F1_SCORE']).toFixed(2)}</PerformanceValueAccuracy>
+              </PerformanceContentsBox>
 
-              {Object.keys(data[0]).map((key: string, idx: number) => {
+              {/* {Object.keys(data[0]).map((key: string, idx: number) => {
                 const modelKey: any = key
                 // console.log('분류모델 modelKey', modelKey)
                 return (
@@ -103,7 +103,7 @@ const ModelPerformance = () => {
                     <PerformanceValueAccuracy>{data[idx][modelKey]}</PerformanceValueAccuracy>
                   </PerformanceContentsBox>
                 )
-              })}
+              })} */}
             </PerformanceContentsBox>
           </PerformanceContentsWrap>
         ) : (
@@ -119,7 +119,7 @@ const ModelPerformance = () => {
                   <div>
                     <PerformanceContents>
                       {modelKey.toString().toUpperCase()}
-                      <InfoCircle content={errorInfo[modelKey]} />
+                      <InfoCircle content={errorInfo[modelKey]} color="#F2F5FC" />
                     </PerformanceContents>
                     <PerformanceValue>{formatNumber(data[0][modelKey as keyof (typeof data)[0]])}</PerformanceValue>
                   </div>
@@ -163,10 +163,10 @@ const PerformanceContentsWrap = styled.div`
   display: flex;
   padding-top: 11.5px;
 `
-const PerformanceContentsBox = styled.div`
+const PerformanceContentsBox = styled.span`
   flex: 1;
 `
-const PerformanceContents = styled.div`
+const PerformanceContents = styled.span`
   // display: inline-block;
   // float: left;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
@@ -174,6 +174,7 @@ const PerformanceContents = styled.div`
   font-size: 20px;
   // padding-right: 10px;
   font-weight: bold;
+  margin-right: 10px;
 `
 const PerformanceModelValue = styled.span`
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
@@ -183,7 +184,7 @@ const PerformanceModelValue = styled.span`
 `
 const PerformanceValueAccuracy = styled.span`
   color: #95eb61;
-  font-size: 22px;
+  font-size: 25px;
   font-weight: bold;
 `
 const PerformanceValue = styled.div`

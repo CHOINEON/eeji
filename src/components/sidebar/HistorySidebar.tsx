@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, { useEffect } from 'react'
 import { CustomButton } from 'views/AIModelGenerator/components/DataInfo/DataImportModal'
-import { MenuList } from 'views/Main/menuList'
+import { MenuList } from 'views/Main/MenuList'
 import CustomCollapse, { CollapseItem } from './components/Collapse/CustomCollapse'
 import useModal from 'hooks/useModal'
 import { useRecoilState } from 'recoil'

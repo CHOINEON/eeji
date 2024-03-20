@@ -135,13 +135,6 @@ const DataProperties = () => {
     <Spin tip="업로드 파일 분석 중 ..." spinning={uploading} style={{ marginTop: '100px' }}>
       <DataPropertiesContainer>
         <Row>
-          <ColumnLabel required={true} label="Algorithm Type" />
-          <Radio.Group onChange={onChangeRadio} value={inputOption.algo_type}>
-            <Radio value={1}>Classification</Radio>
-            <Radio value={0}>Regression</Radio>
-          </Radio.Group>
-        </Row>
-        <Row>
           <ColumnLabel required={true} label="Dataset Name" />
           <Input
             style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
@@ -152,7 +145,13 @@ const DataProperties = () => {
             allowClear
           />
         </Row>
-
+        <Row>
+          <ColumnLabel required={true} label="Algorithm Type" />
+          <Radio.Group onChange={onChangeRadio} value={inputOption.algo_type}>
+            <Radio value={1}>Classification</Radio>
+            <Radio value={0}>Regression</Radio>
+          </Radio.Group>
+        </Row>
         {/* <Col span={24} style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }}>
             <ColumnLabel required={true} label="Timestamp Format" />
             <Input defaultValue="yyyy-mm-dd HH:MM:SS" onChange={onChangeInput} />
@@ -206,7 +205,7 @@ const DataPropertiesContainer = styled.div`
   // border: 1px solid red;
   display: block;
   float: left;
-  margin-top: 20px;
+  // margin-top: 20px;
   width: 100%;
   height: 276px;
   padding: 1em;

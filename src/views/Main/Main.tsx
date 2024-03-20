@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 import { Box, Wrap } from '@chakra-ui/react'
-import { MenuList } from './menuList'
+import { MenuList } from './MenuList'
 
 const Main = () => {
   return (
@@ -9,12 +9,10 @@ const Main = () => {
       <Box my="60px">
         <MainTitle>INEEJI’s INFINITE OPTIMAL SERIES™</MainTitle>
         <SubText>
-          is Prediction solution for ENERGY SAVING based on time series data that enables companies to realize
-          productivity improvement,
+          is Prediction solution for time series data that enables companies to realize productivity improvement,
         </SubText>
         <SubText>
-          production energy cost reduction, and quality improvement through process optimization of industrial
-          processes.
+          production energy cost reduction and quality improvement through process optimization of industrial processes.
         </SubText>
       </Box>
       <Box>
@@ -29,6 +27,7 @@ const IconList = () => {
     <>
       <Wrap spacing="30px" justify="center" height={200} margin={'15vh 0'}>
         {MenuList.map((item: any) => {
+          console.log('item:', item)
           return (
             <MenuItem key={item.title}>
               <IconContainer onClick={() => (window.location.href = `/admin${item.path}`)}>
@@ -67,22 +66,22 @@ const SubText = styled.p`
 `
 
 const MenuItem = styled.div`
-  width: 200px;
-  height: 200px;
+  width: 210px;
+  height: 210px;
   display: flex;
   flex-direction: column;
 `
 
 const IconContainer = styled.button`
   display: block;
-  // width: 150px;
-  // height: 150px;
-  margin: auto;
+  // width: 200px;
+  // height: 200px;
+  margin-bottom: 10px;
 `
 const TitleContainer = styled.div`
   display: block;
   text-align: center;
-  margin: 20px 15px;
+  margin: 0px 15px;
 `
 
 const Title_EN = styled.p`

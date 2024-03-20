@@ -20,6 +20,11 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
   },
   devServer: {
+    client: {
+      overlay: true,
+      // 웹소켓용 url 지정
+      webSocketURL: { hostname: undefined, pathname: undefined, port: '0' },
+    },
     host: 'localhost', // live-server host 및 port
     port: 9871,
   },

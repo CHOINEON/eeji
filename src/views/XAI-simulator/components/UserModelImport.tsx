@@ -10,8 +10,8 @@ import { modalState } from 'stores/modal'
 import ColumnList from './ModelSelect/ColumnList'
 import { customModelStore, xaiResultStore } from 'views/XAI-simulator/store/analyze/atom'
 import XaiApi from 'apis/XaiApi'
-import { transformDataByRow } from '../AnalysisResult'
-import { colorsForStackedBarChart as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
+import { transformDataByRow } from '../XaiAnalysisResult'
+import { colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
 
 interface IDataObj {
   model: any

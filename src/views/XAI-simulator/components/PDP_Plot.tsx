@@ -10,7 +10,7 @@ import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 ChartJS.register(ChartDataLabels)
 
 const PDP_Plot = ({ data }: any) => {
-  console.log('data:', data)
+  // console.log('data:', data)
   const keys: Array<string> = Object.keys(data)
   const values: Array<Array<unknown>> = Object.values(data)
 
@@ -72,15 +72,15 @@ const PDP_Plot = ({ data }: any) => {
     <>
       <ComponentContainer>
         <div className="mt-1 ml-[20px] w-[420px]">
-          <Title>Partical Dependence Plot</Title>
-          <InfoCircle content="하나의 변수가 예측 결과에 미치는 주변 효과" />
+          <Title>변수 변화 결과 예측</Title>
+          <InfoCircle content="하나의 변수가 예측 결과에 미치는 주변 효과" color="#9E9E9E" />
           <Select
-            className="ml-2 w-[130px] bg-[#F5F8FF] border-[#D5DCEF]"
+            className="ml-2 w-[175px] bg-[#F5F8FF] border-[#D5DCEF]"
             defaultValue={options[0]?.value}
             onChange={handleChange}
             options={options}
           />
-          <div className="my-4 block float-left w-full">
+          <div className="block float-left w-full">
             <ChartWrapper>
               <Line data={chartData} options={chartOptions} />
             </ChartWrapper>
@@ -100,7 +100,7 @@ const ComponentContainer = styled.div`
   justify-content: space-evenly;
   padding: 5% 1%;
   background-color: #ffffff;
-  width: 100%;
+  width: 470px;
   height: 40%;
   box-shadow: 0px 0px 10px #5951db33;
   border: 1px solid #d5dcef;
@@ -120,5 +120,5 @@ const Title = styled.div`
 const ChartWrapper = styled.div`
   width: 100%;
   height: 100%;
-  margin-top: 30px;
+  margin-top: 10px;
 `

@@ -55,3 +55,6 @@ option {
 .ant-tabs-nav {
   display: none !important; /*임시처리*/
 }
+.ant-btn-primary {
+  background-color: #1677fe;
+}

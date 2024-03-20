@@ -1,5 +1,7 @@
 import styled from '@emotion/styled'
+import { Badge, Space, Tooltip } from 'antd'
 import React from 'react'
+import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import HorizontalStackedBarChart from './HorizontalStackedBarChart'
 
 const RowItem = ({ number, value, weight, pred }: any) => {
@@ -27,11 +29,23 @@ const RowItem = ({ number, value, weight, pred }: any) => {
 
 const AnalysisGrid = (props: any) => {
   // console.log('AnalysisGrid:', props)
-  const { localWeight, localValue, predResult } = props
+  const { localWeight, localValue, predResult, featureList } = props
+
+  const hoverContent = (feature_list: any) => {
+    return (
+      <LegendContainer>
+        <Space direction="horizontal">
+          {feature_list?.map((value: number, index: any) => (
+            <Badge color={colorChips[index]} text={value} />
+          ))}
+        </Space>
+      </LegendContainer>
+    )
+  }
 
   return (
     <>
-      <div style={{ display: 'block', width: '100%', padding: '0 2%' }}>
+      <div style={{ display: 'block', width: '100%', padding: '0 2%', marginTop: 15 }}>
         <ColumnHeader width={'10%'}>No</ColumnHeader>
         <ColumnHeader width={'20%'}>예측결과</ColumnHeader>
         <ColumnHeader width={'70%'}>입력변수</ColumnHeader>
@@ -73,4 +87,9 @@ const Idx = styled.div`
 
 const Name = styled.div`
   text-align: center;
+`
+
+const LegendContainer = styled.div`
+  // margin-bottom: 20px;
+  text-align: right;
 `

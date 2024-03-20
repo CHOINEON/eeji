@@ -6,10 +6,11 @@ interface ProgressbarProps {
   currentValue: number
   maxValue: number
   label?: string
+  loadingText?: string
   onCompleted?: () => void
 }
 
-const ProgressbarSimple = ({ currentValue, maxValue, label, onCompleted }: ProgressbarProps) => {
+const ProgressbarSimple = ({ currentValue, maxValue, label, onCompleted, loadingText }: ProgressbarProps) => {
   useEffect(() => {
     if (currentValue === 100) onCompleted()
   })
@@ -19,7 +20,7 @@ const ProgressbarSimple = ({ currentValue, maxValue, label, onCompleted }: Progr
       {' '}
       <TextContainer>{currentValue + ' %'}</TextContainer>
       <Progressbar currentValue={currentValue} maxValue={maxValue} label={label} />
-      <DescTextContainer>데이터를 분석중입니다.</DescTextContainer>
+      <DescTextContainer>{loadingText ? loadingText : '데이터를 분석 중입니다.'}</DescTextContainer>
     </Wrapper>
   )
 }

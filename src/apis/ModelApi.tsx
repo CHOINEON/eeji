@@ -1,17 +1,14 @@
-import { axiosPrivate } from './axios'
+import { axiosPrivate, axiosPublic } from './axios'
 import { TResponseType } from './type/commonResponse'
-import { IModelDataReq, IModelOptionReq, IModelOptionRes, IModelPostReq, IModelSaveReqParam } from './type/ModelOption'
+import { IModelDataReq, IModelOptionRes, IModelPostReq, IModelSaveReqParam } from './type/ModelOption'
 
 const controller = new AbortController()
-const signal = controller.signal
+// const signal = controller.signal
 
 const ModelApi = {
   //모델 옵션 설정해서 실행하기
   postModelwithOption: async (params: IModelPostReq): Promise<IModelOptionRes> => {
-    // console.log('params:', params)
-    const config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-    const { data } = await axiosPrivate.post(`api/get_model_option`, params.payload, config)
-
+    const { data } = await axiosPublic.post(`api/get_model_option`, params.payload)
     return data
   },
 
@@ -22,13 +19,13 @@ const ModelApi = {
   //Model Generator결과 페이지에서 모델 저장
   saveGeneratedModel: async (params: IModelSaveReqParam): Promise<TResponseType<object>> => {
     // console.log('params:', params)
-    const { data } = await axiosPrivate.post(`api/save_model/${params.user_id}/`, params)
+    const { data } = await axiosPublic.post(`api/save_model/${params.user_id}/`, params)
     return data
   },
 
   //사용자가 갖고 있는 모델 파일 직접업로드(XAI)
   saveModelwithColumns: async (params: IModelDataReq): Promise<TResponseType<object>> => {
-    const { data } = await axiosPrivate.post(`api/save_custom_model_new/${params.user_id}/`, params.payload)
+    const { data } = await axiosPublic.post(`api/save_custom_model_new/${params.user_id}/`, params.payload)
     return data
   },
 

@@ -9,7 +9,7 @@ import { useRecoilState } from 'recoil'
 import { stepCountStore } from './store/global/atom'
 import './style/styles.css'
 import { notification } from 'antd'
-import AnalysisResult from 'views/AnalysisResult'
+import TabContainer from 'views/AIModelGenerator/TabContainer'
 import DataSet from './DataSet'
 
 const Context = React.createContext({ name: 'Default' })
@@ -36,6 +36,7 @@ const AIModelGenerator = () => {
   const contextValue = useMemo(() => ({ name: 'Ant Design' }), [])
 
   useEffect(() => {
+    //개발중
     setActiveStep(0)
   }, [])
 
@@ -94,7 +95,7 @@ const AIModelGenerator = () => {
           </Box>
           <Box style={{ margin: '10px 8px' }}>
             {activeStep === 0 && <DataSet />}
-            {activeStep === 1 && <AnalysisResult />}
+            {activeStep === 1 && <TabContainer />}
           </Box>
         </Box>
       </Context.Provider>

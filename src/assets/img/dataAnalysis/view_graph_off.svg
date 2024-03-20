@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <g id="view_graph_off" transform="translate(-2265 -6468)">
+    <g id="사각형_4924" data-name="사각형 4924" transform="translate(2265 6468)" fill="#fff" stroke="#d5dcef" stroke-width="1">
+      <rect width="36" height="36" rx="10" stroke="none"/>
+      <rect x="0.5" y="0.5" width="35" height="35" rx="9.5" fill="none"/>
+    </g>
+    <g id="사각형_4926" data-name="사각형 4926" transform="translate(2281 6483)" fill="#fff" stroke="#a3afcf" stroke-width="1">
+      <rect width="4" height="11" stroke="none"/>
+      <rect x="0.5" y="0.5" width="3" height="10" fill="none"/>
+    </g>
+    <g id="사각형_4925" data-name="사각형 4925" transform="translate(2287 6478)" fill="#fff" stroke="#a3afcf" stroke-width="1">
+      <rect width="4" height="16" stroke="none"/>
+      <rect x="0.5" y="0.5" width="3" height="15" fill="none"/>
+    </g>
+    <g id="사각형_4927" data-name="사각형 4927" transform="translate(2275 6487)" fill="#fff" stroke="#a3afcf" stroke-width="1">
+      <rect width="4" height="7" stroke="none"/>
+      <rect x="0.5" y="0.5" width="3" height="6" fill="none"/>
+    </g>
+  </g>
+</svg>

@@ -35,6 +35,9 @@ import BarBg from './img/side_bar_bg.png'
 
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
+import UserApi from 'apis/UserApi'
+import { useMutation } from 'react-query'
+import { message } from 'antd'
 
 const LangParentBox = styled.div`
   display: flex;
@@ -106,6 +109,20 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     setCompnayTel(JSON.parse(window.localStorage.getItem('company_info'))?.com_tel)
   }, [window.localStorage])
 
+  const { mutate: mutateLogout } = useMutation(UserApi.logout, {
+    onSuccess: (response: any) => {
+      console.log('logout response:', response)
+      message.open({
+        type: 'success',
+        content: response?.data.detail,
+      })
+      history.replace('/login')
+    },
+    onError: (error: any) => {
+      // console.log('error::', error)
+    },
+  })
+
   const { t, i18n } = useTranslation('main')
 
   //국가 아이콘 클릭시 default 언어 변경
@@ -117,7 +134,11 @@ export default function HeaderLinks(props: { secondary: boolean }) {
   }
 
   const handleLogout = () => {
-    history.replace('/login')
+    const payload = {
+      com_id: localStorage.getItem('companyId'),
+      user_id: localStorage.getItem('userId'),
+    }
+    mutateLogout(payload)
   }
 
   const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200')
