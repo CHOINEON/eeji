@@ -1,7 +1,7 @@
 import { Wrap } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import React from 'react'
-import { MenuList } from 'views/Main/menuList'
+import { MenuList } from 'views/Main/MenuList'
 
 const AvailableServiceIcon = () => {
   return (
