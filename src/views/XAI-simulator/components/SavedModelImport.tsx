@@ -28,7 +28,7 @@ const SavedModelImport = () => {
 
   const { mutate: mutateGetModelList } = useMutation(XaiApi.getSavedModelList, {
     onSuccess: (result: any) => {
-      // console.log('mutateGetModelList:', result)
+      console.log('mutateGetModelList:', result)
       setData(result.data)
     },
     onError: (error: any, query: any) => {
