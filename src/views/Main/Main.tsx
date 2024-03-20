@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 import { Box, Wrap } from '@chakra-ui/react'
-import { MenuList } from './menuList'
+import { MenuList } from './MenuList'
 
 const Main = () => {
   return (
@@ -27,10 +27,11 @@ const IconList = () => {
     <>
       <Wrap spacing="30px" justify="center" height={200} margin={'15vh 0'}>
         {MenuList.map((item: any) => {
+          console.log('item:', item)
           return (
             <MenuItem key={item.title}>
               <IconContainer onClick={() => (window.location.href = `/admin${item.path}`)}>
-                <img src={item.icon_inbox} style={{ opacity: 1 }} width={100} />
+                <img src={item.icon_src} style={{ opacity: 1 }} />
               </IconContainer>
               <TitleContainer>
                 <Title_EN>{item.title}</Title_EN>
@@ -73,14 +74,14 @@ const MenuItem = styled.div`
 
 const IconContainer = styled.button`
   display: block;
-  // width: 150px;
-  // height: 150px;
-  margin: auto;
+  // width: 200px;
+  // height: 200px;
+  margin-bottom: 10px;
 `
 const TitleContainer = styled.div`
   display: block;
   text-align: center;
-  margin: 20px 15px;
+  margin: 0px 15px;
 `
 
 const Title_EN = styled.p`
