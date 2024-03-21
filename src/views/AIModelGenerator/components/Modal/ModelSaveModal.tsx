@@ -8,6 +8,7 @@ import { CustomButton } from '../DataInfo/DataImportModal'
 import { getNowDateTime } from 'utils/DateFunction'
 import { useMutation } from 'react-query'
 import ModelApi from 'apis/ModelApi'
+import TextArea from 'antd/es/input/TextArea'
 
 const ModelSaveModal = (props: any) => {
   // console.log('ModelSaveModal modal:', props)
@@ -66,7 +67,9 @@ const ModelSaveModal = (props: any) => {
             allowClear
           />
         </Row>
-
+        <Row>
+          <TextArea placeholder="Description" autoSize={{ minRows: 2, maxRows: 6 }} />
+        </Row>
         <CustomButton
           visible={true}
           style={{ height: 40, marginTop: '30px', fontSize: 15, fontWeight: 'bold' }}

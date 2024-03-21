@@ -1,39 +1,12 @@
+import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
-import { styled } from 'styled-components'
-// import LineChart from './components/Chart/LineChart'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  ScriptableContext,
-} from 'chart.js'
-import zoomPlugin from 'chartjs-plugin-zoom'
 import { Line } from 'react-chartjs-2'
 import { useRecoilValue } from 'recoil'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
-import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
-import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
-import FeatureAnalysis from '../Features/FeatureAnalysis'
+import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 
-ChartJS.register(
-  ChartDataLabels,
-  CategoryScale,
-  LinearScale,
-  LineElement,
-  PointElement,
-  zoomPlugin,
-  Title,
-  Tooltip,
-  Legend
-)
-
-const RegressionResult = () => {
+const ClassificationChart = () => {
   const analysisResponse = useRecoilValue(analysisResponseAtom)
   const selectedData = useRecoilValue(selectedDataState)
   const [dataset, setDataset] = useState([])
@@ -46,37 +19,36 @@ const RegressionResult = () => {
   useEffect(() => {
     const arr: Array<any> = []
 
+    //TODO: 일단 Classification 은 50개만 보여주게 slice 처리함
+
     analysisResponse.map((_d: any, i: number) => {
       if (i === 0) {
-        arr.push(generateSeries(`Ground-truth`, analysisResponse[i]['pred_data']['truth'], 'rgb(87,220,49)'))
-        arr.push(generateSeries(`INEEJI prediction`, analysisResponse[i]['pred_data']['pred'], '#4A40F7'))
+        arr.push(generateSeriesForClassification(`Ground-truth`, analysisResponse[i]['pred_data']['truth'], '#617EFF'))
+        arr.push(
+          generateSeriesForClassification(`INEEJI prediction`, analysisResponse[i]['pred_data']['pred'], '#000000')
+        )
       } else {
-        arr.push(generateSeries(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'], colorChips[i]))
+        arr.push(
+          generateSeriesForClassification(`Prediction${i}`, analysisResponse[i]['pred_data']['pred'], colorChips[i])
+        )
       }
     })
 
     setDataset(arr)
   }, [analysisResponse])
 
-  const generateSeries = (label: string, dataArr: any, color: string) => {
+  const generateSeriesForClassification = (label: string, dataArr: any, color: string) => {
     return {
       key: color,
-      type: 'line' as const,
+      type: 'scatter' as const,
       label: label === 'truth' ? `${label} (${selectedData.targetY})` : label,
       borderColor: color,
-      backgroundColor:
-        label === 'INEEJI prediction'
-          ? (context: ScriptableContext<'line'>) => {
-              const ctx = context.chart.ctx
-              const gradient = ctx.createLinearGradient(0, 0, 0, 400)
-              gradient.addColorStop(0, 'rgba(69,58,246,1)')
-              gradient.addColorStop(1, 'rgba(69,58,246,0)')
-              return gradient
-            }
-          : color,
+      backgroundColor: label === 'INEEJI prediction' ? 'rgba(69, 58, 246, 0)' : color,
+      // pointStyle: label === 'truth' ? 'circle' : 'triangle',
       borderWidth: label === 'truth' ? 1 : 1,
       fill: label === 'INEEJI prediction' ? true : false,
       data: dataArr,
+      pointRadius: label === 'INEEJI prediction' ? 5 : 2,
     }
   }
 
@@ -92,7 +64,9 @@ const RegressionResult = () => {
   }
 
   const footer = (tooltipItems: any) => {
+    // console.log('tooltipItems', tooltipItems)
     let tooltipText
+    // let sum = 0
 
     tooltipItems.forEach(function (tooltipItem: any) {
       tooltipText = tooltipItem.raw.z
@@ -100,7 +74,6 @@ const RegressionResult = () => {
 
     return 'Label Name : ' + tooltipText
   }
-
   const options = {
     radius: 2,
     layout: {
@@ -286,28 +259,24 @@ const RegressionResult = () => {
           float: 'left',
         }}
       >
-        <ChartWrapper /**isClassification={selectedData.isClassification} */>
+        <ChartWrapper>
           <div id="legend-container"></div>
-          <Line
-            options={selectedData.isClassification === 1 ? optionsForClassification : options}
-            data={chartData}
-            plugins={[htmlLegendPlugin]}
-          />
+          <Line options={optionsForClassification} data={chartData} plugins={[htmlLegendPlugin]} />
         </ChartWrapper>
-      </div>
-      <div style={{ width: '30%', marginTop: '0px', display: 'inline-block', float: 'left' }}>
-        <FeatureAnalysis textVisible={true} />
       </div>
     </>
   )
 }
 
-export default RegressionResult
+export default ClassificationChart
 
 const ChartWrapper = styled.div`
-  // border: 1px solid pink;
+  //   border: 1px solid pink;
+  display: block;
+  float: left;
   width: 100%;
-  height: 600px;
+  min-width: 900px;
+  height: 580px;
   position: relative;
   float: left;
   margin: 0 10px;

@@ -4,12 +4,6 @@ import { Button, Select } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { filteredResultState, filterWithConstraint } from 'views/AIModelGenerator/store/response/atoms'
-import view_circle_off from 'assets/img/dataAnalysis/view_circle_off.svg'
-import view_circle_on from 'assets/img/dataAnalysis/view_circle_on.svg'
-import view_graph_off from 'assets/img/dataAnalysis/view_graph_off.svg'
-import view_graph_on from 'assets/img/dataAnalysis/view_graph_on.svg'
-import view_list_off from 'assets/img/dataAnalysis/view_list_off.svg'
-import view_list_on from 'assets/img/dataAnalysis/view_list_on.svg'
 
 export interface IConstraint {
   data: string
@@ -116,17 +110,6 @@ const CustomTable = () => {
           <Button type="text" icon={<UndoOutlined />} onClick={handleClearFilter}>
             Clear Filter
           </Button>
-          <div className="block float-right w-[40%]">
-            <button className="mr-1">
-              <img src={view_list_on} />
-            </button>
-            <button className="mr-1" disabled={true}>
-              <img src={view_graph_off} />
-            </button>
-            <button className="mr-1" disabled={true}>
-              <img src={view_circle_off} />
-            </button>
-          </div>
         </div>
       </div>
 
