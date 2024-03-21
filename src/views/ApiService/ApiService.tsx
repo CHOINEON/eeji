@@ -142,6 +142,7 @@ const ApiService = () => {
             color: '#002D65',
             fontSize: '12px',
             textAlign: 'center',
+            marginBottom: '2.5px',
           }}
         >
           <h2 style={{ flex: 0.5 }}>모델 생성일</h2>
@@ -162,6 +163,7 @@ const ApiService = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '12px' }}>
               <Title style={{ fontSize: '22px', marginBottom: '10px' }}>파라미터 설정 및 소스코드 예제</Title>
               <CustomButton1>예제 코드 실행 </CustomButton1>
+              <CustomButton1>새로고침 </CustomButton1>
             </div>
             <div style={{ display: 'flex' }}>
               <div>
@@ -269,10 +271,4 @@ const CustomButton1 = styled.button`
   border-radius: 10px;
   font-size: 11px;
   font-face: 'Helvetica Neue';
-`
-const StyledCard = styled.div`
-  display: 'Flex';
-  flexdirection: 'row';
-  justifycontent: 'space-between';
-  marginleft: '20px';
 `
