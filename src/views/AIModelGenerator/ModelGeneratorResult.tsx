@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
-import { inputOptionListState, selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
+import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 import FeatureSelectModal from './components/Modal/FeatureSelectModal'
 import { featureSelectModalState } from 'views/AIModelGenerator/store/modal/atom'
-import { analysisResponseAtom, filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
+import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import { Select, Spin } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import ClassificationResult from './Visualization/Data/ClassificationResult'
@@ -26,10 +26,11 @@ const ModelGeneratorResult = () => {
   const [analysisResponse, setAnalysisResponse] = useRecoilState(analysisResponseAtom)
   const [selectedFeatureX, setSelectedFeatureX] = useState([])
 
-  //개발중
+  //개발용
   // useEffect(() => {
   //   console.log('data:', analysisResponse)
   //   // setAnalysisResponse(tempData as any)
+  //   setLoading({ showing: false, text: '' })
   //   setAnalysisResponse([
   //     ...analysisResponse,
   //     {

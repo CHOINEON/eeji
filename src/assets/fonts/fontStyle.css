@@ -14,12 +14,12 @@
 @font-face {
   font-family: 'Noto Sans';
   font-style: normal;
-  src: url('./NotoSansKR.ttf') format('truetype');
+  src: url('./NotoSansKR.ttf') format('ttf');
 }
 
 @font-face {
   font-family: 'Helvetica Neue';
-  src: url('./Helvetica.ttf') format('truetype');
+  src: url('./Helvetica.ttf') format('ttf');
 }
 
 @font-face {
@@ -29,5 +29,5 @@
 
 @font-face {
   font-family: 'Helvetica Neue Regular';
-  src: url('./HelveticaNeue Regular.ttf') format('truetype');
+  src: url('./HelveticaNeue Regular.ttf') format('ttf');
 }

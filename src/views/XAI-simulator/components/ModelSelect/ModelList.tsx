@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Tag } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 //모델명/타겟변수/모델유형
 const ModelRow = ({ item, active, onClick }: any) => {

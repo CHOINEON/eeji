@@ -7,7 +7,7 @@ import { lowChromaticColorChips } from 'views/AIModelGenerator/components/Chart/
 
 const FeatureClassPerformance = (colors: any) => {
   const performanceData: any = useRecoilValue(filteredResultState('performance'))[0]
-  console.log('performanceData:', performanceData)
+  // console.log('performanceData:', performanceData)
 
   interface PerformanceTable {
     [key: string | number]: { Accuracy: number }
