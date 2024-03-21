@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 import styled from '@emotion/styled'
-import { Button, Badge } from 'antd'
+import { Badge } from 'antd'
 import React, { useState } from 'react'
 import './antdCustom.css'
 
@@ -16,25 +16,25 @@ const PredictionRow = ({ item, active, onClick }: any) => {
   }
   const ModelType = ({ Model_Type }: any) => {
     return (
-      <div style={{ flex: 1, textAlign: 'center', marginTop: '7px' }}>
+      <StyledModelType>
         <Badge status="success" style={{ marginRight: '5px' }}></Badge>
         {item.user_id}
-      </div>
+      </StyledModelType>
     )
   }
   const Status = ({ isAvailable }: any) => {
     return (
-      <div style={{ flex: 1, textAlign: 'center', marginTop: '7px' }}>
+      <StyledStatus>
         <Badge status="success" style={{ marginRight: '5px' }}></Badge>
-        {item.user_id}
-      </div>
+        {'available'}
+      </StyledStatus>
     )
   }
   const TagType = ({ Tag_List }: any) => {
     return (
       <TagContainer>
-        {TagList?.map((item: any) => (
-          <TagWrapper>
+        {TagList?.map((item: any, index: number) => (
+          <TagWrapper key={index}>
             <TagBox>{item}</TagBox>
           </TagWrapper>
         ))}
@@ -139,7 +139,7 @@ const DateText = styled.div`
 `
 const TagContainer = styled.div`
   display: flex;
-  width: 100px;
+  width: 200px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -153,7 +153,6 @@ const TagWrapper = styled.div`
   align-items: center;
   margin-top: 10px;
 `
-
 const TagBox = styled.div`
   width: 49px;
   height: 16px;
@@ -163,7 +162,7 @@ const TagBox = styled.div`
   border: 1px solid #d5dcef;
   border-radius: 5px;
   align-items: center;
-  // display: inline-block;
+  display: inline-block;
 `
 
 const PublishButton = styled.button`
@@ -174,4 +173,19 @@ const PublishButton = styled.button`
   background: #4338f7;
   padding: 0px 10px;
   color: #fff;
+  margin-left: 105px;
+`
+
+const StyledModelType = styled.div`
+  flex: 0.6;
+  text-align: right;
+  margin-top: 7px;
+  margin-right: 50px;
+  padding-right: 50px;
+`
+
+const StyledStatus = styled.div`
+  flex: 0.4;
+  text-align: right;
+  margin-top: 7px;
 `
