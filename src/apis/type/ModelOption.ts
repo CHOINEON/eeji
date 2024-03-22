@@ -75,3 +75,17 @@ export interface IModelSaveReqParam {
   is_classification: boolean
   descr: string
 }
+
+export interface IModelApiParm {
+  com_id: string
+  user_id: string
+  model_id: string
+  model_name: string
+  target_y: string
+  is_classification: boolean
+  create_date: string
+  update_date: string
+  status: string
+  descr: string
+  columns: string
+}

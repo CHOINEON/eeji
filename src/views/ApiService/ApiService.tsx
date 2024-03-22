@@ -92,7 +92,7 @@ const ApiService = () => {
           <h2 style={{ flex: 1 }}>모델명</h2>
           <h2 style={{ flex: 2 }}>타겟변수명</h2>
           <h2 style={{ flex: 1 }}>Tags</h2>
-          <h2 style={{ flex: 1 }}>모델 유형</h2>
+          <h2 style={{ flex: 1 }}>description</h2>
           <h2 style={{ flex: 1 }}>Status</h2>
           <h2 style={{ flex: 1 }}>API생성</h2>
         </StyledColumn>

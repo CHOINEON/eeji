@@ -1,6 +1,6 @@
 import { axiosPrivate, axiosPublic } from './axios'
 import { TResponseType } from './type/commonResponse'
-import { IModelDataReq, IModelOptionRes, IModelPostReq, IModelSaveReqParam } from './type/ModelOption'
+import { IModelDataReq, IModelOptionRes, IModelPostReq, IModelSaveReqParam, IModelApiParm } from './type/ModelOption'
 
 const controller = new AbortController()
 // const signal = controller.signal
@@ -26,6 +26,13 @@ const ModelApi = {
   //사용자가 갖고 있는 모델 파일 직접업로드(XAI)
   saveModelwithColumns: async (params: IModelDataReq): Promise<TResponseType<object>> => {
     const { data } = await axiosPublic.post(`api/save_custom_model_new/${params.user_id}/`, params.payload)
+    return data
+  },
+
+  //api페이지 publish (API Generator)
+  publishModelAPI: async (params: IModelApiParm): Promise<TResponseType<object>> => {
+    console.log('params:', params)
+    const { data } = await axiosPublic.post(`/api/generate_api_key/${params.user_id}/`, params)
     return data
   },
 
