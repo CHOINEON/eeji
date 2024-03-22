@@ -1,9 +1,10 @@
-import { CloseCircleOutlined, CloseOutlined } from '@ant-design/icons'
+import { CloseOutlined } from '@ant-design/icons'
 import styled from '@emotion/styled'
 import { Label, UploadBtn, Wrapper } from 'components/fields/Wrapper'
 import React, { useState, useRef, useEffect } from 'react'
 
 interface ModelUploadProps {
+  hidden?: boolean
   selectedFile: string
   label: string
   onChange?: any
@@ -11,7 +12,7 @@ interface ModelUploadProps {
 }
 
 const ModelUpload = (props: ModelUploadProps) => {
-  const { selectedFile, label, onChange, required } = props
+  const { selectedFile, label, onChange, required, hidden } = props
   const inputRef = useRef(null)
 
   const handleChange = (e: any) => {
@@ -31,7 +32,7 @@ const ModelUpload = (props: ModelUploadProps) => {
 
   return (
     <>
-      <Wrapper>
+      <Wrapper style={{ display: hidden ? 'none' : 'block' }}>
         <Label hasFileName={selectedFile ? true : false}>
           <span className={required ? 'text-red-500' : 'hidden'}>* </span>
           <span>{label}</span>
@@ -48,14 +49,7 @@ const ModelUpload = (props: ModelUploadProps) => {
         <label htmlFor="input-file">
           <UploadBtn onClick={handleUploadClick}>파일선택</UploadBtn>
         </label>
-        <input
-          style={{ display: 'none' }}
-          ref={inputRef}
-          type="file"
-          onChange={handleChange}
-          // accept=".pickle,.py"
-          id="input-file"
-        />
+        <input style={{ display: 'none' }} ref={inputRef} type="file" onChange={handleChange} id="input-file" />
       </Wrapper>
     </>
   )
