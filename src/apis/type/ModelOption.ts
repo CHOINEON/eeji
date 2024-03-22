@@ -73,4 +73,5 @@ export interface IModelSaveReqParam {
   model_name: string
   target_y: string
   is_classification: boolean
+  descr: string
 }
