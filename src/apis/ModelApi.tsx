@@ -32,7 +32,10 @@ const ModelApi = {
   //api페이지 publish (API Generator)
   publishModelAPI: async (params: IModelApiParm): Promise<TResponseType<object>> => {
     console.log('params:', params)
-    const { data } = await axiosPublic.post(`/api/generate_api_key/${params.user_id}/`, params)
+    const { data } = await axiosPublic.post(
+      `/api/generate_api_key/${params.com_id}/${params.user_id}/${params.model_id}/`,
+      params
+    )
     return data
   },
 

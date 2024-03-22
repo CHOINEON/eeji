@@ -8,6 +8,7 @@ import './antdCustom.css'
 
 const PredictionRow = ({ item, active, onClick }: any) => {
   const user_id = localStorage.getItem('userId').toString()
+
   const { mutate: mutatePublishModelAPI } = useMutation(ModelApi.publishModelAPI, {
     onSuccess: (result: any) => {
       console.log('mutateGetModelList:', result)
@@ -21,8 +22,7 @@ const PredictionRow = ({ item, active, onClick }: any) => {
   const APIMenu = ({ ButtonType }: any) => {
     const PublishAPI = () => {
       console.log('api')
-
-      mutatePublishModelAPI({ user_id: user_id })
+      mutatePublishModelAPI({ com_id: item.com_id, user_id: item.user_id, model_id: item.model_id })
     }
 
     return (
