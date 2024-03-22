@@ -1,16 +1,33 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 import styled from '@emotion/styled'
 import { Badge } from 'antd'
-import React, { useState } from 'react'
+import ModelApi from 'apis/ModelApi'
+import React, { useState, useEffect } from 'react'
+import { useMutation } from 'react-query'
 import './antdCustom.css'
 
-const TagList = ['TAG-01', 'TAG-02', 'TAG-03', 'TAG-04']
-
 const PredictionRow = ({ item, active, onClick }: any) => {
+  const user_id = localStorage.getItem('userId').toString()
+
+  const { mutate: mutatePublishModelAPI } = useMutation(ModelApi.publishModelAPI, {
+    onSuccess: (result: any) => {
+      console.log('mutateGetModelList:', result)
+      // setData(result.data)
+    },
+    onError: (error: any, query: any) => {
+      //
+    },
+  })
+
   const APIMenu = ({ ButtonType }: any) => {
+    const PublishAPI = () => {
+      console.log('api')
+      mutatePublishModelAPI({ com_id: item.com_id, user_id: item.user_id, model_id: item.model_id })
+    }
+
     return (
       <div style={{ flex: 1, textAlign: 'center', marginTop: '5px' }}>
-        <PublishButton>Publish</PublishButton>
+        <PublishButton onClick={PublishAPI}>Publish</PublishButton>
       </div>
     )
   }
@@ -18,23 +35,25 @@ const PredictionRow = ({ item, active, onClick }: any) => {
     return (
       <StyledModelType>
         <Badge status="success" style={{ marginRight: '5px' }}></Badge>
-        {item.user_id}
+        {item.descr}
       </StyledModelType>
     )
   }
+
   const Status = ({ isAvailable }: any) => {
     return (
       <StyledStatus>
         <Badge status="success" style={{ marginRight: '5px' }}></Badge>
-        {'available'}
+        {item.status}
       </StyledStatus>
     )
   }
   const TagType = ({ Tag_List }: any) => {
+    const parsedList = JSON.parse(Tag_List)
     return (
       <TagContainer>
-        {TagList?.map((item: any, index: number) => (
-          <TagWrapper key={index}>
+        {parsedList?.map((item: any, index: number) => (
+          <TagWrapper key={item}>
             <TagBox>{item}</TagBox>
           </TagWrapper>
         ))}
@@ -50,7 +69,7 @@ const PredictionRow = ({ item, active, onClick }: any) => {
       <DateText> {item.create_date}</DateText>
       <ModelTitle>{item.model_name}</ModelTitle>
       <TargetText>{item.target_y}</TargetText>
-      <TagType Tag_List={TagList}></TagType>
+      <TagType Tag_List={item.columns}></TagType>
       <ModelType></ModelType>
       <Status></Status>
       <APIMenu></APIMenu>
@@ -157,6 +176,7 @@ const TagBox = styled.div`
   width: 49px;
   height: 16px;
   font-size: 11px;
+  // font-color: black;
   margin: auto !important;
   letterspacing: 0.1;
   border: 1px solid #d5dcef;
