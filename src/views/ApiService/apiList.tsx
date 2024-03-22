@@ -2,6 +2,7 @@
 import styled from '@emotion/styled'
 import { Badge } from 'antd'
 import React, { useState } from 'react'
+import { useMutation } from 'react-query'
 import './antdCustom.css'
 
 const TagList = ['TAG-01', 'TAG-02', 'TAG-03', 'TAG-04']
@@ -18,15 +19,16 @@ const PredictionRow = ({ item, active, onClick }: any) => {
     return (
       <StyledModelType>
         <Badge status="success" style={{ marginRight: '5px' }}></Badge>
-        {item.user_id}
+        {item.descr}
       </StyledModelType>
     )
   }
+
   const Status = ({ isAvailable }: any) => {
     return (
       <StyledStatus>
         <Badge status="success" style={{ marginRight: '5px' }}></Badge>
-        {'available'}
+        {item.status}
       </StyledStatus>
     )
   }
@@ -66,8 +68,12 @@ const PredictionList = ({ data, onSelect }: any) => {
     onSelect(data[idx].model_id)
   }
 
+  const PublishAPI = () => {
+    console.log('api')
+  }
   return (
     <>
+      <PublishButton onClick={PublishAPI}>Publish</PublishButton>
       {data?.map((item: any, idx: number) => (
         <PredictionListWrapper>
           <PredictionRow key={idx} item={item} active={idx === btnActive} onClick={() => toggleActive(idx)} />
