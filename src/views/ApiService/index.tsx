@@ -1,67 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Input, Tag, Card } from 'antd'
-import PredictionList from 'views/ApiService/apiList'
 import { useMutation } from 'react-query'
-import XaiApi from 'apis/XaiApi'
 import styled from '@emotion/styled'
 import { ReloadOutlined } from '@ant-design/icons'
-
-// interface DataType {
-//   key: React.Key
-//   name: string
-//   created: string
-//   target: string
-//   description: string
-//   tags: string[]
-// }
-
-// const columns: ColumnsType<DataType> = [
-//   { title: '모델 생성일', dataIndex: 'created', key: 'created' },
-//   // Table.EXPAND_COLUMN,
-//   { title: '모델명', dataIndex: 'name', key: 'name' },
-//   // Table.SELECTION_COLUMN,
-//   { title: '타겟변수명', dataIndex: 'target', key: 'target' },
-//   {
-//     title: 'Tags',
-//     key: 'tags',
-//     dataIndex: 'tags',
-//     render: (_, { tags }) => (
-//       <>
-//         {tags.map((tag) => {
-//           let color = tag.length > 5 ? 'geekblue' : 'green'
-//           if (tag === 'loser') {
-//             color = 'volcano'
-//           }
-//           return (
-//             <Tag color={color} key={tag}>
-//               {tag.toUpperCase()}
-//             </Tag>
-//           )
-//         })}
-//       </>
-//     ),
-//   },
-//   { title: '비고', dataIndex: 'description', key: 'description' },
-//   {
-//     title: 'Status',
-//     key: 'state',
-//     render: () => <Badge status="success" text="available" />,
-//   },
-//   { title: 'API 생성', dataIndex: 'address', key: 'address', render: () => <Button>Publish</Button> },
-// ]
-
-//TODO : 사용자가 생성하고 저장했거나, 직접 업로드한 모델 목록을 표출
-//구현할 기능 : 요청 및 응답 명세
-//Query string
+import SavedModelList from './PublishableModelList'
+import XaiApi from 'apis/XaiApi'
 
 const ApiService = () => {
-  const [data, setData] = useState([])
   const [modelId, setModelId] = useState()
-  const user_id = localStorage.getItem('userId').toString()
+  const [data, setData] = useState([])
 
   const { mutate: mutateGetModelList } = useMutation(XaiApi.getSavedModelList, {
     onSuccess: (result: any) => {
-      console.log('mutateGetModelList:', result)
+      // console.log('mutateGetModelList:', result)
       setData(result.data)
     },
     onError: (error: any, query: any) => {
@@ -70,7 +21,7 @@ const ApiService = () => {
   })
 
   useEffect(() => {
-    if (user_id) mutateGetModelList({ user_id: user_id })
+    mutateGetModelList({ user_id: localStorage.getItem('userId') })
   }, [])
 
   const handleSelect = (param: any) => {
@@ -80,6 +31,7 @@ const ApiService = () => {
   const handleClick = () => {
     console.log('click')
   }
+
   return (
     <div style={{ display: 'grid', height: '800px', overflowY: 'scroll' }}>
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -87,16 +39,8 @@ const ApiService = () => {
       </div>
 
       <Card style={{ boxShadow: '0px 0px 10px #5951DB33' }}>
-        <StyledColumn>
-          <h2 style={{ flex: 0.5 }}>모델 생성일</h2>
-          <h2 style={{ flex: 1 }}>모델명</h2>
-          <h2 style={{ flex: 2 }}>타겟변수명</h2>
-          <h2 style={{ flex: 1 }}>Tags</h2>
-          <h2 style={{ flex: 1 }}>description</h2>
-          <h2 style={{ flex: 1 }}>Status</h2>
-          <h2 style={{ flex: 1 }}>API생성</h2>
-        </StyledColumn>
-        <PredictionList data={data} onSelect={handleSelect}></PredictionList>
+        {/* <PredictionList data={data} onSelect={handleSelect}></PredictionList> */}
+        <SavedModelList data={data} onSelect={handleSelect} />
 
         <Card
           bodyStyle={{ paddingRight: '20px', paddingBottom: '10px' }}

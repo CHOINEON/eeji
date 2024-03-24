@@ -1,6 +1,12 @@
 import { axiosPrivate, axiosPublic } from './axios'
 import { TResponseType } from './type/commonResponse'
-import { IModelDataReq, IModelOptionRes, IModelPostReq, IModelSaveReqParam, IModelApiParm } from './type/ModelOption'
+import {
+  IModelDataReq,
+  IModelOptionRes,
+  IModelPostReq,
+  IModelSaveReqParam,
+  IModelApiGeneratorParam,
+} from './type/ModelOption'
 
 const controller = new AbortController()
 // const signal = controller.signal
@@ -30,12 +36,12 @@ const ModelApi = {
   },
 
   //api페이지 publish (API Generator)
-  publishModelAPI: async (params: IModelApiParm): Promise<TResponseType<object>> => {
-    console.log('params:', params)
+  publishModelAPI: async (params: IModelApiGeneratorParam): Promise<TResponseType<object>> => {
+    // const { data } = await axiosPublic.post(`/api/generate_api_key/`, params)
     const { data } = await axiosPublic.post(
-      `/api/generate_api_key/${params.com_id}/${params.user_id}/${params.model_id}/`,
-      params
+      `/api/generate_api_key/?com_id=${params.com_id}&user_id=${params.user_id}&model_id=${params.model_id}`
     )
+
     return data
   },
 
