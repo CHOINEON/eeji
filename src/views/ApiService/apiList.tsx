@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-loss-of-precision */
 import styled from '@emotion/styled'
-import { Badge } from 'antd'
+import { Badge, Card } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import React, { useState, useEffect } from 'react'
 import { useMutation } from 'react-query'
@@ -18,7 +17,7 @@ const PredictionRow = ({ item, active, onClick }: any) => {
     },
   })
 
-  const APIMenu = ({ ButtonType }: any) => {
+  const APIMenu = () => {
     const PublishAPI = () => {
       console.log('api')
       mutatePublishModelAPI({ com_id: item.com_id, user_id: item.user_id, model_id: item.model_id })
@@ -30,16 +29,12 @@ const PredictionRow = ({ item, active, onClick }: any) => {
       </div>
     )
   }
-  const ModelType = ({ Model_Type }: any) => {
-    return (
-      <StyledModelType>
-        <Badge status="success" style={{ marginRight: '5px' }}></Badge>
-        {item.descr}
-      </StyledModelType>
-    )
+
+  const ModelType = () => {
+    return <StyledModelType>{item.descr}</StyledModelType>
   }
 
-  const Status = ({ isAvailable }: any) => {
+  const Status = () => {
     return (
       <StyledStatus>
         <Badge status="success" style={{ marginRight: '5px' }}></Badge>
@@ -47,8 +42,9 @@ const PredictionRow = ({ item, active, onClick }: any) => {
       </StyledStatus>
     )
   }
-  const TagType = ({ Tag_List }: any) => {
-    const parsedList = JSON.parse(Tag_List)
+
+  const InputTags = ({ tags }: any) => {
+    const parsedList = JSON.parse(tags)
     return (
       <TagContainer>
         {parsedList?.map((item: any, index: number) => (
@@ -59,6 +55,7 @@ const PredictionRow = ({ item, active, onClick }: any) => {
       </TagContainer>
     )
   }
+
   return (
     <Row
       role="button"
@@ -68,7 +65,7 @@ const PredictionRow = ({ item, active, onClick }: any) => {
       <DateText> {item.create_date}</DateText>
       <ModelTitle>{item.model_name}</ModelTitle>
       <TargetText>{item.target_y}</TargetText>
-      <TagType Tag_List={item.columns}></TagType>
+      <InputTags tags={item.columns}></InputTags>
       <ModelType></ModelType>
       <Status></Status>
       <APIMenu></APIMenu>
@@ -86,11 +83,22 @@ const PredictionList = ({ data, onSelect }: any) => {
 
   return (
     <>
-      {data?.map((item: any, idx: number) => (
-        <PredictionListWrapper>
-          <PredictionRow key={idx} item={item} active={idx === btnActive} onClick={() => toggleActive(idx)} />
-        </PredictionListWrapper>
-      ))}
+      <Card>
+        <StyledColumn>
+          <h2 style={{ flex: 1 }}>모델 생성일</h2>
+          <h2 style={{ flex: 1 }}>모델명</h2>
+          <h2 style={{ flex: 1 }}>타겟변수명</h2>
+          <h2 style={{ flex: 1 }}>Tags</h2>
+          <h2 style={{ flex: 1 }}>description</h2>
+          <h2 style={{ flex: 1 }}>Status</h2>
+          <h2 style={{ flex: 1 }}>API생성</h2>
+        </StyledColumn>
+        {data?.map((item: any, idx: number) => (
+          <PredictionListWrapper>
+            <PredictionRow key={idx} item={item} active={idx === btnActive} onClick={() => toggleActive(idx)} />
+          </PredictionListWrapper>
+        ))}
+      </Card>
     </>
   )
 }
@@ -101,6 +109,16 @@ const Row = styled.div`
   width: 100%;
   height: 38px;
   border-radius: 10px;
+`
+
+const StyledColumn = styled.div`
+  display: Flex;
+  flex-direction: row;
+  margin-left: 20px;
+  color: #002d65;
+  font-size: 12px;
+  text-align: center;
+  margin-bottom: 2.5px;
 `
 
 const PredictionListWrapper = styled.div`
@@ -126,11 +144,11 @@ const PredictionListWrapper = styled.div`
   }
 `
 const ModelTitle = styled.div`
-  width: 20%;
+  width: 15%;
   height: 100%;
   flex: 1;
   float: left;
-  font-family: Helvetica Neue;
+  font-family: 'Helvetica Neue';
   font-size: 17px;
   line-height: 38px;
   color: #002d65;
@@ -140,7 +158,7 @@ const TargetText = styled.div`
   width: 13%;
   line-height: 35px;
   float: left;
-  font-family: Helvetica Neue;
+  font-family: 'Helvetica Neue';
   font-size: 17px;
   color: #002d65;
 `
@@ -150,14 +168,14 @@ const DateText = styled.div`
   line-height: 35px;
   display: inline-block;
   float: left;
-  font-family: Helvetica Neue;
+  font-family: 'Helvetica Neue';
   font-size: 17px;
   color: #002d65;
   text-align: center;
 `
 const TagContainer = styled.div`
   display: flex;
-  width: 200px;
+  width: 15%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -193,6 +211,7 @@ const PublishButton = styled.button`
   padding: 0px 10px;
   color: #fff;
   margin-left: 105px;
+  text-align: center;
 `
 
 const StyledModelType = styled.div`
@@ -207,4 +226,5 @@ const StyledStatus = styled.div`
   flex: 0.4;
   text-align: right;
   margin-top: 7px;
+  text-align: center;
 `
