@@ -295,7 +295,7 @@ const RegressionResult = () => {
           />
         </ChartWrapper>
       </div>
-      <div style={{ width: '30%', marginTop: '0px', display: 'inline-block', float: 'left' }}>
+      <div style={{ width: '30%', marginBottom: '25px', display: 'inline-block', float: 'left' }}>
         <FeatureAnalysis textVisible={true} />
       </div>
     </>

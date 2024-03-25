@@ -3,11 +3,9 @@ import { saveAs } from 'file-saver'
 // import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
 import ChartItem from './ChartItem'
-import ApexCharts from 'react-apexcharts'
 // import Chart from 'react-apexcharts'
 // const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 import './style.css'
-import axios from 'axios'
 const Page = () => {
   // TODO 2024-03-06
 
@@ -21,7 +19,6 @@ const Page = () => {
   //     .then(() => {})
   // }, [])
 
-  const [range, setRange] = useState('day')
   const [chartType, setChartType] = useState('line')
 
   const [layout, setLayout] = useState('/img/icon/layout_01.svg')

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { Spin } from 'antd'
+import { App, message, Spin } from 'antd'
 import { modalState } from 'stores/modal'
 import { CancelButton, CustomButton } from '../../AIModelGenerator/components/DataInfo/DataImportModal'
 import ModelList from './ModelSelect/ModelList'
@@ -12,6 +12,7 @@ import { colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/c
 import { SavedModelListState } from 'store/model/atom'
 
 const SavedModelImport = () => {
+  const { message } = App.useApp()
   const [xaiResult, setXaiResult] = useRecoilState(xaiResultStore)
 
   const com_id = localStorage.getItem('companyId')
@@ -24,7 +25,7 @@ const SavedModelImport = () => {
 
   const { mutate: mutateGetModelList } = useMutation(XaiApi.getSavedModelList, {
     onSuccess: (result: any) => {
-      console.log('mutateGetModelList:', result)
+      // console.log('mutateGetModelList:', result)
       setData(result.data)
     },
     onError: (error: any, query: any) => {
@@ -34,7 +35,7 @@ const SavedModelImport = () => {
 
   const { mutate: mutatePostResult } = useMutation(XaiApi.postModelForXaiResult, {
     onSuccess: (result: any) => {
-      // console.log('mutateGetResult:', result)
+      console.log('mutateGetResult:', result)
 
       setXaiResult({
         sample_size: result.sample_size,
@@ -76,8 +77,12 @@ const SavedModelImport = () => {
       uuid: uuid,
     }
 
+    if (uuid) {
+      mutatePostResult(payload)
+    } else {
+      message.error('불러올 모델을 선택해주세요.')
+    }
     // console.log('payload:', payload)
-    mutatePostResult(payload)
   }
 
   const handleSelect = (param: any) => {

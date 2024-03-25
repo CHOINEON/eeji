@@ -48,7 +48,7 @@ const ModelSaveModal = (props: any) => {
       uuid: props.payload.uuid,
       model_name: name,
       target_y: props.payload.target_y,
-      is_classification: 0,
+      is_classification: props.payload.isClassification,
       descr: description,
     }
     // console.log('save payload:', payload)

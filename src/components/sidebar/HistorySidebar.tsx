@@ -6,7 +6,6 @@ import CustomCollapse, { CollapseItem } from './components/Collapse/CustomCollap
 import useModal from 'hooks/useModal'
 import { useRecoilState } from 'recoil'
 import { SideBarState } from 'stores/sidebar'
-import UploadIcon from 'assets/img/icons/icon_upload.svg'
 
 export const mockData: Array<CollapseItem> = [
   {
@@ -159,7 +158,8 @@ const SidebarContainer = styled.div`
   left: 0;
   width: 290px;
   height: 98vh;
-  background: linear-gradient(90deg, #3e34e6, #000000);
+  // background-color: #342cc0;
+  background: linear-gradient(135deg, #3b31da, #000000, #000000 60%);
 `
 
 const HeaderWrapper = styled.div`

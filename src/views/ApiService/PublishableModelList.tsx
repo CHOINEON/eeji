@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 
-import { Badge, Button, Card, Row, Tag, message } from 'antd'
+import { Badge, Button as AntButton, Card, Row, Tag, message } from 'antd'
 import styled from '@emotion/styled'
 import { useMutation } from 'react-query'
 import ModelApi from 'apis/ModelApi'
+import { useRecoilState } from 'recoil'
+import { publishResultState } from './store/atom'
 // import {
 //   CheckCircleOutlined,
 //   ClockCircleOutlined,
@@ -32,13 +34,17 @@ interface IModelProps {
 }
 
 const ModelRow = ({ item, active, onClick }: IModelRow) => {
-  const [apiInfo, setApiInfo] = useState({ api_key: '' })
+  // const [apiInfo, setApiInfo] = useState({ api_key: '' })
+  const [result, setResult] = useRecoilState(publishResultState)
+
   const [toggledItem, setToggledItem] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const { mutate: mutatePublishModelAPI } = useMutation(ModelApi.publishModelAPI, {
     onSuccess: (result: any) => {
-      console.log('mutateGetModelList:', result)
-      setApiInfo(result)
+      // console.log('mutateGetModelList:', result)
+      setResult(result)
+      // setApiInfo(result)
     },
     onError: (error: any, query: any) => {
       console.log('er:', error)
@@ -60,12 +66,14 @@ const ModelRow = ({ item, active, onClick }: IModelRow) => {
     <Row
       role="button"
       onClick={onClick}
-      className={`hover:bg-[#D5DCEF] ${active === true ? 'bg-[#D5DCEF]' : 'bg-[#F6F8FF] '}`}
+      className={`h-[43px] rounded-lg border-[#D5DCEF] hover:bg-[#D5DCEF] ${
+        active === true ? 'bg-[#D5DCEF]' : 'bg-[#F6F8FF] '
+      }`}
     >
       <RowItem className="w-1/12">{item.create_date}</RowItem>
       {/* <RowItem className="w-1/12">{item.update_date}</RowItem> */}
       <RowItem className="w-2/12">{item.model_name}</RowItem>
-      <RowItem className="w-1/12">{item.descr}</RowItem>
+      <RowItem className="w-2/12">{item.descr}</RowItem>
       <RowItem className="w-1/12">{item.target_y}</RowItem>
       <RowItem className="w-3/12">
         {JSON.parse(item.columns).map((el: any, idx: number) => {
@@ -86,9 +94,13 @@ const ModelRow = ({ item, active, onClick }: IModelRow) => {
         <Badge className="mr-1" status={item.status === 'available' ? 'success' : 'error'} />
         <RowItem>{item.status}</RowItem>
       </RowItem>
-      <RowItem className="w-2/12">
-        <PublishButton onClick={() => onHandlePublish(item.model_id)} toggle={apiInfo?.api_key ? true : false}>
-          {apiInfo?.api_key ? apiInfo.api_key : 'Publish'}
+      <RowItem className="w-1/12">
+        <PublishButton
+          // loading={true}
+          onClick={() => onHandlePublish(item.model_id)}
+          toggle={result?.api_key ? true : false}
+        >
+          {result?.api_key ? result.api_key : 'Publish'}
         </PublishButton>
       </RowItem>
     </Row>
@@ -105,17 +117,17 @@ const SavedModelList = ({ data, onSelect }: any) => {
   }
 
   return (
-    <Card>
+    <PublishableModelList>
       <StyledColumn>
         <ColumnLabel className="w-1/12">모델 생성일</ColumnLabel>
         {/* <ColumnLabel className="w-1/12">모델 수정일</ColumnLabel> */}
         <ColumnLabel className="w-2/12">모델명</ColumnLabel>
-        <ColumnLabel className="w-1/12">설명</ColumnLabel>
+        <ColumnLabel className="w-2/12">설명</ColumnLabel>
         <ColumnLabel className="w-1/12">타겟변수명</ColumnLabel>
         <ColumnLabel className="w-3/12">입력변수</ColumnLabel>
         <ColumnLabel className="w-1/12">모델유형</ColumnLabel>
         <ColumnLabel className="w-1/12">상태</ColumnLabel>
-        <ColumnLabel className="w-2/12">API Key</ColumnLabel>
+        <ColumnLabel className="w-1/12">API Key</ColumnLabel>
       </StyledColumn>
 
       {data?.map((item: any, idx: number) => (
@@ -123,11 +135,43 @@ const SavedModelList = ({ data, onSelect }: any) => {
           <ModelRow item={item} active={idx === btnActive} onClick={() => toggleActive(idx)} />
         </PredictionListWrapper>
       ))}
-    </Card>
+    </PublishableModelList>
   )
 }
 
 export default SavedModelList
+
+const PublishableModelList = styled.div`
+  width: 100%;
+  height: 400px;
+  box-shadow: 0px 0px 10px #5951db33;
+  background-color: #fff;
+  border: 1px solid #d5dcef;
+  border-radius: 25px;
+  padding: 40px 20px;
+  overflow: auto;
+
+  overflow-y: scroll;
+  overflow: -moz-scrollbars-vertical;
+
+  &::-webkit-scrollbar {
+    background: #332bbf;
+    border-radius: 30%; //width가 너무 작아서 안보임..
+    width: 4px;
+    height: 4px;
+    display: flex;
+    overflow: auto;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #332bbf;
+    border-radius: 10%;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #d5dcef;
+    border-radius: 10%;
+  }
+`
 
 const StyledColumn = styled.div`
   display: flex;
@@ -139,8 +183,7 @@ const StyledColumn = styled.div`
 `
 
 const PredictionListWrapper = styled.div`
-  height: 40px;
-  align-item: center;
+  height: 45px;
   border-radius: 10px;
   border: 1px solid #d5dcef;
   margin-bottom: 5px;
@@ -187,4 +230,8 @@ const PublishButton = styled.button<{ toggle: boolean }>`
   background-color: ${(props: any) => (props.toggle ? '#fff' : '#4338F7')};
   color: ${(props: any) => (props.toggle ? '#002d65' : '#fff')};
   text-align: center;
+  &:hover {
+    background-color: #827fff;
+    color: #fff;
+  }
 `

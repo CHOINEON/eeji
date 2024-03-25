@@ -276,7 +276,7 @@ const ChartWrapper = styled.div`
   float: left;
   width: 100%;
   min-width: 900px;
-  height: 580px;
+  height: 570px;
   position: relative;
   float: left;
   margin: 0 10px;

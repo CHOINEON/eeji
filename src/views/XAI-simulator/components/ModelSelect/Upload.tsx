@@ -13,9 +13,11 @@ interface ModelUploadProps {
 
 const ModelUpload = (props: ModelUploadProps) => {
   const { selectedFile, label, onChange, required, hidden } = props
+  const [file, setFile] = useState() //input 리렌더용(key값으로 사용)
   const inputRef = useRef(null)
 
   const handleChange = (e: any) => {
+    setFile(e.target.files[0])
     onChange(e.target.files[0])
   }
 
@@ -25,6 +27,7 @@ const ModelUpload = (props: ModelUploadProps) => {
   }
 
   const handleRemove = () => {
+    console.log('remove')
     onChange(undefined)
   }
 
@@ -49,7 +52,14 @@ const ModelUpload = (props: ModelUploadProps) => {
         <label htmlFor="input-file">
           <UploadBtn onClick={handleUploadClick}>파일선택</UploadBtn>
         </label>
-        <input style={{ display: 'none' }} ref={inputRef} type="file" onChange={handleChange} id="input-file" />
+        <input
+          key={file}
+          style={{ display: 'none' }}
+          ref={inputRef}
+          type="file"
+          onChange={handleChange}
+          id="input-file"
+        />
       </Wrapper>
     </>
   )
