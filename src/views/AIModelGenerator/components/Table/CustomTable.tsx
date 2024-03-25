@@ -159,10 +159,34 @@ const CustomTableContainer = styled.div`
   height: 540px;
   overflow: auto;
   white-space: nowrap;
+  padding: 0 5px;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  overflow: -moz-scrollbars-horizontal;
+  overflow: -moz-scrollbars-vertical;
+
+  &::-webkit-scrollbar {
+    background: #332bbf;
+    border-radius: 30%; //width가 너무 작아서 안보임..
+    width: 4px;
+    height: 4px;
+    display: flex;
+    overflow: auto;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #332bbf;
+    border-radius: 10%;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #d5dcef;
+    border-radius: 10%;
+  }
 `
 
 const RowItem = styled.div`
   display: inline-block;
+  width: 100%;
   float: left;
   height: 45px;
   border: 1px solid #d5dcef;
@@ -177,7 +201,7 @@ const LabelContainer = styled.div`
   // border: 1px solid red;
   height: 40px;
   line-height: 30px;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   display: block;
   float: left;
   white-space: nowrap;

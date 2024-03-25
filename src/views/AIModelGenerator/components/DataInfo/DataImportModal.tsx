@@ -50,7 +50,7 @@ const DataImportModal = (props: any) => {
   const { mutate } = useMutation(fetchData, {
     onSuccess: (response: any) => {
       // console.log('useMutation response：', response)
-      message.success(response.message)
+      message.success('데이터를 성공적으로 저장했습니다.')
 
       //refetching
       queryClient.invalidateQueries('datasets')

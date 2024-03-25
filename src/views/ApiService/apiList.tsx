@@ -9,7 +9,7 @@ const PredictionRow = ({ item, active, onClick }: any) => {
 
   const { mutate: mutatePublishModelAPI } = useMutation(ModelApi.publishModelAPI, {
     onSuccess: (result: any) => {
-      console.log('mutateGetModelList:', result)
+      // console.log('mutateGetModelList:', result)
       // setData(result.data)
     },
     onError: (error: any, query: any) => {

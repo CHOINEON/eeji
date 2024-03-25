@@ -63,7 +63,7 @@ const XaiAnalysisResult = () => {
   }
 
   return (
-    <div>
+    <>
       <Container>
         <Row gutter={[8, 8]} style={{ width: '100%' }}>
           <p
@@ -80,54 +80,54 @@ const XaiAnalysisResult = () => {
             {/* <InfoCircle content="。。。" /> */}
           </p>
           <Col span={18}>
-            <Row>
-              <RoundedBox width={'100%'} height={'75vh'}>
-                <div className="w-1/7 text-left ">
-                  {/* <RowLabel>입력변수</RowLabel> */}
-                  <Title>입력변수 필터링</Title>
-                  <Button
-                    className="inline-block float-right"
-                    type="text"
-                    icon={<UndoOutlined />}
-                    onClick={handleClearFilter}
-                  >
-                    Clear
-                  </Button>
-                </div>
-                <VariableRow>
-                  <div className="w-6/7 p-3">
-                    {data.feature_list.map((value: number, index) => (
-                      <DynamicBadgeButton
-                        className="px-4 rounded-full m-1 min-w-[70px] h-[28px] font-['Helvetica Neue'] border-[#D5DCEF]}"
-                        key={index}
-                        toggle={activeVars[value]}
-                        color={colorChips[index]}
-                        onClick={handleClick}
-                      >
-                        <Badge className="mr-4" color={colorChips[index]} />
-                        {value}
-
-                        {/* <Badge
-                          className={`${activeVars[value] ? 'border-white' : `border-[${colorChips[index]}]`} mr-4`}
-                          color={activeVars[value] ? 'white' : colorChips[index]}
-                        />
+            <RoundedBox width={'100%'} height={'75vh'}>
+              {/* <ScrollContainer> */}
+              <div className="w-1/7 text-left ">
+                {/* <RowLabel>입력변수</RowLabel> */}
+                <Title>입력변수 필터링</Title>
+                <Button
+                  className="inline-block float-right"
+                  type="text"
+                  icon={<UndoOutlined />}
+                  onClick={handleClearFilter}
+                >
+                  Clear
+                </Button>
+              </div>
+              <VariableRow>
+                <div className="w-6/7 p-3">
+                  {data.feature_list.map((value: number, index) => (
+                    <DynamicBadgeButton
+                      className="px-4 rounded-full m-1 min-w-[70px] h-[28px] font-['Helvetica Neue'] border-[#D5DCEF]}"
+                      key={index}
+                      toggle={activeVars[value]}
+                      color={colorChips[index]}
+                      onClick={handleClick}
+                    >
+                      {/* <Badge className="mr-4" color={colorChips[index]} />
                         {value} */}
-                      </DynamicBadgeButton>
-                    ))}
-                  </div>
-                </VariableRow>
-                <div className="mt-[50px]">
-                  <Title>예측모델 설명 결과</Title>
-                  <AnalysisGrid
-                    featureList={data.feature_list}
-                    localWeight={filteredData}
-                    localValue={data.input_data}
-                    predResult={data.predict_result}
-                    // columns={Object.keys(data.input_data)}
-                  />
+
+                      <Badge
+                        className={`${activeVars[value] ? 'border-white' : `border-[${colorChips[index]}]`} mr-4`}
+                        color={activeVars[value] ? 'white' : colorChips[index]}
+                      />
+                      {value}
+                    </DynamicBadgeButton>
+                  ))}
                 </div>
-              </RoundedBox>
-            </Row>
+              </VariableRow>
+              <div className="mt-[50px]">
+                <Title>예측모델 설명 결과</Title>
+                <AnalysisGrid
+                  featureList={data.feature_list}
+                  localWeight={filteredData}
+                  localValue={data.input_data}
+                  predResult={data.predict_result}
+                  // columns={Object.keys(data.input_data)}
+                />
+              </div>
+              {/* </ScrollContainer> */}
+            </RoundedBox>
           </Col>
           <Col span={6} style={{ width: '100%', height: '75vh' }}>
             <PDP_Plot data={data?.xai_pdp} />
@@ -137,7 +137,7 @@ const XaiAnalysisResult = () => {
         <Row style={{ width: '100%' }}></Row>
         <Col span={6}></Col>
       </Container>
-    </div>
+    </>
   )
 }
 
@@ -169,40 +169,6 @@ const VariableRow = styled(DataRow)`
   border: 1px solid #d5dcef;
 `
 
-const RowLabel = styled.div`
-  font-family: 'Helvetica Neue';
-  display: inline-block;
-  text-align: center;
-  color: #002d65;
-  height: 32px;
-  line-height: 32px;
-`
-
-const UploadContainer = styled.div`
-  // border: 1px solid red;
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  padding: 100px 30px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, 50%);
-`
-
-const TextMain = styled.p`
-  font: sans-serif;
-  color: #002d65;
-  font-size: 25px;
-  text-align: center;
-`
-
-const TextSub = styled.p`
-  font: sans-serif;
-  color: #002d65;
-  font-size: 13px;
-  text-align: center;
-`
-
 const Container = styled.div`
   width: 100%;
   height: 35vw;
@@ -223,27 +189,52 @@ const RoundedBox = styled.div<Container>`
   min-height: ${(props) => (props.minHeight ? props.minHeight : 'auto')};
   position: ${(props) => (props.position ? props.position : 'relative')};
   overflow: auto;
+
+  overflow-y: scroll;
+  overflow-x: scroll;
+  overflow: -moz-scrollbars-horizontal;
+  overflow: -moz-scrollbars-vertical;
+
+  &::-webkit-scrollbar {
+    background: #332bbf;
+    border-radius: 30%; //width가 너무 작아서 안보임..
+    width: 4px;
+    height: 4px;
+    display: flex;
+    overflow: auto;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #332bbf;
+    border-radius: 10%;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #d5dcef;
+    border-radius: 10%;
+  }
 `
 
-const UploadButton = styled.button`
-  background-color: #4338f7;
-  width: 230px;
-  height: 46px;
-  border-radius: 10px;
-  color: #fff;
-  font-family: 'Helvetica Neue';
-  font-weight: Bold;
-  font-size: 17px;
-`
+const ScrollContainer = styled.div`
+  overflow-y: scroll;
+  overflow-x: scroll;
+  overflow: -moz-scrollbars-horizontal;
+  overflow: -moz-scrollbars-vertical;
 
-const VariableButton = tw.button<{ active: boolean }>`
-  m-1
-  px-4
-  py-2
-  rounded-full
-`
+  &::-webkit-scrollbar {
+    background: #332bbf;
+    border-radius: 30%; //width가 너무 작아서 안보임..
+    width: 4px;
+    height: 4px;
+    display: flex;
+    overflow: auto;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #332bbf;
+    border-radius: 10%;
+  }
 
-const LegendContainer = styled.div`
-  // margin-bottom: 20px;
-  text-align: right;
+  &::-webkit-scrollbar-track {
+    background: #d5dcef;
+    border-radius: 10%;
+  }
 `

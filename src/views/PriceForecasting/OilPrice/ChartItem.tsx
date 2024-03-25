@@ -2,7 +2,6 @@ import axios from 'axios'
 import { ApexOptions } from 'apexcharts'
 import { useEffect, useMemo, useState } from 'react'
 import Chart from 'react-apexcharts'
-import { features } from 'process'
 import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
 import { keyColors } from 'views/AIModelGenerator/components/Chart/colors'
 // const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
@@ -14,41 +13,6 @@ const ChartItem = (props: any) => {
   // console.log('id', props)
   // TODO 2024-03-06 심볼명, 심볼설명 배열 생성
   const [chartType, setChartType] = useState('candle')
-
-  // const symbolList = [
-  //   {
-  //     symbol: 'BCOMZS.INDX',
-  //     description: 'Bloomberg Zinc Subindex',
-  //   },
-  //   {
-  //     symbol: 'BCOMNI.INDX',
-  //     description: 'Bloomberg Nickel Subindex',
-  //   },
-  //   {
-  //     symbol: 'BCOMNG.INDX',
-  //     description: 'Bloomberg Natural Gas Subindex',
-  //   },
-  //   {
-  //     symbol: 'BCOMHG.INDX',
-  //     description: 'Bloomberg Copper Subindex',
-  //   },
-  //   {
-  //     symbol: 'BCOMGC.INDX',
-  //     description: 'Bloomberg Gold Subindex',
-  //   },
-  //   {
-  //     symbol: 'BCOMCO.INDX',
-  //     description: 'Bloomberg Brent Crude Subindex',
-  //   },
-  //   {
-  //     symbol: 'BCOMCL.INDX',
-  //     description: 'Bloomberg WTI Crude Oil Subindex',
-  //   },
-  //   {
-  //     symbol: 'BCOMAL.INDX',
-  //     description: 'Bloomberg Aluminum Subindex',
-  //   },
-  // ]
 
   // https://ineeji-solution-tf.du.r.appspot.com/api/index_predict/get_symbol_predict/admin?is_daily=1&symbol=BCOMAL.INDX
 
@@ -80,7 +44,7 @@ const ChartItem = (props: any) => {
       .then(({ data }) => {
         // console.log(data['xai']['xai_global'][0])
         // TODO 2024-03-07 '2024-02-06' 형식을 unix timestamp로 변환
-        console.log('data', data)
+        // console.log('data', data)
         setTruthData([])
         setPredictData([])
 

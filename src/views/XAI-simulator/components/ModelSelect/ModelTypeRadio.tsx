@@ -29,10 +29,10 @@ const ModelTypeRadio = (props: IModelTypeRadio) => {
           onChange={handleChange}
           optionType="button"
           buttonStyle="solid"
-          defaultValue={'pytorch'}
+          defaultValue={'torch'}
           style={{ float: 'right', margin: 7 }}
         >
-          <Radio value={'pytorch'}>
+          <Radio value={'torch'}>
             <Tooltip title=".pt">PyTorch</Tooltip>
           </Radio>
           <Radio value={'keras'}>
