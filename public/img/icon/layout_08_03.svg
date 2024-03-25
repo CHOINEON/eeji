@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 20 16">
+  <g id="layout_08_03" transform="translate(-1683 -583)">
+    <g id="사각형_4334" data-name="사각형 4334" transform="translate(1683 583)" fill="#fff" stroke="#002d65" stroke-width="1">
+      <rect width="20" height="16" stroke="none"/>
+      <rect x="0.5" y="0.5" width="19" height="15" fill="none"/>
+    </g>
+    <line id="선_1728" data-name="선 1728" x1="15.052" transform="translate(1687 583.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1725" data-name="선 1725" x1="15.052" transform="translate(1699 583.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1726" data-name="선 1726" x1="15.052" transform="translate(1702.5 583.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1730" data-name="선 1730" x1="15.052" transform="translate(1683.5 583.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <path id="패스_13696" data-name="패스 13696" d="M-.005-5.016A1.083,1.083,0,0,1-1.062-6.127,1.107,1.107,0,0,1-.005-7.249,1.07,1.07,0,0,1,1.062-6.171,1.071,1.071,0,0,1-.005-5.016ZM-.016-.891A1.459,1.459,0,0,1-1.436-2.343,1.493,1.493,0,0,1-.016-3.85,1.485,1.485,0,0,1,1.425-2.332,1.468,1.468,0,0,1-.016-.891Zm1.5-3.6a1.81,1.81,0,0,0,.726-1.595A2.236,2.236,0,0,0,.017-8.294,2.242,2.242,0,0,0-2.206-6.05a1.955,1.955,0,0,0,.693,1.562A2.457,2.457,0,0,0-2.579-2.343a2.56,2.56,0,0,0,2.6,2.5A2.582,2.582,0,0,0,2.568-2.431,2.415,2.415,0,0,0,1.48-4.488Z" transform="translate(1693 595)" fill="#002d65"/>
+    <line id="선_1731" data-name="선 1731" x1="2" transform="translate(1691 584) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1729" data-name="선 1729" x1="2" transform="translate(1691 596) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1732" data-name="선 1732" x1="2" transform="translate(1695 584) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1727" data-name="선 1727" x1="2" transform="translate(1695 596) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+  </g>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <g id="drawing_03_on" transform="translate(-46 -270)">
+    <g id="사각형_4340" data-name="사각형 4340" transform="translate(46 270)" fill="#e5ebff" stroke="#4338f7" stroke-width="1">
+      <rect width="36" height="36" rx="10" stroke="none"/>
+      <rect x="0.5" y="0.5" width="35" height="35" rx="9.5" fill="none"/>
+    </g>
+    <g id="타원_383" data-name="타원 383" transform="translate(71 283)" fill="#fff" stroke="#4338f7" stroke-width="1">
+      <circle cx="2.5" cy="2.5" r="2.5" stroke="none"/>
+      <circle cx="2.5" cy="2.5" r="2" fill="none"/>
+    </g>
+    <g id="타원_384" data-name="타원 384" transform="translate(52 293)" fill="#fff" stroke="#4338f7" stroke-width="1">
+      <circle cx="2.5" cy="2.5" r="2.5" stroke="none"/>
+      <circle cx="2.5" cy="2.5" r="2" fill="none"/>
+    </g>
+    <line id="선_1597" data-name="선 1597" x2="22" transform="translate(52.5 280.5)" fill="none" stroke="#4338f7" stroke-width="1"/>
+    <line id="선_1598" data-name="선 1598" x2="19" transform="translate(52.5 285.5)" fill="none" stroke="#4338f7" stroke-width="1"/>
+    <line id="선_1599" data-name="선 1599" x2="22" transform="translate(52.5 290.5)" fill="none" stroke="#4338f7" stroke-width="1"/>
+    <line id="선_1600" data-name="선 1600" x2="18" transform="translate(56.5 295.5)" fill="none" stroke="#4338f7" stroke-width="1"/>
+  </g>
+</svg>

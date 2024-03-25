@@ -1,12 +1,13 @@
 import domtoimage from 'dom-to-image'
 import { saveAs } from 'file-saver'
 // import dynamic from 'next/dynamic'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ChartItem from './ChartItem'
 import ApexCharts from 'react-apexcharts'
 // import Chart from 'react-apexcharts'
 // const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
-
+import './style.css'
+import axios from 'axios'
 const Page = () => {
   // TODO 2024-03-06
 
@@ -23,11 +24,8 @@ const Page = () => {
   const [range, setRange] = useState('day')
   const [chartType, setChartType] = useState('line')
 
-  const [layout, setLayout] = useState('/img/layout/layout_00.svg')
-  const [fullscreen, setFullscreen] = useState('/img/top_right/fullscreen.svg')
-  const [capture, setCapture] = useState('/img/top_right/capture.svg')
-  const [setting, setSetting] = useState('/img/top_right/setting.svg')
-
+  const [layout, setLayout] = useState('/img/icon/layout_01.svg')
+  const [fullscreenIcon, setFullscreenIcon] = useState('/img/icon/fullscreen.svg')
   const [drawing1, setDrawing1] = useState('/img/left/drawing_01.svg')
   const [drawing2, setDrawing2] = useState('/img/left/drawing_02.svg')
   const [drawing3, setDrawing3] = useState('/img/left/drawing_03.svg')
@@ -40,34 +38,19 @@ const Page = () => {
   const [isPopup, setIsPopup] = useState(false)
   const [isReset, setIsReset] = useState(false)
 
-  const handleLayout = (type: number) => {
+  const handleLayout = (type: number, src: string) => {
     setIsPopup(false)
+    setLayout(src)
     setLayoutType(type)
   }
 
   return (
-    <section className="bg-[#F5F8FF]">
-      <div className="container p-5 h-screen">
+    <div className="bg-[#F5F8FF] h-[calc(90vh)]">
+      <div className="container p-5 h-full">
         <div className="lg:flex items-center justify-between px-4 space-y-4 lg:space-y-0">
           <div className="lg:flex items-center space-y-4 lg:space-y-0">
             <div className="mr-12 text-[20px] lg:text-[32px] font-bold text-[#002D65]">Commodity Index Forecasting</div>
             <div className="flex space-x-1">
-              <img
-                src={range === 'day' ? '/img/top/day_on.svg' : '/img/top/day.svg'}
-                alt=""
-                onClick={() => {
-                  setRange('day')
-                }}
-                className="cursor-pointer"
-              />
-              <img
-                src={range === 'month' ? '/img/top/month_on.svg' : '/img/top/month.svg'}
-                alt=""
-                onClick={() => {
-                  // setRange('month')
-                }}
-                className="cursor-pointer"
-              />
               <img
                 src={chartType === 'candle' ? '/img/top/candle_on.svg' : '/img/top/candle.svg'}
                 alt=""
@@ -97,53 +80,43 @@ const Page = () => {
           </div>
 
           <div className="flex items-center">
-            <img
-              src={layout}
-              alt=""
-              onMouseOver={() => {
-                setLayout('/img/layout/layout_01_01_on.svg')
-              }}
-              onMouseLeave={() => {
-                setLayout('/img/layout/layout_01_01.svg')
-              }}
+            <div
+              className="item"
               onClick={() => {
                 setIsPopup(!isPopup)
               }}
-              className="cursor-pointer"
-            />
+            >
+              <img
+                src={layout}
+                alt=""
+                // onMouseOver={() => {
+                //   setLayout('/img/layout/layout_01_01_on.svg')
+                // }}
+                // onMouseLeave={() => {
+                //   setLayout('/img/layout/layout_01_01.svg')
+                // }}
+              />
+            </div>
             <div className="ml-1 text-[13px] text-[#002D65] cursor-pointer">Save</div>
-            <img
-              src={fullscreen}
-              // src={document.fullscreenElement ? '/img/top_right/fullscreen_on.svg' : '/img/top_right/fullscreen.svg'}
-              alt=""
-              onMouseOver={() => {
-                setFullscreen('/img/top_right/fullscreen_on.svg')
-              }}
-              onMouseLeave={() => {
-                setFullscreen('/img/top_right/fullscreen.svg')
-              }}
+            <div
+              className={`item ml-10 mr-2 ${document.fullscreenElement}`}
               onClick={() => {
                 // TODO 2024-02-07 웹브라우저 풀스크린 모드 toggle
                 if (!document.fullscreenElement) {
                   document.documentElement.requestFullscreen()
+                  setFullscreenIcon('/img/icon/exit_fullscreen.svg')
                 } else {
                   document.exitFullscreen()
+                  setFullscreenIcon('/img/icon/fullscreen.svg')
                 }
               }}
-              className="cursor-pointer ml-10 mr-2"
-            />
-            <img
-              src={capture}
-              alt=""
-              onMouseOver={() => {
-                setCapture('/img/top_right/capture_on.svg')
-              }}
-              onMouseLeave={() => {
-                setCapture('/img/top_right/capture.svg')
-              }}
+            >
+              <img src={fullscreenIcon} />
+            </div>
+
+            <div
+              className="item "
               onClick={() => {
-                //localhost:3000/img/layout/layout_02_01_on.svg
-                // const node = document.getElementById('screen-body')
                 http: domtoimage.toBlob(document.querySelector('#screen-body')).then((blob: any) => {
                   const saveConfirm = window.confirm('이미지를 저장하시겠습니까?')
                   if (saveConfirm === true) {
@@ -151,8 +124,9 @@ const Page = () => {
                   }
                 })
               }}
-              className="cursor-pointer"
-            />
+            >
+              <img src="/img/icon/capture.svg" />
+            </div>
 
             <div
               className="border border-[#D5DCEF] bg-white ml-2 py-[7px] px-2 rounded-[10px] select-none cursor-pointer hover:text-[#372dd5] hover:border-[#372dd5] text-sm text-[#0f2c61]"
@@ -165,17 +139,9 @@ const Page = () => {
             >
               Reset
             </div>
-            <img
-              src={setting}
-              alt=""
-              onMouseOver={() => {
-                setSetting('/img/top_right/setting_on.svg')
-              }}
-              onMouseLeave={() => {
-                setSetting('/img/top_right/setting.svg')
-              }}
-              className="cursor-pointer ml-2"
-            />
+            <div className="item ml-2">
+              <img src="/img/icon/setting.svg" />
+            </div>
           </div>
         </div>
 
@@ -194,17 +160,12 @@ const Page = () => {
                 <div className="text-[#002D65] text-[13px] mr-2 w-[10px]">1</div>
                 <div className="flex ">
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 1 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(1)
+                      handleLayout(1, '/img/icon/layout_01.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_01_01${layoutType === 1 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_01_01_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_01.svg`} alt="" />
                   </div>
                 </div>
               </div>
@@ -212,30 +173,20 @@ const Page = () => {
                 <div className="text-[#002D65] text-[13px] mr-2 w-[10px]">2</div>
                 <div className="flex ">
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 2 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(2)
+                      handleLayout(2, '/img/icon/layout_02_01.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_02_01${layoutType === 2 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_02_01_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_02_01.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 3 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(3)
+                      handleLayout(3, '/img/icon/layout_02_02.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_02_02${layoutType === 3 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_02_02_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_02_02.svg`} alt="" />
                   </div>
                 </div>
               </div>
@@ -244,69 +195,44 @@ const Page = () => {
                 <div className="text-[#002D65] text-[13px] mr-2 w-[10px]">3</div>
                 <div className="flex">
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 4 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(4)
+                      handleLayout(4, '/img/icon/layout_03_01.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_03_01${layoutType === 4 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_03_01_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_03_01.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 5 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(5)
+                      handleLayout(5, '/img/icon/layout_03_02.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_03_02${layoutType === 5 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_03_02_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_03_02.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 6 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(6)
+                      handleLayout(6, '/img/icon/layout_03_03.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_03_03${layoutType === 6 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_03_03_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_03_03.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 7 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(7)
+                      handleLayout(7, '/img/icon/layout_03_04.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_03_04${layoutType === 7 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_03_04_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_03_04.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 8 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(8)
+                      handleLayout(8, '/img/icon/layout_03_05.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_03_05${layoutType === 8 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_03_05_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_03_05.svg`} alt="" />
                   </div>
                 </div>
               </div>
@@ -314,69 +240,44 @@ const Page = () => {
                 <div className="text-[#002D65] text-[13px] mr-2 w-[10px]">4</div>
                 <div className="flex">
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 9 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(9)
+                      handleLayout(9, '/img/icon/layout_04_01.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_04_01${layoutType === 9 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_04_01_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_04_01.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 10 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(10)
+                      handleLayout(10, '/img/icon/layout_04_02.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_04_02${layoutType === 10 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_04_02_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_04_02.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 11 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(11)
+                      handleLayout(11, '/img/icon/layout_04_03.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_04_03${layoutType === 11 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_04_03_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_04_03.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 12 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(12)
+                      handleLayout(12, '/img/icon/layout_04_04.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_04_04${layoutType === 12 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_04_04_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_04_04.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 13 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(13)
+                      handleLayout(13, '/img/icon/layout_04_05.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_04_05${layoutType === 13 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_04_05_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_04_05.svg`} alt="" />
                   </div>
                 </div>
               </div>
@@ -384,56 +285,36 @@ const Page = () => {
                 <div className="text-[#002D65] text-[13px] mr-2 w-[10px]">5</div>
                 <div className="flex">
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 14 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(14)
+                      handleLayout(14, '/img/icon/layout_05_01.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_05_01${layoutType === 14 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_05_01_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_05_01.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 15 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(15)
+                      handleLayout(15, '/img/icon/layout_05_02.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_05_02${layoutType === 15 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_05_02_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_05_02.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 16 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(16)
+                      handleLayout(16, '/img/icon/layout_05_03.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_05_03${layoutType === 16 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_05_03_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_05_03.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 17 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(17)
+                      handleLayout(17, '/img/icon/layout_05_04.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_05_04${layoutType === 17 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_05_04_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_05_04.svg`} alt="" />
                   </div>
                 </div>
               </div>
@@ -441,43 +322,28 @@ const Page = () => {
                 <div className="text-[#002D65] text-[13px] mr-2 w-[10px]">6</div>
                 <div className="flex">
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 18 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(18)
+                      handleLayout(18, '/img/icon/layout_06_01.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_06_01${layoutType === 18 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_06_01_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_06_01.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 19 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(19)
+                      handleLayout(19, '/img/icon/layout_06_02.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_06_02${layoutType === 19 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_06_02_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_06_02.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 20 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(20)
+                      handleLayout(20, '/img/icon/layout_06_03.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_06_03${layoutType === 20 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_06_03_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_06_03.svg`} alt="" />
                   </div>
                 </div>
               </div>
@@ -485,17 +351,12 @@ const Page = () => {
                 <div className="text-[#002D65] text-[13px] mr-2 w-[10px]">7</div>
                 <div className="flex">
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 21 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(21)
+                      handleLayout(21, '/img/icon/layout_07_01.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_07_01${layoutType === 21 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_07_01_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_07_01.svg`} alt="" />
                   </div>
                 </div>
               </div>
@@ -503,43 +364,28 @@ const Page = () => {
                 <div className="text-[#002D65] text-[13px] mr-2 w-[10px]">8</div>
                 <div className="flex">
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 22 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(22)
+                      handleLayout(22, '/img/icon/layout_08_01.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_08_01${layoutType === 22 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_08_01_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_08_01.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 23 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(23)
+                      handleLayout(23, '/img/icon/layout_08_02.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_08_02${layoutType === 23 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_08_02_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_08_02.svg`} alt="" />
                   </div>
                   <div
-                    className="mr-1.5 group"
+                    className={`mr-1.5 group item ${layoutType === 24 ? 'item-active' : ''}`}
                     onClick={() => {
-                      handleLayout(24)
+                      handleLayout(24, '/img/icon/layout_08_03.svg')
                     }}
                   >
-                    <img
-                      src={`/img/layout/layout_08_03${layoutType === 24 ? '_on' : ''}.svg`}
-                      alt=""
-                      className="icon-off"
-                    />
-                    <img src="/img/layout/layout_08_03_on.svg" alt="" className="icon-on" />
+                    <img src={`/img/icon/layout_08_03.svg`} alt="" />
                   </div>
                 </div>
               </div>
@@ -879,7 +725,7 @@ const Page = () => {
         </div>
         {/* box 종료 */}
       </div>
-    </section>
+    </div>
   )
 }
 

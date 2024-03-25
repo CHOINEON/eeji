@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 20 16">
+  <g id="layout_05_04" transform="translate(-1724 -427)">
+    <g id="사각형_4320" data-name="사각형 4320" transform="translate(1724 427)" fill="#fff" stroke="#002d65" stroke-width="1">
+      <rect width="20" height="16" stroke="none"/>
+      <rect x="0.5" y="0.5" width="19" height="15" fill="none"/>
+    </g>
+    <line id="선_1690" data-name="선 1690" x1="15.052" transform="translate(1728 427.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1692" data-name="선 1692" x1="15.052" transform="translate(1736 427.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1693" data-name="선 1693" x1="15.052" transform="translate(1740 427.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1694" data-name="선 1694" x1="15.052" transform="translate(1743.5 427.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1695" data-name="선 1695" x1="15.052" transform="translate(1724.5 427.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1691" data-name="선 1691" x1="15.052" transform="translate(1732 427.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+  </g>
+</svg>

@@ -1,0 +1,54 @@
+.container{
+	max-width: 1900px;
+	margin: 0 auto
+	;
+}
+
+.item {
+	@apply cursor-pointer text-xs bg-white hover:bg-[#E5EBFF] hover:border-[#4338F7] px-2 py-1.5 border border-[#D5DCEF] rounded-lg w-[36px] h-[36px] grid place-content-center transition
+}
+
+.item-disabled {
+	@apply  text-xs bg-white px-2 py-1.5 border border-[#D5DCEF] rounded-lg w-[36px] h-[36px] grid place-content-center transition
+}
+
+.menu-item {
+	@apply cursor-pointer bg-white  rounded-lg border border-[#D5DCEF]
+}
+
+
+.item-active{
+	@apply bg-[#E5EBFF] border-[#4338F7]
+}
+
+.icon-off{
+	@apply group-hover:hidden cursor-pointer
+}
+
+.icon-on{
+	@apply hidden group-hover:block cursor-pointer
+}
+
+@keyframes slideInUp{
+	from{transform:translate3d(0,10px,0); visibility:visible;}
+	to{transform:translate3d(0,0,0); }
+}
+
+@keyframes slideInDown{
+	from{transform:translate3d(0,-10px,0); visibility:visible}
+	to{transform:translate3d(0,0,0)}
+}
+
+.slideInUp{
+	animation-name:slideInUp;
+	animation-duration: .1s;
+}
+
+.slideInDown{
+	animation-name:slideInDown;
+	animation-duration: .1s;
+}
+
+.itemSelected{
+
+}
