@@ -63,42 +63,42 @@ const ApiService = () => {
                 }}
               ></Button>
             </div>
-            <StyledDiv>
-              <div>
-                <Row>
-                  <ParamText>URL</ParamText>
-                  <Input></Input>
-                </Row>
-                <SecondRow>
-                  <ParamText>Param</ParamText>
-                  <div style={{ width: '100%', paddingRight: '10px' }}>
-                    <StyledDiv>
-                      <h2 style={{ fontFamily: 'Helvetica Neue', fontSize: '13px', color: '#002D65' }}>src</h2>
-                      <Input style={{ marginBottom: '10px', marginLeft: '10px' }}></Input>
-                    </StyledDiv>
-                    <StyledDiv>
-                      <h2>dst</h2>
-                      <Input style={{ marginBottom: '10px ', marginLeft: '10px' }}></Input>
-                    </StyledDiv>
-                    <StyledDiv>
-                      <h2>title</h2>
-                      <Input style={{ marginBottom: '10px', marginLeft: '10px' }}></Input>
-                    </StyledDiv>
-                    <StyledDiv>
-                      <h2>title</h2>
-                      <Input></Input>
-                    </StyledDiv>
-                  </div>
-                </SecondRow>
-              </div>
-              <div>
-                <ResultRow>
-                  <ParamText>실행결과</ParamText>
-                  <Card style={{ height: '200px', marginTop: '10px', marginBottom: '10px' }}></Card>
-                </ResultRow>
-              </div>
-            </StyledDiv>
           </div>
+          <StyledDiv>
+            <div>
+              <Row>
+                <ParamText>URL</ParamText>
+                <Input></Input>
+              </Row>
+              <SecondRow>
+                <ParamText>Param</ParamText>
+                <div style={{ width: '100%', paddingRight: '10px' }}>
+                  <StyledDiv>
+                    <h2 style={{ fontFamily: 'Helvetica Neue', fontSize: '13px', color: '#002D65' }}>src</h2>
+                    <Input style={{ marginBottom: '10px', marginLeft: '10px' }}></Input>
+                  </StyledDiv>
+                  <StyledDiv>
+                    <h2>dst</h2>
+                    <Input style={{ marginBottom: '10px ', marginLeft: '10px' }}></Input>
+                  </StyledDiv>
+                  <StyledDiv>
+                    <h2>title</h2>
+                    <Input style={{ marginBottom: '10px', marginLeft: '10px' }}></Input>
+                  </StyledDiv>
+                  <StyledDiv>
+                    <h2>title</h2>
+                    <Input></Input>
+                  </StyledDiv>
+                </div>
+              </SecondRow>
+            </div>
+            <div>
+              <ResultRow>
+                <ParamText>실행결과</ParamText>
+                <Card style={{ height: '200px', marginTop: '10px', marginBottom: '10px' }}></Card>
+              </ResultRow>
+            </div>
+          </StyledDiv>
         </Card>
       </Card>
     </div>
