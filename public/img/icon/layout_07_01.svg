@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 20 16">
+  <g id="layout_07_01" transform="translate(-1601 -532)">
+    <g id="사각형_4332" data-name="사각형 4332" transform="translate(1601 532)" fill="#fff" stroke="#002d65" stroke-width="1">
+      <rect width="20" height="16" stroke="none"/>
+      <rect x="0.5" y="0.5" width="19" height="15" fill="none"/>
+    </g>
+    <line id="선_1721" data-name="선 1721" x1="15.052" transform="translate(1605 532.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1717" data-name="선 1717" x1="15.052" transform="translate(1617 532.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1718" data-name="선 1718" x1="15.052" transform="translate(1620.5 532.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1722" data-name="선 1722" x1="15.052" transform="translate(1601.5 532.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <path id="패스_13697" data-name="패스 13697" d="M-.533,0,2.447-7.095V-8.14H-2.272v1.045H1.259L-1.809,0Z" transform="translate(1611 544)" fill="#002d65"/>
+    <line id="선_1723" data-name="선 1723" x1="2" transform="translate(1609 533) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1724" data-name="선 1724" x1="2" transform="translate(1609 545) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1719" data-name="선 1719" x1="2" transform="translate(1613 533) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1720" data-name="선 1720" x1="2" transform="translate(1613 545) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+  </g>
+</svg>

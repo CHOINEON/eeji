@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 20 16">
+  <g id="layout_06_03" transform="translate(-1683 -478)">
+    <g id="사각형_4328" data-name="사각형 4328" transform="translate(1683 478)" fill="#fff" stroke="#002d65" stroke-width="1">
+      <rect width="20" height="16" stroke="none"/>
+      <rect x="0.5" y="0.5" width="19" height="15" fill="none"/>
+    </g>
+    <line id="선_1697" data-name="선 1697" x1="15.052" transform="translate(1687 478.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1700" data-name="선 1700" x1="15.052" transform="translate(1699 478.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1701" data-name="선 1701" x1="15.052" transform="translate(1702.5 478.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1702" data-name="선 1702" x1="15.052" transform="translate(1683.5 478.474) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <path id="패스_13698" data-name="패스 13698" d="M1.48-8.14H.127L-2.14-4.6a3.516,3.516,0,0,0-.638,1.936A2.829,2.829,0,0,0,.049.154,2.83,2.83,0,0,0,2.855-2.772,2.655,2.655,0,0,0,.237-5.522a1.923,1.923,0,0,0-.484.055ZM.049-.891A1.741,1.741,0,0,1-1.634-2.728,1.737,1.737,0,0,1,.072-4.477,1.722,1.722,0,0,1,1.711-2.651,1.724,1.724,0,0,1,.049-.891Z" transform="translate(1693 490)" fill="#002d65"/>
+    <line id="선_1704" data-name="선 1704" x1="2" transform="translate(1691 479) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1716" data-name="선 1716" x1="2" transform="translate(1691 491) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1699" data-name="선 1699" x1="2" transform="translate(1695 479) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+    <line id="선_1715" data-name="선 1715" x1="2" transform="translate(1695 491) rotate(90)" fill="none" stroke="#002d65" stroke-width="1"/>
+  </g>
+</svg>

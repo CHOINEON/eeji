@@ -2,6 +2,9 @@ import axios from 'axios'
 import { ApexOptions } from 'apexcharts'
 import { useEffect, useMemo, useState } from 'react'
 import Chart from 'react-apexcharts'
+import { features } from 'process'
+import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
+import { keyColors } from 'views/AIModelGenerator/components/Chart/colors'
 // const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 // // import ApexCharts from 'apexcharts'
 // // Removed the unnecessary import statement for ApexCharts
@@ -11,89 +14,128 @@ const ChartItem = (props: any) => {
   // console.log('id', props)
   // TODO 2024-03-06 심볼명, 심볼설명 배열 생성
   const [chartType, setChartType] = useState('candle')
-  const symbolList = [
-    {
-      symbol: 'BCOMZS.INDX',
-      description: 'Bloomberg Zinc Subindex',
-    },
-    {
-      symbol: 'BCOMNI.INDX',
-      description: 'Bloomberg Nickel Subindex',
-    },
-    {
-      symbol: 'BCOMNG.INDX',
-      description: 'Bloomberg Natural Gas Subindex',
-    },
-    {
-      symbol: 'BCOMHG.INDX',
-      description: 'Bloomberg Copper Subindex',
-    },
-    {
-      symbol: 'BCOMGC.INDX',
-      description: 'Bloomberg Gold Subindex',
-    },
-    {
-      symbol: 'BCOMCO.INDX',
-      description: 'Bloomberg Brent Crude Subindex',
-    },
-    {
-      symbol: 'BCOMCL.INDX',
-      description: 'Bloomberg WTI Crude Oil Subindex',
-    },
-    {
-      symbol: 'BCOMAL.INDX',
-      description: 'Bloomberg Aluminum Subindex',
-    },
-  ]
+
+  // const symbolList = [
+  //   {
+  //     symbol: 'BCOMZS.INDX',
+  //     description: 'Bloomberg Zinc Subindex',
+  //   },
+  //   {
+  //     symbol: 'BCOMNI.INDX',
+  //     description: 'Bloomberg Nickel Subindex',
+  //   },
+  //   {
+  //     symbol: 'BCOMNG.INDX',
+  //     description: 'Bloomberg Natural Gas Subindex',
+  //   },
+  //   {
+  //     symbol: 'BCOMHG.INDX',
+  //     description: 'Bloomberg Copper Subindex',
+  //   },
+  //   {
+  //     symbol: 'BCOMGC.INDX',
+  //     description: 'Bloomberg Gold Subindex',
+  //   },
+  //   {
+  //     symbol: 'BCOMCO.INDX',
+  //     description: 'Bloomberg Brent Crude Subindex',
+  //   },
+  //   {
+  //     symbol: 'BCOMCL.INDX',
+  //     description: 'Bloomberg WTI Crude Oil Subindex',
+  //   },
+  //   {
+  //     symbol: 'BCOMAL.INDX',
+  //     description: 'Bloomberg Aluminum Subindex',
+  //   },
+  // ]
 
   // https://ineeji-solution-tf.du.r.appspot.com/api/index_predict/get_symbol_predict/admin?is_daily=1&symbol=BCOMAL.INDX
 
-  const [symbol, setSymbol] = useState('BCOMZS.INDX')
   const [truthData, setTruthData] = useState<(number | null)[][]>([])
   const [predictData, setPredictData] = useState<(number | null)[][]>([])
   const [selection, setSelection] = useState('all')
   const [isFeature, setIsFeature] = useState(false)
+  const [isReload, setIsReload] = useState(false)
+
+  const [symbolList, setSymbolList] = useState([])
+  const [frequency, setFrequency] = useState('daily')
+  const [symbol, setSymbol] = useState('')
+
+  const [featuredData, setFeaturedData] = useState([])
+
   useEffect(() => {
     if (props.is_reset) {
       setIsFeature((prev) => false)
     }
   }, [props.is_reset])
+
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_NEW_API_SERVER_URL}/api/index_predict/get_symbol_predict/admin?is_daily=1&symbol=${symbol}`
+        `${process.env.REACT_APP_NEW_API_SERVER_URL}/api/index_predict/get_symbol_predict/admin?is_daily=${
+          frequency === 'daily' ? 1 : 0
+        }&symbol=${symbol}`
       )
       .then(({ data }) => {
-        console.log(data)
+        // console.log(data['xai']['xai_global'][0])
         // TODO 2024-03-07 '2024-02-06' 형식을 unix timestamp로 변환
-
+        console.log('data', data)
         setTruthData([])
         setPredictData([])
 
         let tmpCnt = 0
-
-        data.map((item: any) => {
+        data.map((item: any, index: number) => {
           const date = new Date(item.date).getTime()
           // TODO truth Data 초기화
           setTruthData((prev) => [...prev, [date, item.ground_truth]])
           if (tmpCnt > 0) {
-            setPredictData((prev) => [...prev, [date, item.pred_1]])
+            // 2024-03-25 전달 데이터의 pred_1값을 넣는다.
+            setPredictData((prev) => [...prev, [date, data[index - 1].pred_1]])
           } else {
             // TODO 첫 번째 배열에는 동일한 값을 넣는다.
             setPredictData((prev) => [...prev, [date, item.ground_truth]])
           }
-          const value2 = item.pred_1
           // TODO predict Data 초기화
           tmpCnt++
         }, [])
-        // TODO 마지막 배열에 pred_1~pred_5까지의 값을 넣는다.
-        for (let i = 1; i < 6; i++) {
-          const date = new Date(data[data.length - 1].date).getTime() + 86400000 * i
-          setPredictData((prev) => [...prev, [date, data[data.length - 1][`pred_${i}`]]])
 
-          // TODO truth
-          setTruthData((prev) => [...prev, [date, null]])
+        // TODO 2024-03-25 Featured Data 처리
+        // TODO 2024-03-25 xai는 데이터의 마지막 값을 참고한다.
+        if (data[data.length - 1]['xai']['xai_global'][0]) {
+          setFeaturedData((prev) => [...prev, data[data.length - 1]['xai']['xai_global'][0]])
         }
+
+        if (frequency === 'daily') {
+          // TODO 마지막 배열에 pred_1~pred_5까지의 값을 넣는다.
+          for (let i = 1; i < 6; i++) {
+            const date = new Date(data[data.length - 1].date).getTime() + 86400000 * i
+            setPredictData((prev) => [...prev, [date, data[data.length - 1][`pred_${i}`]]])
+
+            // TODO truth
+            setTruthData((prev) => [...prev, [date, null]])
+          }
+        } else {
+          for (let i = 1; i < 4; i++) {
+            const date = new Date(data[data.length - 1].date).getTime() + 86400000 * i
+
+            // TODO 2024-03-25 해당 date의 다음달 마지막 날짜를 구한다.
+            const lastDate = new Date(date)
+            const nextMonth = lastDate.getMonth() + 1 + i
+            lastDate.setMonth(nextMonth)
+            lastDate.setDate(0)
+            // console.log(lastDate)
+            // console.log('lastDate', lastDate.toISOString().split('T')[0])
+
+            // TODO 2024-03-25 lastDate를 unix timestamp로 변환
+            setPredictData((prev) => [...prev, [new Date(lastDate).getTime(), data[data.length - 1][`pred_${i}`]]])
+            console.log(data[data.length - 1][`pred_${i}`])
+            // TODO truth
+            setTruthData((prev) => [...prev, [date, null]])
+          }
+        }
+
+        setIsReload((prev) => !isReload)
       })
       .catch((error) => console.error(error))
       .then(() => {
@@ -102,10 +144,52 @@ const ChartItem = (props: any) => {
   }, [symbol])
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target)
+    // console.log(e.target)
     setSelection((prev) => 'all')
     setSymbol((prev) => e.target.value)
+    setIsFeature((prev) => false)
   }
+
+  useEffect(() => {
+    // daily (1:일일, 0:월간)
+    axios
+      .get(
+        `${process.env.REACT_APP_NEW_API_SERVER_URL}/api/index_predict/get_symbol_list/admin?is_daily=${
+          frequency === 'daily' ? 1 : 0
+        }`
+      )
+      .then(({ data }) => {
+        // console.log(data)
+        setSymbolList([])
+        // TODO 2024-03-25 daylySymbolList에 데이터가 있으면 비운다.
+        data.map((item: any, index: number) => {
+          if (index === 0) {
+            setSymbol((prev) => item['symbol'])
+          }
+          setSymbolList((prev: any) => [...prev, [item['symbol'], item['full_name']]])
+        })
+        // setTimeout(() => {
+        //   console.log(symbolList)
+        // }, 300)
+      })
+      .catch((error) => console.error(error))
+      .then(() => {
+        //
+      })
+  }, [frequency])
+
+  const symbolOption = useMemo(() => {
+    if (symbolList.length > 0) {
+      return symbolList.map((item: any, index: number) => {
+        // console.log('item', item)
+        return (
+          <option key={index} value={item[0]}>
+            {item[1]}
+          </option>
+        )
+      })
+    }
+  }, [symbolList])
 
   const data = useMemo(() => {
     return {
@@ -121,10 +205,7 @@ const ChartItem = (props: any) => {
       ],
 
       options: {
-        // markers: {
-        //   size: [selection === 'all' ? 0 : 4],
-        // },
-        colors: ['#64d33f', '#372dd5'], // line color
+        colors: ['#64d33f', '#372dd5'],
         chart: {
           id: props.chart_id,
           type: chartType === 'area',
@@ -147,7 +228,7 @@ const ChartItem = (props: any) => {
         annotations: {
           xaxis: [
             {
-              x: predictData?.length > 0 ? predictData[predictData?.length - 6][0] : 0, // 세로 Border 출력
+              x: predictData?.length > 0 ? predictData[predictData?.length - (frequency === 'daily' ? 6 : 4)][0] : 0, // 세로 Border 출력
               borderColor: '#1A73FF',
               bordwrWidth: 1,
               strokeDashArray: 10,
@@ -182,18 +263,18 @@ const ChartItem = (props: any) => {
         dataLabels: {
           enabled: false,
         },
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shadeIntensity: 1,
-            opacityFrom: 0.7,
-            opacityTo: 0.9,
-            stops: [0, 100],
-          },
-        },
+        // fill: {
+        //   type: 'gradient',
+        //   gradient: {
+        //     shadeIntensity: 1,
+        //     opacityFrom: 0.7,
+        //     opacityTo: 0.9,
+        //     stops: [0, 100],
+        //   },
+        // },
       },
     }
-  }, [chartType, props.chart_id, predictData, truthData])
+  }, [chartType, props.chart_id, isReload])
 
   const updateChart = (selection: string) => {
     setSelection((prev) => selection)
@@ -221,21 +302,54 @@ const ChartItem = (props: any) => {
     // <div className="bg-white border border-[#D5DCEF] rounded-xl p-3 h-[calc(100%-20px)]">
     <div className="bg-white border border-[#D5DCEF] rounded-xl pt-16 pb-5 px-3 h-full relative">
       <div className="absolute top-3 z-[1000]">
-        <select
-          className=" bg-gray-50 border border-gray-300 text-gray-900 text-[12px] rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 mr-3"
-          onChange={handleSelect}
-        >
-          {symbolList.map((item, index) => {
-            return (
-              <option key={index} value={item.symbol}>
-                {item.description}
-              </option>
-            )
-          })}
-        </select>
+        <div className="flex">
+          <select
+            className=" bg-gray-50 border border-gray-300 text-gray-900 text-[12px] rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 mr-3"
+            onChange={handleSelect}
+          >
+            {/* {symbolList.map((item, index) => {
+              return (
+                <option key={index} value={item.symbol}>
+                  {ttt}
+                </option>
+              )
+            })} */}
+            {symbolOption}
+          </select>
+          <div className="flex items-center space-x-2">
+            <div
+              className={`item ${frequency === 'daily' ? 'item-active' : ''}`}
+              onClick={() => {
+                setFrequency((prev) => 'daily')
+                setIsFeature((prev) => false)
+              }}
+            >
+              1일
+            </div>
+            <div
+              className={`item ${frequency === 'monthly' ? 'item-active' : ''}`}
+              onClick={() => {
+                setFrequency((prev) => 'monthly')
+                setIsFeature((prev) => false)
+              }}
+            >
+              1달
+            </div>
+
+            <div className={`item-disabled`}>
+              <img src="/img/icon/candle.svg" alt="" />
+            </div>
+
+            <div className={`item item-active`}>
+              <img src="/img/icon/line.svg" alt="" />
+            </div>
+          </div>
+        </div>
         <div className="flex space-x-3 mt-2">
           <div
-            className={`cursor-pointer text-[12px] border border-[#D5DCEF] px-2 py-1 ${
+            className={`${
+              frequency === 'daily' ? '' : 'hidden'
+            } rounded-sm cursor-pointer text-[12px] border border-[#D5DCEF] px-2 py-1 ${
               selection === 'one_week' ? 'bg-[#D5DCEF]' : 'bg-white'
             }`}
             onClick={() => {
@@ -245,7 +359,9 @@ const ChartItem = (props: any) => {
             1W
           </div>
           <div
-            className={`cursor-pointer text-[12px] border border-[#D5DCEF] px-2 py-1 ${
+            className={`${
+              frequency === 'daily' ? '' : 'hidden'
+            } rounded-sm cursor-pointer text-[12px] border border-[#D5DCEF] px-2 py-1 ${
               selection === 'one_month' ? 'bg-[#D5DCEF]' : 'bg-white'
             }`}
             onClick={() => {
@@ -255,7 +371,7 @@ const ChartItem = (props: any) => {
             1M
           </div>
           <div
-            className={`cursor-pointer text-[12px] border border-[#D5DCEF] px-2 py-1 ${
+            className={`rounded-sm cursor-pointer text-[12px] border border-[#D5DCEF] px-2 py-1 ${
               selection === 'all' ? 'bg-[#D5DCEF]' : 'bg-white'
             }`}
             onClick={() => {
@@ -268,7 +384,9 @@ const ChartItem = (props: any) => {
       </div>
       {isFeature ? (
         <div
-          className={`absolute top-3 z-[1000] right-3 bg-white border-solid border border-primary font-bold py-2 px-4 cursor-pointer rounded-xl text-sm transition-all bg-[#E5EBFF] text-[#372dd5] border-[#372dd5] select-none`}
+          className={`absolute top-3 z-[1000] right-3 bg-white border-solid border border-primary font-bold py-2 px-4 cursor-pointer rounded-xl text-sm transition-all bg-[#E5EBFF] text-[#372dd5] border-[#372dd5] select-none ${
+            frequency === 'daily' ? 'hidden' : ''
+          }`}
           onClick={() => {
             setIsFeature((prev) => !isFeature)
           }}
@@ -287,7 +405,7 @@ const ChartItem = (props: any) => {
       )}
 
       {isFeature && (
-        <div className="absolute right-3 top-[90px] px-4 py-2 rounded-xl z-[1000] bg-white border-[#372dd5] border w-[calc(100%-25px)] max-w-[500px] shadow-md">
+        <div className="absolute right-3 top-[65px] px-4 py-2 rounded-xl z-[1000] bg-white border-[#372dd5] border w-[calc(100%-25px)] max-w-[930px] shadow-md slideInUp">
           <div className="flex justify-between">
             <div className="font-bold">Feature Importance</div>
             <button
@@ -311,7 +429,7 @@ const ChartItem = (props: any) => {
             </button>
           </div>
           {/* Feature Importance 본문 */}
-          <div></div>
+          <FeatureImportance data={featuredData[0]} colors={keyColors} />
         </div>
       )}
       <Chart

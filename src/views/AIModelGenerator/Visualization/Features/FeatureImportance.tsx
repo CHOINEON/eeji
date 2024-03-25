@@ -137,12 +137,20 @@ const FeatureImportance = ({ data, colors }: any) => {
   }
 
   return (
-    <div style={{ width: '100%' }}>
-      <div className="inline-block float-left" style={{ marginLeft: '20px', width: '59%', height: '200px !important' }}>
+    // <div style={{ width: '100%' }}>
+    //   <div className="inline-block float-left" style={{ marginLeft: '20px', width: '59%', height: '200px !important' }}>
+    //     <Bar data={barData} options={barOptions} width={'100%'} height={'200px'} />
+    //   </div>
+
+    //   <div className="inline-block float-left" style={{ width: '30%', marginTop: '20px' }}>
+    //     <Doughnut data={doughnutData} options={doughnutOptions} />
+    //   </div>
+    // </div>
+    <div className="w-full flex justify-between">
+      <div className="w-[59%] h-[200px]">
         <Bar data={barData} options={barOptions} width={'100%'} height={'200px'} />
       </div>
-
-      <div className="inline-block float-left" style={{ width: '30%', marginTop: '20px' }}>
+      <div className="w-[30%] mt-[20px]">
         <Doughnut data={doughnutData} options={doughnutOptions} />
       </div>
     </div>
