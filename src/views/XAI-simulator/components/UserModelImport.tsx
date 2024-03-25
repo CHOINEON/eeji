@@ -148,11 +148,11 @@ const UserModelImport = () => {
     if (data?.model && data?.data) {
       const formData = new FormData()
 
-      formData.append('structure', data.script)
+      formData.append('structure', data.type === 'pytorch' ? data.script : '') //pytorch인 경우만 선택
       formData.append('weight', data.model)
       formData.append('input_data', data.data)
       formData.append('model_type', !data.type ? 'pytorch' : data.type)
-      formData.append('columns', data.column || '')
+      formData.append('columns', data.column || '') //빈값인 경우 공백으로 보내기
 
       mutateUpload({ user_id, formData })
     }

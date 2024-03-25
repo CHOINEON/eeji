@@ -4,7 +4,6 @@ import { Badge } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import React, { useState, useEffect } from 'react'
 import { useMutation } from 'react-query'
-import './antdCustom.css'
 
 const PredictionRow = ({ item, active, onClick }: any) => {
   const user_id = localStorage.getItem('userId').toString()
