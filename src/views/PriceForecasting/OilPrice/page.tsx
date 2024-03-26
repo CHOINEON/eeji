@@ -21,7 +21,7 @@ const Page = () => {
 
   const [chartType, setChartType] = useState('line')
 
-  const [layout, setLayout] = useState('/img/icon/layout_01.svg')
+  const [layout, setLayout] = useState('/img/icon/layout_06_01.svg')
   const [fullscreenIcon, setFullscreenIcon] = useState('/img/icon/fullscreen.svg')
   const [drawing1, setDrawing1] = useState('/img/left/drawing_01.svg')
   const [drawing2, setDrawing2] = useState('/img/left/drawing_02.svg')
@@ -31,7 +31,7 @@ const Page = () => {
   const [rightMenu2, setRightMenu2] = useState('/img/right/right_02.svg')
   const [rightMenu3, setRightMenu3] = useState('/img/right/right_03.svg')
 
-  const [layoutType, setLayoutType] = useState(1)
+  const [layoutType, setLayoutType] = useState(18)
   const [isPopup, setIsPopup] = useState(false)
   const [isReset, setIsReset] = useState(false)
 
