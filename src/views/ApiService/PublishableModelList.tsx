@@ -16,6 +16,7 @@ import { publishResultState } from './store/atom'
 // } from '@ant-design/icons'
 
 interface IModelRow {
+  id: number
   item: IModelProps
   active: boolean
   onClick: () => void
@@ -33,7 +34,7 @@ interface IModelProps {
   columns: string //json string
 }
 
-const ModelRow = ({ item, active, onClick }: IModelRow) => {
+const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
   // const [apiInfo, setApiInfo] = useState({ api_key: '' })
   const [result, setResult] = useRecoilState(publishResultState)
 
@@ -97,6 +98,7 @@ const ModelRow = ({ item, active, onClick }: IModelRow) => {
       <RowItem className="w-1/12">
         <PublishButton
           // loading={true}
+          data-name={id}
           onClick={() => onHandlePublish(item.model_id)}
           toggle={result?.api_key ? true : false}
         >
@@ -132,7 +134,7 @@ const SavedModelList = ({ data, onSelect }: any) => {
 
       {data?.map((item: any, idx: number) => (
         <PredictionListWrapper key={idx}>
-          <ModelRow item={item} active={idx === btnActive} onClick={() => toggleActive(idx)} />
+          <ModelRow id={idx} item={item} active={idx === btnActive} onClick={() => toggleActive(idx)} />
         </PredictionListWrapper>
       ))}
     </PublishableModelList>
