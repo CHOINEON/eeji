@@ -18,6 +18,28 @@ export const activeVariables = atom({
   default: {} as IActiveVariables,
 })
 
+export interface ICommodityIndex {
+  date: string
+  ground_truth: number
+  prde_1: number
+  prde_2: number
+  prde_3: number
+  prde_4: number
+  prde_5: number
+  xai: IxaiResult
+}
+
+interface IxaiResult {
+  sample_size: number
+  feature_length: number
+  // feature_list?: Array<unknown>
+  predict_result: unknown
+  input_data: Array<unknown>
+  xai_local: Array<unknown>
+  xai_pdp: unknown
+  xai_global: Array<unknown>
+}
+
 //original   DO NOT UPDATE THIS VALUE
 export const xaiResultStore = atom({
   key: 'xaiResultStore',
