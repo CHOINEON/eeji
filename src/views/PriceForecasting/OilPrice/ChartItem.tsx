@@ -83,6 +83,7 @@ const ChartItem = (props: any) => {
         console.log('data', data)
         setTruthData([])
         setPredictData([])
+        setFeaturedData([])
 
         let tmpCnt = 0
         data.map((item: any, index: number) => {
@@ -327,7 +328,7 @@ const ChartItem = (props: any) => {
               1일
             </div>
             <div
-              className={`item ${frequency === 'monthly' ? 'item-active' : ''}`}
+              className={`item ${frequency === 'monthly' ? 'item-active' : ''} whitespace-nowrap`}
               onClick={() => {
                 setFrequency((prev) => 'monthly')
                 setIsFeature((prev) => false)
@@ -345,12 +346,12 @@ const ChartItem = (props: any) => {
             </div>
           </div>
         </div>
-        <div className="flex space-x-3 mt-2">
+        <div className="flex space-x-2 mt-2">
           <div
             className={`${
               frequency === 'daily' ? '' : 'hidden'
-            } rounded-sm cursor-pointer text-[12px] border border-[#D5DCEF] px-2 py-1 ${
-              selection === 'one_week' ? 'bg-[#D5DCEF]' : 'bg-white'
+            } rounded-sm cursor-pointer text-[11px] border border-[#D5DCEF] px-2 py-1 ${
+              selection === 'one_week' ? 'bg-[#D5DCEF]' : 'bg-white hover:bg-[#D5DCEF]'
             }`}
             onClick={() => {
               updateChart('one_week')
@@ -361,8 +362,8 @@ const ChartItem = (props: any) => {
           <div
             className={`${
               frequency === 'daily' ? '' : 'hidden'
-            } rounded-sm cursor-pointer text-[12px] border border-[#D5DCEF] px-2 py-1 ${
-              selection === 'one_month' ? 'bg-[#D5DCEF]' : 'bg-white'
+            } rounded-sm cursor-pointer text-[11px] border border-[#D5DCEF] px-2 py-1 ${
+              selection === 'one_month' ? 'bg-[#D5DCEF]' : 'bg-white hover:bg-[#D5DCEF]'
             }`}
             onClick={() => {
               updateChart('one_month')
@@ -371,8 +372,8 @@ const ChartItem = (props: any) => {
             1M
           </div>
           <div
-            className={`rounded-sm cursor-pointer text-[12px] border border-[#D5DCEF] px-2 py-1 ${
-              selection === 'all' ? 'bg-[#D5DCEF]' : 'bg-white'
+            className={`rounded-sm cursor-pointer text-[11px] border border-[#D5DCEF] px-2 py-1 ${
+              selection === 'all' ? 'bg-[#D5DCEF]' : 'bg-white hover:bg-[#D5DCEF]'
             }`}
             onClick={() => {
               updateChart('all')
@@ -382,30 +383,17 @@ const ChartItem = (props: any) => {
           </div>
         </div>
       </div>
-      {isFeature ? (
-        <div
-          className={`absolute top-3 z-[1000] right-3 bg-white border-solid border border-primary font-bold py-2 px-4 cursor-pointer rounded-xl text-sm transition-all bg-[#E5EBFF] text-[#372dd5] border-[#372dd5] select-none ${
-            frequency === 'daily' ? 'hidden' : ''
-          }`}
-          onClick={() => {
-            setIsFeature((prev) => !isFeature)
-          }}
-        >
-          Feature Importance
-        </div>
-      ) : (
-        <div
-          className={`absolute top-3 z-[1000] right-3 bg-white border-solid border border-[#D5DCEF] border-primary text-primary font-bold py-2 px-4 cursor-pointer rounded-xl text-sm transition-all hover:bg-[#E5EBFF] hover:text-[#372dd5] hover:border-[#372dd5] select-none`}
-          onClick={() => {
-            setIsFeature((prev) => !isFeature)
-          }}
-        >
-          Feature Importance
-        </div>
-      )}
+      <div
+        className={`text-[13px] absolute top-[55px] z-[1000] right-3 bg-white border-solid border border-[#D5DCEF] border-primary text-primary font-bold py-2 px-4 cursor-pointer rounded-xl text-sm transition-all hover:bg-[#E5EBFF] hover:text-[#372dd5] hover:border-[#372dd5] select-none`}
+        onClick={() => {
+          setIsFeature((prev) => !isFeature)
+        }}
+      >
+        Feature Importance
+      </div>
 
       {isFeature && (
-        <div className="absolute right-3 top-[65px] px-4 py-2 rounded-xl z-[1000] bg-white border-[#372dd5] border w-[calc(100%-25px)] max-w-[930px] shadow-md slideInUp">
+        <div className="absolute right-3 top-[55px] px-4 py-2 rounded-xl z-[1000] bg-white border-[#372dd5] border w-[calc(100%-25px)] max-w-[930px] shadow-md slideInUp">
           <div className="flex justify-between">
             <div className="font-bold">Feature Importance</div>
             <button
