@@ -8,14 +8,17 @@ import { CustomButton } from '../DataInfo/DataImportModal'
 import { getNowDateTime } from 'utils/DateFunction'
 import { useMutation } from 'react-query'
 import ModelApi from 'apis/ModelApi'
+import TextArea from 'antd/es/input/TextArea'
 
 const ModelSaveModal = (props: any) => {
   // console.log('ModelSaveModal modal:', props)
-
   const { message } = App.useApp()
   const { openModal, closeModal } = useModal()
-  const [name, setName] = useState(`Model_`)
   const [loading, setLoading] = useState(false)
+
+  const [name, setName] = useState(`Model_`)
+  const [description, setDescription] = useState('')
+
   const dataProperty = useRecoilValue(dataPropertyState)
   const { mutate: mutateSaveModel } = useMutation(ModelApi.saveGeneratedModel, {
     onSuccess: (response: any) => {
@@ -46,6 +49,7 @@ const ModelSaveModal = (props: any) => {
       model_name: name,
       target_y: props.payload.target_y,
       is_classification: 0,
+      descr: description,
     }
     // console.log('save payload:', payload)
     mutateSaveModel(payload)
@@ -66,7 +70,15 @@ const ModelSaveModal = (props: any) => {
             allowClear
           />
         </Row>
-
+        <Row className="mt-4">
+          <TextArea
+            value={description}
+            onChange={(e: any) => setDescription(e.target.value)}
+            placeholder="Description"
+            autoSize={{ minRows: 3, maxRows: 2 }}
+            maxLength={50}
+          />
+        </Row>
         <CustomButton
           visible={true}
           style={{ height: 40, marginTop: '30px', fontSize: 15, fontWeight: 'bold' }}

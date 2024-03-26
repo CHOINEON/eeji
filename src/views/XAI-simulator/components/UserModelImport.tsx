@@ -15,6 +15,7 @@ import { colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/c
 
 interface IDataObj {
   model: any
+  script: any
   data: any
   column: any
   type: any
@@ -42,7 +43,7 @@ const UserModelImport = () => {
 
   const { mutate: mutateUpload } = useMutation(XaiApi.uploadModelwithData, {
     onSuccess: (response: any) => {
-      // console.log('mutateUpload;', response)
+      console.log('mutateUpload;', response)
 
       setModelUploadResult({ ...modelUploadResult, uuid: response.uuid, variable_list: response['variable_list'] })
       setSaving(false)
@@ -105,7 +106,7 @@ const UserModelImport = () => {
   })
 
   useEffect(() => {
-    setData({ ...data, model: 'pytorch', data: undefined, column: undefined })
+    setData({ ...data, type: 'pytorch', model: undefined, data: undefined, column: undefined, script: undefined })
   }, [])
 
   useEffect(() => {
@@ -119,6 +120,10 @@ const UserModelImport = () => {
     }
   }, [data, haveColumn])
 
+  const handleChangeScript = (param: any) => {
+    // console.log('handle change:', param)
+    setData({ ...data, script: param })
+  }
   const handleChangeModel = (param: any) => {
     // console.log('handle change:', param)
     setData({ ...data, model: param })
@@ -132,6 +137,7 @@ const UserModelImport = () => {
   const handleChangeType = (param: string) => {
     setData({ ...data, type: param })
   }
+
   const handleSelectColumn = (param: Array<any>) => {
     setModelUploadResult({ ...modelUploadResult, selected_var: param })
   }
@@ -142,10 +148,11 @@ const UserModelImport = () => {
     if (data?.model && data?.data) {
       const formData = new FormData()
 
+      formData.append('structure', data.type === 'pytorch' ? data.script : '') //pytorch인 경우만 선택
       formData.append('weight', data.model)
       formData.append('input_data', data.data)
       formData.append('model_type', !data.type ? 'pytorch' : data.type)
-      formData.append('columns', data.column || null)
+      formData.append('columns', data.column || '') //빈값인 경우 공백으로 보내기
 
       mutateUpload({ user_id, formData })
     }
@@ -169,6 +176,13 @@ const UserModelImport = () => {
         <div>
           <ModelTypeRadio onChange={handleChangeType} />
           <ModelUpload
+            hidden={data?.type !== 'pytorch'}
+            required={true}
+            label="모델 스크립트 파일"
+            onChange={handleChangeScript}
+            selectedFile={data?.script?.name}
+          />
+          <ModelUpload
             required={true}
             label="예측모델 파일 업로드"
             onChange={handleChangeModel}
@@ -180,32 +194,12 @@ const UserModelImport = () => {
             onChange={handleChangeData}
             selectedFile={data?.data?.name}
           />
-          {/* <Switch
-            defaultChecked
-            checkedChildren={
-              <>
-                <span>Column </span>
-                <CheckOutlined />
-              </>
-            }
-            unCheckedChildren={
-              <>
-                <span>Column </span>
-                <CloseOutlined />
-              </>
-            }
-          /> */}
-          {/* <Checkbox style={{ color: '#002d65', fontSize: '13px' }} onChange={(e) => setHaveColumn(e.target.checked)}>
-            Do you have columns to upload?
-          </Checkbox>
-          {haveColumn ? ( */}
           <ModelUpload
             required={false}
             label="Column(Optional)"
             onChange={handleChangeColumn}
             selectedFile={data?.column?.name}
           />
-          {/* ) : null} */}
         </div>
         <div
           style={{
@@ -219,12 +213,7 @@ const UserModelImport = () => {
         </div>
         <div style={{ margin: '25px 0' }}>
           <CancelButton onClick={() => setModal(null)}>Cancel</CancelButton>
-          <CustomButton
-            // className="block ant-btn ant-btn-primary"
-            visible={modelUploadResult?.uuid ? false : true}
-            disabled={isDisabled}
-            onClick={handleUpload}
-          >
+          <CustomButton visible={modelUploadResult?.uuid ? false : true} disabled={isDisabled} onClick={handleUpload}>
             Upload
           </CustomButton>
           <CustomButton visible={modelUploadResult?.uuid ? true : false} onClick={handleSave}>

@@ -1,17 +1,15 @@
-import { Spin } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import { Spin } from 'antd'
 import { modalState } from 'stores/modal'
 import { CancelButton, CustomButton } from '../../AIModelGenerator/components/DataInfo/DataImportModal'
-import useGetDatasets from 'hooks/queries/useGetDatasets'
 import ModelList from './ModelSelect/ModelList'
 import { useMutation } from 'react-query'
 import XaiApi from 'apis/XaiApi'
-
-import { customModelStore, transformedXaiResultStore, xaiResultStore } from '../store/analyze/atom'
+import { xaiResultStore } from '../store/analyze/atom'
 import { transformDataByRow } from '../XaiAnalysisResult'
-// import { transformDataByRow } from '../AnalysisResult'
 import { colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
+import { SavedModelListState } from 'store/model/atom'
 
 const SavedModelImport = () => {
   const [xaiResult, setXaiResult] = useRecoilState(xaiResultStore)
@@ -22,9 +20,7 @@ const SavedModelImport = () => {
   const [modelId, setModelId] = useState()
   const [saving, setSaving] = useState(false)
   const [modal, setModal] = useRecoilState(modalState)
-  const [isDisabled, setIsDisabled] = useState(false)
-  const [data, setData] = useState([])
-  // const { data } = useGetDatasets(localStorage.getItem('userId'))
+  const [data, setData] = useRecoilState(SavedModelListState)
 
   const { mutate: mutateGetModelList } = useMutation(XaiApi.getSavedModelList, {
     onSuccess: (result: any) => {
@@ -60,7 +56,11 @@ const SavedModelImport = () => {
   })
 
   useEffect(() => {
-    if (user_id) mutateGetModelList({ user_id: user_id })
+    const param = {
+      user_id: localStorage.getItem('userId'),
+    }
+
+    mutateGetModelList(param)
   }, [])
 
   const handleRunModel = () => {
@@ -95,7 +95,7 @@ const SavedModelImport = () => {
           <CustomButton
             // className="block ant-btn ant-btn-primary"
             visible={true}
-            disabled={isDisabled}
+            disabled={false}
             onClick={handleRunModel}
           >
             Run

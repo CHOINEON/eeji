@@ -29,7 +29,7 @@ export default AvailableServiceIcon
 
 const MenuItem = styled.div`
   // height: 90px;
-  width: 117px;
+  width: 120px;
   display: flex;
   flex-direction: column;
 `
@@ -37,8 +37,7 @@ const MenuItem = styled.div`
 const IconContainer = styled.div`
   display: block;
   width: 75px;
-  height: 75px;
-  margin: auto;
+  margin: 5px auto;
 `
 const TitleContainer = styled.div`
   display: block;

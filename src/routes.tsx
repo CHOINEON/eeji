@@ -8,7 +8,7 @@ import PriceForecasting from 'views/PriceForecasting/OilPrice'
 import PDP_DynamicRenderChart from 'views/AIModelGenerator/components/Chart/PDP_Plot/PDP_DynamicRenderChart'
 import XAIsimulator from 'views/XAI-simulator'
 import Main from 'views/Main/Main'
-import ApiService from 'views/ApiService/ApiService'
+import ApiService from 'views/ApiService'
 
 // Auth Imports
 

@@ -73,4 +73,11 @@ export interface IModelSaveReqParam {
   model_name: string
   target_y: string
   is_classification: boolean
+  descr: string
+}
+
+export interface IModelApiGeneratorParam {
+  com_id: string
+  user_id: string
+  model_id: string
 }
