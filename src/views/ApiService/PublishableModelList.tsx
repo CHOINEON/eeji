@@ -35,8 +35,10 @@ interface IModelProps {
 }
 
 const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
+  // console.log('item:', item)
   // const [apiInfo, setApiInfo] = useState({ api_key: '' })
-  const [result, setResult] = useRecoilState(publishResultState)
+  const [result, setResult] = useState({ api_key: '', request: {}, response: {} })
+  const [apiInfo, setApiInfo] = useRecoilState(publishResultState)
 
   const [toggledItem, setToggledItem] = useState([])
   const [loading, setLoading] = useState(false)
@@ -45,7 +47,7 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
     onSuccess: (result: any) => {
       // console.log('mutateGetModelList:', result)
       setResult(result)
-      // setApiInfo(result)
+      setApiInfo(result)
     },
     onError: (error: any, query: any) => {
       console.log('er:', error)
@@ -67,14 +69,14 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
     <Row
       role="button"
       onClick={onClick}
-      className={`h-[43px] rounded-lg border-[#D5DCEF] hover:bg-[#D5DCEF] ${
+      className={`w-100 h-[43px] rounded-lg border-[#D5DCEF] hover:bg-[#D5DCEF] ${
         active === true ? 'bg-[#D5DCEF]' : 'bg-[#F6F8FF] '
       }`}
     >
       <RowItem className="w-1/12">{item.create_date}</RowItem>
       {/* <RowItem className="w-1/12">{item.update_date}</RowItem> */}
       <RowItem className="w-2/12">{item.model_name}</RowItem>
-      <RowItem className="w-2/12">{item.descr}</RowItem>
+      <RowItem className="w-1/12">{item.descr}</RowItem>
       <RowItem className="w-1/12">{item.target_y}</RowItem>
       <RowItem className="w-3/12">
         {JSON.parse(item.columns).map((el: any, idx: number) => {
@@ -95,14 +97,14 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
         <Badge className="mr-1" status={item.status === 'available' ? 'success' : 'error'} />
         <RowItem>{item.status}</RowItem>
       </RowItem>
-      <RowItem className="w-1/12">
+      <RowItem className="w-2/12">
         <PublishButton
           // loading={true}
           data-name={id}
           onClick={() => onHandlePublish(item.model_id)}
           toggle={result?.api_key ? true : false}
         >
-          {result?.api_key ? result.api_key : 'Publish'}
+          {result?.api_key ? item.model_id : 'Publish'}
         </PublishButton>
       </RowItem>
     </Row>
@@ -124,12 +126,12 @@ const SavedModelList = ({ data, onSelect }: any) => {
         <ColumnLabel className="w-1/12">모델 생성일</ColumnLabel>
         {/* <ColumnLabel className="w-1/12">모델 수정일</ColumnLabel> */}
         <ColumnLabel className="w-2/12">모델명</ColumnLabel>
-        <ColumnLabel className="w-2/12">설명</ColumnLabel>
+        <ColumnLabel className="w-1/12">설명</ColumnLabel>
         <ColumnLabel className="w-1/12">타겟변수명</ColumnLabel>
         <ColumnLabel className="w-3/12">입력변수</ColumnLabel>
         <ColumnLabel className="w-1/12">모델유형</ColumnLabel>
         <ColumnLabel className="w-1/12">상태</ColumnLabel>
-        <ColumnLabel className="w-1/12">API Key</ColumnLabel>
+        <ColumnLabel className="w-2/12">API Key</ColumnLabel>
       </StyledColumn>
 
       {data?.map((item: any, idx: number) => (
@@ -185,6 +187,7 @@ const StyledColumn = styled.div`
 `
 
 const PredictionListWrapper = styled.div`
+  width: 100%;
   height: 45px;
   border-radius: 10px;
   border: 1px solid #d5dcef;
@@ -225,7 +228,8 @@ const PublishButton = styled.button<{ toggle: boolean }>`
   font-size: 13px;
   border-radius: 10px;
   height: 30px;
-  // width: 75px;
+  width: ${(props: any) => (props.toggle ? '100%' : '75px')};
+
   padding: 0 5%;
   line-height: 30px;
   font-family: 'Helvetica Neue';
