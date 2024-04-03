@@ -8,7 +8,7 @@ import XaiApi from 'apis/XaiApi'
 import ApiSyntax from './ApiSyntax'
 
 const ApiService = () => {
-  const [modelId, setModelId] = useState()
+  const [selectedRow, setSelectedRow] = useState()
   const [data, setData] = useState([])
 
   const { mutate: mutateGetModelList } = useMutation(XaiApi.getSavedModelList, {
@@ -26,7 +26,8 @@ const ApiService = () => {
   }, [])
 
   const handleSelect = (param: any) => {
-    setModelId(param)
+    console.log('param:', param)
+    setSelectedRow(param)
   }
 
   const handleClick = () => {
