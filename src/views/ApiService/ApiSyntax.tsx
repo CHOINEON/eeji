@@ -30,13 +30,13 @@ interface SyntaxDataType {
 const { TextArea } = Input
 
 const ApiSyntax = () => {
-  const result = useRecoilValue(publishResultState)
+  const apiInfo = useRecoilValue(publishResultState)
   const [defaultValue, setDefaultValue] = useState('')
 
   useEffect(() => {
-    const newDefaultValue: string = JSON.stringify(result?.response?.syntax)
+    const newDefaultValue: string = JSON.stringify(apiInfo?.response?.syntax)
     setDefaultValue(newDefaultValue)
-  }, [result])
+  }, [apiInfo])
   // const [columns, setColumns] = useState<TableProps<DataType>['columns']>([])
 
   // useEffect(() => {
@@ -95,7 +95,7 @@ const ApiSyntax = () => {
   const data_header: HeaderDataType[] = [
     {
       key: '1',
-      parameter: 'APIKey',
+      parameter: 'api_key',
       type: 'string',
       required: 'yes',
       description: '인증 키',
@@ -128,23 +128,20 @@ const ApiSyntax = () => {
   const data_element: ElementDataType[] = [
     {
       key: '1',
-      parameter_name: 'target',
-      type: 'string',
-      required: 'yes',
-      description: '타겟변수',
-    },
-    {
-      key: '2',
-      parameter_name: 'input_data',
+      parameter_name: 'data',
       type: 'list',
       required: 'yes',
-      description: '데이터',
+      description: '모델에 입력할 데이터',
     },
   ]
 
   return (
     <SyntaxTableWrapper>
       <div className="w-1/4 p-3 inline-block float-left">
+        {/* <div className="mb-5">
+          <TableName>Model Input Variables</TableName>
+        </div> */}
+
         <div className="mb-5">
           <TableName>Request Syntax</TableName>
           <Table columns={columns} dataSource={data} pagination={false} />
@@ -155,8 +152,10 @@ const ApiSyntax = () => {
         </div>
       </div>
       <div className="w-1/4 p-3 inline-block float-left">
-        <TableName>Request Elements</TableName>
-        <Table columns={columns_element} dataSource={data_element} pagination={false} />
+        <div className="mb-5">
+          <TableName>Request Elements</TableName>
+          <Table columns={columns_element} dataSource={data_element} pagination={false} />
+        </div>
       </div>
       <div className="w-2/4 p-3 inline-block float-left">
         <TableName>Response Syntax</TableName>
@@ -183,10 +182,6 @@ const SyntaxTableWrapper = styled.div`
   border-radius: 25px;
   box-shadow: 0px 0px 10px #5951db33;
   padding: 1%;
-`
-
-const TableWrapper = styled.div`
-  border: 1px solid red;
 `
 
 const TableName = styled.p`
