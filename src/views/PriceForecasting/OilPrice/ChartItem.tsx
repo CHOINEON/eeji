@@ -5,6 +5,7 @@ import Chart from 'react-apexcharts'
 import { features } from 'process'
 import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
 import { keyColors } from 'views/AIModelGenerator/components/Chart/colors'
+import { ConsoleSqlOutlined } from '@ant-design/icons'
 // const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 // // import ApexCharts from 'apexcharts'
 // // Removed the unnecessary import statement for ApexCharts
@@ -160,12 +161,15 @@ const ChartItem = (props: any) => {
         }`
       )
       .then(({ data }) => {
-        // console.log(data)
         setSymbolList([])
         // TODO 2024-03-25 daylySymbolList에 데이터가 있으면 비운다.
         data.map((item: any, index: number) => {
-          if (index === 0) {
+          // TODO 2024-04-04 props.chart_id에서 숫자만 추출
+          const tmp_index = parseInt(props.chart_id.replace('chart-', ''))
+          // 2024-04-04 해당 index와 일치하는 항목 출력
+          if (index === tmp_index - 1) {
             setSymbol((prev) => item['symbol'])
+            // TODO 2024-04-04 해당 index와 일치하는 option 선택
           }
           setSymbolList((prev: any) => [...prev, [item['symbol'], item['full_name']]])
         })
@@ -183,8 +187,10 @@ const ChartItem = (props: any) => {
     if (symbolList.length > 0) {
       return symbolList.map((item: any, index: number) => {
         // console.log('item', item)
+        // TODO 2024-04-04 props.chart_id에서 숫자만 추출
+        const tmp_index = parseInt(props.chart_id.replace('chart-', ''))
         return (
-          <option key={index} value={item[0]}>
+          <option key={index} value={item[0]} selected={index === tmp_index - 1}>
             {item[1]}
           </option>
         )
