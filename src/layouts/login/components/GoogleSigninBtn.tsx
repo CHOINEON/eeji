@@ -1,10 +1,8 @@
-import React from 'react'
-import { useLocation } from 'react-router-dom'
+import AppleBtn from 'assets/img/components/apple.svg'
 import GoogleBtn from 'assets/img/components/google.svg'
 import kakaoBtn from 'assets/img/components/kakao.svg'
-import AppleBtn from 'assets/img/components/apple.svg'
+import { useLocation } from 'react-router-dom'
 
-import googleSigninBtn_sm from 'assets/img/components/web_light_sq_na.svg'
 import styled from '@emotion/styled'
 import { App } from 'antd'
 

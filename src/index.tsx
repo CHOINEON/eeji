@@ -1,15 +1,15 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import './assets/css/App.css'
 import { ChakraProvider } from '@chakra-ui/react'
 import { App as Antd, ConfigProvider } from 'antd'
-import theme from './theme/theme'
-import { RecoilRoot } from 'recoil'
-import './locales'
-import { QueryClient, QueryClientProvider } from 'react-query'
-import App from './App'
 import GlobalModal from 'components/modal/GlobalModal'
-
+import ReactDOM from 'react-dom'
+import ReactGA from 'react-ga4'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { BrowserRouter } from 'react-router-dom'
+import { RecoilRoot } from 'recoil'
+import App from './App'
+import './assets/css/App.css'
+import './locales'
+import theme from './theme/theme'
 const antdCustomTheme = {
   token: {
     fontFamily: 'Helvetica Neue',
@@ -43,58 +43,25 @@ const antdCustomTheme = {
     },
   },
 }
-// token: {
-//   colorPrimary: '#4338F7',
-//   fontFamily: 'Helvetica Neue',
-//   borderRadius: 7,
-//   colorBgContainer: '#FFFFFF',
-//   colorBgContainer: '#002D65',
-//   colorBgContainerDisabled: '#5951DB33',
-// },
-// components: {
-//   Button: {
-//     colorPrimary: '#00B96B',
-//     // algorithm: true,
-//     // borderRadius: 100,
-//   },
-//   Modal: {
-//     borderRadius: 10,
-//   },
-//   Input: {
-//     colorBgContainer: '#FFFFFF',
-//     colorBorderBg: '1px solid #F5F8FF',
-//     borderRadius: 7,
-//   },
-//   Select: {
-//     // colorPrimary: '#4338f7',
-//     // colorBgBase: '#FFFFFF',
-//     // colorBgContainer: '#FFFFFF',
-//     // colorBorderBg: '1px solid #A3AFCF',
-//     borderRadius: 10,
-//   },
-// },
 
 const queryClient = new QueryClient()
+
+// 구글 애널리틱스 운영서버만 적용
+if (process.env.REACT_APP_GOOGLE_ANALYTICS) {
+  ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS)
+}
 
 ReactDOM.render(
   <RecoilRoot>
     <ConfigProvider theme={antdCustomTheme}>
       <ChakraProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          {/* <Loading /> */}
           <Antd>
-            <App />
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
             <GlobalModal />
           </Antd>
-          {/* <Toaster /> */}
-          {/* <BrowserRouter>
-              <Switch>
-                <Route path={`/auth`} component={AuthLayout} />
-                <Route path={`/admin`} component={AdminLayout} />
-                <Route path={`/login`} component={Login} />
-                <Redirect from="/" to="/login" />
-              </Switch>
-            </BrowserRouter> */}
         </QueryClientProvider>
       </ChakraProvider>
     </ConfigProvider>

@@ -6,28 +6,29 @@
  * 개발자 : 박윤희 (BAK YUN HEE)
  */
 
-import React, { useEffect, useState } from 'react'
+import { Button, FormControl, Input } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import main_bg from './img/bg.jpg'
-import main_font from './img/main_font.svg'
+import { App, Select } from 'antd'
 import logo from 'assets/img/ineeji/logo_wh.svg'
-import circle from './img/package.png'
-import bottom_title from './img/bottom_title.png'
-import login_icon from './img/login_icon.png'
-import date from './img/date.png'
 import axios from 'axios'
-import { FormControl, Button, Input } from '@chakra-ui/react'
-import { App, message, Modal, Select } from 'antd'
-import { Alert } from 'views/hmid/components/Modal/Alert'
+import React, { useEffect } from 'react'
 import { useSetRecoilState } from 'recoil'
+import { Alert } from 'views/hmid/components/Modal/Alert'
 import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
+import main_bg from './img/bg.jpg'
+import bottom_title from './img/bottom_title.png'
+import date from './img/date.png'
+import login_icon from './img/login_icon.png'
+import main_font from './img/main_font.svg'
+import circle from './img/package.png'
 
-import SidebarBrand from 'components/sidebar/components/Brand'
-import GoogleSignin from './components/GoogleSigninBtn'
-import AvailableServiceIcon from './components/AvailableServiceIcon'
-import { useMutation } from 'react-query'
 import UserApi from 'apis/UserApi'
+import SidebarBrand from 'components/sidebar/components/Brand'
 import useGetCompanies from 'hooks/queries/useGetCompanies'
+import { useMutation } from 'react-query'
+import { EventTrigger } from 'utils/google-analytics/gtag'
+import AvailableServiceIcon from './components/AvailableServiceIcon'
+import GoogleSignin from './components/GoogleSigninBtn'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -46,6 +47,7 @@ export const Login: React.FC = () => {
   const { mutate: mutateLogin } = useMutation(UserApi.login, {
     onSuccess: (response: any) => {
       console.log('user login response:', response)
+      EventTrigger('event', 'login', '로그인 성공')
 
       window.localStorage.setItem('userData', JSON.stringify(response))
       window.localStorage.setItem('companyId', company)
@@ -115,7 +117,7 @@ export const Login: React.FC = () => {
     if (code) {
       console.log('login mounted and the code is ::', code)
       axios
-        .post(process.env.REACT_APP_NEW_API_SERVER_URL + '/login/google', { code })
+        .post(process.env.REACT_APP_API_SERVER_URL + '/login/google', { code })
         .then((response) => {
           console.log('/login/google response: ', response.data)
           if (response.data.user_info) {
@@ -147,6 +149,8 @@ export const Login: React.FC = () => {
       //setAlarmMessage('회사를 선택 해주세요.')
       //setShowAlertModal(true)
     } else {
+      EventTrigger('click', 'login', '로그인 시도', 1)
+
       const payload = {
         com_id: company,
         user_id: id,
