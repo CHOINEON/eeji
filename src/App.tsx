@@ -1,5 +1,6 @@
 import NetworkError from 'components/common/NetworkError'
 import NotFound from 'components/common/NotFound'
+import TagManager from 'react-gtm-module'
 import { useQueryClient } from 'react-query'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import RouteChangeTracker from 'utils/google-analytics/RouteChangeTracker'
@@ -24,6 +25,7 @@ function PrivateRoute({ component: Component, isAuthenticated, ...rest }: any) {
 }
 
 export function App() {
+  TagManager.initialize({ gtmId: 'GTM-WP3XQ8RV' })
   RouteChangeTracker()
 
   const { handleError } = useApiError()

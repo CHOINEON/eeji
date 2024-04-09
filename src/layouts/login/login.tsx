@@ -26,7 +26,6 @@ import UserApi from 'apis/UserApi'
 import SidebarBrand from 'components/sidebar/components/Brand'
 import useGetCompanies from 'hooks/queries/useGetCompanies'
 import { useMutation } from 'react-query'
-import { EventTrigger } from 'utils/google-analytics/gtag'
 import AvailableServiceIcon from './components/AvailableServiceIcon'
 import GoogleSignin from './components/GoogleSigninBtn'
 
@@ -47,7 +46,6 @@ export const Login: React.FC = () => {
   const { mutate: mutateLogin } = useMutation(UserApi.login, {
     onSuccess: (response: any) => {
       console.log('user login response:', response)
-      EventTrigger('event', 'login', '로그인 성공')
 
       window.localStorage.setItem('userData', JSON.stringify(response))
       window.localStorage.setItem('companyId', company)
@@ -149,8 +147,6 @@ export const Login: React.FC = () => {
       //setAlarmMessage('회사를 선택 해주세요.')
       //setShowAlertModal(true)
     } else {
-      EventTrigger('click', 'login', '로그인 시도', 1)
-
       const payload = {
         com_id: company,
         user_id: id,

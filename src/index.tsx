@@ -10,6 +10,7 @@ import App from './App'
 import './assets/css/App.css'
 import './locales'
 import theme from './theme/theme'
+
 const antdCustomTheme = {
   token: {
     fontFamily: 'Helvetica Neue',
