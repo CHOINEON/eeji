@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import XaiApi from 'apis/XaiApi'
 import { useEffect, useState } from 'react'
+import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import { useMutation } from 'react-query'
 import ApiSyntax from './ApiSyntax'
 import SavedModelList from './PublishableModelList'
@@ -21,6 +22,15 @@ const ApiService = () => {
 
   useEffect(() => {
     mutateGetModelList({ user_id: localStorage.getItem('userId') })
+
+    const args: DataLayerArgs = {
+      dataLayer: {
+        event: 'virtualPageView',
+        pageUrl: '/api-service',
+        pageTitle: 'REST Api Service',
+      },
+    }
+    TagManager.dataLayer(args)
   }, [])
 
   const handleSelect = (param: any) => {

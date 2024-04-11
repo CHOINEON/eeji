@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "npx syncfusion-license activate",
     "start": "set PORT=9871 && env-cmd -f .env.development react-scripts start",
-    "build": "env-cmd -f .env.production react-scripts build",
+    "build": "set GENERATE_SOURCEMAP=false && env-cmd -f .env.production react-scripts build",
     "test": "env-cmd -f .env.test react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",

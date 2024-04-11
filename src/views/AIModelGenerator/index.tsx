@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useReducer, useMemo } from 'react'
 import { Box } from '@chakra-ui/react'
-import { ThemeProvider } from '@mui/material/styles'
-import { theme } from './theme/theme'
-import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
 import StepButton from '@mui/material/StepButton'
-import { useRecoilState } from 'recoil'
-import { stepCountStore } from './store/global/atom'
-import './style/styles.css'
+import Stepper from '@mui/material/Stepper'
+import { ThemeProvider } from '@mui/material/styles'
 import { notification } from 'antd'
+import React, { useEffect, useMemo } from 'react'
+import TagManager, { DataLayerArgs } from 'react-gtm-module'
+import { useRecoilState } from 'recoil'
 import TabContainer from 'views/AIModelGenerator/TabContainer'
 import DataSet from './DataSet'
+import { stepCountStore } from './store/global/atom'
+import './style/styles.css'
+import { theme } from './theme/theme'
 
 const Context = React.createContext({ name: 'Default' })
 
@@ -38,6 +39,15 @@ const AIModelGenerator = () => {
   useEffect(() => {
     //개발중
     setActiveStep(0)
+
+    const args: DataLayerArgs = {
+      dataLayer: {
+        event: 'virtualPageView',
+        pageUrl: '/ai-model-generator',
+        pageTitle: 'AI Model Generator',
+      },
+    }
+    TagManager.dataLayer(args)
   }, [])
 
   const totalSteps = () => {
