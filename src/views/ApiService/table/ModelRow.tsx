@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Badge, Button as AntButton, Card, Row, Tag, App } from 'antd'
+
+import { Badge, Button as AntButton, Card, Row, Tag, message, App, Button } from 'antd'
 import styled from '@emotion/styled'
 import { useMutation } from 'react-query'
 import ModelApi from 'apis/ModelApi'
@@ -22,16 +23,17 @@ interface IModelProps {
 interface IModelRow {
   id: number
   item: IModelProps
-  active: boolean //row선택 기능 지금 사용 안함
+  active: boolean
   onClick: () => void
 }
 
 const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
+  // console.log('item:', item)
+  // const [apiInfo, setApiInfo] = useState({ api_key: '' })
   const { message } = App.useApp()
   const [result, setResult] = useState({ api_key: '', request: {}, response: {} })
-  const MAX_VAR_COUNT = 5
   const [apiInfo, setApiInfo] = useRecoilState(publishResultState)
-  const [maxCount, setMaxCount] = useState(MAX_VAR_COUNT)
+  const [maxCount, setMaxCount] = useState(5)
   const [loadMore, setLoadMore] = useState(false)
 
   const { mutate: mutatePublishModelAPI } = useMutation(ModelApi.publishModelAPI, {
@@ -69,22 +71,13 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
   //row hover style
   //      // hover:bg-[#D5DCEF]
   // ${active === true ? 'bg-[#D5DCEF]' : 'bg-[#F6F8FF] '}
-  const onHandleClick = () => {
-    setLoadMore((prev: boolean) => !prev)
-  }
 
-  useEffect(() => {
-    // console.log('loadmore:', loadMore)
-    if (loadMore) {
-      setMaxCount(999)
-    } else {
-      setMaxCount(MAX_VAR_COUNT)
+  function RenderInputValueCell(jsonString: string, max?: number) {
+    const inputArr = JSON.parse(jsonString)
+
+    const onHandleClick = () => {
+      // setLoadMore((prev: boolean) => !prev)
     }
-  }, [loadMore])
-
-  function RenderInputValueCell(max?: number) {
-    // const inputArr = JSON.parse(jsonString)
-    const inputArr = JSON.parse(item.columns)
 
     const renderedTags = inputArr.slice(0, max).map((el: any, idx: number) => (
       <Tag key={idx} color="default">
@@ -92,20 +85,34 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
       </Tag>
     ))
 
+    const skippedTags = inputArr.slice(max).map((el: any, idx: number) => (
+      <Tag key={idx} color="default">
+        {el}
+      </Tag>
+    ))
+
+    // const loadMoreButton = (
+    //   <button className="inline-block">
+    //     <Badge count={<PlusCircleOutlined style={{ color: 'black' }} onClick={this.setMaxCount(inputArr.length)} />} />
+    //   </button>
+    // )
+
     return (
       <>
         {renderedTags}
-        <button className="inline-block">
-          <Badge
-            count={
-              loadMore ? (
-                <MinusCircleOutlined style={{ color: 'black' }} onClick={onHandleClick} />
-              ) : (
-                <PlusCircleOutlined style={{ color: 'black' }} onClick={onHandleClick} />
-              )
-            }
-          />
-        </button>
+        {inputArr.length > max && (
+          <button className="inline-block">
+            <Badge
+              count={
+                loadMore ? (
+                  <PlusCircleOutlined style={{ color: 'black' }} onClick={onHandleClick} />
+                ) : (
+                  <MinusCircleOutlined />
+                )
+              }
+            />
+          </button>
+        )}
       </>
     )
   }
@@ -114,14 +121,14 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
     <Row
       // role="button"
       onClick={onClick}
-      className={`w-100 min-h-[43px] px-1 flex-wrap overflow-visible rounded-lg border-[#D5DCEF] bg-[#F6F8FF]`}
+      className={`w-100 h-[43px] px-1 flex-wrap overflow-hidden rounded-lg border-[#D5DCEF] bg-[#F6F8FF]`}
     >
       <RowItem className="w-1/12">{item.create_date}</RowItem>
       {/* <RowItem className="w-1/12">{item.update_date}</RowItem> */}
       <RowItem className="w-2/12">{item.model_name}</RowItem>
       <RowItem className="w-1/12">{item.descr}</RowItem>
       <RowItem className="w-1/12">{item.target_y}</RowItem>
-      <RowItem className="w-3/12">{RenderInputValueCell(maxCount)}</RowItem>
+      <RowItem className="w-3/12">{RenderInputValueCell(item.columns, maxCount)}</RowItem>
       <RowItem className="w-1/12">
         <Tag className="m-auto" color={item.is_classification ? '#2db7f5' : '#87d068'}>
           {item.is_classification ? 'Classification' : 'Regression'}
@@ -148,14 +155,13 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
 
 const RowItem = styled.span`
   // border: 1px solid blue;
+  // flex: 1;
   font-family: 'Helvetica Neue';
   font-size: 14px;
   color: #002d65;
   line-height: 40px;
   text-align: center;
-  flex: flex-wrap;
   text-overflow: ellipsis;
-  overflow-wrap: anywhere;
 `
 
 const PublishButton = styled.button<{ toggle: boolean }>`

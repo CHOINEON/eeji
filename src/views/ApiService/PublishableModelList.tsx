@@ -1,6 +1,6 @@
-import styled from '@emotion/styled'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ModelRow from './table/ModelRow'
+import styled from '@emotion/styled'
 
 const SavedModelList = ({ data, onSelect }: any) => {
   const [btnActive, setBtnActive] = useState(0)
@@ -77,9 +77,8 @@ const StyledColumn = styled.div`
 `
 
 const PredictionListWrapper = styled.div`
-  min-width: 1000px;
   width: 100%;
-  // height: 45px;
+  height: 45px;
   border-radius: 10px;
   border: 1px solid #d5dcef;
   margin-bottom: 5px;

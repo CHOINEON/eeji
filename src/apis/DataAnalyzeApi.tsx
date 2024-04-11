@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { axiosPublic } from './axios'
 import { TResponseType } from './type/commonResponse'
 import { ICorrDataReq, ICorrDataRes } from './type/DataAnalyze'
