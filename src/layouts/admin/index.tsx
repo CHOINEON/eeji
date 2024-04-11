@@ -1,14 +1,11 @@
 // Chakra imports
-import { Portal, Box, useDisclosure } from '@chakra-ui/react'
+import { Box, useDisclosure } from '@chakra-ui/react'
 import ConfirmDialog from 'components/dialogs/ConfirmDialog'
 import Footer from 'components/footer/FooterAdmin'
 import NavBar from 'components/navbar/NavBar'
-import AdminNavbar from 'components/navbar/NavbarAdmin'
 import HistorySidebar from 'components/sidebar/HistorySidebar'
 // Layout components
 // import Navbar from 'components/navbar/NavbarAdmin'
-import Sidebar from 'components/sidebar/Sidebar'
-import { SidebarContext } from 'contexts/SidebarContext'
 import { useState } from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import routes from 'routes'

@@ -84,15 +84,15 @@ const PredictionList = ({ data, onSelect }: any) => {
   return (
     <>
       <Card>
-        <StyledColumn>
-          <h2 style={{ flex: 1 }}>모델 생성일</h2>
-          <h2 style={{ flex: 1 }}>모델명</h2>
-          <h2 style={{ flex: 1 }}>타겟변수명</h2>
-          <h2 style={{ flex: 1 }}>Tags</h2>
-          <h2 style={{ flex: 1 }}>description</h2>
-          <h2 style={{ flex: 1 }}>Status</h2>
-          <h2 style={{ flex: 1 }}>API생성</h2>
-        </StyledColumn>
+        <ColumnLabelWrapper>
+          <h2>모델 생성일</h2>
+          <h2>모델명</h2>
+          <h2>타겟변수명</h2>
+          <h2>Tags</h2>
+          <h2>description</h2>
+          <h2>Status</h2>
+          <h2>API생성</h2>
+        </ColumnLabelWrapper>
         {data?.map((item: any, idx: number) => (
           <PredictionListWrapper>
             <PredictionRow key={idx} item={item} active={idx === btnActive} onClick={() => toggleActive(idx)} />
@@ -111,9 +111,11 @@ const Row = styled.div`
   border-radius: 10px;
 `
 
-const StyledColumn = styled.div`
-  display: Flex;
-  flex-direction: row;
+const ColumnLabelWrapper = styled.div`
+  // display: Flex;
+  // flex-direction: row;
+  min-width: 1000px;
+  width: 100%;
   margin-left: 20px;
   color: #002d65;
   font-size: 12px;
