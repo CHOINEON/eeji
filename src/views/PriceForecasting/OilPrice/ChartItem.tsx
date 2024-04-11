@@ -1,9 +1,10 @@
-import { ApexOptions } from 'apexcharts'
 import axios from 'axios'
+import { ApexOptions } from 'apexcharts'
 import { useEffect, useMemo, useState } from 'react'
 import Chart from 'react-apexcharts'
-import { keyColors } from 'views/AIModelGenerator/components/Chart/colors'
 import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
+import { keyColors } from 'views/AIModelGenerator/components/Chart/colors'
+import { ConsoleSqlOutlined } from '@ant-design/icons'
 // const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 // // import ApexCharts from 'apexcharts'
 // // Removed the unnecessary import statement for ApexCharts
@@ -37,7 +38,7 @@ const ChartItem = (props: any) => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_SERVER_URL}/api/index_predict/get_symbol_predict/admin?is_daily=${
+        `${process.env.REACT_APP_NEW_API_SERVER_URL}/api/index_predict/get_symbol_predict/admin?is_daily=${
           frequency === 'daily' ? 1 : 0
         }&symbol=${symbol}`
       )
@@ -119,7 +120,7 @@ const ChartItem = (props: any) => {
     // daily (1:일일, 0:월간)
     axios
       .get(
-        `${process.env.REACT_APP_API_SERVER_URL}/api/index_predict/get_symbol_list/admin?is_daily=${
+        `${process.env.REACT_APP_NEW_API_SERVER_URL}/api/index_predict/get_symbol_list/admin?is_daily=${
           frequency === 'daily' ? 1 : 0
         }`
       )

@@ -8,7 +8,7 @@ const fetchChartData = async () => {
     }
 
     const response = await axios.get(
-      process.env.REACT_APP_API_SERVER_URL + `/api/index_predict?user_id=${param.user_id}`
+      process.env.REACT_APP_NEW_API_SERVER_URL + `/api/index_predict?user_id=${param.user_id}`
     )
     return response.data
   } catch (error) {

@@ -6,28 +6,28 @@
  * 개발자 : 박윤희 (BAK YUN HEE)
  */
 
-import { Button, FormControl, Input } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { App, Select } from 'antd'
-import logo from 'assets/img/ineeji/logo_wh.svg'
-import axios from 'axios'
-import React, { useEffect } from 'react'
-import { useSetRecoilState } from 'recoil'
-import { Alert } from 'views/hmid/components/Modal/Alert'
-import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
 import main_bg from './img/bg.jpg'
-import bottom_title from './img/bottom_title.png'
-import date from './img/date.png'
-import login_icon from './img/login_icon.png'
 import main_font from './img/main_font.svg'
+import logo from 'assets/img/ineeji/logo_wh.svg'
 import circle from './img/package.png'
+import bottom_title from './img/bottom_title.png'
+import login_icon from './img/login_icon.png'
+import date from './img/date.png'
+import axios from 'axios'
+import { FormControl, Button, Input } from '@chakra-ui/react'
+import { App, message, Modal, Select } from 'antd'
+import { Alert } from 'views/hmid/components/Modal/Alert'
+import { useSetRecoilState } from 'recoil'
+import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
 
-import UserApi from 'apis/UserApi'
 import SidebarBrand from 'components/sidebar/components/Brand'
-import useGetCompanies from 'hooks/queries/useGetCompanies'
-import { useMutation } from 'react-query'
-import AvailableServiceIcon from './components/AvailableServiceIcon'
 import GoogleSignin from './components/GoogleSigninBtn'
+import AvailableServiceIcon from './components/AvailableServiceIcon'
+import { useMutation } from 'react-query'
+import UserApi from 'apis/UserApi'
+import useGetCompanies from 'hooks/queries/useGetCompanies'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -115,7 +115,7 @@ export const Login: React.FC = () => {
     if (code) {
       console.log('login mounted and the code is ::', code)
       axios
-        .post(process.env.REACT_APP_API_SERVER_URL + '/login/google', { code })
+        .post(process.env.REACT_APP_NEW_API_SERVER_URL + '/login/google', { code })
         .then((response) => {
           console.log('/login/google response: ', response.data)
           if (response.data.user_info) {

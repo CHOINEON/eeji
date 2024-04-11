@@ -1,22 +1,21 @@
-import { Typography } from '@mui/material'
-import Checkbox from '@mui/material/Checkbox'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import ListItemText from '@mui/material/ListItemText'
-import MenuItem from '@mui/material/MenuItem'
+import React, { useState, useEffect, useReducer, ChangeEvent } from 'react'
 import OutlinedInput from '@mui/material/OutlinedInput'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import ListItemText from '@mui/material/ListItemText'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Checkbox from '@mui/material/Checkbox'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import { Typography } from '@mui/material'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import { stepCountStore } from '../../store/global/atom'
 import {
-  selectedVarStoreX,
-  selectedVarStoreY,
   variableStoreX,
   variableStoreY,
+  selectedVarStoreX,
+  selectedVarStoreY,
 } from 'views/AIModelGenerator/store/variable/atom'
-import { stepCountStore } from '../../store/global/atom'
-
 import { cloneDeep } from 'lodash'
 
 const ITEM_HEIGHT = 50
