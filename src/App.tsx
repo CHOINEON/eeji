@@ -1,13 +1,12 @@
-import NetworkError from 'components/common/NetworkError'
-import NotFound from 'components/common/NotFound'
-import TagManager from 'react-gtm-module'
-import { useQueryClient } from 'react-query'
-import { Redirect, Route, Switch } from 'react-router-dom'
-import RouteChangeTracker from 'utils/google-analytics/RouteChangeTracker'
+import React, { useEffect, useState } from 'react'
 import { useApiError } from './hooks/useApiError'
-import AdminLayout from './layouts/admin'
+import { useQueryClient } from 'react-query'
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import AuthLayout from './layouts/auth'
+import AdminLayout from './layouts/admin'
 import Login from './layouts/login/login'
+import NotFound from 'components/common/NotFound'
+import NetworkError from 'components/common/NetworkError'
 
 function PrivateRoute({ component: Component, isAuthenticated, ...rest }: any) {
   return (
@@ -25,9 +24,6 @@ function PrivateRoute({ component: Component, isAuthenticated, ...rest }: any) {
 }
 
 export function App() {
-  TagManager.initialize({ gtmId: 'GTM-WP3XQ8RV' })
-  RouteChangeTracker()
-
   const { handleError } = useApiError()
   const queryClient = useQueryClient()
   const isAuthenticated = localStorage.getItem('userId') ? true : false
@@ -50,15 +46,17 @@ export function App() {
 
   return (
     <>
-      <Switch>
-        <Route path={`/auth`} component={AuthLayout} />
-        <PrivateRoute path={`/admin`} component={AdminLayout} isAuthenticated={isAuthenticated} />
-        <Route path={`/login`} component={Login} />
-        <Route path={`/404`} component={NotFound} />
-        <Route path={`/500`} component={NetworkError} />
+      <BrowserRouter>
+        <Switch>
+          <Route path={`/auth`} component={AuthLayout} />
+          <PrivateRoute path={`/admin`} component={AdminLayout} isAuthenticated={isAuthenticated} />
+          <Route path={`/login`} component={Login} />
+          <Route path={`/404`} component={NotFound} />
+          <Route path={`/500`} component={NetworkError} />
 
-        <Redirect from="/" to="/login" />
-      </Switch>
+          <Redirect from="/" to="/login" />
+        </Switch>
+      </BrowserRouter>
     </>
   )
 }

@@ -3,8 +3,9 @@ import XaiApi from 'apis/XaiApi'
 import { useEffect, useState } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import { useMutation } from 'react-query'
-import ApiSyntax from './ApiSyntax'
+import { ReloadOutlined } from '@ant-design/icons'
 import SavedModelList from './PublishableModelList'
+import ApiSyntax from './ApiSyntax'
 
 const ApiService = () => {
   const [selectedRow, setSelectedRow] = useState()
