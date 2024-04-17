@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Input, Tag, Card } from 'antd'
-import { useMutation } from 'react-query'
 import styled from '@emotion/styled'
+import XaiApi from 'apis/XaiApi'
+import { useEffect, useState } from 'react'
+import TagManager, { DataLayerArgs } from 'react-gtm-module'
+import { useMutation } from 'react-query'
 import { ReloadOutlined } from '@ant-design/icons'
 import SavedModelList from './PublishableModelList'
-import XaiApi from 'apis/XaiApi'
 import ApiSyntax from './ApiSyntax'
 
 const ApiService = () => {
@@ -23,6 +23,15 @@ const ApiService = () => {
 
   useEffect(() => {
     mutateGetModelList({ user_id: localStorage.getItem('userId') })
+
+    const args: DataLayerArgs = {
+      dataLayer: {
+        event: 'virtualPageView',
+        pageUrl: '/api-service',
+        pageTitle: 'REST Api Service',
+      },
+    }
+    TagManager.dataLayer(args)
   }, [])
 
   const handleSelect = (param: any) => {

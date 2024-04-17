@@ -1,9 +1,20 @@
-import React from 'react'
 import { Box } from '@chakra-ui/react'
-import OilPriceChart from './OilPriceForecastingChart'
+import { useEffect } from 'react'
+import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import Page from './page'
 
 const PriceForecasting = () => {
+  useEffect(() => {
+    const args: DataLayerArgs = {
+      dataLayer: {
+        event: 'virtualPageView',
+        pageUrl: '/price-forecast',
+        pageTitle: 'Commodity Index Forecast',
+      },
+    }
+    TagManager.dataLayer(args)
+  }, [])
+
   return (
     <Box>
       {/* <OilPriceChart /> */}

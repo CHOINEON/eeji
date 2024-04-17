@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "postinstall": "npx syncfusion-license activate",
-    "start": "set PORT=9871 && react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "set PORT=9871 && env-cmd -f .env.development react-scripts start",
+    "build": "set GENERATE_SOURCEMAP=false && env-cmd -f .env.production react-scripts build",
+    "test": "env-cmd -f .env.test react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "scp -P 50022 -r /Users/82106/repos/infinite-optimal/build/* yunhee@220.94.157.27:~/infinite_optimal"
