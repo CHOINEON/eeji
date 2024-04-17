@@ -115,7 +115,7 @@ export const Login: React.FC = () => {
     if (code) {
       console.log('login mounted and the code is ::', code)
       axios
-        .post(process.env.REACT_APP_NEW_API_SERVER_URL + '/login/google', { code })
+        .post(process.env.REACT_APP_API_SERVER_URL + '/login/google', { code })
         .then((response) => {
           console.log('/login/google response: ', response.data)
           if (response.data.user_info) {
