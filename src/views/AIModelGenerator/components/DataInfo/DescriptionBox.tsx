@@ -105,6 +105,10 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
             height: '100%',
             textAlign: 'center',
             lineHeight: '69px',
+
+            // textOverflow: 'ellipsis',
+            // overflow: 'hidden',
+            // whiteSpace: 'nowrap',
           }}
         >
           <label>
@@ -189,12 +193,13 @@ const DescBoxContainer = styled.div`
   border: 1px solid #d5dcef;
   border-radius: 15px;
   box-shadow: 0px 0px 10px #0000001a;
-
   margin: 10px 0;
 `
+
 const Content = styled.div`
   // border: 1px solid blue;
   display: block;
+  // background: green;
   float: left;
   color: gray;
   font-size: 13px;
@@ -202,7 +207,7 @@ const Content = styled.div`
   height: 69px;
   text-align: center;
   line-height: 69px;
-  width: 100px;
+  width: 160px;
   text-align: center;
 `
 
@@ -219,13 +224,14 @@ const UserContent = styled(Content)`
 `
 
 const TitleWrapper = styled.div`
-  // text-align: center;
+  text-align: center;
   // border: 1px solid red;
   display: block;
   min-width: 400px;
   float: left;
   height: 69px;
   line-height: 69px;
+
   // &:hover {
   //   cursor: pointer;
   // }
