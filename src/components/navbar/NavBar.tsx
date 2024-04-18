@@ -23,7 +23,7 @@ const NavBar = (props: { routes: RoutesType[] }) => {
   const [isOpen, setIsOpen] = React.useState(false)
   const { mutate: mutateLogout } = useMutation(UserApi.logout, {
     onSuccess: (response: any) => {
-      console.log('logout response:', response)
+      // console.log('logout response:', response)
       message.open({
         type: 'success',
         content: response?.message,

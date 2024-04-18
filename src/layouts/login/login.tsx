@@ -18,9 +18,6 @@ import date from './img/date.png'
 import axios from 'axios'
 import { FormControl, Button, Input } from '@chakra-ui/react'
 import { App, message, Modal, Select } from 'antd'
-import { Alert } from 'views/hmid/components/Modal/Alert'
-import { useSetRecoilState } from 'recoil'
-import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
 
 import SidebarBrand from 'components/sidebar/components/Brand'
 import GoogleSignin from './components/GoogleSigninBtn'
@@ -39,8 +36,6 @@ export const Login: React.FC = () => {
   const [password, setPassword] = React.useState()
   const [company, setCompany] = React.useState<any>('')
   const [companyList, setCompanyList] = React.useState<any>()
-  const setShowAlertModal = useSetRecoilState(AlertRecoil.AlertModalState)
-  const setAlarmMessage = useSetRecoilState(AlertRecoil.AlertMessageState)
 
   const { data } = useGetCompanies()
   const { mutate: mutateLogin } = useMutation(UserApi.login, {
@@ -170,14 +165,6 @@ export const Login: React.FC = () => {
     }
   }
 
-  const onEnterId = (e: any) => {
-    //Need validation of id/pw value
-    if (e.keyCode === 13) {
-      setAlarmMessage('패스워드를 입력해주세요.')
-      setShowAlertModal(true)
-    }
-  }
-
   // 회사 리스트
   function RenderCompanyList(companyList: any) {
     const Arr: any = []
@@ -266,7 +253,7 @@ export const Login: React.FC = () => {
           <GoogleSignin />
         </div>
       </FormWrap>
-      <Alert />
+      {/* <Alert /> */}
     </>
   )
 }
