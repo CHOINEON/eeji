@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 import { Box } from '@chakra-ui/react'
-import React, { MouseEventHandler, useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
-import XaiAnalysisResult from './XaiAnalysisResult'
-import { customModelStore, xaiResultStore } from './store/analyze/atom'
+import { useEffect } from 'react'
+import TagManager, { DataLayerArgs } from 'react-gtm-module'
+import { useRecoilState, useResetRecoilState } from 'recoil'
+import { xaiResultStore } from './store/analyze/atom'
 import UploadPage from './UploadPage'
+import XaiAnalysisResult from './XaiAnalysisResult'
 
 const XAIsimulator = () => {
   const [analysisResult, setAnalysisResult] = useRecoilState(xaiResultStore)
@@ -12,6 +13,15 @@ const XAIsimulator = () => {
 
   useEffect(() => {
     resetAnalysisResult()
+
+    const args: DataLayerArgs = {
+      dataLayer: {
+        event: 'virtualPageView',
+        pageUrl: '/xai-simulator',
+        pageTitle: 'XAI',
+      },
+    }
+    TagManager.dataLayer(args)
   }, [])
 
   return (
