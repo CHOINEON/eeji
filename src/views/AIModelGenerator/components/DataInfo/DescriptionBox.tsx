@@ -105,10 +105,6 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
             height: '100%',
             textAlign: 'center',
             lineHeight: '69px',
-
-            // textOverflow: 'ellipsis',
-            // overflow: 'hidden',
-            // whiteSpace: 'nowrap',
           }}
         >
           <label>
@@ -197,9 +193,7 @@ const DescBoxContainer = styled.div`
 `
 
 const Content = styled.div`
-  // border: 1px solid blue;
   display: block;
-  // background: green;
   float: left;
   color: gray;
   font-size: 13px;
@@ -225,14 +219,13 @@ const UserContent = styled(Content)`
 
 const TitleWrapper = styled.div`
   text-align: center;
-  // border: 1px solid red;
   display: block;
   min-width: 400px;
   float: left;
   height: 69px;
   line-height: 69px;
-
   // &:hover {
   //   cursor: pointer;
-  // }
+  // } 
+  //기존css 코드라서 주석 제거하지 않음
 `
