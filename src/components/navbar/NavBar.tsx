@@ -23,16 +23,13 @@ const NavBar = (props: { routes: RoutesType[] }) => {
   const [isOpen, setIsOpen] = React.useState(false)
   const { mutate: mutateLogout } = useMutation(UserApi.logout, {
     onSuccess: (response: any) => {
-      // console.log('logout response:', response)
       message.open({
         type: 'success',
         content: response?.message,
       })
       history.replace('/login')
     },
-    onError: (error: any) => {
-      // console.log('error::', error)
-    },
+    onError: (error: any) => {},
   })
 
   const handleLogout = () => {
@@ -46,8 +43,6 @@ const NavBar = (props: { routes: RoutesType[] }) => {
   return (
     <NavBarContainer {...props}>
       <Logo w="100px" color={['primary.500', 'primary.500']} style={{ flexShrink: 0, width: '15%', minWidth: 252 }} />
-      {/* <MenuToggle toggle={toggle} isOpen={isOpen} /> */}
-      {/* <Box style={{ height: '66px', padding: '30px 0px 0px 20px' }}>
         <DatasetAddButton
           className="ant-btn ant-btn-primary"
           style={{ display: activeStep === 0 && location.pathname == '/admin/data-analysis' ? 'block' : 'none' }}
@@ -56,10 +51,8 @@ const NavBar = (props: { routes: RoutesType[] }) => {
           <span style={{ marginLeft: '30px', letterSpacing: '0.5px', fontSize: '14px', fontWeight: 500 }}>Upload</span>
           <img style={{ top: '-22px', left: '14px', position: 'relative' }} src={UploadIcon} />
         </DatasetAddButton>
-      </Box> */}
       <MenuLinks isOpen={isOpen} routes={routes} style={{ flexGrow: 1 }} />
       <div>
-        {/* {createLinks(routes)} */}
         <HStack spacing="13">
           <Feedback />
           <Button
@@ -83,7 +76,6 @@ const NavBar = (props: { routes: RoutesType[] }) => {
             bg={'rgba(92, 87, 177, 0.6)'}
             _hover={{
               bg: ['primary.100', 'primary.100', 'primary.600', 'primary.600'],
-              // backgroundImage: { settingOverImage },
             }}
             width="32px"
             height="32px"
@@ -102,19 +94,6 @@ const NavBar = (props: { routes: RoutesType[] }) => {
     </NavBarContainer>
   )
 }
-
-// const createLinks = (routes: RoutesType[]) => {
-//   console.log('routes:', routes)
-//   return routes.map((route: RoutesType, index: number) => {
-//     if (window.localStorage.getItem('userPosition') === 'admin') {
-//       return (
-//         <MenuItem to={route.layout + route.path} index={index}>
-//           {route.name}
-//         </MenuItem>
-//       )
-//     }
-//   })
-// }
 
 //verifies if routeName is the one active(in browser input)
 const activeRoute = (routeName: string) => {
@@ -159,10 +138,6 @@ const MenuLinks = ({ isOpen, routes }: any) => {
               </MenuItem>
             )
         })}
-        {/* <MenuItem to="/admin/data-analysis">AI Model Generator</MenuItem>
-        <MenuItem to="#">Explainable AI</MenuItem>
-        <MenuItem to="/admin/price-forecast">Commodity Index Prediction</MenuItem>
-        <MenuItem to="#">Predictions APIs</MenuItem> */}
       </Stack>
     </Box>
   )
@@ -177,7 +152,6 @@ const NavBarContainer = ({ children, ...props }: any) => {
       wrap="nowrap"
       w="100%"
       h="5vh"
-      // mb={8}
       p={8}
       bg={'#242185'}
       color={['white', 'white', 'primary.700', 'primary.700']}
