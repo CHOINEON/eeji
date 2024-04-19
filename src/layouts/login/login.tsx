@@ -2,8 +2,9 @@
  * INFINITE OPTIMAL
  * 메뉴명 : Login
  * 시작 날짜 : 2022-11-24
- * 최종 수정 날짜 : 2022-11-24
+ * 최종 수정 날짜 : 2024-04-19
  * 개발자 : 박윤희 (BAK YUN HEE)
+ * 수정 : 조미라
  */
 
 import React, { useEffect, useState } from 'react'
@@ -18,9 +19,6 @@ import date from './img/date.png'
 import axios from 'axios'
 import { FormControl, Button, Input } from '@chakra-ui/react'
 import { App, message, Modal, Select } from 'antd'
-import { Alert } from 'views/hmid/components/Modal/Alert'
-import { useSetRecoilState } from 'recoil'
-import * as AlertRecoil from 'views/hmid_config/recoil/config/atoms'
 
 import SidebarBrand from 'components/sidebar/components/Brand'
 import GoogleSignin from './components/GoogleSigninBtn'
@@ -33,20 +31,14 @@ axios.defaults.withCredentials = true // withCredentials 전역 설정
 
 export const Login: React.FC = () => {
   const { modal, message } = App.useApp()
-
-  // const [messageApi, contextHolder] = message.useMessage()
   const [id, setId] = React.useState()
   const [password, setPassword] = React.useState()
   const [company, setCompany] = React.useState<any>('')
   const [companyList, setCompanyList] = React.useState<any>()
-  const setShowAlertModal = useSetRecoilState(AlertRecoil.AlertModalState)
-  const setAlarmMessage = useSetRecoilState(AlertRecoil.AlertMessageState)
 
   const { data } = useGetCompanies()
   const { mutate: mutateLogin } = useMutation(UserApi.login, {
     onSuccess: (response: any) => {
-      console.log('user login response:', response)
-
       window.localStorage.setItem('userData', JSON.stringify(response))
       window.localStorage.setItem('companyId', company)
       window.localStorage.setItem('userId', response[0].user_id)
@@ -54,7 +46,6 @@ export const Login: React.FC = () => {
       window.location.href = '/admin/main'
     },
     onError: (error: any) => {
-      // console.log('error::', error)
       console.clear()
       if (error.response.status === 403) {
         modal.confirm({
@@ -73,10 +64,7 @@ export const Login: React.FC = () => {
             }
             mutateLogout(payload)
           },
-          onCancel() {
-            //
-          },
-          // footer: () => <button>test</button>,
+          onCancel() {},
         })
       }
     },
@@ -87,7 +75,6 @@ export const Login: React.FC = () => {
       setLogin(id, password)
     },
     onError: (error: any) => {
-      // console.log('error::', error)
       message.open({
         type: 'error',
         content: error.response?.data.detail,
@@ -96,20 +83,14 @@ export const Login: React.FC = () => {
   })
 
   useEffect(() => {
-    // console.log('company list:', data)
     if (data) {
-      // setCompanyList(data)
       RenderCompanyList(data)
     }
   }, [data])
 
   React.useEffect(() => {
-    // RenderCompanyList()
-    // if (companies?.length > 0) RenderCompanyList(companies)
-
     //로그인 후 redirect된 URL에서 구글 인가코드 추출하여 백엔드로 전달하여 token발급받음
     const params = new URLSearchParams(window.location.search)
-    // console.log('URL search params:', params)
     const code = params.get('code')
 
     if (code) {
@@ -126,26 +107,20 @@ export const Login: React.FC = () => {
             localStorage.setItem('userPicture', response.data.user_info.picture)
 
             window.location.href = '/admin/main'
-            // setIsAuthenticated(true)
-            // window.location.href = '/admin/data-analysis'
           }
         })
         .catch((error) => {
           alert(error)
-          // console.log('error: ' + error)
         })
     }
   }, [])
 
   const setLogin = (id: string, password: string) => {
-    // console.log(company)
     if (company.length === 0 || company === undefined) {
       message.open({
         type: 'error',
         content: '회사를 선택해주세요',
       })
-      //setAlarmMessage('회사를 선택 해주세요.')
-      //setShowAlertModal(true)
     } else {
       const payload = {
         com_id: company,
@@ -170,14 +145,6 @@ export const Login: React.FC = () => {
     }
   }
 
-  const onEnterId = (e: any) => {
-    //Need validation of id/pw value
-    if (e.keyCode === 13) {
-      setAlarmMessage('패스워드를 입력해주세요.')
-      setShowAlertModal(true)
-    }
-  }
-
   // 회사 리스트
   function RenderCompanyList(companyList: any) {
     const Arr: any = []
@@ -195,7 +162,6 @@ export const Login: React.FC = () => {
 
   //selectbox 변경 이벤트
   const handleChange = (value: string | string[]) => {
-    // console.log(`Compnay Selected: ${value}`)
     setCompany(value)
   }
 
@@ -236,7 +202,6 @@ export const Login: React.FC = () => {
             type="text"
             placeholder={'ID'}
             onChange={(e: any) => ChangeId(e)}
-            // onKeyDown={(e: any) => onEnterId(e)}
             style={{ width: '100%', marginBottom: '1.5vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
           />
           <Input
@@ -249,7 +214,6 @@ export const Login: React.FC = () => {
           />
         </FormControl>
         <Button
-          // mt={4}
           type="submit"
           onClick={() => setLogin(id, password)}
           style={{
@@ -266,7 +230,6 @@ export const Login: React.FC = () => {
           <GoogleSignin />
         </div>
       </FormWrap>
-      <Alert />
     </>
   )
 }
