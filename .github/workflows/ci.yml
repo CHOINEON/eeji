@@ -1,0 +1,76 @@
+name: cloudfnt-Web CI
+
+on:
+    push:
+        branches: 
+          - main
+        paths:
+          - 'deploy/ci.json'
+
+env:
+  GAR_REGISTRY: asia-northeast3-docker.pkg.dev      
+  GCP_PROJECT: ineeji-cloudai-test
+
+jobs:       
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: action/checkout@v2
+
+        - name: Install jq
+          run: |
+            sudo apt-get update && sudo apt-get install jq
+        
+        - name: Get the deployment info by parsing the CI.json manifest file
+          id: get-deploy-env
+          run: |
+            service=$(jq -r '.service' deploy/ci.json)
+            version=$(jq -r '.version' deploy/ci.json)
+            docker_file=$(jq -r '.dockerfile' deploy/ci.json)
+            echo "SERVICE=$service" >> $GITHUB_OUTPUT
+            echo "VERSION=$version" >> $GITHUB_OUTPUT
+            echo "DOCKERFILE=$docker_file" >> $GITHUB_OUTPUT
+        
+        - name: Generate image name & tag
+          id: generate-name-tag
+          run: |
+            GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c1-7)
+            echo "NAMETAG=${{ steps.get-deploy-env.outputs.SERVICE }}:${{ steps.get-deploy-env.outputs.VERSION }}__$GITHUB_SHAR_SHORT" >> $GITHUB_OUTPUT
+            
+        # Configure gcloud authentication to Google Cloud
+        - id: auth
+          name: Authenticate with Google Cloud
+          uses: 'google-github-actions/auth@v2'
+          with:
+            workload_identity_provider: 'projects/331963722093/locations/global/workloadIdentityPools/github-action-pool/providers/iam-terraform-infra'
+            service_account: 'tf-action-runner@ineeji-cloudai-test.iam.gserviceaccount.com'
+            token_format: access_token
+        
+        - name: 'Set up Cloud SDK'
+          uses: 'google-github-actions/setup-gcloud@v2'
+          with:
+            version: '>= 363.0.0'
+    
+        - name: 'Use gcloud CLI'
+          run: 'gcloud info'
+        
+        - name: 'Login to Artifact Registry'
+          uses: docker/login-action@v3
+          with:
+            registry: ${GAR_REGISTRY}
+            username: oauth2accesstoken
+            password: ${{ steps.auth.outputs.access_token }}
+        
+        - id: docker-push-tagged
+          name: Tag Docker image and push to GAR
+          uses: docker/build-push-action@v5
+          with: 
+            push: true
+            tags: |
+              # asia-northeast3-docker.pkg.dev/ineeji-cloudai-test/cloudai-cloudfnt-web
+              ${GAR_REGISTRY}/${GCP_PROJECT}/cloudai-${{ steps.get-deploy-env.outputs.SERVICE }}/${{ steps.generate-name-tag.outputs.NAMETAG }}
+        
+        # Print env variables and the event payload for the debugging purpose.
+        - name: Debug
+          uses: hmarr/debug-action@v3
