@@ -47,7 +47,7 @@ jobs:
           id: generate-name-tag
           run: |
             GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c1-7)
-            echo "NAMETAG=${{ steps.get-deploy-env.outputs.SERVICE }}:${{ steps.get-deploy-env.outputs.VERSION }}__$GITHUB_SHAR_SHORT" >> $GITHUB_OUTPUT
+            echo "NAMETAG=${{ steps.get-deploy-env.outputs.SERVICE }}:${{ steps.get-deploy-env.outputs.VERSION }}__$GITHUB_SHA_SHORT" >> $GITHUB_OUTPUT
             
         # Configure gcloud authentication to Google Cloud
         - id: auth
@@ -69,7 +69,7 @@ jobs:
         - name: 'Login to Artifact Registry'
           uses: docker/login-action@v3
           with:
-            registry: ${GAR_REGISTRY}
+            registry: ${{ env.GAR_REGISTRY }}
             username: oauth2accesstoken
             password: ${{ steps.auth.outputs.access_token }}
         
@@ -79,7 +79,7 @@ jobs:
           with: 
             push: true
             tags: |
-              ${GAR_REGISTRY}/${GCP_PROJECT}/cloudai-${{ steps.get-deploy-env.outputs.SERVICE }}/${{ steps.generate-name-tag.outputs.NAMETAG }}
+              ${{ env.GAR_REGISTRY }}/${{ env.GCP_PROJECT }}/cloudai-${{ steps.get-deploy-env.outputs.SERVICE }}/${{ steps.generate-name-tag.outputs.NAMETAG }}
         
         - id: print-docker-push-outputs
           name: Print docker image outputs
