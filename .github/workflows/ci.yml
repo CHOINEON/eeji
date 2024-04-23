@@ -7,16 +7,27 @@ on:
         paths:
           - 'deploy/ci.json'
 
-env:
-  GAR_REGISTRY: asia-northeast3-docker.pkg.dev      
-  GCP_PROJECT: ineeji-cloudai-test
+permissions:
+  contents: 'read'
+  id-token: 'write'
+
+
 
 jobs:       
     build:
+        name: 'Build image'
         runs-on: ubuntu-latest
+        environment: test
+        env:
+          GAR_REGISTRY: "asia-northeast3-docker.pkg.dev"
+          GCP_PROJECT: "ineeji-cloudai-test"
+        
+        defaults:
+          run:
+            shell: bash
 
         steps:
-        - uses: action/checkout@v2
+        - uses: action/checkout@v3
 
         - name: Install jq
           run: |
@@ -68,8 +79,12 @@ jobs:
           with: 
             push: true
             tags: |
-              # asia-northeast3-docker.pkg.dev/ineeji-cloudai-test/cloudai-cloudfnt-web
               ${GAR_REGISTRY}/${GCP_PROJECT}/cloudai-${{ steps.get-deploy-env.outputs.SERVICE }}/${{ steps.generate-name-tag.outputs.NAMETAG }}
+        
+        - id: print-docker-push-outputs
+          name: Print docker image outputs
+          run: |
+            echo "ImageID:${{ steps.docker-push-tagged.outputs.imageid}}\nImageDigest:${{ steps.docker-push-tagged.outputs.digest }}\n"
         
         # Print env variables and the event payload for the debugging purpose.
         - name: Debug
