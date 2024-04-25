@@ -9,8 +9,11 @@
 
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import main_bg from './img/bg.jpg'
-import main_font from './img/main_font.svg'
+import new_mainbg from './img/new_mainbg.png'
+import ineeji from './img/ineeji.png'
+import or from './img/or.png'
+import ineeji_logo from './img/ineeji_logo.png'
+import newmain_font from './img/newmain_font.png'
 import logo from 'assets/img/ineeji/logo_wh.svg'
 import circle from './img/package.png'
 import bottom_title from './img/bottom_title.png'
@@ -19,6 +22,7 @@ import date from './img/date.png'
 import axios from 'axios'
 import { FormControl, Button, Input } from '@chakra-ui/react'
 import { App, message, Modal, Select } from 'antd'
+import sign_in from './img/sign_in.svg'
 
 import SidebarBrand from 'components/sidebar/components/Brand'
 import GoogleSignin from './components/GoogleSigninBtn'
@@ -171,7 +175,9 @@ export const Login: React.FC = () => {
       <Home_Bg />
       <Logo />
       <SidebarBrand />
-      <Title />
+      <UpperTitle>Beyond your Expectations</UpperTitle>
+      <Title></Title>
+
       <BottomBox>
         <Circle />
         <BottomTitleParent>
@@ -185,10 +191,10 @@ export const Login: React.FC = () => {
         <AvailableServiceIcon />
       </BottomBox>
       <FormWrap>
-        <LoginTitle>LOGIN</LoginTitle>
+        <Login_ineejiIcon />
+        <LoginTitle>Login</LoginTitle>
         <LoginSubTitle>Enter Your ID and password to sign in.</LoginSubTitle>
         <LoginIcon />
-
         <FormControl id="text">
           <Select
             size={'large'}
@@ -226,9 +232,14 @@ export const Login: React.FC = () => {
         >
           Login
         </Button>
-        <div style={{ marginTop: '29px', textAlign: 'center' }}>
+        <OrWrapper></OrWrapper>
+        <div style={{ marginTop: '17px', textAlign: 'center' }}>
           <GoogleSignin />
         </div>
+        <TextMenuWrapper>
+          <TextWrapper>Find ID</TextWrapper> <TextWrapper>Find Password</TextWrapper>
+          <TextWrapper>Join</TextWrapper>
+        </TextMenuWrapper>
       </FormWrap>
     </>
   )
@@ -244,17 +255,30 @@ const Wrapper = styled.div`
   bottom: 0;
   z-index: 99;
 `
+
 const BgStyle = styled.div`
   background-position: center top;
   background-repeat: no-repeat;
   background-size: 100% auto;
 `
-
+const Login_ineejiIcon = styled.div`
+  background-image: url(${ineeji});
+  left: 1409px;
+  height: 21px;
+  background-repeat: no-repeat;
+  margin-bottom: 40px;
+`
+const OrWrapper = styled.div`
+  background-image: url(${or});
+  background-repeat: no-repeat;
+  width: 19px;
+  height: 27px;
+  margin-left: 7vw;
+  margin-top: 1vh;
+  padding-bottom: 1vh;
+`
 const Home_Bg = styled(BgStyle)`
-  // background-size: cover;
-  // background-image: url(${main_bg});
-  // filter: brightness(56%);
-  background-color: #4338f7;
+  background-image: url(${new_mainbg});
   position: fixed;
   opacity: 1;
   left: 0;
@@ -264,23 +288,33 @@ const Home_Bg = styled(BgStyle)`
 `
 
 const FormWrap = styled.div`
-  // min-width: 250px;
-  // height: 65vh;
-  width: 20vw;
-  padding: 2vw;
+  width: 18vw;
+  padding-top: 1.5vw;
+  padding-left: 1.5vw;
+  padding-right: 1.5vw;
+  padding-bottom: 1vw;
   position: absolute;
   right: 4vw;
-  top: 50vh;
+  top: 159px;
   z-index: 999;
   background-color: #fff;
   border-radius: 15px;
-  transform: translateY(-50%);
+`
+const UpperTitle = styled.div`
+  font-size: 29px;
+  color: #fff;
+  top: 189px;
+  left: 140px;
+  width: 414px;
+  height: 42px;
+  z-index: 99999;
+  position: absolute;
 `
 
 const Title = styled(BgStyle)`
   background-position: left 7vw top 12vw;
-  background-size: 20% auto;
-  background-image: url(${main_font});
+  background-size: 30% auto;
+  background-image: url(${newmain_font});
   position: fixed;
   left: 0;
   right: 0;
@@ -296,8 +330,6 @@ const Logo = styled(BgStyle)`
   height: 2vw;
   left: 7vw;
   top: 4vw;
-  // width: 9vw;
-  // height: 2vw;
   z-index: 999;
 `
 
@@ -307,9 +339,6 @@ const BottomBox = styled.div`
   bottom: 2vw;
   border-top: 1px solid #fff;
   padding: 0.5vw;
-  // display: flex;
-  // align-items: center;
-  // justify-content: space-between;
   z-index: 999;
   width: 50vw;
   display: block;
@@ -326,24 +355,11 @@ const Circle = styled(BgStyle)`
   float: left;
 `
 
-const TopBox = styled.div`
-  display: inline-flex;
-  align-items: center;
-  margin-bottom: 0.5vw;
-  justify-content: space-between;
-`
-
 const BottomTitleParent = styled.div`
   display: inline-block;
   float: left;
   width: 38vw;
   margin: 2vh 0 2vh 2vw;
-`
-
-const Date = styled(BgStyle)`
-  background-image: url(${date});
-  width: 3vw;
-  height: 1vw;
 `
 
 const BottomTitle = styled(BgStyle)`
@@ -364,6 +380,9 @@ const LoginTitle = styled.div`
   font-family: 'Helvetica Bold';
   font-size: 1.5vw;
   color: #4338f7;
+  left: 1409px;
+  width: 114px;
+  padding-bottom: 0px;
 `
 
 const LoginSubTitle = styled.div`
@@ -371,16 +390,21 @@ const LoginSubTitle = styled.div`
   font-size: 0.6vw;
   color: #afafaf;
   letter-spacing: 0.03vw;
-  margin-bottom: 1vw;
+  padding-bottom: 0;
+`
+
+const TextWrapper = styled.button`
+  color: #a3afcf;
+  font-size: 13px;
+  margin-right: 10px;
 `
 
 const LoginIcon = styled.div`
   background-position: center center;
-  background-image: url(${login_icon});
-  width: 8vw;
-  height: 7vw;
-  background-size: 100% auto;
-  background-repeat: no-repeat;
-  margin: 0 auto;
-  margin-bottom: 2vw;
+  margin-bottom: 3vw;
+`
+const TextMenuWrapper = styled.div`
+  display: flex;
+  padding-top: 15px;
+  justify-content: center;
 `

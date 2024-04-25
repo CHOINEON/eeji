@@ -226,6 +226,6 @@ const TitleWrapper = styled.div`
   line-height: 69px;
   // &:hover {
   //   cursor: pointer;
-  // } 
+  //}
   //기존css 코드라서 주석 제거하지 않음
 `
