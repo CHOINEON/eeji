@@ -43,14 +43,14 @@ const NavBar = (props: { routes: RoutesType[] }) => {
   return (
     <NavBarContainer {...props}>
       <Logo w="100px" color={['primary.500', 'primary.500']} style={{ flexShrink: 0, width: '15%', minWidth: 252 }} />
-        <DatasetAddButton
-          className="ant-btn ant-btn-primary"
-          style={{ display: activeStep === 0 && location.pathname == '/admin/data-analysis' ? 'block' : 'none' }}
-          onClick={handleClick}
-        >
-          <span style={{ marginLeft: '30px', letterSpacing: '0.5px', fontSize: '14px', fontWeight: 500 }}>Upload</span>
-          <img style={{ top: '-22px', left: '14px', position: 'relative' }} src={UploadIcon} />
-        </DatasetAddButton>
+      {/* <DatasetAddButton
+        className="ant-btn ant-btn-primary"
+        style={{ display: activeStep === 0 && location.pathname == '/admin/data-analysis' ? 'block' : 'none' }}
+        onClick={handleClick}
+      >
+        <span style={{ marginLeft: '30px', letterSpacing: '0.5px', fontSize: '14px', fontWeight: 500 }}>Upload</span>
+        <img style={{ top: '-22px', left: '14px', position: 'relative' }} src={UploadIcon} />
+      </DatasetAddButton> */}
       <MenuLinks isOpen={isOpen} routes={routes} style={{ flexGrow: 1 }} />
       <div>
         <HStack spacing="13">

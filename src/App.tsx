@@ -56,7 +56,6 @@ export function App() {
         <Route path={`/login`} component={Login} />
         <Route path={`/404`} component={NotFound} />
         <Route path={`/500`} component={NetworkError} />
-
         <Redirect from="/" to="/login" />
       </Switch>
     </>

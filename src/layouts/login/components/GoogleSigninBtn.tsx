@@ -27,14 +27,24 @@ const GoogleSignin = () => {
   }
 
   return (
-    <>
+    <Flex>
       <GoogleLoginBtn onClick={handleGoogleLogin}>
         {/* <GoogleIcon />
       <LoginButtonText> Continue with Google</LoginButtonText> */}
       </GoogleLoginBtn>
-      <KakaoLoginBtn onClick={() => message.error('준비중인 서비스입니다.')} />
-      <AppleLoginBtn onClick={() => message.error('준비중인 서비스입니다.')} />
-    </>
+      <div
+        style={{
+          fontSize: '17px',
+          textAlign: 'center',
+          marginTop: '5px',
+          paddingLeft: '1rem',
+        }}
+      >
+        Login with Google
+      </div>
+      {/* <KakaoLoginBtn onClick={() => message.error('준비중인 서비스입니다.')} />
+      <AppleLoginBtn onClick={() => message.error('준비중인 서비스입니다.')} /> */}
+    </Flex>
   )
 }
 
@@ -57,7 +67,21 @@ const KakaoLoginBtn = styled(LoginButton)`
 const AppleLoginBtn = styled(LoginButton)`
   background-image: url(${AppleBtn});
 `
-
+const Flex = styled.button`
+  display: flex;
+  border: 1px solid #a3afcf;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  font-family: 'Helvetica Neue';
+  text-align: center;
+  font-size: 17px;
+  font-color: #002d65;
+  font-weight: bold;
+  padding-left: 5px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+`
 // const GoogleIcon = styled.div`
 //   display: block;
 //   float: left;
@@ -79,3 +103,5 @@ const AppleLoginBtn = styled(LoginButton)`
 //     display: none;
 //   }
 // `
+
+const LoginText = styled.div``
