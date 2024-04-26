@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { atom, selector, selectorFamily } from 'recoil'
+import { atom } from 'recoil'
 
 export const userInfoState = atom({
   key: 'userInfo',
@@ -23,13 +23,16 @@ interface UploadData {
   colCount?: number
   startDate?: string
   endDate?: string
+  columns?: Array<any>
+  numericCols?: Array<string>
+  nonNumericCols?: Array<string>
 }
 
 //
 export const uploadedDataState = atom({
   key: 'uploadedData',
   default: {
-    file: undefined,
+    file: null,
     name: '',
     content: [],
     // size: 0,
@@ -37,6 +40,9 @@ export const uploadedDataState = atom({
     colCount: 0,
     startDate: '',
     endDate: '',
+    columns: [],
+    numericCols: [],
+    nonNumericCols: [],
   } as UploadData,
 })
 
@@ -87,7 +93,7 @@ interface IOption {
 export const dataPropertyState = atom({
   key: 'dataProperty',
   default: {
-    algo_type: undefined,
+    algo_type: 0,
     date_format: '',
     name: '',
     date_col: '',
@@ -96,18 +102,14 @@ export const dataPropertyState = atom({
   } as IOption,
 })
 
-//사용자가 입력한 properties 저장소
-// export const dataProperty = selector({
-//   key: 'dataProperty',
-//   get: ({ get }) => ({
-//     name: get(dataPropertyState).name,
-//     desc: get(dataPropertyState).desc,
-//     date_col: get(dataPropertyState).date_col,
-//   }),
-// })
+//GCS Signed url
+interface IGoogleSignedUrlRes {
+  surl: string
+  uuid: string
+  blobName: string
+}
 
-//summary fetching state( 'standby' /requested / completed/ failed)
-export const summaryFetchState = atom({
-  key: 'summaryFetchState',
-  default: 'standby',
+export const signedUrlState = atom({
+  key: 'signedUrlState',
+  default: { surl: '', uuid: '', blobName: '' } as IGoogleSignedUrlRes,
 })

@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { Input, Row, Select, Spin, Radio, RadioChangeEvent } from 'antd'
-import TextArea from 'antd/es/input/TextArea'
-import { dataPropertyState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import styled from '@emotion/styled'
-import { useMutation } from 'react-query'
+import { App, Input, Radio, RadioChangeEvent, Row, Select, Spin } from 'antd'
+import TextArea from 'antd/es/input/TextArea'
 import DatasetApi from 'apis/DatasetApi'
-import { useApiError } from 'hooks/useApiError'
-import { useToast } from 'hooks/useToast'
 import ColumnLabel from 'components/fields/ColumnLabel'
+import { useApiError } from 'hooks/useApiError'
+import { useEffect, useState } from 'react'
+import { useMutation } from 'react-query'
 import { useRecoilState } from 'recoil'
+import { dateTimeToString, isValidDatetimeFormat } from 'utils/DateFunction'
+import { dataPropertyState, signedUrlState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 
 interface Option {
   value: string
@@ -17,44 +17,29 @@ interface Option {
 }
 
 const DataProperties = () => {
-  const { fireToast } = useToast()
+  const { message } = App.useApp()
   const [uploading, setUploading] = useState(false)
   const [inputOption, setInputOption] = useRecoilState(dataPropertyState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
-
-  const [options, setOptions] = useState(Array<Option>)
+  const [signedUrl, setSignedUrl] = useRecoilState(signedUrlState)
+  const [targetOptions, setTargetOptions] = useState(Array<Option>)
+  const [dateColOptions, setDateColOptions] = useState(Array<Option>)
 
   const { handleError } = useApiError()
-  const { mutate } = useMutation(DatasetApi.uploadDataset, {
+
+  const { mutate: mutateSignedUrl } = useMutation(DatasetApi.signedUrl, {
     onSuccess: (response: any) => {
-      // console.log(' /api/upload/{user_id}', response)
-
-      const summaryData = response['1']
-      const columnData = response['2']
-
-      fireToast('request success')
-
-      setUploadedData({
-        ...uploadedData,
-        rowCount: summaryData.row_count,
-        colCount: summaryData.column_count,
-        startDate: summaryData.start_date !== 'null' ? summaryData.start_date : '-',
-        endDate: summaryData.end_date !== 'null' ? summaryData.end_date : '-',
-      })
-
-      //Select Box 옵션 데이터 바인딩
-      generateOptions(summaryData)
-
       setUploading(false)
+      setSignedUrl(response.surl)
     },
     onError: (error: any) => {
-      // console.log('DataProperties/ onError :', error)
       handleError(error)
     },
   })
 
   useEffect(() => {
     clearInputs()
+    getSignedUrl()
     setInputOption({
       ...inputOption,
       name: uploadedData.file?.name.split('.', 2)[0],
@@ -63,55 +48,108 @@ const DataProperties = () => {
   }, [])
 
   useEffect(() => {
-    // console.log('inputOption.algo_type:', inputOption.algo_type)
-    if (inputOption.algo_type !== undefined) fetchFileDescription()
-  }, [inputOption.algo_type])
+    generateOptions(uploadedData)
+  }, [uploadedData])
 
-  const fetchFileDescription = () => {
+  const getSignedUrl = () => {
     setUploading(true)
 
     const formData = new FormData()
-    formData.append('files', uploadedData.file)
-
+    formData.append('com_id', localStorage.getItem('companyId'))
     const user_id = localStorage.getItem('userId').toString()
-    const is_classification = inputOption.algo_type
 
-    // console.log('fetch;', is_classification)
-    mutate({ user_id, is_classification, formData })
+    mutateSignedUrl({ user_id, formData })
   }
 
   function generateOptions(data: any) {
-    // console.log('data:', data)
+    const col_list = data['columns']
+    const non_numeric_cols = data['nonNumericCols']
+    const numeric_cols = data['numericCols']
 
-    const col_list = data['col_list']
-    const non_numeric_cols = data['non_numeric_cols']
-    const numeric_cols = data['numeric_cols']
-
-    const newOption: Array<any> = []
+    const targetArr: Array<any> = []
+    const timestampArr: Array<any> = []
 
     if (inputOption.algo_type === 0) {
       //regression 과 classification 타입에 따라 선택 가능한 컬럼 바인딩
       col_list.map((value: string) => {
         if (numeric_cols.includes(value)) {
-          newOption.push({ value: value, label: value })
+          targetArr.push({ value: value, label: value })
         } else if (non_numeric_cols.includes(value)) {
-          newOption.push({ value: value, label: `${value} (non-numeric column)`, disabled: true })
+          targetArr.push({ value: value, label: `${value} (non-numeric column)`, disabled: true })
         }
       })
+      setTargetOptions(targetArr)
     } else if (inputOption.algo_type === 1) {
       //classification(numeric 무관함)
-      col_list.map((value: string) => newOption.push({ value: value, label: value }))
+      col_list.map((value: string) => targetArr.push({ value: value, label: value }))
+      setTargetOptions(targetArr)
     }
-    setOptions(newOption)
+
+    //Generate datetime column options
+    col_list.map((value: string) => timestampArr.push({ value: value, label: value }))
+    setDateColOptions(timestampArr)
+  }
+
+  const validateDatetime = (columnLabel: string, data: Array<any>) => {
+    let result: boolean
+    const sample = data.slice(0, 10)
+    for (let i = 0; i < 10; i++) {
+      result = isValidDatetimeFormat(sample[i][columnLabel])
+    }
+
+    return result
   }
 
   const clearInputs = () => {
-    setOptions([{ value: '', label: '', disabled: false }])
-    setInputOption({ algo_type: 1, date_format: '', name: '', date_col: '', target_y: '', desc: '' })
+    setTargetOptions([{ value: '', label: '', disabled: false }])
+    setInputOption({ algo_type: 0, date_format: '', name: '', date_col: '', target_y: '', desc: '' })
   }
 
   const handleSelectDateCol = (param: any) => {
-    setInputOption({ ...inputOption, date_col: param })
+    //날짜 컬럼 유효한지 검증
+    const isValid = validateDatetime(param, uploadedData.content)
+
+    if (isValid) setInputOption({ ...inputOption, date_col: param })
+    else message.error('처리할 수 없는 날짜 형식입니다.')
+
+    //시작 종료일 찾기
+    searchStartEndDate(param, uploadedData.content)
+  }
+
+  const searchStartEndDate = (colName: string, array: Array<any>) => {
+    //min & max datetime 찾기
+    const newArr = array.map((obj) => {
+      return { ...obj, dateTime: new Date(obj[colName]) }
+    })
+    console.log('test:"', newArr[0].dateTime.getTime())
+
+    if (!newArr[0].dateTime.getTime()) {
+      alert('날짜 컬럼이 아닙니다.')
+    }
+
+    console.log('newArr[0].dateTime:', newArr[0].dateTime)
+    // console.log('test:', isValidDate(newArr[0].dateTime))
+
+    //Sort in Ascending order(low to high)
+    //https://bobbyhadz.com/blog/javascript-sort-array-of-objects-by-date-property
+    const sortedAsc = newArr.sort((a, b) => Number(a.dateTime) - Number(b.dateTime))
+    // console.log('sortedAsc:', sortedAsc)
+
+    // console.log('-----test:', Object.prototype.toString.call(sortedAsc[0].dateTime))
+
+    const summary = []
+    const lengthOfArray = array.length
+
+    const start = sortedAsc[0].dateTime
+    const end = sortedAsc[lengthOfArray - 1].dateTime
+    // console.log('start:', dateTimeToString(start).length)
+    // console.log('end:', typeof end)
+
+    setUploadedData({
+      ...uploadedData,
+      startDate: dateTimeToString(start).length === 19 ? dateTimeToString(start) : '-',
+      endDate: dateTimeToString(end).length === 19 ? dateTimeToString(end) : '-',
+    })
   }
 
   const handleSelectY = (param: any) => {
@@ -119,16 +157,11 @@ const DataProperties = () => {
   }
 
   const handleChange = (e: any) => {
-    // console.log('name changed:', e.target.value)
     setInputOption({ ...inputOption, name: e.target.value })
   }
 
   const onChangeRadio = (e: RadioChangeEvent) => {
     setInputOption({ ...inputOption, algo_type: e.target.value })
-  }
-
-  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputOption({ ...inputOption, date_format: e.target.value })
   }
 
   return (
@@ -148,15 +181,10 @@ const DataProperties = () => {
         <Row>
           <ColumnLabel required={true} label="Algorithm Type" />
           <Radio.Group onChange={onChangeRadio} value={inputOption.algo_type}>
-            <Radio value={1}>Classification</Radio>
             <Radio value={0}>Regression</Radio>
+            <Radio value={1}>Classification</Radio>
           </Radio.Group>
         </Row>
-        {/* <Col span={24} style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }}>
-            <ColumnLabel required={true} label="Timestamp Format" />
-            <Input defaultValue="yyyy-mm-dd HH:MM:SS" onChange={onChangeInput} />
-          </Col> */}
-
         <Row>
           <ColumnLabel required={true} label=" Target Variable" />
           <Select
@@ -164,22 +192,20 @@ const DataProperties = () => {
               width: '100%',
             }}
             value={inputOption.target_y}
-            placeholder="Timestamp Column"
-            options={options}
-            // defaultValue={options[0]}
+            placeholder="Target Variable"
+            options={targetOptions}
             onSelect={handleSelectY}
           />
         </Row>
-        <Row /*style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }} */>
-          <ColumnLabel required={false} label="Timestamp" />
+        <Row style={{ display: inputOption.algo_type === 0 ? 'block' : 'none' }}>
+          <ColumnLabel required={true} label="Timestamp" />
           <Select
             style={{
               width: '100%',
             }}
             value={inputOption.date_col}
             placeholder="Timestamp Column"
-            options={options}
-            // defaultValue={options[0]}
+            options={dateColOptions}
             onSelect={handleSelectDateCol}
           />
         </Row>
@@ -191,7 +217,7 @@ const DataProperties = () => {
             placeholder="Description"
             maxLength={50}
             allowClear
-            autoSize={{ minRows: 3, maxRows: 2 }}
+            autoSize={{ minRows: 2, maxRows: 2 }}
           />
         </Row>
       </DataPropertiesContainer>
@@ -202,10 +228,8 @@ const DataProperties = () => {
 export default DataProperties
 
 const DataPropertiesContainer = styled.div`
-  // border: 1px solid red;
   display: block;
   float: left;
-  // margin-top: 20px;
   width: 100%;
   height: 276px;
   padding: 1em;

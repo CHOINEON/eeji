@@ -105,6 +105,7 @@ const AIModelGenerator = () => {
           </Box>
           <Box style={{ margin: '10px 8px' }}>
             {activeStep === 0 && <DataSet />}
+            {/* {activeStep === 0 && <ModelList />} */}
             {activeStep === 1 && <TabContainer />}
           </Box>
         </Box>

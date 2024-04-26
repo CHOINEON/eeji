@@ -5,7 +5,6 @@ import { ICompanyList, IUserLoginReq, IUserLogoutReq } from './type/User'
 const UserApi = {
   login: async (payload: IUserLoginReq): Promise<TResponseType<object>> => {
     const { data } = await axiosPublic.post(`api/user/info`, payload)
-    console.log('data::,', data)
     return data
   },
 

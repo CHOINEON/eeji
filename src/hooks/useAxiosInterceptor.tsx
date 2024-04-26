@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios'
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRecoilState, useResetRecoilState } from 'recoil'
 import { ProgressState } from 'stores/progress'
 

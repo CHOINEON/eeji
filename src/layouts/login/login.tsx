@@ -6,25 +6,23 @@
  * 개발자 : 박윤희 (BAK YUN HEE)
  */
 
-import React, { useEffect, useState } from 'react'
+import { Button, FormControl, Input } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import main_bg from './img/bg.jpg'
-import main_font from './img/main_font.svg'
-import logo from 'assets/img/ineeji/logo_wh.svg'
-import circle from './img/package.png'
-import bottom_title from './img/bottom_title.png'
-import login_icon from './img/login_icon.png'
-import date from './img/date.png'
-import axios from 'axios'
-import { FormControl, Button, Input } from '@chakra-ui/react'
-import { App, message, Modal, Select } from 'antd'
-
-import SidebarBrand from 'components/sidebar/components/Brand'
-import GoogleSignin from './components/GoogleSigninBtn'
-import AvailableServiceIcon from './components/AvailableServiceIcon'
-import { useMutation } from 'react-query'
+import { App, Select } from 'antd'
 import UserApi from 'apis/UserApi'
+import logo from 'assets/img/ineeji/logo_wh.svg'
+import axios from 'axios'
 import useGetCompanies from 'hooks/queries/useGetCompanies'
+import React, { useEffect } from 'react'
+import { useMutation } from 'react-query'
+import AvailableServiceIcon from './components/AvailableServiceIcon'
+import GoogleSignin from './components/GoogleSigninBtn'
+import main_bg from './img/bg.jpg'
+import bottom_title from './img/bottom_title.png'
+import date from './img/date.png'
+import login_icon from './img/login_icon.png'
+import main_font from './img/main_font.svg'
+import circle from './img/package.png'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -104,7 +102,8 @@ export const Login: React.FC = () => {
 
     //로그인 후 redirect된 URL에서 구글 인가코드 추출하여 백엔드로 전달하여 token발급받음
     const params = new URLSearchParams(window.location.search)
-    // console.log('URL search params:', params)
+    console.log('URL search params:', params)
+
     const code = params.get('code')
 
     if (code) {
@@ -191,7 +190,7 @@ export const Login: React.FC = () => {
       <Wrapper />
       <Home_Bg />
       <Logo />
-      <SidebarBrand />
+      {/* <SidebarBrand /> */}
       <Title />
       <BottomBox>
         <Circle />

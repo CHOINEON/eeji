@@ -1,7 +1,4 @@
 import axios from 'axios'
-import useAxiosInterceptor from 'hooks/useAxiosInterceptor'
-import { useSetRecoilState } from 'recoil'
-import { ProgressState } from '../stores/progress'
 
 const BASE_URL = 'https://ineeji-solution-tf.du.r.appspot.com'
 const DEV_SERVER_URL = 'http://34.64.98.129:8000'

@@ -1,3 +1,4 @@
+//for datasets
 export type IDatasetReq = {
   user_id: string
   com_id: string
@@ -46,3 +47,22 @@ export interface IDescription {
 }
 
 export type IDescriptionRes = object
+
+//to get signed url
+export interface ISignedUrlReq {
+  user_id: string
+  formData: FormData
+}
+
+export interface ISignedUrlRes {
+  surl: string
+  uuid: string
+  blob_name: string
+}
+
+//to upload to GCS with Signed Url
+export interface IUploadFileReq {
+  signedUrl: string
+  fileType: string
+  file: File
+}
