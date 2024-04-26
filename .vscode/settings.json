@@ -4,6 +4,9 @@
     "minimap.background": "#00000000",
     "scrollbar.shadow": "#00000000"
   },
-  "editor.codeActionsOnSave": {},
-  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll": "explicit"
+  },
+  "editor.formatOnSave": true
 }

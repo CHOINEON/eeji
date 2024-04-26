@@ -3,12 +3,13 @@
   "version": "1.1.0",
   "private": true,
   "scripts": {
-    "start": "set PORT=9871 && env-cmd -f .env.development react-scripts start",
+    "start": "export PORT=80 && env-cmd -f .env.development react-scripts start",
     "build": "set GENERATE_SOURCEMAP=false && env-cmd -f .env.production react-scripts build",
     "test": "env-cmd -f .env.test react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "scp -P 50022 -r /Users/82106/repos/infinite-optimal/build/* yunhee@220.94.157.27:~/infinite_optimal"
+    "deploy": "scp -P 50022 -r /Users/82106/repos/infinite-optimal/build/* yunhee@220.94.157.27:~/infinite_optimal",
+    "openapi": "openapi-generator generate -i https://dev.ineeji-solution-tf.du.r.appspot.com/openapi.json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec"
   },
   "dependencies": {
     "@ag-grid-community/client-side-row-model": "^29.2.0",
@@ -55,6 +56,7 @@
     "env-cmd": "^10.1.0",
     "express": "^4.18.2",
     "file-saver": "^2.0.5",
+    "firebase": "^10.11.0",
     "i18next": "^23.2.11",
     "jschardet": "^3.0.0",
     "nodemon": "^3.0.1",
@@ -108,7 +110,6 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@openapitools/openapi-generator-cli": "^2.6.0",
     "@types/d3": "^7.4.0",
     "@types/dom-to-image": "2.6.4",
     "@types/file-saver": "^2.0.5",

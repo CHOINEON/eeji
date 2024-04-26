@@ -1,62 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import { message } from 'antd'
+import thumbnailImg from 'assets/img/dataAnalysis/thumbnail_circle.svg'
+import ProgressbarSimple from 'components/progressbar/ProgressbarSimple'
+import { useEffect } from 'react'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { modalState } from 'stores/modal'
+import { ProgressState } from 'stores/progress'
 import { styled } from 'styled-components'
+import { uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import DataProperties from './DataProperties'
 import DataSummary from './DataSummary'
-import thumbnailImg from 'assets/img/dataAnalysis/thumbnail_circle.svg'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
-import { message } from 'antd'
-import languageEncoding from 'detect-file-encoding-and-language'
-import { ProgressState } from 'stores/progress'
-import ProgressbarSimple from 'components/progressbar/ProgressbarSimple'
-import { modalState } from 'stores/modal'
 
 const AfterUpload = () => {
   const [modal, setModal] = useRecoilState(modalState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const progress = useRecoilValue(ProgressState)
-  // const [encoding, setEncoding] = useState('UTF-8')
 
   useEffect(() => {
-    // console.log('after upload:', uploadedData)
-    //처음 로드할 때 안에 content 파싱해서 넣음
-    if (uploadedData.file) {
-      if (uploadedData.file.size <= 209715200) {
-        setUploadedData({ ...uploadedData, file: uploadedData.file, name: uploadedData.file.name, content: [] })
-        onDetectEncoding(uploadedData.file)
-        readFile(uploadedData.file)
-      } else {
-        message.open({
-          type: 'error',
-          content: '업로드 가능 파일용량 초과(최대 200MB)',
-          duration: 1,
-          style: {
-            margin: 'auto',
-          },
-        })
-      }
-    }
+    readFile(uploadedData.file)
   }, [])
-
-  async function getEncoding(file: any) {
-    const fileInfo = await languageEncoding(file)
-    // console.log('fileinfo', fileInfo)
-    // setEncoding(fileInfo.encoding)
-    return fileInfo.encoding
-  }
-
-  const onDetectEncoding = (file: any) => {
-    const fileReader = new FileReader()
-
-    if (file.name) {
-      fileReader.onload = (e: any) => {
-        const csvResult = e.target.result.split('/\r|\n|\r\n/')[0]
-        // console.log('csvResult', csvResult)
-        // console.log('result:', jschardet.detect(csvResult))
-      }
-    }
-    fileReader.readAsBinaryString(file)
-  }
 
   const readFile = (file: any) => {
     const fileReader = new FileReader()
@@ -64,22 +25,12 @@ const AfterUpload = () => {
     const acceptedFormats = ['csv', 'xls', 'xlsx']
 
     if (file.name) {
-      // const encodingOption = async () => {
-      //   const encoding = await getEncoding()
-      //   console.log('encoding:', encoding)
-      // }
       if (acceptedFormats.includes(fileFormat)) {
         fileReader.onload = function (event: any) {
           const text = event.target.result
-
-          csvFileToArray(file.name, file.size, text)
-          // console.log('content:', content)
-          // setUploadedData({ ...uploadedData, content: content })
+          csvFileToArray(text)
         }
-        // const encoding = getEncoding(file)
-        // console.log('encoding:', encoding)
 
-        // console.log('encoding:', fileInfo ? fileInfo : 'utf8')
         fileReader.readAsText(file)
       } else {
         message.open({
@@ -94,11 +45,30 @@ const AfterUpload = () => {
     }
   }
 
-  const csvFileToArray = (name: string, size: number, string: string) => {
-    // const decoder = new TextDecoder('utf-8')
-
+  const csvFileToArray = (string: string) => {
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',')
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n')
+
+    //Prepare iteration to classify numeric/non-numeric column list
+    const sampleCnt = 10
+    const sampleRows = csvRows.slice(0, sampleCnt)
+    const numericColums = []
+    const nonNumericColumns = []
+
+    for (let i = 0; i < csvHeader.length; i++) {
+      let isNumber = false
+
+      for (let j = 0; j < sampleRows.length; j++) {
+        const selectedData = Number(sampleRows[j].split(',')[i])
+
+        //테스트 추출한 row 돌면서 isNumber 결과 값 업데이트
+        if (isNaN(selectedData)) isNumber = false
+        else isNumber = true
+      }
+
+      if (isNumber) numericColums.push(csvHeader[i])
+      else nonNumericColumns.push(csvHeader[i])
+    }
 
     const array = csvRows.map((item) => {
       if (item != '') {
@@ -111,16 +81,19 @@ const AfterUpload = () => {
       }
     })
 
-    // setDataArray(array)
-    // console.log('content update:', array.slice(0, -1))
-    // return array.splice(array.length - 1) //split하면서 마지막 행에 빈 값 들어있어서 자름
-
-    setUploadedData({ ...uploadedData, content: array.slice(0, -1) })
+    setUploadedData({
+      ...uploadedData,
+      columns: csvHeader,
+      numericCols: numericColums,
+      nonNumericCols: nonNumericColumns,
+      content: array.slice(0, -1),
+      rowCount: array.length,
+      colCount: csvHeader.length,
+    })
   }
 
   const handleProgressComplete = () => {
     setTimeout(() => setModal(null), 1000)
-    // setModal(null)
   }
 
   return (
@@ -128,7 +101,6 @@ const AfterUpload = () => {
       <DatasetImageContainer>
         <div
           style={{
-            // border: '1px solid red',
             position: 'absolute',
             width: '352px',
             marginTop: '10px',

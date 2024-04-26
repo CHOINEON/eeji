@@ -1,3 +1,47 @@
+export function isValidDatetimeFormat(data: any) {
+  let isValid = false
+
+  //step1. 정규식 체크
+  // YYYY-MM-DD HH:MM:SS
+  const regex1 =
+    /\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01]) (0[0-9]|1[0-9]|2[0-3]):(0[1-9]|[0-5][0-9]):(0[1-9]|[0-5][0-9])$/
+
+  // YYYY/MM/DD HH:MM:SS
+  const regex2 =
+    /\d{4}\/(0[1-9]|1[012])\/(0[1-9]|[12][0-9]|3[01]) (0[0-9]|1[0-9]|2[0-3]):(0[1-9]|[0-5][0-9]):(0[1-9]|[0-5][0-9])$/
+
+  // MM/DD/YYYY HH:MM:SS
+  const regex3 =
+    /\^(0[1-9]|1[012])\/(0[1-9]|[12][0-9]|3[01])\/d{4} (0[0-9]|1[0-9]|2[0-3]):(0[1-9]|[0-5][0-9]):(0[1-9]|[0-5][0-9])$/
+
+  // DD/MM/YYYY HH:MM:SS
+  const regex4 =
+    /\^(0[1-9]|[12][0-9]|3[01]) \/(0[1-9]|1[012])\d{4} (0[0-9]|1[0-9]|2[0-3]):(0[1-9]|[0-5][0-9]):(0[1-9]|[0-5][0-9])$/
+
+  //YYYY-MM-DD
+  const regex5 = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/
+
+  //YYYY/MM/DD
+  const regex6 = /^\d{4}\/(0[1-9]|1[012])\/(0[1-9]|[12][0-9]|3[01])$/
+
+  const regexFormats = [regex1, regex2, regex3, regex4, regex5, regex6]
+
+  for (let i = 0; i < regexFormats.length; i++) {
+    isValid = regexFormats[i].test(data)
+  }
+
+  //step2. 입력받은 string을 날짜객체로 변환 가능해서 한번 더 확인
+  const isValidDate = function (value: string) {
+    const dValue = new Date(value)
+
+    return dValue instanceof Date && isNaN(Date.parse(value)) === false
+  }
+
+  // console.log('isValidDate:', isValidDate(data))
+  isValid = isValidDate(data)
+  return isValid
+}
+
 export function dateTimeToString(date: any) {
   let month = date.getMonth() + 1
   let day = date.getDate()
