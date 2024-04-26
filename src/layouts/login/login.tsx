@@ -10,8 +10,10 @@
 import { Button, FormControl, Input } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { App, Select } from 'antd'
+import UserApi from 'apis/UserApi'
 import logo from 'assets/img/ineeji/logo_wh.svg'
 import axios from 'axios'
+import SidebarBrand from 'components/sidebar/components/Brand'
 import useGetCompanies from 'hooks/queries/useGetCompanies'
 import React, { useEffect } from 'react'
 import { useMutation } from 'react-query'
@@ -22,9 +24,7 @@ import ineeji from './img/ineeji.png'
 import newmain_font from './img/newmain_font.png'
 import new_mainbg from './img/new_mainbg.png'
 import or from './img/or.png'
-
-import UserApi from 'apis/UserApi'
-import SidebarBrand from 'components/sidebar/components/Brand'
+import circle from './img/package.png'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 

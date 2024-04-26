@@ -38,7 +38,7 @@ const DataImportModal = (props: any) => {
 
   const { mutate: mutateUploadFile } = useMutation(DatasetApi.uploadFileToGcs, {
     onSuccess: (response: any) => {
-      console.log('uploadFileToGcs response:', response)
+      console.log(' response:', response)
     },
     onError: (error: any) => {
       handleError(error)
@@ -134,7 +134,7 @@ const DataImportModal = (props: any) => {
         } else {
           const user_id = localStorage.getItem('userId').toString()
 
-          // mutateUploadFile({ signedUrl, fileType: file?.type, file: file })
+          mutateUploadFile({ signedUrl: signedUrl.surl, fileType: file?.type, file: file })
           mutateSaveFileInfo({ user_id, formData })
         }
       }

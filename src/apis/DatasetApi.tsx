@@ -31,7 +31,6 @@ const DatasetApi = {
 
   //upload to GCS with Signed URL
   uploadFileToGcs: async (payload: IUploadFileReq): Promise<any> => {
-    console.log('payload:', payload)
     const axiosInstance = axios.create({
       baseURL: payload.signedUrl,
     })

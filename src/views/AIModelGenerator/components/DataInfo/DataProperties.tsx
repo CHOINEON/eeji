@@ -30,7 +30,7 @@ const DataProperties = () => {
   const { mutate: mutateSignedUrl } = useMutation(DatasetApi.signedUrl, {
     onSuccess: (response: any) => {
       setUploading(false)
-      setSignedUrl(response.surl)
+      setSignedUrl(response)
     },
     onError: (error: any) => {
       handleError(error)
