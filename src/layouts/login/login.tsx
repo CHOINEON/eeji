@@ -7,29 +7,24 @@
  * 수정 : 조미라
  */
 
-import React, { useEffect, useState } from 'react'
+import { Button, FormControl, Input } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import new_mainbg from './img/new_mainbg.png'
-import ineeji from './img/ineeji.png'
-import or from './img/or.png'
-import ineeji_logo from './img/ineeji_logo.png'
-import newmain_font from './img/newmain_font.png'
+import { App, Select } from 'antd'
 import logo from 'assets/img/ineeji/logo_wh.svg'
-import circle from './img/package.png'
-import bottom_title from './img/bottom_title.png'
-import login_icon from './img/login_icon.png'
-import date from './img/date.png'
 import axios from 'axios'
-import { FormControl, Button, Input } from '@chakra-ui/react'
-import { App, message, Modal, Select } from 'antd'
-import sign_in from './img/sign_in.svg'
+import React, { useEffect } from 'react'
+import bottom_title from './img/bottom_title.png'
+import ineeji from './img/ineeji.png'
+import new_mainbg from './img/new_mainbg.png'
+import newmain_font from './img/newmain_font.png'
+import circle from './img/package.png'
 
-import SidebarBrand from 'components/sidebar/components/Brand'
-import GoogleSignin from './components/GoogleSigninBtn'
-import AvailableServiceIcon from './components/AvailableServiceIcon'
-import { useMutation } from 'react-query'
 import UserApi from 'apis/UserApi'
+import SidebarBrand from 'components/sidebar/components/Brand'
 import useGetCompanies from 'hooks/queries/useGetCompanies'
+import { useMutation } from 'react-query'
+import AvailableServiceIcon from './components/AvailableServiceIcon'
+import GoogleSignin from './components/GoogleSigninBtn'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -232,7 +227,7 @@ export const Login: React.FC = () => {
         >
           Login
         </Button>
-        <OrWrapper></OrWrapper>
+        <OrWrapper>or</OrWrapper>
         <div style={{ marginTop: '17px', textAlign: 'center' }}>
           <GoogleSignin />
         </div>
@@ -255,7 +250,6 @@ const Wrapper = styled.div`
   bottom: 0;
   z-index: 99;
 `
-
 const BgStyle = styled.div`
   background-position: center top;
   background-repeat: no-repeat;
@@ -269,13 +263,13 @@ const Login_ineejiIcon = styled.div`
   margin-bottom: 40px;
 `
 const OrWrapper = styled.div`
-  background-image: url(${or});
-  background-repeat: no-repeat;
   width: 19px;
   height: 27px;
   margin-left: 7vw;
-  margin-top: 1vh;
+  padding-top: 1vh;
   padding-bottom: 1vh;
+  font-size: 16px;
+  color: #b0bccb;
 `
 const Home_Bg = styled(BgStyle)`
   background-image: url(${new_mainbg});
@@ -286,7 +280,6 @@ const Home_Bg = styled(BgStyle)`
   top: 0;
   bottom: 0;
 `
-
 const FormWrap = styled.div`
   width: 18vw;
   padding-top: 1.5vw;
@@ -310,7 +303,6 @@ const UpperTitle = styled.div`
   z-index: 99999;
   position: absolute;
 `
-
 const Title = styled(BgStyle)`
   background-position: left 7vw top 12vw;
   background-size: 30% auto;
@@ -322,7 +314,6 @@ const Title = styled(BgStyle)`
   top: 0;
   z-index: 999;
 `
-
 const Logo = styled(BgStyle)`
   background-image: url(${logo});
   position: fixed;
@@ -332,7 +323,6 @@ const Logo = styled(BgStyle)`
   top: 4vw;
   z-index: 999;
 `
-
 const BottomBox = styled.div`
   position: fixed;
   left: 7vw;
@@ -344,7 +334,6 @@ const BottomBox = styled.div`
   display: block;
   float: left;
 `
-
 const Circle = styled(BgStyle)`
   background-image: url(${circle});
   background-size: 88% auto;
@@ -354,28 +343,24 @@ const Circle = styled(BgStyle)`
   display: inline-block;
   float: left;
 `
-
 const BottomTitleParent = styled.div`
   display: inline-block;
   float: left;
   width: 38vw;
   margin: 2vh 0 2vh 2vw;
 `
-
 const BottomTitle = styled(BgStyle)`
   background-image: url(${bottom_title});
   width: 16vw;
   height: 1vw;
   margin-bottom: 1vw;
 `
-
 const BottomCotents = styled.div`
   font-size: 0.7vw;
   line-height: 1vw;
   color: #fff;
   font-family: 'Helvetica Neue', sans-serif;
 `
-
 const LoginTitle = styled.div`
   font-family: 'Helvetica Bold';
   font-size: 1.5vw;
@@ -384,7 +369,6 @@ const LoginTitle = styled.div`
   width: 114px;
   padding-bottom: 0px;
 `
-
 const LoginSubTitle = styled.div`
   font-family: 'Noto Sans';
   font-size: 0.6vw;
@@ -392,13 +376,11 @@ const LoginSubTitle = styled.div`
   letter-spacing: 0.03vw;
   padding-bottom: 0;
 `
-
 const TextWrapper = styled.button`
   color: #a3afcf;
   font-size: 13px;
   margin-right: 10px;
 `
-
 const LoginIcon = styled.div`
   background-position: center center;
   margin-bottom: 3vw;

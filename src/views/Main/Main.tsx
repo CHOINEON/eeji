@@ -1,8 +1,6 @@
-import styled from '@emotion/styled'
-import React from 'react'
 import { Box, Wrap } from '@chakra-ui/react'
+import styled from '@emotion/styled'
 import { MenuList } from './MenuList'
-import cloudAIEEJI from '../../layouts/login/img/Cloud AI EEJI.svg'
 const Main = () => {
   return (
     <>
@@ -56,25 +54,12 @@ const MainTitle = styled.p`
   margin-bottom: 16px;
   letter-spacing: 1px;
 `
-const EEJIIcon = styled.div`
-  background-image: url(${cloudAIEEJI});
-  background-position: center top;
-  background-repeat: no-repeat;
-  border: 1px solid red;
-  top: 176px;
-  left: 857px;
-  width: 100%;
-  height: 38px;
-  z-index: 99999;
-  // position: absolute;
-`
 
 const SubText = styled.p`
   font-family: 'Helvetica Neue';
   font-size: 14px;
   text-align: center;
   color: #ffffff;
-  // letter-spacing: 2px;
 `
 
 const MenuItem = styled.div`

@@ -8,6 +8,7 @@ import { useApiError } from './hooks/useApiError'
 import AdminLayout from './layouts/admin'
 import AuthLayout from './layouts/auth'
 import Login from './layouts/login/login'
+import Join from './layouts/join/join'
 
 function PrivateRoute({ component: Component, isAuthenticated, ...rest }: any) {
   return (
@@ -56,6 +57,7 @@ export function App() {
         <Route path={`/login`} component={Login} />
         <Route path={`/404`} component={NotFound} />
         <Route path={`/500`} component={NetworkError} />
+        <Route path={`/join`} component={Join} />
         <Redirect from="/" to="/login" />
       </Switch>
     </>
