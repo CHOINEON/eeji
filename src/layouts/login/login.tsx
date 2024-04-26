@@ -2,14 +2,14 @@
  * INFINITE OPTIMAL
  * 메뉴명 : Login
  * 시작 날짜 : 2022-11-24
- * 최종 수정 날짜 : 2022-11-24
+ * 최종 수정 날짜 : 2024-04-19
  * 개발자 : 박윤희 (BAK YUN HEE)
+ * 수정 : 조미라
  */
 
 import { Button, FormControl, Input } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { App, Select } from 'antd'
-import UserApi from 'apis/UserApi'
 import logo from 'assets/img/ineeji/logo_wh.svg'
 import axios from 'axios'
 import useGetCompanies from 'hooks/queries/useGetCompanies'
@@ -17,19 +17,19 @@ import React, { useEffect } from 'react'
 import { useMutation } from 'react-query'
 import AvailableServiceIcon from './components/AvailableServiceIcon'
 import GoogleSignin from './components/GoogleSigninBtn'
-import main_bg from './img/bg.jpg'
 import bottom_title from './img/bottom_title.png'
-import date from './img/date.png'
-import login_icon from './img/login_icon.png'
-import main_font from './img/main_font.svg'
-import circle from './img/package.png'
+import ineeji from './img/ineeji.png'
+import newmain_font from './img/newmain_font.png'
+import new_mainbg from './img/new_mainbg.png'
+import or from './img/or.png'
+
+import UserApi from 'apis/UserApi'
+import SidebarBrand from 'components/sidebar/components/Brand'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
 export const Login: React.FC = () => {
   const { modal, message } = App.useApp()
-
-  // const [messageApi, contextHolder] = message.useMessage()
   const [id, setId] = React.useState()
   const [password, setPassword] = React.useState()
   const [company, setCompany] = React.useState<any>('')
@@ -38,8 +38,6 @@ export const Login: React.FC = () => {
   const { data } = useGetCompanies()
   const { mutate: mutateLogin } = useMutation(UserApi.login, {
     onSuccess: (response: any) => {
-      console.log('user login response:', response)
-
       window.localStorage.setItem('userData', JSON.stringify(response))
       window.localStorage.setItem('companyId', company)
       window.localStorage.setItem('userId', response[0].user_id)
@@ -47,7 +45,6 @@ export const Login: React.FC = () => {
       window.location.href = '/admin/main'
     },
     onError: (error: any) => {
-      // console.log('error::', error)
       console.clear()
       if (error.response.status === 403) {
         modal.confirm({
@@ -66,10 +63,7 @@ export const Login: React.FC = () => {
             }
             mutateLogout(payload)
           },
-          onCancel() {
-            //
-          },
-          // footer: () => <button>test</button>,
+          onCancel() {},
         })
       }
     },
@@ -80,7 +74,6 @@ export const Login: React.FC = () => {
       setLogin(id, password)
     },
     onError: (error: any) => {
-      // console.log('error::', error)
       message.open({
         type: 'error',
         content: error.response?.data.detail,
@@ -89,21 +82,15 @@ export const Login: React.FC = () => {
   })
 
   useEffect(() => {
-    // console.log('company list:', data)
     if (data) {
-      // setCompanyList(data)
       RenderCompanyList(data)
     }
   }, [data])
 
   React.useEffect(() => {
-    // RenderCompanyList()
-    // if (companies?.length > 0) RenderCompanyList(companies)
-
     //로그인 후 redirect된 URL에서 구글 인가코드 추출하여 백엔드로 전달하여 token발급받음
     const params = new URLSearchParams(window.location.search)
-    console.log('URL search params:', params)
-
+    // console.log('URL search params:', params)
     const code = params.get('code')
 
     if (code) {
@@ -120,26 +107,20 @@ export const Login: React.FC = () => {
             localStorage.setItem('userPicture', response.data.user_info.picture)
 
             window.location.href = '/admin/main'
-            // setIsAuthenticated(true)
-            // window.location.href = '/admin/data-analysis'
           }
         })
         .catch((error) => {
           alert(error)
-          // console.log('error: ' + error)
         })
     }
   }, [])
 
   const setLogin = (id: string, password: string) => {
-    // console.log(company)
     if (company.length === 0 || company === undefined) {
       message.open({
         type: 'error',
         content: '회사를 선택해주세요',
       })
-      //setAlarmMessage('회사를 선택 해주세요.')
-      //setShowAlertModal(true)
     } else {
       const payload = {
         com_id: company,
@@ -181,7 +162,6 @@ export const Login: React.FC = () => {
 
   //selectbox 변경 이벤트
   const handleChange = (value: string | string[]) => {
-    // console.log(`Compnay Selected: ${value}`)
     setCompany(value)
   }
 
@@ -190,7 +170,7 @@ export const Login: React.FC = () => {
       <Wrapper />
       <Home_Bg />
       <Logo />
-      {/* <SidebarBrand /> */}
+      <SidebarBrand />
       <Title />
       <BottomBox>
         <Circle />
@@ -205,10 +185,10 @@ export const Login: React.FC = () => {
         <AvailableServiceIcon />
       </BottomBox>
       <FormWrap>
-        <LoginTitle>LOGIN</LoginTitle>
+        <Login_ineejiIcon />
+        <LoginTitle>Login</LoginTitle>
         <LoginSubTitle>Enter Your ID and password to sign in.</LoginSubTitle>
         <LoginIcon />
-
         <FormControl id="text">
           <Select
             size={'large'}
@@ -222,7 +202,6 @@ export const Login: React.FC = () => {
             type="text"
             placeholder={'ID'}
             onChange={(e: any) => ChangeId(e)}
-            // onKeyDown={(e: any) => onEnterId(e)}
             style={{ width: '100%', marginBottom: '1.5vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
           />
           <Input
@@ -235,7 +214,6 @@ export const Login: React.FC = () => {
           />
         </FormControl>
         <Button
-          // mt={4}
           type="submit"
           onClick={() => setLogin(id, password)}
           style={{
@@ -248,11 +226,15 @@ export const Login: React.FC = () => {
         >
           Login
         </Button>
-        <div style={{ marginTop: '29px', textAlign: 'center' }}>
+        <OrWrapper></OrWrapper>
+        <div style={{ marginTop: '17px', textAlign: 'center' }}>
           <GoogleSignin />
         </div>
+        <TextMenuWrapper>
+          <TextWrapper>Find ID</TextWrapper> <TextWrapper>Find Password</TextWrapper>
+          <TextWrapper>Join</TextWrapper>
+        </TextMenuWrapper>
       </FormWrap>
-      {/* <Alert /> */}
     </>
   )
 }
@@ -267,17 +249,30 @@ const Wrapper = styled.div`
   bottom: 0;
   z-index: 99;
 `
+
 const BgStyle = styled.div`
   background-position: center top;
   background-repeat: no-repeat;
   background-size: 100% auto;
 `
-
+const Login_ineejiIcon = styled.div`
+  background-image: url(${ineeji});
+  left: 1409px;
+  height: 21px;
+  background-repeat: no-repeat;
+  margin-bottom: 40px;
+`
+const OrWrapper = styled.div`
+  background-image: url(${or});
+  background-repeat: no-repeat;
+  width: 19px;
+  height: 27px;
+  margin-left: 7vw;
+  margin-top: 1vh;
+  padding-bottom: 1vh;
+`
 const Home_Bg = styled(BgStyle)`
-  // background-size: cover;
-  // background-image: url(${main_bg});
-  // filter: brightness(56%);
-  background-color: #4338f7;
+  background-image: url(${new_mainbg});
   position: fixed;
   opacity: 1;
   left: 0;
@@ -287,23 +282,33 @@ const Home_Bg = styled(BgStyle)`
 `
 
 const FormWrap = styled.div`
-  // min-width: 250px;
-  // height: 65vh;
-  width: 20vw;
-  padding: 2vw;
+  width: 18vw;
+  padding-top: 1.5vw;
+  padding-left: 1.5vw;
+  padding-right: 1.5vw;
+  padding-bottom: 1vw;
   position: absolute;
   right: 4vw;
-  top: 50vh;
+  top: 159px;
   z-index: 999;
   background-color: #fff;
   border-radius: 15px;
-  transform: translateY(-50%);
+`
+const UpperTitle = styled.div`
+  font-size: 29px;
+  color: #fff;
+  top: 189px;
+  left: 140px;
+  width: 414px;
+  height: 42px;
+  z-index: 99999;
+  position: absolute;
 `
 
 const Title = styled(BgStyle)`
   background-position: left 7vw top 12vw;
-  background-size: 20% auto;
-  background-image: url(${main_font});
+  background-size: 30% auto;
+  background-image: url(${newmain_font});
   position: fixed;
   left: 0;
   right: 0;
@@ -319,8 +324,6 @@ const Logo = styled(BgStyle)`
   height: 2vw;
   left: 7vw;
   top: 4vw;
-  // width: 9vw;
-  // height: 2vw;
   z-index: 999;
 `
 
@@ -330,9 +333,6 @@ const BottomBox = styled.div`
   bottom: 2vw;
   border-top: 1px solid #fff;
   padding: 0.5vw;
-  // display: flex;
-  // align-items: center;
-  // justify-content: space-between;
   z-index: 999;
   width: 50vw;
   display: block;
@@ -349,24 +349,11 @@ const Circle = styled(BgStyle)`
   float: left;
 `
 
-const TopBox = styled.div`
-  display: inline-flex;
-  align-items: center;
-  margin-bottom: 0.5vw;
-  justify-content: space-between;
-`
-
 const BottomTitleParent = styled.div`
   display: inline-block;
   float: left;
   width: 38vw;
   margin: 2vh 0 2vh 2vw;
-`
-
-const Date = styled(BgStyle)`
-  background-image: url(${date});
-  width: 3vw;
-  height: 1vw;
 `
 
 const BottomTitle = styled(BgStyle)`
@@ -387,6 +374,9 @@ const LoginTitle = styled.div`
   font-family: 'Helvetica Bold';
   font-size: 1.5vw;
   color: #4338f7;
+  left: 1409px;
+  width: 114px;
+  padding-bottom: 0px;
 `
 
 const LoginSubTitle = styled.div`
@@ -394,16 +384,21 @@ const LoginSubTitle = styled.div`
   font-size: 0.6vw;
   color: #afafaf;
   letter-spacing: 0.03vw;
-  margin-bottom: 1vw;
+  padding-bottom: 0;
+`
+
+const TextWrapper = styled.button`
+  color: #a3afcf;
+  font-size: 13px;
+  margin-right: 10px;
 `
 
 const LoginIcon = styled.div`
   background-position: center center;
-  background-image: url(${login_icon});
-  width: 8vw;
-  height: 7vw;
-  background-size: 100% auto;
-  background-repeat: no-repeat;
-  margin: 0 auto;
-  margin-bottom: 2vw;
+  margin-bottom: 3vw;
+`
+const TextMenuWrapper = styled.div`
+  display: flex;
+  padding-top: 15px;
+  justify-content: center;
 `

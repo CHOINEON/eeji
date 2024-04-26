@@ -2,12 +2,12 @@ import styled from '@emotion/styled'
 import React from 'react'
 import { Box, Wrap } from '@chakra-ui/react'
 import { MenuList } from './MenuList'
-
+import cloudAIEEJI from '../../layouts/login/img/Cloud AI EEJI.svg'
 const Main = () => {
   return (
     <>
       <Box my="60px">
-        <MainTitle>INEEJI’s INFINITE OPTIMAL SERIES™</MainTitle>
+        <MainTitle>Cloud AI EEJI</MainTitle>
         <SubText>
           is Prediction solution for time series data that enables companies to realize productivity improvement,
         </SubText>
@@ -55,6 +55,18 @@ const MainTitle = styled.p`
   color: #ffffff;
   margin-bottom: 16px;
   letter-spacing: 1px;
+`
+const EEJIIcon = styled.div`
+  background-image: url(${cloudAIEEJI});
+  background-position: center top;
+  background-repeat: no-repeat;
+  border: 1px solid red;
+  top: 176px;
+  left: 857px;
+  width: 100%;
+  height: 38px;
+  z-index: 99999;
+  // position: absolute;
 `
 
 const SubText = styled.p`

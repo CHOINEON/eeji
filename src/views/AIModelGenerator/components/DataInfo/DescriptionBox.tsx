@@ -178,11 +178,10 @@ const DescBoxContainer = styled.div`
   border: 1px solid #d5dcef;
   border-radius: 15px;
   box-shadow: 0px 0px 10px #0000001a;
-
   margin: 10px 0;
 `
+
 const Content = styled.div`
-  // border: 1px solid blue;
   display: block;
   float: left;
   color: gray;
@@ -191,7 +190,7 @@ const Content = styled.div`
   height: 69px;
   text-align: center;
   line-height: 69px;
-  width: 100px;
+  width: 160px;
   text-align: center;
 `
 
@@ -208,8 +207,7 @@ const UserContent = styled(Content)`
 `
 
 const TitleWrapper = styled.div`
-  // text-align: center;
-  // border: 1px solid red;
+  text-align: center;
   display: block;
   min-width: 400px;
   float: left;
@@ -217,5 +215,6 @@ const TitleWrapper = styled.div`
   line-height: 69px;
   // &:hover {
   //   cursor: pointer;
-  // }
+  //}
+  //기존css 코드라서 주석 제거하지 않음
 `

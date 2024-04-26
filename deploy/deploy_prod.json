@@ -1,0 +1,6 @@
+{
+    "service": "cloudfnt-web",
+    "version": "20240422R1",
+    "registry": "asia-northeast3-docker.pkg.dev",
+    "project": "ineeji-solution-tf"
+}
