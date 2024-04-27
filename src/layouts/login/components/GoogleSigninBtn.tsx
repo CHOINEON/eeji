@@ -12,7 +12,7 @@ const GoogleSignin = () => {
   const { message } = App.useApp()
 
   const location = useLocation()
-  const GOOGLE_ID = '42578919430-p1so0e8e9s3ovojrc7a24c3kn6oq89g1.apps.googleusercontent.com'
+  const GOOGLE_ID = '${process.env.REACT_APP_GOOGLE_ID}'
 
   const oAuthHandler = (): void => {
     const REDIRECT_URI = `${process.env.REACT_APP_REDIRECT_URL}/login`
