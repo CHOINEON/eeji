@@ -49,7 +49,7 @@ const DataProperties = () => {
 
   useEffect(() => {
     generateOptions(uploadedData)
-  }, [uploadedData])
+  }, [uploadedData, inputOption.algo_type])
 
   const getSignedUrl = () => {
     setUploading(true)

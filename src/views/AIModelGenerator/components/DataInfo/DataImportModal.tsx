@@ -49,7 +49,7 @@ const DataImportModal = (props: any) => {
 
   const fetchData = async (payload: any) => {
     //테스트 중
-    // console.log('payload:', payload)
+    console.log('payload:', payload)
     const config = {
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
@@ -57,7 +57,7 @@ const DataImportModal = (props: any) => {
     }
 
     const { data } = await axiosProgress.post(
-      `/api/save_new/${payload.user_id}?user_id=${payload.user_id}`,
+      `/api/reacieve_data_info/${payload.user_id}?user_id=${payload.user_id}`,
       payload.formData,
       config
     )
@@ -66,6 +66,8 @@ const DataImportModal = (props: any) => {
 
   const { mutate: mutateSaveFileInfo } = useMutation(fetchData, {
     onSuccess: (response: any) => {
+      console.log('mutateSaveFileInfo response:', response)
+
       message.success('데이터를 성공적으로 저장했습니다.')
 
       //refetching
