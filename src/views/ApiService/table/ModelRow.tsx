@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-import { Badge, Button as AntButton, Card, Row, Tag, message, App, Button } from 'antd'
-import styled from '@emotion/styled'
-import { useMutation } from 'react-query'
-import ModelApi from 'apis/ModelApi'
-import { useRecoilState } from 'recoil'
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import styled from '@emotion/styled'
+import { App, Badge, Row, Tag } from 'antd'
+import ModelApi from 'apis/ModelApi'
+import { useMutation } from 'react-query'
+import { useRecoilState } from 'recoil'
 import { publishResultState } from '../store/atom'
 
 interface IModelProps {
@@ -28,7 +28,7 @@ interface IModelRow {
 }
 
 const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
-  // console.log('item:', item)
+  console.log('item:', item)
   // const [apiInfo, setApiInfo] = useState({ api_key: '' })
   const { message } = App.useApp()
   const [result, setResult] = useState({ api_key: '', request: {}, response: {} })
@@ -38,7 +38,7 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
 
   const { mutate: mutatePublishModelAPI } = useMutation(ModelApi.publishModelAPI, {
     onSuccess: (result: any) => {
-      // console.log('mutateGetModelList:', result)
+      console.log('mutateGetModelList:', result)
       setResult(result)
       setApiInfo(result)
       handleCopyClipBoard(result.api_key)
@@ -59,7 +59,7 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
   }
 
   const onHandlePublish = (model_id: string) => {
-    // console.log('model_id:', model_id)
+    console.log('model_id:', model_id)
     const payload = {
       com_id: localStorage.getItem('companyId'),
       user_id: localStorage.getItem('userId'),

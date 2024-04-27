@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { App, message, Spin } from 'antd'
-import { modalState } from 'stores/modal'
-import { CancelButton, CustomButton } from '../../AIModelGenerator/components/DataInfo/DataImportModal'
-import ModelList from './ModelSelect/ModelList'
-import { useMutation } from 'react-query'
+import { App, Spin } from 'antd'
 import XaiApi from 'apis/XaiApi'
-import { xaiResultStore } from '../store/analyze/atom'
-import { transformDataByRow } from '../XaiAnalysisResult'
-import { colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
+import { useEffect, useState } from 'react'
+import { useMutation } from 'react-query'
+import { useRecoilState } from 'recoil'
 import { SavedModelListState } from 'store/model/atom'
+import { modalState } from 'stores/modal'
+import { colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
+import { CancelButton, CustomButton } from '../../AIModelGenerator/components/DataInfo/DataImportModal'
+import { transformDataByRow } from '../XaiAnalysisResult'
+import { xaiResultStore } from '../store/analyze/atom'
+import ModelList from './ModelSelect/ModelList'
 
 const SavedModelImport = () => {
   const { message } = App.useApp()
@@ -25,7 +25,7 @@ const SavedModelImport = () => {
 
   const { mutate: mutateGetModelList } = useMutation(XaiApi.getSavedModelList, {
     onSuccess: (result: any) => {
-      // console.log('mutateGetModelList:', result)
+      console.log('mutateGetModelList:', result)
       setData(result.data)
     },
     onError: (error: any, query: any) => {
@@ -82,7 +82,7 @@ const SavedModelImport = () => {
     } else {
       message.error('불러올 모델을 선택해주세요.')
     }
-    // console.log('payload:', payload)
+    console.log('payload:', payload)
   }
 
   const handleSelect = (param: any) => {

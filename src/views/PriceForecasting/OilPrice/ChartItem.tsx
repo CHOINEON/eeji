@@ -1,13 +1,12 @@
-import axios from 'axios'
 import { ApexOptions } from 'apexcharts'
+import axios from 'axios'
 import { useEffect, useMemo, useState } from 'react'
 import Chart from 'react-apexcharts'
 import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
 import { keyColors } from 'views/AIModelGenerator/components/Chart/colors'
-import { ConsoleSqlOutlined } from '@ant-design/icons'
 
 const ChartItem = (props: any) => {
-  // console.log('id', props)
+  console.log('id', props)
   // TODO 2024-03-06 심볼명, 심볼설명 배열 생성
   const [chartType, setChartType] = useState('candle')
 
@@ -39,9 +38,9 @@ const ChartItem = (props: any) => {
         }&symbol=${symbol}`
       )
       .then(({ data }) => {
-        // console.log(data['xai']['xai_global'][0])
+        console.log(data['xai']['xai_global'][0])
         // TODO 2024-03-07 '2024-02-06' 형식을 unix timestamp로 변환
-        // console.log('data', data)
+        console.log('data', data)
         setTruthData([])
         setPredictData([])
         setFeaturedData([])
@@ -86,8 +85,8 @@ const ChartItem = (props: any) => {
             const nextMonth = lastDate.getMonth() + 1 + i
             lastDate.setMonth(nextMonth)
             lastDate.setDate(0)
-            // console.log(lastDate)
-            // console.log('lastDate', lastDate.toISOString().split('T')[0])
+            console.log(lastDate)
+            console.log('lastDate', lastDate.toISOString().split('T')[0])
 
             // TODO 2024-03-25 lastDate를 unix timestamp로 변환
             setPredictData((prev) => [...prev, [new Date(lastDate).getTime(), data[data.length - 1][`pred_${i}`]]])
@@ -106,7 +105,7 @@ const ChartItem = (props: any) => {
   }, [symbol])
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // console.log(e.target)
+    console.log(e.target)
     setSelection((prev) => 'all')
     setSymbol((prev) => e.target.value)
     setIsFeature((prev) => false)
@@ -146,7 +145,7 @@ const ChartItem = (props: any) => {
   const symbolOption = useMemo(() => {
     if (symbolList.length > 0) {
       return symbolList.map((item: any, index: number) => {
-        // console.log('item', item)
+        console.log('item', item)
         // TODO 2024-04-04 props.chart_id에서 숫자만 추출
         const tmp_index = parseInt(props.chart_id.replace('chart-', ''))
         return (

@@ -1,13 +1,12 @@
-import React from 'react'
-import { useRecoilValue } from 'recoil'
-import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
-import styled from 'styled-components'
-import IcoPerformance from 'assets/img/icons/XAI/icon_perfromanceModel.png'
-import { PerformanceModel } from 'apis/type/ModelPerformanceOption'
 import { message } from 'antd'
-import { filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
+import { PerformanceModel } from 'apis/type/ModelPerformanceOption'
+import IcoPerformance from 'assets/img/icons/XAI/icon_perfromanceModel.png'
 import useModal from 'hooks/useModal'
+import { useRecoilValue } from 'recoil'
+import styled from 'styled-components'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
+import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
 
 const errorInfo: any = {
   MAE: '평균절대오차. 모든 오차 절대값의 합을 평균. (0에 가까울 수록 좋은 모델)',
@@ -24,8 +23,8 @@ const ModelPerformance = () => {
   const currentKey = useRecoilValue(filteredResultState('uuid'))
 
   const handleSave = () => {
-    // console.log('selectedData:', selectedData)
-    // console.log('currentKey:', currentKey)
+    console.log('selectedData:', selectedData)
+    console.log('currentKey:', currentKey)
 
     const userId = localStorage.getItem('userId')
     const companyId = localStorage.getItem('companyId')
@@ -97,7 +96,7 @@ const ModelPerformance = () => {
 
               {/* {Object.keys(data[0]).map((key: string, idx: number) => {
                 const modelKey: any = key
-                // console.log('분류모델 modelKey', modelKey)
+                console.log('분류모델 modelKey', modelKey)
                 return (
                   <PerformanceContentsBox key={modelKey}>
                     <PerformanceValueAccuracy>{data[idx][modelKey]}</PerformanceValueAccuracy>

@@ -1,17 +1,17 @@
 import styled from '@emotion/styled'
-import { Input, App, Row, Spin, Typography } from 'antd'
+import { App, Input, Row, Spin } from 'antd'
+import TextArea from 'antd/es/input/TextArea'
+import ModelApi from 'apis/ModelApi'
 import useModal from 'hooks/useModal'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useMutation } from 'react-query'
 import { useRecoilValue } from 'recoil'
+import { getNowDateTime } from 'utils/DateFunction'
 import { dataPropertyState } from 'views/AIModelGenerator/store/dataset/atom'
 import { CustomButton } from '../DataInfo/DataImportModal'
-import { getNowDateTime } from 'utils/DateFunction'
-import { useMutation } from 'react-query'
-import ModelApi from 'apis/ModelApi'
-import TextArea from 'antd/es/input/TextArea'
 
 const ModelSaveModal = (props: any) => {
-  // console.log('ModelSaveModal modal:', props)
+  console.log('ModelSaveModal modal:', props)
   const { message } = App.useApp()
   const { openModal, closeModal } = useModal()
   const [loading, setLoading] = useState(false)
@@ -51,7 +51,7 @@ const ModelSaveModal = (props: any) => {
       is_classification: props.payload.isClassification,
       descr: description,
     }
-    // console.log('save payload:', payload)
+    console.log('save payload:', payload)
     mutateSaveModel(payload)
   }
 

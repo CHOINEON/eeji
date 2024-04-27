@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { message, Spin } from 'antd'
-import ModelTypeRadio from './ModelSelect/ModelTypeRadio'
-import ModelUpload from './ModelSelect/Upload'
+import { Spin, message } from 'antd'
 import ModelApi from 'apis/ModelApi'
+import XaiApi from 'apis/XaiApi'
+import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
-import { CancelButton, CustomButton } from '../../AIModelGenerator/components/DataInfo/DataImportModal'
 import { useRecoilState, useResetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
-import ColumnList from './ModelSelect/ColumnList'
-import { customModelStore, xaiResultStore } from 'views/XAI-simulator/store/analyze/atom'
-import XaiApi from 'apis/XaiApi'
-import { transformDataByRow } from '../XaiAnalysisResult'
 import { colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
+import { customModelStore, xaiResultStore } from 'views/XAI-simulator/store/analyze/atom'
+import { CancelButton, CustomButton } from '../../AIModelGenerator/components/DataInfo/DataImportModal'
+import { transformDataByRow } from '../XaiAnalysisResult'
+import ColumnList from './ModelSelect/ColumnList'
+import ModelTypeRadio from './ModelSelect/ModelTypeRadio'
+import ModelUpload from './ModelSelect/Upload'
 
 interface IDataObj {
   model: any
@@ -57,7 +57,7 @@ const UserModelImport = () => {
 
   const { mutate: mutatePostResult } = useMutation(XaiApi.postModelForXaiResult, {
     onSuccess: (result: any) => {
-      // console.log('mutatePostResult:', result)
+      console.log('mutatePostResult:', result)
 
       message.open({
         type: 'success',
@@ -96,7 +96,7 @@ const UserModelImport = () => {
   })
   const { mutate: mutateSave } = useMutation(ModelApi.saveModelwithColumns, {
     onSuccess: (response: any) => {
-      // console.log('mutateSave;', response)
+      console.log('mutateSave;', response)
 
       //결과 데이터 받아오기 위해 다시 요청
       const payload = {
@@ -104,7 +104,7 @@ const UserModelImport = () => {
         com_id: com_id,
         uuid: response.uuid,
       }
-      // console.log('payload:', payload)
+      console.log('payload:', payload)
       mutatePostResult(payload)
     },
     onError: (error: any, query: any) => {
@@ -124,8 +124,8 @@ const UserModelImport = () => {
   useEffect(() => clearSelectedFile('torch'), [])
 
   useEffect(() => {
-    // console.log('useEffect:', data)
-    // console.log('haveColumn:', haveColumn)
+    console.log('useEffect:', data)
+    console.log('haveColumn:', haveColumn)
 
     if (!data?.model || !data?.data) {
       setIsDisabled(true) //버튼 활성화
@@ -135,23 +135,23 @@ const UserModelImport = () => {
   }, [data, haveColumn])
 
   const handleChangeScript = (param: any) => {
-    // console.log('handleChangeScript:', param)
+    console.log('handleChangeScript:', param)
     setData({ ...data, script: param })
   }
   const handleChangeModel = (param: any) => {
-    // console.log('handleChangeModel:', param)
+    console.log('handleChangeModel:', param)
     setData({ ...data, model: param })
   }
   const handleChangeData = (param: any) => {
-    // console.log('handleChangeData:', param)
+    console.log('handleChangeData:', param)
     setData({ ...data, data: param })
   }
   const handleChangeColumn = (param: any) => {
-    // console.log('handleChangeColumn:', param)
+    console.log('handleChangeColumn:', param)
     setData({ ...data, column: param })
   }
   const handleChangeType = (param: string) => {
-    // console.log('handleChangeType:', param)
+    console.log('handleChangeType:', param)
     clearSelectedFile(param)
   }
 

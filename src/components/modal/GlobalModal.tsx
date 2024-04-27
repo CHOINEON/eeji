@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import { Modal } from 'antd'
 import logo_xs from 'assets/img/ineeji/logo_xs.svg'
 import { useRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
-import UserModelImport from '../../views/XAI-simulator/components/UserModelImport'
-import { Modal } from 'antd'
-import SendFeedback from '../../views/Main/SendFeedback'
-import DataImportModal from '../../views/AIModelGenerator/components/DataInfo/DataImportModal'
-import SavedModelImport from '../../views/XAI-simulator/components/SavedModelImport'
 import ModelSaveModal from 'views/AIModelGenerator/components/Modal/ModelSaveModal'
+import DataImportModal from '../../views/AIModelGenerator/components/DataInfo/DataImportModal'
+import SendFeedback from '../../views/Main/SendFeedback'
+import SavedModelImport from '../../views/XAI-simulator/components/SavedModelImport'
+import UserModelImport from '../../views/XAI-simulator/components/UserModelImport'
 
 export const MODAL_TYPES = {
   UserModelImport: 'UserModelImport',
@@ -34,7 +33,7 @@ const GlobalModal = () => {
   // }, [modalProps])
 
   const renderComponent = () => {
-    // console.log('modalType:', modalType)
+    console.log('modalType:', modalType)
 
     if (!modalType) {
       return null

@@ -1,8 +1,8 @@
-import { CaretDownFilled, DownOutlined, EllipsisOutlined, MoreOutlined } from '@ant-design/icons'
+import { EllipsisOutlined } from '@ant-design/icons'
 import styled from '@emotion/styled'
-import { Button, Dropdown, MenuProps } from 'antd'
+import { Dropdown, MenuProps } from 'antd'
 import { mockData } from 'components/sidebar/HistorySidebar'
-import React, { ForwardedRef, forwardRef, useEffect, useState } from 'react'
+import { ForwardedRef, forwardRef, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { SideBarState } from 'stores/sidebar'
 import { ItemChild } from './CustomCollapse'
@@ -33,7 +33,7 @@ const CollapseItem = ({ children }: CollapseItemProps, ref: ForwardedRef<HTMLDiv
   const onClick: any = (key: string, id: any) => {
     if (key === '1') {
       const indexToUpdate = data.findIndex((item: any) => item.label === 'Fixed')
-      // console.log(indexToUpdate)
+      console.log(indexToUpdate)
 
       if (indexToUpdate !== -1) {
         const updatedData = [...data]
@@ -43,25 +43,25 @@ const CollapseItem = ({ children }: CollapseItemProps, ref: ForwardedRef<HTMLDiv
           .map((item: any) => item.children.find((child: any) => child.id === id))
           .filter((element: any) => element !== undefined)
 
-        // console.log('child to start:', childToStar[0])
+        console.log('child to start:', childToStar[0])
         //원래 fix되었던 값들
         const original = updatedData[indexToUpdate].children
 
         //Fixed children render only it's not included already
         const newChildren = [...original, childToStar[0]]
-        // console.log('newChildren:', newChildren)
+        console.log('newChildren:', newChildren)
         updatedData[indexToUpdate] = {
           ...updatedData[indexToUpdate],
           children: newChildren,
         }
 
-        // console.log('??:', updatedData)
+        console.log('??:', updatedData)
         // const test = updatedData.map((item: any) => ({
         //   ...item,
         //   children: item.children.filter((child: any) => child.id !== childToStar[0].id),
         // }))
 
-        // console.log('---test:', test)
+        console.log('---test:', test)
 
         // setSidebarItem(updatedDataFiltered)
       }

@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react'
 import { Typography } from '@mui/material'
+import { Select } from 'antd'
+import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import {
-  selectedVarStoreX,
-  selectedVarStoreY,
-  indexColumnStore,
-  variableStore,
-  usedVariableStore,
+    usedVariableStore,
+    variableStore
 } from '../../store/variable/atom'
-import { Select } from 'antd'
 
 interface NewTagSelectProps {
   selectionType: string
@@ -33,7 +30,7 @@ const NewTagSelect: React.FC<NewTagSelectProps> = (props: any) => {
 
   //Update "options" in <Select> whenever feature selected
   useEffect(() => {
-    // console.log('usedVariable:', usedVariable)
+    console.log('usedVariable:', usedVariable)
     if (usedVariable && usedVariable.length > 0) {
       if (type === 'y') {
         const leftItems = usedVariable.filter((item) => item.category !== 'x').map((item) => item.value)

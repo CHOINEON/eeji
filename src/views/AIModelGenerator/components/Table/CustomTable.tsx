@@ -1,9 +1,9 @@
 import { UndoOutlined } from '@ant-design/icons'
 import styled from '@emotion/styled'
 import { Button, Select } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import { filteredResultState, filterWithConstraint } from 'views/AIModelGenerator/store/response/atoms'
+import { filterWithConstraint, filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
 
 export interface IConstraint {
   data: string
@@ -27,8 +27,8 @@ const CustomTable = () => {
   const [selectValue, setSelectValue] = useState({ 실제: {}, 예측결과: {} })
 
   useEffect(() => {
-    // console.log('analysisResponse:', analysisResponse)
-    // console.log('columns:', columns)
+    console.log('analysisResponse:', analysisResponse)
+    console.log('columns:', columns)
 
     setData(rowData)
     // renderTable(analysisResponse[0].row_data)
@@ -42,7 +42,7 @@ const CustomTable = () => {
   }, [])
 
   useEffect(() => {
-    // console.log(filteredData)
+    console.log(filteredData)
     if (filteredData) setData(filteredData)
     else setData(rowData)
   }, [filteredData])
@@ -50,7 +50,7 @@ const CustomTable = () => {
   // const renderTable = (dataObj: any) => {
   //   console.log('dataObj:', dataObj)
   //   Object.values(dataObj).map((item: any, idx:number) => {
-  //     // console.log('item:', item['실제']) // row 하나
+  //     console.log('item:', item['실제']) // row 하나
   //     return (
   //       <div style={{ border: '1px solid blue' }}>
   //         <CellItem>{item['실제']}</CellItem>
@@ -65,7 +65,7 @@ const CustomTable = () => {
   // }
 
   const handleChange = (selectedValue: any, filterKey: string) => {
-    // console.log('selectedValue:', selectedValue)
+    console.log('selectedValue:', selectedValue)
 
     setSelectValue({ ...selectValue, [filterKey]: { value: selectedValue, label: selectedValue } })
 

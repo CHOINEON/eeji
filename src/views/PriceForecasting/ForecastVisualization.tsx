@@ -1,6 +1,6 @@
-import React from 'react'
-import * as fc from 'd3fc'
 import * as d3 from 'd3'
+import * as fc from 'd3fc'
+import React from 'react'
 
 const ForecastVisualization = () => {
   const svgRef2 = React.useRef()
@@ -18,7 +18,7 @@ const ForecastVisualization = () => {
   }, [])
 
   React.useEffect(() => {
-    // console.log('wsData:', wsData)
+    console.log('wsData:', wsData)
     if (wsData) {
       const data: any = prevWsData
       for (const j in wsData) {
@@ -65,7 +65,7 @@ const ForecastVisualization = () => {
   }
 
   const renderChart = () => {
-    // console.log('rendering chart:', data)
+    console.log('rendering chart:', data)
 
     // const yExtent = fc.extentLinear().accessors([(d: any) => d.high, (d: any) => d.low])
     // const xExtent = fc.extentTime().accessors([(d: any) => d.date])
@@ -86,7 +86,7 @@ const ForecastVisualization = () => {
     // chart.yDomain(yExtent(data)).xDomain(xExtent(data))
 
     const data = fc.randomFinancial()(50)
-    // console.log('data:', data)
+    console.log('data:', data)
     const yExtent = fc.extentLinear().accessors([(d: any) => d.high, (d: any) => d.low])
     const xExtent = fc.extentTime().accessors([(d: any) => d.date])
 

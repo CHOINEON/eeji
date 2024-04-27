@@ -1,4 +1,4 @@
-import { atom, selector, selectorFamily } from 'recoil'
+import { atom, selector } from 'recoil'
 
 export const customModelStore = atom({
   key: 'customModelSaveResult',
@@ -77,7 +77,7 @@ export const localAttrState = selector({
     const localAttr = get(xaiResultStore).xai_local
     const activeList = get(activeVariables)
     const filterValuesArray = Object.keys(activeList).filter((key) => !activeList[key])
-    // console.log('filterValuesArray:', filterValuesArray)
+    console.log('filterValuesArray:', filterValuesArray)
 
     if (filterValuesArray.length > 0) {
       let newObj: Array<any> = []

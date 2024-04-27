@@ -1,11 +1,10 @@
 import styled from '@emotion/styled'
-import { ConfirmContext } from 'components/dialogs/ConfirmContext'
-import useModal from 'hooks/useModal'
-import React, { useContext } from 'react'
-import CardButton from './components/button/CardButton'
 import IconServerUpload from 'assets/img/icons/XAI/upload_b_io.png'
 import IconCustomerUpload from 'assets/img/icons/XAI/upload_b_user.png'
-import ProgressbarSimple from 'components/progressbar/ProgressbarSimple'
+import { ConfirmContext } from 'components/dialogs/ConfirmContext'
+import useModal from 'hooks/useModal'
+import { useContext } from 'react'
+import CardButton from './components/button/CardButton'
 
 const UploadPage = () => {
   const { confirm } = useContext(ConfirmContext)
@@ -41,7 +40,7 @@ const UploadPage = () => {
 
   const handleDialogOpen = async () => {
     const result = await confirm('Are you sure?')
-    // console.log('handleDialogOpenresult:', result)
+    console.log('handleDialogOpenresult:', result)
   }
 
   return (

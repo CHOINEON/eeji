@@ -1,14 +1,13 @@
 import { Button, Modal, Select, Tag } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import ColumnLabel from 'components/fields/ColumnLabel'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { v4 } from 'uuid'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { featureSelectModalState } from 'views/AIModelGenerator/store/modal/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
-import { inputOptionListState } from 'views/AIModelGenerator/store/userOption/atom'
 import { variableStore } from 'views/AIModelGenerator/store/variable/atom'
 
 const FeatureSelectModal = ({ data, onRunning }: any) => {
@@ -23,7 +22,7 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
 
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: (result: any) => {
-      // console.log('FeatureSelectModal mutate result:', result)
+      console.log('FeatureSelectModal mutate result:', result)
       onRunning(false)
 
       setAnalysisResponse([
@@ -51,14 +50,14 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
   })
 
   useEffect(() => {
-    // console.log('selectedData:', selectedData)
+    console.log('selectedData:', selectedData)
 
     if (selectedData.non_numeric_cols && selectedData?.numeric_cols) {
       const numeric_cols = JSON.parse(selectedData.numeric_cols)
       const non_numeric_cols = JSON.parse(selectedData.non_numeric_cols)
 
-      // console.log(numeric_cols)
-      // console.log(non_numeric_cols)
+      console.log(numeric_cols)
+      console.log(non_numeric_cols)
 
       const newOption: Array<any> = []
       variableList.map((x) => {
@@ -83,7 +82,7 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
 
   const handleChange = (value: string[]) => {
     setSelectedFeatures(value)
-    // console.log('new arr:', value.split(', '))
+    console.log('new arr:', value.split(', '))
   }
 
   const handleGenerate = () => {
@@ -118,11 +117,11 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
         // number_beyssian: userInputOption.number_beyssian,
         if_classification: selectedData.isClassification,
       }
-      // console.log('payload:', payload)
+      console.log('payload:', payload)
 
       const controller = new AbortController()
       // setController(controller)
-      // console.log('custom model generate / payload:', payload)
+      console.log('custom model generate / payload:', payload)
 
       mutateRunning({ type: 'request', payload, controller })
     }

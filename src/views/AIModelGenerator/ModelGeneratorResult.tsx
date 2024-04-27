@@ -1,18 +1,17 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
-import { useMutation } from 'react-query'
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
-import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
-import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
-import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
-import FeatureSelectModal from './components/Modal/FeatureSelectModal'
-import { featureSelectModalState } from 'views/AIModelGenerator/store/modal/atom'
-import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import { Select, Spin } from 'antd'
 import ModelApi from 'apis/ModelApi'
+import { useEffect, useState } from 'react'
+import { useMutation } from 'react-query'
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
+import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
+import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { featureSelectModalState } from 'views/AIModelGenerator/store/modal/atom'
+import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
+import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
 import ClassificationResult from './Visualization/Data/ClassificationResult'
 import RegressionResult from './Visualization/Data/RegressionResult'
-import tempData from './data/classificationData.json'
+import FeatureSelectModal from './components/Modal/FeatureSelectModal'
 
 const ModelGeneratorResult = () => {
   const [loading, setLoading] = useState({ showing: false, text: '데이터 분석 중...' })
@@ -52,7 +51,7 @@ const ModelGeneratorResult = () => {
 
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: (result: any) => {
-      // console.log('postModelwithOption result:', result)
+      console.log('postModelwithOption result:', result)
       setLoading({ showing: false, text: '' })
 
       setAnalysisResponse([
@@ -122,7 +121,7 @@ const ModelGeneratorResult = () => {
   }
 
   const handleGenerate = (param: any) => {
-    // console.log('handleGenerate:', param)
+    console.log('handleGenerate:', param)
     setLoading({ showing: param, text: '사용자 모델 생성 중...' })
   }
 

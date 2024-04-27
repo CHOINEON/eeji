@@ -4,8 +4,7 @@ import styled from '@emotion/styled'
 import { HSeparator } from 'components/separator/Separator'
 
 // Custom components
-import ineeji from 'components/sidebar/components/nav_bar_logo.png'
-import ineeji_bl from 'components/sidebar/components/nav_bar_logo.png'
+import { default as ineeji, default as ineeji_bl } from 'components/sidebar/components/nav_bar_logo.png'
 
 const Logo = styled.div<{ colorMode: string }>`
   width: 100%;
@@ -31,7 +30,7 @@ const Logo = styled.div<{ colorMode: string }>`
 export function SidebarBrand() {
   //   Chakra color mode
   const logoColor = useColorModeValue('navy.700', 'white')
-  // console.log(logoColor);
+  console.log(logoColor);
 
   const ToMain = () => {
     window.location.href = '/admin/data-analysis'

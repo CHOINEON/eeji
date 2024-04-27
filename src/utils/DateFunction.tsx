@@ -37,7 +37,7 @@ export function isValidDatetimeFormat(data: any) {
     return dValue instanceof Date && isNaN(Date.parse(value)) === false
   }
 
-  // console.log('isValidDate:', isValidDate(data))
+  console.log('isValidDate:', isValidDate(data))
   isValid = isValidDate(data)
   return isValid
 }
