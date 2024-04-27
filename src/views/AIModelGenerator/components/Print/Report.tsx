@@ -1,9 +1,9 @@
-import { Ref, forwardRef, useEffect } from 'react'
+import React, { useEffect, forwardRef, Ref } from 'react'
 
 const Report = forwardRef((props: any, ref: Ref<HTMLDivElement>) => {
   useEffect(() => {
-    console.log('Report props: ', props)
-    console.log('ref: ', ref)
+    // console.log('Report props: ', props)
+    // console.log('ref: ', ref)
   }, [])
 
   return (

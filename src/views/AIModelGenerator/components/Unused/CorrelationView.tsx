@@ -1,13 +1,18 @@
-import { DatePicker, Row, Select, Slider, Spin } from 'antd'
-import Title from 'antd/es/typography/Title'
-import dayjs from 'dayjs'
-import isBetween from 'dayjs/plugin/isBetween'
-import { useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { selectedDataState } from '../../store/dataset/atom'
-import { variableStore } from '../../store/variable/atom'
-import ScatterPlot from '../Chart/D3_Scatter/ScatterPlot'
+import React, { useState, useEffect, useRef } from 'react'
 import ItemBox from '../DataEntry/ItemBox'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { selectedVarStoreX, selectedVarStoreY, usedVariableStore, variableStore } from '../../store/variable/atom'
+import ScatterPlot from '../Chart/D3_Scatter/ScatterPlot'
+import { Col, DatePicker, InputNumber, Row, Select, Slider } from 'antd'
+import dayjs from 'dayjs'
+import { selectedDataState } from '../../store/dataset/atom'
+import { Spin } from 'antd'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import type { DatePickerProps } from 'antd'
+import { RangePickerProps } from 'antd/es/date-picker'
+import { MdDateRange } from 'react-icons/md'
+import isBetween from 'dayjs/plugin/isBetween'
+import Title from 'antd/es/typography/Title'
 import InfoCircle from '../Icon/InfoCircle'
 dayjs.extend(isBetween)
 
@@ -34,8 +39,8 @@ const CorrelationView = ({ data, options }: any) => {
   const [variableList, setVariableList] = useRecoilState(variableStore)
 
   useEffect(() => {
-    console.log('CorrelationView data::', data)
-    console.log('CorrelationView options::', options)
+    // console.log('CorrelationView data::', data)
+    // console.log('CorrelationView options::', options)
 
     if (data?.length > 0) {
       setLoading(false)
@@ -53,13 +58,13 @@ const CorrelationView = ({ data, options }: any) => {
   }
 
   const renderDefaultDate = (data: Array<any>) => {
-    console.log('render default:', data)
+    // console.log('render default:', data)
     //TODO: 날짜순으로 정렬해서 처음/마지막 날짜 state에 저장
 
     const filteredArr = data.sort(date_ascending)
     const dateArr = filteredArr.map((value: any) => value.date_col)
 
-    console.log('dateArr:', dateArr)
+    // console.log('dateArr:', dateArr)
     setDatetime({ startDate: dateArr[0], endDate: dateArr[dateArr.length - 1] })
     setDefaultDatetime({ startDate: dateArr[0], endDate: dateArr[dateArr.length - 1] })
     setDataRange({ start: dateArr[0], end: dateArr[dateArr.length - 1] })
@@ -99,7 +104,7 @@ const CorrelationView = ({ data, options }: any) => {
   }
 
   const handleChange = (param: any, type: string) => {
-    console.log('param:', param)
+    // console.log('param:', param)
 
     // TODO : data 를 slider 의 min/max로 필터링해서 chartData에 담기 -> ScatterPlot에 보냄
     if (type === 'x') {
@@ -135,12 +140,12 @@ const CorrelationView = ({ data, options }: any) => {
       const startDate = dayjs(datetime.startDate)
       const endDate = dayjs(datetime.endDate)
 
-      console.log('startDate: ' + startDate)
-      console.log('endDate: ' + endDate)
+      // console.log('startDate: ' + startDate)
+      // console.log('endDate: ' + endDate)
       console.log('bool:', dateToCheck.isBetween(startDate, endDate))
       return dateToCheck.isBetween(startDate, endDate)
     }
-    console.log('data:', data)
+    // console.log('data:', data)
     /////////////////NEED REFACTORING !!! ///////////////////
     const filteredData = data.filter((d: any) => isBetween(d))
     console.log('filteredData:', filteredData)
@@ -167,7 +172,7 @@ const CorrelationView = ({ data, options }: any) => {
     console.log('orderByFeatureY:', orderByFeatureY)
 
     setChartData(filteredData)
-    console.log('filteredData:', filteredData)
+    // console.log('filteredData:', filteredData)
 
     //sliderMin 값으로 scale을 정하고 있어서(ScatterPlot.tsx) 날짜 필터링한 데이터의 컬럼 최소/최대값을 sliderMin과 동기화함(11/14)
     const xMinValue = orderByFeatureX[0][featureX.value]
@@ -191,7 +196,7 @@ const CorrelationView = ({ data, options }: any) => {
   }
 
   const handleDateChange = (value: any, type: string) => {
-    console.log('handleRangeChange:', value, type)
+    // console.log('handleRangeChange:', value, type)
 
     const stringDate = dayjs(value).format(dateFormat)
     console.log('stringDate:', stringDate)

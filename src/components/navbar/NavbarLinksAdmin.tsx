@@ -4,34 +4,40 @@ import {
   Button,
   Flex,
   Icon,
+  Image,
+  Link,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Text,
+  useColorModeValue,
   useColorMode,
-  useColorModeValue
 } from '@chakra-ui/react'
 // Custom Components
-import styled from '@emotion/styled'
+import { ItemContent } from 'components/menu/ItemContent'
+import { SearchBar } from 'components/navbar/searchBar/SearchBar'
 import { SidebarResponsive } from 'components/sidebar/Sidebar'
 import PropTypes from 'prop-types'
 import React from 'react'
+import styled from '@emotion/styled'
 // Assets
-import { FaEthereum } from 'react-icons/fa'
-import { IoMdMoon, IoMdSunny } from 'react-icons/io'
+import navImage from 'assets/img/layout/Navbar.png'
 import { MdLanguage } from 'react-icons/md'
+import { IoMdMoon, IoMdSunny } from 'react-icons/io'
+import { FaEthereum } from 'react-icons/fa'
 import routes from 'routes'
 
-import ico_jp from './img/ico_jp.png'
 import ico_ko from './img/ico_ko.png'
+import ico_jp from './img/ico_jp.png'
 import ico_us from './img/ico_us.png'
+import BarBg from './img/side_bar_bg.png'
 
-import { message } from 'antd'
-import UserApi from 'apis/UserApi'
 import { useTranslation } from 'react-i18next'
-import { useMutation } from 'react-query'
 import { useHistory } from 'react-router-dom'
+import UserApi from 'apis/UserApi'
+import { useMutation } from 'react-query'
+import { message } from 'antd'
 
 const LangParentBox = styled.div`
   display: flex;
@@ -113,7 +119,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
       history.replace('/login')
     },
     onError: (error: any) => {
-      console.log('error::', error)
+      // console.log('error::', error)
     },
   })
 

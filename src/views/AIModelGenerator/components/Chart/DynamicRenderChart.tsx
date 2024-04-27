@@ -1,5 +1,6 @@
 import { Select } from 'antd'
-import { useEffect, useState } from 'react'
+import Title from 'antd/es/typography/Title'
+import React, { useEffect, useState } from 'react'
 import LineChart from './LineChart'
 
 const DynamicRenderChart = ({ type, data }: any) => {
@@ -38,8 +39,8 @@ const DynamicRenderChart = ({ type, data }: any) => {
     }
 
     if (type === 'modelResult' || type === 'prediction') {
-      console.log('type:', type)
-      console.log('data:', data)
+      // console.log('type:', type)
+      // console.log('data:', data)
 
       const columns = Object.keys(data) //[CNN1D, LSTM, MLP]
       const result: { [key: string]: Array<string> } = {}

@@ -1,24 +1,24 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 // import LineChart from './components/Chart/LineChart'
 import {
-    CategoryScale,
-    Chart as ChartJS,
-    Legend,
-    LineElement,
-    LinearScale,
-    PointElement,
-    ScriptableContext,
-    Title,
-    Tooltip,
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ScriptableContext,
 } from 'chart.js'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import { Line } from 'react-chartjs-2'
 import { useRecoilValue } from 'recoil'
-import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
-import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
+import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import FeatureAnalysis from '../Features/FeatureAnalysis'
 
 ChartJS.register(
@@ -205,7 +205,7 @@ const RegressionResult = () => {
     afterUpdate(chart: any, args: any, options: any) {
       const ul = getOrCreateLegendList(chart, options.containerID)
 
-      console.log('ul::', ul)
+      // console.log('ul::', ul)
 
       // Remove old legend items
       while (ul.firstChild) {
@@ -215,7 +215,7 @@ const RegressionResult = () => {
       // Reuse the built-in legendItems generator
       const items = chart.options.plugins.legend.labels.generateLabels(chart)
 
-      console.log('items:', items)
+      // console.log('items:', items)
       items.forEach((item: any) => {
         const li = document.createElement('li')
         li.style.alignItems = 'center'

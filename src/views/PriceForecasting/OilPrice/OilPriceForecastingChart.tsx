@@ -1,14 +1,14 @@
-import { Select, Spin, Typography } from 'antd'
-import { Chart as ChartJS } from 'chart.js'
-import annotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
-import zoomPlugin from 'chartjs-plugin-zoom'
-import { useEffect, useState } from 'react'
-import { Line } from 'react-chartjs-2'
-import { useMutation } from 'react-query'
+import { Select, Card, Typography, Spin } from 'antd'
 import styled from 'styled-components'
-import { Title } from 'views/AIModelGenerator/components/Input/Title'
+import React, { useEffect, useState } from 'react'
+import { Chart as ChartJS } from 'chart.js'
+import zoomPlugin from 'chartjs-plugin-zoom'
+import annotationPlugin, { AnnotationOptions, AnnotationPluginOptions } from 'chartjs-plugin-annotation'
+import { useMutation } from 'react-query'
 import fetchChartData from '../../../apis/PriceForecastApi'
+import { Line } from 'react-chartjs-2'
+import { Title } from 'views/AIModelGenerator/components/Input/Title'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 const { Text, Link } = Typography
 
 ChartJS.register(zoomPlugin, annotationPlugin, ChartDataLabels)
@@ -103,7 +103,7 @@ const OilPriceChart = () => {
   }, [dataSource, selectedOption])
 
   useEffect(() => {
-    console.log('selectedOption:', selectedOption)
+    // console.log('selectedOption:', selectedOption)
     if (selectedData && selectedData) {
       function formattingData(data: any) {
         const dataObj: any = {}
@@ -144,11 +144,11 @@ const OilPriceChart = () => {
         // setLastDay(data.index_hist.slice(-1)[0])
         dataObj['lastDay'] = data.index_hist.slice(-1)[0]
 
-        console.log('dataObj::', dataObj)
+        // console.log('dataObj::', dataObj)
         return dataObj
       }
       const reformattedData = formattingData(selectedData)
-      console.log('reformattedData:', reformattedData)
+      // console.log('reformattedData:', reformattedData)
 
       const dataToRender = {
         datasets: [

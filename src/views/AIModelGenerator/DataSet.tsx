@@ -1,15 +1,15 @@
-import { Col, Spin } from 'antd'
-import useGetDatasets from 'hooks/queries/useGetDatasets'
-import { useEffect, useState } from 'react'
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
-import DataEditModal from './components/DataInfo/DataEditModal'
+import React, { useEffect, useState } from 'react'
 import DescriptionBox from './components/DataInfo/DescriptionBox'
-import Empty from './components/Empty/Empty'
+import { Col, Spin } from 'antd'
+import './style/data-analysis-style.css'
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
 import { stepCountStore } from './store/global/atom'
-import { analysisResponseAtom } from './store/response/atoms'
 import { usedVariableStore, variableStore } from './store/variable/atom'
-import './style/data-analysis-style.css'
+import useGetDatasets from 'hooks/queries/useGetDatasets'
+import DataEditModal from './components/DataInfo/DataEditModal'
+import { analysisResponseAtom } from './store/response/atoms'
+import Empty from './components/Empty/Empty'
 
 const DataSet = () => {
   const [loading, setLoading] = useState(false)
@@ -36,7 +36,7 @@ const DataSet = () => {
   }, [data])
 
   const handleSelect = (data: any) => {
-    console.log('Dataset selected ::', data)
+    // console.log('Dataset selected ::', data)
 
     setUsedVariable([])
     setSelectedData({
@@ -67,7 +67,7 @@ const DataSet = () => {
       })
       // const temp = [{ label: name, options: formattedData }]
       setVariableList(formattedData)
-      console.log(formattedData)
+      // console.log(formattedData)
 
       //feature 사용관리 하기 위한 store 데이터 포맷팅
       const result: Array<any> = []
