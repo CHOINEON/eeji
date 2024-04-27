@@ -1,8 +1,8 @@
-import { ChartData, Chart as ChartJS, ChartOptions, Legend } from 'chart.js'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
+import { ChartData, Chart as ChartJS, ChartOptions, Legend } from 'chart.js'
 import { colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 
 ChartJS.register(Legend, ChartDataLabels)
 
@@ -63,7 +63,7 @@ const externalTooltipHandler = (context: any) => {
 
     const tableBody = document.createElement('tbody')
     bodyLines.forEach((body: any, i: number) => {
-      console.log('body:', body)
+      // console.log('body:', body)
       const colors = tooltip.labelColors[i]
 
       const span = document.createElement('span')
@@ -122,8 +122,8 @@ const options: ChartOptions<'bar'> = {
     },
     datalabels: {
       formatter: (value, context) => {
-        console.log('value:', value)
-        console.log('context:', context)
+        // console.log('value:', value)
+        // console.log('context:', context)
 
         if (value > 3) return value.toFixed(1) + '%'
         else return ''
@@ -169,26 +169,26 @@ interface IStackedBarChart {
 }
 
 const HorizontalStackedBarChart = (props: IStackedBarChart) => {
-  console.log('HorizontalStackedBarChart props:', props)
+  // console.log('HorizontalStackedBarChart props:', props)
   const { weight, value } = props
   const [chartData, setChartData] = useState<ChartData<'bar'>>({
     datasets: [],
   })
 
   useEffect(() => {
-    console.log('columns:', columns)
-    console.log('weight:', weight)
+    // console.log('columns:', columns)
+    // console.log('weight:', weight)
 
     const newArr: Array<IDataset> = []
     //datasets 안에 들어갈 내용
     Object.keys(weight).forEach((col: any, i: number) => {
-      console.log('col:', col)
+      // console.log('col:', col)
 
       const totalLocalValue: number = Object.values(weight).reduce((acc: number, curr: number) => {
         return (acc + curr) as number
       }, 0)
-      console.log('total:', totalLocalValue)
-      console.log('weight[i]:', col[i])
+      // console.log('total:', totalLocalValue)
+      // console.log('weight[i]:', col[i])
 
       newArr.push({
         label: `${col}의 실제값(` + value[col] + ')',
@@ -197,7 +197,7 @@ const HorizontalStackedBarChart = (props: IStackedBarChart) => {
         borderRadius: 5,
       })
     })
-    console.log('newArr: ', newArr)
+    // console.log('newArr: ', newArr)
 
     setChartData({
       labels: [''],

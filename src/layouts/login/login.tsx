@@ -21,8 +21,8 @@ import AvailableServiceIcon from './components/AvailableServiceIcon'
 import GoogleSignin from './components/GoogleSigninBtn'
 import bottom_title from './img/bottom_title.png'
 import ineeji from './img/ineeji.png'
-import new_mainbg from './img/new_mainbg.png'
 import newmain_font from './img/newmain_font.png'
+import new_mainbg from './img/new_mainbg.png'
 import or from './img/or.png'
 import circle from './img/package.png'
 
@@ -90,7 +90,7 @@ export const Login: React.FC = () => {
   React.useEffect(() => {
     //로그인 후 redirect된 URL에서 구글 인가코드 추출하여 백엔드로 전달하여 token발급받음
     const params = new URLSearchParams(window.location.search)
-    console.log('URL search params:', params)
+    // console.log('URL search params:', params)
     const code = params.get('code')
 
     if (code) {

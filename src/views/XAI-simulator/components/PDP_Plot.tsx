@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 import styled from '@emotion/styled'
-import { Select, SelectProps } from 'antd'
-import { Chart as ChartJS } from 'chart.js'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
-import { useState } from 'react'
+import { Select, Card, SelectProps } from 'antd'
 import { Line } from 'react-chartjs-2'
+import { Chart as ChartJS } from 'chart.js'
+import React, { MouseEventHandler, useEffect, useState } from 'react'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 
 ChartJS.register(ChartDataLabels)
 
 const PDP_Plot = ({ data }: any) => {
-  console.log('data:', data)
+  // console.log('data:', data)
   const keys: Array<string> = Object.keys(data)
   const values: Array<Array<unknown>> = Object.values(data)
 
@@ -53,7 +53,7 @@ const PDP_Plot = ({ data }: any) => {
   const handleChange = (value: any) => {
     setSelectedOption(value)
     const selectedData = data[value]
-    console.log('selectedData:', selectedData)
+    // console.log('selectedData:', selectedData)
 
     setChartData({
       datasets: [

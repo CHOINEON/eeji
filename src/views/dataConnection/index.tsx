@@ -21,9 +21,10 @@
 */
 
 // Chakra imports
-import { Box, useColorModeValue } from '@chakra-ui/react'
+import { Box, useColorModeValue, Stack, Button } from '@chakra-ui/react'
 
 import React from 'react'
+import { MdOutlineGridView, MdOutlineSettingsInputComposite, MdSave, MdOutlineRestartAlt } from 'react-icons/md'
 
 export default function DataConnection() {
   const [ButtonDisabled, setButtonDisabled] = React.useState<boolean>(true)
@@ -35,7 +36,7 @@ export default function DataConnection() {
   const [AdminInfo, setAdminInfo] = React.useState('block')
 
   const theme = useColorModeValue('navy.700', 'white')
-  console.log(theme)
+  // console.log(theme)
 
   //새로고침 막기
   // const preventClose = (e: BeforeUnloadEvent) => {

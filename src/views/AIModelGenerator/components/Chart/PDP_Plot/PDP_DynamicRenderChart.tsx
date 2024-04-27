@@ -1,5 +1,6 @@
+import { Select } from 'antd'
 import Title from 'antd/es/typography/Title'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 // import PDP_LineChart from './PDP_LineChart'
 import PDP_LineChart from './PDP_LineChart'
 
@@ -66,8 +67,8 @@ const PDP_DynamicRenderChart = ({ type, data }: any) => {
     }
 
     if (type === 'modelResult' || type === 'prediction') {
-      console.log('type:', type)
-      console.log('data:', data)
+      // console.log('type:', type)
+      // console.log('data:', data)
 
       const columns = Object.keys(data) //[CNN1D, LSTM, MLP]
       const result: { [key: string]: Array<string> } = {}

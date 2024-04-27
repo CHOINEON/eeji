@@ -1,5 +1,6 @@
 import { Button, message } from 'antd'
-import { useState } from 'react'
+import axios from 'axios'
+import React, { useState } from 'react'
 
 const FeatureSuggestion = (selectedVarY: Array<any>) => {
   const [btnLoading, setBtnLoading] = useState(false)
@@ -25,11 +26,11 @@ const FeatureSuggestion = (selectedVarY: Array<any>) => {
   //     file_nm: selectedDataFile,
   //   }
 
-  //   console.log('param:', param)
+  //   // console.log('param:', param)
   //   axios
   //     .post(process.env.REACT_APP_API_SERVER_URL + '/api/boruta', param)
   //     .then((response) => {
-  //       console.log('boruta resp:', response)
+  //       // console.log('boruta resp:', response)
 
   //       const suggestedArr = response.data
   //       const newSelection: Array<any> = []

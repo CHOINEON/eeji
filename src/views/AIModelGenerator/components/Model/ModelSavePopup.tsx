@@ -53,7 +53,7 @@ function ModelSavePopup(props: any) {
     axios
       .get(process.env.REACT_APP_API_SERVER_URL + '/api/predict/model?com_id=' + com_id + '&user_id=' + user_id)
       .then((response: any) => {
-        console.log('/api/predict/mode response:', response)
+        // console.log('/api/predict/mode response:', response)
         setModelList(response.data)
       })
       .catch((err) => console.error(err))
@@ -66,14 +66,14 @@ function ModelSavePopup(props: any) {
   }
 
   const handleOk = () => {
-    console.log('ok')
+    // console.log('ok')
     setSaveModalOpen(false)
     clearInput()
     // onClose()
   }
 
   const handleCancel = () => {
-    console.log('clear')
+    // console.log('clear')
     setSaveModalOpen(false)
     clearInput()
   }
@@ -145,7 +145,7 @@ function ModelSavePopup(props: any) {
   }
 
   const onChangeTextArea = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    console.log('e:', e)
+    // console.log('e:', e)
     setDescription(e.target.value)
   }
 

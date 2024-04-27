@@ -1,13 +1,13 @@
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
 import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
-import { lowChromaticColorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import { filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
+import { lowChromaticColorChips } from 'views/AIModelGenerator/components/Chart/colors'
 
 const FeatureClassPerformance = (colors: any) => {
   const performanceData: any = useRecoilValue(filteredResultState('performance'))[0]
-  console.log('performanceData:', performanceData)
+  // console.log('performanceData:', performanceData)
 
   interface PerformanceTable {
     [key: string | number]: { Accuracy: number }
@@ -18,7 +18,7 @@ const FeatureClassPerformance = (colors: any) => {
     // const g = Math.floor(Math.random() * 255)
     // const b = Math.floor(Math.random() * 255)
     // return 'rgba(' + r + ',' + g + ',' + b + ', 0.8)'
-    console.log('test:', Math.floor(Math.random() * performanceData.length))
+    // console.log('test:', Math.floor(Math.random() * performanceData.length))
 
     return lowChromaticColorChips.slice(performanceData.length)
   }

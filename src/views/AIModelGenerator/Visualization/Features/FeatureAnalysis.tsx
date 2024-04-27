@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
-import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
-import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
+import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
+import { analysisResponseAtom, filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
 import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
 import ModelPerformance from 'views/XAI-simulator/ModelPerformance'
+import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import FeatureClassPerformance from './FeatureClassPerformance'
 
 const FeatureAnalysis = ({ textVisible }: any) => {
@@ -16,7 +16,7 @@ const FeatureAnalysis = ({ textVisible }: any) => {
 
   const [modelIdx, setModelIdx] = useRecoilState(selectModelState)
   const [chartData, setChartData] = useState({ labels: [], values: [] })
-  console.log('analysisResponse:', analysisResponse)
+  // console.log('analysisResponse:', analysisResponse)
 
   useEffect(() => {
     setChartData(analysisResponse[modelIdx]['feature_data'][0])

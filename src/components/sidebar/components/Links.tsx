@@ -2,8 +2,9 @@
 
 import { NavLink, useLocation } from 'react-router-dom'
 // chakra imports
-import { Box, Flex, HStack, Text, useColorModeValue } from '@chakra-ui/react'
-import React from 'react'
+import { Box, Flex, HStack, Text, useColorModeValue, Icon } from '@chakra-ui/react'
+import { RxTriangleDown, RxTriangleUp } from 'react-icons/rx'
+import React, { useEffect } from 'react'
 
 export function SidebarLinks(props: { routes: RoutesType[] }) {
   const [toggleIcon, setToggleIcon] = React.useState('0')
@@ -23,8 +24,8 @@ export function SidebarLinks(props: { routes: RoutesType[] }) {
     return location.pathname.includes(routeName)
   }
 
-  console.log('[ Linek User Auth ]')
-  console.log(window.localStorage.getItem('userPosition'))
+  // console.log('[ Linek User Auth ]')
+  // console.log(window.localStorage.getItem('userPosition'))
 
   // this function creates the links from the secondary accordions (for example auth -> sign-in -> default)
   const createLinks = (routes: RoutesType[]) => {

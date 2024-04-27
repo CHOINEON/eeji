@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2'
 import { useRecoilValue } from 'recoil'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
@@ -64,7 +64,7 @@ const ClassificationChart = () => {
   }
 
   const footer = (tooltipItems: any) => {
-    console.log('tooltipItems', tooltipItems)
+    // console.log('tooltipItems', tooltipItems)
     let tooltipText
     // let sum = 0
 
@@ -178,7 +178,7 @@ const ClassificationChart = () => {
     afterUpdate(chart: any, args: any, options: any) {
       const ul = getOrCreateLegendList(chart, options.containerID)
 
-      console.log('ul::', ul)
+      // console.log('ul::', ul)
 
       // Remove old legend items
       while (ul.firstChild) {
@@ -188,7 +188,7 @@ const ClassificationChart = () => {
       // Reuse the built-in legendItems generator
       const items = chart.options.plugins.legend.labels.generateLabels(chart)
 
-      console.log('items:', items)
+      // console.log('items:', items)
       items.forEach((item: any) => {
         const li = document.createElement('li')
         li.style.alignItems = 'center'

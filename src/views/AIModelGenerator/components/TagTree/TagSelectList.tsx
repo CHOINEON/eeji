@@ -1,22 +1,22 @@
-import { Typography } from '@mui/material'
-import Checkbox from '@mui/material/Checkbox'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import ListItemText from '@mui/material/ListItemText'
-import MenuItem from '@mui/material/MenuItem'
+import React, { useState, useEffect, useReducer, ChangeEvent } from 'react'
 import OutlinedInput from '@mui/material/OutlinedInput'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import ListItemText from '@mui/material/ListItemText'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Checkbox from '@mui/material/Checkbox'
 import axios from 'axios'
-import { cloneDeep } from 'lodash'
-import React, { useEffect, useState } from 'react'
+import { Typography } from '@mui/material'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import {
-    selectedVarStoreX,
-    selectedVarStoreY,
-    variableStoreX,
-    variableStoreY,
-} from 'views/AIModelGenerator/store/variable/atom'
 import { stepCountStore } from '../../store/global/atom'
+import {
+  variableStoreX,
+  variableStoreY,
+  selectedVarStoreX,
+  selectedVarStoreY,
+} from 'views/AIModelGenerator/store/variable/atom'
+import { cloneDeep } from 'lodash'
 
 const ITEM_HEIGHT = 50
 const ITEM_PADDING_TOP = 8
@@ -119,7 +119,7 @@ const TagSelectList = (props: any) => {
         search_type: 'all',
       })
       .then((response) => {
-        console.log('fetching taglist data:', response)
+        // console.log('fetching taglist data:', response)
         //recoil state 에 전체 태그 데이터 저장
         setVarListX(response.data)
         setVarListY(response.data)
@@ -152,8 +152,8 @@ const TagSelectList = (props: any) => {
     const checkedIndex = []
 
     if (type === 'EXPLANATORY_VARIABLE') {
-      console.log(selectedVarX)
-      console.log(array)
+      // console.log(selectedVarX)
+      // console.log(array)
       array = cloneDeep(varListX)
 
       for (let i = 0; i < tempArray.length; i++) {

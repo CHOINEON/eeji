@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
-import { Badge, Space } from 'antd'
+import { Badge, Space, Tooltip } from 'antd'
 import React from 'react'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import HorizontalStackedBarChart from './HorizontalStackedBarChart'
 
 const RowItem = ({ number, value, weight, pred }: any) => {
   // const { number, columns, predResult, value, weight } = props
-  console.log('RowItem weight', weight)
+  // console.log('RowItem weight', weight)
   // const itemObj = item.item
 
   ////////24.03.05 Backend 요청으로 input data가 모두 0인 row를 걸러냄
@@ -28,7 +28,7 @@ const RowItem = ({ number, value, weight, pred }: any) => {
 }
 
 const AnalysisGrid = (props: any) => {
-  console.log('AnalysisGrid:', props)
+  // console.log('AnalysisGrid:', props)
   const { localWeight, localValue, predResult, featureList } = props
 
   const hoverContent = (feature_list: any) => {

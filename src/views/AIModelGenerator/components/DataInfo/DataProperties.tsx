@@ -128,22 +128,22 @@ const DataProperties = () => {
     }
 
     console.log('newArr[0].dateTime:', newArr[0].dateTime)
-    console.log('test:', isValidDate(newArr[0].dateTime))
+    // console.log('test:', isValidDate(newArr[0].dateTime))
 
     //Sort in Ascending order(low to high)
     //https://bobbyhadz.com/blog/javascript-sort-array-of-objects-by-date-property
     const sortedAsc = newArr.sort((a, b) => Number(a.dateTime) - Number(b.dateTime))
-    console.log('sortedAsc:', sortedAsc)
+    // console.log('sortedAsc:', sortedAsc)
 
-    console.log('-----test:', Object.prototype.toString.call(sortedAsc[0].dateTime))
+    // console.log('-----test:', Object.prototype.toString.call(sortedAsc[0].dateTime))
 
     const summary = []
     const lengthOfArray = array.length
 
     const start = sortedAsc[0].dateTime
     const end = sortedAsc[lengthOfArray - 1].dateTime
-    console.log('start:', dateTimeToString(start).length)
-    console.log('end:', typeof end)
+    // console.log('start:', dateTimeToString(start).length)
+    // console.log('end:', typeof end)
 
     setUploadedData({
       ...uploadedData,

@@ -1,14 +1,14 @@
+import React, { useEffect, useState } from 'react'
 import { Row } from 'antd'
-import { useEffect, useState } from 'react'
-import { useRecoilState } from 'recoil'
-import { inputOptionListState } from 'views/AIModelGenerator/store/userOption/atom'
-import {
-    selectedVarStoreX,
-    selectedVarStoreY,
-    usedVariableStore,
-    variableStore,
-} from 'views/AIModelGenerator/store/variable/atom'
 import NewTagSelect from '../TagTree/NewTagSelect'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import {
+  selectedVarStoreX,
+  selectedVarStoreY,
+  usedVariableStore,
+  variableStore,
+} from 'views/AIModelGenerator/store/variable/atom'
+import { inputOptionListState } from 'views/AIModelGenerator/store/userOption/atom'
 
 const VariableOption = () => {
   //최초 리스트
@@ -40,7 +40,7 @@ const VariableOption = () => {
   }, [selectedVarY])
 
   const handleSelect = (param: any) => {
-    console.log('select:', param)
+    // console.log('select:', param)
 
     if (param.type === 'x') {
       //multiple selection
@@ -80,7 +80,7 @@ const VariableOption = () => {
   }
 
   const handleDeselect = (param: any) => {
-    console.log('deselect:', param)
+    // console.log('deselect:', param)
 
     if (param.type === 'x') {
       //multiple selection

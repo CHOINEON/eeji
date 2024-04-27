@@ -1,10 +1,13 @@
-import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model'
-import { CheckboxSelectionCallbackParams, ColDef, ModuleRegistry } from '@ag-grid-community/core'
+import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react'
+import { render } from 'react-dom'
 import { AgGridReact } from '@ag-grid-community/react'
 import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
+import { CheckboxSelectionCallbackParams, ColDef } from '@ag-grid-community/core'
+import { ModuleRegistry } from '@ag-grid-community/core'
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model'
 import axios from 'axios'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { SelectionChangedEvent } from 'ag-grid-community'
 
 // Register the required feature modules with the Grid
 ModuleRegistry.registerModules([ClientSideRowModelModule])
@@ -31,20 +34,20 @@ const SeriesSelectionGrid = (props: any) => {
   ])
 
   useEffect(() => {
-    console.log('taglist refresh:', gridRef.current)
+    // console.log('taglist refresh:', gridRef.current)
     //selection 초기화
     if (refresh) gridRef.current.api.deselectAll()
   }, [refresh])
 
   useEffect(() => {
-    console.log('*********series selection grid')
+    // console.log('*********series selection grid')
     //TODO :한번에 불러서 배열에서 찾게 바꾸기(arr.find())
     const fetchStatistic = () => {
       if (selectedTags.length > 0) {
-        console.log('selectedTags:', selectedTags)
+        // console.log('selectedTags:', selectedTags)
         axios.post(process.env.REACT_APP_API_SERVER_URL + '/api/tag/describe', selectedTags).then(
           (response: any) => {
-            console.log('response:', response)
+            // console.log('response:', response)
             setStatistic(response.data)
           },
           (error) => {
@@ -64,7 +67,7 @@ const SeriesSelectionGrid = (props: any) => {
   }, [])
 
   const onSelectionChanged = (e: any) => {
-    console.log('e:', e)
+    // console.log('e:', e)
   }
 
   // const onGridReady = useCallback((params: GridReadyEvent) => {
