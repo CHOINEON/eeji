@@ -1,11 +1,11 @@
-import { axiosPrivate, axiosPublic } from './axios'
+import { axiosPublic } from './axios'
 import { TResponseType } from './type/commonResponse'
 import {
-  IModelDataReq,
-  IModelOptionRes,
-  IModelPostReq,
-  IModelSaveReqParam,
-  IModelApiGeneratorParam,
+    IModelApiGeneratorParam,
+    IModelDataReq,
+    IModelOptionRes,
+    IModelPostReq,
+    IModelSaveReqParam,
 } from './type/ModelOption'
 
 const controller = new AbortController()
@@ -24,7 +24,7 @@ const ModelApi = {
 
   //Model Generator결과 페이지에서 모델 저장
   saveGeneratedModel: async (params: IModelSaveReqParam): Promise<TResponseType<object>> => {
-    // console.log('params:', params)
+    console.log('params:', params)
     const { data } = await axiosPublic.post(`api/save_model/${params.user_id}/`, params)
     return data
   },

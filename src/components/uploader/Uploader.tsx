@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import ico_upload_button from 'assets/img/dataAnalysis/upload_circle.svg'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { importModalAtom } from 'views/AIModelGenerator/store/modal/atom'
 
@@ -51,7 +51,7 @@ const Uploader = (props: any) => {
 
   //triggers when file is dropped
   const handleDrop = (e: DragEvent): void => {
-    // console.log('handle drop:', e)
+    console.log('handle drop:', e)
     e.preventDefault()
     e.stopPropagation()
 
@@ -85,7 +85,7 @@ const Uploader = (props: any) => {
   }, [initDragEvents, resetDragEvents])
 
   const handleChange = (e: any) => {
-    // console.log('handle Change:', e)
+    console.log('handle Change:', e)
 
     if (e.type === 'drop') {
       e.preventDefault()

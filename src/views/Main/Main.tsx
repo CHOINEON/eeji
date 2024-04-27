@@ -1,8 +1,7 @@
-import styled from '@emotion/styled'
-import React from 'react'
 import { Box, Wrap } from '@chakra-ui/react'
-import { MenuList } from './MenuList'
+import styled from '@emotion/styled'
 import cloudAIEEJI from '../../layouts/login/img/Cloud AI EEJI.svg'
+import { MenuList } from './MenuList'
 const Main = () => {
   return (
     <>
@@ -27,7 +26,7 @@ const IconList = () => {
     <>
       <Wrap spacing="30px" justify="center" height={200} margin={'15vh 0'}>
         {MenuList.map((item: any) => {
-          // console.log('item:', item)
+          console.log('item:', item)
           return (
             <MenuItem key={item.title}>
               <IconContainer onClick={() => (window.location.href = `/admin${item.path}`)}>

@@ -1,24 +1,13 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-import styled from '@emotion/styled'
-import axios from 'axios'
 import {
-  csv,
-  select,
-  scaleLinear,
-  axisLeft,
-  axisBottom,
-  format,
-  extent,
-  scaleOrdinal,
-  schemeCategory10,
-  group,
-  zoom,
+    scaleLinear,
+    select
 } from 'd3'
+import { useCallback, useEffect, useRef } from 'react'
 
 import PropsTypes from 'prop-types'
-import { Group, Chart, ChartWrapper } from './style/style'
-import AxisLabel from './AxisLabel'
 import Axis from './Axis'
+import AxisLabel from './AxisLabel'
+import { Chart, ChartWrapper, Group } from './style/style'
 
 //https://velog.io/@suyeonme/JS-D3.js%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-Scatter-Plot-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
 //https://2019.wattenberger.com/blog/react-and-d3
@@ -69,9 +58,9 @@ function ScatterPlot({ data, featureX, featureY }: any) {
     .nice()
 
   useEffect(() => {
-    // console.log('scatter data:', data)
-    // console.log('featureX:', featureX)
-    // console.log('featureY:', featureY)
+    console.log('scatter data:', data)
+    console.log('featureX:', featureX)
+    console.log('featureY:', featureY)
 
     handleDrawRect()
   }, [data, featureX, featureY])

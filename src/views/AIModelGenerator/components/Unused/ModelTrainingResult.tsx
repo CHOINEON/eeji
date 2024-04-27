@@ -1,11 +1,10 @@
 import styled from '@emotion/styled'
 import Title from 'antd/es/typography/Title'
-import React from 'react'
 import DynamicRenderChart from '../Chart/DynamicRenderChart'
 import InfoCircle from '../Icon/InfoCircle'
 
 const ModelTrainingResult = ({ data }: any) => {
-  // console.log('model training result:', data)
+  console.log('model training result:', data)
   return (
     <RoundedBox minHeight={'100%'}>
       <Title level={4} style={{ color: '#002D65', display: 'inline-block', width: '80%' }}>

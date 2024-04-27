@@ -1,15 +1,14 @@
 import styled from '@emotion/styled'
-import { Badge, Button, Col, Row, Space, Tag } from 'antd'
+import { Badge, Button, Col, Row } from 'antd'
 // import Title from 'antd/es/typography/Title'
-import React, { MouseEventHandler, useEffect, useState } from 'react'
-import AnalysisGrid, { ColumnHeader, DataRow } from './Visualization/AnalysisGrid'
+import { UndoOutlined } from '@ant-design/icons'
+import React, { useEffect } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { activeVariables, localAttrState, transformedXaiResultStore, xaiResultStore } from './store/analyze/atom'
+import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
+import AnalysisGrid, { DataRow } from './Visualization/AnalysisGrid'
 import GlobalFeatureImportance from './components/GlobalFeatureImportance'
 import PDP_Plot from './components/PDP_Plot'
-import tw from 'tailwind-styled-components'
-import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
-import { UndoOutlined } from '@ant-design/icons'
+import { activeVariables, localAttrState, xaiResultStore } from './store/analyze/atom'
 
 export const transformDataByRow = (count: number, rawData: any) => {
   const sample_size = count //["1","2","3","4"]
@@ -32,7 +31,7 @@ const XaiAnalysisResult = () => {
   const filteredData = useRecoilValue(localAttrState)
 
   useEffect(() => {
-    // console.log('AnalysisResult  mounted data', data)
+    console.log('AnalysisResult  mounted data', data)
 
     //각 입력변수별로 활성화 여부를 담는 배열 세팅
     const obj = data?.feature_list.reduce((accumulator, value) => {

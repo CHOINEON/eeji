@@ -2,11 +2,11 @@ import styled from '@emotion/styled'
 import { DatePicker, DatePickerProps, InputNumber, Row, Select, Space } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
 import dayjs from 'dayjs'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 // import { optionListState } from 'views/AIModelGenerator/store/base/atom'
-import { inputOptionListState, userInputOptionState } from 'views/AIModelGenerator/store/userOption/atom'
+import { inputOptionListState } from 'views/AIModelGenerator/store/userOption/atom'
 
 const LabelBox = styled.div`
   //   text-align: center;
@@ -48,7 +48,7 @@ const PreprocessingOption = () => {
   }
 
   const onOutlierValueChange = (param: any) => {
-    // console.log('param:', param)
+    console.log('param:', param)
 
     if (param === 'std') {
       setNumberRange([0.1, 3.5])
@@ -80,14 +80,14 @@ const PreprocessingOption = () => {
   const outlierInputChange = (param: any) => {
     // setOutlierValue(param)
 
-    // console.log('userInputOption::', userInputOption)
+    console.log('userInputOption::', userInputOption)
     setUserInputOption({ ...userInputOption, number_std: param })
 
-    // console.log('outlierInputChange:', param)
+    console.log('outlierInputChange:', param)
   }
 
   const onStartDateChange = (value: DatePickerProps['value'] | RangePickerProps['value'], dateString: string) => {
-    // console.log('dateString:', dateString)
+    console.log('dateString:', dateString)
     setUserInputOption({ ...userInputOption, start_date: dateString })
   }
 

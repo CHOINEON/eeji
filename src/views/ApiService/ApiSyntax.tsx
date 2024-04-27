@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
-import { Input, Space, Table, Tag } from 'antd'
 import type { TableProps } from 'antd'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { Input, Table } from 'antd'
+import { useEffect, useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import { publishResultState } from './store/atom'
 
 interface HeaderDataType {
@@ -45,7 +45,7 @@ const ApiSyntax = () => {
   //   }
   // }, [result])
 
-  // console.log('result?.response.syntax:', result?.response.syntax)
+  console.log('result?.response.syntax:', result?.response.syntax)
 
   const columns: TableProps<SyntaxDataType>['columns'] = [
     {
