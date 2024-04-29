@@ -1,82 +1,69 @@
 import styled from '@emotion/styled'
-import { Select, Spin } from 'antd'
+import { App, Select, Spin } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { featureSelectModalState } from 'views/AIModelGenerator/store/modal/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
 import FeatureSelectModal from './components/Modal/FeatureSelectModal'
+import { stepCountStore } from './store/global/atom'
 import ClassificationResult from './Visualization/Data/ClassificationResult'
 import RegressionResult from './Visualization/Data/RegressionResult'
 
 const ModelGeneratorResult = () => {
+  const { message } = App.useApp()
+
   const [loading, setLoading] = useState({ showing: false, text: '데이터 분석 중...' })
   const [options, setOptions] = useState([])
-  const [modelIdx, setModelIdx] = useRecoilState(selectModelState)
+  const [selectedFeatureX, setSelectedFeatureX] = useState([])
 
   const selectedData = useRecoilValue(selectedDataState)
   const resetSelectedData = useResetRecoilState(selectedDataState)
 
-  const [modalState, setModalState] = useRecoilState(featureSelectModalState)
+  const setActiveStep = useSetRecoilState(stepCountStore)
+  const setModelIdx = useSetRecoilState(selectModelState)
+  const setModalState = useSetRecoilState(featureSelectModalState)
+
   const [analysisResponse, setAnalysisResponse] = useRecoilState(analysisResponseAtom)
-  const [selectedFeatureX, setSelectedFeatureX] = useState([])
-
-  //개발용
-  // useEffect(() => {
-  //   console.log('data:', analysisResponse)
-  //   // setAnalysisResponse(tempData as any)
-  //   setLoading({ showing: false, text: '' })
-  //   setAnalysisResponse([
-  //     ...analysisResponse,
-  //     {
-  //       pred_data: JSON.parse(tempData['prediction_data']),
-  //       row_data: tempData['result_table'],
-  //       performance: tempData['peformance_table'],
-  //       feature_data: tempData['feature_piechart_data'],
-  //       input: tempData['selected_input'],
-  //       error: tempData['metrics'],
-  //       uuid: tempData['get_uuid'],
-  //       classes: tempData['classes'],
-  //     },
-  //   ])
-
-  //   return () => {
-  //     resetSelectedData()
-  //   }
-  // }, [])
 
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: (result: any) => {
       // console.log('postModelwithOption result:', result)
+
       setLoading({ showing: false, text: '' })
 
-      setAnalysisResponse([
-        ...analysisResponse,
-        {
-          pred_data: JSON.parse(result['prediction_data']),
-          feature_data: result['feature_piechart_data'],
-          input: result['selected_input'],
-          error: result['metrics'],
-          row_data: result['result_table'],
-          performance: result['peformance_table'],
-          uuid: result['get_uuid'],
-          classes: result['classes'],
-        },
-      ])
+      // 한 번에 한 개의 요청만 처리하도록 변경하여, 서버 응답메시지를 사용자에게 표출함(2024-04-29)
+      if (result?.detail) {
+        message.warning({ content: result.detail, style: { marginTop: '5vh' } }).then(() => setActiveStep(0))
+      } else {
+        setAnalysisResponse([
+          ...analysisResponse,
+          {
+            pred_data: JSON.parse(result['prediction_data']),
+            feature_data: result['feature_piechart_data'],
+            input: result['selected_input'],
+            error: result['metrics'],
+            row_data: result['result_table'],
+            performance: result['peformance_table'],
+            uuid: result['get_uuid'],
+            classes: result['classes'],
+          },
+        ])
 
-      setSelectedFeatureX(result['selected_input'])
+        setSelectedFeatureX(result['selected_input'])
+      }
     },
     onError: (error: any) => {
       setLoading({ showing: false, text: '' })
 
       if (error.message === 'canceled') {
-        alert('request canceled')
+        message.warning('request canceled')
       } else {
-        alert(error.message)
+        message.warning(error.message)
       }
     },
   })

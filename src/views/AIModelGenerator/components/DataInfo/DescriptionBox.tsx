@@ -1,14 +1,14 @@
-import React from 'react'
-import styled from '@emotion/styled'
-import '../../style/uploader.css'
-import { Dropdown, MenuProps, App, Tag } from 'antd'
 import { ExclamationCircleFilled, MoreOutlined } from '@ant-design/icons'
-import { useRecoilState } from 'recoil'
-import { datasetEditModalState } from 'views/AIModelGenerator/store/modal/atom'
-import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
-import { useMutation, useQueryClient } from 'react-query'
+import styled from '@emotion/styled'
+import { App, Dropdown, MenuProps, Tag } from 'antd'
 import DatasetApi from 'apis/DatasetApi'
+import React from 'react'
+import { useMutation, useQueryClient } from 'react-query'
+import { useRecoilState } from 'recoil'
 import { FileName } from 'views/AIModelGenerator/components/Input/Title'
+import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { datasetEditModalState } from 'views/AIModelGenerator/store/modal/atom'
+import '../../style/uploader.css'
 
 export interface DescriptionBoxProps {
   ds_id?: string
@@ -96,40 +96,11 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
 
   return (
     <>
-      <DescBoxContainer onClick={handleClick}>
-        <div
-          style={{
-            display: 'block',
-            float: 'left',
-            width: '50px',
-            height: '100%',
-            textAlign: 'center',
-            lineHeight: '69px',
-          }}
-        >
-          <label>
-            <input
-              type="checkbox"
-              disabled={true} //체크해서 뭐할건지 정의 안되어있음
-              // checked={checked}
-              // onChange={({ target: { checked } }) => onChange(checked)}
-            />
-            {/* {children} */}
-          </label>
-        </div>
-
-        <TitleWrapper>
-          <FileName>{data?.name}</FileName>
-        </TitleWrapper>
-        <div
-          className="container"
-          // style={{
-          //   display: 'flex',
-          //   flexDirection: 'row',
-          //   flexWrap: 'wrap',
-          //   justifyContent: 'space-evenly',
-          // }}
-        >
+      <DescBoxContainer>
+        <div className="container">
+          <TitleWrapper>
+            <FileName>{data?.name}</FileName>
+          </TitleWrapper>
           <Content>
             <div>
               <Tag color="#FE7E0D">{data?.target_y}</Tag>
@@ -164,11 +135,12 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
                 lineHeight: '30px',
                 fontWeight: 500,
               }}
+              onClick={handleClick}
             >
               Run
             </button>
           </ButtonContent>
-          <Content style={{ float: 'right' }}>
+          <Content style={{ float: 'right', width: 50 }}>
             <Dropdown menu={{ items, onClick }}>
               <MoreOutlined style={{ display: 'block', textAlign: 'center', lineHeight: '69px' }} size={16} />
             </Dropdown>
@@ -214,7 +186,7 @@ const DateContent = styled(Content)`
 `
 
 const UserContent = styled(Content)`
-  width: 230px;
+  width: 200px;
 `
 
 const TitleWrapper = styled.div`
@@ -224,8 +196,4 @@ const TitleWrapper = styled.div`
   float: left;
   height: 69px;
   line-height: 69px;
-  // &:hover {
-  //   cursor: pointer;
-  //}
-  //기존css 코드라서 주석 제거하지 않음
 `
