@@ -1,55 +1,38 @@
-import styled from '@emotion/styled'
+import React, { useState, useEffect } from 'react'
 import { App } from 'antd'
-import { axiosProgress } from 'apis/axios'
-import DatasetApi from 'apis/DatasetApi'
-import { useApiError } from 'hooks/useApiError'
-import useAxiosInterceptor from 'hooks/useAxiosInterceptor'
-import { useEffect, useState } from 'react'
-import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
-import { modalState } from 'stores/modal'
-import { ProgressState } from 'stores/progress'
-import {
-  dataPropertyState,
-  signedUrlState,
-  uploadedDataState,
-  userInfoState,
-} from 'views/AIModelGenerator/store/dataset/atom'
-import AfterUpload from './AfterUpload'
+import { importModalAtom } from 'views/AIModelGenerator/store/modal/atom'
+import { dataPropertyState, uploadedDataState, userInfoState } from 'views/AIModelGenerator/store/dataset/atom'
+import styled from '@emotion/styled'
+import { useMutation, useQueryClient } from 'react-query'
 import BeforeUpload from './BeforeUpload'
+import AfterUpload from './AfterUpload'
+import { axiosProgress } from 'apis/axios'
+import useAxiosInterceptor from 'hooks/useAxiosInterceptor'
+import { ProgressState } from 'stores/progress'
+import { modalState } from 'stores/modal'
 
 const DataImportModal = (props: any) => {
   const { message } = App.useApp()
-  const { handleError } = useApiError()
-  const queryClient = useQueryClient()
-
   const [modal, setModal] = useRecoilState(modalState)
-  const [signedUrl, setSignedUrl] = useRecoilState(signedUrlState)
 
   const userInfo = useRecoilValue(userInfoState)
   const inputOption = useRecoilValue(dataPropertyState)
   const progress = useRecoilValue(ProgressState)
 
-  const uploadedData = useRecoilValue(uploadedDataState)
+  const queryClient = useQueryClient()
+
+  const [saving, setSaving] = useState(false)
+  const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
+  // const [importOpen, setImportOpen] = useRecoilState(importModalAtom)
 
   const resetInputOption = useResetRecoilState(dataPropertyState)
   const resetUploadedData = useResetRecoilState(uploadedDataState)
   const [btnDisabled, setBtnDisabled] = useState(true)
 
-  const { mutate: mutateUploadFile } = useMutation(DatasetApi.uploadFileToGcs, {
-    onSuccess: (response: any) => {
-      console.log(' response:', response)
-    },
-    onError: (error: any) => {
-      handleError(error)
-    },
-  })
-
   useAxiosInterceptor(axiosProgress)
 
   const fetchData = async (payload: any) => {
-    //테스트 중
-    console.log('payload:', payload)
     const config = {
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
@@ -57,17 +40,16 @@ const DataImportModal = (props: any) => {
     }
 
     const { data } = await axiosProgress.post(
-      `/api/reacieve_data_info/${payload.user_id}?user_id=${payload.user_id}`,
+      `/api/save_new/${payload.user_id}?user_id=${payload.user_id}`,
       payload.formData,
       config
     )
     return data
   }
 
-  const { mutate: mutateSaveFileInfo } = useMutation(fetchData, {
+  const { mutate } = useMutation(fetchData, {
     onSuccess: (response: any) => {
-      console.log('mutateSaveFileInfo response:', response)
-
+      // console.log('useMutation response：', response)
       message.success('데이터를 성공적으로 저장했습니다.')
 
       //refetching
@@ -89,6 +71,7 @@ const DataImportModal = (props: any) => {
       //선택 초기화
       resetUploadedData()
       resetInputOption()
+      setSaving(false)
     }
   }, [])
 
@@ -101,9 +84,10 @@ const DataImportModal = (props: any) => {
   }, [inputOption.target_y])
 
   const handleSave = () => {
-    const file: File = uploadedData.file
+    const dataFile = uploadedData.file
+    // console.log('dataFile::', dataFile)
 
-    if (file && file?.size > 33554432) {
+    if (dataFile && dataFile.size > 33554432) {
       message.open({
         type: 'error',
         content: '데이터가 너무 큽니다(최대 32MB)',
@@ -113,16 +97,32 @@ const DataImportModal = (props: any) => {
         },
       })
     } else {
-      if (file) {
+      if (dataFile) {
         const formData = new FormData()
 
+        // console.log('inputOption:', inputOption)
         formData.append('com_id', userInfo.com_id)
         formData.append('date_col', inputOption.date_col ? inputOption.date_col : 'undefined')
         formData.append('target_y', inputOption.target_y)
         formData.append('name', inputOption.name)
         formData.append('desc', inputOption.desc ? inputOption.desc : null)
         formData.append('is_classification', inputOption.algo_type.toString())
-        formData.append('blob_name', signedUrl.blobName)
+
+        // key/value 쌍이 담긴 리스트
+        // for (const [name, value] of formData) {
+        //   console.log(`${name} = ${value}`) // key1 = value1, then key2 = value2
+        // }
+
+        // if (inputOption.algo_type === 2 && inputOption.date_col.length === 0) {
+        //   message.open({
+        //     type: 'error',
+        //     content: 'Timestamp column is not selected.',
+        //     duration: 5,
+        //     style: {
+        //       margin: 'auto',
+        //     },
+        //   })
+        // } else
 
         if (inputOption.target_y.length === 0) {
           message.open({
@@ -134,29 +134,38 @@ const DataImportModal = (props: any) => {
             },
           })
         } else {
-          const user_id = localStorage.getItem('userId').toString()
+          // setSummaryFetch('requested')
+          setSaving(true)
 
-          mutateUploadFile({ signedUrl: signedUrl.surl, fileType: file?.type, file: file })
-          mutateSaveFileInfo({ user_id, formData })
+          const user_id = localStorage.getItem('userId').toString()
+          mutate({ user_id, formData })
         }
       }
     }
   }
 
   const handleCancel = () => {
+    setSaving(false)
     resetUploadedData()
     setModal(null)
   }
 
   return (
     <>
+      {/* <Spin tip="데이터 업로드 중 ..." spinning={saving}> */}
       {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
       <div>
         <CancelButton onClick={handleCancel}>Cancel</CancelButton>
-        <CustomButton visible={true} disabled={btnDisabled} onClick={handleSave}>
+        <CustomButton
+          // className="block ant-btn ant-btn-primary"
+          visible={true}
+          disabled={btnDisabled}
+          onClick={handleSave}
+        >
           Save
         </CustomButton>
       </div>
+      {/* </Spin> */}
     </>
   )
 }

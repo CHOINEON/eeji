@@ -1,14 +1,14 @@
-import { ExclamationCircleFilled, MoreOutlined } from '@ant-design/icons'
-import styled from '@emotion/styled'
-import { App, Dropdown, MenuProps, Tag } from 'antd'
-import DatasetApi from 'apis/DatasetApi'
 import React from 'react'
-import { useMutation, useQueryClient } from 'react-query'
-import { useRecoilState } from 'recoil'
-import { FileName } from 'views/AIModelGenerator/components/Input/Title'
-import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
-import { datasetEditModalState } from 'views/AIModelGenerator/store/modal/atom'
+import styled from '@emotion/styled'
 import '../../style/uploader.css'
+import { Dropdown, MenuProps, App, Tag } from 'antd'
+import { ExclamationCircleFilled, MoreOutlined } from '@ant-design/icons'
+import { useRecoilState } from 'recoil'
+import { datasetEditModalState } from 'views/AIModelGenerator/store/modal/atom'
+import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { useMutation, useQueryClient } from 'react-query'
+import DatasetApi from 'apis/DatasetApi'
+import { FileName } from 'views/AIModelGenerator/components/Input/Title'
 
 export interface DescriptionBoxProps {
   ds_id?: string
@@ -87,6 +87,9 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
         onOk() {
           handleDelete(data.ds_id)
         },
+        onCancel() {
+          console.log('Cancel')
+        },
       })
     }
   }
@@ -118,7 +121,15 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
         <TitleWrapper>
           <FileName>{data?.name}</FileName>
         </TitleWrapper>
-        <div className="container">
+        <div
+          className="container"
+          // style={{
+          //   display: 'flex',
+          //   flexDirection: 'row',
+          //   flexWrap: 'wrap',
+          //   justifyContent: 'space-evenly',
+          // }}
+        >
           <Content>
             <div>
               <Tag color="#FE7E0D">{data?.target_y}</Tag>
