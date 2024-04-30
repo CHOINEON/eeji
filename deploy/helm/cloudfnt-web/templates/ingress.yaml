@@ -18,13 +18,21 @@ metadata:
   name: {{ $fullName }}
   labels:
     {{- include "cloudfnt-web.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+  {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
   {{- end }}
+    cloud.google.com/backend-config: '{"default": {{ include "cloudfnt-web.fullname" . | quote }}  }'
 spec:
   {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  {{- if .Values.ingress.defaultBackendExist }}
+  defaultBackend:
+    service:
+      name: {{ $fullName }}
+      port:
+        number: {{ $svcPort }}
   {{- end }}
   {{- if .Values.ingress.tls }}
   tls:
@@ -38,8 +46,7 @@ spec:
   {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
-      http:
+    - http:
         paths:
           {{- range .paths }}
           - path: {{ .path }}

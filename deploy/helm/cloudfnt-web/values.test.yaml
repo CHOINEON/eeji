@@ -8,13 +8,12 @@ image:
   repository: asia-northeast3-docker.pkg.dev/ineeji-cloudai-test/cloudai-cloudfnt-web/cloudfnt-web
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "20240427R2__8c647bc"
+  tag: "20240430R1__bb1cde8"
   env:
     - name: PORT
-      value: "80"
+      value: "9871"
     - name: REACT_APP_API_SERVER_URL
       value: "http://10.0.0.35"
-
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: "cloudfnt-web-test"
@@ -55,20 +54,16 @@ ingress:
   enabled: true
   className: ""
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: "eeji-cloudfnt-web-lb-endpoint"
-    networking.gke.io/managed-certificates: "eeji-cloudfnt-web-test-cert"
+    kubernetes.io/ingress.global-static-ip-name: eeji-cloudfnt-web-lb-endpoint
+    networking.gke.io/managed-certificates: eeji-cloudfnt-web-test-cert
     ingressClassName: "gce"
-  hosts: []
-  # 나중에 추가시 포맷 참조를 위해 남겨둡니다.
-  #  - host: chart-example.local
-  #    paths:
-  #      - path: /
-  #        pathType: ImplementationSpecific
+  hosts:
+   - http:
+     paths:
+       - path: /
+         pathType: ImplementationSpecific
   tls: []
-  # 나중에 추가시 포맷 참조를 위해 남겨둡니다.
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - test.infinite-optimal.com
+  defaultBackendExist: true
 
 certificate:
   name: "eeji-cloudfnt-web-test-cert"
@@ -137,3 +132,13 @@ affinity:
           operator: In
           values:
           - cpu-node-pool-ineeji-cloudai-test
+
+healthCheck:
+  checkIntervalSec: 30
+  timeoutSec: 60
+  healthyThreshold: 3
+  unhealthyThreshold: 3
+  protocol: HTTP
+  requestPath: /health
+  port: 3333
+
