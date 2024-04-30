@@ -4,17 +4,11 @@ import { App } from 'antd'
 import AppleBtn from 'assets/img/components/apple.svg'
 import GoogleBtn from 'assets/img/components/google.svg'
 import kakaoBtn from 'assets/img/components/kakao.svg'
-import { useLocation } from 'react-router-dom'
+
 const GoogleSignin = () => {
-  const { message } = App.useApp()
-
-  const location = useLocation()
-  const GOOGLE_ID = '${process.env.REACT_APP_GOOGLE_ID}'
-
   const oAuthHandler = (): void => {
     const REDIRECT_URI = `${process.env.REACT_APP_REDIRECT_URL}/login`
-    // console.log('REDIRECT_URI:', REDIRECT_URI)
-    const GoogleURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.email`
+    const GoogleURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.REACT_APP_GOOGLE_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.email`
 
     window.location.assign(GoogleURL)
   }
@@ -42,30 +36,9 @@ const GoogleSignin = () => {
       }}
       onClick={handleGoogleLogin}
     >
-      <GoogleLoginBtn></GoogleLoginBtn>
+      <GoogleLoginBtn />
       <span style={{ flex: '7' }}>Login with Google</span>
     </Button>
-    // <Flex>
-    //   <GoogleLoginBtn onClick={handleGoogleLogin}>
-    //     {/* <GoogleIcon />
-    //   <LoginButtonText> Continue with Google</LoginButtonText> */}
-    //   </GoogleLoginBtn>
-    //   <div
-    //     style={{
-    //       fontSize: '1rem',
-    //       textAlign: 'center',
-    //       // verticalAlign: 'center',
-    //       // lineHeight : '10px;'
-    //       paddingLeft: '1rem',
-    //       color: '#002D65',
-    //     }}
-    //   >
-    //     Login with Google
-    //   </div>
-    //   {/*
-    // //   {/* <KakaoLoginBtn onClick={() => message.error('준비중인 서비스입니다.')} />
-    // //   <AppleLoginBtn onClick={() => message.error('준비중인 서비스입니다.')} /> * */}
-    // </Flex>
   )
 }
 
