@@ -304,7 +304,7 @@ const FormWrap = styled.div`
   padding-bottom: 1vw;
   position: absolute;
   right: 4vw;
-  top: 159px;
+  top: 200px;
   z-index: 999;
   background-color: #fff;
   border-radius: 30px;

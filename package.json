@@ -3,7 +3,9 @@
   "version": "1.1.0",
   "private": true,
   "scripts": {
-    "start": "env-cmd -f .env.test react-scripts start",
+    "start": "env-cmd -f .env.production react-scripts start",
+    "start:dev": "env-cmd -f .env.development react-scripts start",
+    "start:test": "env-cmd -f .env.test react-scripts start",
     "build": "set GENERATE_SOURCEMAP=false && env-cmd -f .env.production react-scripts build",
     "test": "env-cmd -f .env.test react-scripts test",
     "eject": "react-scripts eject",
@@ -12,8 +14,6 @@
     "openapi": "openapi-generator generate -i https://dev.ineeji-solution-tf.du.r.appspot.com/openapi.json -g typescript-axios -o ./models -c ./openapi.json --skip-validate-spec"
   },
   "dependencies": {
-    "@ag-grid-community/client-side-row-model": "^29.2.0",
-    "@ag-grid-community/react": "^29.2.0",
     "@ant-design/icons": "^5.0.1",
     "@chakra-ui/icons": "^1.1.5",
     "@chakra-ui/react": "^1.8.8",
