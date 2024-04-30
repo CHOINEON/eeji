@@ -1,17 +1,21 @@
+import React from 'react'
+import { useRecoilState, useResetRecoilState } from 'recoil'
 import { message } from 'antd'
 import Banner from 'components/card/Banner'
 import Uploader from 'components/uploader/Uploader'
-import { useRecoilState, useResetRecoilState } from 'recoil'
 import { uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 
 const BeforeUpload = () => {
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const resetUploadFileState = useResetRecoilState(uploadedDataState)
 
-  const handleSelectedFile = (file: File) => {
+  const handleSelectedFile = (file: any) => {
+    // console.log('handleSelectedFile:', file)
+
     if (file) {
       if (file.size <= 209715200) {
-        setUploadedData({ ...uploadedData, file: file })
+        setUploadedData({ ...uploadedData, file: file, name: file.name, content: [] })
+        // readFile(file)
       } else {
         message.open({
           type: 'error',
@@ -26,6 +30,7 @@ const BeforeUpload = () => {
   }
 
   const handleCancelClick = () => {
+    // console.log('param:', param)
     resetUploadFileState()
   }
 

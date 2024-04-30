@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { atom } from 'recoil'
+import { atom, selector, selectorFamily } from 'recoil'
 
 export const userInfoState = atom({
   key: 'userInfo',
@@ -23,16 +23,13 @@ interface UploadData {
   colCount?: number
   startDate?: string
   endDate?: string
-  columns?: Array<any>
-  numericCols?: Array<string>
-  nonNumericCols?: Array<string>
 }
 
 //
 export const uploadedDataState = atom({
   key: 'uploadedData',
   default: {
-    file: null,
+    file: undefined,
     name: '',
     content: [],
     // size: 0,
@@ -40,9 +37,6 @@ export const uploadedDataState = atom({
     colCount: 0,
     startDate: '',
     endDate: '',
-    columns: [],
-    numericCols: [],
-    nonNumericCols: [],
   } as UploadData,
 })
 
@@ -102,14 +96,18 @@ export const dataPropertyState = atom({
   } as IOption,
 })
 
-//GCS Signed url
-interface IGoogleSignedUrlRes {
-  surl: string
-  uuid: string
-  blobName: string
-}
+//사용자가 입력한 properties 저장소
+// export const dataProperty = selector({
+//   key: 'dataProperty',
+//   get: ({ get }) => ({
+//     name: get(dataPropertyState).name,
+//     desc: get(dataPropertyState).desc,
+//     date_col: get(dataPropertyState).date_col,
+//   }),
+// })
 
-export const signedUrlState = atom({
-  key: 'signedUrlState',
-  default: { surl: '', uuid: '', blobName: '' } as IGoogleSignedUrlRes,
+//summary fetching state( 'standby' /requested / completed/ failed)
+export const summaryFetchState = atom({
+  key: 'summaryFetchState',
+  default: 'standby',
 })
