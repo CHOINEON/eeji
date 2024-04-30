@@ -84,7 +84,6 @@ jobs:
           uses: docker/build-push-action@v5
           with: 
             context: .
-            platforms: linux/amd64, linux/arm64
             push: true
             tags: |
               ${{ env.GAR_REGISTRY }}/${{ env.GCP_PROJECT }}/cloudai-${{ steps.get-deploy-env.outputs.SERVICE }}/${{ steps.generate-name-tag.outputs.NAMETAG }}
