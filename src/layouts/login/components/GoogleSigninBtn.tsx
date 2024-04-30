@@ -81,7 +81,7 @@ const LoginButton = styled.button`
 const GoogleLoginBtn = styled(LoginButton)`
   background-image: url(${GoogleBtn});
   background-repeat: no-repeat;
-  // flex: 1;
+  height: 90%;
   margin-left: 5px;
   position: absolute;
   left: 0;
