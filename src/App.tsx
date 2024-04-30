@@ -9,6 +9,7 @@ import HealthCheck from 'views/HealthCheck'
 import { useApiError } from './hooks/useApiError'
 import AdminLayout from './layouts/admin'
 import AuthLayout from './layouts/auth'
+import Join from './layouts/join/join'
 import Login from './layouts/login/login'
 
 function PrivateRoute({ component: Component, isAuthenticated, ...rest }: any) {
@@ -58,6 +59,7 @@ export function App() {
         <Route path={`/404`} component={NotFound} />
         <Route path={`/500`} component={NetworkError} />
         <Route path={`/health`} component={HealthCheck} />
+        <Route path={`/join`} component={Join} />
         <Redirect from="/" to="/login" />
       </Switch>
     </>
