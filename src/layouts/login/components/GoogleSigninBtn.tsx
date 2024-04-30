@@ -40,8 +40,9 @@ const GoogleSignin = () => {
         textAlign: 'center',
         position: 'relative',
       }}
+      onClick={handleGoogleLogin}
     >
-      <GoogleLoginBtn onClick={handleGoogleLogin}> </GoogleLoginBtn>
+      <GoogleLoginBtn></GoogleLoginBtn>
       <span style={{ flex: '7' }}>Login with Google</span>
     </Button>
     // <Flex>
