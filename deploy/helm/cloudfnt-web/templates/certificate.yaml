@@ -1,0 +1,12 @@
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: {{ .Values.certificate.name }}
+  labels:
+    {{- include "cloudfnt-web.labels" . | nindent 4 }}
+spec:
+  domains:
+    {{- range .Values.certificate.domains }}
+    - {{ . | quote }}
+    {{- end }}
