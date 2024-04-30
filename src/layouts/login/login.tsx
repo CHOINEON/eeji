@@ -195,7 +195,7 @@ export const Login: React.FC = () => {
             size={'large'}
             placeholder={'Select Company'}
             onChange={handleChange}
-            style={{ width: '100%', marginBottom: '1.5vh', border: 0 }}
+            style={{ width: '100%', marginBottom: '2vh', border: 0 }}
             options={companyList}
           />
           <Input
@@ -203,7 +203,7 @@ export const Login: React.FC = () => {
             type="text"
             placeholder={'ID'}
             onChange={(e: any) => ChangeId(e)}
-            style={{ width: '100%', marginBottom: '1.5vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
+            style={{ width: '100%', marginBottom: '1.3vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
           />
           <Input
             color={'black'}
@@ -211,7 +211,7 @@ export const Login: React.FC = () => {
             placeholder={'Password'}
             onChange={(e: any) => ChangePassword(e)}
             onKeyDown={(e: unknown) => onEnterLogin(e)}
-            style={{ width: '100%', marginBottom: '1.5vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
+            style={{ width: '100%', marginBottom: '1.3vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
           />
         </FormControl>
         <Button
@@ -229,7 +229,7 @@ export const Login: React.FC = () => {
         </Button>
         <OrWrapper>or</OrWrapper>
 
-        <div style={{ marginTop: '17px', textAlign: 'center' }}>
+        <div style={{ marginTop: '20px', textAlign: 'center' }}>
           <GoogleSignin />
         </div>
         <TextMenuWrapper>
@@ -261,7 +261,7 @@ const Login_ineejiIcon = styled.div`
   left: 1409px;
   height: 21px;
   background-repeat: no-repeat;
-  margin-bottom: 40px;
+  margin-bottom: 45px;
 `
 const OrWrapper = styled.div`
   width: 19px;
@@ -284,13 +284,16 @@ const Home_Bg = styled(BgStyle)`
 `
 const Beyond = styled.div`
   font-size: 29px;
+  font-family: 'ITC Avant Garde Gothic Light';
+
   color: #fff;
-  top: 189px;
-  left: 140px;
+  top: 195px;
+  left: 135px;
   width: 414px;
   height: 42px;
   z-index: 99999;
   position: absolute;
+  letter-spacing: 0.06vw;
 `
 
 const FormWrap = styled.div`
@@ -304,7 +307,7 @@ const FormWrap = styled.div`
   top: 200px;
   z-index: 999;
   background-color: #fff;
-  border-radius: 15px;
+  border-radius: 30px;
 `
 // const Beyond = styled.div`
 //   font-size: 29px;
@@ -332,7 +335,7 @@ const Logo = styled(BgStyle)`
   position: fixed;
   width: 11vw;
   height: 2vw;
-  left: 7vw;
+  left: 7.2vw;
   top: 4vw;
   z-index: 999;
 `
