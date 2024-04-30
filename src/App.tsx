@@ -35,7 +35,6 @@ export function App() {
   const { handleError } = useApiError()
   const queryClient = useQueryClient()
   const isAuthenticated = localStorage.getItem('userId') ? true : false
-  // const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('userId') ? true : false)
 
   queryClient.setDefaultOptions({
     queries: {
@@ -43,7 +42,6 @@ export function App() {
         handleError(error)
       },
       retry: 0, // 요청 실패하면 기본 3번의 재시도
-      // suspense: true, //useErrorBoundaries 가 true로 세팅됨
     },
     mutations: {
       onError: (error: any) => {

@@ -1,10 +1,7 @@
-import React, { useCallback } from 'react'
-import { createStandaloneToast } from '@chakra-ui/react'
-import useErrorModal from 'apis/error/useErrorModal'
-import { AxiosError } from 'axios'
-import toast from 'react-hot-toast'
-import { Redirect, Route, Switch, useHistory } from 'react-router-dom'
 import { App } from 'antd'
+import { AxiosError } from 'axios'
+import { useCallback } from 'react'
+import { useHistory } from 'react-router-dom'
 
 //https://9yujin.tistory.com/59
 
@@ -34,7 +31,6 @@ export const useApiError = () => {
     const status = axiosError.response?.status
 
     switch (status) {
-      //BadReqeustException | ValidationError
       case 400:
         message.error('Bad request!')
         break
@@ -45,9 +41,12 @@ export const useApiError = () => {
       case 429:
         // openErrorModal(error)
         break
+      case 409:
+        alert(axiosError.response?.data)
+        break
       // API 요청 실패
       case 500:
-        alert('500')
+        alert('Network error! 관리자에게 문의하세요.')
         handle500()
         break
       default:

@@ -5,7 +5,7 @@ import DatasetApi from 'apis/DatasetApi'
 import ColumnLabel from 'components/fields/ColumnLabel'
 import { useApiError } from 'hooks/useApiError'
 import { useToast } from 'hooks/useToast'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState } from 'recoil'
 import { dataPropertyState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
@@ -28,6 +28,7 @@ const DataProperties = () => {
   const { handleError } = useApiError()
   const { mutate } = useMutation(DatasetApi.uploadDataset, {
     onSuccess: (response: any) => {
+      console.log('uploadDataset resp:', response)
       const summaryData = response['1']
 
       fireToast('request success')
@@ -42,7 +43,6 @@ const DataProperties = () => {
 
       //Select Box 옵션 데이터 바인딩
       generateOptions(summaryData)
-
       setUploading(false)
     },
     onError: (error: any) => {
@@ -125,10 +125,6 @@ const DataProperties = () => {
 
   const onChangeRadio = (e: RadioChangeEvent) => {
     setInputOption({ ...inputOption, algo_type: e.target.value })
-  }
-
-  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputOption({ ...inputOption, date_format: e.target.value })
   }
 
   return (
