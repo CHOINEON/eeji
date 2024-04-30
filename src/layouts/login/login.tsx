@@ -90,6 +90,7 @@ export const Login: React.FC = () => {
   React.useEffect(() => {
     //로그인 후 redirect된 URL에서 구글 인가코드 추출하여 백엔드로 전달하여 token발급받음
     const params = new URLSearchParams(window.location.search)
+    // console.log('URL search params:', params)
     const code = params.get('code')
 
     if (code) {
@@ -170,9 +171,8 @@ export const Login: React.FC = () => {
       <Home_Bg />
       <Logo />
       <SidebarBrand />
-      <UpperTitle>Beyond your Expectations</UpperTitle>
-      <Title></Title>
-
+      <Beyond>Beyond your Expectations</Beyond>
+      <Title />
       <BottomBox>
         <Circle />
         <BottomTitleParent>
@@ -228,12 +228,13 @@ export const Login: React.FC = () => {
           Login
         </Button>
         <OrWrapper>or</OrWrapper>
+
         <div style={{ marginTop: '17px', textAlign: 'center' }}>
           <GoogleSignin />
         </div>
         <TextMenuWrapper>
-          <TextWrapper>Find ID</TextWrapper> <TextWrapper>Find Password</TextWrapper>
-          <TextWrapper>Join</TextWrapper>
+          <TextWrapper>Find ID |</TextWrapper> <TextWrapper>Find Password</TextWrapper>
+          <TextWrapper> | Join</TextWrapper>
         </TextMenuWrapper>
       </FormWrap>
     </>
@@ -273,6 +274,7 @@ const OrWrapper = styled.div`
 `
 const Home_Bg = styled(BgStyle)`
   background-image: url(${new_mainbg});
+  background-size: cover;
   position: fixed;
   opacity: 1;
   left: 0;
@@ -280,6 +282,17 @@ const Home_Bg = styled(BgStyle)`
   top: 0;
   bottom: 0;
 `
+const Beyond = styled.div`
+  font-size: 29px;
+  color: #fff;
+  top: 189px;
+  left: 140px;
+  width: 414px;
+  height: 42px;
+  z-index: 99999;
+  position: absolute;
+`
+
 const FormWrap = styled.div`
   width: 18vw;
   padding-top: 1.5vw;
@@ -293,16 +306,16 @@ const FormWrap = styled.div`
   background-color: #fff;
   border-radius: 15px;
 `
-const UpperTitle = styled.div`
-  font-size: 29px;
-  color: #fff;
-  top: 189px;
-  left: 140px;
-  width: 414px;
-  height: 42px;
-  z-index: 99999;
-  position: absolute;
-`
+// const Beyond = styled.div`
+//   font-size: 29px;
+//   color: #fff;
+//   top: 189px;
+//   left: 140px;
+//   width: 414px;
+//   height: 42px;
+//   z-index: 99999;
+//   position: absolute;
+// `
 const Title = styled(BgStyle)`
   background-position: left 7vw top 12vw;
   background-size: 30% auto;

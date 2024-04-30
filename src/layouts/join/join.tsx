@@ -1,24 +1,44 @@
-import React from 'react'
 import styled from '@emotion/styled'
+import React from 'react'
 import bg from './img/bg.svg'
-import ineeji from './img/ineeji.svg'
-import locked from './img/locked.png'
-import logo from './img/logo.png'
+import blueicon from './img/blueicon.png'
 import copyright from './img/copyright.svg'
+import ineeji from './img/ineeji.svg'
+import logo from './img/logo.png'
 export const Join: React.FC = () => {
   return (
     <Wrapper>
       <Join_Bg />
-      <Banner>
-        <Ineeji />
-        <JoinText>Join</JoinText>
-        <Cancle>Cancle</Cancle>
-      </Banner>
+      <Banner />
+      <Ineeji />
+      <JoinText>Join</JoinText>
+      <Cancle>Cancle</Cancle>
+
       <FormWrap>
-        <Locked />
-        <Text>관리자의 승인을 기다리고 있습니다</Text>
-        <SubText>원활한 Cloud AI EEJI(데모) 서비스를 이용하기 위해서는 추가 정보가 필요합니다. </SubText>
-        <AddButton>추가정보 입력하기</AddButton>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <Blueicon />
+        </div>
+
+        <Text>관리자 승인 대기중입니다</Text>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <SubText>
+            Cloud AI EEJI(데모) 서비스는 회원가입 후 관리자 승인이 필요합니다. 현재 승인절차 진행중입니다.
+          </SubText>
+        </div>
+        <Flex>
+          <AddButton>확인</AddButton>
+          <AddButton>관리자에게 문의하기</AddButton>
+        </Flex>
       </FormWrap>
       <BottomLogo />
       <Copy />
@@ -37,7 +57,10 @@ const BgStyle = styled.div`
   background-repeat: no-repeat;
   background-size: 100% auto;
 `
-
+const Flex = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
 const Banner = styled.div`
   top: 0px;
   left: 0px;
@@ -92,52 +115,57 @@ const FormWrap = styled.div`
   position: absolute;
   z-index: 999;
   background: #fff;
-  border-radius: 15px;
+  border-radius: 20px;
   top: 286px;
   left: 761px;
-  width: 398px;
+  width: 420px;
   padding: 20px;
-  height: 347px;
+  height: 310px;
   text-align: center;
 `
-const Locked = styled.div`
-  background-image: url(${locked});
+const Blueicon = styled.div`
+  background-image: url(${blueicon});
   background-repeat: no-repeat;
-  background-size: 100% auto;
-  top: 406px;
-  left: 917px;
-  width: 86px;
-  height: 83px;
-  margin-left: 7.5rem;
+  // background-size: cover;
+
+  top: 389px;
+  left: 857px;
+  width: 194px;
+  height: 25px;
+
   margin-bottom: 20px;
   margin-top: 20px;
+  // border: 1px solid red;
+  justify-content: center;
 `
 const Text = styled.div`
-  font-size: 22px;
+  font-size: 30px;
   color: #4338f7;
+  margin-top: 10px;
+  margin-bottom: 5px;
 `
 const SubText = styled.div`
-  font-size: 12px;
+  font-size: 14px;
+  font-family: 'Helvetica Neue';
   color: #002d65;
   top: 568px;
   left: 814px;
-  width: 292px;
+  width: 295px;
   height: 32px;
-  //   padding: 10px;
-  padding-left: 50px;
-  margin-top: 10px;
+  // margin-top: 10px;
+  margin-bottom: 60px;
 `
 const AddButton = styled.button`
+  font-family: 'Helvetica Neue';
+  font-weight: bold;
   z-index: 99999;
   top: 568px;
-  left: 781px;
-  width: 359px;
+  width: 45%;
   height: 46px;
   color: #fff;
   font-size: 14px;
   background: #4338f7;
   border-radius: 9px;
-  position: fixed;
 `
 
 const BottomLogo = styled.div`

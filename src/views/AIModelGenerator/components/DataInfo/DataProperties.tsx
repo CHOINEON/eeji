@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { Input, Row, Select, Spin, Radio, RadioChangeEvent } from 'antd'
-import TextArea from 'antd/es/input/TextArea'
-import { dataPropertyState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import styled from '@emotion/styled'
-import { useMutation } from 'react-query'
+import { Input, Radio, RadioChangeEvent, Row, Select, Spin } from 'antd'
+import TextArea from 'antd/es/input/TextArea'
 import DatasetApi from 'apis/DatasetApi'
+import ColumnLabel from 'components/fields/ColumnLabel'
 import { useApiError } from 'hooks/useApiError'
 import { useToast } from 'hooks/useToast'
-import ColumnLabel from 'components/fields/ColumnLabel'
+import React, { useEffect, useState } from 'react'
+import { useMutation } from 'react-query'
 import { useRecoilState } from 'recoil'
+import { dataPropertyState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 
 interface Option {
   value: string
@@ -23,14 +23,12 @@ const DataProperties = () => {
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
 
   const [options, setOptions] = useState(Array<Option>)
+  const [dateColOptions, setDateColOptions] = useState(Array<Option>)
 
   const { handleError } = useApiError()
   const { mutate } = useMutation(DatasetApi.uploadDataset, {
     onSuccess: (response: any) => {
-      // console.log(' /api/upload/{user_id}', response)
-
       const summaryData = response['1']
-      const columnData = response['2']
 
       fireToast('request success')
 
@@ -48,7 +46,6 @@ const DataProperties = () => {
       setUploading(false)
     },
     onError: (error: any) => {
-      // console.log('DataProperties/ onError :', error)
       handleError(error)
     },
   })
@@ -63,7 +60,6 @@ const DataProperties = () => {
   }, [])
 
   useEffect(() => {
-    // console.log('inputOption.algo_type:', inputOption.algo_type)
     if (inputOption.algo_type !== undefined) fetchFileDescription()
   }, [inputOption.algo_type])
 
@@ -76,7 +72,6 @@ const DataProperties = () => {
     const user_id = localStorage.getItem('userId').toString()
     const is_classification = inputOption.algo_type
 
-    // console.log('fetch;', is_classification)
     mutate({ user_id, is_classification, formData })
   }
 
@@ -103,6 +98,12 @@ const DataProperties = () => {
       col_list.map((value: string) => newOption.push({ value: value, label: value }))
     }
     setOptions(newOption)
+
+    //Generate datetime column options
+    const timestampArr: Array<any> = []
+
+    col_list.map((value: string) => timestampArr.push({ value: value, label: value }))
+    setDateColOptions(timestampArr)
   }
 
   const clearInputs = () => {
@@ -119,7 +120,6 @@ const DataProperties = () => {
   }
 
   const handleChange = (e: any) => {
-    // console.log('name changed:', e.target.value)
     setInputOption({ ...inputOption, name: e.target.value })
   }
 
@@ -152,11 +152,6 @@ const DataProperties = () => {
             <Radio value={0}>Regression</Radio>
           </Radio.Group>
         </Row>
-        {/* <Col span={24} style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }}>
-            <ColumnLabel required={true} label="Timestamp Format" />
-            <Input defaultValue="yyyy-mm-dd HH:MM:SS" onChange={onChangeInput} />
-          </Col> */}
-
         <Row>
           <ColumnLabel required={true} label=" Target Variable" />
           <Select
@@ -166,11 +161,10 @@ const DataProperties = () => {
             value={inputOption.target_y}
             placeholder="Timestamp Column"
             options={options}
-            // defaultValue={options[0]}
             onSelect={handleSelectY}
           />
         </Row>
-        <Row /*style={{ display: inputOption.algo_type == 2 ? 'block' : 'none' }} */>
+        <Row>
           <ColumnLabel required={false} label="Timestamp" />
           <Select
             style={{
@@ -178,8 +172,7 @@ const DataProperties = () => {
             }}
             value={inputOption.date_col}
             placeholder="Timestamp Column"
-            options={options}
-            // defaultValue={options[0]}
+            options={dateColOptions}
             onSelect={handleSelectDateCol}
           />
         </Row>
@@ -202,10 +195,8 @@ const DataProperties = () => {
 export default DataProperties
 
 const DataPropertiesContainer = styled.div`
-  // border: 1px solid red;
   display: block;
   float: left;
-  // margin-top: 20px;
   width: 100%;
   height: 276px;
   padding: 1em;

@@ -1,11 +1,12 @@
 import { Button, Input, message, Modal, Space } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import * as common from 'utils/DateFunction'
 import { saveModalAtom } from 'views/AIModelGenerator/store/modal/atom'
 import { modelListAtom } from 'views/AIModelGenerator/store/model/atom'
+
+import axios from 'axios'
+import * as common from 'utils/DateFunction'
 
 function ModelSavePopup(props: any) {
   const { onSave, data } = props

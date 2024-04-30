@@ -1,12 +1,48 @@
-import { axiosPublic, axiosProgress } from './axios'
-import { IDatasetList, IDataUploadReq, IDatasetReq, IDatasetEditReq } from './type/Dataset'
+import axios from 'axios'
+import { axiosProgress, axiosPublic } from './axios'
 import { TResponseType } from './type/commonResponse'
-import useAxiosInterceptor from 'hooks/useAxiosInterceptor'
+import {
+  IDatasetEditReq,
+  IDatasetList,
+  IDatasetReq,
+  IDataUploadReq,
+  ISignedUrlReq,
+  ISignedUrlRes,
+  IUploadFileReq,
+} from './type/Dataset'
 
 const DatasetApi = {
   //전체 데이터셋 리스트 가져오기
   getDatasetList: async (user_id: string): Promise<TResponseType<IDatasetList>> => {
     const { data } = await axiosPublic.post(`/api/dataset_list/${user_id}?user_id=${user_id}`)
+    return data
+  },
+
+  //get Google signed URL from backend
+  signedUrl: async (payload: ISignedUrlReq): Promise<TResponseType<ISignedUrlRes>> => {
+    const config = {
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+    }
+    const { data } = await axiosPublic.post(`/api/get_surl/${payload.user_id}`, payload.formData, config)
+    return data
+  },
+
+  //upload to GCS with Signed URL
+  uploadFileToGcs: async (payload: IUploadFileReq): Promise<any> => {
+    const axiosInstance = axios.create({
+      baseURL: payload.signedUrl,
+    })
+
+    const config = {
+      headers: {
+        // 'content-type': payload.fileType,
+        'Content-Type': 'application/octet-stream',
+      },
+    }
+
+    const { data } = await axiosInstance.put(payload.signedUrl, payload.file, config)
     return data
   },
 
@@ -32,10 +68,6 @@ const DatasetApi = {
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
       },
-      // onUploadProgress: (e: any) => {
-      //   const percentCompleted = Math.round((e.loaded / e.total) * 100)
-      //   // setProgressValue({ progress: percentCompleted, isLoading: percentCompleted ? true : false })
-      // },
     }
 
     const { data } = await axiosProgress.post(
@@ -47,24 +79,12 @@ const DatasetApi = {
     return data
   },
 
-  //데이터셋 수정하기(edit)  --- 24.01.25 백엔드 요청에 따라 QueryString으로 변경함
-  // editDataset: async (payload: IDatasetEditReq): Promise<TResponseType<string>> => {
-  //   const { data } = await axiosPrivate.patch(`/api/edit_data/${payload.user_id}`, payload)
-  //   return data
-  // },'
-
   editDataset: async (payload: IDatasetEditReq): Promise<TResponseType<string>> => {
     const { data } = await axiosPublic.patch(
       `/api/edit_data/${payload.user_id}?com_id=${payload.com_id}&ds_id=${payload.ds_id}&ds_name=${payload.ds_name}&ds_desc=${payload.ds_desc}`
     )
     return data
   },
-
-  //데이터셋 삭제하기(delete) --- 24.01.25 백엔드 요청에 따라 QueryString으로 변경함
-  // deleteDataset: async (payload: IDatasetReq): Promise<TResponseType<string>> => {
-  //   const { data } = await axiosPrivate.delete(`/api/delete_data/${payload.user_id}`, { data: payload })
-  //   return data
-  // },
 
   deleteDataset: async (payload: IDatasetReq): Promise<TResponseType<string>> => {
     const { data } = await axiosPublic.delete(

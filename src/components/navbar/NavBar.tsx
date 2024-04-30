@@ -1,15 +1,15 @@
 import { Avatar, Box, Button, Flex, HStack, Link, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import React, { useEffect } from 'react'
-import Logo from './Logo'
+import { message } from 'antd'
+import UserApi from 'apis/UserApi'
 import logoutBtnImage from 'assets/img/icons/logout_off.svg'
 import settingOffImage from 'assets/img/icons/setting_off.svg'
-import { useHistory } from 'react-router-dom'
-import './style/style.css'
 import Feedback from 'components/common/Feedback'
+import React from 'react'
 import { useMutation } from 'react-query'
-import UserApi from 'apis/UserApi'
-import { message } from 'antd'
+import { useHistory } from 'react-router-dom'
+import Logo from './Logo'
+import './style/style.css'
 
 const NavBar = (props: { routes: RoutesType[] }) => {
   const history = useHistory()
