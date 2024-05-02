@@ -292,7 +292,7 @@ const Beyond = styled.div`
   width: 414px;
   height: 42px;
   z-index: 99999;
-  position: absolute;
+  position: fixed;
   letter-spacing: 0.06vw;
 `
 
