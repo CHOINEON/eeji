@@ -285,7 +285,6 @@ const Home_Bg = styled(BgStyle)`
 const Beyond = styled.div`
   font-size: 29px;
   font-family: 'ITC Avant Garde Gothic Light';
-
   color: #fff;
   top: 195px;
   left: 135px;
@@ -398,7 +397,7 @@ const TextWrapper = styled.button`
   margin-right: 10px;
 `
 const LoginIcon = styled.div`
-  background-position: center center;
+  background-position: center;
   margin-bottom: 3vw;
 `
 const TextMenuWrapper = styled.div`
