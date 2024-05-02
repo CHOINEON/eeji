@@ -1,6 +1,5 @@
 import { Button } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { App } from 'antd'
 import AppleBtn from 'assets/img/components/apple.svg'
 import GoogleBtn from 'assets/img/components/google.svg'
 import kakaoBtn from 'assets/img/components/kakao.svg'
@@ -51,7 +50,11 @@ const LoginButton = styled.button`
   border-radius: 10px;
 `
 
-const GoogleLoginBtn = styled(LoginButton)`
+const GoogleLoginBtn = styled.div`
+  display: inline-block;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   background-image: url(${GoogleBtn});
   background-repeat: no-repeat;
   height: 90%;
