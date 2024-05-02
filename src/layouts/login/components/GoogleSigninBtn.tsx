@@ -35,7 +35,7 @@ const GoogleSignin = () => {
       }}
       onClick={handleGoogleLogin}
     >
-      <GoogleLoginBtn />
+      <GoogleLogin />
       <span style={{ flex: '7' }}>Login with Google</span>
     </Button>
   )
@@ -50,7 +50,7 @@ const LoginButton = styled.button`
   border-radius: 10px;
 `
 
-const GoogleLoginBtn = styled.div`
+const GoogleLogin = styled.div`
   display: inline-block;
   width: 38px;
   height: 38px;
