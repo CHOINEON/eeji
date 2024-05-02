@@ -110,7 +110,12 @@ export const Login: React.FC = () => {
           }
         })
         .catch((error) => {
-          alert(error)
+          console.log(error)
+          if (error.status_code === 401) {
+            message.error('관리자 승인 대기 중입니다')
+          } else {
+            alert(error)
+          }
         })
     }
   }, [])

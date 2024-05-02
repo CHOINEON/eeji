@@ -8,7 +8,7 @@ const GoogleSignin = () => {
   const oAuthHandler = (): void => {
     const REDIRECT_URI = `${process.env.REACT_APP_REDIRECT_URL}/login`
     const GoogleURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.REACT_APP_GOOGLE_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.email`
-
+    console.log('url::', GoogleURL)
     window.location.assign(GoogleURL)
   }
 
