@@ -112,7 +112,7 @@ jobs:
         - name: 'helm template'
           run: |
             cd deploy/helm;
-            helm template eeji-cloudfnt-web-test cloudfnt-web -f cloudfnt-web/values.test.yaml --set image.tags=${{ steps.generate-name-tag.outputs.NAME_TAG }} | tee cloudfnt-web-chart.yaml
+            helm template eeji-cloudfnt-web-test cloudfnt-web -f cloudfnt-web/values.test.yaml --set image.tag=${{ steps.generate-name-tag.outputs.NAME_TAG }} | tee cloudfnt-web-chart.yaml
             kubectl apply -f cloudfnt-web-chart.yaml -n default
         
         # Print env variables and the event payload for the debugging purpose.
