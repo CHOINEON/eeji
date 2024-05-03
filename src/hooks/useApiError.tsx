@@ -9,23 +9,22 @@ import { useHistory } from 'react-router-dom'
 export const useApiError = () => {
   const { message } = App.useApp()
   const history = useHistory()
-  // const { openErrorModal } = useErrorModal()
 
   const defaultHandler = (error: any) => {
     console.error(error)
   }
 
-  const handle404 = () => {
-    console.log('history:', history)
-    // history.push('/404')
+  const handle401 = () => {
+    history.push('/join')
   }
 
-  const handle500 = () => {
-    alert('error code: 500')
+  const handle404 = () => {
+    // history.push('/404')
   }
 
   const handleError = useCallback((axiosError: AxiosError) => {
     console.log('useApiError / handleError ::', axiosError)
+
     const errorResponse = axiosError.response?.data
     const error = axiosError?.name
     const status = axiosError.response?.status
@@ -33,6 +32,10 @@ export const useApiError = () => {
     switch (status) {
       case 400:
         message.error('Bad request!')
+        break
+      case 401:
+        message.error('사용 불가한 계정입니다. 관리자에게 문의하세요.')
+        handle401()
         break
       case 404:
         handle404()
@@ -42,12 +45,11 @@ export const useApiError = () => {
         // openErrorModal(error)
         break
       case 409:
-        alert(axiosError.response?.data)
+        message.error(axiosError.response?.data)
         break
       // API 요청 실패
       case 500:
-        alert('Network error! 관리자에게 문의하세요.')
-        handle500()
+        message.error('Network error! 관리자에게 문의하세요.')
         break
       default:
         defaultHandler(error)
