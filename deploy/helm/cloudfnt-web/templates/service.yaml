@@ -8,6 +8,7 @@ metadata:
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+    cloud.google.com/neg: '{"exposed_ports": {{.Values.service.port | quote }}:{}}}'
 spec:
   type: {{ .Values.service.type }}
   ports:

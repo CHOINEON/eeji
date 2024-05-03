@@ -10,12 +10,11 @@ metadata:
     app.kubernetes.io/instance: eeji-cloudfnt-web-test
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-  annotations:
-    cloud.google.com/neg: '{"ingress": true}'
+    cloud.google.com/neg: '{"exposed_ports": "80":{}}}'
 spec:
   type: ClusterIP
   ports:
-    - port: 3333
+    - port: 80
       targetPort: 9871
       protocol: TCP
       name: http
@@ -56,7 +55,7 @@ spec:
         - name: cloudfnt-web
           securityContext:
             {}
-          image: "asia-northeast3-docker.pkg.dev/ineeji-cloudai-test/cloudai-cloudfnt-web/cloudfnt-web:20240430R1__bb1cde8"
+          image: "asia-northeast3-docker.pkg.dev/ineeji-cloudai-test/cloudai-cloudfnt-web/cloudfnt-web:20240503R1__677af5d"
           imagePullPolicy: Always
           env:
             - name: PORT
@@ -68,21 +67,23 @@ spec:
               containerPort: 9871
               protocol: TCP
           livenessProbe:
-            failureThreshold: 3
+            failureThreshold: 5
             httpGet:
               path: /health
               port: 9871
             initialDelaySeconds: 60
+            periodSeconds: 30
           readinessProbe:
-            failureThreshold: 3
+            failureThreshold: 5
             httpGet:
               path: /health
               port: 9871
             initialDelaySeconds: 60
+            periodSeconds: 30
           resources:
             requests:
               cpu: 2000m
-              memory: 3Gi
+              memory: 4Gi
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -97,54 +98,6 @@ spec:
           key: dedicated
           operator: Equal
           value: cloudfnt
----
-# Source: cloudfnt-web/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: cloudfnt-web-test
-  labels:
-    helm.sh/chart: cloudfnt-web-1.0.0
-    app.kubernetes.io/name: cloudfnt-web
-    app.kubernetes.io/instance: eeji-cloudfnt-web-test
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-  annotations:
-    ingressClassName: "gce"
-    kubernetes.io/ingress.global-static-ip-name: "eeji-cloudfnt-web-lb-endpoint"
-    networking.gke.io/managed-certificates: "eeji-cloudfnt-web-test-cert"
-    cloud.google.com/backend-config: '{"default": "cloudfnt-web-test"  }'
-spec:
-  defaultBackend:
-    service:
-      name: cloudfnt-web-test
-      port:
-        number: 3333
-  rules:
-    - http:
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: cloudfnt-web-test
-                port:
-                  number: 3333
----
-# Source: cloudfnt-web/templates/backendconfig.yaml
-apiVersion: cloud.google.com/v1
-kind: BackendConfig
-metadata:
-  name: cloudfnt-web-test
-spec:
-  healthCheck:
-    checkIntervalSec: 30
-    timeoutSec: 60
-    healthyThreshold: 3
-    unhealthyThreshold: 3
-    type: HTTP
-    requestPath: /health
-    port: 3333
 ---
 # Source: cloudfnt-web/templates/certificate.yaml
 apiVersion: networking.gke.io/v1
