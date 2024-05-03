@@ -17,3 +17,7 @@ export interface ICompanyInfo {
 }
 
 export type ICompanyList = Array<ICompanyInfo>
+
+export type IGooglesigninReq = {
+  code: string
+}
