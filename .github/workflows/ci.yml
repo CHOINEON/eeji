@@ -56,8 +56,9 @@ jobs:
           id: generate-name-tag
           run: |
             GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c1-7)
-            echo "NAMETAG=${{ steps.get-deploy-env.outputs.SERVICE }}:${{ steps.get-deploy-env.outputs.VERSION }}__$GITHUB_SHA_SHORT" >> $GITHUB_OUTPUT
-            echo "IMAGETAG=${{ env.GAR_REGISTRY }}/${{ env.GCP_PROJECT }}/cloudai-${{ steps.get-deploy-env.outputs.SERVICE }}/${NAMETAG}" >> $GITHUB_OUTPUT
+            name_tag=${{ steps.get-deploy-env.outputs.VERSION }}__${GITHUB_SHA_SHORT}
+            echo "NAME_TAG=$name_tag" >> $GITHUB_OUTPUT
+            echo "IMAGE_TAG=${{ env.GAR_REGISTRY }}/${{ env.GCP_PROJECT }}/cloudai-${{ steps.get-deploy-env.outputs.SERVICE }}/${{ steps.get-deploy-env.outputs.SERVICE }}:$name_tag" >> $GITHUB_OUTPUT
         
         # Configure gcloud authentication to Google Cloud
         - id: auth
@@ -90,7 +91,7 @@ jobs:
             context: .
             push: true
             tags: |
-              ${{ steps.generate-name-tag.outputs.IMAGETAG }}
+              ${{ steps.generate-name-tag.outputs.IMAGE_TAG }}
         
         - id: print-docker-push-outputs
           name: Print docker image outputs
@@ -111,7 +112,7 @@ jobs:
         - name: 'helm template'
           run: |
             cd deploy/helm;
-            helm template eeji-cloudfnt-web-test cloudfnt-web -f cloudfnt-web/values.test.yaml --set image.tags=${{ steps.generate-name-tag.outputs.NAMETAG }} | tee cloudfnt-web-chart.yaml
+            helm template eeji-cloudfnt-web-test cloudfnt-web -f cloudfnt-web/values.test.yaml --set image.tags=${{ steps.generate-name-tag.outputs.NAME_TAG }} | tee cloudfnt-web-chart.yaml
             kubectl apply -f cloudfnt-web-chart.yaml -n default
         
         # Print env variables and the event payload for the debugging purpose.
