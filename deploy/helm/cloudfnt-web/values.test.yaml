@@ -47,7 +47,7 @@ service:
   type: ClusterIP
   port: 80
   targetPort: 9871
-  annotations: {}
+  neg_name: "cloudfnt_web_neg"
 
 ingress:
   enabled: false

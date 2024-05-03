@@ -11,17 +11,20 @@ permissions:
   contents: 'read'
   id-token: 'write'
 
-
-
 jobs:       
-    build:
-        name: 'Build image'
+    build_deploy:
+        name: 'Build image & Deploy test cluster'
         runs-on: ubuntu-latest
         environment: test
         env:
           GAR_REGISTRY: "asia-northeast3-docker.pkg.dev"
           GCP_PROJECT: "ineeji-cloudai-test"
-        
+          GKE_CLUSTER: "gke-primary-ineeji-cloudai-test"
+          GKE_CLUSTER_LOCATION: "asia-northeast3-a"
+
+        outputs:
+          image_tag: ${{ steps.generate-name-tag.outputs.IMAGETAG }}
+          name_tag: ${{ steps.generate-name-tag.outputs.NAMETAG }}
         defaults:
           run:
             shell: bash
@@ -54,7 +57,8 @@ jobs:
           run: |
             GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c1-7)
             echo "NAMETAG=${{ steps.get-deploy-env.outputs.SERVICE }}:${{ steps.get-deploy-env.outputs.VERSION }}__$GITHUB_SHA_SHORT" >> $GITHUB_OUTPUT
-            
+            echo "IMAGETAG="${{ env.GAR_REGISTRY }}/${{ env.GCP_PROJECT }}/cloudai-${{ steps.get-deploy-env.outputs.SERVICE }}/${NAMETAG}" >> $GITHUB_OUTPUT
+        
         # Configure gcloud authentication to Google Cloud
         - id: auth
           name: Authenticate with Google Cloud
@@ -86,7 +90,7 @@ jobs:
             context: .
             push: true
             tags: |
-              ${{ env.GAR_REGISTRY }}/${{ env.GCP_PROJECT }}/cloudai-${{ steps.get-deploy-env.outputs.SERVICE }}/${{ steps.generate-name-tag.outputs.NAMETAG }}
+              ${{ steps.generate-name-tag.outputs.IMAGETAG }}
         
         - id: print-docker-push-outputs
           name: Print docker image outputs
@@ -96,3 +100,22 @@ jobs:
         # Print env variables and the event payload for the debugging purpose.
         - name: Debug
           uses: hmarr/debug-action@v3
+
+        # Install helm 
+        - uses: azure/setup-helm@v4.2.0
+
+        # Get GKE credentials
+        - id: 'get-gke-credentials'
+          uses: 'google-github-actions/get-gke-credentials@v2'
+          with:
+            cluster_name: ${{ env.GKE_CLUSTER }}
+            location: ${{ env.GKE_CLUSTER_LOCATION }}
+        
+        # Render helm chart with the IMAGE TAG
+        - name: 'helm template'
+          run: |
+            cd deploy/helm;
+            helm template eeji-cloudfnt-web-test cloudfnt-web -f cloudfnt-web/values.test.yaml --set image.tags=${{ steps.generate-name-tag.outputs.NAMETAG }} >> cloudfnt-web-chart.yaml
+            kubectl apply -f cloudfnt-web-chart.yaml -n default
+        
+        # TODO: notify failure and sucess
