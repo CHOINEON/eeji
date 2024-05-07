@@ -1,5 +1,6 @@
 {
-  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  // "typescript.tsdk": "node_modules\\typescript\\lib",
   "workbench.colorCustomizations": {
     "minimap.background": "#00000000",
     "scrollbar.shadow": "#00000000"
@@ -8,5 +9,6 @@
     "source.organizeImports": "explicit",
     "source.fixAll": "explicit"
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }

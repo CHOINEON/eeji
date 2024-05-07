@@ -190,8 +190,9 @@ export const Login: React.FC = () => {
         <LoginTitle>Login</LoginTitle>
         <LoginSubTitle>Enter Your ID and password to sign in.</LoginSubTitle>
         <LoginIcon />
-        <FormControl id="text">
+        <FormControl>
           <Select
+            id="company"
             size={'large'}
             placeholder={'Select Company'}
             onChange={handleChange}
@@ -199,6 +200,7 @@ export const Login: React.FC = () => {
             options={companyList}
           />
           <Input
+            id="id"
             color={'black'}
             type="text"
             placeholder={'ID'}
@@ -206,6 +208,7 @@ export const Login: React.FC = () => {
             style={{ width: '100%', marginBottom: '1.3vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
           />
           <Input
+            id="password"
             color={'black'}
             type="password"
             placeholder={'Password'}
@@ -283,6 +286,7 @@ const Home_Bg = styled(BgStyle)`
   bottom: 0;
 `
 const Beyond = styled.div`
+  min-width: 414px;
   font-size: 29px;
   font-family: 'ITC Avant Garde Gothic Light';
   color: #fff;
