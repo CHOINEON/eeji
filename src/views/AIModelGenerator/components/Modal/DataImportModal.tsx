@@ -15,9 +15,10 @@ import {
   uploadedDataState,
   userInfoState,
 } from 'views/AIModelGenerator/store/dataset/atom'
-import AfterUpload from './AfterUpload'
-import BeforeUpload from './BeforeUpload'
+import AfterUpload from '../DataInfo/AfterUpload'
+import BeforeUpload from '../DataInfo/BeforeUpload'
 
+//to be tested
 const DataImportModal = (props: any) => {
   const { message } = App.useApp()
   const { handleError } = useApiError()
@@ -38,7 +39,7 @@ const DataImportModal = (props: any) => {
 
   const { mutate: mutateUploadFile } = useMutation(DatasetApi.uploadFileToGcs, {
     onSuccess: (response: any) => {
-      console.log(' response:', response)
+      console.log('mutateUploadFile response:', response)
     },
     onError: (error: any) => {
       handleError(error)
@@ -103,17 +104,17 @@ const DataImportModal = (props: any) => {
   const handleSave = () => {
     const file: File = uploadedData.file
 
-    if (file && file?.size > 33554432) {
-      message.open({
-        type: 'error',
-        content: '데이터가 너무 큽니다(최대 32MB)',
-        duration: 1,
-        style: {
-          margin: 'auto',
-        },
-      })
-    } else {
-      if (file) {
+    if (file) {
+      if (file?.size > 33554432) {
+        message.open({
+          type: 'error',
+          content: '데이터가 너무 큽니다(최대 32MB)',
+          duration: 1,
+          style: {
+            margin: 'auto',
+          },
+        })
+      } else {
         const formData = new FormData()
 
         formData.append('com_id', userInfo.com_id)
@@ -140,6 +141,8 @@ const DataImportModal = (props: any) => {
           mutateSaveFileInfo({ user_id, formData })
         }
       }
+    } else {
+      message.warning('file is not selected')
     }
   }
 
