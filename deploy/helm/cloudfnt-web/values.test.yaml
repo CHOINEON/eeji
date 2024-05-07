@@ -8,7 +8,7 @@ image:
   repository: asia-northeast3-docker.pkg.dev/ineeji-cloudai-test/cloudai-cloudfnt-web/cloudfnt-web
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "20240430R1__bb1cde8"
+  tag: "20240503R1__677af5d"
   env:
     - name: PORT
       value: "9871"
@@ -45,18 +45,16 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 3333
+  port: 80
   targetPort: 9871
-  annotations:
-    cloud.google.com/neg: '{"ingress": true}'
+  neg_name: "cloudfnt_web_neg"
 
 ingress:
-  enabled: true
+  enabled: false
   className: ""
   annotations:
     kubernetes.io/ingress.global-static-ip-name: eeji-cloudfnt-web-lb-endpoint
     networking.gke.io/managed-certificates: eeji-cloudfnt-web-test-cert
-    ingressClassName: "gce"
   hosts:
    - http:
      paths:
@@ -80,20 +78,22 @@ resources:
   #   memory: 128Mi
   requests:
     cpu: 2000m
-    memory: 3Gi
+    memory: 4Gi
 
 livenessProbe:
   httpGet:
     path: /health
     port: 9871
   initialDelaySeconds: 60
-  failureThreshold: 3
+  periodSeconds: 30
+  failureThreshold: 5
 readinessProbe:
   httpGet:
     path: /health
     port: 9871
   initialDelaySeconds: 60
-  failureThreshold: 3
+  periodSeconds: 30
+  failureThreshold: 5
 
 autoscaling:
   enabled: false
@@ -132,13 +132,3 @@ affinity:
           operator: In
           values:
           - cpu-node-pool-ineeji-cloudai-test
-
-healthCheck:
-  checkIntervalSec: 30
-  timeoutSec: 60
-  healthyThreshold: 3
-  unhealthyThreshold: 3
-  protocol: HTTP
-  requestPath: /health
-  port: 3333
-

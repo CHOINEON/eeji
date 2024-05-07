@@ -1,11 +1,24 @@
 import styled from '@emotion/styled'
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import bg from './img/bg.svg'
 import blueicon from './img/blueicon.png'
 import copyright from './img/copyright.svg'
 import ineeji from './img/ineeji.svg'
 import logo from './img/logo.png'
+
 export const Join: React.FC = () => {
+  const history = useHistory()
+
+  //TODO: 왜 페이지 이동 안되는지 원인 찾기
+  const handleConfirm = () => {
+    history.replace('/login')
+  }
+
+  const handleContact = () => {
+    location.href = 'https://ineeji.com/html/contact/contact.php'
+  }
+
   return (
     <Wrapper>
       <Join_Bg />
@@ -36,8 +49,8 @@ export const Join: React.FC = () => {
           </SubText>
         </div>
         <Flex>
-          <AddButton>확인</AddButton>
-          <AddButton>관리자에게 문의하기</AddButton>
+          <AddButton onClick={handleConfirm}>확인</AddButton>
+          <AddButton onClick={handleContact}>관리자에게 문의하기</AddButton>
         </Flex>
       </FormWrap>
       <BottomLogo />

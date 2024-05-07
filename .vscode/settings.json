@@ -6,7 +6,7 @@
     "scrollbar.shadow": "#00000000"
   },
   "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit",
+    "source.organizeImports": true,
     "source.fixAll": "explicit"
   },
   "editor.formatOnSave": true,

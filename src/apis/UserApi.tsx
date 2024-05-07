@@ -1,6 +1,6 @@
 import { axiosPublic } from './axios'
 import { TResponseType } from './type/commonResponse'
-import { ICompanyList, IUserLoginReq, IUserLogoutReq } from './type/User'
+import { ICompanyList, IGooglesigninReq, IUserLoginReq, IUserLogoutReq } from './type/User'
 
 const UserApi = {
   login: async (payload: IUserLoginReq): Promise<TResponseType<object>> => {
@@ -15,6 +15,11 @@ const UserApi = {
 
   getCompanyList: async (): Promise<TResponseType<ICompanyList>> => {
     const { data } = await axiosPublic.get(`api/company`)
+    return data
+  },
+
+  signinWithgoogle: async (payload: IGooglesigninReq): Promise<TResponseType<object>> => {
+    const { data } = await axiosPublic.post(`login/google`, payload)
     return data
   },
 }

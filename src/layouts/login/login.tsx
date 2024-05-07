@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * INFINITE OPTIMAL
  * 메뉴명 : Login
@@ -63,15 +64,13 @@ export const Login: React.FC = () => {
             }
             mutateLogout(payload)
           },
-          onCancel() {},
         })
       }
     },
   })
-
   const { mutate: mutateLogout } = useMutation(UserApi.logout, {
     onSuccess: (response: any) => {
-      setLogin(id, password)
+      message.success('logout success')
     },
     onError: (error: any) => {
       message.open({
@@ -79,6 +78,29 @@ export const Login: React.FC = () => {
         content: error.response?.data.detail,
       })
     },
+  })
+
+  const { mutate: mutateGoogleLogin } = useMutation(UserApi.signinWithgoogle, {
+    onSuccess: (response: any) => {
+      if (response.user_info) {
+        //로그인 상태 확인되면 localStorage에 user정보 저장 ->  datasetList 페이지로 redirect
+        localStorage.setItem('userId', response.user_info.email)
+        localStorage.setItem('userData', JSON.stringify(response.user_info))
+        localStorage.setItem('companyId', response.user_info.com_id || 'google')
+        localStorage.setItem('userPicture', response.user_info.picture)
+
+        window.location.href = '/admin/main'
+      }
+    },
+    // onError: (error: any) => {
+    // console.log('mutateGoogleLogin error:', error)
+    // message
+    //   .open({
+    //     type: 'error',
+    //     content: error.response?.data.detail,
+    //   })
+    //   .then(() => history.push('/join'))
+    // },
   })
 
   useEffect(() => {
@@ -90,28 +112,10 @@ export const Login: React.FC = () => {
   React.useEffect(() => {
     //로그인 후 redirect된 URL에서 구글 인가코드 추출하여 백엔드로 전달하여 token발급받음
     const params = new URLSearchParams(window.location.search)
-    // console.log('URL search params:', params)
-    const code = params.get('code')
+    const code: string = params.get('code')
 
-    if (code) {
-      console.log('login mounted and the code is ::', code)
-      axios
-        .post(process.env.REACT_APP_API_SERVER_URL + '/login/google', { code })
-        .then((response) => {
-          console.log('/login/google response: ', response.data)
-          if (response.data.user_info) {
-            //로그인 상태 확인되면 localStorage에 user정보 저장 ->  datasetList 페이지로 redirect
-            localStorage.setItem('userId', response.data.user_info.email)
-            localStorage.setItem('userData', JSON.stringify(response.data.user_info))
-            localStorage.setItem('companyId', response.data.user_info.com_id || 'google')
-            localStorage.setItem('userPicture', response.data.user_info.picture)
-
-            window.location.href = '/admin/main'
-          }
-        })
-        .catch((error) => {
-          alert(error)
-        })
+    if (code && code.length > 0) {
+      mutateGoogleLogin({ code: code })
     }
   }, [])
 
@@ -167,7 +171,6 @@ export const Login: React.FC = () => {
 
   return (
     <>
-      <Wrapper />
       <Home_Bg />
       <Logo />
       <SidebarBrand />
@@ -212,7 +215,7 @@ export const Login: React.FC = () => {
             color={'black'}
             type="password"
             placeholder={'Password'}
-            onChange={(e: any) => ChangePassword(e)}
+            onChange={(e: never) => ChangePassword(e)}
             onKeyDown={(e: unknown) => onEnterLogin(e)}
             style={{ width: '100%', marginBottom: '1.3vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
           />
@@ -246,14 +249,6 @@ export const Login: React.FC = () => {
 
 export default Login
 
-const Wrapper = styled.div`
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 99;
-`
 const BgStyle = styled.div`
   background-position: center top;
   background-repeat: no-repeat;
