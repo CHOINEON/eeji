@@ -1,5 +1,5 @@
-import { IconButton, Input, InputGroup, InputLeftElement, useColorModeValue } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
+import { IconButton, Input, InputGroup, InputLeftElement, useColorModeValue } from '@chakra-ui/react'
 export function SearchBar(props: {
   variant?: string
   background?: string
@@ -17,7 +17,6 @@ export function SearchBar(props: {
   return (
     <InputGroup w={{ base: '100%', md: '200px' }} {...rest}>
       <InputLeftElement
-        // eslint-disable-next-line react/no-children-prop
         children={
           <IconButton
             aria-label="search"
