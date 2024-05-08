@@ -8,5 +8,6 @@
     "source.organizeImports": true,
     "source.fixAll": "explicit"
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }

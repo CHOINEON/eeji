@@ -105,7 +105,7 @@ const Ineeji = styled.div`
   height: 25px;
 `
 const Cancle = styled.button`
-  top: 26px;
+  top: 25px;
   left: 1839px;
   width: 56px;
   height: 22px;
