@@ -87,20 +87,38 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
         onOk() {
           handleDelete(data.ds_id)
         },
-        onCancel() {
-          console.log('Cancel')
-        },
       })
     }
   }
 
   return (
     <>
-      <DescBoxContainer>
+      <DescBoxContainer onClick={handleClick}>
+        <div
+          style={{
+            display: 'block',
+            float: 'left',
+            width: '50px',
+            height: '100%',
+            textAlign: 'center',
+            lineHeight: '69px',
+          }}
+        >
+          <label>
+            <input
+              type="checkbox"
+              disabled={true} //체크해서 뭐할건지 정의 안되어있음
+              // checked={checked}
+              // onChange={({ target: { checked } }) => onChange(checked)}
+            />
+            {/* {children} */}
+          </label>
+        </div>
+
+        <TitleWrapper>
+          <FileName>{data?.name}</FileName>
+        </TitleWrapper>
         <div className="container">
-          <TitleWrapper>
-            <FileName>{data?.name}</FileName>
-          </TitleWrapper>
           <Content>
             <div>
               <Tag color="#FE7E0D">{data?.target_y}</Tag>
@@ -135,12 +153,11 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
                 lineHeight: '30px',
                 fontWeight: 500,
               }}
-              onClick={handleClick}
             >
               Run
             </button>
           </ButtonContent>
-          <Content style={{ float: 'right', width: 50 }}>
+          <Content style={{ float: 'right' }}>
             <Dropdown menu={{ items, onClick }}>
               <MoreOutlined style={{ display: 'block', textAlign: 'center', lineHeight: '69px' }} size={16} />
             </Dropdown>
@@ -186,7 +203,7 @@ const DateContent = styled(Content)`
 `
 
 const UserContent = styled(Content)`
-  width: 200px;
+  width: 230px;
 `
 
 const TitleWrapper = styled.div`
@@ -196,4 +213,8 @@ const TitleWrapper = styled.div`
   float: left;
   height: 69px;
   line-height: 69px;
+  // &:hover {
+  //   cursor: pointer;
+  //}
+  //기존css 코드라서 주석 제거하지 않음
 `
