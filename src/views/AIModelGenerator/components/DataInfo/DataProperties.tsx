@@ -62,6 +62,8 @@ const DataProperties = () => {
   }
 
   function generateOptions(data: any) {
+    console.log('generateOptions ::', data)
+
     const col_list = data['columns']
     const non_numeric_cols = data['nonNumericCols']
     const numeric_cols = data['numericCols']

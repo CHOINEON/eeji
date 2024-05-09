@@ -3,9 +3,8 @@ import XaiApi from 'apis/XaiApi'
 import { useEffect, useState } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import { useMutation } from 'react-query'
-import { ReloadOutlined } from '@ant-design/icons'
-import SavedModelList from './PublishableModelList'
 import ApiSyntax from './ApiSyntax'
+import SavedModelList from './PublishableModelList'
 
 const ApiService = () => {
   const [selectedRow, setSelectedRow] = useState()
@@ -35,7 +34,6 @@ const ApiService = () => {
   }, [])
 
   const handleSelect = (param: any) => {
-    console.log('param:', param)
     setSelectedRow(param)
   }
 
