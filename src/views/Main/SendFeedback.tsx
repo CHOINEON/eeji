@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import { Input, Rate } from 'antd'
-import { CustomButton } from '../AIModelGenerator/components/DataInfo/DataImportModal'
 import styled from '@emotion/styled'
-import ColumnLabel from 'components/fields/ColumnLabel'
+import { Input, Rate } from 'antd'
 import CustomerServiceApi from 'apis/CustomerServiceApi'
+import ColumnLabel from 'components/fields/ColumnLabel'
+import { useState } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
+import { CustomButton } from '../AIModelGenerator/components/Modal/DataImportModal'
 
 const SendFeedback = () => {
   const { TextArea } = Input

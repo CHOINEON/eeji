@@ -1,14 +1,14 @@
 import styled from '@emotion/styled'
-import { Input, App, Row, Spin, Typography } from 'antd'
-import useModal from 'hooks/useModal'
-import React, { useEffect, useState } from 'react'
-import { useRecoilValue } from 'recoil'
-import { dataPropertyState } from 'views/AIModelGenerator/store/dataset/atom'
-import { CustomButton } from '../DataInfo/DataImportModal'
-import { getNowDateTime } from 'utils/DateFunction'
-import { useMutation } from 'react-query'
-import ModelApi from 'apis/ModelApi'
+import { App, Input, Row, Spin } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
+import ModelApi from 'apis/ModelApi'
+import useModal from 'hooks/useModal'
+import { useEffect, useState } from 'react'
+import { useMutation } from 'react-query'
+import { useRecoilValue } from 'recoil'
+import { getNowDateTime } from 'utils/DateFunction'
+import { dataPropertyState } from 'views/AIModelGenerator/store/dataset/atom'
+import { CustomButton } from '../Modal/DataImportModal'
 
 const ModelSaveModal = (props: any) => {
   // console.log('ModelSaveModal modal:', props)

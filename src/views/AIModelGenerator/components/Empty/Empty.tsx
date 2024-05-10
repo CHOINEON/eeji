@@ -1,9 +1,7 @@
-import { Button } from 'antd'
-import React from 'react'
 import empty_db from 'assets/img/icons/empty_db.png'
-import styled from 'styled-components'
-import { CustomButton } from '../DataInfo/DataImportModal'
 import useModal from 'hooks/useModal'
+import styled from 'styled-components'
+import { CustomButton } from '../Modal/DataImportModal'
 
 const Empty = () => {
   const { openModal, closeModal } = useModal()
