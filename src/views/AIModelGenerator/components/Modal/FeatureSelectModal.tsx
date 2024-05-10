@@ -1,14 +1,13 @@
 import { Button, Modal, Select, Tag } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import ColumnLabel from 'components/fields/ColumnLabel'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { v4 } from 'uuid'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { featureSelectModalState } from 'views/AIModelGenerator/store/modal/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
-import { inputOptionListState } from 'views/AIModelGenerator/store/userOption/atom'
 import { variableStore } from 'views/AIModelGenerator/store/variable/atom'
 
 const FeatureSelectModal = ({ data, onRunning }: any) => {
@@ -16,7 +15,6 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
   const [variableList, setVariableList] = useRecoilState(variableStore) //전체
   const [analysisResponse, setAnalysisResponse] = useRecoilState(analysisResponseAtom)
   const selectedData = useRecoilValue(selectedDataState)
-  // const userInputOption = useRecoilValue(inputOptionListState)
 
   const [options, setOptions] = useState([])
   const [selectedFeatures, setSelectedFeatures] = useState([])
@@ -57,9 +55,6 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
       const numeric_cols = JSON.parse(selectedData.numeric_cols)
       const non_numeric_cols = JSON.parse(selectedData.non_numeric_cols)
 
-      // console.log(numeric_cols)
-      // console.log(non_numeric_cols)
-
       const newOption: Array<any> = []
       variableList.map((x) => {
         if (numeric_cols?.includes(x.value)) {
@@ -70,7 +65,6 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
       })
       setOptions(newOption)
     }
-    // setOptions(variableList.filter((x) => x.value !== selectedData.targetY))
   }, [])
 
   const handleOk = () => {
@@ -106,23 +100,9 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
         end_date: selectedData.endDate,
         x_value: selectedFeatures || null,
         y_value: selectedData.targetY || '',
-        // type_missing: userInputOption.type_missing,
-        // number_missing: userInputOption.number_missing,
-        // type_outlier: userInputOption.type_outlier,
-        // number_std: userInputOption.number_std,
-        // number_perc: userInputOption.number_perc,
-        // type_scaling: userInputOption.type_scaling,
-        // number_ma: userInputOption.number_ma,
-        // type_model: userInputOption.type_model,
-        // number_epoch: userInputOption.number_epoch,
-        // number_beyssian: userInputOption.number_beyssian,
         if_classification: selectedData.isClassification,
       }
-      // console.log('payload:', payload)
-
       const controller = new AbortController()
-      // setController(controller)
-      // console.log('custom model generate / payload:', payload)
 
       mutateRunning({ type: 'request', payload, controller })
     }
@@ -130,7 +110,6 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
 
   return (
     <Modal
-      // style={{ top: 150 }}
       title="Select feature X"
       open={isModalOpen}
       footer={null}
