@@ -58,7 +58,7 @@ const DataImportModal = (props: any) => {
     }
 
     const { data } = await axiosProgress.post(
-      `/api/reacieve_data_info/${payload.user_id}?user_id=${payload.user_id}`,
+      `/api/receive_data_info/${payload.user_id}?user_id=${payload.user_id}`,
       payload.formData,
       config
     )

@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
-import React, { useEffect } from 'react'
-import { CustomButton } from 'views/AIModelGenerator/components/DataInfo/DataImportModal'
-import { MenuList } from 'views/Main/MenuList'
-import CustomCollapse, { CollapseItem } from './components/Collapse/CustomCollapse'
 import useModal from 'hooks/useModal'
+import { useEffect } from 'react'
 import { useRecoilState } from 'recoil'
 import { SideBarState } from 'stores/sidebar'
+import { CustomButton } from 'views/AIModelGenerator/components/Modal/DataImportModal'
+import { MenuList } from 'views/Main/MenuList'
+import CustomCollapse, { CollapseItem } from './components/Collapse/CustomCollapse'
 
 export const mockData: Array<CollapseItem> = [
   {
