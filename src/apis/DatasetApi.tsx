@@ -37,7 +37,6 @@ const DatasetApi = {
 
     const config = {
       headers: {
-        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/octet-stream',
       },
     }

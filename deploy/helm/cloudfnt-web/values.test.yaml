@@ -8,15 +8,17 @@ image:
   repository: asia-northeast3-docker.pkg.dev/ineeji-cloudai-test/cloudai-cloudfnt-web/cloudfnt-web
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "20240503R1__677af5d"
+  tag: '20240503R1__677af5d'
   env:
     - name: PORT
-      value: "9871"
+      value: '9871'
     - name: REACT_APP_API_SERVER_URL
-      value: "http://10.0.0.35"
+      value: 'http://10.0.0.35'
+    - name: REACT_APP_GOOGLE_ID
+      value: '331963722093-o0li116qqfnsfisotcd0que3vtjp9a04.apps.googleusercontent.com'
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: "cloudfnt-web-test"
+nameOverride: ''
+fullnameOverride: 'cloudfnt-web-test'
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -27,15 +29,17 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: "cloudai-gke-runner"
+  name: 'cloudai-gke-runner'
 
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -47,26 +51,26 @@ service:
   type: ClusterIP
   port: 80
   targetPort: 9871
-  neg_name: "cloudfnt_web_neg"
+  neg_name: 'cloudfnt_web_neg'
 
 ingress:
   enabled: false
-  className: ""
+  className: ''
   annotations:
     kubernetes.io/ingress.global-static-ip-name: eeji-cloudfnt-web-lb-endpoint
     networking.gke.io/managed-certificates: eeji-cloudfnt-web-test-cert
   hosts:
-   - http:
-     paths:
-       - path: /
-         pathType: ImplementationSpecific
+    - http:
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
   tls: []
   defaultBackendExist: true
 
 certificate:
-  name: "eeji-cloudfnt-web-test-cert"
+  name: 'eeji-cloudfnt-web-test-cert'
   domains:
-    - "test.infinite-optimal.com"
+    - 'test.infinite-optimal.com'
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -127,8 +131,8 @@ affinity:
   nodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
-      - matchExpressions:
-        - key: cloud.google.com/gke-nodepool
-          operator: In
-          values:
-          - cpu-node-pool-ineeji-cloudai-test
+        - matchExpressions:
+            - key: cloud.google.com/gke-nodepool
+              operator: In
+              values:
+                - cpu-node-pool-ineeji-cloudai-test
