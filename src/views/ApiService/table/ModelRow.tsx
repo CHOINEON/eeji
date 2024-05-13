@@ -27,68 +27,22 @@ interface IModelRow {
   onClick: () => void
 }
 
-const VariableCell = (jsonString: string, max?: number) => {
-  const [expand, setExpand] = useState(false)
-  const [varArr, setVarArr] = useState([])
-
-  useEffect(() => {
-    console.log('test:', expand)
-  }, [expand])
-
-  useEffect(() => {
-    setVarArr(JSON.parse(jsonString))
-  }, [])
-
-  const onHandleClick = () => {
-    alert('clicked:')
-    // setExpand(!expand)
-  }
-
-  const renderedTags = varArr.slice(0, max).map((el: any, idx: number) => (
-    <Tag key={idx} color="default">
-      {el}
-    </Tag>
-  ))
-
-  return (
-    <>
-      {renderedTags}
-
-      {varArr.length > max && (
-        <button className="inline-block">
-          <Badge
-            count={
-              expand ? (
-                <PlusCircleOutlined style={{ color: 'black' }} onClick={onHandleClick} />
-              ) : (
-                <MinusCircleOutlined />
-              )
-            }
-          />
-        </button>
-      )}
-    </>
-  )
-}
-
 const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
-  // console.log('item:', item)
-  // const [apiInfo, setApiInfo] = useState({ api_key: '' })
-  const maxCount = 5
+  const [maxCount, setMaxCount] = useState(4)
+  const [varArr, setVarArr] = useState([])
   const { message } = App.useApp()
   const [result, setResult] = useState({ api_key: '', request: {}, response: {} })
   const [apiInfo, setApiInfo] = useRecoilState(publishResultState)
+  const [loadMore, setLoadMore] = useState(false)
 
   const { mutate: mutatePublishModelAPI } = useMutation(ModelApi.publishModelAPI, {
     onSuccess: (result: any) => {
-      // console.log('mutateGetModelList:', result)
       setResult(result)
       setApiInfo(result)
       handleCopyClipBoard(result.api_key)
     },
     onError: (error: any, query: any) => {
       console.log('er:', error)
-      // message.warning()
     },
   })
 
@@ -101,8 +55,14 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
     }
   }
 
+  useEffect(() => {
+    setVarArr(JSON.parse(item.columns).slice(0, maxCount))
+
+    if (loadMore) setMaxCount(4)
+    else setMaxCount(999)
+  }, [loadMore])
+
   const onHandlePublish = (model_id: string) => {
-    // console.log('model_id:', model_id)
     const payload = {
       com_id: localStorage.getItem('companyId'),
       user_id: localStorage.getItem('userId'),
@@ -111,22 +71,48 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
     mutatePublishModelAPI(payload)
   }
 
-  //row hover style
-  //      // hover:bg-[#D5DCEF]
-  // ${active === true ? 'bg-[#D5DCEF]' : 'bg-[#F6F8FF] '}
+  function RenderInputValueCell(tagArr: Array<string>, loadMore: boolean) {
+    const onHandleClick = () => {
+      setLoadMore((prev: boolean) => !prev)
+    }
+
+    const renderedTags = tagArr.map((el: any, idx: number) => (
+      <Tag key={idx} color="default">
+        {el}
+      </Tag>
+    ))
+
+    return (
+      <>
+        {renderedTags}
+        {/* {inputArr.length > max && ( */}
+        <button className="inline-block">
+          <Badge
+            count={
+              loadMore ? (
+                <MinusCircleOutlined onClick={onHandleClick} />
+              ) : (
+                <PlusCircleOutlined style={{ color: 'black' }} onClick={onHandleClick} />
+              )
+            }
+          />
+        </button>
+        {/* )} */}
+      </>
+    )
+  }
 
   return (
     <Row
       // role="button"
       onClick={onClick}
-      className={`w-100 h-[43px] px-1 flex-wrap overflow-hidden rounded-lg border-[#D5DCEF] bg-[#F6F8FF]`}
+      className={`w-100  px-1 flex-wrap overflow-hidden rounded-lg border-[#D5DCEF] bg-[#F6F8FF]`}
     >
       <RowItem className="w-1/12">{item.create_date}</RowItem>
-      {/* <RowItem className="w-1/12">{item.update_date}</RowItem> */}
       <RowItem className="w-2/12">{item.model_name}</RowItem>
       <RowItem className="w-1/12">{item.descr}</RowItem>
       <RowItem className="w-1/12">{item.target_y}</RowItem>
-      <RowItem className="w-3/12">{VariableCell(item.columns, maxCount)}</RowItem>
+      <RowItem className="w-3/12">{RenderInputValueCell(varArr, loadMore)}</RowItem>
       <RowItem className="w-1/12">
         <Tag className="m-auto" color={item.is_classification ? '#2db7f5' : '#87d068'}>
           {item.is_classification ? 'Classification' : 'Regression'}
@@ -152,8 +138,6 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
 }
 
 const RowItem = styled.span`
-  // border: 1px solid blue;
-  // flex: 1;
   font-family: 'Helvetica Neue';
   font-size: 14px;
   color: #002d65;
@@ -167,7 +151,6 @@ const PublishButton = styled.button<{ toggle: boolean }>`
   border-radius: 10px;
   height: 30px;
   width: ${(props: any) => (props.toggle ? '100%' : '75px')};
-
   padding: 0 5%;
   line-height: 30px;
   font-family: 'Helvetica Neue';
