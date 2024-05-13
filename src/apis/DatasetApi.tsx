@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { axiosProgress, axiosPublic } from './axios'
 import { TResponseType } from './type/commonResponse'
 import {
@@ -31,18 +30,29 @@ const DatasetApi = {
 
   //upload to GCS with Signed URL
   uploadFileToGcs: async (payload: IUploadFileReq): Promise<any> => {
-    const axiosInstance = axios.create({
-      baseURL: payload.signedUrl,
+    // const axiosInstance = axios.create({
+    //   baseURL: payload.signedUrl,
+    // })
+
+    // const config = {
+    //   headers: {
+    //     'Content-Type': 'application/octet-stream',
+    //   },
+    // }
+
+    // const { data } = await axiosInstance.put(payload.signedUrl, payload.file, config)
+    // return data
+
+    const response = await fetch(payload.signedUrl, {
+      method: 'POST',
+      body: payload.file,
     })
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/octet-stream',
-      },
+    if (response.ok) {
+      console.log('File uploaded successfully')
+    } else {
+      console.error('Error uploading file')
     }
-
-    const { data } = await axiosInstance.put(payload.signedUrl, payload.file, config)
-    return data
   },
 
   //파일 업로드 후 description 내려받기
