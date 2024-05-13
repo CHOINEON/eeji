@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import styled from '@emotion/styled'
@@ -27,14 +27,57 @@ interface IModelRow {
   onClick: () => void
 }
 
+const VariableCell = (jsonString: string, max?: number) => {
+  const [expand, setExpand] = useState(false)
+  const [varArr, setVarArr] = useState([])
+
+  useEffect(() => {
+    console.log('test:', expand)
+  }, [expand])
+
+  useEffect(() => {
+    setVarArr(JSON.parse(jsonString))
+  }, [])
+
+  const onHandleClick = () => {
+    alert('clicked:')
+    // setExpand(!expand)
+  }
+
+  const renderedTags = varArr.slice(0, max).map((el: any, idx: number) => (
+    <Tag key={idx} color="default">
+      {el}
+    </Tag>
+  ))
+
+  return (
+    <>
+      {renderedTags}
+
+      {varArr.length > max && (
+        <button className="inline-block">
+          <Badge
+            count={
+              expand ? (
+                <PlusCircleOutlined style={{ color: 'black' }} onClick={onHandleClick} />
+              ) : (
+                <MinusCircleOutlined />
+              )
+            }
+          />
+        </button>
+      )}
+    </>
+  )
+}
+
 const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
   // console.log('item:', item)
   // const [apiInfo, setApiInfo] = useState({ api_key: '' })
+  const maxCount = 5
   const { message } = App.useApp()
   const [result, setResult] = useState({ api_key: '', request: {}, response: {} })
   const [apiInfo, setApiInfo] = useRecoilState(publishResultState)
-  const [maxCount, setMaxCount] = useState(5)
-  const [loadMore, setLoadMore] = useState(false)
 
   const { mutate: mutatePublishModelAPI } = useMutation(ModelApi.publishModelAPI, {
     onSuccess: (result: any) => {
@@ -72,51 +115,6 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
   //      // hover:bg-[#D5DCEF]
   // ${active === true ? 'bg-[#D5DCEF]' : 'bg-[#F6F8FF] '}
 
-  function RenderInputValueCell(jsonString: string, max?: number) {
-    const inputArr = JSON.parse(jsonString)
-
-    const onHandleClick = () => {
-      // setLoadMore((prev: boolean) => !prev)
-    }
-
-    const renderedTags = inputArr.slice(0, max).map((el: any, idx: number) => (
-      <Tag key={idx} color="default">
-        {el}
-      </Tag>
-    ))
-
-    const skippedTags = inputArr.slice(max).map((el: any, idx: number) => (
-      <Tag key={idx} color="default">
-        {el}
-      </Tag>
-    ))
-
-    // const loadMoreButton = (
-    //   <button className="inline-block">
-    //     <Badge count={<PlusCircleOutlined style={{ color: 'black' }} onClick={this.setMaxCount(inputArr.length)} />} />
-    //   </button>
-    // )
-
-    return (
-      <>
-        {renderedTags}
-        {inputArr.length > max && (
-          <button className="inline-block">
-            <Badge
-              count={
-                loadMore ? (
-                  <PlusCircleOutlined style={{ color: 'black' }} onClick={onHandleClick} />
-                ) : (
-                  <MinusCircleOutlined />
-                )
-              }
-            />
-          </button>
-        )}
-      </>
-    )
-  }
-
   return (
     <Row
       // role="button"
@@ -128,7 +126,7 @@ const ModelRow = ({ id, item, active, onClick }: IModelRow) => {
       <RowItem className="w-2/12">{item.model_name}</RowItem>
       <RowItem className="w-1/12">{item.descr}</RowItem>
       <RowItem className="w-1/12">{item.target_y}</RowItem>
-      <RowItem className="w-3/12">{RenderInputValueCell(item.columns, maxCount)}</RowItem>
+      <RowItem className="w-3/12">{VariableCell(item.columns, maxCount)}</RowItem>
       <RowItem className="w-1/12">
         <Tag className="m-auto" color={item.is_classification ? '#2db7f5' : '#87d068'}>
           {item.is_classification ? 'Classification' : 'Regression'}
