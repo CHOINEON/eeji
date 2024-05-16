@@ -44,7 +44,7 @@ const DatasetApi = {
     // return data
 
     const response = await fetch(payload.signedUrl, {
-      method: 'POST',
+      method: 'PUT',
       body: payload.file,
     })
 
