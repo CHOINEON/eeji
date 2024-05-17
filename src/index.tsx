@@ -16,19 +16,31 @@ const antdCustomTheme = {
     fontFamily: 'Helvetica Neue',
     colorPrimary: '#1677ff',
     borderRadius: 10,
+    // colorBgContainer: '#FFFFFF',
+    // colorBgContainerDisabled: '#5951DB33',
   },
   components: {
     Button: {
+      // colorPrimaryActive: '#4338f7',
       colorPrimary: '#4338f7 !important',
+      // colorBorder: '#4338F7',
+      // borderRadius: '10px',
     },
     Modal: {
-      borderRadius: 12,
+      borderRadius: 10,
     },
     Input: {
-      borderRadius: 12,
+      // colorBorder: '1px solid #A3AFCF',
+      // colorBgContainer: '#fff',
+      borderRadius: 10,
     },
     Select: {
-      borderRadius: 12,
+      // colorBorder: '1px solid #ff973d',
+      borderRadius: 10,
+      // colorPrimary: '#4338f7',
+      // colorBgBase: '#FFFFFF',
+      // colorBgContainer: '#FFFFFF',
+      // colorBorderBg: '1px solid #A3AFCF',
     },
   },
 }
