@@ -47,7 +47,6 @@ const ModelRow = ({ item, active, onClick }: any) => {
 }
 
 const ModelList = ({ data, onSelect }: any) => {
-  console.log('data::', data)
   const [btnActive, setBtnActive] = useState(0)
 
   const toggleActive = (idx: number) => {

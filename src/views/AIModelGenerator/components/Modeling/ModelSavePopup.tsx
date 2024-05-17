@@ -78,10 +78,7 @@ function ModelSavePopup(props: any) {
   }
 
   const handleSave = () => {
-    console.log('save')
     if (modelList.find((model) => model.model_name === title)) {
-      console.log('if')
-
       messageApi.open({
         type: 'error',
         content: `이미 존재하는 모델명입니다. (${title})`,
