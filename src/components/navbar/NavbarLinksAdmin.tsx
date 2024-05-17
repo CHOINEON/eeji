@@ -4,40 +4,34 @@ import {
   Button,
   Flex,
   Icon,
-  Image,
-  Link,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Text,
-  useColorModeValue,
   useColorMode,
+  useColorModeValue,
 } from '@chakra-ui/react'
 // Custom Components
-import { ItemContent } from 'components/menu/ItemContent'
-import { SearchBar } from 'components/navbar/searchBar/SearchBar'
+import styled from '@emotion/styled'
 import { SidebarResponsive } from 'components/sidebar/Sidebar'
 import PropTypes from 'prop-types'
 import React from 'react'
-import styled from '@emotion/styled'
 // Assets
-import navImage from 'assets/img/layout/Navbar.png'
-import { MdLanguage } from 'react-icons/md'
-import { IoMdMoon, IoMdSunny } from 'react-icons/io'
 import { FaEthereum } from 'react-icons/fa'
+import { IoMdMoon, IoMdSunny } from 'react-icons/io'
+import { MdLanguage } from 'react-icons/md'
 import routes from 'routes'
 
-import ico_ko from './img/ico_ko.png'
 import ico_jp from './img/ico_jp.png'
+import ico_ko from './img/ico_ko.png'
 import ico_us from './img/ico_us.png'
-import BarBg from './img/side_bar_bg.png'
 
-import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router-dom'
-import UserApi from 'apis/UserApi'
-import { useMutation } from 'react-query'
 import { message } from 'antd'
+import UserApi from 'apis/UserApi'
+import { useTranslation } from 'react-i18next'
+import { useMutation } from 'react-query'
+import { useHistory } from 'react-router-dom'
 
 const LangParentBox = styled.div`
   display: flex;
@@ -155,17 +149,6 @@ export default function HeaderLinks(props: { secondary: boolean }) {
       boxShadow={shadow}
       style={{ backgroundColor: 'rgba(0,0,0,0)', color: '#002D65' }}
     >
-      {/* <SearchBar
-      
-        mb={() => {
-          if (secondary) {
-            return { base: "10px", md: "unset" };
-          }
-          return "unset";
-        }}
-        me="10px"
-        borderRadius="30px"
-      /> */}
       <Flex
         bg={ethBg}
         display={secondary ? 'flex' : 'none'}
@@ -245,7 +228,6 @@ export default function HeaderLinks(props: { secondary: boolean }) {
           </Flex>
         </MenuList>
       </Menu> */}
-
       <Menu>
         <MenuButton p="0px">
           <Icon mt="0px" as={MdLanguage} color={navbarIconBlue} w="20px" h="18px" me="10px" />
@@ -273,7 +255,6 @@ export default function HeaderLinks(props: { secondary: boolean }) {
           <Flex flexDirection="column"></Flex>
         </MenuList>
       </Menu>
-
       <Button
         variant="no-hover"
         bg="transparent"
