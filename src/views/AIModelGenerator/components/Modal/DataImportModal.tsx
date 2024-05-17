@@ -75,8 +75,8 @@ const DataImportModal = (props: any) => {
       queryClient.invalidateQueries('datasets')
     },
     onError: (error: any, query: any) => {
-      // setSaving(false)
       message.error(error)
+      // setSaving(false)
       // console.error(error)
     },
   })

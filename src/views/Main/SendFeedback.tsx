@@ -16,7 +16,6 @@ const SendFeedback = () => {
 
   const { mutate: mutateSend } = useMutation(CustomerServiceApi.postCustomerFeedback, {
     onSuccess: (response: any) => {
-      console.log('mutateSend;', response)
       alert('성공!')
       setModal(null)
     },

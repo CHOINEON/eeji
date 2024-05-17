@@ -35,8 +35,6 @@ const SavedModelImport = () => {
 
   const { mutate: mutatePostResult } = useMutation(XaiApi.postModelForXaiResult, {
     onSuccess: (result: any) => {
-      console.log('mutateGetResult:', result)
-
       setXaiResult({
         sample_size: result.sample_size,
         feature_length: result.feature_length,
@@ -52,7 +50,7 @@ const SavedModelImport = () => {
       setModal(null)
     },
     onError: (error: any, query: any) => {
-      console.log('error: ', error)
+      message.error(error)
     },
   })
 

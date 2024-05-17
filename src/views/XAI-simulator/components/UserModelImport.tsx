@@ -44,8 +44,6 @@ const UserModelImport = () => {
 
   const { mutate: mutateUpload } = useMutation(XaiApi.uploadModelwithData, {
     onSuccess: (response: any) => {
-      console.log('mutateUpload;', response)
-
       setModelUploadResult({ ...modelUploadResult, uuid: response.uuid, variable_list: response['variable_list'] })
       setSaving(false)
     },
@@ -83,7 +81,6 @@ const UserModelImport = () => {
       setModal(null)
     },
     onError: (error: any, query: any) => {
-      console.log('error:', error)
       message.open({
         type: 'error',
         content: error,
@@ -96,8 +93,6 @@ const UserModelImport = () => {
   })
   const { mutate: mutateSave } = useMutation(ModelApi.saveModelwithColumns, {
     onSuccess: (response: any) => {
-      // console.log('mutateSave;', response)
-
       //결과 데이터 받아오기 위해 다시 요청
       const payload = {
         user_id: user_id,
@@ -108,7 +103,6 @@ const UserModelImport = () => {
       mutatePostResult(payload)
     },
     onError: (error: any, query: any) => {
-      console.log('error:', error)
       message.open({
         type: 'error',
         content: error,

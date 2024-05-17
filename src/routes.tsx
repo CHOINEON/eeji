@@ -1,14 +1,13 @@
 /* eslint-disable prettier/prettier */
 import { Icon } from '@chakra-ui/react'
-import { MdOutlineModelTraining, MdOutlineAnalytics } from 'react-icons/md'
+import { MdOutlineAnalytics, MdOutlineModelTraining } from 'react-icons/md'
 
 // Admin Imports
 import AIModelGenerator from 'views/AIModelGenerator'
-import PriceForecasting from 'views/PriceForecasting/OilPrice'
-import PDP_DynamicRenderChart from 'views/AIModelGenerator/components/Chart/PDP_Plot/PDP_DynamicRenderChart'
-import XAIsimulator from 'views/XAI-simulator'
-import Main from 'views/Main/Main'
 import ApiService from 'views/ApiService'
+import Main from 'views/Main/Main'
+import PriceForecasting from 'views/PriceForecasting/OilPrice'
+import XAIsimulator from 'views/XAI-simulator'
 
 // Auth Imports
 

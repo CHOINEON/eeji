@@ -10,8 +10,6 @@ const XaiApi = {
         'content-type': 'multipart/form-data',
       },
     }
-
-    console.log('uploadModelwithData param:', params)
     const { data } = await axiosPublic.post(`api/upload_custom_model_new/${params.user_id}`, params.formData, config)
     return data
   },

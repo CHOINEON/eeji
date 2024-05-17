@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Badge, Card } from 'antd'
 import ModelApi from 'apis/ModelApi'
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useMutation } from 'react-query'
 
 const PredictionRow = ({ item, active, onClick }: any) => {
@@ -19,7 +19,6 @@ const PredictionRow = ({ item, active, onClick }: any) => {
 
   const APIMenu = () => {
     const PublishAPI = () => {
-      console.log('api')
       mutatePublishModelAPI({ com_id: item.com_id, user_id: item.user_id, model_id: item.model_id })
     }
 

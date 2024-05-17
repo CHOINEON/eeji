@@ -23,7 +23,7 @@ export const useApiError = () => {
   }
 
   const handleError = useCallback((axiosError: AxiosError) => {
-    console.log('useApiError / handleError ::', axiosError)
+    // console.log('useApiError / handleError ::', axiosError)
 
     const errorResponse = axiosError.response?.data
     const error = axiosError?.name
