@@ -31,3 +31,8 @@
   font-family: 'Helvetica Neue Regular';
   src: url('HelveticaNeue Regular.ttf') format('ttf');
 }
+
+@font-face {
+  font-family: 'Futura';
+  src: url('FuturaCyrillicLight.ttf') format('ttf');
+}
