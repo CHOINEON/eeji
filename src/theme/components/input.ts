@@ -5,7 +5,7 @@ export const inputStyles = {
       baseStyle: {
         field: {
           fontWeight: 400,
-          borderRadius: '10px',
+          borderRadius: '8px',
         },
       },
 

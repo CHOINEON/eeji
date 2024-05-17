@@ -8,23 +8,24 @@
  * 수정 : 조미라
  */
 
-import { Button, FormControl } from '@chakra-ui/react'
+import { Button, FormControl, Input } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { App, Input, Select } from 'antd'
-import UserApi from 'apis/UserApi'
+import { App, Select } from 'antd'
 import logo from 'assets/img/ineeji/logo_wh.svg'
 import axios from 'axios'
+import React, { useEffect } from 'react'
+import bottom_title from './img/bottom_title.png'
+import ineeji from './img/ineeji.png'
+import new_mainbg from './img/new_mainbg.png'
+import newmain_font from './img/newmain_font.png'
+import circle from './img/package.png'
+
+import UserApi from 'apis/UserApi'
 import SidebarBrand from 'components/sidebar/components/Brand'
 import useGetCompanies from 'hooks/queries/useGetCompanies'
-import React, { useEffect } from 'react'
 import { useMutation } from 'react-query'
 import AvailableServiceIcon from './components/AvailableServiceIcon'
 import GoogleSignin from './components/GoogleSigninBtn'
-import bottom_title from './img/bottom_title.png'
-import ineeji from './img/ineeji.png'
-import main_bg_circle from './img/main_bg_circle.png'
-import circle from './img/package.png'
-import solution_title from './img/solution_title.png'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -195,17 +196,16 @@ export const Login: React.FC = () => {
         <FormControl>
           <Select
             id="company"
-            size="large"
+            size={'large'}
             placeholder={'Select Company'}
             onChange={handleChange}
-            style={{ width: '100%', marginBottom: '30px', border: 0 }}
+            style={{ width: '100%', marginBottom: '2vh', border: 0 }}
             options={companyList}
           />
           <Input
             id="id"
             color={'black'}
             type="text"
-            size="large"
             placeholder={'ID'}
             onChange={(e: any) => ChangeId(e)}
             style={{ width: '100%', marginBottom: '1.3vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
@@ -214,7 +214,6 @@ export const Login: React.FC = () => {
             id="password"
             color={'black'}
             type="password"
-            size="large"
             placeholder={'Password'}
             onChange={(e: never) => ChangePassword(e)}
             onKeyDown={(e: unknown) => onEnterLogin(e)}
@@ -229,17 +228,19 @@ export const Login: React.FC = () => {
             backgroundColor: '#4338f7',
             color: '#fff',
             width: '100%',
-            height: 46,
+            borderRadius: '7px',
           }}
         >
           Login
         </Button>
         <OrWrapper>or</OrWrapper>
-        <GoogleSignin />
+
+        <div style={{ marginTop: '20px', textAlign: 'center' }}>
+          <GoogleSignin />
+        </div>
         <TextMenuWrapper>
-          <TextWrapper onClick={() => message.info('관리자에게 문의하세요')}>Find ID | </TextWrapper>
-          <TextWrapper onClick={() => message.info('관리자에게 문의하세요')}>Find Password | </TextWrapper>
-          <TextWrapper onClick={() => message.info('관리자에게 문의하세요')}>Join</TextWrapper>
+          <TextWrapper>Find ID |</TextWrapper> <TextWrapper>Find Password</TextWrapper>
+          <TextWrapper> | Join</TextWrapper>
         </TextMenuWrapper>
       </FormWrap>
     </>
@@ -261,16 +262,16 @@ const Login_ineejiIcon = styled.div`
   margin-bottom: 45px;
 `
 const OrWrapper = styled.div`
-  display: block;
+  width: 19px;
   height: 27px;
-  text-align: center;
+  margin-left: 7vw;
   padding-top: 1vh;
   padding-bottom: 1vh;
   font-size: 16px;
   color: #b0bccb;
 `
 const Home_Bg = styled(BgStyle)`
-  background-image: url(${main_bg_circle});
+  background-image: url(${new_mainbg});
   background-size: cover;
   position: fixed;
   opacity: 1;
@@ -288,12 +289,12 @@ const Beyond = styled.div`
   left: 135px;
   width: 414px;
   height: 42px;
+  z-index: 99999;
   position: fixed;
   letter-spacing: 0.06vw;
 `
 
 const FormWrap = styled.div`
-  min-width: 398px;
   width: 18vw;
   padding-top: 1.5vw;
   padding-left: 1.5vw;
@@ -306,13 +307,22 @@ const FormWrap = styled.div`
   background-color: #fff;
   border-radius: 30px;
 `
-
+// const Beyond = styled.div`
+//   font-size: 29px;
+//   color: #fff;
+//   top: 189px;
+//   left: 140px;
+//   width: 414px;
+//   height: 42px;
+//   z-index: 99999;
+//   position: absolute;
+// `
 const Title = styled(BgStyle)`
   background-position: left 7vw top 12vw;
   background-size: 30% auto;
-  background-image: url(${solution_title});
+  background-image: url(${newmain_font});
   position: fixed;
-  left: -5px;
+  left: 0;
   right: 0;
   bottom: 0;
   top: 0;
@@ -367,33 +377,30 @@ const BottomCotents = styled.div`
 `
 const LoginTitle = styled.div`
   font-family: 'Helvetica Bold';
-  font-size: 35px;
+  font-size: 1.5vw;
   color: #4338f7;
   left: 1409px;
-  width: 100%;
+  width: 114px;
   padding-bottom: 0px;
 `
 const LoginSubTitle = styled.div`
   font-family: 'Noto Sans';
-  font-size: 13px;
+  font-size: 0.6vw;
   color: #afafaf;
-  letter-spacing: 1px;
+  letter-spacing: 0.03vw;
   padding-bottom: 0;
 `
 const TextWrapper = styled.button`
   color: #a3afcf;
   font-size: 13px;
-  margin: 5px;
+  margin-right: 10px;
 `
 const LoginIcon = styled.div`
   background-position: center;
   margin-bottom: 3vw;
 `
 const TextMenuWrapper = styled.div`
-  width: 100%;
-  display: block;
-  float: left;
+  display: flex;
   padding-top: 15px;
-  text-align: center;
-  margin: auto;
+  justify-content: center;
 `
