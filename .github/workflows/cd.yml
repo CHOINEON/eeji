@@ -1,0 +1,122 @@
+name: cloudfnt-Web CD
+
+on:
+    push:
+        branches: 
+          - main
+        paths:
+          - 'deploy/cd.json'
+
+permissions:
+  contents: 'read'
+  id-token: 'write'
+
+jobs:       
+    build_deploy:
+        name: 'Build image & Deploy prod cluster'
+        runs-on: ubuntu-latest
+        environment: prod
+        env:
+          GAR_REGISTRY: "asia-northeast3-docker.pkg.dev"
+          GCP_PROJECT: "ineeji-solution-tf"
+          GKE_CLUSTER: "gke-primary-ineeji-solution-tf"
+          GKE_CLUSTER_LOCATION: "asia-northeast3-a"
+
+        outputs:
+          image_tag: ${{ steps.generate-name-tag.outputs.IMAGETAG }}
+          name_tag: ${{ steps.generate-name-tag.outputs.NAMETAG }}
+        defaults:
+          run:
+            shell: bash
+
+        steps:
+        - uses: actions/checkout@v3
+
+        - name: Install jq
+          run: |
+            sudo apt-get update && sudo apt-get install jq
+        
+        - name: Setup up QEMU
+          uses: docker/setup-qemu-action@v3
+        
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
+        
+        - name: Get the deployment info by parsing the CD.json manifest file
+          id: get-deploy-env
+          run: |
+            service=$(jq -r '.service' deploy/cd.json)
+            version=$(jq -r '.version' deploy/cd.json)
+            docker_file=$(jq -r '.dockerfile' deploy/cd.json)
+            echo "SERVICE=$service" >> $GITHUB_OUTPUT
+            echo "VERSION=$version" >> $GITHUB_OUTPUT
+            echo "DOCKERFILE=$docker_file" >> $GITHUB_OUTPUT
+        
+        - name: Generate image name & tag
+          id: generate-name-tag
+          run: |
+            GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c1-7)
+            name_tag=${{ steps.get-deploy-env.outputs.VERSION }}__${GITHUB_SHA_SHORT}
+            echo "NAME_TAG=$name_tag" >> $GITHUB_OUTPUT
+            echo "IMAGE_TAG=${{ env.GAR_REGISTRY }}/${{ env.GCP_PROJECT }}/cloudai-${{ steps.get-deploy-env.outputs.SERVICE }}/${{ steps.get-deploy-env.outputs.SERVICE }}:$name_tag" >> $GITHUB_OUTPUT
+        
+        # Configure gcloud authentication to Google Cloud
+        - id: auth
+          name: Authenticate with Google Cloud
+          uses: 'google-github-actions/auth@v2'
+          with:
+            workload_identity_provider: 'projects/42578919430/locations/global/workloadIdentityPools/github-action-pool/providers/iam-terraform-infra'
+            service_account: 'tf-action-runner@ineeji-solution-tf.iam.gserviceaccount.com'
+            token_format: access_token
+        
+        - name: 'Set up Cloud SDK'
+          uses: 'google-github-actions/setup-gcloud@v2'
+          with:
+            version: '>= 363.0.0'
+    
+        - name: 'Use gcloud CLI'
+          run: 'gcloud info'
+        
+        - name: 'Login to Artifact Registry'
+          uses: docker/login-action@v3
+          with:
+            registry: ${{ env.GAR_REGISTRY }}
+            username: oauth2accesstoken
+            password: ${{ steps.auth.outputs.access_token }}
+        
+        - id: docker-push-tagged
+          name: Tag Docker image and push to GAR
+          uses: docker/build-push-action@v5
+          with: 
+            context: .
+            push: true
+            tags: |
+              ${{ steps.generate-name-tag.outputs.IMAGE_TAG }}
+        
+        - id: print-docker-push-outputs
+          name: Print docker image outputs
+          run: |
+            echo "ImageID:${{ steps.docker-push-tagged.outputs.imageid}}\nImageDigest:${{ steps.docker-push-tagged.outputs.digest }}\n"
+        
+        # Install helm 
+        - uses: azure/setup-helm@v4.2.0
+
+        # Get GKE credentials
+        - id: 'get-gke-credentials'
+          uses: 'google-github-actions/get-gke-credentials@v2'
+          with:
+            cluster_name: ${{ env.GKE_CLUSTER }}
+            location: ${{ env.GKE_CLUSTER_LOCATION }}
+        
+        # Render helm chart with the IMAGE TAG
+        - name: 'helm template'
+          run: |
+            cd deploy/helm;
+            helm template eeji-cloudfnt-web-prod cloudfnt-web -f cloudfnt-web/values.prod.yaml --set image.tag=${{ steps.generate-name-tag.outputs.NAME_TAG }} | tee cloudfnt-web-chart.yaml
+            kubectl apply -f cloudfnt-web-chart.yaml -n default
+        
+        # Print env variables and the event payload for the debugging purpose.
+        - name: Debug
+          if: always()
+          uses: hmarr/debug-action@v3
+        # TODO: notify failure and sucess

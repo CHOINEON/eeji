@@ -1,0 +1,113 @@
+---
+# Source: cloudfnt-web/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cloudai-gke-runner
+  annotations:
+    iam.gke.io/gcp-service-account: "cloudai-gke-runner@ineeji-solution-tf.iam.gserviceaccount.com"
+---
+# Source: cloudfnt-web/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudfnt-web-prod
+  labels:
+    helm.sh/chart: cloudfnt-web-1.0.0
+    app.kubernetes.io/name: cloudfnt-web
+    app.kubernetes.io/instance: eeji-cloudfnt-web-prod
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    cloud.google.com/neg: '{"exposed_ports": { "80":{}}}'
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 9871
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: cloudfnt-web
+    app.kubernetes.io/instance: eeji-cloudfnt-web-prod
+---
+# Source: cloudfnt-web/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudfnt-web-prod
+  labels:
+    helm.sh/chart: cloudfnt-web-1.0.0
+    app.kubernetes.io/name: cloudfnt-web
+    app.kubernetes.io/instance: eeji-cloudfnt-web-prod
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cloudfnt-web
+      app.kubernetes.io/instance: eeji-cloudfnt-web-prod
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: cloudfnt-web-1.0.0
+        app.kubernetes.io/name: cloudfnt-web
+        app.kubernetes.io/instance: eeji-cloudfnt-web-prod
+        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: cloudai-gke-runner
+      securityContext:
+        {}
+      containers:
+        - name: cloudfnt-web
+          securityContext:
+            {}
+          image: "asia-northeast3-docker.pkg.dev/ineeji-solution-tf/cloudai-cloudfnt-web/cloudfnt-web:20240503R1__677af5d"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PORT
+              value: "9871"
+            - name: REACT_APP_API_SERVER_URL
+              value: http://10.0.0.35
+            - name: REACT_APP_GOOGLE_ID
+              value: 42578919430-p1so0e8e9s3ovojrc7a24c3kn6oq89g1.apps.googleusercontent.com
+          ports:
+            - name: http
+              containerPort: 9871
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /health
+              port: 9871
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /health
+              port: 9871
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 2000m
+              memory: 4Gi
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: cloud.google.com/gke-nodepool
+                operator: In
+                values:
+                - cpu-node-pool-ineeji-cloudai-test
+                - default-pool
+                - platform-node-pool-ineeji-solution-tf
+      tolerations:
+        - effect: NoSchedule
+          key: dedicated
+          operator: Equal
+          value: cloudfnt

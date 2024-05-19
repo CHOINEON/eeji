@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: asia-northeast3-docker.pkg.dev/ineeji-cloudai-test/cloudai-cloudfnt-web/cloudfnt-web
-  pullPolicy: Always
+  repository: asia-northeast3-docker.pkg.dev/ineeji-solution-tf/cloudai-cloudfnt-web/cloudfnt-web
+  pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: '20240503R1__677af5d'
   env:
@@ -15,18 +15,19 @@ image:
     - name: REACT_APP_API_SERVER_URL
       value: 'http://10.0.0.35'
     - name: REACT_APP_GOOGLE_ID
-      value: '331963722093-o0li116qqfnsfisotcd0que3vtjp9a04.apps.googleusercontent.com'
+      value: '42578919430-p1so0e8e9s3ovojrc7a24c3kn6oq89g1.apps.googleusercontent.com'
 imagePullSecrets: []
 nameOverride: ''
-fullnameOverride: 'cloudfnt-web-test'
+fullnameOverride: 'cloudfnt-web-prod'
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: false
+  create: true
   # Automatically mount a ServiceAccount's API credentials?
   automount: true
   # Annotations to add to the service account
-  annotations: {}
+  annotations:
+    iam.gke.io/gcp-service-account: cloudai-gke-runner@ineeji-solution-tf.iam.gserviceaccount.com
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: 'cloudai-gke-runner'
@@ -69,9 +70,9 @@ ingress:
 
 certificate:
   enabled: false
-  name: 'eeji-cloudfnt-web-test-cert'
+  name: 'eeji-cloudfnt-web-prod-cert'
   domains:
-    - 'test.infinite-optimal.com'
+    - 'prod.infinite-optimal.com'
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -137,3 +138,5 @@ affinity:
               operator: In
               values:
                 - cpu-node-pool-ineeji-cloudai-test
+                - default-pool
+                - platform-node-pool-ineeji-solution-tf
