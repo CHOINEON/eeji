@@ -22,8 +22,8 @@ import GoogleSignin from './components/GoogleSigninBtn'
 import bottom_title from './img/bottom_title.png'
 import ineeji from './img/ineeji.png'
 import main_bg_circle from './img/main_bg_circle.png'
+import main_title from './img/main_title.png'
 import circle from './img/package.png'
-import solution_title from './img/solution_title.png'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -172,7 +172,6 @@ export const Login: React.FC = () => {
       <Home_Bg />
       <Logo />
       <SidebarBrand />
-      <Beyond>Beyond your Expectations</Beyond>
       <Title />
       <BottomBox>
         <Circle />
@@ -278,18 +277,6 @@ const Home_Bg = styled(BgStyle)`
   top: 0;
   bottom: 0;
 `
-const Beyond = styled.div`
-  min-width: 414px;
-  font-size: 29px;
-  font-family: 'Futura';
-  color: #fff;
-  top: 195px;
-  left: 135px;
-  width: 414px;
-  height: 42px;
-  position: fixed;
-  letter-spacing: 0.06vw;
-`
 
 const FormWrap = styled.div`
   min-width: 398px;
@@ -309,7 +296,7 @@ const FormWrap = styled.div`
 const Title = styled(BgStyle)`
   background-position: left 7vw top 12vw;
   background-size: 30% auto;
-  background-image: url(${solution_title});
+  background-image: url(${main_title});
   position: fixed;
   left: -5px;
   right: 0;
