@@ -1,14 +1,20 @@
 import { message } from 'antd'
 import thumbnailImg from 'assets/img/dataAnalysis/thumbnail_circle.svg'
+import ProgressbarSimple from 'components/progressbar/ProgressbarSimple'
 import { useEffect } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { modalState } from 'stores/modal'
 import { ProgressState } from 'stores/progress'
 import { styled } from 'styled-components'
 import { uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import DataProperties from './DataProperties'
 import DataSummary from './DataSummary'
 
-const AfterUpload = () => {
+export interface IAfterUpload {
+  onUploadSuccess: () => void
+}
+
+const AfterUpload = ({ onUploadSuccess }: IAfterUpload) => {
   const [modal, setModal] = useRecoilState(modalState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const progress = useRecoilValue(ProgressState)
@@ -75,7 +81,7 @@ const AfterUpload = () => {
   }
 
   const handleProgressComplete = () => {
-    setTimeout(() => setModal(null), 2000)
+    onUploadSuccess()
   }
 
   return (
@@ -90,11 +96,11 @@ const AfterUpload = () => {
         </div>
       </DatasetImageContainer>
       <DataSummary />
-      {/* {progress.percent === 0 ? (
+      {progress.percent === 0 ? (
         <DataProperties />
       ) : (
         <ProgressbarSimple currentValue={progress.percent} maxValue={100} onCompleted={handleProgressComplete} />
-      )} */}
+      )}
     </>
   )
 }

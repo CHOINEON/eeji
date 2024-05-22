@@ -124,9 +124,13 @@ const DataImportModal = (props: any) => {
     setModal(null)
   }
 
+  const handleUploadComplete = () => {
+    setModal(null)
+  }
+
   return (
     <>
-      {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
+      {!uploadedData.file ? <BeforeUpload /> : <AfterUpload onUploadSuccess={handleUploadComplete} />}
       <div>
         <CancelButton onClick={handleCancel}>Cancel</CancelButton>
         <CustomButton visible={true} disabled={btnDisabled} onClick={handleSave}>
