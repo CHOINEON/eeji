@@ -1,56 +1,36 @@
 import styled from '@emotion/styled'
 import { App } from 'antd'
 import { axiosProgress } from 'apis/axios'
-import DatasetApi from 'apis/DatasetApi'
-import { useApiError } from 'hooks/useApiError'
 import useAxiosInterceptor from 'hooks/useAxiosInterceptor'
 import { useEffect, useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
 import { ProgressState } from 'stores/progress'
-import {
-  dataPropertyState,
-  signedUrlState,
-  uploadedDataState,
-  userInfoState,
-} from 'views/AIModelGenerator/store/dataset/atom'
+import { dataPropertyState, uploadedDataState, userInfoState } from 'views/AIModelGenerator/store/dataset/atom'
 import AfterUpload from '../DataInfo/AfterUpload'
 import BeforeUpload from '../DataInfo/BeforeUpload'
 
-//to be tested
 const DataImportModal = (props: any) => {
   const { message } = App.useApp()
-  const { handleError } = useApiError()
-  const queryClient = useQueryClient()
-
   const [modal, setModal] = useRecoilState(modalState)
-  const [signedUrl, setSignedUrl] = useRecoilState(signedUrlState)
 
   const userInfo = useRecoilValue(userInfoState)
   const inputOption = useRecoilValue(dataPropertyState)
   const progress = useRecoilValue(ProgressState)
 
-  const uploadedData = useRecoilValue(uploadedDataState)
+  const queryClient = useQueryClient()
+
+  const [saving, setSaving] = useState(false)
+  const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
 
   const resetInputOption = useResetRecoilState(dataPropertyState)
   const resetUploadedData = useResetRecoilState(uploadedDataState)
   const [btnDisabled, setBtnDisabled] = useState(true)
 
-  const { mutate: mutateUploadFile } = useMutation(DatasetApi.uploadFileToGcs, {
-    onSuccess: (response: any) => {
-      console.log('mutateUploadFile response:', response)
-    },
-    onError: (error: any) => {
-      handleError(error)
-    },
-  })
-
   useAxiosInterceptor(axiosProgress)
 
   const fetchData = async (payload: any) => {
-    //테스트 중
-    console.log('payload:', payload)
     const config = {
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
@@ -58,26 +38,21 @@ const DataImportModal = (props: any) => {
     }
 
     const { data } = await axiosProgress.post(
-      `/api/receive_data_info/${payload.user_id}?user_id=${payload.user_id}`,
+      `/api/save_new/${payload.user_id}?user_id=${payload.user_id}`,
       payload.formData,
       config
     )
     return data
   }
 
-  const { mutate: mutateSaveFileInfo } = useMutation(fetchData, {
+  const { mutate } = useMutation(fetchData, {
     onSuccess: (response: any) => {
-      console.log('mutateSaveFileInfo response:', response)
-
       message.success('데이터를 성공적으로 저장했습니다.')
-
       //refetching
       queryClient.invalidateQueries('datasets')
     },
     onError: (error: any, query: any) => {
       message.error(error)
-      // setSaving(false)
-      // console.error(error)
     },
   })
 
@@ -90,6 +65,7 @@ const DataImportModal = (props: any) => {
       //선택 초기화
       resetUploadedData()
       resetInputOption()
+      setSaving(false)
     }
   }, [])
 
@@ -102,19 +78,18 @@ const DataImportModal = (props: any) => {
   }, [inputOption.target_y])
 
   const handleSave = () => {
-    const file: File = uploadedData.file
-
-    if (file) {
-      if (file?.size > 33554432) {
-        message.open({
-          type: 'error',
-          content: '데이터가 너무 큽니다(최대 32MB)',
-          duration: 1,
-          style: {
-            margin: 'auto',
-          },
-        })
-      } else {
+    const dataFile = uploadedData.file
+    if (dataFile && dataFile.size > 33554432) {
+      message.open({
+        type: 'error',
+        content: '데이터가 너무 큽니다(최대 32MB)',
+        duration: 1,
+        style: {
+          margin: 'auto',
+        },
+      })
+    } else {
+      if (dataFile) {
         const formData = new FormData()
 
         formData.append('com_id', userInfo.com_id)
@@ -123,7 +98,6 @@ const DataImportModal = (props: any) => {
         formData.append('name', inputOption.name)
         formData.append('desc', inputOption.desc ? inputOption.desc : null)
         formData.append('is_classification', inputOption.algo_type.toString())
-        formData.append('blob_name', signedUrl.blobName)
 
         if (inputOption.target_y.length === 0) {
           message.open({
@@ -135,18 +109,17 @@ const DataImportModal = (props: any) => {
             },
           })
         } else {
-          const user_id = localStorage.getItem('userId').toString()
+          setSaving(true)
 
-          mutateUploadFile({ signedUrl: signedUrl.surl, fileType: file?.type, file: file })
-          mutateSaveFileInfo({ user_id, formData })
+          const user_id = localStorage.getItem('userId').toString()
+          mutate({ user_id, formData })
         }
       }
-    } else {
-      message.warning('file is not selected')
     }
   }
 
   const handleCancel = () => {
+    setSaving(false)
     resetUploadedData()
     setModal(null)
   }

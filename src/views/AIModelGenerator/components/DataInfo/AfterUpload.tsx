@@ -1,13 +1,11 @@
 import { message } from 'antd'
 import thumbnailImg from 'assets/img/dataAnalysis/thumbnail_circle.svg'
-import ProgressbarSimple from 'components/progressbar/ProgressbarSimple'
 import { useEffect } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { modalState } from 'stores/modal'
 import { ProgressState } from 'stores/progress'
 import { styled } from 'styled-components'
 import { uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
-import DataProperties from './DataProperties'
 import DataSummary from './DataSummary'
 
 const AfterUpload = () => {
@@ -16,7 +14,22 @@ const AfterUpload = () => {
   const progress = useRecoilValue(ProgressState)
 
   useEffect(() => {
-    readFile(uploadedData.file)
+    //처음 로드할 때 안에 content 파싱해서 넣음
+    if (uploadedData.file) {
+      if (uploadedData.file.size <= 209715200) {
+        setUploadedData({ ...uploadedData, file: uploadedData.file, name: uploadedData.file.name, content: [] })
+        readFile(uploadedData.file)
+      } else {
+        message.open({
+          type: 'error',
+          content: '업로드 가능 파일용량 초과(최대 200MB)',
+          duration: 1,
+          style: {
+            margin: 'auto',
+          },
+        })
+      }
+    }
   }, [])
 
   const readFile = (file: any) => {
@@ -28,9 +41,8 @@ const AfterUpload = () => {
       if (acceptedFormats.includes(fileFormat)) {
         fileReader.onload = function (event: any) {
           const text = event.target.result
-          csvFileToArray(text)
+          csvFileToArray(file.name, file.size, text)
         }
-
         fileReader.readAsText(file)
       } else {
         message.open({
@@ -45,30 +57,9 @@ const AfterUpload = () => {
     }
   }
 
-  const csvFileToArray = (string: string) => {
+  const csvFileToArray = (name: string, size: number, string: string) => {
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',')
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n')
-
-    //Prepare iteration to classify numeric/non-numeric column list
-    const sampleCnt = 10
-    const sampleRows = csvRows.slice(0, sampleCnt)
-    const numericColums = []
-    const nonNumericColumns = []
-
-    for (let i = 0; i < csvHeader.length; i++) {
-      let isNumber = false
-
-      for (let j = 0; j < sampleRows.length; j++) {
-        const selectedData = Number(sampleRows[j].split(',')[i])
-
-        //테스트 추출한 row 돌면서 isNumber 결과 값 업데이트
-        if (isNaN(selectedData)) isNumber = false
-        else isNumber = true
-      }
-
-      if (isNumber) numericColums.push(csvHeader[i])
-      else nonNumericColumns.push(csvHeader[i])
-    }
 
     const array = csvRows.map((item) => {
       if (item != '') {
@@ -80,32 +71,17 @@ const AfterUpload = () => {
         return obj
       }
     })
-
-    setUploadedData({
-      ...uploadedData,
-      columns: csvHeader,
-      numericCols: numericColums,
-      nonNumericCols: nonNumericColumns,
-      content: array.slice(0, -1),
-      rowCount: array.length,
-      colCount: csvHeader.length,
-    })
+    setUploadedData({ ...uploadedData, content: array.slice(0, -1) })
   }
 
   const handleProgressComplete = () => {
-    setTimeout(() => setModal(null), 1000)
+    setTimeout(() => setModal(null), 2000)
   }
 
   return (
     <>
       <DatasetImageContainer>
-        <div
-          style={{
-            position: 'absolute',
-            width: '352px',
-            marginTop: '10px',
-          }}
-        >
+        <div className="absolute w-[352px] mt-[10px]">
           <img src={thumbnailImg} style={{ margin: '0 auto' }} />
           <div>
             <DatasetName>{uploadedData.file?.name}</DatasetName>
@@ -114,11 +90,11 @@ const AfterUpload = () => {
         </div>
       </DatasetImageContainer>
       <DataSummary />
-      {progress.percent === 0 ? (
+      {/* {progress.percent === 0 ? (
         <DataProperties />
       ) : (
         <ProgressbarSimple currentValue={progress.percent} maxValue={100} onCompleted={handleProgressComplete} />
-      )}
+      )} */}
     </>
   )
 }
@@ -126,7 +102,6 @@ const AfterUpload = () => {
 export default AfterUpload
 
 const DatasetImageContainer = styled.div`
-  // border: 1px solid grey;
   position: relative;
   width: 100%;
   height: 170px;
