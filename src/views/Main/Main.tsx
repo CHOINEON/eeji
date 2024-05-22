@@ -1,6 +1,7 @@
 import { Box, Wrap } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { MenuList } from './MenuList'
+
 const Main = () => {
   return (
     <>
