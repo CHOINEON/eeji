@@ -18,13 +18,14 @@ const AfterUpload = ({ onUploadSuccess }: IAfterUpload) => {
   const [modal, setModal] = useRecoilState(modalState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const progress = useRecoilValue(ProgressState)
+  const MAX_FILE_SIZE = 32 * 1024 * 1024
 
   useEffect(() => {
     if (checkFileSize(uploadedData.file)) readFile(uploadedData.file)
   }, [])
 
   const checkFileSize = (file: any) => {
-    if (file.size <= 33554432) {
+    if (file.size <= MAX_FILE_SIZE) {
       setUploadedData({ ...uploadedData, file: uploadedData.file, name: uploadedData.file.name, content: [] })
       return true
     } else {
