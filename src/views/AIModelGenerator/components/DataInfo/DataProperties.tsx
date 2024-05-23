@@ -4,7 +4,6 @@ import TextArea from 'antd/es/input/TextArea'
 import DatasetApi from 'apis/DatasetApi'
 import ColumnLabel from 'components/fields/ColumnLabel'
 import { useApiError } from 'hooks/useApiError'
-import { useToast } from 'hooks/useToast'
 import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState } from 'recoil'
@@ -17,7 +16,6 @@ interface Option {
 }
 
 const DataProperties = () => {
-  const { fireToast } = useToast()
   const [uploading, setUploading] = useState(false)
   const [inputOption, setInputOption] = useRecoilState(dataPropertyState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
@@ -27,8 +25,6 @@ const DataProperties = () => {
   const { mutate } = useMutation(DatasetApi.uploadDataset, {
     onSuccess: (response: any) => {
       const summaryData = response['1']
-
-      fireToast('request success')
 
       setUploadedData({
         ...uploadedData,
@@ -58,6 +54,7 @@ const DataProperties = () => {
   }, [])
 
   useEffect(() => {
+    // 분석 유형 선택 시 파일 서버로 보내 description 받아옴
     if (inputOption.algo_type !== undefined) fetchFileDescription()
   }, [inputOption.algo_type])
 

@@ -20,23 +20,25 @@ const AfterUpload = ({ onUploadSuccess }: IAfterUpload) => {
   const progress = useRecoilValue(ProgressState)
 
   useEffect(() => {
-    //처음 로드할 때 안에 content 파싱해서 넣음
-    if (uploadedData.file) {
-      if (uploadedData.file.size <= 209715200) {
-        setUploadedData({ ...uploadedData, file: uploadedData.file, name: uploadedData.file.name, content: [] })
-        readFile(uploadedData.file)
-      } else {
-        message.open({
-          type: 'error',
-          content: '업로드 가능 파일용량 초과(최대 200MB)',
-          duration: 1,
-          style: {
-            margin: 'auto',
-          },
-        })
-      }
-    }
+    if (checkFileSize(uploadedData.file)) readFile(uploadedData.file)
   }, [])
+
+  const checkFileSize = (file: any) => {
+    if (file.size <= 33554432) {
+      setUploadedData({ ...uploadedData, file: uploadedData.file, name: uploadedData.file.name, content: [] })
+      return true
+    } else {
+      message.open({
+        type: 'error',
+        content: '업로드 가능 파일용량 초과(최대 32MB)',
+        duration: 1,
+        style: {
+          margin: 'auto',
+        },
+      })
+      return false
+    }
+  }
 
   const readFile = (file: any) => {
     const fileReader = new FileReader()
