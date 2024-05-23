@@ -10,14 +10,36 @@ import { uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import DataProperties from './DataProperties'
 import DataSummary from './DataSummary'
 
-const AfterUpload = () => {
+export interface IAfterUpload {
+  onUploadSuccess: () => void
+}
+
+const AfterUpload = ({ onUploadSuccess }: IAfterUpload) => {
   const [modal, setModal] = useRecoilState(modalState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const progress = useRecoilValue(ProgressState)
+  const MAX_FILE_SIZE = 32 * 1024 * 1024
 
   useEffect(() => {
-    readFile(uploadedData.file)
+    if (checkFileSize(uploadedData.file)) readFile(uploadedData.file)
   }, [])
+
+  const checkFileSize = (file: any) => {
+    if (file.size <= MAX_FILE_SIZE) {
+      setUploadedData({ ...uploadedData, file: uploadedData.file, name: uploadedData.file.name, content: [] })
+      return true
+    } else {
+      message.open({
+        type: 'error',
+        content: '업로드 가능 파일용량 초과(최대 32MB)',
+        duration: 1,
+        style: {
+          margin: 'auto',
+        },
+      })
+      return false
+    }
+  }
 
   const readFile = (file: any) => {
     const fileReader = new FileReader()
@@ -28,9 +50,8 @@ const AfterUpload = () => {
       if (acceptedFormats.includes(fileFormat)) {
         fileReader.onload = function (event: any) {
           const text = event.target.result
-          csvFileToArray(text)
+          csvFileToArray(file.name, file.size, text)
         }
-
         fileReader.readAsText(file)
       } else {
         message.open({
@@ -45,30 +66,9 @@ const AfterUpload = () => {
     }
   }
 
-  const csvFileToArray = (string: string) => {
+  const csvFileToArray = (name: string, size: number, string: string) => {
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',')
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n')
-
-    //Prepare iteration to classify numeric/non-numeric column list
-    const sampleCnt = 10
-    const sampleRows = csvRows.slice(0, sampleCnt)
-    const numericColums = []
-    const nonNumericColumns = []
-
-    for (let i = 0; i < csvHeader.length; i++) {
-      let isNumber = false
-
-      for (let j = 0; j < sampleRows.length; j++) {
-        const selectedData = Number(sampleRows[j].split(',')[i])
-
-        //테스트 추출한 row 돌면서 isNumber 결과 값 업데이트
-        if (isNaN(selectedData)) isNumber = false
-        else isNumber = true
-      }
-
-      if (isNumber) numericColums.push(csvHeader[i])
-      else nonNumericColumns.push(csvHeader[i])
-    }
 
     const array = csvRows.map((item) => {
       if (item != '') {
@@ -80,32 +80,17 @@ const AfterUpload = () => {
         return obj
       }
     })
-
-    setUploadedData({
-      ...uploadedData,
-      columns: csvHeader,
-      numericCols: numericColums,
-      nonNumericCols: nonNumericColumns,
-      content: array.slice(0, -1),
-      rowCount: array.length,
-      colCount: csvHeader.length,
-    })
+    setUploadedData({ ...uploadedData, content: array.slice(0, -1) })
   }
 
   const handleProgressComplete = () => {
-    setTimeout(() => setModal(null), 1000)
+    onUploadSuccess()
   }
 
   return (
     <>
       <DatasetImageContainer>
-        <div
-          style={{
-            position: 'absolute',
-            width: '352px',
-            marginTop: '10px',
-          }}
-        >
+        <div className="absolute w-[352px] mt-[10px]">
           <img src={thumbnailImg} style={{ margin: '0 auto' }} />
           <div>
             <DatasetName>{uploadedData.file?.name}</DatasetName>
@@ -126,7 +111,6 @@ const AfterUpload = () => {
 export default AfterUpload
 
 const DatasetImageContainer = styled.div`
-  // border: 1px solid grey;
   position: relative;
   width: 100%;
   height: 170px;

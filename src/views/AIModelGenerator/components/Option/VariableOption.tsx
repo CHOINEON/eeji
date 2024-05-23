@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
 import { Row } from 'antd'
-import NewTagSelect from '../TagTree/NewTagSelect'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useEffect, useState } from 'react'
+import { useRecoilState } from 'recoil'
+import { inputOptionListState } from 'views/AIModelGenerator/store/userOption/atom'
 import {
   selectedVarStoreX,
   selectedVarStoreY,
   usedVariableStore,
   variableStore,
 } from 'views/AIModelGenerator/store/variable/atom'
-import { inputOptionListState } from 'views/AIModelGenerator/store/userOption/atom'
+import NewTagSelect from '../TagTree/NewTagSelect'
 
 const VariableOption = () => {
   //최초 리스트
