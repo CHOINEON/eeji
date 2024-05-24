@@ -1,0 +1,32 @@
+[
+  {
+    "id": 2492038490238492384,
+    "name": "Test Model1",
+    "state": "created",
+    "target": "class",
+    "dataset": "https://data-saved-url",
+    "accuracy": 78.8939,
+    "errorRate": 0.123134,
+    "created": "2024-04-25 12:00:00",
+    "updated": "2024-04-25 12:00:00",
+    "createdby": "Mira",
+    "isClassification": true,
+    "descr": "콩 분류 모델",
+    "starred": true
+  },
+  {
+    "id": 2492038490238492384,
+    "name": "Test Model1",
+    "state": "created",
+    "target": "class",
+    "dataset": "https://data-saved-url",
+    "accuracy": 78.8939,
+    "errorRate": 0.123134,
+    "created": "2024-04-25 12:00:00",
+    "updated": "2024-04-25 12:00:00",
+    "createdby": "Mira",
+    "isClassification": true,
+    "descr": "콩 분류 모델",
+    "starred": true
+  }
+]

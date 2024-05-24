@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import DescriptionBox from './components/DataInfo/DescriptionBox'
-import { Col, Spin } from 'antd'
-import './style/data-analysis-style.css'
+import { Col, Empty, Spin } from 'antd'
+import useGetDatasets from 'hooks/queries/useGetDatasets'
+import { useEffect, useState } from 'react'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
+import DataEditModal from './components/DataInfo/DataEditModal'
+import DescriptionBox from './components/DataInfo/DescriptionBox'
+import ModelList from './ModelList'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
 import { stepCountStore } from './store/global/atom'
-import { usedVariableStore, variableStore } from './store/variable/atom'
-import useGetDatasets from 'hooks/queries/useGetDatasets'
-import DataEditModal from './components/DataInfo/DataEditModal'
 import { analysisResponseAtom } from './store/response/atoms'
-import Empty from './components/Empty/Empty'
+import { usedVariableStore, variableStore } from './store/variable/atom'
+import './style/data-analysis-style.css'
 
 const DataSet = () => {
   const [loading, setLoading] = useState(false)
@@ -82,6 +82,7 @@ const DataSet = () => {
 
   return (
     <>
+      <ModelList />
       <div style={{ textAlign: 'center', width: '100%' }}>
         {data?.data.length > 0 ? (
           <>
