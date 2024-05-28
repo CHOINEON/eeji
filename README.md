@@ -38,7 +38,7 @@ tag 명을 가진 - 뒤에 git_hash 가 붙습니다. - 이미지가 있어야 �
 
 ```
 # 검증계 kubernetes cluster에 접속하기 위해서 credentials (.kubeconfig)을 다운로드 합니다.
-$ gcloud container clusters get-credentials gke-primary-ineeji-cloudai-test --zone asia-northeast3-a --project ineeji-cloudai-test
+$ gcloud container clusters get-credentials cloudai-eeji-test --zone asia-northeast3-a --project ineeji-cloudai-test
 
 $ kubectl get deploy/cloudfnt-web-test -o wide
 NAME                READY   UP-TO-DATE   AVAILABLE   AGE    CONTAINERS     IMAGES                                                                                                     SELECTOR
