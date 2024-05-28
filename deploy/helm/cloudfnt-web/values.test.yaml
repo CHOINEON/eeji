@@ -9,11 +9,9 @@ image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: '20240503R1__677af5d'
-  env: {}
 imagePullSecrets: []
 nameOverride: ''
 fullnameOverride: 'cloudfnt-web-test'
-
 serviceAccount:
   # Specifies whether a service account should be created
   create: false
