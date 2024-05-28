@@ -19,7 +19,7 @@ jobs:
         env:
           GAR_REGISTRY: "asia-northeast3-docker.pkg.dev"
           GCP_PROJECT: "ineeji-cloudai-test"
-          GKE_CLUSTER: "gke-primary-ineeji-cloudai-test"
+          GKE_CLUSTER: "cloudai-eeji-test"
           GKE_CLUSTER_LOCATION: "asia-northeast3-a"
 
         outputs:
@@ -111,8 +111,8 @@ jobs:
         # Render helm chart with the IMAGE TAG
         - name: 'helm template'
           run: |
-            cd deploy/helm;
-            helm template eeji-cloudfnt-web-test cloudfnt-web -f cloudfnt-web/values.test.yaml --set image.tag=${{ steps.generate-name-tag.outputs.NAME_TAG }} | tee cloudfnt-web-chart.yaml
+            cd deploy/helm/cloudfnt-web;
+            helm template test . -f values.test.yaml --set image.tag=${{ steps.generate-name-tag.outputs.NAME_TAG }} | tee cloudfnt-web-chart.yaml
             kubectl apply -f cloudfnt-web-chart.yaml -n default
         
         # Print env variables and the event payload for the debugging purpose.
