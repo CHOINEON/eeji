@@ -19,6 +19,7 @@ const XAIsimulator = () => {
         event: 'virtualPageView',
         pageUrl: '/xai-simulator',
         pageTitle: 'XAI',
+        user_id: localStorage.getItem('userId'),
       },
     }
     TagManager.dataLayer(args)
