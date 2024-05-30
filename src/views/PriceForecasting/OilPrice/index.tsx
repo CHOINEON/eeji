@@ -10,6 +10,7 @@ const PriceForecasting = () => {
         event: 'virtualPageView',
         pageUrl: '/price-forecast',
         pageTitle: 'Commodity Index Forecast',
+        user_id: localStorage.getItem('userId'),
       },
     }
     TagManager.dataLayer(args)

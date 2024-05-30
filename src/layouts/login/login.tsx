@@ -16,6 +16,7 @@ import axios from 'axios'
 import SidebarBrand from 'components/sidebar/components/Brand'
 import useGetCompanies from 'hooks/queries/useGetCompanies'
 import React, { useEffect } from 'react'
+import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import { useMutation } from 'react-query'
 import AvailableServiceIcon from './components/AvailableServiceIcon'
 import GoogleSignin from './components/GoogleSigninBtn'
@@ -41,6 +42,17 @@ export const Login: React.FC = () => {
       window.localStorage.setItem('companyId', company)
       window.localStorage.setItem('userId', response[0].user_id)
       window.localStorage.setItem('userPosition', response[0].user_position)
+
+      const args: DataLayerArgs = {
+        dataLayer: {
+          event: 'user_info',
+          user_id: localStorage.getItem('userId'),
+          member_type: 'id-pwd',
+        },
+      }
+
+      TagManager.dataLayer(args)
+
       window.location.href = '/admin/main'
     },
     onError: (error: any) => {
@@ -86,6 +98,15 @@ export const Login: React.FC = () => {
         localStorage.setItem('userData', JSON.stringify(response.user_info))
         localStorage.setItem('companyId', response.user_info.com_id || 'google')
         localStorage.setItem('userPicture', response.user_info.picture)
+
+        const args: DataLayerArgs = {
+          dataLayer: {
+            event: 'user_info',
+            user_id: localStorage.getItem('userId'),
+            member_type: 'social signin(Google)',
+          },
+        }
+        TagManager.dataLayer(args)
 
         window.location.href = '/admin/main'
       }

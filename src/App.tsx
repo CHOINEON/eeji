@@ -3,7 +3,6 @@ import NotFound from 'components/common/NotFound'
 import TagManager from 'react-gtm-module'
 import { useQueryClient } from 'react-query'
 import { Redirect, Route, Switch } from 'react-router-dom'
-import UserEventTracker from 'utils/firebase-analytics/UserEventTracker'
 import RouteChangeTracker from 'utils/google-analytics/RouteChangeTracker'
 import HealthCheck from 'views/HealthCheck'
 import { useApiError } from './hooks/useApiError'
@@ -30,7 +29,7 @@ function PrivateRoute({ component: Component, isAuthenticated, ...rest }: any) {
 export function App() {
   TagManager.initialize({ gtmId: 'GTM-WP3XQ8RV' })
   RouteChangeTracker()
-  UserEventTracker()
+  // UserEventTracker()
 
   const { handleError } = useApiError()
   const queryClient = useQueryClient()

@@ -26,7 +26,6 @@ const IconList = () => {
     <>
       <Wrap spacing="30px" justify="center" height={200} margin={'15vh 0'}>
         {MenuList.map((item: any) => {
-          // console.log('item:', item)
           return (
             <MenuItem key={item.title}>
               <IconContainer onClick={() => (window.location.href = `/admin${item.path}`)}>

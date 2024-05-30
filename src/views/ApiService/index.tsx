@@ -28,6 +28,7 @@ const ApiService = () => {
         event: 'virtualPageView',
         pageUrl: '/api-service',
         pageTitle: 'REST Api Service',
+        user_id: localStorage.getItem('userId'),
       },
     }
     TagManager.dataLayer(args)
