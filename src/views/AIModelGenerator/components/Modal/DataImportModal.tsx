@@ -4,10 +4,11 @@ import { axiosProgress } from 'apis/axios'
 import useAxiosInterceptor from 'hooks/useAxiosInterceptor'
 import { useEffect, useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
 import { ProgressState } from 'stores/progress'
 import { dataPropertyState, uploadedDataState, userInfoState } from 'views/AIModelGenerator/store/dataset/atom'
+import { fileUploadState } from 'views/AIModelGenerator/store/upload/atom'
 import AfterUpload from '../DataInfo/AfterUpload'
 import BeforeUpload from '../DataInfo/BeforeUpload'
 
@@ -15,6 +16,7 @@ const DataImportModal = (props: any) => {
   const { message } = App.useApp()
   const [modal, setModal] = useRecoilState(modalState)
 
+  const setEnabled = useSetRecoilState(fileUploadState)
   const userInfo = useRecoilValue(userInfoState)
   const inputOption = useRecoilValue(dataPropertyState)
   const progress = useRecoilValue(ProgressState)
@@ -79,15 +81,16 @@ const DataImportModal = (props: any) => {
 
   const handleSave = () => {
     const dataFile = uploadedData.file
-    if (dataFile && dataFile.size > 33554432) {
+    if (dataFile && dataFile.size > Number(process.env.REACT_APP_MAX_FILE_SIZE)) {
       message.open({
         type: 'error',
-        content: '데이터가 너무 큽니다(최대 32MB)',
+        content: '데이터가 너무 큽니다(최대 2GB)',
         duration: 1,
         style: {
           margin: 'auto',
         },
       })
+      setEnabled(false)
     } else {
       if (dataFile) {
         const formData = new FormData()
