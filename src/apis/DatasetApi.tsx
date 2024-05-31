@@ -64,7 +64,7 @@ const DatasetApi = {
     }
 
     const { data } = await axiosPublic.post(
-      `/api/upload_new/${payload.user_id}?user_id=${payload.user_id}&is_classification=${payload.is_classification}/`,
+      `/api/upload_new/${payload.user_id}?user_id=${payload.user_id}&is_classification=${payload.is_classification}`,
       payload.formData,
       config
     )
