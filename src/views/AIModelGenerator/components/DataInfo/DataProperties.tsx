@@ -6,8 +6,9 @@ import ColumnLabel from 'components/fields/ColumnLabel'
 import { useApiError } from 'hooks/useApiError'
 import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { dataPropertyState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { fileUploadState } from 'views/AIModelGenerator/store/upload/atom'
 
 interface Option {
   value: string
@@ -17,6 +18,7 @@ interface Option {
 
 const DataProperties = () => {
   const [uploading, setUploading] = useState(false)
+  const uploadable = useRecoilValue(fileUploadState)
   const [inputOption, setInputOption] = useRecoilState(dataPropertyState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const [options, setOptions] = useState(Array<Option>)
@@ -57,6 +59,13 @@ const DataProperties = () => {
     // 분석 유형 선택 시 파일 서버로 보내 description 받아옴
     if (inputOption.algo_type !== undefined) fetchFileDescription()
   }, [inputOption.algo_type])
+
+  useEffect(() => {
+    if (uploadable) {
+      //
+    } else {
+    }
+  }, [uploadable])
 
   const fetchFileDescription = () => {
     setUploading(true)
@@ -136,7 +145,7 @@ const DataProperties = () => {
         </Row>
         <Row>
           <ColumnLabel required={true} label="Algorithm Type" />
-          <Radio.Group onChange={onChangeRadio} value={inputOption.algo_type}>
+          <Radio.Group onChange={onChangeRadio} value={inputOption.algo_type} disabled={!uploadable}>
             <Radio value={1}>Classification</Radio>
             <Radio value={0}>Regression</Radio>
           </Radio.Group>
@@ -151,6 +160,7 @@ const DataProperties = () => {
             placeholder="Timestamp Column"
             options={options}
             onSelect={handleSelectY}
+            disabled={!uploadable}
           />
         </Row>
         <Row>
@@ -163,6 +173,7 @@ const DataProperties = () => {
             placeholder="Timestamp Column"
             options={dateColOptions}
             onSelect={handleSelectDateCol}
+            disabled={!uploadable}
           />
         </Row>
         <Row>
@@ -174,6 +185,7 @@ const DataProperties = () => {
             maxLength={50}
             allowClear
             autoSize={{ minRows: 3, maxRows: 2 }}
+            disabled={!uploadable}
           />
         </Row>
       </DataPropertiesContainer>

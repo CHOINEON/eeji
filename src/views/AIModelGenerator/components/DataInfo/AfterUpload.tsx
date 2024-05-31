@@ -2,11 +2,12 @@ import { message } from 'antd'
 import thumbnailImg from 'assets/img/dataAnalysis/thumbnail_circle.svg'
 import ProgressbarSimple from 'components/progressbar/ProgressbarSimple'
 import { useEffect } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
 import { ProgressState } from 'stores/progress'
 import { styled } from 'styled-components'
 import { uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { fileUploadState } from 'views/AIModelGenerator/store/upload/atom'
 import DataProperties from './DataProperties'
 import DataSummary from './DataSummary'
 
@@ -16,27 +17,29 @@ export interface IAfterUpload {
 
 const AfterUpload = ({ onUploadSuccess }: IAfterUpload) => {
   const [modal, setModal] = useRecoilState(modalState)
+  const setEnabled = useSetRecoilState(fileUploadState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const progress = useRecoilValue(ProgressState)
-  const MAX_FILE_SIZE = 32 * 1024 * 1024
+  // const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024
 
   useEffect(() => {
     if (checkFileSize(uploadedData.file)) readFile(uploadedData.file)
   }, [])
 
   const checkFileSize = (file: any) => {
-    if (file.size <= MAX_FILE_SIZE) {
+    if (file.size < Number(process.env.REACT_APP_MAX_FILE_SIZE)) {
       setUploadedData({ ...uploadedData, file: uploadedData.file, name: uploadedData.file.name, content: [] })
       return true
     } else {
       message.open({
         type: 'error',
-        content: '업로드 가능 파일용량 초과(최대 32MB)',
+        content: '업로드 가능 파일용량 초과(최대 2GB)',
         duration: 1,
         style: {
           margin: 'auto',
         },
       })
+      setEnabled(false)
       return false
     }
   }
