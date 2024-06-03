@@ -17,9 +17,11 @@ COPY . .
 
 ARG ENV
 RUN if [ "$ENV" = "DEV" ] ; then \
-    cp .env.development .env ; \
+        cp .env.development .env ; \
+    elif [ "$ENV" = "TEST" ] ; then \
+        cp .env.test .env ; \
     else \
-    cp .env.test .env ; \
+        cp .env.production .env ; \
     fi
 
 # 각각의 명령어들은 한줄 한줄씩 캐싱되어 실행된다.

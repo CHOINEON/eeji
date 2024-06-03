@@ -9,6 +9,16 @@ image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: '20240503R1__677af5d'
+  env:
+    - name: PORT
+      value: '9871'
+    - name: REACT_APP_REDIRECT_URL
+      value: 'https://test.infinite-optimal.com'
+    - name: REACT_APP_API_SERVER_URL
+      value: 'https://cloudfnt-bnd-test.infinite-optimal.com'
+    - name: REACT_APP_GOOGLE_ID
+      value: '331963722093-o0li116qqfnsfisotcd0que3vtjp9a04.apps.googleusercontent.com'
+
 imagePullSecrets: []
 nameOverride: ''
 fullnameOverride: 'cloudfnt-web-test'

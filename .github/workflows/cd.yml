@@ -10,16 +10,17 @@ on:
 permissions:
   contents: 'read'
   id-token: 'write'
+  actions: 'read'
 
 jobs:       
     build_deploy:
-        name: 'Build image & Deploy prod cluster'
+        name: 'Build image & deploy prod cluster'
         runs-on: ubuntu-latest
         environment: prod
         env:
           GAR_REGISTRY: "asia-northeast3-docker.pkg.dev"
           GCP_PROJECT: "ineeji-solution-tf"
-          GKE_CLUSTER: "gke-primary-ineeji-solution-tf"
+          GKE_CLUSTER: "cloudai-eeji-prod"
           GKE_CLUSTER_LOCATION: "asia-northeast3-a"
 
         outputs:
@@ -119,4 +120,13 @@ jobs:
         - name: Debug
           if: always()
           uses: hmarr/debug-action@v3
-        # TODO: notify failure and sucess
+      
+        - name: action-slack
+          uses: 8398a7/action-slack@v3
+          with:
+            status: ${{ job.status }}
+            author_name: cloudfnt-web prod deploy
+            fields: repo,commit,author,action,ref,workflow
+          env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+          if: always() # Pick up events even if the job fails or is canceled.
