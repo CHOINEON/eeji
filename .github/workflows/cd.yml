@@ -1,11 +1,11 @@
-name: cloudfnt-Web CI
+name: cloudfnt-Web CD
 
 on:
     push:
         branches: 
           - main
         paths:
-          - 'deploy/ci.json'
+          - 'deploy/cd.json'
 
 permissions:
   contents: 'read'
@@ -14,13 +14,13 @@ permissions:
 
 jobs:       
     build_deploy:
-        name: 'Build image & Deploy test cluster'
+        name: 'Build image & deploy prod cluster'
         runs-on: ubuntu-latest
-        environment: test
+        environment: prod
         env:
           GAR_REGISTRY: "asia-northeast3-docker.pkg.dev"
-          GCP_PROJECT: "ineeji-cloudai-test"
-          GKE_CLUSTER: "cloudai-eeji-test"
+          GCP_PROJECT: "ineeji-solution-tf"
+          GKE_CLUSTER: "cloudai-eeji-prod"
           GKE_CLUSTER_LOCATION: "asia-northeast3-a"
 
         outputs:
@@ -43,12 +43,12 @@ jobs:
         - name: Set up Docker Buildx
           uses: docker/setup-buildx-action@v3
         
-        - name: Get the deployment info by parsing the CI.json manifest file
+        - name: Get the deployment info by parsing the CD.json manifest file
           id: get-deploy-env
           run: |
-            service=$(jq -r '.service' deploy/ci.json)
-            version=$(jq -r '.version' deploy/ci.json)
-            docker_file=$(jq -r '.dockerfile' deploy/ci.json)
+            service=$(jq -r '.service' deploy/cd.json)
+            version=$(jq -r '.version' deploy/cd.json)
+            docker_file=$(jq -r '.dockerfile' deploy/cd.json)
             echo "SERVICE=$service" >> $GITHUB_OUTPUT
             echo "VERSION=$version" >> $GITHUB_OUTPUT
             echo "DOCKERFILE=$docker_file" >> $GITHUB_OUTPUT
@@ -66,8 +66,8 @@ jobs:
           name: Authenticate with Google Cloud
           uses: 'google-github-actions/auth@v2'
           with:
-            workload_identity_provider: 'projects/331963722093/locations/global/workloadIdentityPools/github-action-pool/providers/iam-terraform-infra'
-            service_account: 'tf-action-runner@ineeji-cloudai-test.iam.gserviceaccount.com'
+            workload_identity_provider: 'projects/42578919430/locations/global/workloadIdentityPools/github-action-pool/providers/iam-terraform-infra'
+            service_account: 'tf-action-runner@ineeji-solution-tf.iam.gserviceaccount.com'
             token_format: access_token
         
         - name: 'Set up Cloud SDK'
@@ -92,7 +92,7 @@ jobs:
             context: .
             push: true
             build-args: |
-              ENV=TEST
+              ENV=PROD
             tags: |
               ${{ steps.generate-name-tag.outputs.IMAGE_TAG }}
         
@@ -114,20 +114,20 @@ jobs:
         # Render helm chart with the IMAGE TAG
         - name: 'helm template'
           run: |
-            cd deploy/helm/cloudfnt-web;
-            helm template test . -f values.test.yaml --set image.tag=${{ steps.generate-name-tag.outputs.NAME_TAG }} | tee cloudfnt-web-chart.yaml
+            cd deploy/helm;
+            helm template eeji-cloudfnt-web-prod cloudfnt-web -f cloudfnt-web/values.prod.yaml --set image.tag=${{ steps.generate-name-tag.outputs.NAME_TAG }} | tee cloudfnt-web-chart.yaml
             kubectl apply -f cloudfnt-web-chart.yaml -n default
         
         # Print env variables and the event payload for the debugging purpose.
         - name: Debug
           if: always()
           uses: hmarr/debug-action@v3
-       
+      
         - name: action-slack
           uses: 8398a7/action-slack@v3
           with:
             status: ${{ job.status }}
-            author_name: cloudfnt-web test deploy
+            author_name: cloudfnt-web prod deploy
             fields: repo,commit,author,action,ref,workflow
           env:
             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
