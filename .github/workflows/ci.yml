@@ -91,6 +91,8 @@ jobs:
           with: 
             context: .
             push: true
+            build-args: |
+              ENV=TEST
             tags: |
               ${{ steps.generate-name-tag.outputs.IMAGE_TAG }}
         
