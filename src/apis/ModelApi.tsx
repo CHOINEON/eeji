@@ -24,13 +24,13 @@ const ModelApi = {
 
   //Model Generator결과 페이지에서 모델 저장
   saveGeneratedModel: async (params: IModelSaveReqParam): Promise<TResponseType<object>> => {
-    const { data } = await axiosPublic.post(`api/save_model/${params.user_id}/`, params)
+    const { data } = await axiosPublic.post(`api/save_model/${params.user_id}`, params)
     return data
   },
 
   //사용자가 갖고 있는 모델 파일 직접업로드(XAI)
   saveModelwithColumns: async (params: IModelDataReq): Promise<TResponseType<object>> => {
-    const { data } = await axiosPublic.post(`api/save_custom_model_new/${params.user_id}/`, params.payload)
+    const { data } = await axiosPublic.post(`api/save_custom_model_new/${params.user_id}`, params.payload)
     return data
   },
 
@@ -38,7 +38,7 @@ const ModelApi = {
   publishModelAPI: async (params: IModelApiGeneratorParam): Promise<TResponseType<object>> => {
     // const { data } = await axiosPublic.post(`/api/generate_api_key/`, params)
     const { data } = await axiosPublic.post(
-      `/api/generate_api_key/?com_id=${params.com_id}&user_id=${params.user_id}&model_id=${params.model_id}`
+      `/api/generate_api_key?com_id=${params.com_id}&user_id=${params.user_id}&model_id=${params.model_id}`
     )
 
     return data

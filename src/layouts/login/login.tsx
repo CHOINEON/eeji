@@ -16,14 +16,15 @@ import axios from 'axios'
 import SidebarBrand from 'components/sidebar/components/Brand'
 import useGetCompanies from 'hooks/queries/useGetCompanies'
 import React, { useEffect } from 'react'
+import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import { useMutation } from 'react-query'
 import AvailableServiceIcon from './components/AvailableServiceIcon'
 import GoogleSignin from './components/GoogleSigninBtn'
 import bottom_title from './img/bottom_title.png'
 import ineeji from './img/ineeji.png'
 import main_bg_circle from './img/main_bg_circle.png'
+import main_title from './img/main_title.png'
 import circle from './img/package.png'
-import solution_title from './img/solution_title.png'
 
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
@@ -41,6 +42,17 @@ export const Login: React.FC = () => {
       window.localStorage.setItem('companyId', company)
       window.localStorage.setItem('userId', response[0].user_id)
       window.localStorage.setItem('userPosition', response[0].user_position)
+
+      const args: DataLayerArgs = {
+        dataLayer: {
+          event: 'user_info',
+          user_id: localStorage.getItem('userId'),
+          member_type: 'id-pwd',
+        },
+      }
+
+      TagManager.dataLayer(args)
+
       window.location.href = '/admin/main'
     },
     onError: (error: any) => {
@@ -86,6 +98,15 @@ export const Login: React.FC = () => {
         localStorage.setItem('userData', JSON.stringify(response.user_info))
         localStorage.setItem('companyId', response.user_info.com_id || 'google')
         localStorage.setItem('userPicture', response.user_info.picture)
+
+        const args: DataLayerArgs = {
+          dataLayer: {
+            event: 'user_info',
+            user_id: localStorage.getItem('userId'),
+            member_type: 'social signin(Google)',
+          },
+        }
+        TagManager.dataLayer(args)
 
         window.location.href = '/admin/main'
       }
@@ -172,7 +193,6 @@ export const Login: React.FC = () => {
       <Home_Bg />
       <Logo />
       <SidebarBrand />
-      <Beyond>Beyond your Expectations</Beyond>
       <Title />
       <BottomBox>
         <Circle />
@@ -278,18 +298,6 @@ const Home_Bg = styled(BgStyle)`
   top: 0;
   bottom: 0;
 `
-const Beyond = styled.div`
-  min-width: 414px;
-  font-size: 29px;
-  font-family: 'Futura';
-  color: #fff;
-  top: 195px;
-  left: 135px;
-  width: 414px;
-  height: 42px;
-  position: fixed;
-  letter-spacing: 0.06vw;
-`
 
 const FormWrap = styled.div`
   min-width: 398px;
@@ -309,7 +317,7 @@ const FormWrap = styled.div`
 const Title = styled(BgStyle)`
   background-position: left 7vw top 12vw;
   background-size: 30% auto;
-  background-image: url(${solution_title});
+  background-image: url(${main_title});
   position: fixed;
   left: -5px;
   right: 0;

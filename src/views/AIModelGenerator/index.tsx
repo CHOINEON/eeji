@@ -45,6 +45,7 @@ const AIModelGenerator = () => {
         event: 'virtualPageView',
         pageUrl: '/ai-model-generator',
         pageTitle: 'AI Model Generator',
+        user_id: localStorage.getItem('userId'),
       },
     }
     TagManager.dataLayer(args)

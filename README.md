@@ -38,7 +38,7 @@ tag 명을 가진 - 뒤에 git_hash 가 붙습니다. - 이미지가 있어야 �
 
 ```
 # 검증계 kubernetes cluster에 접속하기 위해서 credentials (.kubeconfig)을 다운로드 합니다.
-$ gcloud container clusters get-credentials gke-primary-ineeji-cloudai-test --zone asia-northeast3-a --project ineeji-cloudai-test
+$ gcloud container clusters get-credentials cloudai-eeji-test --zone asia-northeast3-a --project ineeji-cloudai-test
 
 $ kubectl get deploy/cloudfnt-web-test -o wide
 NAME                READY   UP-TO-DATE   AVAILABLE   AGE    CONTAINERS     IMAGES                                                                                                     SELECTOR
@@ -48,6 +48,18 @@ IMAGES에 version으로 시작하는 이름이 있으면 성공적으로 배포�
 
 다음에는 운영계에 배포하는 방법을 정리합니다. To Be Added.
 
+### Troubleshooting guide
+
+#### GCP project의 리소스 접근 권한 필요
+예로서, 리소스에 대한 추가 액세스 권한 필요하거나 projects/ineeji-cloudai-test/locations/asia-northeast3/repositories/cloudai-cloudfnt-web
+gcloud container clusters 명령시 
+```
+실행시 ERROR: (gcloud.container.clusters.get-credentials) ResponseError: code=403, message=Required "container.clusters.get" permission for "projects/ineeji-cloudai-test/zones/us-northeast3-a/clusters/gke-primary-ineeji-cloudai-test".
+```
+에러에 대해서 GCP 사용자 계정에 적절한 권한이 부여되지 않은 경우입니다.
+이때는 Terraform IaC를 적절한 권한을 부여하는 PR을 생성하고 solution-infra (CSI) team에게 review를 받습니다.
+
+[예제 PR](https://github.com/INEEJI/iac-terraform-infra/pull/38)을 참고합니다.
 
 
 

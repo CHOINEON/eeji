@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import Progressbar from './Progressbar'
 
 interface ProgressbarProps {
@@ -17,7 +17,6 @@ const ProgressbarSimple = ({ currentValue, maxValue, label, onCompleted, loading
 
   return (
     <Wrapper>
-      {' '}
       <TextContainer>{currentValue + ' %'}</TextContainer>
       <Progressbar currentValue={currentValue} maxValue={maxValue} label={label} />
       <DescTextContainer>{loadingText ? loadingText : '데이터를 분석 중입니다.'}</DescTextContainer>
@@ -28,7 +27,6 @@ const ProgressbarSimple = ({ currentValue, maxValue, label, onCompleted, loading
 export default ProgressbarSimple
 
 const Wrapper = styled.div`
-  // border: 1px solid red;
   padding: 20% 2%;
   width: 100%;
   text-align: center;

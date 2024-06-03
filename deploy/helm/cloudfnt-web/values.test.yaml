@@ -6,20 +6,12 @@ replicaCount: 1
 
 image:
   repository: asia-northeast3-docker.pkg.dev/ineeji-cloudai-test/cloudai-cloudfnt-web/cloudfnt-web
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: '20240503R1__677af5d'
-  env:
-    - name: PORT
-      value: '9871'
-    - name: REACT_APP_API_SERVER_URL
-      value: 'http://10.0.0.35'
-    - name: REACT_APP_GOOGLE_ID
-      value: '331963722093-o0li116qqfnsfisotcd0que3vtjp9a04.apps.googleusercontent.com'
 imagePullSecrets: []
 nameOverride: ''
 fullnameOverride: 'cloudfnt-web-test'
-
 serviceAccount:
   # Specifies whether a service account should be created
   create: false
@@ -136,4 +128,4 @@ affinity:
             - key: cloud.google.com/gke-nodepool
               operator: In
               values:
-                - cpu-node-pool-ineeji-cloudai-test
+                - cloudai-eeji-test-cpu-nodepool
