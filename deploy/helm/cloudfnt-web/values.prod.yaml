@@ -139,6 +139,5 @@ affinity:
             - key: cloud.google.com/gke-nodepool
               operator: In
               values:
-                - cpu-node-pool-ineeji-cloudai-test
-                - default-pool
-                - platform-node-pool-ineeji-solution-tf
+              - cloudai-eeji-prod-cpu-nodepool
+              - cloudai-eeji-prod-pltf-nodepool
