@@ -75,6 +75,11 @@ export const Login: React.FC = () => {
             mutateLogout(payload)
           },
         })
+      } else if (error.response.status === 409) {
+        message.open({
+          type: 'error',
+          content: <p>{error.response.data.detail}</p>,
+        })
       }
     },
   })
@@ -111,15 +116,6 @@ export const Login: React.FC = () => {
         window.location.href = '/admin/main'
       }
     },
-    // onError: (error: any) => {
-    // console.log('mutateGoogleLogin error:', error)
-    // message
-    //   .open({
-    //     type: 'error',
-    //     content: error.response?.data.detail,
-    //   })
-    //   .then(() => history.push('/join'))
-    // },
   })
 
   useEffect(() => {
@@ -143,6 +139,16 @@ export const Login: React.FC = () => {
       message.open({
         type: 'error',
         content: '회사를 선택해주세요',
+      })
+    } else if (id === undefined || id?.length === 0) {
+      message.open({
+        type: 'error',
+        content: '아이디를 입력해주세요.',
+      })
+    } else if (password === undefined || password?.length === 0) {
+      message.open({
+        type: 'error',
+        content: '패스워드를 입력해주세요.',
       })
     } else {
       const payload = {
