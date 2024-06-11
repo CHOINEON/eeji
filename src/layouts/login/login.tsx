@@ -73,7 +73,6 @@ export const Login: React.FC = () => {
               user_pass: password,
             }
             mutateLogout(payload)
-            mutateLogin(payload)
           },
         })
       } else if (error.response.status === 409) {
