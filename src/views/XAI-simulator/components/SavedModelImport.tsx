@@ -25,7 +25,6 @@ const SavedModelImport = () => {
 
   const { mutate: mutateGetModelList } = useMutation(XaiApi.getSavedModelList, {
     onSuccess: (result: any) => {
-      console.log('mutateGetModelList result:', result)
       setData(result.data)
     },
     onError: (error: any, query: any) => {
@@ -79,7 +78,6 @@ const SavedModelImport = () => {
     } else {
       message.error('불러올 모델을 선택해주세요.')
     }
-    // console.log('payload:', payload)
   }
 
   const handleSelect = (param: any) => {
