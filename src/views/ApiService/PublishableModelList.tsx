@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Empty } from 'antd'
 import { useState } from 'react'
 import ModelRow from './table/ModelRow'
 
@@ -23,12 +24,17 @@ const SavedModelList = ({ data, onSelect }: any) => {
         <ColumnLabel className="w-1/12">상태</ColumnLabel>
         <ColumnLabel className="w-2/12">API Key</ColumnLabel>
       </StyledColumn>
-
-      {data?.map((item: any, idx: number) => (
-        <PredictionListWrapper key={idx}>
-          <ModelRow id={idx} item={item} active={idx === btnActive} onClick={() => toggleActive(idx)} />
-        </PredictionListWrapper>
-      ))}
+      {data?.length > 0 ? (
+        data?.map((item: any, idx: number) => (
+          <PredictionListWrapper key={idx}>
+            <ModelRow id={idx} item={item} active={idx === btnActive} onClick={() => toggleActive(idx)} />
+          </PredictionListWrapper>
+        ))
+      ) : (
+        <div className="m-auto relative top-[50px]">
+          <Empty />
+        </div>
+      )}
     </PublishableModelList>
   )
 }

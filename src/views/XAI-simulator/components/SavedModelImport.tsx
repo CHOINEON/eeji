@@ -1,4 +1,4 @@
-import { App, Spin } from 'antd'
+import { App, Empty, Spin } from 'antd'
 import XaiApi from 'apis/XaiApi'
 import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
@@ -25,7 +25,7 @@ const SavedModelImport = () => {
 
   const { mutate: mutateGetModelList } = useMutation(XaiApi.getSavedModelList, {
     onSuccess: (result: any) => {
-      // console.log('mutateGetModelList:', result)
+      console.log('mutateGetModelList result:', result)
       setData(result.data)
     },
     onError: (error: any, query: any) => {
@@ -58,7 +58,6 @@ const SavedModelImport = () => {
     const param = {
       user_id: localStorage.getItem('userId'),
     }
-
     mutateGetModelList(param)
   }, [])
 
@@ -90,9 +89,7 @@ const SavedModelImport = () => {
   return (
     <>
       <Spin tip="모델 로딩중 ..." spinning={saving}>
-        <div>
-          <ModelList data={data} onSelect={handleSelect} />
-        </div>
+        <div>{data?.length > 0 ? <ModelList data={data} onSelect={handleSelect} /> : <Empty />}</div>
         <div style={{ margin: '25px 0' }}>
           <CancelButton onClick={() => setModal(null)}>Cancel</CancelButton>
           <CustomButton
