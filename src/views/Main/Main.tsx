@@ -8,10 +8,12 @@ const Main = () => {
       <Box my="60px">
         <MainTitle>Cloud AI EEJI</MainTitle>
         <SubText>
-          is Prediction solution for time series data that enables companies to realize productivity improvement,
+          is a comprehensive AI-driven prediction service tailored for businesses. It features automated AI model
+          generation,
         </SubText>
         <SubText>
-          production energy cost reduction and quality improvement through process optimization of industrial processes.
+          provides explanations for results, offers commodity index forecasts to enhance model accuracy, and includes a
+          REST API service enabling users to leverage prediction data for insightful decision-making.
         </SubText>
       </Box>
       <Box>

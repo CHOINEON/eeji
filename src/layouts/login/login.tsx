@@ -20,9 +20,9 @@ import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import { useMutation } from 'react-query'
 import AvailableServiceIcon from './components/AvailableServiceIcon'
 import GoogleSignin from './components/GoogleSigninBtn'
-import bottom_title from './img/bottom_title.png'
 import ineeji from './img/ineeji.png'
 import main_bg_circle from './img/main_bg_circle.png'
+import main_subtitle from './img/main_subtitle.png'
 import main_title from './img/main_title.png'
 import circle from './img/package.png'
 
@@ -199,15 +199,16 @@ export const Login: React.FC = () => {
       <Home_Bg />
       <Logo />
       <SidebarBrand />
+      <AboveTitle />
       <Title />
       <BottomBox>
         <Circle />
         <BottomTitleParent>
-          <BottomTitle />
+          <BottomTitle>Cloud AI EEJI</BottomTitle>
           <BottomCotents>
-            is Prediction solution for time series data that enables companies to realize productivity improvement,
-            production energy cost reduction and quality improvement through process optimization of industrial
-            processes.
+            is a comprehensive AI-driven prediction service tailored for businesses. It features automated AI model
+            generation, provides explanations for results, offers commodity index forecasts to enhance model accuracy,
+            and includes a REST API service enabling users to leverage prediction data for insightful decision-making.
           </BottomCotents>
         </BottomTitleParent>
         <AvailableServiceIcon />
@@ -320,15 +321,26 @@ const FormWrap = styled.div`
   border-radius: 30px;
 `
 
-const Title = styled(BgStyle)`
+const AboveTitle = styled.div`
   background-position: left 7vw top 12vw;
-  background-size: 30% auto;
-  background-image: url(${main_title});
+  background-image: url(${main_subtitle});
+  background-size: 20% auto;
+  background-repeat: no-repeat;
   position: fixed;
   left: -5px;
   right: 0;
   bottom: 0;
   top: 0;
+`
+const Title = styled(BgStyle)`
+  background-position: left 7vw top 12vw;
+  background-size: 30% auto;
+  background-image: url(${main_title});
+  position: fixed;
+  left: -10px;
+  right: 0;
+  bottom: 0;
+  top: 30px;
   z-index: 999;
 `
 const Logo = styled(BgStyle)`
@@ -366,11 +378,12 @@ const BottomTitleParent = styled.div`
   width: 38vw;
   margin: 2vh 0 2vh 2vw;
 `
-const BottomTitle = styled(BgStyle)`
-  background-image: url(${bottom_title});
-  width: 16vw;
-  height: 1vw;
-  margin-bottom: 1vw;
+const BottomTitle = styled.p`
+  font-family: 'Helvetica Neue';
+  color: white;
+  font-weight: bold;
+  font-size: 25px;
+  margin: 5px 0;
 `
 const BottomCotents = styled.div`
   font-size: 0.7vw;
