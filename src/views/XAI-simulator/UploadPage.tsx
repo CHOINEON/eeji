@@ -12,8 +12,8 @@ const UploadPage = () => {
 
   const buttonItems = [
     {
-      title: 'INFINITE OPTIMAL',
-      description: 'INFINITE OPTIMAL에서 모델 데이터를 가져옵니다.',
+      title: 'EEJI',
+      description: 'AI Model Generator에서 생성한 모델 데이터를 가져옵니다.',
       icon: IconServerUpload,
       handleClick: () => handleClick('SavedModelImport'),
     },

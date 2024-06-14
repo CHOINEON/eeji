@@ -1,5 +1,6 @@
 import { App, Empty, Spin } from 'antd'
 import XaiApi from 'apis/XaiApi'
+import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState } from 'recoil'
@@ -18,7 +19,7 @@ const SavedModelImport = () => {
   const com_id = localStorage.getItem('companyId')
   const user_id = localStorage.getItem('userId').toString()
 
-  const [modelId, setModelId] = useState()
+  const [modelId, setModelId] = useState<string>()
   const [saving, setSaving] = useState(false)
   const [modal, setModal] = useRecoilState(modalState)
   const [data, setData] = useRecoilState(SavedModelListState)
@@ -27,8 +28,8 @@ const SavedModelImport = () => {
     onSuccess: (result: any) => {
       setData(result.data)
     },
-    onError: (error: any, query: any) => {
-      //
+    onError: (error: AxiosError) => {
+      console.error(error.message)
     },
   })
 
@@ -48,8 +49,9 @@ const SavedModelImport = () => {
       setSaving(false)
       setModal(null)
     },
-    onError: (error: any, query: any) => {
-      message.error(error)
+    onError: (error: AxiosError) => {
+      setSaving(false)
+      message.error(error?.message)
     },
   })
 
@@ -61,12 +63,10 @@ const SavedModelImport = () => {
   }, [])
 
   const handleRunModel = () => {
-    // '1be13733ed4e48338c92e6a74fea9f40'  // feature length : 4
-    fetchGetResult(modelId) //feature length: 12
+    fetchGetResult(modelId)
   }
 
   const fetchGetResult = (uuid: string) => {
-    setSaving(true)
     const payload = {
       user_id: user_id,
       com_id: com_id,
@@ -74,28 +74,24 @@ const SavedModelImport = () => {
     }
 
     if (uuid) {
+      setSaving(true)
       mutatePostResult(payload)
     } else {
       message.error('불러올 모델을 선택해주세요.')
     }
   }
 
-  const handleSelect = (param: any) => {
-    setModelId(param)
+  const handleSelect = (model_id: string) => {
+    setModelId(model_id)
   }
 
   return (
     <>
-      <Spin tip="모델 로딩중 ..." spinning={saving}>
+      <Spin tip="모델 분석중..." spinning={saving}>
         <div>{data?.length > 0 ? <ModelList data={data} onSelect={handleSelect} /> : <Empty />}</div>
-        <div style={{ margin: '25px 0' }}>
+        <div className="mt-[25px]">
           <CancelButton onClick={() => setModal(null)}>Cancel</CancelButton>
-          <CustomButton
-            // className="block ant-btn ant-btn-primary"
-            visible={true}
-            disabled={false}
-            onClick={handleRunModel}
-          >
+          <CustomButton visible={true} disabled={false} onClick={handleRunModel}>
             Run
           </CustomButton>
         </div>
