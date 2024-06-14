@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Tag } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 //모델명/타겟변수/모델유형
 const ModelRow = ({ item, active, onClick }: any) => {
@@ -49,6 +49,10 @@ const ModelRow = ({ item, active, onClick }: any) => {
 const ModelList = ({ data, onSelect }: any) => {
   const [btnActive, setBtnActive] = useState(0)
 
+  useEffect(() => {
+    onSelect(data[0].model_id)
+  }, [])
+
   const toggleActive = (idx: number) => {
     setBtnActive(idx)
     onSelect(data[idx].model_id)
@@ -56,7 +60,7 @@ const ModelList = ({ data, onSelect }: any) => {
 
   return (
     <ModelListWrapper>
-      {data?.map((item: any, idx: number) => (
+      {data?.map((item: object, idx: number) => (
         <ModelRow key={idx} item={item} active={idx === btnActive} onClick={() => toggleActive(idx)} />
       ))}
     </ModelListWrapper>

@@ -1,6 +1,7 @@
 import { message, Spin } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import XaiApi from 'apis/XaiApi'
+import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState, useResetRecoilState } from 'recoil'
@@ -14,49 +15,40 @@ import ModelTypeRadio from './ModelSelect/ModelTypeRadio'
 import ModelUpload from './ModelSelect/Upload'
 
 interface IDataObj {
-  model: any
-  script: any
-  data: any
-  column: any
-  type: any
-}
-
-interface IParamObj {
-  uuid: string
-  variable_list: Array<string>
-  selected_var: Array<string>
+  type: string
+  model: File
+  script: File
+  data: File
+  column: File
 }
 
 const UserModelImport = () => {
   const com_id = localStorage.getItem('companyId')
   const user_id = localStorage.getItem('userId').toString()
 
+  const resetModelUploadResult = useResetRecoilState(customModelStore)
   const [xaiResult, setXaiResult] = useRecoilState(xaiResultStore)
+  const [modelUploadResult, setModelUploadResult] = useRecoilState(customModelStore)
 
   const [saving, setSaving] = useState(false)
   const [data, setData] = useState<IDataObj>() //upload(step1) 요청 시 필요한 데이터
-  // const [response, setResponse] = useState<IParamObj>() //save(step2) 요청 시 필요한 파라메터
   const [modal, setModal] = useRecoilState(modalState)
   const [isDisabled, setIsDisabled] = useState(true)
   const [haveColumn, setHaveColumn] = useState(false)
-  const [modelUploadResult, setModelUploadResult] = useRecoilState(customModelStore)
-  const resetModelUploadResult = useResetRecoilState(customModelStore)
 
-  const { mutate: mutateUpload } = useMutation(XaiApi.uploadModelwithData, {
+  const { mutate: mutateUserModelUpload } = useMutation(XaiApi.uploadModelwithData, {
     onSuccess: (response: any) => {
       setModelUploadResult({ ...modelUploadResult, uuid: response.uuid, variable_list: response['variable_list'] })
       setSaving(false)
     },
-    onError: (error: any, query: any) => {
-      console.error(error)
+    onError: (error: AxiosError) => {
       setSaving(false)
+      message.error(error.message)
     },
   })
 
   const { mutate: mutatePostResult } = useMutation(XaiApi.postModelForXaiResult, {
     onSuccess: (result: any) => {
-      // console.log('mutatePostResult:', result)
-
       message.open({
         type: 'success',
         content: '모델을 성공적으로 저장했습니다.',
@@ -80,17 +72,12 @@ const UserModelImport = () => {
       setSaving(false)
       setModal(null)
     },
-    onError: (error: any, query: any) => {
-      message.open({
-        type: 'error',
-        content: error,
-        duration: 1,
-        style: {
-          margin: 'auto',
-        },
-      })
+    onError: (error: AxiosError) => {
+      setSaving(false)
+      message.error(error.message)
     },
   })
+
   const { mutate: mutateSave } = useMutation(ModelApi.saveModelwithColumns, {
     onSuccess: (response: any) => {
       //결과 데이터 받아오기 위해 다시 요청
@@ -99,18 +86,10 @@ const UserModelImport = () => {
         com_id: com_id,
         uuid: response.uuid,
       }
-      // console.log('payload:', payload)
       mutatePostResult(payload)
     },
-    onError: (error: any, query: any) => {
-      message.open({
-        type: 'error',
-        content: error,
-        duration: 1,
-        style: {
-          margin: 'auto',
-        },
-      })
+    onError: (error: AxiosError) => {
+      message.error(error.message)
       setSaving(false)
     },
   })
@@ -118,9 +97,6 @@ const UserModelImport = () => {
   useEffect(() => clearSelectedFile('torch'), [])
 
   useEffect(() => {
-    // console.log('useEffect:', data)
-    // console.log('haveColumn:', haveColumn)
-
     if (!data?.model || !data?.data) {
       setIsDisabled(true) //버튼 활성화
     } else {
@@ -128,35 +104,29 @@ const UserModelImport = () => {
     }
   }, [data, haveColumn])
 
-  const handleChangeScript = (param: any) => {
-    // console.log('handleChangeScript:', param)
+  const handleChangeScript = (param: File) => {
+    console.log(param)
     setData({ ...data, script: param })
   }
-  const handleChangeModel = (param: any) => {
-    // console.log('handleChangeModel:', param)
+  const handleChangeModel = (param: File) => {
     setData({ ...data, model: param })
   }
-  const handleChangeData = (param: any) => {
-    // console.log('handleChangeData:', param)
+  const handleChangeData = (param: File) => {
     setData({ ...data, data: param })
   }
-  const handleChangeColumn = (param: any) => {
-    // console.log('handleChangeColumn:', param)
+  const handleChangeColumn = (param: File) => {
     setData({ ...data, column: param })
   }
   const handleChangeType = (param: string) => {
-    // console.log('handleChangeType:', param)
     clearSelectedFile(param)
   }
-
-  // useEffect(() => console.log('data:', data), [data])
 
   const clearSelectedFile = (selectedType: string) => {
     setData({ ...data, type: selectedType, model: undefined, data: undefined, column: undefined, script: undefined })
     resetModelUploadResult()
   }
 
-  const handleSelectColumn = (param: Array<any>) => {
+  const handleSelectColumn = (param: Array<string>) => {
     setModelUploadResult({ ...modelUploadResult, selected_var: param })
   }
 
@@ -172,7 +142,7 @@ const UserModelImport = () => {
       formData.append('model_type', !data.type ? 'torch' : data.type)
       formData.append('columns', data.column || '') //빈값인 경우 공백으로 보내기
 
-      mutateUpload({ user_id, formData })
+      mutateUserModelUpload({ user_id, formData })
     }
   }
 
@@ -220,7 +190,7 @@ const UserModelImport = () => {
           />
         </div>
         {modelUploadResult.uuid.length > 0 && modelUploadResult?.variable_list?.length == 0 ? (
-          <div className="text-center">확인할 컬럼이 없습니다. 저장 버튼을 누르세요.</div>
+          <div className="text-center mt-5">확인할 컬럼이 없습니다. 저장 버튼을 누르세요.</div>
         ) : (
           <div
             style={{
