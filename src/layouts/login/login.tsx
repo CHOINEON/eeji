@@ -116,6 +116,10 @@ export const Login: React.FC = () => {
         window.location.href = '/admin/main'
       }
     },
+
+    onError: (err: Error) => {
+      message.error('구글 로그인 실패! 관리자에게 문의하세요.')
+    },
   })
 
   useEffect(() => {
