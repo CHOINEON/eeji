@@ -3,7 +3,6 @@ import NotFound from 'components/common/NotFound'
 import TagManager from 'react-gtm-module'
 import { useQueryClient } from 'react-query'
 import { Redirect, Route, Switch } from 'react-router-dom'
-import RouteChangeTracker from 'utils/google-analytics/RouteChangeTracker'
 import HealthCheck from 'views/HealthCheck'
 import { useApiError } from './hooks/useApiError'
 import AdminLayout from './layouts/admin'
@@ -28,7 +27,8 @@ function PrivateRoute({ component: Component, isAuthenticated, ...rest }: any) {
 
 export function App() {
   TagManager.initialize({ gtmId: 'GTM-WP3XQ8RV' })
-  RouteChangeTracker()
+
+  // RouteChangeTracker()  // GTM으로만 수집 테스트하고있어 주석 처리 합니다.
   // UserEventTracker()
 
   const { handleError } = useApiError()
