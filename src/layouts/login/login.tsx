@@ -42,12 +42,15 @@ export const Login: React.FC = () => {
       window.localStorage.setItem('companyId', company)
       window.localStorage.setItem('userId', response[0].user_id)
       window.localStorage.setItem('userPosition', response[0].user_position)
+      window.localStorage.setItem('userLevel', response[0].user_level)
 
       const args: DataLayerArgs = {
         dataLayer: {
           event: 'user_info',
           user_id: localStorage.getItem('userId'),
-          member_type: 'id-pwd',
+          user_level: localStorage.getItem('userLevel'),
+          login_type: 'id',
+          crm_id: localStorage.getItem('userId') === 'admin' ? '00000' : Math.floor(10000 + Math.random() * 9000),
         },
       }
 
@@ -108,7 +111,9 @@ export const Login: React.FC = () => {
           dataLayer: {
             event: 'user_info',
             user_id: localStorage.getItem('userId'),
-            member_type: 'social signin(Google)',
+            user_level: localStorage.getItem('userLevel'),
+            login_type: 'Google',
+            crm_id: localStorage.getItem('userId') === 'admin' ? '00000' : Math.floor(10000 + Math.random() * 9000),
           },
         }
         TagManager.dataLayer(args)
