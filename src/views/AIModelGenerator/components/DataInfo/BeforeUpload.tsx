@@ -10,12 +10,12 @@ const BeforeUpload = () => {
 
   const handleSelectedFile = (file: File) => {
     if (file) {
-      if (file.size <= 209715200) {
+      if (file.size <= 400 * 1024 * 1024) {
         setUploadedData({ ...uploadedData, file: file })
       } else {
         message.open({
           type: 'error',
-          content: '업로드 가능 파일용량 초과(최대 200MB)',
+          content: '업로드 가능 파일용량 초과(최대 400MB)',
           duration: 1,
           style: {
             margin: 'auto',
