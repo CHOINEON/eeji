@@ -1,59 +1,53 @@
 import styled from '@emotion/styled'
 import { App } from 'antd'
+import DatasetApi from 'apis/DatasetApi'
 import { axiosProgress } from 'apis/axios'
+import { UploadStateType } from 'apis/type/Dataset'
 import useAxiosInterceptor from 'hooks/useAxiosInterceptor'
 import { useEffect, useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
 import { ProgressState } from 'stores/progress'
-import { dataPropertyState, uploadedDataState, userInfoState } from 'views/AIModelGenerator/store/dataset/atom'
+import { dataPropertyState, signedUrlState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { fileUploadState } from 'views/AIModelGenerator/store/upload/atom'
 import AfterUpload from '../DataInfo/AfterUpload'
 import BeforeUpload from '../DataInfo/BeforeUpload'
 
-const DataImportModal = (props: any) => {
+const DataImportModal = () => {
   const { message } = App.useApp()
-  const [modal, setModal] = useRecoilState(modalState)
-
-  const setEnabled = useSetRecoilState(fileUploadState)
-  const userInfo = useRecoilValue(userInfoState)
-  const inputOption = useRecoilValue(dataPropertyState)
-  const progress = useRecoilValue(ProgressState)
-
   const queryClient = useQueryClient()
 
-  const [saving, setSaving] = useState(false)
-  const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
+  const inputOption = useRecoilValue(dataPropertyState)
+  const progress = useRecoilValue(ProgressState)
+  const signedUrl = useRecoilValue(signedUrlState)
+  const uploadedData = useRecoilValue(uploadedDataState)
 
+  const setModal = useSetRecoilState(modalState)
+  const setEnabled = useSetRecoilState(fileUploadState)
   const resetInputOption = useResetRecoilState(dataPropertyState)
   const resetUploadedData = useResetRecoilState(uploadedDataState)
+
   const [btnDisabled, setBtnDisabled] = useState(true)
 
   useAxiosInterceptor(axiosProgress)
 
-  const fetchData = async (payload: any) => {
-    const config = {
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded',
-      },
-    }
-
-    const { data } = await axiosProgress.post(
-      `/api/save_new/${payload.user_id}?user_id=${payload.user_id}`,
-      payload.formData,
-      config
-    )
-    return data
-  }
-
-  const { mutate } = useMutation(fetchData, {
-    onSuccess: (response: any) => {
+  const { mutate: mutateUpload } = useMutation(DatasetApi.uploadFileToGcs, {
+    onSuccess: () => {
       message.success('데이터를 성공적으로 저장했습니다.')
-      //refetching
-      queryClient.invalidateQueries('datasets')
+      notifyBackend('success')
     },
     onError: (error: any, query: any) => {
+      message.error(error)
+      notifyBackend('fail')
+    },
+  })
+
+  const { mutate: mutateNotify } = useMutation(DatasetApi.notifyWithState, {
+    onSuccess: (response: any) => {
+      queryClient.invalidateQueries('datasets')
+    },
+    onError: (error: any) => {
       message.error(error)
     },
   })
@@ -64,10 +58,8 @@ const DataImportModal = (props: any) => {
 
   useEffect(() => {
     return () => {
-      //선택 초기화
       resetUploadedData()
       resetInputOption()
-      setSaving(false)
     }
   }, [])
 
@@ -84,7 +76,7 @@ const DataImportModal = (props: any) => {
     if (dataFile && dataFile.size > Number(process.env.REACT_APP_MAX_FILE_SIZE)) {
       message.open({
         type: 'error',
-        content: '데이터가 너무 큽니다(최대 2GB)',
+        content: '데이터가 너무 큽니다(최대 400MB)',
         duration: 1,
         style: {
           margin: 'auto',
@@ -93,47 +85,44 @@ const DataImportModal = (props: any) => {
       setEnabled(false)
     } else {
       if (dataFile) {
-        const formData = new FormData()
-
-        formData.append('com_id', userInfo.com_id)
-        formData.append('date_col', inputOption.date_col ? inputOption.date_col : 'undefined')
-        formData.append('target_y', inputOption.target_y)
-        formData.append('name', inputOption.name)
-        formData.append('desc', inputOption.desc ? inputOption.desc : null)
-        formData.append('is_classification', inputOption.algo_type.toString())
-
-        if (inputOption.target_y.length === 0) {
-          message.open({
-            type: 'error',
-            content: 'Target variable is not selected.',
-            duration: 5,
-            style: {
-              margin: 'auto',
-            },
-          })
-        } else {
-          setSaving(true)
-
-          const user_id = localStorage.getItem('userId').toString()
-          mutate({ user_id, formData })
-        }
+        notifyBackend('start')
+        mutateUpload({ signedUrl: signedUrl, dataFile })
       }
     }
   }
 
-  const handleCancel = () => {
-    setSaving(false)
-    resetUploadedData()
-    setModal(null)
+  const notifyBackend = (state: UploadStateType) => {
+    // TODO: Call notify API when GCS upload request got response
+    // Below is the metadata in Form to send
+    const formData = new FormData()
+    formData.append('com_id', localStorage.getItem('companyId'))
+    formData.append('date_col', inputOption.date_col ? inputOption.date_col : 'undefined')
+    formData.append('target_y', inputOption.target_y)
+    formData.append('name', inputOption.name)
+    formData.append('desc', inputOption.desc ? inputOption.desc : null)
+    formData.append('is_classification', inputOption.algo_type.toString())
+    if (inputOption.target_y.length === 0) {
+      message.open({
+        type: 'error',
+        content: 'Target variable is not selected.',
+        duration: 5,
+        style: {
+          margin: 'auto',
+        },
+      })
+    }
+
+    mutateNotify({ state: state, formData: formData })
   }
 
-  const handleUploadComplete = () => {
+  const handleCancel = () => {
+    resetUploadedData()
     setModal(null)
   }
 
   return (
     <>
-      {!uploadedData.file ? <BeforeUpload /> : <AfterUpload onUploadSuccess={handleUploadComplete} />}
+      {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
       <div>
         <CancelButton onClick={handleCancel}>Cancel</CancelButton>
         <CustomButton visible={true} disabled={btnDisabled} onClick={handleSave}>

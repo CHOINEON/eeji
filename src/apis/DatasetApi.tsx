@@ -1,14 +1,15 @@
-import { axiosProgress, axiosPublic } from './axios'
-import { TResponseType } from './type/commonResponse'
+import axios from 'axios'
+import { axiosPublic } from './axios'
 import {
+  IDataUploadReq,
   IDatasetEditReq,
   IDatasetList,
   IDatasetReq,
-  IDataUploadReq,
   ISignedUrlReq,
   ISignedUrlRes,
   IUploadFileReq,
 } from './type/Dataset'
+import { TResponseType } from './type/commonResponse'
 
 const DatasetApi = {
   //전체 데이터셋 리스트 가져오기
@@ -17,74 +18,38 @@ const DatasetApi = {
     return data
   },
 
-  //get Google signed URL from backend
-  signedUrl: async (payload: ISignedUrlReq): Promise<TResponseType<ISignedUrlRes>> => {
-    const config = {
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded',
-      },
-    }
-    const { data } = await axiosPublic.post(`/api/get_surl/${payload.user_id}`, payload.formData, config)
+  //request Google signed URL with object name
+  getSignedUrl: async (payload: ISignedUrlReq): Promise<TResponseType<ISignedUrlRes>> => {
+    const { data } = await axiosPublic.post(`/api/v1/get_signed_url?object_name=${payload.object_name}`)
     return data
   },
 
   //upload to GCS with Signed URL
   uploadFileToGcs: async (payload: IUploadFileReq): Promise<any> => {
-    // const axiosInstance = axios.create({
-    //   baseURL: payload.signedUrl,
-    // })
-
-    // const config = {
-    //   headers: {
-    //     'Content-Type': 'application/octet-stream',
-    //   },
-    // }
-
-    // const { data } = await axiosInstance.put(payload.signedUrl, payload.file, config)
-    // return data
-
-    const response = await fetch(payload.signedUrl, {
-      method: 'PUT',
-      body: payload.file,
+    const axiosInstance = axios.create({
+      baseURL: payload.signedUrl,
     })
 
-    if (response.ok) {
-      console.log('File uploaded successfully')
-    } else {
-      console.error('Error uploading file')
+    const config = {
+      headers: {
+        'Content-Type': 'application/octet-stream',
+      },
+      withCredentials: false,
     }
+
+    const { data } = await axiosInstance.put(payload.signedUrl, payload.file, config)
+    return data
   },
 
-  //파일 업로드 후 description 내려받기
-  uploadDataset: async (payload: IDataUploadReq): Promise<TResponseType<object>> => {
+  // After GCS upload start, notify backend to save metadata with status
+  notifyWithState: async (payload: IDataUploadReq): Promise<TResponseType<object>> => {
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
       },
     }
 
-    const { data } = await axiosPublic.post(
-      `/api/upload_new/${payload.user_id}?user_id=${payload.user_id}&is_classification=${payload.is_classification}`,
-      payload.formData,
-      config
-    )
-    return data
-  },
-
-  //파일을 저장하기(저장하기 버튼 클릭) => return { message: string }
-  saveDataset: async (payload: IDataUploadReq): Promise<TResponseType<string>> => {
-    const config = {
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded',
-      },
-    }
-
-    const { data } = await axiosProgress.post(
-      `/api/save_new/${payload.user_id}?user_id=${payload.user_id}`,
-      payload.formData,
-      config
-    )
-
+    const { data } = await axiosPublic.post(`/api/notify/upload?state=${payload.state}`, payload.formData, config)
     return data
   },
 

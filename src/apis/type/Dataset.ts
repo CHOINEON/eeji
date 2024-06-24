@@ -28,10 +28,11 @@ export interface IDatasetRes {
 
 export type IDatasetList = Array<IDatasetRes>
 
+export type UploadStateType = 'start' | 'cancel' | 'fail' | 'success'
+
 export interface IDataUploadReq {
-  user_id: string
-  is_classification: number
-  formData: FormData
+  state: UploadStateType
+  formData?: FormData
 }
 
 export interface IDescription {
@@ -50,19 +51,18 @@ export type IDescriptionRes = object
 
 //to get signed url
 export interface ISignedUrlReq {
-  user_id: string
-  formData: FormData
+  object_name: string
 }
 
 export interface ISignedUrlRes {
-  surl: string
-  uuid: string
-  blob_name: string
+  signed_url: string
+  expiration: string
+  data_id: string
 }
 
 //to upload to GCS with Signed Url
 export interface IUploadFileReq {
   signedUrl: string
-  fileType: string
+  fileType?: string
   file: File
 }
