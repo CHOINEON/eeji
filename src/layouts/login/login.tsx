@@ -43,6 +43,7 @@ export const Login: React.FC = () => {
       window.localStorage.setItem('userId', response[0].user_id)
       window.localStorage.setItem('userPosition', response[0].user_position)
       window.localStorage.setItem('userLevel', response[0].user_level)
+      window.localStorage.setItem('accessToken', `${response[0].token_type} ${response[0].access_token}`)
 
       const args: DataLayerArgs = {
         dataLayer: {
