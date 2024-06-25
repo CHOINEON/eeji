@@ -1,4 +1,4 @@
-import { axiosPublic } from './axios'
+import { axiosPrivate, axiosPublic } from './axios'
 import { TResponseType } from './type/commonResponse'
 import { ICompanyList, IGooglesigninReq, IUserLoginReq, IUserLogoutReq } from './type/User'
 
@@ -9,17 +9,17 @@ const UserApi = {
   },
 
   logout: async (payload: IUserLogoutReq): Promise<TResponseType<object>> => {
-    const { data } = await axiosPublic.post(`api/user/logout`, payload)
+    const { data } = await axiosPrivate.post(`api/user/logout`, payload)
     return data
   },
 
   getCompanyList: async (): Promise<TResponseType<ICompanyList>> => {
-    const { data } = await axiosPublic.get(`api/company`)
+    const { data } = await axiosPrivate.get(`api/company`)
     return data
   },
 
   signinWithgoogle: async (payload: IGooglesigninReq): Promise<TResponseType<object>> => {
-    const { data } = await axiosPublic.post(`login/google`, payload)
+    const { data } = await axiosPrivate.post(`login/google`, payload)
     return data
   },
 }

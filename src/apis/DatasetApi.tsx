@@ -1,4 +1,4 @@
-import { axiosProgress, axiosPublic } from './axios'
+import { axiosPrivate, axiosProgress } from './axios'
 import { TResponseType } from './type/commonResponse'
 import {
   IDatasetEditReq,
@@ -13,7 +13,7 @@ import {
 const DatasetApi = {
   //전체 데이터셋 리스트 가져오기
   getDatasetList: async (user_id: string): Promise<TResponseType<IDatasetList>> => {
-    const { data } = await axiosPublic.post(`/api/dataset_list/${user_id}?user_id=${user_id}`)
+    const { data } = await axiosPrivate.post(`/api/dataset_list/${user_id}?user_id=${user_id}`)
     return data
   },
 
@@ -24,7 +24,7 @@ const DatasetApi = {
         'content-type': 'application/x-www-form-urlencoded',
       },
     }
-    const { data } = await axiosPublic.post(`/api/get_surl/${payload.user_id}`, payload.formData, config)
+    const { data } = await axiosPrivate.post(`/api/get_surl/${payload.user_id}`, payload.formData, config)
     return data
   },
 
@@ -63,7 +63,7 @@ const DatasetApi = {
       },
     }
 
-    const { data } = await axiosPublic.post(
+    const { data } = await axiosPrivate.post(
       `/api/upload_new/${payload.user_id}?user_id=${payload.user_id}&is_classification=${payload.is_classification}`,
       payload.formData,
       config
@@ -89,14 +89,14 @@ const DatasetApi = {
   },
 
   editDataset: async (payload: IDatasetEditReq): Promise<TResponseType<string>> => {
-    const { data } = await axiosPublic.patch(
+    const { data } = await axiosPrivate.patch(
       `/api/edit_data/${payload.user_id}?com_id=${payload.com_id}&ds_id=${payload.ds_id}&ds_name=${payload.ds_name}&ds_desc=${payload.ds_desc}`
     )
     return data
   },
 
   deleteDataset: async (payload: IDatasetReq): Promise<TResponseType<string>> => {
-    const { data } = await axiosPublic.delete(
+    const { data } = await axiosPrivate.delete(
       `/api/delete_data/${payload.user_id}?com_id=${payload.com_id}&ds_id=${payload.ds_id}`
     )
     return data
