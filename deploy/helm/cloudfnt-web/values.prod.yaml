@@ -139,5 +139,5 @@ affinity:
             - key: cloud.google.com/gke-nodepool
               operator: In
               values:
-                - cloudai-eeji-prod-cpu-nodepool
-                - cloudai-eeji-prod-pltf-nodepool
+                - cloudai-eeji-prod2-cpu-nodepool
+                - cloudai-eeji-prod2-pltf-nodepool
