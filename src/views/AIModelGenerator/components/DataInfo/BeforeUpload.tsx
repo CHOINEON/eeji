@@ -1,6 +1,7 @@
 import { message } from 'antd'
 import Banner from 'components/card/Banner'
 import Uploader from 'components/uploader/Uploader'
+import languageEncoding from 'detect-file-encoding-and-language'
 import { useRecoilState, useResetRecoilState } from 'recoil'
 import { uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 
@@ -10,7 +11,9 @@ const BeforeUpload = () => {
 
   const handleSelectedFile = (file: File) => {
     if (file) {
-      if (file.size <= 209715200) {
+      languageEncoding(file).then((fileInfo) => setUploadedData({ encoding: fileInfo.encoding }))
+
+      if (file.size <= 400 * 1024 * 1024) {
         setUploadedData({ ...uploadedData, file: file })
       } else {
         message.open({
