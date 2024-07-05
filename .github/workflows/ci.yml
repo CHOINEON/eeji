@@ -117,7 +117,8 @@ jobs:
             cd deploy/helm/cloudfnt-web;
             helm template test . -f values.test.yaml --set image.tag=${{ steps.generate-name-tag.outputs.NAME_TAG }} | tee cloudfnt-web-chart.yaml
             kubectl apply -f cloudfnt-web-chart.yaml -n default
-        
+            kubectl rollout status deployment/cloudfnt-web-test --timeout 15m
+
         # Print env variables and the event payload for the debugging purpose.
         - name: Debug
           if: always()

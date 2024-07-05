@@ -20,8 +20,8 @@ jobs:
         env:
           GAR_REGISTRY: "asia-northeast3-docker.pkg.dev"
           GCP_PROJECT: "ineeji-solution-tf"
-          GKE_CLUSTER: "cloudai-eeji-prod"
-          GKE_CLUSTER_LOCATION: "asia-northeast3-a"
+          GKE_CLUSTER: "cloudai-eeji-prod2"
+          GKE_CLUSTER_LOCATION: "asia-northeast3"
 
         outputs:
           image_tag: ${{ steps.generate-name-tag.outputs.IMAGETAG }}
@@ -117,6 +117,7 @@ jobs:
             cd deploy/helm;
             helm template eeji-cloudfnt-web-prod cloudfnt-web -f cloudfnt-web/values.prod.yaml --set image.tag=${{ steps.generate-name-tag.outputs.NAME_TAG }} | tee cloudfnt-web-chart.yaml
             kubectl apply -f cloudfnt-web-chart.yaml -n default
+            kubectl rollout status deployment/cloudfnt-web-prod --timeout 15m
         
         # Print env variables and the event payload for the debugging purpose.
         - name: Debug
