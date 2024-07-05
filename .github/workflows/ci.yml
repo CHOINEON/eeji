@@ -124,6 +124,7 @@ jobs:
           with:
             api_key: ${{secrets.DD_API_KEY}}
             app_key: ${{secrets.DD_APP_KEY}}
+            datadog_site: us5.datadoghq.com
             public_ids: '4ax-6i5-c33, zm5-6em-fyh, hiw-mjz-nfk, 3sx-93u-q37'
 
         # Print env variables and the event payload for the debugging purpose.
