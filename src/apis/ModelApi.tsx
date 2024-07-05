@@ -1,5 +1,4 @@
-import { axiosPublic } from './axios'
-import { TResponseType } from './type/commonResponse'
+import { axiosPrivate } from './axios'
 import {
   IModelApiGeneratorParam,
   IModelDataReq,
@@ -7,6 +6,7 @@ import {
   IModelPostReq,
   IModelSaveReqParam,
 } from './type/ModelOption'
+import { TResponseType } from './type/commonResponse'
 
 const controller = new AbortController()
 // const signal = controller.signal
@@ -14,7 +14,7 @@ const controller = new AbortController()
 const ModelApi = {
   //모델 옵션 설정해서 실행하기
   postModelwithOption: async (params: IModelPostReq): Promise<IModelOptionRes> => {
-    const { data } = await axiosPublic.post(`api/get_model_option`, params.payload)
+    const { data } = await axiosPrivate.post(`api/get_model_option`, params.payload)
     return data
   },
 
@@ -24,20 +24,20 @@ const ModelApi = {
 
   //Model Generator결과 페이지에서 모델 저장
   saveGeneratedModel: async (params: IModelSaveReqParam): Promise<TResponseType<object>> => {
-    const { data } = await axiosPublic.post(`api/save_model/${params.user_id}`, params)
+    const { data } = await axiosPrivate.post(`api/save_model/${params.user_id}`, params)
     return data
   },
 
   //사용자가 갖고 있는 모델 파일 직접업로드(XAI)
   saveModelwithColumns: async (params: IModelDataReq): Promise<TResponseType<object>> => {
-    const { data } = await axiosPublic.post(`api/save_custom_model_new/${params.user_id}`, params.payload)
+    const { data } = await axiosPrivate.post(`api/save_custom_model_new/${params.user_id}`, params.payload)
     return data
   },
 
   //api페이지 publish (API Generator)
   publishModelAPI: async (params: IModelApiGeneratorParam): Promise<TResponseType<object>> => {
-    // const { data } = await axiosPublic.post(`/api/generate_api_key/`, params)
-    const { data } = await axiosPublic.post(
+    // const { data } = await axiosPrivate.post(`/api/generate_api_key/`, params)
+    const { data } = await axiosPrivate.post(
       `/api/generate_api_key?com_id=${params.com_id}&user_id=${params.user_id}&model_id=${params.model_id}`
     )
 

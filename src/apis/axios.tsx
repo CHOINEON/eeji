@@ -5,6 +5,11 @@ export const axiosPublic = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
+export const axiosPrivate = axios.create({
+  baseURL: process.env.REACT_APP_API_SERVER_URL,
+  headers: { 'Content-Type': 'application/json', Authorization: localStorage.getItem('authToken') },
+})
+
 export const axiosProgress = axios.create({
   baseURL: process.env.REACT_APP_API_SERVER_URL,
   headers: { 'Content-Type': 'application/json' },
