@@ -1,14 +1,11 @@
 import styled from '@emotion/styled'
 import { App, Input, Radio, RadioChangeEvent, Row, Select } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
-import DatasetApi from 'apis/DatasetApi'
 import ColumnLabel from 'components/fields/ColumnLabel'
-import { useApiError } from 'hooks/useApiError'
 import { useEffect, useState } from 'react'
-import { useMutation } from 'react-query'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { dateTimeToString, isValidDatetimeFormat } from 'utils/DateFunction'
-import { dataPropertyState, signedUrlState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { dataPropertyState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 
 interface Option {
   value: string
@@ -18,23 +15,11 @@ interface Option {
 
 const DataProperties = () => {
   const { message } = App.useApp()
-  const { handleError } = useApiError()
 
   const [inputOption, setInputOption] = useRecoilState(dataPropertyState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const [targetOptions, setTargetOptions] = useState(Array<Option>)
   const [dateColOptions, setDateColOptions] = useState(Array<Option>)
-
-  const setSignedUrl = useSetRecoilState(signedUrlState)
-
-  const { mutate: mutateSignedUrl } = useMutation(DatasetApi.getSignedUrl, {
-    onSuccess: (response: any) => {
-      setSignedUrl(response)
-    },
-    onError: (error: any) => {
-      handleError(error)
-    },
-  })
 
   useEffect(() => {
     clearInputs()
@@ -44,17 +29,6 @@ const DataProperties = () => {
       target_y: '',
     })
   }, [])
-
-  useEffect(() => {
-    if (uploadedData.file.name?.length > 0) {
-      mutateSignedUrl({ object_name: generateObjectName(uploadedData.file.name) })
-    }
-  }, [uploadedData])
-
-  function generateObjectName(fileName: string) {
-    const reg = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi
-    return fileName.replace(reg, '')
-  }
 
   useEffect(() => {
     generateOptions(uploadedData)
@@ -68,8 +42,8 @@ const DataProperties = () => {
     const targetArr: Array<any> = []
     const timestampArr: Array<any> = []
 
+    //regression 과 classification 타입에 따라 선택 가능한 컬럼 바인딩
     if (inputOption.algo_type === 0) {
-      //regression 과 classification 타입에 따라 선택 가능한 컬럼 바인딩
       col_list.map((value: string) => {
         if (numeric_cols.includes(value)) {
           targetArr.push({ value: value, label: value })
@@ -79,7 +53,7 @@ const DataProperties = () => {
       })
       setTargetOptions(targetArr)
     } else if (inputOption.algo_type === 1) {
-      //classification(numeric 무관함)
+      //classification 의 경우 numeric 무관함
       col_list.map((value: string) => targetArr.push({ value: value, label: value }))
       setTargetOptions(targetArr)
     }
@@ -120,29 +94,15 @@ const DataProperties = () => {
     const newArr = array.map((obj) => {
       return { ...obj, dateTime: new Date(obj[colName]) }
     })
-    console.log('test:"', newArr[0].dateTime.getTime())
-
     if (!newArr[0].dateTime.getTime()) {
       alert('날짜 컬럼이 아닙니다.')
     }
-
-    console.log('newArr[0].dateTime:', newArr[0].dateTime)
-    // console.log('test:', isValidDate(newArr[0].dateTime))
-
     //Sort in Ascending order(low to high)
-    //https://bobbyhadz.com/blog/javascript-sort-array-of-objects-by-date-property
     const sortedAsc = newArr.sort((a, b) => Number(a.dateTime) - Number(b.dateTime))
-    // console.log('sortedAsc:', sortedAsc)
-
-    // console.log('-----test:', Object.prototype.toString.call(sortedAsc[0].dateTime))
-
-    const summary = []
     const lengthOfArray = array.length
 
     const start = sortedAsc[0].dateTime
     const end = sortedAsc[lengthOfArray - 1].dateTime
-    // console.log('start:', dateTimeToString(start).length)
-    // console.log('end:', typeof end)
 
     setUploadedData({
       ...uploadedData,

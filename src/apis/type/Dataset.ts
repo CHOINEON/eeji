@@ -31,8 +31,9 @@ export type IDatasetList = Array<IDatasetRes>
 export type UploadStateType = 'start' | 'cancel' | 'fail' | 'success'
 
 export interface IDataUploadReq {
-  state: UploadStateType
-  formData?: FormData
+  object_name: string
+  object_size: number
+  status: UploadStateType
 }
 
 export interface IDescription {
@@ -65,4 +66,9 @@ export interface IUploadFileReq {
   signedUrl: string
   fileType?: string
   file: File
+}
+
+export interface IModelDataSaveReq {
+  object_name: string
+  data: string //JSON string
 }

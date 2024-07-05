@@ -26,6 +26,7 @@ interface UploadData {
   columns?: Array<any>
   numericCols?: Array<string>
   nonNumericCols?: Array<string>
+  objectName?: string
 }
 
 //
@@ -35,7 +36,6 @@ export const uploadedDataState = atom({
     file: null,
     name: '',
     content: [],
-    // size: 0,
     rowCount: 0,
     colCount: 0,
     startDate: '',
@@ -43,6 +43,7 @@ export const uploadedDataState = atom({
     columns: [],
     numericCols: [],
     nonNumericCols: [],
+    objectName: '',
   } as UploadData,
 })
 
@@ -102,14 +103,7 @@ export const dataPropertyState = atom({
   } as IOption,
 })
 
-//GCS Signed url
-interface IGoogleSignedUrlRes {
-  surl: string
-  uuid: string
-  blobName: string
-}
-
 export const signedUrlState = atom({
   key: 'signedUrlState',
-  default: { surl: '', uuid: '', blobName: '' } as IGoogleSignedUrlRes,
+  default: '' as string,
 })
