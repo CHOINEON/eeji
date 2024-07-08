@@ -13,7 +13,8 @@ const BeforeUpload = () => {
     if (file) {
       languageEncoding(file).then((fileInfo) => setUploadedData({ encoding: fileInfo.encoding }))
 
-      if (file.size <= 400 * 1024 * 1024) {
+      //현재 업로드 용량 제한 400MB로 설정(FileReader에서 contents를 읽는 최대 사이즈가 512MB이고, 400MB를 넘는 경우 브라우저 부하에 따라 멈추는 경우가 있어 400으로 제한 / 24-07-08)
+      if (file.size <= 419430400) {
         setUploadedData({ ...uploadedData, file: file })
       } else {
         message.open({
