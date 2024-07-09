@@ -4,9 +4,10 @@ import { App, Dropdown, MenuProps, Tag } from 'antd'
 import DatasetApi from 'apis/DatasetApi'
 import React from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import { useRecoilState } from 'recoil'
+import { useSetRecoilState } from 'recoil'
 import { FileName } from 'views/AIModelGenerator/components/Input/Title'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { stepCountStore } from 'views/AIModelGenerator/store/global/atom'
 import { datasetEditModalState } from 'views/AIModelGenerator/store/modal/atom'
 import '../../style/uploader.css'
 
@@ -26,7 +27,6 @@ export interface DescriptionBoxProps {
 export interface IDescriptionBox {
   data: DescriptionBoxProps | Array<any>
   onSelect: any
-  // onViewMore: any
 }
 
 //각 데이터셋 박스
@@ -34,8 +34,11 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
   const { data, onSelect } = props
   const { message, modal } = App.useApp()
   const queryClient = useQueryClient()
-  const [modalState, setModalState] = useRecoilState(datasetEditModalState)
-  const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
+
+  const setModalState = useSetRecoilState(datasetEditModalState)
+  const setSelectedData = useSetRecoilState(selectedDataState)
+  const setActiveStep = useSetRecoilState(stepCountStore)
+
   const items: MenuProps['items'] = [
     {
       label: 'Edit',
@@ -46,10 +49,10 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
       key: '2',
     },
   ]
+
   const { mutate: mutateDelete } = useMutation(DatasetApi.deleteDataset, {
     onSuccess: (response: any) => {
       message.success(response?.message)
-      //refetching
       queryClient.invalidateQueries('datasets')
     },
     onError: (error: any) => {
@@ -91,6 +94,10 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
     }
   }
 
+  const handleRunClick = (e: any) => {
+    setActiveStep(1)
+  }
+
   return (
     <>
       <DescBoxContainer onClick={handleClick}>
@@ -108,10 +115,7 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
             <input
               type="checkbox"
               disabled={true} //체크해서 뭐할건지 정의 안되어있음
-              // checked={checked}
-              // onChange={({ target: { checked } }) => onChange(checked)}
             />
-            {/* {children} */}
           </label>
         </div>
 
@@ -119,11 +123,11 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
           <FileName>{data?.name}</FileName>
         </TitleWrapper>
         <div className="container">
-          <Content>
+          <LargeContent>
             <div>
               <Tag color="#FE7E0D">{data?.target_y}</Tag>
             </div>
-          </Content>
+          </LargeContent>
           <Content>
             <div>
               {data?.size / 1024 < 1024
@@ -131,17 +135,14 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
                 : Math.round(data?.size / 1024 / 1024) + ' MB'}
             </div>
           </Content>
-
-          <DateContent>
+          <LargeContent>
             <div>{data?.create_date}</div>
-          </DateContent>
-          <DateContent>
-            <div>{data?.update_date}</div>
-          </DateContent>
+          </LargeContent>
+
           <UserContent>
             <div>{data?.user_id}</div>
           </UserContent>
-          <ButtonContent>
+          <Content>
             <button
               style={{
                 borderRadius: '10px',
@@ -153,10 +154,11 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
                 lineHeight: '30px',
                 fontWeight: 500,
               }}
+              onClick={handleRunClick}
             >
               Run
             </button>
-          </ButtonContent>
+          </Content>
           <Content style={{ float: 'right' }}>
             <Dropdown menu={{ items, onClick }}>
               <MoreOutlined style={{ display: 'block', textAlign: 'center', lineHeight: '69px' }} size={16} />
@@ -190,15 +192,10 @@ const Content = styled.div`
   height: 69px;
   text-align: center;
   line-height: 69px;
-  width: 160px;
-  text-align: center;
+  width: 5%;
 `
 
-const ButtonContent = styled(Content)`
-  width: 10%;
-`
-
-const DateContent = styled(Content)`
+const LargeContent = styled(Content)`
   width: 200px;
 `
 

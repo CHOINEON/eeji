@@ -1,14 +1,11 @@
 import styled from '@emotion/styled'
-import { Input, Radio, RadioChangeEvent, Row, Select, Spin } from 'antd'
+import { App, Input, Radio, RadioChangeEvent, Row, Select } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
-import DatasetApi from 'apis/DatasetApi'
 import ColumnLabel from 'components/fields/ColumnLabel'
-import { useApiError } from 'hooks/useApiError'
 import { useEffect, useState } from 'react'
-import { useMutation } from 'react-query'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
+import { dateTimeToString, isValidDatetimeFormat } from 'utils/DateFunction'
 import { dataPropertyState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
-import { fileUploadState } from 'views/AIModelGenerator/store/upload/atom'
 
 interface Option {
   value: string
@@ -17,34 +14,12 @@ interface Option {
 }
 
 const DataProperties = () => {
-  const [uploading, setUploading] = useState(false)
-  const uploadable = useRecoilValue(fileUploadState)
+  const { message } = App.useApp()
+
   const [inputOption, setInputOption] = useRecoilState(dataPropertyState)
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
-  const [options, setOptions] = useState(Array<Option>)
+  const [targetOptions, setTargetOptions] = useState(Array<Option>)
   const [dateColOptions, setDateColOptions] = useState(Array<Option>)
-  const { handleError } = useApiError()
-  const { mutate } = useMutation(DatasetApi.uploadDataset, {
-    onSuccess: (response: any) => {
-      const summaryData = response['1']
-
-      setUploadedData({
-        ...uploadedData,
-        rowCount: summaryData.row_count,
-        colCount: summaryData.column_count,
-        startDate: summaryData.start_date !== 'null' ? summaryData.start_date : '-',
-        endDate: summaryData.end_date !== 'null' ? summaryData.end_date : '-',
-      })
-
-      //Select Box 옵션 데이터 바인딩
-      generateOptions(summaryData)
-
-      setUploading(false)
-    },
-    onError: (error: any) => {
-      handleError(error)
-    },
-  })
 
   useEffect(() => {
     clearInputs()
@@ -56,65 +31,84 @@ const DataProperties = () => {
   }, [])
 
   useEffect(() => {
-    // 분석 유형 선택 시 파일 서버로 보내 description 받아옴
-    if (inputOption.algo_type !== undefined) fetchFileDescription()
-  }, [inputOption.algo_type])
-
-  useEffect(() => {
-    if (uploadable) {
-      //
-    } else {
-    }
-  }, [uploadable])
-
-  const fetchFileDescription = () => {
-    setUploading(true)
-
-    const formData = new FormData()
-    formData.append('files', uploadedData.file)
-
-    const user_id = localStorage.getItem('userId').toString()
-    const is_classification = inputOption.algo_type
-
-    mutate({ user_id, is_classification, formData })
-  }
+    generateOptions(uploadedData)
+  }, [uploadedData, inputOption.algo_type])
 
   function generateOptions(data: any) {
-    const col_list = data['col_list']
-    const non_numeric_cols = data['non_numeric_cols']
-    const numeric_cols = data['numeric_cols']
+    const col_list = data['columns']
+    const non_numeric_cols = data['nonNumericCols']
+    const numeric_cols = data['numericCols']
 
-    const newOption: Array<any> = []
-
-    if (inputOption.algo_type === 0) {
-      //regression 과 classification 타입에 따라 선택 가능한 컬럼 바인딩
-      col_list.map((value: string) => {
-        if (numeric_cols.includes(value)) {
-          newOption.push({ value: value, label: value })
-        } else if (non_numeric_cols.includes(value)) {
-          newOption.push({ value: value, label: `${value} (non-numeric column)`, disabled: true })
-        }
-      })
-    } else if (inputOption.algo_type === 1) {
-      //classification(numeric 무관함)
-      col_list.map((value: string) => newOption.push({ value: value, label: value }))
-    }
-    setOptions(newOption)
-
-    //Generate datetime column options
+    const targetArr: Array<any> = []
     const timestampArr: Array<any> = []
 
+    //regression 과 classification 타입에 따라 선택 가능한 컬럼 바인딩
+    if (inputOption.algo_type === 0) {
+      col_list.map((value: string) => {
+        if (numeric_cols.includes(value)) {
+          targetArr.push({ value: value, label: value })
+        } else if (non_numeric_cols.includes(value)) {
+          targetArr.push({ value: value, label: `${value} (non-numeric column)`, disabled: true })
+        }
+      })
+      setTargetOptions(targetArr)
+    } else if (inputOption.algo_type === 1) {
+      //classification 의 경우 numeric 무관함
+      col_list.map((value: string) => targetArr.push({ value: value, label: value }))
+      setTargetOptions(targetArr)
+    }
+
+    //Generate datetime column options
     col_list.map((value: string) => timestampArr.push({ value: value, label: value }))
     setDateColOptions(timestampArr)
   }
 
+  const validateDatetime = (columnLabel: string, data: Array<any>) => {
+    let result: boolean
+    const sample = data.slice(0, 10)
+    for (let i = 0; i < 10; i++) {
+      result = isValidDatetimeFormat(sample[i][columnLabel])
+    }
+
+    return result
+  }
+
   const clearInputs = () => {
-    setOptions([{ value: '', label: '', disabled: false }])
-    setInputOption({ algo_type: 1, date_format: '', name: '', date_col: '', target_y: '', desc: '' })
+    setTargetOptions([{ value: '', label: '', disabled: false }])
+    setInputOption({ algo_type: 0, date_format: '', name: '', date_col: '', target_y: '', desc: '' })
   }
 
   const handleSelectDateCol = (param: any) => {
-    setInputOption({ ...inputOption, date_col: param })
+    //날짜 컬럼 유효한지 검증
+    const isValid = validateDatetime(param, uploadedData.content)
+
+    if (isValid) setInputOption({ ...inputOption, date_col: param })
+    else message.error('처리할 수 없는 날짜 형식입니다.')
+
+    //시작 종료일 찾기
+    searchStartEndDate(param, uploadedData.content)
+  }
+
+  const searchStartEndDate = (colName: string, array: Array<any>) => {
+    //min & max datetime 찾기
+    const newArr = array.map((obj) => {
+      return { ...obj, dateTime: new Date(obj[colName]) }
+    })
+    if (!newArr[0].dateTime.getTime()) {
+      alert('날짜 컬럼이 아닙니다.')
+    }
+    //Sort in Ascending order(low to high)
+    const sortedAsc = newArr.sort((a, b) => Number(a.dateTime) - Number(b.dateTime))
+    const lengthOfArray = array.length
+
+    const start = sortedAsc[0].dateTime
+    const end = sortedAsc[lengthOfArray - 1].dateTime
+
+    setUploadedData({
+      ...uploadedData,
+      startDate: dateTimeToString(start).length === 19 ? dateTimeToString(start) : '-',
+      endDate: dateTimeToString(end).length === 19 ? dateTimeToString(end) : '-',
+    })
   }
 
   const handleSelectY = (param: any) => {
@@ -130,66 +124,61 @@ const DataProperties = () => {
   }
 
   return (
-    <Spin tip="업로드 파일 분석 중 ..." spinning={uploading} style={{ marginTop: '100px' }}>
-      <DataPropertiesContainer>
-        <Row>
-          <ColumnLabel required={true} label="Dataset Name" />
-          <Input
-            style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-            placeholder="Dataset Name"
-            maxLength={20}
-            onChange={handleChange}
-            value={inputOption.name}
-            allowClear
-          />
-        </Row>
-        <Row>
-          <ColumnLabel required={true} label="Algorithm Type" />
-          <Radio.Group onChange={onChangeRadio} value={inputOption.algo_type} disabled={!uploadable}>
-            <Radio value={1}>Classification</Radio>
-            <Radio value={0}>Regression</Radio>
-          </Radio.Group>
-        </Row>
-        <Row>
-          <ColumnLabel required={true} label=" Target Variable" />
-          <Select
-            style={{
-              width: '100%',
-            }}
-            value={inputOption.target_y}
-            placeholder="Timestamp Column"
-            options={options}
-            onSelect={handleSelectY}
-            disabled={!uploadable}
-          />
-        </Row>
-        <Row>
-          <ColumnLabel required={false} label="Timestamp" />
-          <Select
-            style={{
-              width: '100%',
-            }}
-            value={inputOption.date_col}
-            placeholder="Timestamp Column"
-            options={dateColOptions}
-            onSelect={handleSelectDateCol}
-            disabled={!uploadable}
-          />
-        </Row>
-        <Row>
-          <ColumnLabel required={false} label=" Description(Optional)" />
-          <TextArea
-            value={inputOption.desc}
-            onChange={(e) => setInputOption({ ...inputOption, desc: e.target.value })}
-            placeholder="Description"
-            maxLength={50}
-            allowClear
-            autoSize={{ minRows: 3, maxRows: 2 }}
-            disabled={!uploadable}
-          />
-        </Row>
-      </DataPropertiesContainer>
-    </Spin>
+    <DataPropertiesContainer>
+      <Row>
+        <ColumnLabel required={true} label="Dataset Name" />
+        <Input
+          style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
+          placeholder="Dataset Name"
+          maxLength={20}
+          onChange={handleChange}
+          value={inputOption.name}
+          allowClear
+        />
+      </Row>
+      <Row>
+        <ColumnLabel required={true} label="Algorithm Type" />
+        <Radio.Group onChange={onChangeRadio} value={inputOption.algo_type}>
+          <Radio value={0}>Regression</Radio>
+          <Radio value={1}>Classification</Radio>
+        </Radio.Group>
+      </Row>
+      <Row>
+        <ColumnLabel required={true} label=" Target Variable" />
+        <Select
+          style={{
+            width: '100%',
+          }}
+          value={inputOption.target_y}
+          placeholder="Target Variable"
+          options={targetOptions}
+          onSelect={handleSelectY}
+        />
+      </Row>
+      <Row style={{ display: inputOption.algo_type === 0 ? 'block' : 'none' }}>
+        <ColumnLabel required={true} label="Timestamp" />
+        <Select
+          style={{
+            width: '100%',
+          }}
+          value={inputOption.date_col}
+          placeholder="Timestamp Column"
+          options={dateColOptions}
+          onSelect={handleSelectDateCol}
+        />
+      </Row>
+      <Row>
+        <ColumnLabel required={false} label=" Description(Optional)" />
+        <TextArea
+          value={inputOption.desc}
+          onChange={(e) => setInputOption({ ...inputOption, desc: e.target.value })}
+          placeholder="Description"
+          maxLength={50}
+          allowClear
+          autoSize={{ minRows: 2, maxRows: 2 }}
+        />
+      </Row>
+    </DataPropertiesContainer>
   )
 }
 

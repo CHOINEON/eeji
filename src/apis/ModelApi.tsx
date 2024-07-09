@@ -1,5 +1,4 @@
 import { axiosPrivate } from './axios'
-import { TResponseType } from './type/commonResponse'
 import {
   IModelApiGeneratorParam,
   IModelDataReq,
@@ -7,6 +6,7 @@ import {
   IModelPostReq,
   IModelSaveReqParam,
 } from './type/ModelOption'
+import { TResponseType } from './type/commonResponse'
 
 const controller = new AbortController()
 // const signal = controller.signal
