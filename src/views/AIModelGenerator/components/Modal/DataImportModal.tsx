@@ -3,7 +3,7 @@ import { App, Button } from 'antd'
 import DatasetApi from 'apis/DatasetApi'
 import { UploadStateType } from 'apis/type/Dataset'
 import { useEffect, useState } from 'react'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
 import { ProgressState } from 'stores/progress'
@@ -22,6 +22,7 @@ type inputValuesType = {
 
 const DataImportModal = () => {
   const { message } = App.useApp()
+  const queryClient = useQueryClient()
 
   const inputOption = useRecoilValue(dataPropertyState)
   const progress = useRecoilValue(ProgressState)
@@ -43,8 +44,8 @@ const DataImportModal = () => {
   })
 
   const { mutateAsync: uploadFile } = useMutation(DatasetApi.uploadFileToGcs, {
-    onSuccess: (response: any) => {
-      notifyBackend('success')
+    onSuccess: async (response: any) => {
+      await notifyBackend('success')
 
       const inputValues: inputValuesType = {
         data_name: inputOption.name,
@@ -55,7 +56,7 @@ const DataImportModal = () => {
       }
 
       //모델 생성에 필요한 데이터 백엔드에 저장
-      saveMetaData({ object_name: generateObjectName(inputOption.name), data: JSON.stringify(inputValues) })
+      saveMetaData({ object_name: uploadedData.objectName, data: inputValues })
     },
     onError: (error: Error) => {
       message.error(error.message)
@@ -66,17 +67,23 @@ const DataImportModal = () => {
   const { mutateAsync: notifyState } = useMutation(DatasetApi.notifyWithState, {
     onSuccess: (response: any) => {},
     onError: (error: Error) => {
-      message.error(error.message)
+      message.error(error?.message)
     },
   })
 
-  const { mutate: saveMetaData } = useMutation(DatasetApi.saveModelData, {
+  const { mutateAsync: saveMetaData } = useMutation(DatasetApi.saveModelData, {
     onSuccess: (response: any) => {
       message.success('데이터를 성공적으로 저장했습니다.')
+
+      setSaving(false)
+      setModal(null)
+
+      queryClient.invalidateQueries('datasets')
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       notifyBackend('fail')
-      message.error(error.message)
+
+      message.error(error.detail)
       setSaving(false)
     },
   })
@@ -100,16 +107,6 @@ const DataImportModal = () => {
     }
   }, [inputOption.target_y])
 
-  function generateObjectName(fileName: string) {
-    const objName = `${localStorage.getItem('userId').toString()}_${fileName}_${Math.floor(
-      new Date().getTime() / 1000
-    )}`
-    //Object Name Requirements (https://download.huihoo.com/google/gdgdevkit/DVD1/developers.google.com/storage/docs/bucketnaming.html)
-    const reg = /[\[\]\t\n\r\#*/?]/gi
-
-    return objName.replace(reg, '')
-  }
-
   const handleSave = async () => {
     const dataFile = uploadedData.file
     if (dataFile && dataFile.size > Number(process.env.REACT_APP_MAX_FILE_SIZE)) {
@@ -128,7 +125,7 @@ const DataImportModal = () => {
 
         //signedURL을 정상적으로 발급 -> notify start -> GCS upload -> notify success -> save data
         //https://app.diagrams.net/#G1C7afvT0Z81_2GEPRH58ohi4QWQsuGRM5
-        const getUrlResult = await getSignedUrl({ object_name: generateObjectName(uploadedData.file.name) })
+        const getUrlResult = await getSignedUrl({ object_name: uploadedData.objectName })
         const startResult = await notifyBackend('start')
 
         try {
@@ -145,7 +142,7 @@ const DataImportModal = () => {
   // Call notify API when GCS upload request got response
   const notifyBackend = async (state: UploadStateType) => {
     return await notifyState({
-      object_name: generateObjectName(uploadedData.file.name),
+      object_name: uploadedData.objectName,
       object_size: uploadedData.file.size,
       status: state,
     })
