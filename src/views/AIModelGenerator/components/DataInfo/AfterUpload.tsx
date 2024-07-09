@@ -42,7 +42,7 @@ const AfterUpload = () => {
 
           if (text.length === 0) message.error('컬럼 정보를 확인할 수 없습니다.')
           else {
-            if (new TextEncoder().encode(text).length > 400 * 1024 * 1024) {
+            if (new TextEncoder().encode(text).length > Number(process.env.REACT_APP_MAX_FILE_SIZE)) {
               message.info('최대 처리 가능한 용량은 400MB 입니다.')
               setLoading({ isLoading: false })
             } else {

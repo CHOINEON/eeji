@@ -10,8 +10,8 @@ const BeforeUpload = () => {
 
   const handleSelectedFile = (file: File) => {
     if (file) {
-      if (file.size <= 400 * 1024 * 1024) {
-        setUploadedData({ ...uploadedData, file: file })
+      if (file.size <= Number(process.env.REACT_APP_MAX_FILE_SIZE)) {
+        setUploadedData({ ...uploadedData, file: file, objectName: generateObjectName(file.name) })
       } else {
         message.open({
           type: 'error',
@@ -23,6 +23,16 @@ const BeforeUpload = () => {
         })
       }
     }
+  }
+
+  function generateObjectName(fileName: string) {
+    const objName = `${localStorage.getItem('userId').toString()}_${fileName}_${Math.floor(
+      new Date().getTime() / 1000
+    )}`
+    //Object Name Requirements (https://download.huihoo.com/google/gdgdevkit/DVD1/developers.google.com/storage/docs/bucketnaming.html)
+    const reg = /[\[\]\t\n\r\#*/?]/gi
+
+    return objName.replace(reg, '')
   }
 
   const handleCancelClick = () => {
