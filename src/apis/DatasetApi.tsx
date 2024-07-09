@@ -27,7 +27,7 @@ const DatasetApi = {
         'user-id': localStorage.getItem('userId'),
       },
     }
-    const { data } = await axiosPrivate.get(`/api/v1/get_signed_url/object_name=${payload.object_name}`, config)
+    const { data } = await axiosPrivate.get(`/api/v1/get_signed_url/${payload.object_name}`, config)
     return data
   },
 
@@ -57,6 +57,7 @@ const DatasetApi = {
         'object-size': payload.object_size,
       },
     }
+
     const state = payload.status
     const { data } = await axiosPrivate.post(
       `/api/v1/notify_upload/${payload.object_name}?status=${payload.status}`,
