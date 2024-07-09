@@ -70,5 +70,5 @@ export interface IUploadFileReq {
 
 export interface IModelDataSaveReq {
   object_name: string
-  data: string //JSON string
+  data: object
 }

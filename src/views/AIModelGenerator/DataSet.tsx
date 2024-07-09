@@ -1,28 +1,25 @@
-import { Col, Empty, Spin } from 'antd'
+import { Empty, Spin } from 'antd'
 import useGetDatasets from 'hooks/queries/useGetDatasets'
 import { useEffect, useState } from 'react'
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
+import { useResetRecoilState, useSetRecoilState } from 'recoil'
 import DataEditModal from './components/DataInfo/DataEditModal'
 import DescriptionBox from './components/DataInfo/DescriptionBox'
 import ModelList from './components/Model/ModelList'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
-import { stepCountStore } from './store/global/atom'
 import { analysisResponseAtom } from './store/response/atoms'
-import { usedVariableStore, variableStore } from './store/variable/atom'
+import { usedVariableStore } from './store/variable/atom'
 import './style/data-analysis-style.css'
 
 const DataSet = () => {
   const [loading, setLoading] = useState(false)
-  const setActiveStep = useSetRecoilState(stepCountStore)
-  const setUserInfo = useSetRecoilState(userInfoState)
-  const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
-  const setVariableList = useSetRecoilState(variableStore) //최초 변수 리스트 렌더링
-  const resetAnalysisResponse = useResetRecoilState(analysisResponseAtom)
-  const [usedVariable, setUsedVariable] = useRecoilState(usedVariableStore)
 
-  //모든 데이터셋 가져오기
+  const setUserInfo = useSetRecoilState(userInfoState)
+  const setSelectedData = useSetRecoilState(selectedDataState)
+  const setUsedVariable = useSetRecoilState(usedVariableStore)
+
+  const resetAnalysisResponse = useResetRecoilState(analysisResponseAtom)
+
   const { data } = useGetDatasets(localStorage.getItem('userId'))
-  const columnNames = ['Target', 'Total Size', 'Created', 'Updated', 'Created by']
 
   useEffect(() => {
     //데이터셋 페이지 나갔다 오면 초기화
@@ -36,8 +33,6 @@ const DataSet = () => {
   }, [data])
 
   const handleSelect = (data: any) => {
-    // console.log('Dataset selected ::', data)
-
     setUsedVariable([])
     setSelectedData({
       ds_id: data.ds_id,
@@ -53,47 +48,18 @@ const DataSet = () => {
       non_numeric_cols: data.non_numeric_cols,
       isClassification: data.is_classification,
     })
-
-    //태그리스트 드롭다운 바인딩
-    setFeatureList(data.name, JSON.parse(data.col_list))
-  }
-
-  const setFeatureList = (name: string, columns: Array<any>) => {
-    if (columns) {
-      //X, Y 변수 드롭다운 리스트(default로 사용) 포맷팅
-      const formattedData: any = []
-      columns.forEach((column: any) => {
-        formattedData.push({ value: column, label: column })
-      })
-      // const temp = [{ label: name, options: formattedData }]
-      setVariableList(formattedData)
-      // console.log(formattedData)
-
-      //feature 사용관리 하기 위한 store 데이터 포맷팅
-      const result: Array<any> = []
-      columns.forEach((value: any) => {
-        result.push({ value: value, used: false })
-      })
-
-      setUsedVariable(result)
-      setActiveStep(1)
-    }
   }
 
   return (
     <>
       <ModelList />
-      <div style={{ textAlign: 'center', width: '100%' }}>
+      <div>
         {data?.data.length > 0 ? (
-          <>
-            <Spin tip="데이터셋 로드 중..." spinning={loading} style={{ marginTop: '100px' }}>
-              {data?.data.map((data: any, index: number) => (
-                <Col key={index}>
-                  <DescriptionBox data={data} onSelect={handleSelect} />
-                </Col>
-              ))}
-            </Spin>
-          </>
+          <Spin tip="데이터셋 로드 중..." spinning={loading} style={{ marginTop: '100px', backgroundColor: 'red' }}>
+            {data?.data.map((data: any, index: number) => (
+              <DescriptionBox key={index} data={data} onSelect={handleSelect} />
+            ))}
+          </Spin>
         ) : (
           !loading && <Empty />
         )}
