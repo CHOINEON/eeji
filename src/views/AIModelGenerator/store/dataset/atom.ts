@@ -27,9 +27,9 @@ interface UploadData {
   numericCols?: Array<string>
   nonNumericCols?: Array<string>
   objectName?: string
+  encoding?: string
 }
 
-//
 export const uploadedDataState = atom({
   key: 'uploadedData',
   default: {
