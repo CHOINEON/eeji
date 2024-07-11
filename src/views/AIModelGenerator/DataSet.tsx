@@ -51,7 +51,8 @@ const DataSet = () => {
 
   return (
     <>
-      {/* <ModelList /> */}
+      {/* 배포를 위해 숨김처리 */
+      /* <ModelList />  */}
       <div>
         {data?.data.length > 0 ? (
           <Spin tip="데이터셋 로드 중..." spinning={loading} style={{ marginTop: '100px', backgroundColor: 'red' }}>
