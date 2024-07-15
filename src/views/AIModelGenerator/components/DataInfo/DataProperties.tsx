@@ -35,7 +35,7 @@ const DataProperties = () => {
   }, [uploadedData, inputOption.algo_type])
 
   function generateOptions(data: any) {
-    const col_list = data['columns']
+    const col_list = data['columns'].filter(Boolean) //유효하지 않은 값(빈 값)제거 필터링
     const non_numeric_cols = data['nonNumericCols']
     const numeric_cols = data['numericCols']
 
