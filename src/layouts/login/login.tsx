@@ -106,7 +106,7 @@ export const Login: React.FC = () => {
         localStorage.setItem('userData', JSON.stringify(response.user_info))
         localStorage.setItem('companyId', response.user_info.com_id || 'google')
         localStorage.setItem('userPicture', response.user_info.picture)
-        localStorage.setItem('authToken', `${response[0].token_type} ${response[0].access_token}`)
+        localStorage.setItem('authToken', response.user_info.access_token)
 
         const args: DataLayerArgs = {
           dataLayer: {
