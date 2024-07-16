@@ -44,10 +44,6 @@ option {
   --ag-borders: none;
 }
 
-/* .js-plotly-plot .plotly .modebar{
-  display:none;
-} */
-
 .ant-tabs-nav {
   display: none !important; /*임시처리*/
 }
