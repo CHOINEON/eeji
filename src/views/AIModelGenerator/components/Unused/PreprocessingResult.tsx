@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 import Title from 'antd/es/typography/Title'
-import React from 'react'
-import DynamicRenderChart from '../Chart/DynamicRenderChart'
 import InfoCircle from '../Icon/InfoCircle'
+import DynamicRenderChart from './DynamicRenderChart'
 
 const PreprocessingResult = ({ data, options }: any) => {
   return (

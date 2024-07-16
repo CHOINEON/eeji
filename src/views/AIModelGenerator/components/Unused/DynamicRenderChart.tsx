@@ -1,7 +1,6 @@
 import { Select } from 'antd'
-import Title from 'antd/es/typography/Title'
-import React, { useEffect, useState } from 'react'
-import LineChart from './LineChart'
+import { useEffect, useState } from 'react'
+import LineChart from '../Chart/LineChart'
 
 const DynamicRenderChart = ({ type, data }: any) => {
   const [chartData, setChartData] = useState([])
