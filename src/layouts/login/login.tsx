@@ -141,6 +141,7 @@ export const Login: React.FC = () => {
     const code: string = params.get('code')
 
     if (code && code.length > 0) {
+      // 구글로그인 시, 로컬 스토리지에 auth Token값이 있는 경우 삭제함
       if (localStorage.getItem('authToken')) localStorage.removeItem('authToken')
       mutateGoogleLogin({ code: code })
     }
