@@ -1,6 +1,6 @@
 import { axiosPrivate } from './axios'
-import { TResponseType } from './type/commonResponse'
 import { IModelDataReq, IModelReqParam } from './type/ModelOption'
+import { TResponseType } from './type/commonResponse'
 
 const XaiApi = {
   //모델 및 데이터셋 파일 업로드 => 컬럼 리턴(column file 업로드 한 경우만)

@@ -1,10 +1,10 @@
-import { axiosPrivate, axiosPublic } from './axios'
-import { TResponseType } from './type/commonResponse'
+import { axiosPrivate } from './axios'
 import { ICompanyList, IGooglesigninReq, IUserLoginReq, IUserLogoutReq } from './type/User'
+import { TResponseType } from './type/commonResponse'
 
 const UserApi = {
   login: async (payload: IUserLoginReq): Promise<TResponseType<object>> => {
-    const { data } = await axiosPublic.post(`api/user/info`, payload)
+    const { data } = await axiosPrivate.post(`api/user/info`, payload)
     return data
   },
 

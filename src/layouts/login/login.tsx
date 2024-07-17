@@ -43,7 +43,7 @@ export const Login: React.FC = () => {
       window.localStorage.setItem('userId', response[0].user_id)
       window.localStorage.setItem('userPosition', response[0].user_position)
       window.localStorage.setItem('userLevel', response[0].user_level)
-      window.localStorage.setItem('accessToken', `${response[0].token_type} ${response[0].access_token}`)
+      window.localStorage.setItem('authToken', `${response[0].token_type} ${response[0].access_token}`)
 
       const args: DataLayerArgs = {
         dataLayer: {
@@ -56,7 +56,6 @@ export const Login: React.FC = () => {
       }
 
       TagManager.dataLayer(args)
-
       window.location.href = '/admin/main'
     },
     onError: (error: any) => {
@@ -107,6 +106,7 @@ export const Login: React.FC = () => {
         localStorage.setItem('userData', JSON.stringify(response.user_info))
         localStorage.setItem('companyId', response.user_info.com_id || 'google')
         localStorage.setItem('userPicture', response.user_info.picture)
+        localStorage.setItem('authToken', response.user_info.access_token)
 
         const args: DataLayerArgs = {
           dataLayer: {

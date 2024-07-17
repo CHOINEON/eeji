@@ -9,10 +9,10 @@ import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { featureSelectModalState } from 'views/AIModelGenerator/store/modal/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
-import FeatureSelectModal from './components/Modal/FeatureSelectModal'
-import { stepCountStore } from './store/global/atom'
 import ClassificationResult from './Visualization/Data/ClassificationResult'
 import RegressionResult from './Visualization/Data/RegressionResult'
+import FeatureSelectModal from './components/Modal/FeatureSelectModal'
+import { stepCountStore } from './store/global/atom'
 
 const ModelGeneratorResult = () => {
   const { message } = App.useApp()
@@ -32,8 +32,6 @@ const ModelGeneratorResult = () => {
 
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: (result: any) => {
-      // console.log('postModelwithOption result:', result)
-
       setLoading({ showing: false, text: '' })
 
       // 한 번에 한 개의 요청만 처리하도록 변경하여, 서버 응답메시지를 사용자에게 표출함(2024-04-29)
@@ -91,7 +89,6 @@ const ModelGeneratorResult = () => {
         date_col: selectedData.dateCol,
         start_date: selectedData.startDate,
         end_date: selectedData.endDate,
-        // x_value: null,
         y_value: selectedData.targetY || '',
         if_classification: selectedData.isClassification,
       }
@@ -103,12 +100,10 @@ const ModelGeneratorResult = () => {
   }, [selectedData])
 
   const handleRegenerate = () => {
-    // selectedFeatureX
     setModalState(true)
   }
 
   const handleGenerate = (param: any) => {
-    // console.log('handleGenerate:', param)
     setLoading({ showing: param, text: '사용자 모델 생성 중...' })
   }
 

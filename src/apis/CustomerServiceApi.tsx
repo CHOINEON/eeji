@@ -1,6 +1,6 @@
 import { axiosPrivate } from './axios'
-import { TResponseType } from './type/commonResponse'
 import { IFeedbackDataReq, IFeedbackRes } from './type/CustomerService'
+import { TResponseType } from './type/commonResponse'
 
 const CustomerServiceApi = {
   postCustomerFeedback: async (payload: IFeedbackDataReq): Promise<TResponseType<IFeedbackRes>> => {
