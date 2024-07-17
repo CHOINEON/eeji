@@ -141,6 +141,7 @@ export const Login: React.FC = () => {
     const code: string = params.get('code')
 
     if (code && code.length > 0) {
+      if (localStorage.getItem('authToken')) localStorage.removeItem('authToken')
       mutateGoogleLogin({ code: code })
     }
   }, [])
