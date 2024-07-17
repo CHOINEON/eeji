@@ -89,6 +89,7 @@ export const Login: React.FC = () => {
   const { mutate: mutateLogout } = useMutation(UserApi.logout, {
     onSuccess: (response: any) => {
       message.success('logout success')
+      localStorage.removeItem('authToken')
     },
     onError: (error: any) => {
       message.open({
