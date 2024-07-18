@@ -79,11 +79,7 @@ const ModelSaveModal = (props: any) => {
             maxLength={50}
           />
         </Row>
-        <CustomButton
-          visible={true}
-          style={{ height: 40, marginTop: '30px', fontSize: 15, fontWeight: 'bold' }}
-          onClick={handleClick}
-        >
+        <CustomButton style={{ height: 40, marginTop: '30px', fontSize: 15, fontWeight: 'bold' }} onClick={handleClick}>
           Save
         </CustomButton>
       </div>

@@ -59,9 +59,7 @@ const SendFeedback = () => {
         />
       </div>
       <div style={{ marginTop: '40px' }}>
-        <CustomButton visible={true} onClick={handleClick}>
-          Send
-        </CustomButton>
+        <CustomButton onClick={handleClick}>Send</CustomButton>
       </div>
     </>
   )
