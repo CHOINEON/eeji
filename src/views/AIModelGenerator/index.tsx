@@ -7,8 +7,8 @@ import { notification } from 'antd'
 import React, { useEffect, useMemo } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import { useRecoilState } from 'recoil'
-import TabContainer from 'views/AIModelGenerator/TabContainer'
 import DataSet from './DataSet'
+import ModelList from './components/Model/ModelList'
 import { stepCountStore } from './store/global/atom'
 import './style/styles.css'
 import { theme } from './theme/theme'
@@ -104,10 +104,16 @@ const AIModelGenerator = () => {
               ))}
             </Stepper>
           </Box>
-          <Box style={{ margin: '10px 8px' }}>
-            {activeStep === 0 && <DataSet />}
-            {activeStep === 1 && <TabContainer />}
-          </Box>
+          <div className="h-[800px] border">
+            <div className="w-3/6 h-full border block float-left">
+              <DataSet />
+            </div>
+            <div className="w-3/6 h-full border block float-left">
+              {' '}
+              <ModelList />
+            </div>
+            {/* {activeStep === 1 && <TabContainer />} */}
+          </div>
         </Box>
       </Context.Provider>
     </ThemeProvider>

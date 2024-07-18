@@ -1,18 +1,15 @@
+import { Empty, Spin } from 'antd'
 import useGetDatasets from 'hooks/queries/useGetDatasets'
-import useModal from 'hooks/useModal'
 import { useEffect, useState } from 'react'
 import { useResetRecoilState, useSetRecoilState } from 'recoil'
-import DatasetList from './DatasetList'
-import DataEditModal from './components/DataInfo/DataEditModal'
-import { CustomButton } from './components/Modal/DataImportModal'
+import DescriptionBox from './components/DataInfo/DescriptionBox'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
 import { analysisResponseAtom } from './store/response/atoms'
 import { usedVariableStore } from './store/variable/atom'
 import './style/data-analysis-style.css'
 
-const DataSet = () => {
+const DatasetList = () => {
   const [loading, setLoading] = useState(false)
-  const { openModal, closeModal } = useModal()
 
   const setUserInfo = useSetRecoilState(userInfoState)
   const setSelectedData = useSetRecoilState(selectedDataState)
@@ -51,32 +48,21 @@ const DataSet = () => {
     })
   }
 
-  const handleClick = () => {
-    openModal({
-      modalTitle: 'Data Upload',
-      modalType: 'DataImport',
-      modalProps: {
-        onClick: () => {
-          closeModal()
-        },
-      },
-    })
-  }
-
   return (
     <>
-      {/* 배포를 위해 숨김처리 */
-      /* <ModelList />  */}
-      <CustomButton
-        style={{ width: 134, height: 28, margin: '20px auto', fontSize: 13, fontWeight: 'bold' }}
-        onClick={handleClick}
-      >
-        Data Upload
-      </CustomButton>
-      <DatasetList />
-      <DataEditModal />
+      <div className="p-10">
+        {data?.data.length > 0 ? (
+          <Spin tip="데이터셋 로드 중..." spinning={loading} style={{ marginTop: '100px', backgroundColor: 'red' }}>
+            {data?.data.map((data: any, index: number) => (
+              <DescriptionBox key={index} data={data} onSelect={handleSelect} />
+            ))}
+          </Spin>
+        ) : (
+          !loading && <Empty />
+        )}
+      </div>
     </>
   )
 }
 
-export default DataSet
+export default DatasetList

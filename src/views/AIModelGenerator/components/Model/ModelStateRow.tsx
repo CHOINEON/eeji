@@ -79,20 +79,20 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
             <div className="row-item">{rowData.name}</div>
             <div className="row-item">{rowData.isClassification ? 'classification' : 'regression'}</div>
             <div className="row-item">{rowData.target}</div>
-            <div className="row-item">{rowData.descr}</div>
+            <div className="row-item">{rowData.created}</div>
             <div className="row-item">
               <Tag className="row-item-tag" color={tag?.color} icon={tag?.icon}>
                 {tag?.name}
               </Tag>
             </div>
-            <div className="row-item">{rowData.accuracy}</div>
-            <div className="row-item">{rowData.errorRate}</div>
-            <div className="row-item">{rowData.created}</div>
-            <div className="row-item">{rowData.updated}</div>
-            <div className="row-item">{rowData.createdby}</div>
-            <div className="row-item">
+            {/* <div className="row-item">{rowData.descr}</div> */}
+            {/* <div className="row-item">{rowData.accuracy}</div>
+            <div className="row-item">{rowData.errorRate}</div> */}
+            {/* <div className="row-item">{rowData.updated}</div> */}
+            {/* <div className="row-item">{rowData.createdby}</div> */}
+            {/* <div className="row-item">
               <button className="btn-run">Run</button>
-            </div>
+            </div> */}
           </div>
         </div>
       )}
@@ -105,14 +105,14 @@ const ModelStateList = ({ data }: IModelStateRows) => {
     'Model Name',
     'Model Type',
     'Target',
-    'Description',
-    'State',
-    'Accuracy',
-    'Error rate',
     'Created',
-    'Updated',
-    'Create by',
-    '',
+    'State',
+    // 'Description',
+    // 'Accuracy',
+    // 'Error rate',
+    // 'Updated',
+    // 'Create by',
+    // '',
   ]
 
   return (
