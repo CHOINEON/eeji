@@ -24,7 +24,6 @@ const Empty = () => {
       <MainText>업로드된 데이터가 없습니다.</MainText>
       <SubText>분석을 위해 데이터를 업로드하세요.</SubText>
       <CustomButton
-        visible={true}
         style={{ width: 200, height: 40, margin: '20px auto', fontSize: 15, fontWeight: 'bold' }}
         onClick={handleClick}
       >

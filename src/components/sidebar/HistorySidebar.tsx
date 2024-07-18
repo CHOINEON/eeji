@@ -118,7 +118,6 @@ const SidebarHeader = (props: any) => {
           <SubTitle>{value.title_KR} </SubTitle>
         </div>
         <CustomButton
-          visible={true}
           style={{ width: 134, height: 28, margin: '20px auto', fontSize: 13, fontWeight: 'bold' }}
           onClick={handleClick}
         >

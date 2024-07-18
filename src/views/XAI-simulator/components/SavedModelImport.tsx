@@ -91,7 +91,7 @@ const SavedModelImport = () => {
         <div>{data?.length > 0 ? <ModelList data={data} onSelect={handleSelect} /> : <Empty />}</div>
         <div className="mt-[25px]">
           <CancelButton onClick={() => setModal(null)}>Cancel</CancelButton>
-          <CustomButton visible={true} disabled={false} onClick={handleRunModel}>
+          <CustomButton disabled={false} onClick={handleRunModel}>
             Run
           </CustomButton>
         </div>
