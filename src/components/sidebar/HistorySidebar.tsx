@@ -117,13 +117,14 @@ const SidebarHeader = (props: any) => {
           <Title>{value.title}</Title>
           <SubTitle>{value.title_KR} </SubTitle>
         </div>
-        <CustomButton
-          visible={true}
-          style={{ width: 134, height: 28, margin: '20px auto', fontSize: 13, fontWeight: 'bold' }}
-          onClick={handleClick}
-        >
-          Data Upload
-        </CustomButton>
+        <div className="text-center">
+          <CustomButton
+            style={{ width: 134, height: 28, margin: '20px auto', fontSize: 13, fontWeight: 'bold' }}
+            onClick={handleClick}
+          >
+            Data Upload
+          </CustomButton>
+        </div>
       </div>
     </HeaderWrapper>
   )

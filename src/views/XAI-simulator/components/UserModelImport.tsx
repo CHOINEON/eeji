@@ -206,12 +206,13 @@ const UserModelImport = () => {
 
         <div style={{ margin: '25px 0' }}>
           <CancelButton onClick={() => setModal(null)}>Cancel</CancelButton>
-          <CustomButton visible={modelUploadResult?.uuid ? false : true} disabled={isDisabled} onClick={handleUpload}>
-            Upload
-          </CustomButton>
-          <CustomButton visible={modelUploadResult?.uuid ? true : false} onClick={handleSave}>
-            Model Save
-          </CustomButton>
+          {modelUploadResult?.uuid ? (
+            <CustomButton onClick={handleSave}>Model Save</CustomButton>
+          ) : (
+            <CustomButton disabled={isDisabled} onClick={handleUpload}>
+              Upload
+            </CustomButton>
+          )}
         </div>
       </Spin>
     </>
