@@ -1,7 +1,9 @@
-import { Empty, Spin } from 'antd'
+import { Empty } from 'antd'
 import useGetDatasets from 'hooks/queries/useGetDatasets'
+import useModal from 'hooks/useModal'
 import { useEffect, useState } from 'react'
 import { useResetRecoilState, useSetRecoilState } from 'recoil'
+import AddItemButton from './components/Button/AddItemButton'
 import DescriptionBox from './components/DataInfo/DescriptionBox'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
 import { analysisResponseAtom } from './store/response/atoms'
@@ -10,6 +12,7 @@ import './style/data-analysis-style.css'
 
 const DatasetList = () => {
   const [loading, setLoading] = useState(false)
+  const { openModal, closeModal } = useModal()
 
   const setUserInfo = useSetRecoilState(userInfoState)
   const setSelectedData = useSetRecoilState(selectedDataState)
@@ -45,22 +48,30 @@ const DatasetList = () => {
       numeric_cols: data.numeric_cols,
       non_numeric_cols: data.non_numeric_cols,
       isClassification: data.is_classification,
+      createDate: data.create_date,
+    })
+  }
+
+  const handleAddClick = () => {
+    openModal({
+      modalTitle: 'Data Upload',
+      modalType: 'DataImport',
+      modalProps: {
+        onClick: () => {
+          closeModal()
+        },
+      },
     })
   }
 
   return (
     <>
-      <div className="p-10">
-        {data?.data.length > 0 ? (
-          <Spin tip="데이터셋 로드 중..." spinning={loading} style={{ marginTop: '100px', backgroundColor: 'red' }}>
-            {data?.data.map((data: any, index: number) => (
-              <DescriptionBox key={index} data={data} onSelect={handleSelect} />
-            ))}
-          </Spin>
-        ) : (
-          !loading && <Empty />
-        )}
-      </div>
+      <AddItemButton onClick={handleAddClick} />
+      {data?.data.length > 0
+        ? data?.data.map((data: any, index: number) => (
+            <DescriptionBox key={index} data={data} onSelect={handleSelect} />
+          ))
+        : !loading && <Empty />}
     </>
   )
 }

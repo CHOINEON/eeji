@@ -5,7 +5,7 @@ const ModelList = () => {
   const mockdata: Array<IModelStateData> = sample
   return (
     <div className="p-10">
-      <p className="font-['Helvetica Neue'] font-bold text-[23px] text-[#002D65]">Processing</p>
+      <p className="font-['Helvetica Neue'] font-bold text-[23px] text-[#002D65]">Model List</p>
       <ModelStateList data={mockdata} />
     </div>
   )

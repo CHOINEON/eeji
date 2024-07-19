@@ -61,6 +61,7 @@ interface IDataset {
   non_numeric_cols?: string | null
   numeric_cols?: string | null
   isClassification?: number
+  createDate?: string
 }
 
 export const selectedDataState = atom({
@@ -79,6 +80,7 @@ export const selectedDataState = atom({
     non_numeric_cols: '',
     numeric_cols: '',
     isClassification: 1,
+    createDate: '',
   } as IDataset,
 })
 

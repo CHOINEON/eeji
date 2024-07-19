@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 
-export const Title = styled.span`
-  display: block;
-  float: left;
-  font-size: 30px;
+export const Text = styled.p`
   color: #002d65;
-  font-weight: bolder;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
+`
+
+export const Title = styled(Text)`
+  font-weight: bolder;
 `
 
 export const SubTitle = styled(Title)`
@@ -15,11 +15,12 @@ export const SubTitle = styled(Title)`
 `
 
 export const FileName = styled(Title)`
-  display: inline-block;
-  font-size: 17px;
-  width: 330px;
+  font-size: 12px;
   text-overflow: ellipsis;
   overflow: hidden;
-  white-space: nowrap;
-  margin-left: 2vw;
+  word-break: break-word;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `
