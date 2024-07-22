@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import React, { useEffect } from 'react'
 
 interface CardButtonItem {
   title: string

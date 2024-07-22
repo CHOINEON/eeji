@@ -17,7 +17,7 @@ import { stepCountStore } from './store/global/atom'
 const ModelGeneratorResult = () => {
   const { message } = App.useApp()
 
-  const [loading, setLoading] = useState({ showing: false, text: '데이터 분석 중...' })
+  const [loading, setLoading] = useState({ showing: false, text: '모델 생성 중...' })
   const [options, setOptions] = useState([])
   const [selectedFeatureX, setSelectedFeatureX] = useState([])
 
@@ -113,7 +113,7 @@ const ModelGeneratorResult = () => {
 
   return (
     <>
-      <Spin tip={loading.text} spinning={loading.showing} style={{ marginTop: '300px' }}>
+      <Spin tip={loading.text} spinning={loading.showing} style={{ marginTop: '150px' }}>
         <ComponentContainer>
           <div className="mt-[30px] ml-[30px] w-[63%] h-[47px]">
             <div className="block float-left mr-[30px]">

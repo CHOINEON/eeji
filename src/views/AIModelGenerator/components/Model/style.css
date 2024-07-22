@@ -21,7 +21,6 @@ body {
   flex-flow: column nowrap;
   background-color: white;
   width: 100%;
-  min-width: 1344px;
   height: 71px;
   border-radius: 15px;
   border: 1px solid #d5dcef;
@@ -50,11 +49,9 @@ body {
   flex-flow: row nowrap;
   width: 100%;
   padding: 30px 12px 0 12px;
-  min-width: 1344px;
 }
 
 .row-header {
-  /* border: 1px solid red; */
   display: flex;
   flex-flow: row;
 }
@@ -77,9 +74,9 @@ body {
   padding-left: 20px !important;
 }
 
-.head-item:last-child {
+/* .head-item:last-child {
   padding-right: 20px !important;
-}
+} */
 
 .row-item {
   display: flex;
@@ -118,11 +115,11 @@ body {
   padding-left: 20px;
 }
 
-.table-row div:last-child {
+/* .table-row div:last-child {
   display: block;
   margin: auto;
   padding-right: 20px;
-}
+} */
 
 .btn-run {
   background-color: #4338f7;

@@ -4,11 +4,10 @@ import ModelStateList, { IModelStateData } from './ModelStateRow'
 const ModelList = () => {
   const mockdata: Array<IModelStateData> = sample
   return (
-    <>
-      <p className="font-['Helvetica Neue'] font-bold text-[23px] text-[#002D65]">Processing(테스트 중)</p>
+    <div className="p-10">
+      <p className="font-['Helvetica Neue'] font-bold text-[23px] text-[#002D65]">Model List</p>
       <ModelStateList data={mockdata} />
-      <p className="font-['Helvetica Neue'] font-bold text-[23px] text-[#002D65]">Completed</p>
-    </>
+    </div>
   )
 }
 

@@ -1,11 +1,12 @@
 import { ExclamationCircleFilled, MoreOutlined } from '@ant-design/icons'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { App, Dropdown, MenuProps, Tag } from 'antd'
+import { App, Checkbox, Dropdown, MenuProps } from 'antd'
 import DatasetApi from 'apis/DatasetApi'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import { useSetRecoilState } from 'recoil'
-import { FileName } from 'views/AIModelGenerator/components/Input/Title'
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
+import { FileName } from 'views/AIModelGenerator/components/Input/Text'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { stepCountStore } from 'views/AIModelGenerator/store/global/atom'
 import { datasetEditModalState } from 'views/AIModelGenerator/store/modal/atom'
@@ -29,6 +30,10 @@ export interface IDescriptionBox {
   onSelect: any
 }
 
+const SelectedBg = css`
+  background-color: #d5dcef;
+`
+
 //각 데이터셋 박스
 const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
   const { data, onSelect } = props
@@ -36,8 +41,12 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
   const queryClient = useQueryClient()
 
   const setModalState = useSetRecoilState(datasetEditModalState)
-  const setSelectedData = useSetRecoilState(selectedDataState)
+  const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
+  const resetSelectedData = useResetRecoilState(selectedDataState)
+
   const setActiveStep = useSetRecoilState(stepCountStore)
+
+  const [isChecked, setIsChecked] = useState(false)
 
   const items: MenuProps['items'] = [
     {
@@ -59,14 +68,26 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
       message.error('삭제 실패')
     },
   })
+
   const handleClick = (event: any) => {
+    //"more" 아이콘 클릭된 경우 예외로 처리
     if (event.target.tagName !== 'svg' && event.target.tagName !== 'SPAN') {
-      //"more" 아이콘 클릭된 경우 예외로 처리
       onSelect(data)
+      setIsChecked((prev) => !prev)
     } else {
       setSelectedData(data)
     }
   }
+
+  //체크 해제 시 선택된 데이터셋 비움
+  useEffect(() => {
+    if (!isChecked) resetSelectedData()
+  }, [isChecked])
+
+  //선택된 데이터 하나만 제외하고 다 체크 해제
+  useEffect(() => {
+    if (selectedData.ds_id == '' || selectedData.ds_id !== data.ds_id) setIsChecked(false)
+  }, [selectedData])
 
   const handleDelete = (ds_id: any) => {
     const param = {
@@ -94,74 +115,24 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
     }
   }
 
-  const handleRunClick = (e: any) => {
-    setActiveStep(1)
-  }
-
   return (
     <>
-      <DescBoxContainer onClick={handleClick}>
-        <div
-          style={{
-            display: 'block',
-            float: 'left',
-            width: '50px',
-            height: '100%',
-            textAlign: 'center',
-            lineHeight: '69px',
-          }}
-        >
-          <label>
-            <input
-              type="checkbox"
-              disabled={true} //체크해서 뭐할건지 정의 안되어있음
-            />
-          </label>
-        </div>
-
-        <TitleWrapper>
+      <DescBoxContainer onClick={handleClick} isChecked={isChecked}>
+        <div className="h-4/5">
+          <Checkbox checked={isChecked}></Checkbox>
           <FileName>{data?.name}</FileName>
-        </TitleWrapper>
-        <div className="container">
-          <LargeContent>
-            <div>
-              <Tag color="#FE7E0D">{data?.target_y}</Tag>
-            </div>
-          </LargeContent>
-          <Content>
+        </div>
+        <div className="h-1/5">
+          <Content className="w-5/6 float-left">
             <div>
               {data?.size / 1024 < 1024
                 ? Math.round(data?.size / 1024) + ' KB'
                 : Math.round(data?.size / 1024 / 1024) + ' MB'}
             </div>
           </Content>
-          <LargeContent>
-            <div>{data?.create_date}</div>
-          </LargeContent>
-
-          <UserContent>
-            <div>{data?.user_id}</div>
-          </UserContent>
-          <Content>
-            <button
-              style={{
-                borderRadius: '10px',
-                backgroundColor: '#4338F7',
-                color: 'white',
-                display: 'inline-block',
-                width: '100px',
-                height: '30px',
-                lineHeight: '30px',
-                fontWeight: 500,
-              }}
-              onClick={handleRunClick}
-            >
-              Run
-            </button>
-          </Content>
-          <Content style={{ float: 'right' }}>
+          <Content className="text-right w-1/6 float-right">
             <Dropdown menu={{ items, onClick }}>
-              <MoreOutlined style={{ display: 'block', textAlign: 'center', lineHeight: '69px' }} size={16} />
+              <MoreOutlined size={16} />
             </Dropdown>
           </Content>
         </div>
@@ -172,46 +143,28 @@ const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
 
 export default DescriptionBox
 
-const DescBoxContainer = styled.div`
-  display: block;
-  float: left;
-  background-color: #fff;
-  width: 100%;
-  border: 1px solid #d5dcef;
+export const SquareItemBox = styled.div`
+  width: 100px;
+  height: 100px;
+  margin: 10px;
   border-radius: 15px;
+`
+
+const DescBoxContainer = styled(SquareItemBox)<{ isChecked: boolean }>`
+  display: inline-block;
+  background-color: #fff;
+  border: 1px solid #d5dcef;
   box-shadow: 0px 0px 10px #0000001a;
-  margin: 10px 0;
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: #d5dcef;
+    color: #fff;
+  }
+  ${(props: any) => (props.isChecked ? SelectedBg : '')}
 `
-
 const Content = styled.div`
-  display: block;
-  float: left;
   color: gray;
-  font-size: 13px;
+  font-size: 10px;
   color: #002d65;
-  height: 69px;
-  text-align: center;
-  line-height: 69px;
-  width: 5%;
-`
-
-const LargeContent = styled(Content)`
-  width: 200px;
-`
-
-const UserContent = styled(Content)`
-  width: 230px;
-`
-
-const TitleWrapper = styled.div`
-  text-align: center;
-  display: block;
-  min-width: 400px;
-  float: left;
-  height: 69px;
-  line-height: 69px;
-  // &:hover {
-  //   cursor: pointer;
-  //}
-  //기존css 코드라서 주석 제거하지 않음
 `
