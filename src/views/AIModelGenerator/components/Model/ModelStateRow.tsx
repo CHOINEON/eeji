@@ -20,6 +20,18 @@ export interface IHeaders {
   headers: Array<string>
 }
 
+//메타데이터 구조 상세 참고 (https://docs.google.com/document/d/19lP80LLDBsnNQ27foyVKtP81Jc8XqRLM6GE1POXQIVQ/edit)
+const status: ITag[] = [
+  { key: 1, name: 'created', color: 'default' },
+  { key: 2, name: 'started', color: 'processing', icon: <PlayCircleOutlined /> },
+  { key: 3, name: 'preprocessing', color: 'processing', icon: <SyncOutlined spin /> },
+  { key: 4, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
+  { key: 5, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
+  { key: 6, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
+  { key: 7, name: 'completed', color: 'success', icon: <CheckCircleOutlined /> },
+  { key: 8, name: 'failed', color: 'error', icon: <CloseCircleOutlined /> },
+]
+
 const ModelStateColHeader = ({ headers }: IHeaders) => {
   return (
     <>
@@ -36,21 +48,8 @@ const ModelStateColHeader = ({ headers }: IHeaders) => {
   )
 }
 
-export const status: ITag[] = [
-  { key: 1, name: 'created', color: 'default' },
-  { key: 2, name: 'started', color: 'processing', icon: <PlayCircleOutlined /> },
-  { key: 3, name: 'preprocessing', color: 'processing', icon: <SyncOutlined spin /> },
-  { key: 4, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
-  { key: 5, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
-  { key: 6, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
-  { key: 7, name: 'completed', color: 'success', icon: <CheckCircleOutlined /> },
-  { key: 8, name: 'failed', color: 'error', icon: <CloseCircleOutlined /> },
-]
-
 const ModelStateRow = ({ rowData }: IModelStateRow) => {
   const [tag, setTag] = useState<ITag>({ key: 0, name: '', color: '' })
-
-  //메타데이터 구조 상세 참고 (https://docs.google.com/document/d/19lP80LLDBsnNQ27foyVKtP81Jc8XqRLM6GE1POXQIVQ/edit)
 
   useEffect(() => {
     if (rowData) {
