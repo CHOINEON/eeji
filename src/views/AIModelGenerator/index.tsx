@@ -31,11 +31,11 @@ const AIModelGenerator = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box style={{ position: 'relative', zIndex: 1000 }}>
-        <div className="h-screen">
+        <div className="h-dvh block float-left">
           <div className="w-2/6 float-left">
             <DataSet />
           </div>
-          <div className="w-4/6 h-full block float-left">
+          <div className="w-4/6 min-h-fit block float-left">
             <ModelList />
           </div>
           {activeStep === 1 && <TabContainer />}

@@ -1,42 +1,36 @@
-import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, SyncOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, CloseCircleOutlined, PlayCircleOutlined, SyncOutlined } from '@ant-design/icons'
 import { Tag } from 'antd'
+import { IModelStatus } from 'apis/type/Model'
 import { useEffect, useState } from 'react'
 import './style.css'
 
 interface ITag {
+  key: number
   name: string
   color: string
   icon?: any
 }
 
-export interface IModelStateData {
-  id: number
-  name: string
-  state: string
-  target: string
-  dataset: string
-  accuracy: number
-  errorRate: number
-  created: string
-  updated: string
-  createdby: string
-  isClassification: boolean | number
-  descr: string
-  starred: boolean | number
-}
-
-export interface IModelStateRows {
-  data: Array<IModelStateData>
-}
-
 export interface IModelStateRow {
-  rowData: IModelStateData
+  rowData: IModelStatus
   key?: number
 }
 
 export interface IHeaders {
   headers: Array<string>
 }
+
+//메타데이터 구조 상세 참고 (https://docs.google.com/document/d/19lP80LLDBsnNQ27foyVKtP81Jc8XqRLM6GE1POXQIVQ/edit)
+const status: ITag[] = [
+  { key: 1, name: 'created', color: 'default' },
+  { key: 2, name: 'started', color: 'processing', icon: <PlayCircleOutlined /> },
+  { key: 3, name: 'preprocessing', color: 'processing', icon: <SyncOutlined spin /> },
+  { key: 4, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
+  { key: 5, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
+  { key: 6, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
+  { key: 7, name: 'completed', color: 'success', icon: <CheckCircleOutlined /> },
+  { key: 8, name: 'failed', color: 'error', icon: <CloseCircleOutlined /> },
+]
 
 const ModelStateColHeader = ({ headers }: IHeaders) => {
   return (
@@ -55,21 +49,17 @@ const ModelStateColHeader = ({ headers }: IHeaders) => {
 }
 
 const ModelStateRow = ({ rowData }: IModelStateRow) => {
-  const [tag, setTag] = useState<ITag>()
-
-  const status = [
-    { name: 'created', color: 'default' },
-    { name: 'ready', color: 'default', icon: <ClockCircleOutlined /> },
-    { name: 'running', color: 'processing', icon: <SyncOutlined spin /> },
-    { name: 'blocked', color: 'orange', icon: <CloseCircleOutlined /> },
-    { name: 'completed', color: 'success', icon: <CheckCircleOutlined /> },
-  ]
+  const [tag, setTag] = useState<ITag>({ key: 0, name: '', color: '' })
 
   useEffect(() => {
     if (rowData) {
-      setTag(status.filter((item) => item.name === rowData.state)[0])
+      setTag(status.filter((item: ITag) => item.key == rowData.state)[0])
     }
   }, [rowData])
+
+  const handleClick = (model_id: string) => {
+    console.log('modelid:', model_id)
+  }
 
   return (
     <>
@@ -77,22 +67,18 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
         <div className="table-container">
           <div className="table-row">
             <div className="row-item">{rowData.name}</div>
-            <div className="row-item">{rowData.isClassification ? 'classification' : 'regression'}</div>
             <div className="row-item">{rowData.target}</div>
-            <div className="row-item">{rowData.created}</div>
+            <div className="row-item">{rowData?.created_at}</div>
             <div className="row-item">
-              <Tag className="row-item-tag" color={tag?.color} icon={tag?.icon}>
-                {tag?.name}
+              <Tag className="row-item-tag m-auto" color={tag?.color} icon={tag?.icon}>
+                <span className="tracking-normal">{tag?.name}</span>
               </Tag>
             </div>
-            {/* <div className="row-item">{rowData.descr}</div> */}
-            {/* <div className="row-item">{rowData.accuracy}</div>
-            <div className="row-item">{rowData.errorRate}</div> */}
-            {/* <div className="row-item">{rowData.updated}</div> */}
-            {/* <div className="row-item">{rowData.createdby}</div> */}
-            {/* <div className="row-item">
-              <button className="btn-run">Run</button>
-            </div> */}
+            <div className="row-item">
+              <button className="btn-run" onClick={() => handleClick(rowData.id)}>
+                Run
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -100,28 +86,37 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
   )
 }
 
-const ModelStateList = ({ data }: IModelStateRows) => {
-  const headers: Array<string> = [
-    'Model Name',
-    'Model Type',
-    'Target',
-    'Created',
-    'State',
-    // 'Description',
-    // 'Accuracy',
-    // 'Error rate',
-    // 'Updated',
-    // 'Create by',
-    // '',
-  ]
+interface ModelStateListProps {
+  data: IModelStatus[] | undefined
+}
+
+const ModelStateInfo = () => {
+  return (
+    <>
+      {status.map((tag: ITag, idx: number) => {
+        return (
+          <Tag className="row-item-tag m-auto mr-2" color={tag?.color} icon={tag?.icon} key={idx}>
+            <span className="tracking-normal">{tag?.name}</span>
+          </Tag>
+        )
+      })}
+    </>
+  )
+}
+
+const ModelStateList = ({ data }: ModelStateListProps) => {
+  const headers: Array<string> = ['Model Name', 'Target', 'Created', 'State', 'Result']
 
   return (
     <>
       <ModelStateColHeader headers={headers} />
       {data?.length > 0 &&
-        data.map((d: IModelStateData, i: number) => {
+        data.map((d: IModelStatus, i: number) => {
           return <ModelStateRow rowData={d} key={i} />
         })}
+      <div className="text-right">
+        state : <ModelStateInfo />
+      </div>
     </>
   )
 }

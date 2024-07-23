@@ -1,12 +1,22 @@
-import sample from '../../data/modelListData.json'
-import ModelStateList, { IModelStateData } from './ModelStateRow'
+import { IModelList, IModelStatus } from 'apis/type/Model'
+import useGetModelList from 'hooks/queries/useGetModelList'
+import { useEffect, useState } from 'react'
+import ModelStateList from './ModelStateRow'
 
 const ModelList = () => {
-  const mockdata: Array<IModelStateData> = sample
+  const { data } = useGetModelList(localStorage.getItem('userId'))
+  const [list, setList] = useState<IModelStatus[] | undefined>([])
+
+  useEffect(() => {
+    if (typeof data === 'object') {
+      setList(data as IModelList)
+    }
+  }, [data])
+
   return (
     <div className="p-10">
       <p className="font-['Helvetica Neue'] font-bold text-[23px] text-[#002D65]">Model List</p>
-      <ModelStateList data={mockdata} />
+      <ModelStateList data={list} />
     </div>
   )
 }

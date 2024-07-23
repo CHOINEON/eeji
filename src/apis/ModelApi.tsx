@@ -1,4 +1,5 @@
 import { axiosPrivate } from './axios'
+import { IModelList } from './type/Model'
 import {
   IModelApiGeneratorParam,
   IModelDataReq,
@@ -9,9 +10,20 @@ import {
 import { TResponseType } from './type/commonResponse'
 
 const controller = new AbortController()
-// const signal = controller.signal
 
 const ModelApi = {
+  getModelStatusList: async (user_id: string): Promise<TResponseType<IModelList>> => {
+    const config = {
+      headers: {
+        'user-id': user_id,
+        'EEJI-Test-Code': 'MOCK_DATA',
+      },
+    }
+
+    const { data } = await axiosPrivate.get('api/v1/list_model', config)
+    return data
+  },
+
   //모델 옵션 설정해서 실행하기
   postModelwithOption: async (params: IModelPostReq): Promise<IModelOptionRes> => {
     const { data } = await axiosPrivate.post(`api/get_model_option`, params.payload)
