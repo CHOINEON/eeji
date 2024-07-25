@@ -1,20 +1,33 @@
 import styled from '@emotion/styled'
-import { Tag } from 'antd'
+import { Empty, Tag } from 'antd'
+import { IModelInfo } from 'apis/type/Model'
 import { useEffect, useState } from 'react'
 
+interface ModelRowProps {
+  item: IModelInfo
+  active: boolean
+  onClick: () => void
+}
+
+interface ColorInfo {
+  type: string
+  isClassification: boolean
+  color: string
+}
+
 //모델명/타겟변수/모델유형
-const ModelRow = ({ item, active, onClick }: any) => {
-  const ModelType = ({ isClassification }: any) => {
-    const category = [
-      { type: 'regression', isClassification: 0, color: '#2db7f5' },
-      { type: 'classification', isClassification: 1, color: '#FF973D' },
+const ModelRow = ({ item, active, onClick }: ModelRowProps) => {
+  const ModelType = ({ is_classification }: IModelInfo) => {
+    const category: Array<ColorInfo> = [
+      { type: 'regression', isClassification: false, color: '#2db7f5' },
+      { type: 'classification', isClassification: true, color: '#FF973D' },
     ]
-    const typeObj = category.filter((item) => item.isClassification === isClassification)[0]
+    const typeObj = category.filter((item: ColorInfo) => item.isClassification === is_classification)[0]
 
     return (
       <TagWrapper>
         <Tag
-          color={typeObj.color}
+          color={typeObj?.color}
           style={{
             width: '100%',
             fontSize: 10,
@@ -38,9 +51,9 @@ const ModelRow = ({ item, active, onClick }: any) => {
         onClick={onClick}
         className={`hover:bg-[#D5DCEF] ${active === true ? 'bg-[#D5DCEF]' : 'bg-[#F6F8FF] '}`}
       >
-        <ModelTitle>{item.model_name}</ModelTitle>
-        <TargetText>{item.target_y}</TargetText>
-        <ModelType isClassification={item.is_classification}></ModelType>
+        <ModelTitle>{item.name}</ModelTitle>
+        <TargetText>{item.target}</TargetText>
+        <ModelType is_classification={item.is_classification}></ModelType>
       </Row>
     </>
   )
@@ -50,19 +63,23 @@ const ModelList = ({ data, onSelect }: any) => {
   const [btnActive, setBtnActive] = useState(0)
 
   useEffect(() => {
-    onSelect(data[0].model_id)
+    onSelect(data[0].id)
   }, [])
 
   const toggleActive = (idx: number) => {
     setBtnActive(idx)
-    onSelect(data[idx].model_id)
+    onSelect(data[idx].id)
   }
 
   return (
     <ModelListWrapper>
-      {data?.map((item: object, idx: number) => (
-        <ModelRow key={idx} item={item} active={idx === btnActive} onClick={() => toggleActive(idx)} />
-      ))}
+      {data?.length > 0 ? (
+        data?.map((item: object, idx: number) => (
+          <ModelRow key={idx} item={item} active={idx === btnActive} onClick={() => toggleActive(idx)} />
+        ))
+      ) : (
+        <Empty />
+      )}
     </ModelListWrapper>
   )
 }

@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import { useRecoilState } from 'recoil'
 import DataSet from './DataSet'
-import TabContainer from './TabContainer'
+import ModelGeneratorResult from './ModelGeneratorResult'
 import ModelList from './components/Model/ModelList'
 import { stepCountStore } from './store/global/atom'
 import './style/styles.css'
@@ -31,15 +31,17 @@ const AIModelGenerator = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box style={{ position: 'relative', zIndex: 1000 }}>
-        <div className="h-dvh block float-left">
-          <div className="w-2/6 float-left">
-            <DataSet />
+        {activeStep === 0 && (
+          <div className="h-dvh block float-left">
+            <div className="w-2/6 float-left">
+              <DataSet />
+            </div>
+            <div className="w-4/6 min-h-fit block float-left">
+              <ModelList />
+            </div>
           </div>
-          <div className="w-4/6 min-h-fit block float-left">
-            <ModelList />
-          </div>
-          {activeStep === 1 && <TabContainer />}
-        </div>
+        )}
+        {activeStep === 1 && <ModelGeneratorResult />}
       </Box>
     </ThemeProvider>
   )

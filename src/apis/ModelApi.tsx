@@ -1,4 +1,4 @@
-import { axiosPrivate } from './axios'
+import { axiosPrivate, axiosPublic } from './axios'
 import { IModelList } from './type/Model'
 import {
   IModelApiGeneratorParam,
@@ -21,6 +21,24 @@ const ModelApi = {
     }
 
     const { data } = await axiosPrivate.get('api/v1/list_model', config)
+    return data
+  },
+
+  //google signed url로 클라우드에 저장된 결과 데이터(json) 받아오기
+  getJsonResult: async (signed_url: string): Promise<any> => {
+    const { data } = await axiosPublic.get(signed_url)
+    return data
+  },
+
+  //모델 학습 결과 다운로드(signed url)
+  getTrainingResultUrl: async (model_id: string): Promise<TResponseType<string>> => {
+    const config = {
+      headers: {
+        'company-id': localStorage.getItem('companyId'),
+        'user-id': localStorage.getItem('userId'),
+      },
+    }
+    const { data } = await axiosPrivate.get(`api/v1/get_model_download_url/${model_id}`, config)
     return data
   },
 

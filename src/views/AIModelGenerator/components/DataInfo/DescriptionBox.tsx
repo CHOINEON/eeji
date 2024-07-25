@@ -8,7 +8,6 @@ import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { FileName } from 'views/AIModelGenerator/components/Input/Text'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
-import { stepCountStore } from 'views/AIModelGenerator/store/global/atom'
 import { datasetEditModalState } from 'views/AIModelGenerator/store/modal/atom'
 import '../../style/uploader.css'
 
@@ -35,16 +34,13 @@ const SelectedBg = css`
 `
 
 //각 데이터셋 박스
-const DescriptionBox: React.FC<IDescriptionBox> = (props: any) => {
-  const { data, onSelect } = props
+const DescriptionBox: React.FC<IDescriptionBox> = ({ data, onSelect }: any) => {
   const { message, modal } = App.useApp()
   const queryClient = useQueryClient()
 
   const setModalState = useSetRecoilState(datasetEditModalState)
   const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
   const resetSelectedData = useResetRecoilState(selectedDataState)
-
-  const setActiveStep = useSetRecoilState(stepCountStore)
 
   const [isChecked, setIsChecked] = useState(false)
 

@@ -1,9 +1,10 @@
-export interface IModelStatus {
-  id: string
-  name: string
-  target: string
-  state: number
-  created_at: string
+export interface IModelInfo {
+  id?: string
+  name?: string
+  target?: string
+  state?: string
+  created_at?: string
+  is_classification?: boolean
 }
 
-export type IModelList = Array<IModelStatus>
+export type IModelList = Array<IModelInfo>
