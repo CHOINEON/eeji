@@ -1,4 +1,4 @@
-import { message } from 'antd'
+import { App } from 'antd'
 import { PerformanceModel } from 'apis/type/ModelPerformanceOption'
 import IcoPerformance from 'assets/img/icons/XAI/icon_perfromanceModel.png'
 import { useRecoilValue } from 'recoil'
@@ -20,6 +20,8 @@ const errorInfo: IErrorInfo = {
 }
 
 const ModelPerformance = () => {
+  const { message } = App.useApp()
+
   const selectedModel = useRecoilValue(selectedModelAtom)
   const data = useRecoilValue(filteredResultState('error'))
 

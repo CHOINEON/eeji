@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { message } from 'antd'
+import { App } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import { useEffect } from 'react'
 import { useMutation } from 'react-query'
@@ -12,6 +12,8 @@ import { analysisResponseAtom } from './store/response/atoms'
 import './style/data-analysis-style.css'
 
 const DataSet = () => {
+  const { message } = App.useApp()
+
   const selectedData = useRecoilState(selectedDataState)
   const setUserInfo = useSetRecoilState(userInfoState)
   const resetAnalysisResponse = useResetRecoilState(analysisResponseAtom)

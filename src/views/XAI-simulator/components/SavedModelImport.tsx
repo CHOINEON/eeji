@@ -64,8 +64,8 @@ const SavedModelImport = () => {
       setLoading(false)
       setModal(null)
     } catch (error) {
-      console.error(error?.response?.data)
       message.error('결과를 확인할 수 없습니다. 관리자에게 문의하세요')
+      setLoading(false)
     }
   }
 
