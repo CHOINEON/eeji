@@ -33,9 +33,9 @@ export default DataInfoBox
 
 const SummaryDiv = styled(SquareItemBox)`
   width: 100%;
-  height: 100px;
+  // height: 100px;
   border: 1px dotted #d5dcef;
   box-shadow: 0px 0px 10px #0000001a;
-  padding: 2em;
+  padding: 1em;
   background-color: #d5dcef;
 `
