@@ -81,3 +81,8 @@ export interface IModelApiGeneratorParam {
   user_id: string
   model_id: string
 }
+
+export interface IGetSurlReq {
+  model_id: string
+  is_xai: string //Boolean as a string for HTTP header
+}

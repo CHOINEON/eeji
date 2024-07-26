@@ -22,7 +22,7 @@ const FeatureAnalysis = ({ textVisible }: any) => {
   return (
     <>
       <ModelPerformance />
-      <FeatureClassPerformance />
+      {analysisResponse[modelIdx].classes && <FeatureClassPerformance />}
       <ComponentContainer textVisible={textVisible}>
         <SubTitle>
           변수 중요도
@@ -63,7 +63,6 @@ const ComponentContainer = styled.div<{ textVisible: boolean }>`
   border: 1px solid #a3afcf;
   border-radius: 10px;
   opacity: 1;
-  // overflow: auto;
   white-space: wrap;
   padding: 20px 30px;
 `
@@ -73,7 +72,6 @@ const Title = styled.div`
   float: left;
   color: #002d65;
   font-weight: bold;
-  // padding: 20px 20px 0 20px;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
 `
 
@@ -91,7 +89,6 @@ export const AIbutton = styled.button`
   border-radius: 3px;
   color: white;
   font-weight: 500;
-  // margin-left: 20px;
   margin-right: 10px;
 `
 

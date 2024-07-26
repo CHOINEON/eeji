@@ -33,15 +33,12 @@ export const filteredResultState = selectorFamily({
   get:
     (param: string) =>
     ({ get }) => {
-      const modelIdx = get(selectModelState)
       const result: Array<IAnalysisResult> = []
 
       if (param) {
         if (param.length > 0) {
-          result.push(get(analysisResponseAtom)[modelIdx][param])
-
-          console.log('test:', get(analysisResponseAtom))
-        } else result.push(get(analysisResponseAtom)[modelIdx])
+          result.push(get(analysisResponseAtom)[0][param])
+        } else result.push(get(analysisResponseAtom)[0])
         return result
       }
     },

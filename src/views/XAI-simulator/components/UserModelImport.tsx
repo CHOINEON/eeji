@@ -105,7 +105,6 @@ const UserModelImport = () => {
   }, [data, haveColumn])
 
   const handleChangeScript = (param: File) => {
-    console.log(param)
     setData({ ...data, script: param })
   }
   const handleChangeModel = (param: File) => {

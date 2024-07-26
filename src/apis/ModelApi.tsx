@@ -1,6 +1,7 @@
 import { axiosPrivate, axiosPublic } from './axios'
 import { IModelList } from './type/Model'
 import {
+  IGetSurlReq,
   IModelApiGeneratorParam,
   IModelDataReq,
   IModelOptionRes,
@@ -16,7 +17,7 @@ const ModelApi = {
     const config = {
       headers: {
         'user-id': user_id,
-        'EEJI-Test-Code': 'MOCK_DATA',
+        // 'EEJI-Test-Code': 'MOCK_DATA',
       },
     }
 
@@ -31,14 +32,15 @@ const ModelApi = {
   },
 
   //모델 학습 결과 다운로드(signed url)
-  getTrainingResultUrl: async (model_id: string): Promise<TResponseType<string>> => {
+  getTrainingResultUrl: async (param: IGetSurlReq): Promise<TResponseType<object>> => {
     const config = {
       headers: {
         'company-id': localStorage.getItem('companyId'),
         'user-id': localStorage.getItem('userId'),
+        isxai: param.is_xai,
       },
     }
-    const { data } = await axiosPrivate.get(`api/v1/get_model_download_url/${model_id}`, config)
+    const { data } = await axiosPrivate.get(`api/v1/get_model_download_url/${param.model_id}`, config)
     return data
   },
 

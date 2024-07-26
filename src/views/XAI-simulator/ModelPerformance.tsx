@@ -1,58 +1,30 @@
-import React from 'react'
-import { useRecoilValue } from 'recoil'
-import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
-import styled from 'styled-components'
-import IcoPerformance from 'assets/img/icons/XAI/icon_perfromanceModel.png'
-import { PerformanceModel } from 'apis/type/ModelPerformanceOption'
 import { message } from 'antd'
-import { filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
-import useModal from 'hooks/useModal'
+import { PerformanceModel } from 'apis/type/ModelPerformanceOption'
+import IcoPerformance from 'assets/img/icons/XAI/icon_perfromanceModel.png'
+import { useRecoilValue } from 'recoil'
+import styled from 'styled-components'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
+import { selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
+import { filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
 
-const errorInfo: any = {
+interface IErrorInfo {
+  [key: string]: string
+}
+
+const errorInfo: IErrorInfo = {
   MAE: '평균절대오차. 모든 오차 절대값의 합을 평균. (0에 가까울 수록 좋은 모델)',
   MSE: '평균제곱오차. 오차를 제곱한 값의 평균. (알고리즘이 예측한 값과 실제 정답과의 차이)',
   RMSE: '평균 제곱근 오차. 예측 모델에서 예측한 값과 실제 값 사이의 평균 차이. 예측 모델이 목표 값(정확도)를 얼마나 잘 예측할 수 있는지 추정.',
-  f1_score: '정확성과 재현율을 균형있게 평가하는 성능 지표. (0~1 사이의 값을 가지며, 높을 수록 좋음)',
+  F1_SCORE: '정확성과 재현율을 균형있게 평가하는 성능 지표. (0~1 사이의 값을 가지며, 높을 수록 좋음)',
+  ACCURACY: '분류 모델이 얼마나 정확하게 분류했는지 평가하는 지표.',
 }
 
 const ModelPerformance = () => {
-  const { openModal, closeModal } = useModal()
-  const selectedData = useRecoilValue(selectedDataState)
-
+  const selectedModel = useRecoilValue(selectedModelAtom)
   const data = useRecoilValue(filteredResultState('error'))
-  const currentKey = useRecoilValue(filteredResultState('uuid'))
-
-  const handleSave = () => {
-    // console.log('selectedData:', selectedData)
-    // console.log('currentKey:', currentKey)
-
-    const userId = localStorage.getItem('userId')
-    const companyId = localStorage.getItem('companyId')
-
-    const payload = {
-      user_id: userId,
-      com_id: companyId,
-      uuid: currentKey[0],
-      model_name: '',
-      target_y: selectedData.targetY,
-      isClassification: selectedData.isClassification,
-    }
-    // mutateSaveModel(payload)
-    openModal({
-      modalTitle: 'Model Save',
-      modalType: 'SaveModel',
-      modalProps: {
-        payload,
-        onClick: () => {
-          closeModal()
-        },
-      },
-    })
-  }
 
   const handleReport = () => {
-    message.info('4월 서비스 준비 중입니다.')
+    message.info('9월 서비스 준비 중입니다.')
   }
 
   // 데이터 값이 일정값을 넘을 시 B/M/K로 구분하여 내보내게 설정해놓았습니다.
@@ -79,8 +51,8 @@ const ModelPerformance = () => {
           </div>
         </PerformanceTitleImgWrap>
 
-        <div>{selectedData.name} 데이터로 학습을 진행한 결과입니다.</div>
-        {selectedData.isClassification === 1 ? (
+        <div>{selectedModel.name} 데이터로 학습을 진행한 결과입니다.</div>
+        {selectedModel.is_classification ? (
           <PerformanceContentsWrap>
             <PerformanceContentsBox>
               <PerformanceContents>예측 정확도</PerformanceContents>
@@ -88,48 +60,40 @@ const ModelPerformance = () => {
             </PerformanceContentsBox>
             <PerformanceContentsBox>
               <PerformanceContents>
-                <InfoCircle content={errorInfo.f1_score} color="#F2F5FC" />
+                <InfoCircle content={errorInfo.F1_SCORE} color="#F2F5FC" />
                 F-SCORE
               </PerformanceContents>
               <PerformanceContentsBox>
                 <PerformanceValueAccuracy>{Number(data[0]['F1_SCORE']).toFixed(2)}</PerformanceValueAccuracy>
               </PerformanceContentsBox>
-
-              {/* {Object.keys(data[0]).map((key: string, idx: number) => {
-                const modelKey: any = key
-                // console.log('분류모델 modelKey', modelKey)
-                return (
-                  <PerformanceContentsBox key={modelKey}>
-                    <PerformanceValueAccuracy>{data[idx][modelKey]}</PerformanceValueAccuracy>
-                  </PerformanceContentsBox>
-                )
-              })} */}
             </PerformanceContentsBox>
           </PerformanceContentsWrap>
         ) : (
           <PerformanceContentsWrap>
-            {Object.keys(data[0]).map((key, index) => {
-              const modelKey = key as keyof PerformanceModel
-              const isFirstItem = index === 0
-              const boxStyle = isFirstItem
-                ? {}
-                : { borderLeft: '1px solid rgba(255, 255, 255, 0.5)', paddingLeft: '10px' }
-              return (
-                <PerformanceContentsBox style={boxStyle} key={modelKey}>
-                  <div>
-                    <PerformanceContents>
-                      {modelKey.toString().toUpperCase()}
-                      <InfoCircle content={errorInfo[modelKey]} color="#F2F5FC" />
-                    </PerformanceContents>
-                    <PerformanceValue>{formatNumber(data[0][modelKey as keyof (typeof data)[0]])}</PerformanceValue>
-                  </div>
-                </PerformanceContentsBox>
-              )
-            })}
+            {Object.keys(data[0])
+              // .filter((item) => ['ACCURACY', 'F1_SCORE'].includes(item))
+              .map((key, index) => {
+                const modelKey = key as keyof PerformanceModel
+                const isFirstItem = index === 0
+                const boxStyle = isFirstItem
+                  ? {}
+                  : { borderLeft: '1px solid rgba(255, 255, 255, 0.5)', paddingLeft: '10px' }
+                return (
+                  <PerformanceContentsBox style={boxStyle} key={modelKey}>
+                    <div>
+                      <PerformanceContents>
+                        {modelKey.toString().toUpperCase()}
+                        <InfoCircle content={errorInfo[modelKey]} color="#F2F5FC" />
+                      </PerformanceContents>
+                      <PerformanceValue>{formatNumber(data[0][modelKey as keyof (typeof data)[0]])}</PerformanceValue>
+                    </div>
+                  </PerformanceContentsBox>
+                )
+              })}
           </PerformanceContentsWrap>
         )}
         <PerformanceButtonWrap>
-          <SaveButton onClick={handleSave}>SAVE</SaveButton>
+          {/* <SaveButton onClick={handleSave}>SAVE</SaveButton> */}
           <ExportButton onClick={handleReport}>REPORT</ExportButton>
         </PerformanceButtonWrap>
       </ComponentContainer>
@@ -171,7 +135,7 @@ const PerformanceContents = styled.span`
   // float: left;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
   color: #fff;
-  font-size: 20px;
+  font-size: 18px;
   // padding-right: 10px;
   font-weight: bold;
   margin-right: 10px;
