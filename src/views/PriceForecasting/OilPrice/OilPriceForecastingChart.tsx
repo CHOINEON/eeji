@@ -1,14 +1,14 @@
-import { Select, Card, Typography, Spin } from 'antd'
-import styled from 'styled-components'
-import React, { useEffect, useState } from 'react'
+import { Select, Spin, Typography } from 'antd'
 import { Chart as ChartJS } from 'chart.js'
-import zoomPlugin from 'chartjs-plugin-zoom'
-import annotationPlugin, { AnnotationOptions, AnnotationPluginOptions } from 'chartjs-plugin-annotation'
-import { useMutation } from 'react-query'
-import fetchChartData from '../../../apis/PriceForecastApi'
-import { Line } from 'react-chartjs-2'
-import { Title } from 'views/AIModelGenerator/components/Input/Title'
+import annotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import zoomPlugin from 'chartjs-plugin-zoom'
+import { useEffect, useState } from 'react'
+import { Line } from 'react-chartjs-2'
+import { useMutation } from 'react-query'
+import styled from 'styled-components'
+import { Title } from 'views/AIModelGenerator/components/Input/Text'
+import fetchChartData from '../../../apis/PriceForecastApi'
 const { Text, Link } = Typography
 
 ChartJS.register(zoomPlugin, annotationPlugin, ChartDataLabels)
