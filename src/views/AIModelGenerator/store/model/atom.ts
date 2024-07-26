@@ -1,16 +1,12 @@
+import { IModelInfo } from 'apis/type/Model'
 import { atom } from 'recoil'
-
-// export const stepCountStore = atom({
-//   key: 'ai-modeling-activeStep',
-//   default: 0,
-// })
-
-export const runModalAtom = atom({
-  key: 'modelRunModal',
-  default: false,
-})
 
 export const modelListAtom = atom({
   key: 'modelList',
   default: [],
+})
+
+export const selectedModelAtom = atom({
+  key: 'selectedModel',
+  default: {} as IModelInfo,
 })

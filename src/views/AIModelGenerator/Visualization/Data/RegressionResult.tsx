@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import { styled } from 'styled-components'
-// import LineChart from './components/Chart/LineChart'
 import {
-  Chart as ChartJS,
   CategoryScale,
+  Chart as ChartJS,
+  Legend,
   LinearScale,
-  PointElement,
   LineElement,
+  PointElement,
+  ScriptableContext,
   Title,
   Tooltip,
-  Legend,
-  ScriptableContext,
 } from 'chart.js'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import zoomPlugin from 'chartjs-plugin-zoom'
+import { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2'
 import { useRecoilValue } from 'recoil'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
-import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
-import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { styled } from 'styled-components'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
+import { selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
+import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import FeatureAnalysis from '../Features/FeatureAnalysis'
 
 ChartJS.register(
@@ -35,13 +34,8 @@ ChartJS.register(
 
 const RegressionResult = () => {
   const analysisResponse = useRecoilValue(analysisResponseAtom)
-  const selectedData = useRecoilValue(selectedDataState)
+  const selectedModel = useRecoilValue(selectedModelAtom)
   const [dataset, setDataset] = useState([])
-
-  // useEffect(() => {
-  //   console.log('selectedData:', selectedData)
-  //   console.log('PredictionResult analysisResponse:', analysisResponse)
-  // }, [])
 
   useEffect(() => {
     const arr: Array<any> = []
@@ -62,7 +56,7 @@ const RegressionResult = () => {
     return {
       key: color,
       type: 'line' as const,
-      label: label === 'truth' ? `${label} (${selectedData.targetY})` : label,
+      label: label === 'truth' ? `${label} (${selectedModel.target})` : label,
       borderColor: color,
       backgroundColor:
         label === 'INEEJI prediction'
@@ -81,12 +75,11 @@ const RegressionResult = () => {
   }
 
   const chartData = {
-    labels:
-      selectedData?.isClassification == 1
-        ? [0, 1]
-        : Array(analysisResponse[0]['pred_data']['pred'].length)
-            .fill(null)
-            .map((value, i) => i),
+    labels: selectedModel?.is_classification
+      ? [0, 1]
+      : Array(analysisResponse[0]['pred_data']['pred'].length)
+          .fill(null)
+          .map((value, i) => i),
     // datasets: selectedData.isClassification == 1 ? dataset.slice(0, 50) : dataset,
     datasets: dataset,
   }
@@ -170,8 +163,6 @@ const RegressionResult = () => {
           display: true,
           text: 'Value',
         },
-        // min: -0.5,
-        // max: 1.5,
         ticks: {
           // forces step size to be 50 units
           stepSize: 1,
@@ -192,8 +183,6 @@ const RegressionResult = () => {
       listContainer.style.justifyContent = 'right'
       listContainer.style.margin = '15px'
 
-      // listContainer.style.padding = '100px'
-
       legendContainer.appendChild(listContainer)
     }
 
@@ -205,8 +194,6 @@ const RegressionResult = () => {
     afterUpdate(chart: any, args: any, options: any) {
       const ul = getOrCreateLegendList(chart, options.containerID)
 
-      // console.log('ul::', ul)
-
       // Remove old legend items
       while (ul.firstChild) {
         ul.firstChild.remove()
@@ -215,7 +202,6 @@ const RegressionResult = () => {
       // Reuse the built-in legendItems generator
       const items = chart.options.plugins.legend.labels.generateLabels(chart)
 
-      // console.log('items:', items)
       items.forEach((item: any) => {
         const li = document.createElement('li')
         li.style.alignItems = 'center'
@@ -245,7 +231,7 @@ const RegressionResult = () => {
         boxSpan.style.borderRadius = '20px'
         // boxSpan.style.flexShrink = 0
 
-        if (selectedData.isClassification === 1) {
+        if (selectedModel.is_classification) {
           if (item.text === 'INEEJI prediction') {
             boxSpan.style.height = '20px'
             boxSpan.style.width = '20px'
@@ -261,8 +247,6 @@ const RegressionResult = () => {
         // Text
         const textContainer = document.createElement('p')
         textContainer.style.color = item.fontColor
-        // textContainer.style.margin = 0
-        // textContainer.style.padding = 0
         textContainer.style.textDecoration = item.hidden ? 'line-through' : ''
 
         const text = document.createTextNode(item.text)
@@ -279,7 +263,6 @@ const RegressionResult = () => {
     <>
       <div
         style={{
-          // border: '1px solid red',
           width: '68%',
           padding: '5px 30px',
           display: 'block',
@@ -289,7 +272,7 @@ const RegressionResult = () => {
         <ChartWrapper /**isClassification={selectedData.isClassification} */>
           <div id="legend-container"></div>
           <Line
-            options={selectedData.isClassification === 1 ? optionsForClassification : options}
+            options={selectedModel.is_classification ? optionsForClassification : options}
             data={chartData}
             plugins={[htmlLegendPlugin]}
           />

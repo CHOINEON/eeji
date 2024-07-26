@@ -1,5 +1,4 @@
 import { atom, selectorFamily } from 'recoil'
-import { IConstraint } from 'views/AIModelGenerator/components/Table/CustomTable'
 import { selectModelState } from '../userOption/atom'
 
 export interface IAnalysisResult {
@@ -11,6 +10,24 @@ export const analysisResponseAtom = atom({
   default: [],
 })
 
+export interface ItrainingResult {
+  classes: Array<unknown>
+  feature_piechart_data: object
+  get_uuid: string
+  metrics: object
+  peformance_table: object //typo 아님
+  prediction_data: object
+  result_table: object
+  selected_input: Array<string>
+  isClassification: number
+  targetY: string
+}
+
+export const trainingResultAtom = atom({
+  key: 'trainingResult',
+  default: {} as ItrainingResult,
+})
+
 export const filteredResultState = selectorFamily({
   key: 'filteredResultState',
   get:
@@ -19,12 +36,12 @@ export const filteredResultState = selectorFamily({
       const modelIdx = get(selectModelState)
       const result: Array<IAnalysisResult> = []
 
-      // console.log('current atom:', get(analysisResponseAtom))
       if (param) {
-        if (param.length > 0) result.push(get(analysisResponseAtom)[modelIdx][param])
-        else result.push(get(analysisResponseAtom)[modelIdx])
+        if (param.length > 0) {
+          result.push(get(analysisResponseAtom)[modelIdx][param])
 
-        // console.log('filteredResultState result:', result)
+          console.log('test:', get(analysisResponseAtom))
+        } else result.push(get(analysisResponseAtom)[modelIdx])
         return result
       }
     },

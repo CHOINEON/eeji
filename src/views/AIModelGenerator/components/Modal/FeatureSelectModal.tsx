@@ -49,8 +49,6 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
   })
 
   useEffect(() => {
-    // console.log('selectedData:', selectedData)
-
     if (selectedData.non_numeric_cols && selectedData?.numeric_cols) {
       const numeric_cols = JSON.parse(selectedData.numeric_cols)
       const non_numeric_cols = JSON.parse(selectedData.non_numeric_cols)
@@ -77,7 +75,6 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
 
   const handleChange = (value: string[]) => {
     setSelectedFeatures(value)
-    // console.log('new arr:', value.split(', '))
   }
 
   const handleGenerate = () => {
@@ -139,7 +136,6 @@ const FeatureSelectModal = ({ data, onRunning }: any) => {
           allowClear
           placeholder="Feature X"
           options={options}
-          // value={inputOption.target_y}
           onChange={handleChange}
         />
       </div>

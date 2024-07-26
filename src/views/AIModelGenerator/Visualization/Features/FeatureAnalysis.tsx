@@ -1,25 +1,22 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
-import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
-import { analysisResponseAtom, filteredResultState } from 'views/AIModelGenerator/store/response/atoms'
-import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
-import ModelPerformance from 'views/XAI-simulator/ModelPerformance'
+import { useEffect, useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
+import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
+import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
+import { selectModelState } from 'views/AIModelGenerator/store/userOption/atom'
+import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
+import ModelPerformance from 'views/XAI-simulator/ModelPerformance'
 import FeatureClassPerformance from './FeatureClassPerformance'
 
 const FeatureAnalysis = ({ textVisible }: any) => {
-  const analysisResponse = useRecoilValue(analysisResponseAtom)
-  // const selectedData = useRecoilValue(selectedDataState)
-  // const newdata = useRecoilValue(filteredResultState('feature_data'))
-
-  const [modelIdx, setModelIdx] = useRecoilState(selectModelState)
   const [chartData, setChartData] = useState({ labels: [], values: [] })
-  // console.log('analysisResponse:', analysisResponse)
+
+  const analysisResponse = useRecoilValue(analysisResponseAtom)
+  const modelIdx = useRecoilValue(selectModelState)
 
   useEffect(() => {
-    setChartData(analysisResponse[modelIdx]['feature_data'][0])
+    setChartData(analysisResponse[modelIdx]['feature_data'])
   }, [modelIdx])
 
   return (
