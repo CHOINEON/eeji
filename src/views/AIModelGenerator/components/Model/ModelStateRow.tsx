@@ -80,14 +80,9 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
       const expiration_KST = expiration + kstOffset
       const now = new Date().getTime()
 
-      // GCS에서 받아온 만료시간이 GTM으로 설정되어 있어 로컬 개발환경에서는 한국 시간대(GMT + 9)로 변경하여 확인함
-      if (window.location.hostname == 'localhost') {
-        if (expiration_KST > now) downloadData(result.signed_url)
-        else message.error('데이터 유효기간이 만료되었습니다.')
-      } else {
-        if (expiration > now) downloadData(result.signed_url)
-        else message.error('데이터 유효기간이 만료되었습니다.')
-      }
+      // GCS에서 받아온 만료시간이 GTM으로 설정되어 있어 한국 시간대(GMT + 9)로 변경하여 확인함
+      if (expiration > now) downloadData(result.signed_url)
+      else message.error('데이터 유효기간이 만료되었습니다.')
     },
     onError: (error: Error) => {
       message.error('결과를 확인할 수 없습니다. 관리자에게 문의하세요')
@@ -161,17 +156,6 @@ interface ModelStateListProps {
 }
 
 const ModelStateInfo = () => {
-  return (
-    <>
-      {status.map((tag: ITag, idx: number) => {
-        return (
-          <Tag className="row-item-tag m-auto mr-2" color={tag?.color} icon={tag?.icon} key={idx}>
-            <span className="tracking-normal">{tag?.name}</span>
-          </Tag>
-        )
-      })}
-    </>
-  )
 }
 
 const ModelStateList = ({ data }: ModelStateListProps) => {
