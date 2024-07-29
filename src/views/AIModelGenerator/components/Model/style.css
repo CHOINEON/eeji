@@ -122,12 +122,10 @@ body {
 } */
 
 .btn-run {
-  background-color: #4338f7;
-  color: white;
+  color: blue;
+  text-decoration: underline;
   border-radius: 10px;
   width: 91px;
-  height: 30px;
-  line-height: 30px;
   float: left;
   font-size: 14px;
   font-weight: 500;
