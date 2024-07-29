@@ -80,7 +80,7 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
       const expiration_KST = expiration + kstOffset
       const now = new Date().getTime()
 
-      // 쿠버네티스 시간이 GTM으로 설정되어 있어 로컬 개발환경에서는 한국 시간대(GMT + 9)로 변경하여 확인함
+      // GCS에서 받아온 만료시간이 GTM으로 설정되어 있어 로컬 개발환경에서는 한국 시간대(GMT + 9)로 변경하여 확인함
       if (window.location.hostname == 'localhost') {
         if (expiration_KST > now) downloadData(result.signed_url)
         else message.error('데이터 유효기간이 만료되었습니다.')
