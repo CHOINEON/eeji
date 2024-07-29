@@ -37,13 +37,15 @@ export interface IHeaders {
 const status: ITag[] = [
   { key: 0, name: 'waiting', color: 'default', icon: <ClockCircleOutlined /> },
   { key: 1, name: 'created', color: 'default' },
-  { key: 2, name: 'started', color: 'processing', icon: <PlayCircleOutlined /> },
+  { key: 2, name: 'started', color: 'default', icon: <PlayCircleOutlined /> },
   { key: 3, name: 'preprocessing', color: 'processing', icon: <SyncOutlined spin /> },
   { key: 4, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
   { key: 5, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
   { key: 6, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
-  { key: 7, name: 'completed', color: 'success', icon: <CheckCircleOutlined /> },
-  { key: 8, name: 'failed', color: 'error', icon: <CloseCircleOutlined /> },
+  { key: 7, name: 'train completed', color: 'processing', icon: <CheckCircleOutlined /> },
+  { key: 8, name: 'analyzing', color: 'processing', icon: <SyncOutlined spin /> },
+  { key: 9, name: 'result saved', color: 'success', icon: <CheckCircleOutlined /> },
+  { key: 10, name: 'failed', color: 'error', icon: <CloseCircleOutlined /> },
 ]
 
 const ModelStateColHeader = ({ headers }: IHeaders) => {
@@ -73,10 +75,22 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
 
   const { mutate: mutateTrainingResult } = useMutation(ModelApi.getTrainingResultUrl, {
     onSuccess: (result: any) => {
-      downloadData(result.signed_url)
+      const expiration = new Date(result.expiration).getTime()
+      const kstOffset = 9 * 60 * 60 * 1000
+      const expiration_KST = expiration + kstOffset
+      const now = new Date().getTime()
+
+      // 쿠버네티스 시간이 GTM으로 설정되어 있어 로컬 개발환경에서는 한국 시간대(GMT + 9)로 변경하여 확인함
+      if (window.location.hostname == 'localhost') {
+        if (expiration_KST > now) downloadData(result.signed_url)
+        else message.error('데이터 유효기간이 만료되었습니다.')
+      } else {
+        if (expiration > now) downloadData(result.signed_url)
+        else message.error('데이터 유효기간이 만료되었습니다.')
+      }
     },
     onError: (error: Error) => {
-      console.log('err:', error)
+      message.error('결과를 확인할 수 없습니다. 관리자에게 문의하세요')
     },
   })
 
@@ -129,7 +143,7 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
               </Tag>
             </div>
             <div className="row-item">
-              {rowData.state === '7' && (
+              {rowData.state === '9' && (
                 <button className="btn-run" onClick={() => handleClick(rowData)}>
                   View result
                 </button>
