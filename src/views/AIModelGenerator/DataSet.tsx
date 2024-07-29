@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { App } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import { useEffect } from 'react'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import DatasetList from './DatasetList'
 import DataEditModal from './components/DataInfo/DataEditModal'
@@ -13,6 +13,7 @@ import './style/data-analysis-style.css'
 
 const DataSet = () => {
   const { message } = App.useApp()
+  const queryClient = useQueryClient()
 
   const selectedData = useRecoilState(selectedDataState)
   const setUserInfo = useSetRecoilState(userInfoState)
@@ -21,6 +22,7 @@ const DataSet = () => {
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: (result: any) => {
       message.success('모델 학습이 정상적으로 요청되었습니다.')
+      queryClient.invalidateQueries('models')
     },
     onError: (error: any) => {
       message.error('요청이 실패하였습니다. 다음에 다시 시도해주세요.')
