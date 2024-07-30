@@ -179,9 +179,9 @@ const ModelStateList = ({ data }: ModelStateListProps) => {
         data.map((d: IModelInfo, i: number) => {
           return <ModelStateRow rowData={d} key={i} />
         })}
-      <div className="text-right">
+      {/* <div className="text-right">
         * state : <ModelStateInfo />
-      </div>
+      </div> */}
     </>
   )
 }
