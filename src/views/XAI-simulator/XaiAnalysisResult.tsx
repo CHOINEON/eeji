@@ -1,11 +1,10 @@
 import styled from '@emotion/styled'
-import { Badge, Button, Col, Row } from 'antd'
+import { App, Badge, Button, Col, Row } from 'antd'
 // import Title from 'antd/es/typography/Title'
 import { UndoOutlined } from '@ant-design/icons'
 import React, { useEffect } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
-import GlobalFeatureImportance from './components/GlobalFeatureImportance'
 import PDP_Plot from './components/PDP_Plot'
 import { activeVariables, localAttrState, xaiResultStore } from './store/analyze/atom'
 import AnalysisGrid, { DataRow } from './Visualization/AnalysisGrid'
@@ -26,6 +25,7 @@ export const transformDataByRow = (count: number, rawData: any) => {
 }
 
 const XaiAnalysisResult = () => {
+  const { message } = App.useApp()
   const [data, setData] = useRecoilState(xaiResultStore)
   const [activeVars, setActiveVars] = useRecoilState(activeVariables)
   const filteredData = useRecoilValue(localAttrState)
@@ -35,9 +35,13 @@ const XaiAnalysisResult = () => {
     const obj = data?.feature_list.reduce((accumulator, value) => {
       return { ...accumulator, [value]: true }
     }, {})
-
+    console.log('obj:', obj)
     setActiveVars(obj)
   }, [])
+
+  useEffect(() => {
+    console.log('XaiAnalysisResult:', data)
+  }, [data])
 
   const handleClick = (e: any) => {
     const selectedVar = e.target.innerText
@@ -45,10 +49,6 @@ const XaiAnalysisResult = () => {
   }
 
   const handleClearFilter = (e: any) => {
-    // for (const [key, value] of Object.entries(activeVars)) {
-    //   // setActiveVars({ ...activeVars, [key]: true })
-    // }
-
     setActiveVars((prevState: any) => {
       const updatedVars = { ...prevState }
 
@@ -78,7 +78,6 @@ const XaiAnalysisResult = () => {
           <Col span={18}>
             <RoundedBox width={'100%'} height={'75vh'}>
               <div className="w-1/7 text-left ">
-                {/* <RowLabel>입력변수</RowLabel> */}
                 <Title>입력변수 필터링</Title>
                 <Button
                   className="inline-block float-right"
@@ -99,9 +98,6 @@ const XaiAnalysisResult = () => {
                       color={colorChips[index]}
                       onClick={handleClick}
                     >
-                      {/* <Badge className="mr-4" color={colorChips[index]} />
-                        {value} */}
-
                       <Badge
                         className={`${activeVars[value] ? 'border-white' : `border-[${colorChips[index]}]`} mr-4`}
                         color={activeVars[value] ? 'white' : colorChips[index]}
@@ -118,19 +114,15 @@ const XaiAnalysisResult = () => {
                   localWeight={filteredData}
                   localValue={data.input_data}
                   predResult={data.predict_result}
-                  // columns={Object.keys(data.input_data)}
                 />
               </div>
-              {/* </ScrollContainer> */}
             </RoundedBox>
           </Col>
           <Col span={6} style={{ width: '100%', height: '75vh' }}>
-            <PDP_Plot data={data?.xai_pdp} />
-            <GlobalFeatureImportance data={data?.xai_global[0]} colors={data.colors} />
+            {data?.xai_pdp ? <PDP_Plot data={data?.xai_pdp} /> : null}
+            {/* <GlobalFeatureImportance data={data?.xai_global} colors={data.colors} /> */}
           </Col>
         </Row>
-        <Row style={{ width: '100%' }}></Row>
-        <Col span={6}></Col>
       </Container>
     </>
   )

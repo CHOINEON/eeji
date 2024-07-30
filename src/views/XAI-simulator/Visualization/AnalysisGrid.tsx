@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Badge, Space, Tooltip } from 'antd'
+import { Badge, Space } from 'antd'
 import React from 'react'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import HorizontalStackedBarChart from './HorizontalStackedBarChart'
@@ -28,7 +28,6 @@ const RowItem = ({ number, value, weight, pred }: any) => {
 }
 
 const AnalysisGrid = (props: any) => {
-  // console.log('AnalysisGrid:', props)
   const { localWeight, localValue, predResult, featureList } = props
 
   const hoverContent = (feature_list: any) => {
