@@ -14,7 +14,7 @@ const ModelList = () => {
   }, [data])
 
   return (
-    <div className="p-10">
+    <div className="max-h-[76vh] p-10 flex flex-wrap overflow-y-scroll ">
       <p className="font-['Helvetica Neue'] font-bold text-[23px] text-[#002D65]">Model List</p>
       <ModelStateList data={list} />
     </div>
