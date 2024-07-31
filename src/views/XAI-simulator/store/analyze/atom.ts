@@ -51,7 +51,7 @@ export const xaiResultStore = atom({
     input_data: [],
     xai_local: [] as Array<unknown>,
     xai_pdp: {},
-    xai_global: [],
+    xai_global: {},
     colors: {},
   },
 })

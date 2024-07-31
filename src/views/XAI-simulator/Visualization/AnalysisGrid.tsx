@@ -5,11 +5,7 @@ import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import HorizontalStackedBarChart from './HorizontalStackedBarChart'
 
 const RowItem = ({ number, value, weight, pred }: any) => {
-  // const { number, columns, predResult, value, weight } = props
-  // console.log('RowItem weight', weight)
-  // const itemObj = item.item
-
-  ////////24.03.05 Backend 요청으로 input data가 모두 0인 row를 걸러냄
+  //24.03.05 Backend 요청으로 input data가 모두 0인 row를 걸러냄
   return (
     <>
       {!Object.values(weight).every((val: any) => val == 0) && (
@@ -28,7 +24,7 @@ const RowItem = ({ number, value, weight, pred }: any) => {
 }
 
 const AnalysisGrid = (props: any) => {
-  const { localWeight, localValue, predResult, featureList } = props
+  const { localWeight, localValue, predResult } = props
 
   const hoverContent = (feature_list: any) => {
     return (

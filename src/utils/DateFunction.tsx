@@ -83,3 +83,20 @@ export function removeSeparator(date: string) {
     return date
   }
 }
+
+/**
+ * signed_url의 expiration date를 확인해 현재 유효한지 확인
+ * @param string 형식의 날짜
+ * @param number GMT기준 로컬 시간과의 차이
+ * @returns {boolean} 유효한지 여부. 유효하면 true, 유효하지 않으면 false
+ */
+
+export function validationCheck(date: string, timeOffset: number) {
+  const expiration = new Date(date).getTime()
+  const kstOffset = timeOffset * 60 * 60 * 1000
+  const expiration_KST = expiration + kstOffset
+  const now = new Date().getTime()
+
+  if (expiration_KST > now) return true
+  else return false
+}
