@@ -1,10 +1,10 @@
-import styled from '@emotion/styled'
-import { App, Badge, Button, Col, Row } from 'antd'
-// import Title from 'antd/es/typography/Title'
 import { UndoOutlined } from '@ant-design/icons'
+import styled from '@emotion/styled'
+import { Badge, Button, Col, Row } from 'antd'
 import React, { useEffect } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
+import GlobalFeatureImportance from './components/GlobalFeatureImportance'
 import PDP_Plot from './components/PDP_Plot'
 import { activeVariables, localAttrState, xaiResultStore } from './store/analyze/atom'
 import AnalysisGrid, { DataRow } from './Visualization/AnalysisGrid'
@@ -25,8 +25,7 @@ export const transformDataByRow = (count: number, rawData: any) => {
 }
 
 const XaiAnalysisResult = () => {
-  const { message } = App.useApp()
-  const [data, setData] = useRecoilState(xaiResultStore)
+  const data = useRecoilValue(xaiResultStore)
   const [activeVars, setActiveVars] = useRecoilState(activeVariables)
   const filteredData = useRecoilValue(localAttrState)
 
@@ -35,13 +34,8 @@ const XaiAnalysisResult = () => {
     const obj = data?.feature_list.reduce((accumulator, value) => {
       return { ...accumulator, [value]: true }
     }, {})
-    console.log('obj:', obj)
     setActiveVars(obj)
   }, [])
-
-  useEffect(() => {
-    console.log('XaiAnalysisResult:', data)
-  }, [data])
 
   const handleClick = (e: any) => {
     const selectedVar = e.target.innerText
@@ -110,17 +104,17 @@ const XaiAnalysisResult = () => {
               <div className="mt-[50px]">
                 <Title>예측모델 설명 결과</Title>
                 <AnalysisGrid
-                  featureList={data.feature_list}
+                  featureList={data?.feature_list}
                   localWeight={filteredData}
-                  localValue={data.input_data}
-                  predResult={data.predict_result}
+                  localValue={data?.input_data}
+                  predResult={data?.predict_result.predict_result}
                 />
               </div>
             </RoundedBox>
           </Col>
           <Col span={6} style={{ width: '100%', height: '75vh' }}>
             {data?.xai_pdp ? <PDP_Plot data={data?.xai_pdp} /> : null}
-            {/* <GlobalFeatureImportance data={data?.xai_global} colors={data.colors} /> */}
+            {data?.xai_global ? <GlobalFeatureImportance data={data?.xai_global} colors={data?.colors} /> : null}
           </Col>
         </Row>
       </Container>

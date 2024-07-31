@@ -11,6 +11,7 @@ import { IModelInfo } from 'apis/type/Model'
 import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useSetRecoilState } from 'recoil'
+import { validationCheck } from 'utils/DateFunction'
 import { v4 } from 'uuid'
 import { stepCountStore } from 'views/AIModelGenerator/store/global/atom'
 import { selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
@@ -75,13 +76,8 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
 
   const { mutate: mutateTrainingResult } = useMutation(ModelApi.getTrainingResultUrl, {
     onSuccess: (result: any) => {
-      const expiration = new Date(result.expiration).getTime()
-      const kstOffset = 9 * 60 * 60 * 1000
-      const expiration_KST = expiration + kstOffset
-      const now = new Date().getTime()
-
-      // GCS에서 받아온 만료시간이 GTM으로 설정되어 있어 한국 시간대(GMT + 9)로 변경하여 확인함
-      if (expiration_KST > now) downloadData(result.signed_url)
+      // GCS에서 받아온 만료시간이 GMT으로 설정되어 있어 한국 시간대(GMT + 9)로 변경하여 확인함
+      if (validationCheck(result.expiration, 9)) downloadData(result.signed_url)
       else message.error('데이터 유효기간이 만료되었습니다.')
     },
     onError: (error: Error) => {
