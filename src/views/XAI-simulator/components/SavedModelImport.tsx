@@ -80,11 +80,7 @@ const SavedModelImport = () => {
     <>
       <Spin tip="모델 분석중..." spinning={loading}>
         <div>
-          {completedModelList?.length > 0 ? (
-            <ModelList data={completedModelList.filter((i: IModelInfo) => i.state === '7')} onSelect={handleSelect} />
-          ) : (
-            <Empty />
-          )}
+          {completedModelList?.length > 0 ? <ModelList data={completedModelList} onSelect={handleSelect} /> : <Empty />}
         </div>
         <div className="mt-[25px]">
           <CancelButton onClick={() => setModal(null)}>Cancel</CancelButton>
