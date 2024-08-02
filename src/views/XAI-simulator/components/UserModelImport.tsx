@@ -58,7 +58,6 @@ const UserModelImport = () => {
         },
       })
 
-      console.log('result::', setXaiResult)
       setXaiResult({
         ...xaiResult,
         sample_size: result['sample_size'],
