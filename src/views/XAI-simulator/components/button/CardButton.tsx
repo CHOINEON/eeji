@@ -5,6 +5,7 @@ interface CardButtonItem {
   description: string
   icon: any
   handleClick: any
+  buttonName: string
 }
 
 type CardButtonProps = {
@@ -12,7 +13,7 @@ type CardButtonProps = {
 }
 
 const CardButton = ({ item }: CardButtonProps) => {
-  const { title, description, icon, handleClick } = item
+  const { title, description, icon, handleClick, buttonName } = item
 
   return (
     <Container>
@@ -25,7 +26,7 @@ const CardButton = ({ item }: CardButtonProps) => {
       </Title>
       <Description>{description}</Description>
 
-      <UploadButton onClick={handleClick}>Data Upload</UploadButton>
+      <UploadButton onClick={handleClick}>{buttonName}</UploadButton>
     </Container>
   )
 }
