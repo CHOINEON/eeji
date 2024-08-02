@@ -59,14 +59,15 @@ const UserModelImport = () => {
       })
 
       setXaiResult({
-        sample_size: result.sample_size,
-        feature_length: result.feature_length,
-        feature_list: result.feature_list,
-        predict_result: result.predict_result?.predict_result,
-        input_data: transformDataByRow(result.sample_size, result.input_data),
-        xai_local: transformDataByRow(result.sample_size, result.xai_local),
-        xai_global: result.xai_global,
-        xai_pdp: result.xai_pdp,
+        ...xaiResult,
+        sample_size: result['sample_size'],
+        feature_length: result['feature_length'],
+        feature_list: result['feature_list'],
+        predict_result: result['predict_result'],
+        input_data: transformDataByRow(result['sample_size'], result['input_data']),
+        xai_local: transformDataByRow(result['sample_size'], result['xai_local']),
+        xai_global: result['xai_global'][0], //gcs에 저장된 위치 result('xai_global')
+        xai_pdp: result['xai_pdp'],
         colors: STACKED_BAR_CHART_COLORS,
       })
       setSaving(false)

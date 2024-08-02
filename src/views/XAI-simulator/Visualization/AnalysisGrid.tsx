@@ -12,7 +12,7 @@ const RowItem = ({ number, value, weight, pred }: any) => {
         <DataRow style={{ padding: '0 2%', marginBottom: '1%' }}>
           <div style={{ width: '10%', textAlign: 'center' }}>{number}</div>
           <div style={{ width: '20%', textAlign: 'center' }}>
-            <b>{pred}</b>
+            <b>{pred.toString()}</b>
           </div>
           <div style={{ width: '70%', height: '50px !important' }}>
             <HorizontalStackedBarChart weight={weight} value={value} />

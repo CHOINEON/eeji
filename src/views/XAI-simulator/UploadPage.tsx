@@ -15,12 +15,14 @@ const UploadPage = () => {
       description: 'AI Model Generator에서 생성한 모델 데이터를 가져옵니다.',
       icon: IconServerUpload,
       handleClick: () => handleClick('SavedModelImport'),
+      buttonName: 'Select Model',
     },
     {
       title: 'USER',
       description: '사용자의 PC에 저장된 모델 데이터를 가져옵니다.',
       icon: IconCustomerUpload,
       handleClick: () => handleClick('UserModelImport'),
+      buttonName: 'Upload Model',
     },
   ]
 
