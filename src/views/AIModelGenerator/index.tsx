@@ -32,7 +32,7 @@ const AIModelGenerator = () => {
     <ThemeProvider theme={theme}>
       <Box style={{ position: 'relative', zIndex: 1000 }}>
         {activeStep === 0 && (
-          <div className="h-dvh block float-left">
+          <div className="w-100 h-dvh block float-left">
             <div className="w-2/6 float-left">
               <DataSet />
             </div>

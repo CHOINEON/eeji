@@ -1,4 +1,3 @@
-import { Empty } from 'antd'
 import useGetDatasets from 'hooks/queries/useGetDatasets'
 import useModal from 'hooks/useModal'
 import { useEffect, useState } from 'react'
@@ -67,11 +66,9 @@ const DatasetList = () => {
   return (
     <>
       <AddItemButton onClick={handleAddClick} />
-      {data?.data.length > 0
-        ? data?.data.map((data: any, index: number) => (
-            <DescriptionBox key={index} data={data} onSelect={handleSelect} />
-          ))
-        : !loading && <Empty />}
+      {data?.data.map((data: any, index: number) => (
+        <DescriptionBox key={index} data={data} onSelect={handleSelect} />
+      ))}
     </>
   )
 }

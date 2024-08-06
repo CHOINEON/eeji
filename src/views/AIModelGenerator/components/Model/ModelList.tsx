@@ -1,3 +1,4 @@
+import { Empty } from 'antd'
 import { IModelInfo, IModelList } from 'apis/type/Model'
 import useGetModelList from 'hooks/queries/useGetModelList'
 import { useEffect, useState } from 'react'
@@ -15,8 +16,14 @@ const ModelList = () => {
 
   return (
     <div className="max-h-[76vh] p-10 flex flex-wrap overflow-y-scroll ">
-      <p className="font-['Helvetica Neue'] font-bold text-[23px] text-[#002D65]">Model List</p>
-      <ModelStateList data={list} />
+      <p className="w-100 font-['Helvetica Neue'] font-bold text-[23px] text-[#002D65]">Model List</p>
+      {list?.length > 0 ? (
+        <ModelStateList data={list} />
+      ) : (
+        <div className="m-auto flex items-center min-h-[50vh]">
+          <Empty />
+        </div>
+      )}
     </div>
   )
 }

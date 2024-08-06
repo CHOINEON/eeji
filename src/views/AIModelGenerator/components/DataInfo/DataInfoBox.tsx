@@ -10,18 +10,18 @@ const DataInfoBox = () => {
     <>
       <SummaryDiv>
         <>
-          <div className="w-1/3 h-full inline-block">
+          <ItemContent>
             <Title>Target variable</Title>
             <Text>{selectedData[0]?.targetY}</Text>
-          </div>
-          <div className="w-1/3 h-full inline-block">
+          </ItemContent>
+          <ItemContent>
             <Title>Type</Title>
             <Text>{selectedData[0]?.isClassification ? 'classification' : 'regression'}</Text>
-          </div>
-          <div className="w-1/3 h-full inline-block">
+          </ItemContent>
+          <ItemContent>
             <Title>Created</Title>
             <Text>{selectedData[0]?.createDate}</Text>
-          </div>
+          </ItemContent>
         </>
       </SummaryDiv>
     </>
@@ -41,4 +41,11 @@ const SummaryDiv = styled.div`
   box-shadow: 0px 0px 10px #0000001a;
   padding: 1em;
   background-color: #d5dcef;
+`
+
+const ItemContent = styled.div`
+  width: 33%;
+  height: 100%;
+  display: inline-block;
+  float: left;
 `
