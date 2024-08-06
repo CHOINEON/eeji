@@ -59,11 +59,7 @@ const DataSet = () => {
             <DatasetList />
           </div>
         </div>
-        {selectedData[0].ds_id && (
-          <div className="w-100 flex align-center justify-center">
-            <DataInfoBox />
-          </div>
-        )}
+        <div className="w-100 flex align-center justify-center">{selectedData[0].ds_id && <DataInfoBox />}</div>
         <div className="w-100 flex align-center justify-center mt-2 px-[10px]">
           <GenerateButton
             className="w-100 float-right h-[46px] rounded-lg bg-[#4338F7] text-white text-[15px] font-bold font-lg leading-[47px]"
