@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import { useRecoilState } from 'recoil'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { Text, Title } from '../Input/Text'
-import { SquareItemBox } from './DescriptionBox'
 
 const DataInfoBox = () => {
   const selectedData = useRecoilState(selectedDataState)
@@ -31,9 +30,13 @@ const DataInfoBox = () => {
 
 export default DataInfoBox
 
-const SummaryDiv = styled(SquareItemBox)`
+const SummaryDiv = styled.div`
+  width: 100px;
+  margin: 10px;
+  border-radius: 15px;
+  display: inline-block;
+  text-align: center;
   width: 100%;
-  // height: 100px;
   border: 1px dotted #d5dcef;
   box-shadow: 0px 0px 10px #0000001a;
   padding: 1em;
