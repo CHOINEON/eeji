@@ -99,6 +99,8 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
   const downloadData = async (url: string) => {
     try {
       const result = await ModelApi.getJsonResult(url)
+      //운영계에만 에러 발생하여 로그 확인하기 위해 임시로 콘솔 찍음
+      console.log('download result::', result)
       setAnalysisResult([
         {
           key: v4(),
@@ -115,7 +117,7 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
       ])
       setActiveStep(1)
     } catch (error) {
-      console.error(error.response.data)
+      console.error(error)
       message.error('데이터 유효기간이 만료되었습니다.')
     }
   }
