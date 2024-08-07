@@ -7,9 +7,9 @@ export const useToast = () => {
   const removeToast = (content: string) => setToasts({ content: content, isClosing: true })
   const fireToast = (content: string) => {
     setToasts({ content: content, isClosing: true })
-    setTimeout(() => removeToast(content), 60000)
-    setTimeout(() => setToasts({ content: '', isClosing: false }), 60000)
+    // setTimeout(() => removeToast(content), 60000)
+    // setTimeout(() => setToasts({ content: '', isClosing: false }), 60000)
   }
 
-  return { toasts, fireToast }
+  return { toasts, fireToast, removeToast }
 }

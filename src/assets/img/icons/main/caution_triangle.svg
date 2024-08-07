@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="27.553" height="23.679" viewBox="0 0 27.553 23.679">
+  <g id="caution_triangle" transform="translate(-990.337 -672)">
+    <path id="패스_14306" data-name="패스 14306" d="M26.109,23.679H1.445A1.442,1.442,0,0,1,.2,21.5L12.536.707a1.442,1.442,0,0,1,2.481,0L27.349,21.5a1.442,1.442,0,0,1-1.24,2.178" transform="translate(990.337 672)" fill="#edba29"/>
+    <g id="그룹_7987" data-name="그룹 7987">
+      <path id="패스_14307" data-name="패스 14307" d="M435.9,225.5l-.6-8.965a1.473,1.473,0,1,1,2.939-.2,1.607,1.607,0,0,1,0,.2l-.6,8.965a.869.869,0,0,1-1.732,0" transform="translate(567.343 463.114)"/>
+      <path id="패스_14308" data-name="패스 14308" d="M447.281,661.71a1.2,1.2,0,1,1-1.2-1.2,1.2,1.2,0,0,1,1.2,1.2" transform="translate(558.035 30.161)"/>
+    </g>
+    <rect id="사각형_5884" data-name="사각형 5884" width="27.553" height="23.679" transform="translate(990.337 672)" fill="none"/>
+  </g>
+</svg>
