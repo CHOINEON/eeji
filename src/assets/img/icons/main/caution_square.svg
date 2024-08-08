@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+  <g id="caution_square" transform="translate(-1027.473 -670.34)">
+    <path id="패스_14380" data-name="패스 14380" d="M13,0h0a13,13,0,1,1,0,26h0A13,13,0,0,1,13,0Z" transform="translate(1027.473 670.34)" fill="#edba29"/>
+    <g id="그룹_7988" data-name="그룹 7988" transform="translate(36.359 -1.66)">
+      <path id="패스_14307" data-name="패스 14307" d="M435.9,225.5l-.6-8.965a1.473,1.473,0,1,1,2.939-.2,1.607,1.607,0,0,1,0,.2l-.6,8.965a.869.869,0,0,1-1.732,0" transform="translate(567.343 463.114)"/>
+      <path id="패스_14308" data-name="패스 14308" d="M447.281,661.71a1.2,1.2,0,1,1-1.2-1.2,1.2,1.2,0,0,1,1.2,1.2" transform="translate(558.035 30.161)"/>
+    </g>
+  </g>
+</svg>

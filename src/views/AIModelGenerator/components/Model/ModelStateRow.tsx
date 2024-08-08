@@ -8,6 +8,7 @@ import {
 import { App, Tag } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import { IModelInfo } from 'apis/type/Model'
+import { useToast } from 'hooks/useToast'
 import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useSetRecoilState } from 'recoil'
@@ -48,6 +49,10 @@ const status: ITag[] = [
   { key: 9, name: 'result saved', color: 'success', icon: <CheckCircleOutlined /> },
   { key: 10, name: 'failed', color: 'error', icon: <CloseCircleOutlined /> },
 ]
+
+interface ModelStateListProps {
+  data: IModelInfo[] | undefined
+}
 
 const ModelStateColHeader = ({ headers }: IHeaders) => {
   return (
@@ -149,10 +154,6 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
   )
 }
 
-interface ModelStateListProps {
-  data: IModelInfo[] | undefined
-}
-
 const ModelStateInfo = () => {
   return (
     <>
@@ -168,7 +169,40 @@ const ModelStateInfo = () => {
 }
 
 const ModelStateList = ({ data }: ModelStateListProps) => {
+  const { fireToast } = useToast()
+
+  const [prevData, setPrevData] = useState<IModelInfo[]>([])
+  const [newData, setNewData] = useState<IModelInfo[]>([])
   const headers: Array<string> = ['Model Name', 'Target', 'Created', 'State', 'Result']
+
+  useEffect(() => {
+    setNewData(data)
+  }, [])
+
+  const extractItems = (stateCheck: (oldState: string, newState: string) => boolean) => {
+    return newData.filter((newItem: IModelInfo) => {
+      const oldItem = prevData.find((item: IModelInfo) => item.id === newItem.id)
+      return oldItem && stateCheck(oldItem.state, newItem.state)
+    })
+  }
+
+  const showToastMessages = (items: IModelInfo[], type: 'success' | 'error', content: string) => {
+    items.forEach((item: IModelInfo) => fireToast({ id: item.id, type, title: 'AI Model Generator', content }))
+  }
+
+  useEffect(() => {
+    if (prevData.length > 0 && newData.length > 0) {
+      // 이전 데이터와 새로운 데이터를 비교하여 조건에 맞는 배열 요소를 추출
+      const updatedItems = extractItems((oldState, newState) => oldState !== '9' && newState === '9')
+      showToastMessages(updatedItems, 'success', '모델 학습이 완료되었습니다.')
+
+      const failedItems = extractItems((oldState, newState) => oldState !== '10' && newState === '10')
+      showToastMessages(failedItems, 'error', '모델 학습이 실패하였습니다.')
+    }
+
+    // 이전 데이터를 새로운 데이터로 업데이트
+    setPrevData(newData)
+  }, [newData, extractItems, showToastMessages])
 
   return (
     <>
