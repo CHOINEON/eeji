@@ -32,11 +32,11 @@ const AfterUpload = () => {
     setLoading({ isLoading: true, message: '데이터 읽는 중 ...' })
 
     const fileReader = new FileReader()
-    const fileFormat = file.name.split('.').pop()
+    const fileFormat: string = file.name.split('.').pop()
     const acceptedFormats = ['csv', 'xls', 'xlsx']
 
     if (file.name) {
-      if (acceptedFormats.includes(fileFormat)) {
+      if (acceptedFormats.includes(fileFormat.toLowerCase())) {
         fileReader.onload = function (event: any) {
           const text = event.target.result
 
@@ -60,6 +60,7 @@ const AfterUpload = () => {
             margin: 'auto',
           },
         })
+        setLoading({ isLoading: false })
       }
     }
   }
