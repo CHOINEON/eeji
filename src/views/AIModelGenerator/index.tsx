@@ -1,6 +1,5 @@
 import { Box } from '@chakra-ui/react'
 import { ThemeProvider } from '@mui/material/styles'
-import ToastList from 'components/toast/List'
 import { useEffect } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import { useRecoilState } from 'recoil'
@@ -39,7 +38,6 @@ const AIModelGenerator = () => {
             </div>
             <div className="w-4/6 min-h-fit block float-left">
               <ModelList />
-              <ToastList />
             </div>
           </div>
         )}

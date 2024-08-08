@@ -1,6 +1,7 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { App as Antd, ConfigProvider } from 'antd'
 import GlobalModal from 'components/modal/GlobalModal'
+import ToastList from 'components/toast/List'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga4'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -48,6 +49,7 @@ ReactDOM.render(
           <Antd>
             <BrowserRouter>
               <App />
+              <ToastList />
             </BrowserRouter>
             <GlobalModal />
           </Antd>
