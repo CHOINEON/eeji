@@ -10,6 +10,7 @@ export interface Toast {
   isClosing?: boolean
 }
 
-export const toastState = atom<Toast>({
+export const toastState = atom<Toast[]>({
   key: 'toastState',
+  default: [],
 })

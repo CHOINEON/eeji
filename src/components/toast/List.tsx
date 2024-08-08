@@ -10,7 +10,7 @@ const ToastList = () => {
     <>
       <StToastList>
         {toasts.map((toast: any, i: number) => (
-          <ToastItem key={i} id={toast.id} title={toast.title} top={100} duration={60000} {...toast} />
+          <ToastItem key={i} id={toast.id} title={toast.title} top={100} {...toast} />
         ))}
       </StToastList>
     </>
@@ -21,10 +21,10 @@ export default ToastList
 
 const StToastList = styled.div`
   width: 300px;
-  height: 100%;
+  height: auto;
   top: 65px;
   right: 0px;
-  padding: 20px;
+  padding-top: 20px;
   position: fixed;
   z-index: 1000;
 `
