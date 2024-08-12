@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import ico_upload_button from 'assets/img/dataAnalysis/upload_circle.svg'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { importModalAtom } from 'views/AIModelGenerator/store/modal/atom'
 
@@ -104,25 +104,6 @@ const Uploader = (props: any) => {
     inputRef.current.click()
   }
 
-  const handleCancel = () => {
-    onCancelClick()
-    setFile(null)
-  }
-
-  // const renderFileList = () => {
-  //   return (
-  //     <>
-  //       <div>
-  //         파일명 : {file.name} <CloseOutlined onClick={handleCancel} />
-  //       </div>
-  //       <div>
-  //         크기 :{' '}
-  //         {file.size / 1024 < 1024 ? Math.round(file.size / 1024) + ' KB' : Math.round(file.size / 1024 / 1024) + ' MB'}
-  //       </div>
-  //     </>
-  //   )
-  // }
-
   return (
     <UploadIconContainer>
       <input
@@ -133,10 +114,18 @@ const Uploader = (props: any) => {
         accept=".csv, .xls, .xlsx"
         id="input-file-upload"
       />
-      <div ref={dragRef} style={{ lineHeight: '550px', textAlign: 'center' }}>
-        <label htmlFor="input-file-upload">
-          <UploadButton onClick={handleUploadClick} />
-        </label>
+      <div ref={dragRef} className="text-center h-[400px] relative">
+        <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2">
+          <label htmlFor="input-file-upload" className="text-center mt-3">
+            <UploadButton onClick={handleUploadClick} />
+            <div className="float-left my-3 text-center m-auto w-100">
+              <a href="https://recruitineeji.notion.site/2-1-38ce1b102d834abba0f9653df1d918f9?pvs=4" target="_blank">
+                <InfoLink>( EEJI 업로드 가이드 바로가기 )</InfoLink>
+              </a>
+            </div>
+          </label>
+        </div>
+
         {/* {file && renderFileList()} */}
       </div>
     </UploadIconContainer>
@@ -147,7 +136,6 @@ export default Uploader
 
 const UploadIconContainer = styled.div`
   width: 100%;
-  height: 450px;
 `
 
 const UploadButton = styled.button`
@@ -156,4 +144,14 @@ const UploadButton = styled.button`
   background: transparent url(${ico_upload_button}) 0% 0% no-repeat padding-box;
   background-size: cover;
   opacity: 1;
+`
+
+const InfoLink = styled.p`
+  font-family: 'Helvetica Neue';
+  color: #002d65;
+  font-size: 13px;
+  cursor: pointer;
+  &:hover {
+    color: #4338f7;
+  }
 `
