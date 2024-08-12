@@ -1,6 +1,5 @@
-import React from 'react'
-import { styled } from 'styled-components'
 import packageImg from 'assets/img/ineeji/package@2x.png'
+import { styled } from 'styled-components'
 
 const Banner = () => {
   return (
@@ -9,11 +8,10 @@ const Banner = () => {
         <img style={{ width: '100%', margin: 'auto', padding: '10px 15px' }} src={packageImg} />
       </div>
       <div style={{ width: '70%', height: '100%', float: 'left', padding: '2px 8px' }}>
-        <BannerTitle>INEEJI’s INFINITE OPTIMAL SERIES™</BannerTitle>
+        <BannerTitle>INEEJI’s Cloud AI, EEJI</BannerTitle>
         <BannerContents>
-          is Prediction solution for ENERGY SAVING based on time series data that enables companies to realize
-          productivity improvement, production energy cost reduction, and quality improvement through process
-          optimization of industrial processes.
+          is a time series-based prediction solution for energy saving, helping companies optimize industrial processes
+          to improve productivity, reduce production energy costs, and enhance quality.
         </BannerContents>
       </div>
     </BannerContainer>
