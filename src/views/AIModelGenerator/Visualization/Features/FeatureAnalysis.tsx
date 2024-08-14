@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
-import { useEffect, useState } from 'react'
+import useResizeObserver from 'hooks/useResizeObserver'
+import { useEffect, useRef, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
@@ -10,14 +11,32 @@ import ModelPerformance from 'views/XAI-simulator/ModelPerformance'
 import FeatureClassPerformance from './FeatureClassPerformance'
 
 const FeatureAnalysis = ({ textVisible }: any) => {
-  const [chartData, setChartData] = useState({ labels: [], values: [] })
+  const contentRef = useRef(null)
+  const [isShowReadMore, setIsShowReadMore] = useState(false)
 
+  const [chartData, setChartData] = useState({ labels: [], values: [] })
   const analysisResponse = useRecoilValue(analysisResponseAtom)
   const modelIdx = useRecoilValue(selectModelState)
+
+  const observeCallback = (entries: any) => {
+    for (const entry of entries) {
+      if (entry.target.scrollHeight > Math.round(entry.contentRect.height)) {
+        setIsShowReadMore(true)
+      } else {
+        setIsShowReadMore(false)
+      }
+    }
+  }
+  useResizeObserver({ callback: observeCallback, element: contentRef })
 
   useEffect(() => {
     setChartData(analysisResponse[modelIdx]['feature_data'])
   }, [modelIdx])
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    contentRef.current.classList.add('show')
+    setIsShowReadMore(false)
+  }
 
   return (
     <>
@@ -32,7 +51,7 @@ const FeatureAnalysis = ({ textVisible }: any) => {
           <div className="block float-left w-100 mt-2">
             <AIbutton>AI</AIbutton>
             <AITextContainer>
-              현재 예측 모델에서 가장 영향력이 큰 변수는 <b>{chartData?.labels[0]}</b>
+              현재 예측 모델에서 가장 영향력이 큰 변수는 <b>{chartData?.labels[0]} </b>
               입니다.
             </AITextContainer>
           </div>
@@ -40,7 +59,10 @@ const FeatureAnalysis = ({ textVisible }: any) => {
             <AIbutton>AI</AIbutton>
             <AITextContainer>
               현재 {modelIdx === 0 ? '자동 추천으로 ' : ''}입력된 원인 변수 X는{' '}
-              <b>{analysisResponse[modelIdx]?.input?.join(', ')}</b>입니다.
+              <Ellipsis ref={contentRef}>
+                <b>{analysisResponse[modelIdx]?.input?.join(', ')}</b> 입니다.
+              </Ellipsis>
+              {isShowReadMore && <MoreButton onClick={handleClick}>...더보기</MoreButton>}
             </AITextContainer>
           </div>
         </div>
@@ -99,5 +121,27 @@ export const AITextContainer = styled.div`
   float: left;
   color: #002d65;
   fontsize: 12px;
-  marginbottom: 5px;
+  margin-bottom: 5px;
+`
+
+const Ellipsis = styled.div`
+  position: relative;
+  display: -webkit-box;
+  max-height: 3rem;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  &.show {
+    display: block;
+    max-height: fit-content;
+    overflow: auto;
+    -webkit-line-clamp: unset;
+  }
+`
+
+const MoreButton = styled.button`
+  max-height: 2rem;
+  line-height: 2rem;
+  &.hide {
+    display: none;
+  }
 `
