@@ -55,8 +55,8 @@ const RegressionResult = () => {
     setDataset(arr)
 
     const totalLabels = Object.keys(analysisResponse[0].row_data).length
-    if (totalLabels > 10000) {
-      const newWidth = 800 + (totalLabels - 10000) * (totalLabels > 10000 ? totalLabels / 1000 : 1)
+    if (totalLabels > 1000) {
+      const newWidth = 800 + (totalLabels - 1000) * (totalLabels > 100 ? totalLabels / 100 : 1)
       const containerBody = document.querySelector('.containerBody') as HTMLDivElement
       containerBody.style.width = `${newWidth > 1920 ? 1920 : newWidth}px`
     }
@@ -81,7 +81,15 @@ const RegressionResult = () => {
     }
 
     if (chartRef.current) {
+      //chartInstanceRef에 캔버스로 차트 만들어 할당
       chartInstanceRef.current = new ChartJS(chartRef.current, config)
+
+      //차트가 있는 canvas element(chartRef)에 더블클릭 이벤트 리스너 등록
+      chartRef.current.addEventListener('dblclick', () => {
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.resetZoom() // 줌 리셋
+        }
+      })
     }
 
     return () => {
@@ -138,6 +146,20 @@ const RegressionResult = () => {
       title: {
         display: false,
         text: '',
+      },
+      zoom: {
+        zoom: {
+          drag: {
+            enabled: true,
+          },
+          wheel: {
+            enabled: false,
+          },
+          pinch: {
+            enabled: true,
+          },
+          mode: 'x' as const,
+        },
       },
     },
     interaction: {
