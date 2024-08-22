@@ -1,7 +1,6 @@
 import {
   CategoryScale,
   Chart as ChartJS,
-  Decimation,
   Legend,
   LinearScale,
   LineElement,
@@ -29,14 +28,15 @@ ChartJS.register(
   zoomPlugin,
   Title,
   Tooltip,
-  Legend,
-  Decimation
+  Legend
 )
 
 const RegressionResult = () => {
+  const [dataset, setDataset] = useState([])
+
   const analysisResponse = useRecoilValue(analysisResponseAtom)
   const selectedModel = useRecoilValue(selectedModelAtom)
-  const [dataset, setDataset] = useState([])
+
   const chartRef = useRef<HTMLCanvasElement | null>(null)
   const chartInstanceRef = useRef<ChartJS | null>(null)
 
@@ -134,7 +134,6 @@ const RegressionResult = () => {
       legend: {
         display: true,
         position: 'top' as const,
-        // align: 'start' as const,
       },
       title: {
         display: false,
@@ -145,11 +144,6 @@ const RegressionResult = () => {
       mode: 'index' as const,
       intersect: false,
     },
-    // scales: {
-    //   x: {
-    //     type: 'linear' as const,
-    //   },
-    // },
   }
 
   const footer = (tooltipItems: any) => {
