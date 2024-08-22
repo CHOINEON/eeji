@@ -1,0 +1,7 @@
+.container{
+    overflow-x: scroll;
+}
+
+.containerBody{
+    height:600px;
+}

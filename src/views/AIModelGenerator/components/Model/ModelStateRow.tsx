@@ -14,7 +14,7 @@ import { useMutation } from 'react-query'
 import { useSetRecoilState } from 'recoil'
 import { validationCheck } from 'utils/DateFunction'
 import { v4 } from 'uuid'
-import { stepCountStore } from 'views/AIModelGenerator/store/global/atom'
+import { loadingAtom, stepCountStore } from 'views/AIModelGenerator/store/global/atom'
 import { selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import './style.css'
@@ -76,7 +76,7 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
   const setAnalysisResult = useSetRecoilState(analysisResponseAtom)
   const setActiveStep = useSetRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
   const setSelectedModel = useSetRecoilState(selectedModelAtom)
-
+  const setLoading = useSetRecoilState(loadingAtom)
   const [tag, setTag] = useState<ITag>({ key: 0, name: '', color: '' })
 
   const { mutate: mutateTrainingResult } = useMutation(ModelApi.getTrainingResultUrl, {
@@ -97,6 +97,7 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
   }, [rowData])
 
   const handleClick = (model: IModelInfo) => {
+    setLoading(true)
     setSelectedModel(model)
     mutateTrainingResult({ model_id: model.id, is_xai: 'false' })
   }
@@ -105,7 +106,6 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
     try {
       const result = await ModelApi.getJsonResult(url)
       //운영계에만 에러 발생하여 로그 확인하기 위해 임시로 콘솔 찍음
-      console.log('download result::', result)
       setAnalysisResult([
         {
           key: v4(),
@@ -121,6 +121,7 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
         },
       ])
       setActiveStep(1)
+      setLoading(false)
     } catch (error) {
       console.error(error)
       message.error('데이터 유효기간이 만료되었습니다.')

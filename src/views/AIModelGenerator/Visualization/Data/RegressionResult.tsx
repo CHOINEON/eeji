@@ -1,24 +1,24 @@
 import {
   CategoryScale,
   Chart as ChartJS,
+  Decimation,
   Legend,
   LinearScale,
   LineElement,
   PointElement,
-  ScriptableContext,
   Title,
   Tooltip,
 } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import zoomPlugin from 'chartjs-plugin-zoom'
-import { useEffect, useState } from 'react'
-import { Line } from 'react-chartjs-2'
+import { useEffect, useRef, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { styled } from 'styled-components'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import { selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import FeatureAnalysis from '../Features/FeatureAnalysis'
+import '../style.css'
 
 ChartJS.register(
   ChartDataLabels,
@@ -29,13 +29,16 @@ ChartJS.register(
   zoomPlugin,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Decimation
 )
 
 const RegressionResult = () => {
   const analysisResponse = useRecoilValue(analysisResponseAtom)
   const selectedModel = useRecoilValue(selectedModelAtom)
   const [dataset, setDataset] = useState([])
+  const chartRef = useRef<HTMLCanvasElement | null>(null)
+  const chartInstanceRef = useRef<ChartJS | null>(null)
 
   useEffect(() => {
     const arr: Array<any> = []
@@ -50,7 +53,43 @@ const RegressionResult = () => {
     })
 
     setDataset(arr)
+
+    const totalLabels = Object.keys(analysisResponse[0].row_data).length
+    if (totalLabels > 10000) {
+      const newWidth = 800 + (totalLabels - 10000) * (totalLabels > 10000 ? totalLabels / 1000 : 1)
+      const containerBody = document.querySelector('.containerBody') as HTMLDivElement
+      containerBody.style.width = `${newWidth > 1920 ? 1920 : newWidth}px`
+    }
   }, [analysisResponse])
+
+  useEffect(() => {
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy() // 기존 차트를 파괴하여 충돌 방지
+    }
+
+    const config = {
+      type: 'line',
+      data: {
+        labels: selectedModel?.is_classification
+          ? [0, 1]
+          : Array(analysisResponse[0]['pred_data']['pred'].length)
+              .fill(null)
+              .map((_, i) => i),
+        datasets: dataset,
+      },
+      options: selectedModel.is_classification ? optionsForClassification : options,
+    }
+
+    if (chartRef.current) {
+      chartInstanceRef.current = new ChartJS(chartRef.current, config)
+    }
+
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy() // 컴포넌트 언마운트 시 차트를 파괴
+      }
+    }
+  }, [dataset, selectedModel, analysisResponse])
 
   const generateSeries = (label: string, dataArr: any, color: string) => {
     return {
@@ -60,7 +99,7 @@ const RegressionResult = () => {
       borderColor: color,
       backgroundColor:
         label === 'INEEJI prediction'
-          ? (context: ScriptableContext<'line'>) => {
+          ? (context: any) => {
               const ctx = context.chart.ctx
               const gradient = ctx.createLinearGradient(0, 0, 0, 400)
               gradient.addColorStop(0, 'rgba(69,58,246,1)')
@@ -74,43 +113,28 @@ const RegressionResult = () => {
     }
   }
 
-  const chartData = {
-    labels: selectedModel?.is_classification
-      ? [0, 1]
-      : Array(analysisResponse[0]['pred_data']['pred'].length)
-          .fill(null)
-          .map((value, i) => i),
-    // datasets: selectedData.isClassification == 1 ? dataset.slice(0, 50) : dataset,
-    datasets: dataset,
-  }
-
-  const footer = (tooltipItems: any) => {
-    let tooltipText
-
-    tooltipItems.forEach(function (tooltipItem: any) {
-      tooltipText = tooltipItem.raw.z
-    })
-
-    return 'Label Name : ' + tooltipText
-  }
-
   const options = {
-    radius: 2,
+    indexAxis: 'x' as const,
+    radius: 1,
     layout: {
       padding: 20,
     },
+    showLine: true,
     responsive: true,
     maintainAspectRatio: false,
+    parsing: false as const,
+    animation: false as const,
     plugins: {
       datalabels: {
         display: false,
       },
       htmlLegend: {
-        // ID of the container to put the legend in
         containerID: 'legend-container',
       },
       legend: {
-        display: false,
+        display: true,
+        position: 'top' as const,
+        // align: 'start' as const,
       },
       title: {
         display: false,
@@ -121,6 +145,21 @@ const RegressionResult = () => {
       mode: 'index' as const,
       intersect: false,
     },
+    // scales: {
+    //   x: {
+    //     type: 'linear' as const,
+    //   },
+    // },
+  }
+
+  const footer = (tooltipItems: any) => {
+    let tooltipText
+
+    tooltipItems.forEach(function (tooltipItem: any) {
+      tooltipText = tooltipItem.raw.z
+    })
+
+    return 'Label Name : ' + tooltipText
   }
 
   const optionsForClassification = {
@@ -135,7 +174,6 @@ const RegressionResult = () => {
         display: false,
       },
       htmlLegend: {
-        // ID of the container to put the legend in
         containerID: 'legend-container',
       },
       legend: {
@@ -164,98 +202,10 @@ const RegressionResult = () => {
           text: 'Value',
         },
         ticks: {
-          // forces step size to be 50 units
           stepSize: 1,
           padding: 10,
         },
       },
-    },
-  }
-
-  const getOrCreateLegendList = (chart: any, id: any) => {
-    const legendContainer = document.getElementById(id)
-    let listContainer = legendContainer.querySelector('ul')
-
-    if (!listContainer) {
-      listContainer = document.createElement('ul')
-      listContainer.style.display = 'flex'
-      listContainer.style.flexDirection = 'row'
-      listContainer.style.justifyContent = 'right'
-      listContainer.style.margin = '15px'
-
-      legendContainer.appendChild(listContainer)
-    }
-
-    return listContainer
-  }
-
-  const htmlLegendPlugin: any = {
-    id: 'htmlLegend',
-    afterUpdate(chart: any, args: any, options: any) {
-      const ul = getOrCreateLegendList(chart, options.containerID)
-
-      // Remove old legend items
-      while (ul.firstChild) {
-        ul.firstChild.remove()
-      }
-
-      // Reuse the built-in legendItems generator
-      const items = chart.options.plugins.legend.labels.generateLabels(chart)
-
-      items.forEach((item: any) => {
-        const li = document.createElement('li')
-        li.style.alignItems = 'center'
-        li.style.cursor = 'pointer'
-        li.style.display = 'flex'
-        li.style.flexDirection = 'row'
-        li.style.marginLeft = '40px'
-
-        li.onclick = () => {
-          const { type } = chart.config
-          if (type === 'pie' || type === 'doughnut') {
-            // Pie and doughnut charts only have a single dataset and visibility is per item
-            chart.toggleDataVisibility(item.index)
-          } else {
-            chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex))
-          }
-          chart.update()
-        }
-
-        // Color box
-        const boxSpan = document.createElement('span')
-        boxSpan.style.background = item.fillStyle
-        boxSpan.style.borderColor = item.strokeStyle
-        boxSpan.style.borderWidth = item.lineWidth + 'px'
-        boxSpan.style.display = 'inline-block'
-        boxSpan.style.marginRight = '10px'
-        boxSpan.style.borderRadius = '20px'
-        // boxSpan.style.flexShrink = 0
-
-        if (selectedModel.is_classification) {
-          if (item.text === 'INEEJI prediction') {
-            boxSpan.style.height = '20px'
-            boxSpan.style.width = '20px'
-          } else {
-            boxSpan.style.height = '10px'
-            boxSpan.style.width = '10px'
-          }
-        } else {
-          boxSpan.style.height = '3px'
-          boxSpan.style.width = '60px'
-        }
-
-        // Text
-        const textContainer = document.createElement('p')
-        textContainer.style.color = item.fontColor
-        textContainer.style.textDecoration = item.hidden ? 'line-through' : ''
-
-        const text = document.createTextNode(item.text)
-        textContainer.appendChild(text)
-
-        li.appendChild(boxSpan)
-        li.appendChild(textContainer)
-        ul.appendChild(li)
-      })
     },
   }
 
@@ -269,13 +219,13 @@ const RegressionResult = () => {
           float: 'left',
         }}
       >
-        <ChartWrapper /**isClassification={selectedData.isClassification} */>
+        <ChartWrapper>
           <div id="legend-container"></div>
-          <Line
-            options={selectedModel.is_classification ? optionsForClassification : options}
-            data={chartData}
-            plugins={[htmlLegendPlugin]}
-          />
+          <div className="container">
+            <div className="containerBody">
+              <canvas id="predChart" ref={chartRef}></canvas>
+            </div>
+          </div>
         </ChartWrapper>
       </div>
       <div style={{ width: '30%', marginBottom: '25px', display: 'inline-block', float: 'left' }}>
@@ -288,7 +238,6 @@ const RegressionResult = () => {
 export default RegressionResult
 
 const ChartWrapper = styled.div`
-  // border: 1px solid pink;
   width: 100%;
   height: 600px;
   position: relative;
