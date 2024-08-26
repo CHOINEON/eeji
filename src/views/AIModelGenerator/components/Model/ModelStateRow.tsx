@@ -10,6 +10,7 @@ import ModelApi from 'apis/ModelApi'
 import { IModelInfo } from 'apis/type/Model'
 import { useToast } from 'hooks/useToast'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
 import { useSetRecoilState } from 'recoil'
 import { validationCheck } from 'utils/DateFunction'
@@ -35,21 +36,6 @@ export interface IHeaders {
   headers: Array<string>
 }
 
-//메타데이터 구조 상세 참고 (https://docs.google.com/document/d/19lP80LLDBsnNQ27foyVKtP81Jc8XqRLM6GE1POXQIVQ/edit)
-const status: ITag[] = [
-  { key: 0, name: 'waiting', color: 'default', icon: <ClockCircleOutlined /> },
-  { key: 1, name: 'created', color: 'default' },
-  { key: 2, name: 'started', color: 'default', icon: <PlayCircleOutlined /> },
-  { key: 3, name: 'preprocessing', color: 'processing', icon: <SyncOutlined spin /> },
-  { key: 4, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
-  { key: 5, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
-  { key: 6, name: 'model training', color: 'processing', icon: <SyncOutlined spin /> },
-  { key: 7, name: 'train completed', color: 'processing', icon: <CheckCircleOutlined /> },
-  { key: 8, name: 'analyzing', color: 'processing', icon: <SyncOutlined spin /> },
-  { key: 9, name: 'result saved', color: 'success', icon: <CheckCircleOutlined /> },
-  { key: 10, name: 'failed', color: 'error', icon: <CloseCircleOutlined /> },
-]
-
 interface ModelStateListProps {
   data: IModelInfo[] | undefined
 }
@@ -72,6 +58,7 @@ const ModelStateColHeader = ({ headers }: IHeaders) => {
 
 const ModelStateRow = ({ rowData }: IModelStateRow) => {
   const { message } = App.useApp()
+  const { t } = useTranslation()
 
   const setAnalysisResult = useSetRecoilState(analysisResponseAtom)
   const setActiveStep = useSetRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
@@ -83,12 +70,27 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
     onSuccess: (result: any) => {
       // GCS에서 받아온 만료시간이 GMT으로 설정되어 있어 한국 시간대(GMT + 9)로 변경하여 확인함
       if (validationCheck(result.expiration, 9)) downloadData(result.signed_url)
-      else message.error('데이터 유효기간이 만료되었습니다.')
+      else message.error(t('데이터 유효기간이 만료되었습니다.'))
     },
     onError: (error: Error) => {
-      message.error('결과를 확인할 수 없습니다. 관리자에게 문의하세요')
+      message.error(t('결과를 확인할 수 없습니다. 관리자에게 문의하세요'))
     },
   })
+
+  //메타데이터 구조 상세 참고 (https://docs.google.com/document/d/19lP80LLDBsnNQ27foyVKtP81Jc8XqRLM6GE1POXQIVQ/edit)
+  const status: ITag[] = [
+    { key: 0, name: t('waiting'), color: 'default', icon: <ClockCircleOutlined /> },
+    { key: 1, name: t('created'), color: 'default' },
+    { key: 2, name: t('started'), color: 'default', icon: <PlayCircleOutlined /> },
+    { key: 3, name: t('preprocessing'), color: 'processing', icon: <SyncOutlined spin /> },
+    { key: 4, name: t('model training'), color: 'processing', icon: <SyncOutlined spin /> },
+    { key: 5, name: t('model training'), color: 'processing', icon: <SyncOutlined spin /> },
+    { key: 6, name: t('model training'), color: 'processing', icon: <SyncOutlined spin /> },
+    { key: 7, name: t('train completed'), color: 'processing', icon: <CheckCircleOutlined /> },
+    { key: 8, name: t('analyzing'), color: 'processing', icon: <SyncOutlined spin /> },
+    { key: 9, name: t('result saved'), color: 'success', icon: <CheckCircleOutlined /> },
+    { key: 10, name: t('failed'), color: 'error', icon: <CloseCircleOutlined /> },
+  ]
 
   useEffect(() => {
     if (rowData) {
@@ -124,7 +126,7 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
       setLoading(false)
     } catch (error) {
       console.error(error)
-      message.error('데이터 유효기간이 만료되었습니다.')
+      message.error(t('데이터 유효기간이 만료되었습니다.'))
     }
   }
 
@@ -138,13 +140,13 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
             <div className="row-item">{rowData?.created_at}</div>
             <div className="row-item">
               <Tag className="row-item-tag m-auto" color={tag?.color} icon={tag?.icon}>
-                <span className="tracking-normal">{tag?.name}</span>
+                <span className="tracking-normal">{t(tag?.name)}</span>
               </Tag>
             </div>
             <div className="row-item">
               {rowData.state === '9' && (
                 <button className="btn-run" onClick={() => handleClick(rowData)}>
-                  View result
+                  {t('View result')}
                 </button>
               )}
             </div>
@@ -155,26 +157,27 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
   )
 }
 
-const ModelStateInfo = () => {
-  return (
-    <>
-      {status.map((tag: ITag, idx: number) => {
-        return (
-          <Tag className="row-item-tag m-auto mr-2" color={tag?.color} icon={tag?.icon} key={idx}>
-            <span className="tracking-normal">{tag?.name}</span>
-          </Tag>
-        )
-      })}
-    </>
-  )
-}
+// const ModelStateInfo = () => {
+//   return (
+//     <>
+//       {status.map((tag: ITag, idx: number) => {
+//         return (
+//           <Tag className="row-item-tag m-auto mr-2" color={tag?.color} icon={tag?.icon} key={idx}>
+//             <span className="tracking-normal">{tag?.name}</span>
+//           </Tag>
+//         )
+//       })}
+//     </>
+//   )
+// }
 
 const ModelStateList = ({ data }: ModelStateListProps) => {
   const { fireToast } = useToast()
+  const { t } = useTranslation()
 
   const [prevData, setPrevData] = useState<IModelInfo[]>([])
   const [newData, setNewData] = useState<IModelInfo[]>([])
-  const headers: Array<string> = ['Model Name', 'Target', 'Created', 'State', 'Result']
+  const headers: Array<string> = [t('Model Name'), t('Target'), t('Created'), t('State'), t('Result')]
 
   useEffect(() => {
     setNewData(data)

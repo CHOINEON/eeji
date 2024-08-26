@@ -3,6 +3,7 @@ import ModelApi from 'apis/ModelApi'
 import XaiApi from 'apis/XaiApi'
 import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
 import { useRecoilState, useResetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
@@ -23,6 +24,7 @@ interface IDataObj {
 }
 
 const UserModelImport = () => {
+  const { t } = useTranslation()
   const com_id = localStorage.getItem('companyId')
   const user_id = localStorage.getItem('userId').toString()
 
@@ -51,7 +53,7 @@ const UserModelImport = () => {
     onSuccess: (result: any) => {
       message.open({
         type: 'success',
-        content: '모델을 성공적으로 저장했습니다.',
+        content: t('Successfully saved'),
         duration: 1,
         style: {
           margin: 'auto',
@@ -160,37 +162,32 @@ const UserModelImport = () => {
 
   return (
     <>
-      <Spin tip="업로드 중 ..." spinning={saving}>
+      <Spin tip={t('uploading').concat('...')} spinning={saving}>
         <div>
           <ModelTypeRadio onChange={handleChangeType} />
           <ModelUpload
             hidden={data?.type !== 'torch'}
             required={true}
-            label="모델 스크립트 파일"
+            label={t('Model script file')}
             onChange={handleChangeScript}
             selectedFile={data?.script?.name}
           />
           <ModelUpload
             required={true}
-            label="예측모델 파일 업로드"
+            label={t('Prediction model file')}
             onChange={handleChangeModel}
             selectedFile={data?.model?.name}
           />
-          <ModelUpload
-            required={true}
-            label="분석할 데이터"
-            onChange={handleChangeData}
-            selectedFile={data?.data?.name}
-          />
+          <ModelUpload required={true} label={t('Data')} onChange={handleChangeData} selectedFile={data?.data?.name} />
           <ModelUpload
             required={false}
-            label="Column(Optional)"
+            label={t('Column(Optional)')}
             onChange={handleChangeColumn}
             selectedFile={data?.column?.name}
           />
         </div>
         {modelUploadResult.uuid.length > 0 && modelUploadResult?.variable_list?.length == 0 ? (
-          <div className="text-center mt-5">확인할 컬럼이 없습니다. 저장 버튼을 누르세요.</div>
+          <div className="text-center mt-5">{t('No columns to check. Please click save to proceed')}</div>
         ) : (
           <div
             style={{
@@ -205,12 +202,12 @@ const UserModelImport = () => {
         )}
 
         <div style={{ margin: '25px 0' }}>
-          <CancelButton onClick={() => setModal(null)}>Cancel</CancelButton>
+          <CancelButton onClick={() => setModal(null)}>{t('Cancel')}</CancelButton>
           {modelUploadResult?.uuid ? (
-            <CustomButton onClick={handleSave}>Model Save</CustomButton>
+            <CustomButton onClick={handleSave}>{t('Model Save')}</CustomButton>
           ) : (
             <CustomButton disabled={isDisabled} onClick={handleUpload}>
-              Upload
+              {t('Upload')}
             </CustomButton>
           )}
         </div>

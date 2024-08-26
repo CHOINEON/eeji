@@ -1,6 +1,7 @@
 import { App } from 'antd'
 import { PerformanceModel } from 'apis/type/ModelPerformanceOption'
 import IcoPerformance from 'assets/img/icons/XAI/icon_perfromanceModel.png'
+import { useTranslation } from 'react-i18next'
 import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
@@ -20,6 +21,7 @@ const errorInfo: IErrorInfo = {
 }
 
 const ModelPerformance = () => {
+  const { t } = useTranslation()
   const { message } = App.useApp()
 
   const selectedModel = useRecoilValue(selectedModelAtom)
@@ -96,7 +98,7 @@ const ModelPerformance = () => {
         )}
         <PerformanceButtonWrap>
           {/* <SaveButton onClick={handleSave}>SAVE</SaveButton> */}
-          <ExportButton onClick={handleReport}>REPORT</ExportButton>
+          <ExportButton onClick={handleReport}>{t('report')}</ExportButton>
         </PerformanceButtonWrap>
       </ComponentContainer>
     </>

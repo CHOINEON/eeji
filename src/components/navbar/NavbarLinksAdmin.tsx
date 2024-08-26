@@ -117,7 +117,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     },
   })
 
-  const { t, i18n } = useTranslation('main')
+  const { t, i18n } = useTranslation()
 
   //국가 아이콘 클릭시 default 언어 변경
   const changeLanguage = (e: any) => {

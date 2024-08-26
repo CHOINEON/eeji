@@ -1,12 +1,15 @@
 import domtoimage from 'dom-to-image'
 import { saveAs } from 'file-saver'
 // import dynamic from 'next/dynamic'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import ChartItem from './ChartItem'
 // import Chart from 'react-apexcharts'
 // const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
+import { useTranslation } from 'react-i18next'
 import './style.css'
+
 const Page = () => {
+  const { t } = useTranslation()
   // TODO 2024-03-06
 
   // useEffect(() => {
@@ -46,7 +49,9 @@ const Page = () => {
       <div className="container p-5 h-full">
         <div className="lg:flex items-center justify-between px-4 space-y-4 lg:space-y-0">
           <div className="lg:flex items-center space-y-4 lg:space-y-0">
-            <div className="mr-12 text-[20px] lg:text-[32px] font-bold text-[#002D65]">Commodity Index Forecasting</div>
+            <div className="mr-12 text-[20px] lg:text-[32px] font-bold text-[#002D65]">
+              {t('Commodity Index Forecast')}
+            </div>
             <div className="flex space-x-1">
               <img
                 src={chartType === 'candle' ? '/img/top/candle_on.svg' : '/img/top/candle.svg'}
@@ -94,7 +99,7 @@ const Page = () => {
                 // }}
               />
             </div>
-            <div className="ml-1 text-[13px] text-[#002D65] cursor-pointer">Save</div>
+            <div className="ml-1 text-[13px] text-[#002D65] cursor-pointer">{t('Save')}</div>
             <div
               className={`item ml-10 mr-2 ${document.fullscreenElement}`}
               onClick={() => {
@@ -134,7 +139,7 @@ const Page = () => {
                 }, 100)
               }}
             >
-              Reset
+              {t('Reset')}
             </div>
             <div className="item ml-2">
               <img src="/img/icon/setting.svg" />

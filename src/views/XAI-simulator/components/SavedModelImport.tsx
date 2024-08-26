@@ -3,6 +3,7 @@ import ModelApi from 'apis/ModelApi'
 import { IModelInfo } from 'apis/type/Model'
 import useGetModelList from 'hooks/queries/useGetModelList'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
@@ -14,6 +15,7 @@ import { transformDataByRow } from '../XaiAnalysisResult'
 import ModelList from './ModelSelect/ModelList'
 
 const SavedModelImport = () => {
+  const { t } = useTranslation()
   const { message } = App.useApp()
 
   const [xaiResult, setXaiResult] = useRecoilState(xaiResultStore)
@@ -29,7 +31,7 @@ const SavedModelImport = () => {
     onSuccess: (result: any) => {
       // GCS에서 받아온 만료시간이 GMT으로 설정되어 있어 한국 시간대(GMT + 9)로 변경하여 확인함
       if (validationCheck(result.expiration, 9)) downloadData(result.signed_url)
-      else message.error('데이터 유효기간이 만료되었습니다.')
+      else message.error(t('Sorry. This request is expired.'))
     },
     onError: (error: Error) => {
       console.error('err:', error)
@@ -67,7 +69,7 @@ const SavedModelImport = () => {
       setLoading(false)
       setModal(null)
     } catch (error) {
-      message.error('결과를 확인할 수 없습니다. 관리자에게 문의하세요')
+      message.error(t('The result is not available. Please contact admin'))
       setLoading(false)
     }
   }
@@ -78,14 +80,14 @@ const SavedModelImport = () => {
 
   return (
     <>
-      <Spin tip="모델 분석중..." spinning={loading}>
+      <Spin tip={t('analyzing').concat('...')} spinning={loading}>
         <div>
           {completedModelList?.length > 0 ? <ModelList data={completedModelList} onSelect={handleSelect} /> : <Empty />}
         </div>
         <div className="mt-[25px]">
-          <CancelButton onClick={() => setModal(null)}>Cancel</CancelButton>
+          <CancelButton onClick={() => setModal(null)}>{t('Cancel')}</CancelButton>
           <CustomButton disabled={false} onClick={handleRunModel}>
-            Run
+            {t('Run')}
           </CustomButton>
         </div>
       </Spin>

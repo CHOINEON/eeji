@@ -1,25 +1,24 @@
 import i18n from 'i18next'
 // import i18n, { Resource } from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import * as en from './en'
-import * as ko from './ko'
-import * as jp from './jp'
+import en from './en/translation.json'
+import jp from './jp/translation.json'
+import ko from './kr/translation.json'
 
 const resources: any = {
-  'us-US': {
-    ...en,
-  },
-  'ko-KR': {
-    ...ko,
-  },
-  'jp-JP': {
-    ...jp,
-  },
+  'us-US': { translation: en },
+  'ko-KR': { translation: ko },
+  'jp-JP': { translation: jp },
 } as const
+
+//브라우저 언어 설정 가져오기
+const browserLang = window.navigator.language
+//localStorage에서 언어설정 가져오기
+const userLanguage = localStorage.getItem('Locale') ?? browserLang
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: 'ko-KR', // 초기 설정 언어
+  lng: userLanguage || 'ko-KR', // 초기 설정 언어
   fallbackLng: {
     'us-US': ['us-US'], // 한국어 불러오는 것이 실패했을 경우 영문을 써라 라는 말입니다.
     default: ['ko-KR'],

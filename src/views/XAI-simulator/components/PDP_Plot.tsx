@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 import styled from '@emotion/styled'
-import { Select, Card, SelectProps } from 'antd'
-import { Line } from 'react-chartjs-2'
+import { Select, SelectProps } from 'antd'
 import { Chart as ChartJS } from 'chart.js'
-import React, { MouseEventHandler, useEffect, useState } from 'react'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import { useState } from 'react'
+import { Line } from 'react-chartjs-2'
+import { useTranslation } from 'react-i18next'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 
 ChartJS.register(ChartDataLabels)
 
 const PDP_Plot = ({ data }: any) => {
-  // console.log('data:', data)
+  const { t } = useTranslation()
   const keys: Array<string> = Object.keys(data)
   const values: Array<Array<unknown>> = Object.values(data)
 
@@ -72,15 +73,15 @@ const PDP_Plot = ({ data }: any) => {
     <>
       <ComponentContainer>
         <div className="mt-1 ml-[20px] w-[420px]">
-          <Title>변수 변화 결과 예측</Title>
-          <InfoCircle content="하나의 변수가 예측 결과에 미치는 주변 효과" color="#9E9E9E" />
+          <Title>{t('Prediction of Variable Impact')}</Title>
+          <InfoCircle content="Surrounding effect of a single variable on prediction results" color="#9E9E9E" />
           <Select
             className="ml-2 w-[175px] bg-[#F5F8FF] border-[#D5DCEF]"
             defaultValue={options[0]?.value}
             onChange={handleChange}
             options={options}
           />
-          <div className="block float-left w-full">
+          <div className="block float-left h-100">
             <ChartWrapper>
               <Line data={chartData} options={chartOptions} />
             </ChartWrapper>

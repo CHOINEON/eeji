@@ -3,6 +3,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import { Spin } from 'antd'
 import { useEffect } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
+import { useTranslation } from 'react-i18next'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import DataSet from './DataSet'
 import ModelGeneratorResult from './ModelGeneratorResult'
@@ -13,6 +14,7 @@ import { theme } from './theme/theme'
 
 //TODO: <TabContainer/> 컴포넌트 단순화하기
 const AIModelGenerator = () => {
+  const { t } = useTranslation()
   const loading = useRecoilValue(loadingAtom)
   const [activeStep, setActiveStep] = useRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
 
@@ -33,7 +35,7 @@ const AIModelGenerator = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box style={{ position: 'relative', zIndex: 1000 }}>
-        <Spin tip="Loading" size="small" spinning={loading} style={{ top: 300 }}>
+        <Spin tip={t('loading')} size="small" spinning={loading} style={{ top: 300 }}>
           {activeStep === 0 && (
             <div className="w-100 h-dvh block float-left">
               <div className="w-2/6 float-left">

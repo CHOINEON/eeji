@@ -1,22 +1,28 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
-import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
 import { AITextContainer, AIbutton } from 'views/AIModelGenerator/Visualization/Features/FeatureAnalysis'
+import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
 
 const GlobalFeatureImportance = ({ data, colors }: any) => {
+  const { t } = useTranslation()
+
   return (
     <>
       <ComponentContainer>
         <div className="mt-1 ml-[20px] w-[420px]">
-          <Title className="inline-block mb-5">변수 기여도 통계(평균)</Title>
-          <InfoCircle content="각 변수가 전체 예측에 미치는 영향도" color="#9E9E9E" />
+          <Title className="inline-block mb-5">{t('Variable Contribution Statistics(Average)')}</Title>
+          <InfoCircle content={t('The impact of each variable on the overall prediction')} color="#9E9E9E" />
           <FeatureImportance data={data} colors={colors} />
           <div className="my-5 block float-left w-full">
             <AIbutton>AI</AIbutton>
             <AITextContainer>
-              현재 예측 모델에서 가장 영향력이 큰 변수는 <b>{data?.labels[0]}</b>
-              입니다.
+              <Trans
+                i18nKey="The most influential variable in the current AI prediction model is"
+                values={{ var: data?.labels[0] }}
+              >
+                The most influential variable in the current AI prediction model is <strong>{data?.labels[0]}</strong>.
+              </Trans>
             </AITextContainer>
           </div>
         </div>
