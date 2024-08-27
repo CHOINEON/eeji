@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import { App, Checkbox, Dropdown, MenuProps } from 'antd'
 import DatasetApi from 'apis/DatasetApi'
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { FileName } from 'views/AIModelGenerator/components/Input/Text'
@@ -37,6 +38,7 @@ const SelectedBg = css`
 const DescriptionBox: React.FC<IDescriptionBox> = ({ data, onSelect }: any) => {
   const { message, modal } = App.useApp()
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const setModalState = useSetRecoilState(datasetEditModalState)
   const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
@@ -46,11 +48,11 @@ const DescriptionBox: React.FC<IDescriptionBox> = ({ data, onSelect }: any) => {
 
   const items: MenuProps['items'] = [
     {
-      label: 'Edit',
+      label: t('Edit').toString(),
       key: '1',
     },
     {
-      label: 'Delete',
+      label: t('Delete').toString(),
       key: '2',
     },
   ]

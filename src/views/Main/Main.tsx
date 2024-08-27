@@ -1,6 +1,6 @@
 import { Box, Wrap } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { MenuList } from './MenuList'
+import { useMenuList } from './MenuList'
 
 const Main = () => {
   return (
@@ -24,10 +24,12 @@ const Main = () => {
 }
 
 const IconList = () => {
+  const menuList = useMenuList()
+
   return (
     <>
       <Wrap spacing="30px" justify="center" height={200} margin={'15vh 0'}>
-        {MenuList.map((item: any) => {
+        {menuList.map((item: any) => {
           return (
             <MenuItem key={item.title}>
               <IconContainer onClick={() => (window.location.href = `/admin${item.path}`)}>
@@ -35,7 +37,6 @@ const IconList = () => {
               </IconContainer>
               <TitleContainer>
                 <Title_EN>{item.title}</Title_EN>
-                <Title_KR>{item.title_KR}</Title_KR>
               </TitleContainer>
             </MenuItem>
           )

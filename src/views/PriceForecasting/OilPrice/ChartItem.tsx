@@ -1,13 +1,15 @@
-import axios from 'axios'
 import { ApexOptions } from 'apexcharts'
+import axios from 'axios'
 import { useEffect, useMemo, useState } from 'react'
 import Chart from 'react-apexcharts'
+import { useTranslation } from 'react-i18next'
 import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
 import { keyColors } from 'views/AIModelGenerator/components/Chart/colors'
-import { ConsoleSqlOutlined } from '@ant-design/icons'
 
 const ChartItem = (props: any) => {
   // console.log('id', props)
+  const { t } = useTranslation()
+
   // TODO 2024-03-06 심볼명, 심볼설명 배열 생성
   const [chartType, setChartType] = useState('candle')
 
@@ -291,7 +293,7 @@ const ChartItem = (props: any) => {
                 setIsFeature((prev) => false)
               }}
             >
-              1일
+              {t('1d')}
             </div>
             <div
               className={`item ${frequency === 'monthly' ? 'item-active' : ''} whitespace-nowrap`}
@@ -300,7 +302,7 @@ const ChartItem = (props: any) => {
                 setIsFeature((prev) => false)
               }}
             >
-              1달
+              {t('1m')}
             </div>
 
             <div className={`item-disabled`}>
@@ -313,6 +315,7 @@ const ChartItem = (props: any) => {
           </div>
         </div>
         <div className="flex space-x-2 mt-2">
+          <div className="mx-1">{t('View Period')} : </div>
           <div
             className={`${
               frequency === 'daily' ? '' : 'hidden'
@@ -323,7 +326,7 @@ const ChartItem = (props: any) => {
               updateChart('one_week')
             }}
           >
-            1W
+            {t('1w')}
           </div>
           <div
             className={`${
@@ -335,7 +338,7 @@ const ChartItem = (props: any) => {
               updateChart('one_month')
             }}
           >
-            1M
+            {t('1m')}
           </div>
           <div
             className={`rounded-sm cursor-pointer text-[11px] border border-[#D5DCEF] px-2 py-1 ${
@@ -345,7 +348,7 @@ const ChartItem = (props: any) => {
               updateChart('all')
             }}
           >
-            ALL
+            {t('ALL')}
           </div>
         </div>
       </div>
@@ -355,13 +358,13 @@ const ChartItem = (props: any) => {
           setIsFeature((prev) => !isFeature)
         }}
       >
-        Feature Importance
+        {t('Feature Importance')}
       </div>
 
       {isFeature && (
         <div className="absolute right-3 top-[55px] px-4 py-2 rounded-xl z-[1000] bg-white border-[#372dd5] border w-[calc(100%-25px)] max-w-[930px] shadow-md slideInUp">
           <div className="flex justify-between">
-            <div className="font-bold">Feature Importance</div>
+            <div className="font-bold">{t('Feature Importance')}</div>
             <button
               className=""
               onClick={() => {

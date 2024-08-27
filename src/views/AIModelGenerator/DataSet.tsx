@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { App } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import DatasetList from './DatasetList'
@@ -14,6 +15,7 @@ import './style/data-analysis-style.css'
 const DataSet = () => {
   const { message } = App.useApp()
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const selectedData = useRecoilState(selectedDataState)
   const setUserInfo = useSetRecoilState(userInfoState)
@@ -52,7 +54,7 @@ const DataSet = () => {
 
   return (
     <div className="h-[80vh] p-10 border-r-2">
-      <p className="font-['Helvetica Neue'] font-bold text-[23px] text-[#002D65] ">Dataset</p>
+      <p className="font-['Helvetica Neue'] font-bold text-[23px] text-[#002D65] ">{t('Dataset')}</p>
       <div className="h-[93vh]">
         <div className="w-100 h-3/5 overflow-scroll text-center">
           <div className="flex justify-center flex-wrap">
@@ -66,7 +68,7 @@ const DataSet = () => {
             disabled={!selectedData[0].ds_id}
             onClick={handleGenerateModel}
           >
-            Generate Model
+            {t('Generate Model')}
           </GenerateButton>
         </div>
         <DataEditModal />

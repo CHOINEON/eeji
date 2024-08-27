@@ -1,9 +1,12 @@
 import { Wrap } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import React from 'react'
-import { MenuList } from 'views/Main/MenuList'
+import { useTranslation } from 'react-i18next'
+import { useMenuList } from 'views/Main/MenuList'
 
 const AvailableServiceIcon = () => {
+  const { t } = useTranslation()
+  const MenuList = useMenuList()
+
   return (
     <div style={{ display: 'block', float: 'left', marginLeft: '20px' }}>
       <Wrap spacing="1px" justify="left">
@@ -14,7 +17,7 @@ const AvailableServiceIcon = () => {
                 <img src={item.icon_src} />
               </IconContainer>
               <TitleContainer>
-                <Title_EN>{item.title}</Title_EN>
+                <Title_EN>{t(item.title)}</Title_EN>
                 {/* <Title_KR>{item.title_KR}</Title_KR> */}
               </TitleContainer>
             </MenuItem>

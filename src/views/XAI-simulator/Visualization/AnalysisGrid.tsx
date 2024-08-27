@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Badge, Space } from 'antd'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import HorizontalStackedBarChart from './HorizontalStackedBarChart'
 
@@ -24,6 +25,7 @@ const RowItem = ({ number, value, weight, pred }: any) => {
 }
 
 const AnalysisGrid = (props: any) => {
+  const { t } = useTranslation()
   const { localWeight, localValue, predResult } = props
 
   const hoverContent = (feature_list: any) => {
@@ -41,9 +43,9 @@ const AnalysisGrid = (props: any) => {
   return (
     <>
       <div style={{ display: 'block', width: '100%', padding: '0 2%', marginTop: 15 }}>
-        <ColumnHeader width={'10%'}>No</ColumnHeader>
-        <ColumnHeader width={'20%'}>예측결과</ColumnHeader>
-        <ColumnHeader width={'70%'}>입력변수</ColumnHeader>
+        <ColumnHeader width={'10%'}>{t('No')}</ColumnHeader>
+        <ColumnHeader width={'20%'}>{t('Prediction Result')}</ColumnHeader>
+        <ColumnHeader width={'70%'}>{t('Input Variables')}</ColumnHeader>
       </div>
       {localValue?.map((value: any, i: number) => {
         return <RowItem key={i} number={i} value={value} weight={localWeight[i]} pred={predResult[i]} />
@@ -61,7 +63,6 @@ export const DataRow = styled.div`
   align-content: space-evenly;
   align-items: center;
   width: 100%;
-  // height: 51px;
   background-color: #f6f8ff;
   border: 1px solid #d5dcef;
   border-radius: 10px;
@@ -74,14 +75,6 @@ export const ColumnHeader = styled.div<{ width: string }>`
   text-align: center;
   width: ${(props: any) => (props.width ? props.width : '100%')};
   color: #002d65;
-`
-
-const Idx = styled.div`
-  text-align: center;
-`
-
-const Name = styled.div`
-  text-align: center;
 `
 
 const LegendContainer = styled.div`

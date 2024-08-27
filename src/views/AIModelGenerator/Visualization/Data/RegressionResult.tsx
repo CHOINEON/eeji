@@ -142,6 +142,8 @@ const RegressionResult = () => {
       legend: {
         display: true,
         position: 'top' as const,
+        align: 'start' as const,
+        // padding: 100,
       },
       title: {
         display: false,

@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useRecoilState } from 'recoil'
 import { SideBarState } from 'stores/sidebar'
 import { CustomButton } from 'views/AIModelGenerator/components/Modal/DataImportModal'
-import { MenuList } from 'views/Main/MenuList'
+import { useMenuList } from 'views/Main/MenuList'
 import CustomCollapse, { CollapseItem } from './components/Collapse/CustomCollapse'
 
 export const mockData: Array<CollapseItem> = [
@@ -131,6 +131,7 @@ const SidebarHeader = (props: any) => {
 }
 
 const HistorySidebar = () => {
+  const MenuList = useMenuList()
   const item = MenuList[0]
   const [sidebarItem, setSidebarItem] = useRecoilState(SideBarState)
 

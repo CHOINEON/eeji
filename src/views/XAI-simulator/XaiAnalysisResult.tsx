@@ -2,6 +2,7 @@ import { UndoOutlined } from '@ant-design/icons'
 import styled from '@emotion/styled'
 import { Badge, Button, Col, Row } from 'antd'
 import React, { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import GlobalFeatureImportance from './components/GlobalFeatureImportance'
@@ -25,6 +26,7 @@ export const transformDataByRow = (count: number, rawData: any) => {
 }
 
 const XaiAnalysisResult = () => {
+  const { t } = useTranslation()
   const data = useRecoilValue(xaiResultStore)
   const [activeVars, setActiveVars] = useRecoilState(activeVariables)
   const filteredData = useRecoilValue(localAttrState)
@@ -72,14 +74,14 @@ const XaiAnalysisResult = () => {
           <Col span={18}>
             <RoundedBox width={'100%'} height={'75vh'}>
               <div className="w-1/7 text-left ">
-                <Title>입력변수 필터링</Title>
+                <Title>{t('Input Variable Filtering')}</Title>
                 <Button
                   className="inline-block float-right"
                   type="text"
                   icon={<UndoOutlined />}
                   onClick={handleClearFilter}
                 >
-                  Clear
+                  {t('Clear')}
                 </Button>
               </div>
               <VariableRow>
@@ -102,7 +104,7 @@ const XaiAnalysisResult = () => {
                 </div>
               </VariableRow>
               <div className="mt-[50px]">
-                <Title>예측모델 설명 결과</Title>
+                <Title>{t('Prediction Model Explanation Results')}</Title>
                 <AnalysisGrid
                   featureList={data?.feature_list}
                   localWeight={filteredData}
