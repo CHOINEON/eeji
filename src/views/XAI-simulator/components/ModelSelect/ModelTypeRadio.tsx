@@ -1,7 +1,6 @@
 import { Radio, Tooltip } from 'antd'
-import ColumnLabel from 'components/fields/ColumnLabel'
 import { Label, Wrapper } from 'components/fields/Wrapper'
-import React from 'react'
+import { useTranslation } from 'react-i18next'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 
 interface IModelTypeRadio {
@@ -9,6 +8,7 @@ interface IModelTypeRadio {
 }
 
 const ModelTypeRadio = (props: IModelTypeRadio) => {
+  const { t } = useTranslation()
   const { onChange } = props
 
   const handleChange = (e: any) => {
@@ -21,7 +21,7 @@ const ModelTypeRadio = (props: IModelTypeRadio) => {
         <Label hasFileName={false}>
           <span className={'text-red-500'}>* </span>
           <span>
-            모델 유형
+            {t('Framework')}
             <InfoCircle content={`pytorch(.pt) Keras(.h5) sklearn(.pkl, .pickle)`} />
           </span>
         </Label>

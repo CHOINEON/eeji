@@ -1,10 +1,12 @@
 import styled from '@emotion/styled'
 import { Col, Row } from 'antd'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { dataPropertyState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 
 const DataSummary = () => {
+  const { t } = useTranslation()
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const inputOption = useRecoilValue(dataPropertyState)
   const [visible, setVisible] = useState(false)
@@ -35,21 +37,21 @@ const DataSummary = () => {
     <DataSummaryContainer visible={visible}>
       <Row>
         <Col span={12}>
-          <Title style={{ width: '35%' }}>∙ Row</Title>
+          <Title style={{ width: '35%' }}>∙ {t('Row')}</Title>
           <Text>{uploadedData.rowCount > 0 ? uploadedData.rowCount : ''}</Text>
         </Col>
         <Col span={12}>
-          <Title style={{ width: '25%' }}>∙ Start</Title>
+          <Title style={{ width: '25%' }}>∙ {t('Start')}</Title>
           <Text>{uploadedData.startDate}</Text>
         </Col>
       </Row>
       <Row>
         <Col span={12}>
-          <Title style={{ width: '35%' }}>∙ Column</Title>
+          <Title style={{ width: '35%' }}>∙ {t('Column')}</Title>
           <Text>{uploadedData.colCount > 0 ? uploadedData.colCount : ''}</Text>
         </Col>
         <Col span={12}>
-          <Title style={{ width: '25%' }}>∙ End</Title>
+          <Title style={{ width: '25%' }}>∙ {t('End')}</Title>
           <Text>{uploadedData.endDate}</Text>
         </Col>
       </Row>

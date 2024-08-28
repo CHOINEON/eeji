@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { Empty, Tag } from 'antd'
 import { IModelInfo } from 'apis/type/Model'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface ModelRowProps {
   item: IModelInfo
@@ -17,10 +18,11 @@ interface ColorInfo {
 
 //모델명/타겟변수/모델유형
 const ModelRow = ({ item, active, onClick }: ModelRowProps) => {
+  const { t } = useTranslation()
   const ModelType = ({ is_classification }: IModelInfo) => {
     const category: Array<ColorInfo> = [
-      { type: 'regression', isClassification: false, color: '#2db7f5' },
-      { type: 'classification', isClassification: true, color: '#FF973D' },
+      { type: t('Regression'), isClassification: false, color: '#2db7f5' },
+      { type: t('Classification'), isClassification: true, color: '#FF973D' },
     ]
     const typeObj = category.filter((item: ColorInfo) => item.isClassification === is_classification)[0]
 

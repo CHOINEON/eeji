@@ -4,6 +4,7 @@
   "Explainable AI": "설명가능 인공지능",
   "Commodity Index Forecast": "경제 지표 예측",
   "Prediction API": "예측 API",
+  "API Generator": "API 생성",
   "loading": "불러오는 중",
   "uploading": "업로드 중",
   "Logout": "로그아웃",
@@ -14,25 +15,41 @@
   "Run": "실행하기",
   "Cancel": "취소",
   "Clear": "선택 해제",
-  "regression": "예측",
-  "classification": "분류",
+  "Regression": "예측",
+  "Classification": "분류",
+  "No data": "데이터 없음",
 
   "Dataset": "데이터셋",
   "Generate Model": "모델 생성하기",
   "Edit": "수정",
   "Delete": "삭제",
+  "Data Upload": "데이터 업로드",
+  "Row": "행",
+  "Column": "열",
+  "Start": "시작",
+  "End": "끝",
+  "Dataset Name": "데이터셋 이름",
+  "Optional": "선택 사항",
+  "Timestamp": "타임스탬프",
 
+  "The model training has been successfully requested.": "모델 학습이 정상적으로 요청되었습니다.",
+  "The request has failed. Please try again later.": "요청이 실패하였습니다. 다음에 다시 시도해주세요.",
+
+  "Browse": "파일 선택",
+  "The data is too large (maximum 400MB)": "데이터가 너무 큽니다(최대 400MB)",
+  "EEJI Upload Guide": "EEJI 업로드 가이드",
   "Model List": "모델 리스트",
   "Model Name": "모델 이름",
   "Target": "타겟",
+  "Target Variable": "타겟 변수",
   "Created": "생성일",
   "State": "상태",
   "Result": "결과",
   "View result": "결과보기",
-  "Sorry. This request is expired.": "데이터 유효기간이 만료되었습니다.",
-  "The result is not available. Please contact admin": "결과를 확인할 수 없습니다. 관리자에게 문의하세요",
+  "Sorry. This request has expired.": "데이터 유효기간이 만료되었습니다.",
+  "The result is not available. Please contact the administrator.": "결과를 확인할 수 없습니다. 관리자에게 문의하세요",
 
-  "waiting": "대기중",
+  "waiting": "대기 중",
   "created": "생성됨",
   "started": "학습 시작",
   "preprocessing": "전처리 중",
@@ -42,12 +59,39 @@
   "result saved": "결과 저장됨",
   "failed": "학습 실패",
 
-  "Model performance": "모델 성능",
+  "Prediction Results of the Model": "모델의 예측 결과",
+  "Prediction Results of": "{{target_var}}의 예측 결과",
+  "Model Performance": "모델 성능",
   "is trained by optimized EEJI model": "데이터로 학습을 진행한 결과입니다",
+  "Prediction Accuracy": "예측 정확도",
+
+  "meanAbsoluteError": {
+    "title": "평균절대오차",
+    "description": "{{error}}. 모든 오차 절대값의 합을 평균 (0에 가까울 수록 좋은 모델)"
+  },
+  "meanSquaredError": {
+    "title": "평균제곱오차",
+    "description": "{{error}}. 오차를 제곱한 값의 평균 (알고리즘이 예측한 값과 실제 정답과의 차이)"
+  },
+  "rootMeanSquaredError": {
+    "title": "평균 제곱근 오차",
+    "description": "{{error}}. 예측 모델에서 예측한 값과 실제 값 사이의 평균 차이. 예측 모델이 목표 값(정확도)를 얼마나 잘 예측할 수 있는지 추정"
+  },
+  "f1Score": {
+    "title": "F1 점수",
+    "description": "정확성과 재현율을 균형있게 평가하는 성능 지표(0~1 사이의 값을 가지며, 높을 수록 좋음)"
+  },
+  "accuracy": {
+    "title": "정확도",
+    "description": "분류 모델이 얼마나 정확하게 분류했는지 평가하는 지표"
+  },
+  "Mean Absolute Error. The average of the absolute values of all errors (The closer to 0, the better the model)": "평균절대오차. 모든 오차 절대값의 합을 평균 (0에 가까울 수록 좋은 모델)",
+
   "report": "보고서",
   "Feature importance": "변수 중요도",
+  "The higher the feature importance, the greater its impact on the prediction model.": "변수 중요도가 높을 수록 예측 모델에 대한 영향력이 큽니다.",
   "The most important feature in this prediction model is": "AI현재 예측 모델에서 가장 영향력이 큰 변수는",
-  "The input variables selected by AI are": "현재 자동 추천으로 입력된 원인 변수 X는",
+  "The input variables selected by AI are": "현재 자동 추천으로 입력된 원인 변수 X는 <strong>{{var}}</strong>입니다.",
   "...more": "...더보기",
 
   "Select Model": "모델 선택",
@@ -56,6 +100,7 @@
   "Retrieve the model data stored on the user’s PC.": "사용자의 PC에 저장된 모델 데이터를 가져옵니다.",
   "Model Import": "모델 불러오기",
   "Successfully saved": "성공적으로 저장했습니다.",
+  "Framework": "프레임워크",
   "Model script file": "모델 스크립트 파일",
   "Prediction model file": "예측모델 파일 업로드",
   "Data": "분석할 데이터",
@@ -79,5 +124,23 @@
   "1w": "1주",
   "Truth": "실제값",
   "Predict": "예측값",
-  "View Period": "조회 기간"
+  "View Period": "조회 기간",
+
+  "Model Creation Date": "모델 생성일",
+  "Description": "설명",
+  "Target Variable Name": "타겟 변수명",
+  "Model Type": "모델 유형",
+  "Status": "상태",
+  "API Key": "API 키",
+  "Request Syntax": "요청 구문",
+  "Method": "메서드",
+  "Request URL": "요청 URL",
+  "Request Header": "요청 헤더",
+  "Parameter": "파라미터",
+  "Type": "타입",
+  "Required": "필수 여부",
+  "Request Elements": "요청 요소",
+  "Response Syntax": "응답 구문",
+  "Authentication Key": "인증 키",
+  "Data to input into the model": "모델에 입력할 데이터"
 }

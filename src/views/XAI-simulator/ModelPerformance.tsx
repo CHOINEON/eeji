@@ -13,12 +13,20 @@ interface IErrorInfo {
 }
 
 const errorInfo: IErrorInfo = {
-  MAE: '평균절대오차. 모든 오차 절대값의 합을 평균. (0에 가까울 수록 좋은 모델)',
-  MSE: '평균제곱오차. 오차를 제곱한 값의 평균. (알고리즘이 예측한 값과 실제 정답과의 차이)',
-  RMSE: '평균 제곱근 오차. 예측 모델에서 예측한 값과 실제 값 사이의 평균 차이. 예측 모델이 목표 값(정확도)를 얼마나 잘 예측할 수 있는지 추정.',
-  F1_SCORE: '정확성과 재현율을 균형있게 평가하는 성능 지표. (0~1 사이의 값을 가지며, 높을 수록 좋음)',
-  ACCURACY: '분류 모델이 얼마나 정확하게 분류했는지 평가하는 지표.',
+  MAE: '평균절대오차. 모든 오차 절대값의 합을 평균 (0에 가까울 수록 좋은 모델)',
+  MSE: '평균제곱오차. 오차를 제곱한 값의 평균 (알고리즘이 예측한 값과 실제 정답과의 차이)',
+  RMSE: '평균 제곱근 오차. 예측 모델에서 예측한 값과 실제 값 사이의 평균 차이. 예측 모델이 목표 값(정확도)를 얼마나 잘 예측할 수 있는지 추정',
+  F1_SCORE: '정확성과 재현율을 균형있게 평가하는 성능 지표 (0~1 사이의 값을 가지며, 높을 수록 좋음)',
+  ACCURACY: '분류 모델이 얼마나 정확하게 분류했는지 평가하는 지표',
 }
+
+// const errorInfo: IErrorInfo = {
+//   MAE: 'Mean Absolute Error. The average of the absolute values of all errors (The closer to 0, the better the model)',
+//   MSE: 'Mean Squared Error. The average of the squared errors (The difference between the value predicted by the algorithm and the actual correct answer)',
+//   RMSE: 'Root Mean Squared Error. The average difference between the value predicted by the model and the actual value. It estimates how well the prediction model can predict the target value (accuracy)',
+//   F1_SCORE: 'Performance indicator that balances precision and recall (It ranges from 0 to 1, and higher is better)',
+//   ACCURACY: 'A metric to evaluate how accurately the classification model classified',
+// }
 
 const ModelPerformance = () => {
   const { t } = useTranslation()
@@ -49,17 +57,19 @@ const ModelPerformance = () => {
     <>
       <ComponentContainer>
         <PerformanceTitleImgWrap>
-          <PerformanceTitle>모델 성능</PerformanceTitle>
+          <PerformanceTitle>{t('Model Performance')}</PerformanceTitle>
           <div>
             <img src={IcoPerformance} alt="Performance Icon" />
           </div>
         </PerformanceTitleImgWrap>
 
-        <div>{selectedModel.name} 데이터로 학습을 진행한 결과입니다.</div>
+        <div>
+          {selectedModel.name} {t('is trained by optimized EEJI model')}
+        </div>
         {selectedModel.is_classification ? (
           <PerformanceContentsWrap>
             <PerformanceContentsBox>
-              <PerformanceContents>예측 정확도</PerformanceContents>
+              <PerformanceContents>{t('Prediction Accuracy')}</PerformanceContents>
               <PerformanceModelValue>{(Number(data[0]['ACCURACY']) * 100).toFixed(0)} %</PerformanceModelValue>
             </PerformanceContentsBox>
             <PerformanceContentsBox>

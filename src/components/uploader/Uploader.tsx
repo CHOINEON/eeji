@@ -1,11 +1,13 @@
 import styled from '@emotion/styled'
 import ico_upload_button from 'assets/img/dataAnalysis/upload_circle.svg'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useRecoilValue } from 'recoil'
 import { importModalAtom } from 'views/AIModelGenerator/store/modal/atom'
 
 /**https://www.filestack.com/fileschool/react/react-file-upload/ */
 const Uploader = (props: any) => {
+  const { t } = useTranslation()
   const { onSelectedFile, onCancelClick } = props
 
   const inputRef = useRef(null)
@@ -120,7 +122,7 @@ const Uploader = (props: any) => {
             <UploadButton onClick={handleUploadClick} />
             <div className="float-left my-3 text-center m-auto w-100">
               <a href="https://recruitineeji.notion.site/2-1-38ce1b102d834abba0f9653df1d918f9?pvs=4" target="_blank">
-                <InfoLink>( EEJI 업로드 가이드 바로가기 )</InfoLink>
+                <InfoLink>( {t('EEJI Upload Guide')} )</InfoLink>
               </a>
             </div>
           </label>

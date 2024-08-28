@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
+import { useTranslation } from 'react-i18next'
 import { useRecoilState } from 'recoil'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { Text, Title } from '../Input/Text'
 
 const DataInfoBox = () => {
+  const { t } = useTranslation()
   const selectedData = useRecoilState(selectedDataState)
 
   return (
@@ -11,15 +13,15 @@ const DataInfoBox = () => {
       <SummaryDiv>
         <>
           <ItemContent>
-            <Title>Target variable</Title>
+            <Title>{t('Target Variable')}</Title>
             <Text>{selectedData[0]?.targetY}</Text>
           </ItemContent>
           <ItemContent>
-            <Title>Type</Title>
+            <Title>{t('Model Type')}</Title>
             <Text>{selectedData[0]?.isClassification ? 'classification' : 'regression'}</Text>
           </ItemContent>
           <ItemContent>
-            <Title>Created</Title>
+            <Title>{t('Created')}</Title>
             <Text>{selectedData[0]?.createDate}</Text>
           </ItemContent>
         </>

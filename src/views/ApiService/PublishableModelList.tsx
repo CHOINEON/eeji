@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
 import { Empty } from 'antd'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import ModelRow from './table/ModelRow'
 
 const SavedModelList = ({ data, onSelect }: any) => {
+  const { t } = useTranslation()
   const [btnActive, setBtnActive] = useState(0)
 
   const toggleActive = (idx: number) => {
@@ -14,15 +16,14 @@ const SavedModelList = ({ data, onSelect }: any) => {
   return (
     <PublishableModelList>
       <StyledColumn>
-        <ColumnLabel className="w-1/12">모델 생성일</ColumnLabel>
-        {/* <ColumnLabel className="w-1/12">모델 수정일</ColumnLabel> */}
-        <ColumnLabel className="w-2/12">모델명</ColumnLabel>
-        <ColumnLabel className="w-1/12">설명</ColumnLabel>
-        <ColumnLabel className="w-1/12">타겟변수명</ColumnLabel>
-        <ColumnLabel className="w-3/12">입력변수</ColumnLabel>
-        <ColumnLabel className="w-1/12">모델유형</ColumnLabel>
-        <ColumnLabel className="w-1/12">상태</ColumnLabel>
-        <ColumnLabel className="w-2/12">API Key</ColumnLabel>
+        <ColumnLabel className="w-1/12">{t('Model Creation Date')}</ColumnLabel>
+        <ColumnLabel className="w-2/12">{t('Model Name')}</ColumnLabel>
+        <ColumnLabel className="w-1/12">{t('Description')}</ColumnLabel>
+        <ColumnLabel className="w-1/12">{t('Target Variable Name')}</ColumnLabel>
+        <ColumnLabel className="w-3/12">{t('Input Variables')}</ColumnLabel>
+        <ColumnLabel className="w-1/12">{t('Model Type')}</ColumnLabel>
+        <ColumnLabel className="w-1/12">{t('Status')}</ColumnLabel>
+        <ColumnLabel className="w-2/12">{t('API Key')}</ColumnLabel>
       </StyledColumn>
       {data?.length > 0 ? (
         data?.map((item: any, idx: number) => (

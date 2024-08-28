@@ -3,6 +3,7 @@ import { App, Input, Radio, RadioChangeEvent, Row, Select } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import ColumnLabel from 'components/fields/ColumnLabel'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useRecoilState } from 'recoil'
 import { dateTimeToString, isValidDatetimeFormat } from 'utils/DateFunction'
 import { dataPropertyState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
@@ -14,6 +15,7 @@ interface Option {
 }
 
 const DataProperties = () => {
+  const { t } = useTranslation()
   const { message } = App.useApp()
 
   const [inputOption, setInputOption] = useRecoilState(dataPropertyState)
@@ -126,10 +128,10 @@ const DataProperties = () => {
   return (
     <DataPropertiesContainer>
       <Row>
-        <ColumnLabel required={true} label="Dataset Name" />
+        <ColumnLabel required={true} label={t('Dataset Name')} />
         <Input
           style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-          placeholder="Dataset Name"
+          placeholder={t('Dataset Name')}
           maxLength={20}
           onChange={handleChange}
           value={inputOption.name}
@@ -137,38 +139,38 @@ const DataProperties = () => {
         />
       </Row>
       <Row>
-        <ColumnLabel required={true} label="Algorithm Type" />
+        <ColumnLabel required={true} label={t('Model Type')} />
         <Radio.Group onChange={onChangeRadio} value={inputOption.algo_type}>
-          <Radio value={0}>Regression</Radio>
-          <Radio value={1}>Classification</Radio>
+          <Radio value={0}>{t('Regression')}</Radio>
+          <Radio value={1}>{t('Classification')}</Radio>
         </Radio.Group>
       </Row>
       <Row>
-        <ColumnLabel required={true} label=" Target Variable" />
+        <ColumnLabel required={true} label={t('Target Variable')} />
         <Select
           style={{
             width: '100%',
           }}
           value={inputOption.target_y}
-          placeholder="Target Variable"
+          placeholder={t('Target Variable')}
           options={targetOptions}
           onSelect={handleSelectY}
         />
       </Row>
       <Row style={{ display: inputOption.algo_type === 0 ? 'block' : 'none' }}>
-        <ColumnLabel required={true} label="Timestamp" />
+        <ColumnLabel required={true} label={t('Timestamp')} />
         <Select
           style={{
             width: '100%',
           }}
           value={inputOption.date_col}
-          placeholder="Timestamp Column"
+          placeholder={t('Timestamp')}
           options={dateColOptions}
           onSelect={handleSelectDateCol}
         />
       </Row>
       <Row>
-        <ColumnLabel required={false} label=" Description(Optional)" />
+        <ColumnLabel required={false} label={`${t('Description')} ${t('Optional')}`} />
         <TextArea
           value={inputOption.desc}
           onChange={(e) => setInputOption({ ...inputOption, desc: e.target.value })}

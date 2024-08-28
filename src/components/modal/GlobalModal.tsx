@@ -43,7 +43,7 @@ const GlobalModal = () => {
     return (
       <Modal
         className="rounded-corners"
-        width="400px"
+        width="420px"
         open={true}
         onCancel={() => setModal(null)}
         title={
