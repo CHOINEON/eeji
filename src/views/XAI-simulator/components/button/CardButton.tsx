@@ -72,7 +72,8 @@ const Description = styled.p`
 
 const UploadButton = styled.button`
   background-color: #4338f7;
-  width: 106px;
+  width: 50%;
+  padding: 1%;
   height: 28px;
   border-radius: 10px;
   color: #fff;

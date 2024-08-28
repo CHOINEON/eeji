@@ -2,11 +2,13 @@ import styled from '@emotion/styled'
 import XaiApi from 'apis/XaiApi'
 import { useEffect, useState } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
+import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
 import ApiSyntax from './ApiSyntax'
 import SavedModelList from './PublishableModelList'
 
 const ApiService = () => {
+  const { t } = useTranslation()
   const [selectedRow, setSelectedRow] = useState()
   const [data, setData] = useState([])
 
@@ -45,7 +47,7 @@ const ApiService = () => {
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Title style={{ marginLeft: '30px', marginBottom: 10 }}>API Generator</Title>
+        <Title style={{ marginLeft: '30px', marginBottom: 10 }}>{t('API Generator')}</Title>
       </div>
       <SavedModelList data={data} onSelect={handleSelect} />
       <ApiSyntax />

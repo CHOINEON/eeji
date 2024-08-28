@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import useResizeObserver from 'hooks/useResizeObserver'
 import { useEffect, useRef, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useRecoilValue } from 'recoil'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
@@ -11,6 +12,7 @@ import ModelPerformance from 'views/XAI-simulator/ModelPerformance'
 import FeatureClassPerformance from './FeatureClassPerformance'
 
 const FeatureAnalysis = ({ textVisible }: any) => {
+  const { t } = useTranslation()
   const contentRef = useRef(null)
   const [isShowReadMore, setIsShowReadMore] = useState(false)
 
@@ -44,25 +46,37 @@ const FeatureAnalysis = ({ textVisible }: any) => {
       {analysisResponse[modelIdx].classes && <FeatureClassPerformance />}
       <ComponentContainer textVisible={textVisible}>
         <SubTitle>
-          변수 중요도
-          <InfoCircle content="변수 중요도가 높을 수록 예측 모델에 대한 영향력이 큽니다." />
+          {t('Feature Importance')}
+          <InfoCircle
+            content={t('The higher the feature importance, the greater its impact on the prediction model.')}
+          />
         </SubTitle>
         <div className={textVisible ? 'block' : 'hidden'}>
           <div className="block float-left w-100 mt-2">
             <AIbutton>AI</AIbutton>
             <AITextContainer>
-              현재 예측 모델에서 가장 영향력이 큰 변수는 <b>{chartData?.labels[0]} </b>
-              입니다.
+              <Trans
+                i18nKey="The most influential variable in the current AI prediction model is"
+                values={{ var: chartData?.labels[0] }}
+              >
+                The most influential variable in the current AI prediction model is{' '}
+                <strong>{chartData?.labels[0]} </strong>.
+              </Trans>
             </AITextContainer>
           </div>
           <div className="block float-left w-100">
             <AIbutton>AI</AIbutton>
             <AITextContainer>
-              현재 {modelIdx === 0 ? '자동 추천으로 ' : ''}입력된 원인 변수 X는{' '}
               <Ellipsis ref={contentRef}>
-                <b>{analysisResponse[modelIdx]?.input?.join(', ')}</b> 입니다.
+                <Trans
+                  i18nKey="The input variables selected by AI are"
+                  values={{ var: analysisResponse[modelIdx]?.input?.join(', ') }}
+                >
+                  The input variables selected by AI are{' '}
+                  <strong>{analysisResponse[modelIdx]?.input?.join(', ')}</strong>
+                </Trans>
               </Ellipsis>
-              {isShowReadMore && <MoreButton onClick={handleClick}>...더보기</MoreButton>}
+              {isShowReadMore && <MoreButton onClick={handleClick}>{t('...more')}</MoreButton>}
             </AITextContainer>
           </div>
         </div>

@@ -23,7 +23,7 @@ const DataSet = () => {
 
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: (result: any) => {
-      message.success('모델 학습이 정상적으로 요청되었습니다.')
+      message.success(t('The model training has been successfully requested.'))
       queryClient.invalidateQueries('models')
     },
     onError: (error: any) => {

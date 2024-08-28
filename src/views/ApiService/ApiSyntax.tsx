@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
-import { Input, Space, Table, Tag } from 'antd'
 import type { TableProps } from 'antd'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { Input, Table } from 'antd'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useRecoilValue } from 'recoil'
 import { publishResultState } from './store/atom'
 
 interface HeaderDataType {
@@ -30,6 +31,7 @@ interface SyntaxDataType {
 const { TextArea } = Input
 
 const ApiSyntax = () => {
+  const { t } = useTranslation()
   const apiInfo = useRecoilValue(publishResultState)
   const [defaultValue, setDefaultValue] = useState('')
 
@@ -49,13 +51,13 @@ const ApiSyntax = () => {
 
   const columns: TableProps<SyntaxDataType>['columns'] = [
     {
-      title: '메서드',
+      title: t('Method'),
       dataIndex: 'method',
       key: 'method',
       render: (text) => <a>{text.toUpperCase()}</a>,
     },
     {
-      title: '요청 URL',
+      title: t('Request URL'),
       dataIndex: 'url',
       key: 'url',
     },
@@ -71,22 +73,22 @@ const ApiSyntax = () => {
 
   const columns_header: TableProps<HeaderDataType>['columns'] = [
     {
-      title: '파라미터',
+      title: t('Parameter'),
       dataIndex: 'parameter',
       key: 'parameter',
     },
     {
-      title: '타입',
+      title: t('Type'),
       dataIndex: 'type',
       key: 'type',
     },
     {
-      title: '필수여부',
+      title: t('Required'),
       dataIndex: 'required',
       key: 'required',
     },
     {
-      title: '설명',
+      title: t('Description'),
       dataIndex: 'description',
       key: 'description',
     },
@@ -98,28 +100,28 @@ const ApiSyntax = () => {
       parameter: 'api_key',
       type: 'string',
       required: 'yes',
-      description: '인증 키',
+      description: t('Authentication Key'),
     },
   ]
 
   const columns_element: TableProps<ElementDataType>['columns'] = [
     {
-      title: '파라미터',
+      title: t('Parameter'),
       dataIndex: 'parameter_name',
       key: 'parameter_name',
     },
     {
-      title: '타입',
+      title: t('Type'),
       dataIndex: 'type',
       key: 'type',
     },
     {
-      title: '필수여부',
+      title: t('Required'),
       dataIndex: 'required',
       key: 'required',
     },
     {
-      title: '설명',
+      title: t('Description'),
       dataIndex: 'description',
       key: 'description',
     },
@@ -131,7 +133,7 @@ const ApiSyntax = () => {
       parameter_name: 'data',
       type: 'list',
       required: 'yes',
-      description: '모델에 입력할 데이터',
+      description: t('Data to input into the model'),
     },
   ]
 
@@ -143,22 +145,22 @@ const ApiSyntax = () => {
         </div> */}
 
         <div className="mb-5">
-          <TableName>Request Syntax</TableName>
+          <TableName>{t('Request Syntax')}</TableName>
           <Table columns={columns} dataSource={data} pagination={false} />
         </div>
         <div className="mb-5">
-          <TableName>Request Header</TableName>
+          <TableName>{t('Request Header')}</TableName>
           <Table columns={columns_header} dataSource={data_header} pagination={false} />
         </div>
       </div>
       <div className="w-1/4 p-3 inline-block float-left">
         <div className="mb-5">
-          <TableName>Request Elements</TableName>
+          <TableName>{t('Request Elements')}</TableName>
           <Table columns={columns_element} dataSource={data_element} pagination={false} />
         </div>
       </div>
       <div className="w-2/4 p-3 inline-block float-left">
-        <TableName>Response Syntax</TableName>
+        <TableName>{t('Response Syntax')}</TableName>
         <TextArea
           rows={12}
           value={defaultValue}

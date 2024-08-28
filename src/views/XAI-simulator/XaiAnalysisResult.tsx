@@ -1,6 +1,6 @@
 import { UndoOutlined } from '@ant-design/icons'
 import styled from '@emotion/styled'
-import { Badge, Button, Col, Row } from 'antd'
+import { Badge, Button } from 'antd'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -58,7 +58,7 @@ const XaiAnalysisResult = () => {
   return (
     <>
       <Container>
-        <Row gutter={[8, 8]} style={{ width: '100%' }}>
+        <div>
           <p
             style={{
               color: '#002D65',
@@ -71,54 +71,56 @@ const XaiAnalysisResult = () => {
           >
             XAI
           </p>
-          <Col span={18}>
-            <RoundedBox width={'100%'} height={'75vh'}>
-              <div className="w-1/7 text-left ">
-                <Title>{t('Input Variable Filtering')}</Title>
-                <Button
-                  className="inline-block float-right"
-                  type="text"
-                  icon={<UndoOutlined />}
-                  onClick={handleClearFilter}
-                >
-                  {t('Clear')}
-                </Button>
-              </div>
-              <VariableRow>
-                <div className="w-6/7 p-3">
-                  {data.feature_list.map((value: number, index) => (
-                    <DynamicBadgeButton
-                      className="px-4 rounded-full m-1 min-w-[70px] h-[28px] font-['Helvetica Neue'] border-[#D5DCEF]}"
-                      key={index}
-                      toggle={activeVars[value]}
-                      color={colorChips[index]}
-                      onClick={handleClick}
-                    >
-                      <Badge
-                        className={`${activeVars[value] ? 'border-white' : `border-[${colorChips[index]}]`} mr-4`}
-                        color={activeVars[value] ? 'white' : colorChips[index]}
-                      />
-                      {value}
-                    </DynamicBadgeButton>
-                  ))}
+          <div className="w-100">
+            <div className="w-[70%] h-[80vh] mr-2 block float-left">
+              <RoundedBox height="80vh">
+                <div className="w-1/7 text-left ">
+                  <Title>{t('Input Variable Filtering')}</Title>
+                  <Button
+                    className="inline-block float-right"
+                    type="text"
+                    icon={<UndoOutlined />}
+                    onClick={handleClearFilter}
+                  >
+                    {t('Clear')}
+                  </Button>
                 </div>
-              </VariableRow>
-              <div className="mt-[50px]">
-                <Title>{t('Prediction Model Explanation Results')}</Title>
-                <AnalysisGrid
-                  featureList={data?.feature_list}
-                  localWeight={filteredData}
-                  localValue={data?.input_data}
-                  predResult={data?.predict_result.predict_result}
-                />
-              </div>
-            </RoundedBox>
-          </Col>
-          <Col span={6} style={{ width: '100%', height: '75vh' }}>
-            {data?.xai_pdp ? <PDP_Plot data={data?.xai_pdp} /> : null}
-            {data?.xai_global ? <GlobalFeatureImportance data={data?.xai_global} colors={data?.colors} /> : null}
-          </Col>
-        </Row>
+                <VariableRow>
+                  <div className="w-6/7 p-3">
+                    {data.feature_list.map((value: number, index) => (
+                      <DynamicBadgeButton
+                        className="px-4 rounded-full m-1 min-w-[70px] h-[28px] font-['Helvetica Neue'] border-[#D5DCEF]}"
+                        key={index}
+                        toggle={activeVars[value]}
+                        color={colorChips[index]}
+                        onClick={handleClick}
+                      >
+                        <Badge
+                          className={`${activeVars[value] ? 'border-white' : `border-[${colorChips[index]}]`} mr-4`}
+                          color={activeVars[value] ? 'white' : colorChips[index]}
+                        />
+                        {value}
+                      </DynamicBadgeButton>
+                    ))}
+                  </div>
+                </VariableRow>
+                <div className="mt-[50px]">
+                  <Title>{t('Prediction Model Explanation Results')}</Title>
+                  <AnalysisGrid
+                    featureList={data?.feature_list}
+                    localWeight={filteredData}
+                    localValue={data?.input_data}
+                    predResult={data?.predict_result.predict_result}
+                  />
+                </div>
+              </RoundedBox>
+            </div>
+            <div className="w-[28%] h-[78vh] ml-1 bg-red block float-left">
+              {data?.xai_pdp ? <PDP_Plot data={data?.xai_pdp} /> : null}
+              {data?.xai_global ? <GlobalFeatureImportance data={data?.xai_global} colors={data?.colors} /> : null}
+            </div>
+          </div>
+        </div>
       </Container>
     </>
   )

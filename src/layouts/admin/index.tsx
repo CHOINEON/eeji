@@ -77,14 +77,14 @@ export default function Dashboard(props: { [x: string]: any }) {
         <NavBar routes={routes} />
         {getRoute() ? (
           location.pathname === '/admin/ai-model-generator' ? (
-            <Box pe="20px" minH="90vh" pt="50px" overflow="auto" height="90vh" width="100vw">
+            <Box minH="90vh" p="30px" overflow="auto" height="90vh" width="100vw">
               <Switch>
                 {getRoutes(routes)}
                 <Redirect from="/" to="/admin/main" />
               </Switch>
             </Box>
           ) : (
-            <Box mx="auto" pe="20px" minH="90vh" pt="50px">
+            <Box mx="auto" p="30px" minH="90vh">
               <Switch>
                 {getRoutes(routes)}
                 <Redirect from="/" to="/admin/main" />

@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { App, Select } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import { useEffect, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
 import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
@@ -16,6 +17,7 @@ import ClassificationResult from './Visualization/Data/ClassificationResult'
 import RegressionResult from './Visualization/Data/RegressionResult'
 
 const ModelGeneratorResult = () => {
+  const { t } = useTranslation()
   const { message } = App.useApp()
 
   const [options, setOptions] = useState([])
@@ -114,8 +116,12 @@ const ModelGeneratorResult = () => {
       <ComponentContainer>
         <div className="mt-[30px] ml-[30px] w-[63%] h-[47px]">
           <div className="block float-left mr-[30px]">
-            <Title>Prediction Result of {selectedModel.target}</Title>
-            <InfoCircle content="모델의 예측 결과" />
+            <Title>
+              <Trans i18nKey="Prediction Results of" values={{ target_var: selectedModel.target }}>
+                Prediction Results of {selectedModel.target}
+              </Trans>
+            </Title>
+            <InfoCircle content={t('Prediction Results of the Model')} />
           </div>
           <div className="ml-3">
             {options.length > 1 && (

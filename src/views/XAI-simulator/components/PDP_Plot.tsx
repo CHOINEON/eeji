@@ -72,7 +72,7 @@ const PDP_Plot = ({ data }: any) => {
   return (
     <>
       <ComponentContainer>
-        <div className="mt-1 ml-[20px] w-[420px]">
+        <div className="mt-1 ml-[20px]">
           <Title>{t('Prediction of Variable Impact')}</Title>
           <InfoCircle content="Surrounding effect of a single variable on prediction results" color="#9E9E9E" />
           <Select
@@ -81,11 +81,11 @@ const PDP_Plot = ({ data }: any) => {
             onChange={handleChange}
             options={options}
           />
-          <div className="block float-left h-100">
-            <ChartWrapper>
-              <Line data={chartData} options={chartOptions} />
-            </ChartWrapper>
-          </div>
+          {/* <div className="block float-left h-100 w-100"> */}
+          <ChartWrapper>
+            <Line data={chartData} options={chartOptions} />
+          </ChartWrapper>
+          {/* </div> */}
         </div>
       </ComponentContainer>
     </>
@@ -95,14 +95,13 @@ const PDP_Plot = ({ data }: any) => {
 export default PDP_Plot
 
 const ComponentContainer = styled.div`
-  // border: 1px solid red;
+  border: 1px solid red;
+  // height: 100px;
   display: block;
   float: left;
   justify-content: space-evenly;
   padding: 5% 1%;
   background-color: #ffffff;
-  width: 470px;
-  height: 40%;
   box-shadow: 0px 0px 10px #5951db33;
   border: 1px solid #d5dcef;
   border-radius: 25px;
@@ -119,7 +118,8 @@ const Title = styled.div`
 `
 
 const ChartWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  margin-top: 10px;
+  // width: 100%;
+  // height: 100%;
+  // margin-top: 10px;
+  padding-right: 20px;
 `

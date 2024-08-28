@@ -34,10 +34,11 @@ const GlobalFeatureImportance = ({ data, colors }: any) => {
 export default GlobalFeatureImportance
 
 const ComponentContainer = styled.div`
-  // border: 1px solid red;
-  width: 470px;
-  height: 57%;
-  margin-top: 22px;
+  border: 1px solid red;
+  // width: 470px;
+  width: 100%;
+  height: 55%;
+  margin-top: 2%;
   display: block;
   float: left;
   justify-content: space-evenly;

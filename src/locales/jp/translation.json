@@ -4,6 +4,7 @@
   "Explainable AI": "説明可能なAI",
   "Commodity Index Forecast": "経済指標予測",
   "Prediction API": "予測API",
+  "API Generator": "APIジェネレーター",
   "loading": "読み込み中",
   "uploading": "アップロード中",
   "Logout": "ログアウト",
@@ -14,23 +15,39 @@
   "Run": "実行",
   "Cancel": "キャンセル",
   "Clear": "選択解除",
-  "regression": "回帰",
-  "classification": "分類",
+  "Regression": "回帰",
+  "Classification": "分類",
+  "No data": "データなし",
 
   "Dataset": "データセット",
   "Generate Model": "モデルを生成する",
   "Edit": "編集",
   "Delete": "削除",
+  "Data Upload": "データアップロード",
+  "Browse": "ファイルを選択",
+  "The data is too large (maximum 400MB)": "データが大きすぎます（最大400MB）",
+  "EEJI Upload Guide": "EEJIアップロードガイド",
 
   "Model List": "モデルリスト",
   "Model Name": "モデル名",
   "Target": "ターゲット",
+  "Target Variable": "ターゲット変",
   "Created": "作成日",
   "State": "状態",
   "Result": "結果",
   "View result": "結果を見る",
-  "Sorry. This request is expired.": "データの有効期限が切れました。",
-  "The result is not available. Please contact admin": "結果を確認できません。管理者にお問い合わせください",
+  "Sorry. This request has expired.": "データの有効期限が切れました。",
+  "The result is not available. Please contact the administrator.": "結果を確認できません。管理者にお問い合わせください",
+  "Row": "行",
+  "Column": "列",
+  "Start": "開始",
+  "End": "終了",
+  "Dataset Name": "データセット名",
+  "Optional": "オプション",
+  "Timestamp": "タイムスタンプ",
+
+  "The model training has been successfully requested.": "モデルの学習が正常にリクエストされました。",
+  "The request has failed. Please try again later.": "リクエストが失敗しました。後でもう一度お試しください。",
 
   "waiting": "待機中",
   "created": "作成済み",
@@ -42,12 +59,39 @@
   "result saved": "結果保存済み",
   "failed": "学習失敗",
 
-  "Model performance": "モデル性能",
+  "Prediction Results of the Model": "モデルの予測結果",
+  "Prediction Results of": "{{target_var}}の予測結果",
+
+  "Model Performance": "モデル性能",
   "is trained by optimized EEJI model": "データで学習を行った結果です",
+  "Prediction Accuracy": "予測精度",
+
+  "meanAbsoluteError": {
+    "title": "평균절대오차",
+    "description": "{{error}}. 모든 오차 절대값의 합을 평균 (0에 가까울 수록 좋은 모델)"
+  },
+  "meanSquaredError": {
+    "title": "평균제곱오차",
+    "description": "{{error}}. 오차를 제곱한 값의 평균 (알고리즘이 예측한 값과 실제 정답과의 차이)"
+  },
+  "rootMeanSquaredError": {
+    "title": "평균 제곱근 오차",
+    "description": "{{error}}. 예측 모델에서 예측한 값과 실제 값 사이의 평균 차이. 예측 모델이 목표 값(정확도)를 얼마나 잘 예측할 수 있는지 추정"
+  },
+  "f1Score": {
+    "title": "F1 점수",
+    "description": "정확성과 재현율을 균형있게 평가하는 성능 지표(0~1 사이의 값을 가지며, 높을 수록 좋음)"
+  },
+  "accuracy": {
+    "title": "정확도",
+    "description": "분류 모델이 얼마나 정확하게 분류했는지 평가하는 지표"
+  },
+
   "report": "レポート",
   "Feature importance": "変数の重要度",
+  "The higher the feature importance, the greater its impact on the prediction model.": "“変数の重要度が高いほど、予測モデルへの影響が大きくなります。”",
   "The most important feature in this prediction model is": "現在の予測モデルで最も影響力のある変数は",
-  "The input variables selected by AI are": "現在自動選択された入力変数は",
+  "The input variables selected by AI are": "現在自動選択された入力変数は<strong>{{var}}</strong>です。",
   "...more": "...もっと見る",
 
   "Select Model": "モデルを選択",
@@ -56,6 +100,7 @@
   "Retrieve the model data stored on the user’s PC.": "ユーザーのPCに保存されているモデルデータを取得します。",
   "Model Import": "モデルインポート",
   "Successfully saved": "保存に成功しました。",
+  "Framework": "フレームワーク",
   "Model script file": "モデルスクリプトファイル",
   "Prediction model file": "予測モデルファイルのアップロード",
   "Data": "分析するデータ",
@@ -79,5 +124,23 @@
   "1w": "1週間",
   "Truth": "実際の値",
   "Predict": "予測値",
-  "View Period": "照会期間"
+  "View Period": "照会期間",
+
+  "Model Creation Date": "モデル作成日",
+  "Description": "説明",
+  "Target Variable Name": "ターゲット変数名",
+  "Model Type": "モデルタイプ",
+  "Status": "状態",
+  "API Key": "AAPIキー",
+  "Request Syntax": "リクエスト構文",
+  "Method": "メソッド",
+  "Request URL": "リクエストURL",
+  "Request Header": "リクエストヘッダー",
+  "Parameter": "パラメーター",
+  "Type": "タイプ",
+  "Required": "必須かどうか",
+  "Request Elements": "リクエスト要素",
+  "Response Syntax": "レスポンス構文",
+  "Authentication Key": "認証キー",
+  "Data to input into the model": "モデルに入力するデータ"
 }

@@ -70,10 +70,10 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
     onSuccess: (result: any) => {
       // GCS에서 받아온 만료시간이 GMT으로 설정되어 있어 한국 시간대(GMT + 9)로 변경하여 확인함
       if (validationCheck(result.expiration, 9)) downloadData(result.signed_url)
-      else message.error(t('데이터 유효기간이 만료되었습니다.'))
+      else message.error(t('Sorry. This request has expired.'))
     },
     onError: (error: Error) => {
-      message.error(t('결과를 확인할 수 없습니다. 관리자에게 문의하세요'))
+      message.error(t('The result is not available. Please contact the administrator.'))
     },
   })
 
@@ -96,7 +96,7 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
     if (rowData) {
       setTag(status.filter((item: ITag) => item.key.toString() == rowData.state)[0])
     }
-  }, [rowData])
+  }, [rowData, t])
 
   const handleClick = (model: IModelInfo) => {
     setLoading(true)
@@ -140,7 +140,7 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
             <div className="row-item">{rowData?.created_at}</div>
             <div className="row-item">
               <Tag className="row-item-tag m-auto" color={tag?.color} icon={tag?.icon}>
-                <span className="tracking-normal">{t(tag?.name)}</span>
+                <span className="tracking-normal">{tag?.name}</span>
               </Tag>
             </div>
             <div className="row-item">

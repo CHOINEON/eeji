@@ -1,6 +1,7 @@
 import useGetDatasets from 'hooks/queries/useGetDatasets'
 import useModal from 'hooks/useModal'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useResetRecoilState, useSetRecoilState } from 'recoil'
 import AddItemButton from './components/Button/AddItemButton'
 import DescriptionBox from './components/DataInfo/DescriptionBox'
@@ -10,6 +11,7 @@ import { usedVariableStore } from './store/variable/atom'
 import './style/data-analysis-style.css'
 
 const DatasetList = () => {
+  const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const { openModal, closeModal } = useModal()
 
@@ -53,7 +55,7 @@ const DatasetList = () => {
 
   const handleAddClick = () => {
     openModal({
-      modalTitle: 'Data Upload',
+      modalTitle: t('Data Upload'),
       modalType: 'DataImport',
       modalProps: {
         onClick: () => {

@@ -3,6 +3,7 @@ import { App, Button } from 'antd'
 import DatasetApi from 'apis/DatasetApi'
 import { UploadStateType } from 'apis/type/Dataset'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
@@ -21,6 +22,7 @@ type inputValuesType = {
 }
 
 const DataImportModal = () => {
+  const { t } = useTranslation()
   const { message } = App.useApp()
   const queryClient = useQueryClient()
 
@@ -73,7 +75,7 @@ const DataImportModal = () => {
 
   const { mutateAsync: saveMetaData } = useMutation(DatasetApi.saveModelData, {
     onSuccess: (response: any) => {
-      message.success('데이터를 성공적으로 저장했습니다.')
+      message.success(t('Successfully saved'))
 
       setSaving(false)
       setModal(null)
@@ -112,7 +114,9 @@ const DataImportModal = () => {
     if (dataFile && dataFile.size > Number(process.env.REACT_APP_MAX_FILE_SIZE)) {
       message.open({
         type: 'error',
-        content: '데이터가 너무 큽니다(최대 400MB)',
+        // content: '데이터가 너무 큽니다(최대 400MB)',
+
+        content: t('The data is too large (maximum 400MB)'),
         duration: 1,
         style: {
           margin: 'auto',
@@ -157,9 +161,9 @@ const DataImportModal = () => {
     <>
       {!uploadedData.file ? <BeforeUpload /> : <AfterUpload />}
       <div>
-        <CancelButton onClick={handleCancel}>Cancel</CancelButton>
+        <CancelButton onClick={handleCancel}>{t('Cancel')}</CancelButton>
         <CustomButton disabled={btnDisabled} onClick={handleSave} loading={saving}>
-          Save
+          {t('Save')}
         </CustomButton>
       </div>
     </>

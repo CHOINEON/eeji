@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
 import { App, Input, Modal, Row, Space, Typography } from 'antd'
-import { useRecoilState } from 'recoil'
-import { datasetEditModalState } from 'views/AIModelGenerator/store/modal/atom'
 import TextArea from 'antd/es/input/TextArea'
-import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import DatasetApi from 'apis/DatasetApi'
-import { useMutation, useQueryClient } from 'react-query'
 import { useApiError } from 'hooks/useApiError'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useMutation, useQueryClient } from 'react-query'
+import { useRecoilState } from 'recoil'
+import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { datasetEditModalState } from 'views/AIModelGenerator/store/modal/atom'
 const { Text } = Typography
 
 const DataEditModal = () => {
+  const { t } = useTranslation()
   const { message } = App.useApp()
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
@@ -62,10 +64,10 @@ const DataEditModal = () => {
         <Space direction="vertical" size="small" style={{ display: 'flex' }}>
           <Row>
             <Text type="danger">* </Text>
-            <span> Dataset Name</span>
+            <span> {t('Dataset Name')}</span>
             <Input
               style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-              placeholder="Dataset Name"
+              placeholder={t('Dataset Name')}
               maxLength={20}
               onChange={(e) => setInputData({ ...inputData, name: e.target.value })}
               value={inputData.name}
@@ -74,12 +76,12 @@ const DataEditModal = () => {
           </Row>
           <Row>
             {' '}
-            <span> Description(Optional)</span>
+            <span> {t('Description')}</span>
             <TextArea
               style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
               value={inputData.desc}
               onChange={(e) => setInputData({ ...inputData, desc: e.target.value })}
-              placeholder="Description"
+              placeholder={t('Description')}
               maxLength={50}
               allowClear
               autoSize={{ minRows: 2, maxRows: 2 }}
