@@ -46,8 +46,6 @@ const RegressionResult = () => {
   useEffect(() => {
     const arr: Array<any> = []
 
-    console.log('analysisResponse:', analysisResponse)
-
     analysisResponse.map((_d: any, i: number) => {
       if (i === 0) {
         arr.push(generateSeries(`Ground-truth`, analysisResponse[i]['pred_data']['truth'], 'rgb(87,220,49)'))
@@ -57,7 +55,6 @@ const RegressionResult = () => {
       }
     })
 
-    console.log('arr:', arr)
     setDataset(arr)
 
     const totalLabels = Object.keys(analysisResponse[0].row_data).length

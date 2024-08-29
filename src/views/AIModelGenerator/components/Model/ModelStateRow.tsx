@@ -108,7 +108,6 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
   const downloadData = async (url: string) => {
     try {
       const result = await ModelApi.getJsonResult(url)
-      console.log('result:', result)
 
       // (24-08-29) 끝에서 5000개만 그리도록 수정
       function sliceResultObj(obj: any, num: number) {
@@ -130,11 +129,9 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
         return { pred: obj['pred'].slice(-num), truth: obj['truth'].slice(-num) }
       }
 
-      //운영계에만 에러 발생하여 로그 확인하기 위해 임시로 콘솔 찍음
       setAnalysisResult([
         {
           key: v4(),
-          // pred_data: result['prediction_data'],
           pred_data:
             result['prediction_data']['pred'].length > MAX_DATA_COUNT
               ? sliceResultArr(result['prediction_data'], MAX_DATA_COUNT)
