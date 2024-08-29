@@ -57,6 +57,7 @@ const ModelStateColHeader = ({ headers }: IHeaders) => {
 }
 
 const ModelStateRow = ({ rowData }: IModelStateRow) => {
+  const MAX_DATA_COUNT = 5000
   const { message } = App.useApp()
   const { t } = useTranslation()
 
@@ -107,15 +108,44 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
   const downloadData = async (url: string) => {
     try {
       const result = await ModelApi.getJsonResult(url)
+      console.log('result:', result)
+
+      // (24-08-29) 끝에서 5000개만 그리도록 수정
+      function sliceResultObj(obj: any, num: number) {
+        // 객체의 키들을 배열로 변환
+        const keys = Object.keys(obj)
+        // 마지막 5000개의 키 추출
+        const last5000Keys = keys.slice(-num)
+
+        // 마지막 10개의 키-값 쌍으로 새 객체 생성
+        const last5000Obj = last5000Keys.reduce((result: any, key: string) => {
+          result[key] = obj[key]
+          return result
+        }, {})
+
+        return last5000Obj
+      }
+
+      function sliceResultArr(obj: { pred: Array<unknown>; truth: Array<unknown> }, num: number) {
+        return { pred: obj['pred'].slice(-num), truth: obj['truth'].slice(-num) }
+      }
+
       //운영계에만 에러 발생하여 로그 확인하기 위해 임시로 콘솔 찍음
       setAnalysisResult([
         {
           key: v4(),
-          pred_data: result['prediction_data'],
+          // pred_data: result['prediction_data'],
+          pred_data:
+            result['prediction_data']['pred'].length > MAX_DATA_COUNT
+              ? sliceResultArr(result['prediction_data'], MAX_DATA_COUNT)
+              : result['prediction_data'],
           feature_data: result['feature_piechart_data'],
           input: result['selected_input'],
           error: result['metrics'],
-          row_data: result['result_table'],
+          row_data:
+            Object.keys(result['result_table']).length > MAX_DATA_COUNT
+              ? sliceResultObj(result['result_table'], MAX_DATA_COUNT)
+              : result['result_table'],
           metrics: result['metrics'],
           performance: result['peformance_table'],
           uuid: result['get_uuid'],
@@ -126,7 +156,7 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
       setLoading(false)
     } catch (error) {
       console.error(error)
-      message.error(t('데이터 유효기간이 만료되었습니다.'))
+      message.error(t('Sorry. This request has expired.'))
     }
   }
 
