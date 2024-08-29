@@ -1,9 +1,12 @@
 import {
+  BubbleDataPoint,
   CategoryScale,
+  ChartConfiguration,
   Chart as ChartJS,
   Legend,
   LinearScale,
   LineElement,
+  Point,
   PointElement,
   Title,
   Tooltip,
@@ -67,14 +70,12 @@ const RegressionResult = () => {
       chartInstanceRef.current.destroy() // 기존 차트를 파괴하여 충돌 방지
     }
 
-    const config = {
+    const config: ChartConfiguration<'line', (number | [number, number] | Point | BubbleDataPoint)[], unknown> = {
       type: 'line',
       data: {
         labels: selectedModel?.is_classification
           ? [0, 1]
-          : Array(analysisResponse[0]['pred_data']['pred'].length)
-              .fill(null)
-              .map((_, i) => i),
+          : analysisResponse[0]['pred_data']['pred'].map((item: { x: number; y: number }) => item.x),
         datasets: dataset,
       },
       options: selectedModel.is_classification ? optionsForClassification : options,
@@ -130,7 +131,6 @@ const RegressionResult = () => {
     showLine: true,
     responsive: true,
     maintainAspectRatio: false,
-    parsing: false as const,
     animation: false as const,
     plugins: {
       datalabels: {
@@ -143,7 +143,6 @@ const RegressionResult = () => {
         display: true,
         position: 'top' as const,
         align: 'start' as const,
-        // padding: 100,
       },
       title: {
         display: false,
