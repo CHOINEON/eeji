@@ -112,7 +112,7 @@
   "No": "No",
   "Prediction Result": "Prediction Result",
   "Input Variables": "Input Variables",
-  "Variable Contribution Statistics(Average)": "Variable Contribution Statistics(Average)",
+  "Variable Contribution Statistics(Average)": "Variable Contribution Statistics(Avg)",
   "The impact of each variable on the overall prediction": "The impact of each variable on the overall prediction",
   "The most influential variable in the current AI prediction model is": "The most influential variable in the current AI prediction model is <strong>{{var}}</strong>",
 
