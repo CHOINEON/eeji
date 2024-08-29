@@ -85,7 +85,8 @@ const ChartItem = (props: any) => {
 
             // TODO 2024-03-25 해당 date의 다음달 마지막 날짜를 구한다.
             const lastDate = new Date(date)
-            const nextMonth = lastDate.getMonth() + 1 + i
+            const nextMonth = lastDate.getMonth() + i
+
             lastDate.setMonth(nextMonth)
             lastDate.setDate(0)
             // console.log(lastDate)
@@ -93,7 +94,7 @@ const ChartItem = (props: any) => {
 
             // TODO 2024-03-25 lastDate를 unix timestamp로 변환
             setPredictData((prev) => [...prev, [new Date(lastDate).getTime(), data[data.length - 1][`pred_${i}`]]])
-            console.log(data[data.length - 1][`pred_${i}`])
+            // console.log(data[data.length - 1][`pred_${i}`])
             // TODO truth
             setTruthData((prev) => [...prev, [date, null]])
           }
