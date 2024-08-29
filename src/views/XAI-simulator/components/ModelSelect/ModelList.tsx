@@ -122,7 +122,7 @@ const Row = styled.div`
 `
 const ModelTitle = styled.div`
   text-align: center;
-  width: 56%;
+  width: 53%;
   height: 100%;
   display: inline-block;
   float: left;

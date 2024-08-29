@@ -10,11 +10,11 @@ const GlobalFeatureImportance = ({ data, colors }: any) => {
   return (
     <>
       <ComponentContainer>
-        <div className="mt-1 ml-[20px] w-[420px]">
+        <div className="mx-5">
           <Title className="inline-block mb-5">{t('Variable Contribution Statistics(Average)')}</Title>
           <InfoCircle content={t('The impact of each variable on the overall prediction')} color="#9E9E9E" />
           <FeatureImportance data={data} colors={colors} />
-          <div className="my-5 block float-left w-full">
+          <div className=" block float-left w-full">
             <AIbutton>AI</AIbutton>
             <AITextContainer>
               <Trans

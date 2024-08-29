@@ -83,7 +83,7 @@ const PDP_Plot = ({ data }: any) => {
               options={options}
             />
           </div>
-          <div className="mt-1 h-100 w-100">
+          <div className="mt-1 h-[175px]">
             <ChartWrapper>
               <Line data={chartData} options={chartOptions} />
             </ChartWrapper>
@@ -100,6 +100,7 @@ const ComponentContainer = styled.div`
   border: 1px solid red;
   // height: 100px;
   width: 100%;
+  height: 45%;
   display: block;
   float: left;
   justify-content: space-evenly;
