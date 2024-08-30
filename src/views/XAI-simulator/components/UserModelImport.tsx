@@ -68,8 +68,18 @@ const UserModelImport = () => {
         feature_length: result['feature_length'],
         feature_list: result['feature_list'],
         predict_result: result['predict_result'],
-        input_data: transformDataByRow(xaiPagination.limit, xaiPagination.offset, result['input_data']),
-        xai_local: transformDataByRow(xaiPagination.limit, xaiPagination.offset, result['xai_local']),
+        input_data: transformDataByRow(
+          xaiPagination.limit,
+          xaiPagination.offset,
+          result['input_data'],
+          xaiPagination.total
+        ),
+        xai_local: transformDataByRow(
+          xaiPagination.limit,
+          xaiPagination.offset,
+          result['xai_local'],
+          xaiPagination.total
+        ),
         xai_global: result['xai_global'][0], //gcs에 저장된 위치 result('xai_global')
         xai_pdp: result['xai_pdp'],
         colors: STACKED_BAR_CHART_COLORS,
