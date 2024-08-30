@@ -1,8 +1,10 @@
 import styled from '@emotion/styled'
-import { Badge, Space } from 'antd'
+import { Badge, Pagination, PaginationProps, Space } from 'antd'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { useRecoilState } from 'recoil'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
+import { xaiPaginationStore } from '../store/analyze/atom'
 import HorizontalStackedBarChart from './HorizontalStackedBarChart'
 
 const RowItem = ({ number, value, weight, pred }: any) => {
@@ -13,7 +15,7 @@ const RowItem = ({ number, value, weight, pred }: any) => {
         <DataRow style={{ padding: '0 2%', marginBottom: '1%' }}>
           <div style={{ width: '10%', textAlign: 'center' }}>{number}</div>
           <div style={{ width: '20%', textAlign: 'center' }}>
-            <b>{pred.toString()}</b>
+            <b>{pred?.toString()}</b>
           </div>
           <div style={{ width: '70%', height: '50px !important' }}>
             <HorizontalStackedBarChart weight={weight} value={value} />
@@ -25,8 +27,11 @@ const RowItem = ({ number, value, weight, pred }: any) => {
 }
 
 const AnalysisGrid = (props: any) => {
+  console.log('AnalysisGrid props:', props)
   const { t } = useTranslation()
+
   const { localWeight, localValue, predResult } = props
+  const [xaiPagination, setXaiPagination] = useRecoilState(xaiPaginationStore)
 
   const hoverContent = (feature_list: any) => {
     return (
@@ -40,6 +45,17 @@ const AnalysisGrid = (props: any) => {
     )
   }
 
+  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+    if (xaiPagination.limit !== pageSize)
+      setXaiPagination({ ...xaiPagination, offset: pageSize * (current - 1) + 1, limit: pageSize })
+  }
+
+  const onChange = (e: any) => {
+    // pageSize 변경할 때도 호출되어 분기처리
+    if (e !== xaiPagination.page)
+      setXaiPagination({ ...xaiPagination, page: e, offset: xaiPagination.limit * (e - 1) + 1 })
+  }
+
   return (
     <>
       <div style={{ display: 'block', width: '100%', padding: '0 2%', marginTop: 15 }}>
@@ -48,8 +64,18 @@ const AnalysisGrid = (props: any) => {
         <ColumnHeader width={'70%'}>{t('Input Variables')}</ColumnHeader>
       </div>
       {localValue?.map((value: any, i: number) => {
-        return <RowItem key={i} number={i} value={value} weight={localWeight[i]} pred={predResult[i]} />
+        const index = xaiPagination.offset === 1 ? i + 1 : xaiPagination.offset + i
+        return <RowItem key={i} number={index} value={value} weight={localWeight[i]} pred={predResult[index]} />
       })}
+      <Pagination
+        className="text-center"
+        defaultCurrent={1}
+        total={xaiPagination.total}
+        showSizeChanger
+        onShowSizeChange={onShowSizeChange}
+        onChange={onChange}
+        showTotal={(total) => `Total ${total} items`}
+      />
     </>
   )
 }

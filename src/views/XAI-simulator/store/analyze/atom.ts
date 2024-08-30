@@ -44,6 +44,7 @@ interface IxaiResult {
 export const xaiResultStore = atom({
   key: 'xaiResultStore',
   default: {
+    model_id: '',
     sample_size: 0,
     feature_length: 0,
     feature_list: [],
@@ -53,6 +54,16 @@ export const xaiResultStore = atom({
     xai_pdp: {},
     xai_global: {},
     colors: {},
+  },
+})
+
+export const xaiPaginationStore = atom({
+  key: 'xaiPaginationStore',
+  default: {
+    total: 0,
+    page: 1, //1페이지
+    offset: 1, //1번 데이터부터 시작(eg. offset = 1  ==>  1 ~ 1+limit까지의 데이터)
+    limit: 10,
   },
 })
 
