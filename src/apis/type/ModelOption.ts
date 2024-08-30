@@ -86,3 +86,9 @@ export interface IGetSurlReq {
   model_id: string
   is_xai: string //Boolean as a string for HTTP header
 }
+
+export interface IPaginatedReq {
+  model_id: string
+  offset: number
+  limit: number
+}

@@ -9,8 +9,8 @@ import { useRecoilState, useResetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
 import { colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
 import { CancelButton, CustomButton } from 'views/AIModelGenerator/components/Modal/DataImportModal'
-import { customModelStore, xaiResultStore } from 'views/XAI-simulator/store/analyze/atom'
-import { transformDataByRow } from '../XaiAnalysisResult'
+import { customModelStore, xaiPaginationStore, xaiResultStore } from 'views/XAI-simulator/store/analyze/atom'
+import { transformDataByRow } from '../functions'
 import ColumnList from './ModelSelect/ColumnList'
 import ModelTypeRadio from './ModelSelect/ModelTypeRadio'
 import ModelUpload from './ModelSelect/Upload'
@@ -37,6 +37,8 @@ const UserModelImport = () => {
   const [modal, setModal] = useRecoilState(modalState)
   const [isDisabled, setIsDisabled] = useState(true)
   const [haveColumn, setHaveColumn] = useState(false)
+
+  const [xaiPagination, setXaiPagination] = useRecoilState(xaiPaginationStore)
 
   const { mutate: mutateUserModelUpload } = useMutation(XaiApi.uploadModelwithData, {
     onSuccess: (response: any) => {
@@ -66,8 +68,8 @@ const UserModelImport = () => {
         feature_length: result['feature_length'],
         feature_list: result['feature_list'],
         predict_result: result['predict_result'],
-        input_data: transformDataByRow(result['sample_size'], result['input_data']),
-        xai_local: transformDataByRow(result['sample_size'], result['xai_local']),
+        input_data: transformDataByRow(xaiPagination.limit, xaiPagination.offset, result['input_data']),
+        xai_local: transformDataByRow(xaiPagination.limit, xaiPagination.offset, result['xai_local']),
         xai_global: result['xai_global'][0], //gcs에 저장된 위치 result('xai_global')
         xai_pdp: result['xai_pdp'],
         colors: STACKED_BAR_CHART_COLORS,
