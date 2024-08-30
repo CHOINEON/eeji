@@ -27,7 +27,6 @@ const RowItem = ({ number, value, weight, pred }: any) => {
 }
 
 const AnalysisGrid = (props: any) => {
-  console.log('AnalysisGrid props:', props)
   const { t } = useTranslation()
 
   const { localWeight, localValue, predResult } = props

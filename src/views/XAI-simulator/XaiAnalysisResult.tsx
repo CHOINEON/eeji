@@ -23,6 +23,8 @@ const XaiAnalysisResult = () => {
 
   const { mutate: mutateXaiResult } = useMutation(XaiApi.getPaginatedXaiResult, {
     onSuccess: (result: any) => {
+      console.log('result:', result)
+
       if (Object.keys(result).length > 0)
         setXaiResult({
           ...xaiResult,
@@ -30,8 +32,18 @@ const XaiAnalysisResult = () => {
           feature_length: result.feature_list.length,
           feature_list: result['feature_list'],
           predict_result: result['predict_result'],
-          input_data: transformDataByRow(xaiPagination.limit, xaiPagination.offset, result['input_data']),
-          xai_local: transformDataByRow(xaiPagination.limit, xaiPagination.offset, result['xai_local']),
+          input_data: transformDataByRow(
+            xaiPagination.limit,
+            xaiPagination.offset,
+            result['input_data'],
+            xaiPagination.total
+          ),
+          xai_local: transformDataByRow(
+            xaiPagination.limit,
+            xaiPagination.offset,
+            result['xai_local'],
+            xaiPagination.total
+          ),
           xai_global: result['xai_global'],
           xai_pdp: result['xai_pdp'],
           colors: STACKED_BAR_CHART_COLORS,
