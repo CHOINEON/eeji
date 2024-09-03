@@ -45,7 +45,8 @@
   "Created": "생성일",
   "State": "상태",
   "Result": "결과",
-  "View result": "결과보기",
+  "View result": "결과 보기",
+  "Update Model Details": "모델 정보 수정",
   "Sorry. This request has expired.": "데이터 유효기간이 만료되었습니다.",
   "The result is not available. Please contact the administrator.": "결과를 확인할 수 없습니다. 관리자에게 문의하세요",
 

@@ -4,6 +4,7 @@ import {
   IGetSurlReq,
   IModelApiGeneratorParam,
   IModelDataReq,
+  IModelModifyRequest,
   IModelOptionRes,
   IModelPostReq,
   IModelSaveReqParam,
@@ -68,7 +69,6 @@ const ModelApi = {
 
   //api페이지 publish (API Generator)
   publishModelAPI: async (params: IModelApiGeneratorParam): Promise<TResponseType<object>> => {
-    // const { data } = await axiosPrivate.post(`/api/generate_api_key/`, params)
     const { data } = await axiosPrivate.post(
       `/api/generate_api_key?com_id=${params.com_id}&user_id=${params.user_id}&model_id=${params.model_id}`
     )
@@ -76,11 +76,13 @@ const ModelApi = {
     return data
   },
 
-  //특정 유저를 위해 모델 리스트를 db에서 갖고옴
-  // postModelList: async (user_id: string): Promise<TResponseType<object>> => {
-  //   const { data } = await axiosPrivate.post(`/api/model_list/${user_id}`)
-  //   return data
-  // },
+  renameModel: async (params: IModelModifyRequest): Promise<TResponseType<object>> => {
+    const { data } = await axiosPrivate.patch(`/api/v1/rename_model/${params.model_id}`, {
+      model_name: params.model_name,
+    })
+
+    return data
+  },
 }
 
 export default ModelApi

@@ -9,15 +9,17 @@ import { App, Tag } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import { IModelInfo } from 'apis/type/Model'
 import { useToast } from 'hooks/useToast'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
 import { useSetRecoilState } from 'recoil'
+import { Ellipsis } from 'styles/common'
 import { validationCheck } from 'utils/DateFunction'
 import { v4 } from 'uuid'
 import { loadingAtom, stepCountStore } from 'views/AIModelGenerator/store/global/atom'
 import { selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
+import Actions from '../Button/Actions'
 import './style.css'
 
 interface ITag {
@@ -58,6 +60,7 @@ const ModelStateColHeader = ({ headers }: IHeaders) => {
 
 const ModelStateRow = ({ rowData }: IModelStateRow) => {
   const MAX_DATA_COUNT = 5000
+  const contentRef = useRef(null)
   const { message } = App.useApp()
   const { t } = useTranslation()
 
@@ -162,7 +165,10 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
       {rowData && (
         <div className="table-container">
           <div className="table-row">
-            <div className="row-item">{rowData.name}</div>
+            <div className="row-item">
+              <Ellipsis ref={contentRef}>{rowData.name}</Ellipsis>
+            </div>
+
             <div className="row-item">{rowData.target}</div>
             <div className="row-item">{rowData?.created_at}</div>
             <div className="row-item">
@@ -176,6 +182,9 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
                   {t('View result')}
                 </button>
               )}
+            </div>
+            <div>
+              <Actions model_id={rowData.id} model_name={rowData.name} />
             </div>
           </div>
         </div>
