@@ -1,6 +1,5 @@
 import { Modal } from 'antd'
 import logo_xs from 'assets/img/ineeji/logo_xs.svg'
-import { useEffect } from 'react'
 import { useRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
 import ModelSaveModal from 'views/AIModelGenerator/components/Modal/ModelSaveModal'
@@ -29,13 +28,7 @@ const GlobalModal = () => {
   const [modal, setModal] = useRecoilState(modalState)
   const { modalType, modalProps, modalTitle } = modal || {}
 
-  useEffect(() => {
-    console.log('GlobalModal:', modalProps)
-  }, [modalProps])
-
   const renderComponent = () => {
-    // console.log('modalType:', modalType)
-
     if (!modalType) {
       return null
     }
