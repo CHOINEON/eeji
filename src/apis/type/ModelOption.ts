@@ -92,3 +92,8 @@ export interface IPaginatedReq {
   offset: number
   limit: number
 }
+
+export interface IModelModifyRequest {
+  model_id: string
+  model_name?: string
+}
