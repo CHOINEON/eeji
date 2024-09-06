@@ -1,7 +1,6 @@
-import styled from '@emotion/styled'
-import { App } from 'antd'
+import { App, Button } from 'antd'
 import ModelApi from 'apis/ModelApi'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
@@ -16,6 +15,7 @@ const DataSet = () => {
   const { message } = App.useApp()
   const queryClient = useQueryClient()
   const { t } = useTranslation()
+  const [loading, setLoading] = useState(false)
 
   const selectedData = useRecoilState(selectedDataState)
   const setUserInfo = useSetRecoilState(userInfoState)
@@ -25,6 +25,7 @@ const DataSet = () => {
     onSuccess: (result: any) => {
       message.success(t('The model training has been successfully requested.'))
       queryClient.invalidateQueries('models')
+      setLoading(false)
     },
     onError: (error: any) => {
       message.error('요청이 실패하였습니다. 다음에 다시 시도해주세요.')
@@ -50,6 +51,7 @@ const DataSet = () => {
       if_classification: selectedData[0].isClassification,
     }
     mutateRunning({ type: 'request', payload: payload })
+    setLoading(true)
   }
 
   return (
@@ -63,13 +65,14 @@ const DataSet = () => {
         </div>
         <div className="w-100 flex align-center justify-center">{selectedData[0].ds_id && <DataInfoBox />}</div>
         <div className="w-100 flex align-center justify-center mt-2 px-[10px]">
-          <GenerateButton
-            className="w-100 float-right h-[46px] rounded-lg bg-[#4338F7] text-white text-[15px] font-bold font-lg leading-[47px]"
+          <Button
+            className="w-100 float-right h-[46px] rounded-lg bg-[#4338F7] text-white text-[15px] font-bold font-lg "
             disabled={!selectedData[0].ds_id}
             onClick={handleGenerateModel}
+            loading={loading}
           >
             {t('Generate Model')}
-          </GenerateButton>
+          </Button>
         </div>
         <DataEditModal />
       </div>
@@ -78,7 +81,3 @@ const DataSet = () => {
 }
 
 export default DataSet
-
-const GenerateButton = styled.button`
-  background-color: ${(props: any) => (props.disabled ? '#C3CADB' : '#4338f7')};
-`
