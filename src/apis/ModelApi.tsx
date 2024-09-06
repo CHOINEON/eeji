@@ -83,6 +83,12 @@ const ModelApi = {
 
     return data
   },
+
+  getModelDescription: async (params: IModelModifyRequest): Promise<TResponseType<object>> => {
+    const { data } = await axiosPrivate.get(`/api/v1/describe_model/${params.model_id}`)
+
+    return data
+  },
 }
 
 export default ModelApi
