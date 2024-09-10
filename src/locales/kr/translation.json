@@ -32,6 +32,7 @@
   "Optional": "선택 사항",
   "Timestamp": "타임스탬프",
 
+  "The types of date formats supported by EEJI can be found in the guide document. Please check the document for more details.": "EEJI에서 지원하는 날짜 포맷의 종류는 가이드 문서를 확인해주세요",
   "The model training has been successfully requested.": "모델 학습이 정상적으로 요청되었습니다.",
   "The request has failed. Please try again later.": "요청이 실패하였습니다. 다음에 다시 시도해주세요.",
 

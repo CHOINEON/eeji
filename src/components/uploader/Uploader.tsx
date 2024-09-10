@@ -1,4 +1,6 @@
+import { ReadOutlined } from '@ant-design/icons'
 import styled from '@emotion/styled'
+import { Button } from 'antd'
 import ico_upload_button from 'assets/img/dataAnalysis/upload_circle.svg'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -122,7 +124,9 @@ const Uploader = (props: any) => {
             <UploadButton onClick={handleUploadClick} />
             <div className="float-left my-3 text-center m-auto w-100">
               <a href="https://recruitineeji.notion.site/2-1-38ce1b102d834abba0f9653df1d918f9?pvs=4" target="_blank">
-                <InfoLink>( {t('EEJI Upload Guide')} )</InfoLink>
+                <Button type="dashed" icon={<ReadOutlined />}>
+                  {t('EEJI Upload Guide')}
+                </Button>
               </a>
             </div>
           </label>
@@ -148,7 +152,7 @@ const UploadButton = styled.button`
   opacity: 1;
 `
 
-const InfoLink = styled.p`
+const InfoLink = styled.button`
   font-family: 'Helvetica Neue';
   color: #002d65;
   font-size: 13px;

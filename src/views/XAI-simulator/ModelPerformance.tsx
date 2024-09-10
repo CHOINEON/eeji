@@ -74,7 +74,7 @@ const ModelPerformance = () => {
             </PerformanceContentsBox>
             <PerformanceContentsBox>
               <PerformanceContents>
-                <InfoCircle content={errorInfo.F1_SCORE} color="#F2F5FC" />
+                <InfoCircle content={errorInfo.F1_SCORE} styleClass="text-[#F2F5FC]" />
                 F-SCORE
               </PerformanceContents>
               <PerformanceContentsBox>
@@ -97,7 +97,7 @@ const ModelPerformance = () => {
                     <div>
                       <PerformanceContents>
                         {modelKey.toString().toUpperCase()}
-                        <InfoCircle content={errorInfo[modelKey]} color="#F2F5FC" />
+                        <InfoCircle content={errorInfo[modelKey]} styleClass="text-[#F2F5FC]" />
                       </PerformanceContents>
                       <PerformanceValue>{formatNumber(data[0][modelKey as keyof (typeof data)[0]])}</PerformanceValue>
                     </div>

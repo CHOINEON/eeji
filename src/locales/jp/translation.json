@@ -47,6 +47,7 @@
   "Optional": "オプション",
   "Timestamp": "タイムスタンプ",
 
+  "The types of date formats supported by EEJI can be found in the guide document. Please check the document for more details.": "EEJIがサポートしている日付フォーマットの種類は、ガイドドキュメントをご確認ください。詳細については、ドキュメントを確認してください。",
   "The model training has been successfully requested.": "モデルの学習が正常にリクエストされました。",
   "The request has failed. Please try again later.": "リクエストが失敗しました。後でもう一度お試しください。",
 
