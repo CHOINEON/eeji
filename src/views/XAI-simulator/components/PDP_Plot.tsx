@@ -74,7 +74,10 @@ const PDP_Plot = ({ data }: any) => {
       <ComponentContainer>
         <div className="mt-1 ml-[20px]">
           <Title>{t('Prediction of Variable Impact')}</Title>
-          <InfoCircle content={t('Surrounding effect of a single variable on prediction results')} color="#9E9E9E" />
+          <InfoCircle
+            content={t('Surrounding effect of a single variable on prediction results')}
+            styleClass="text-[#9E9E9E]"
+          />
           <div className="w-100 mt-3 pr-4 text-right">
             <Select
               className="w-[200px] mx-5 text-left"

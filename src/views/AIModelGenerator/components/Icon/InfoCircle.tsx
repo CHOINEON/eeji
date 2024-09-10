@@ -1,14 +1,13 @@
 import { Icon } from '@chakra-ui/react'
 import { Tooltip } from 'antd'
-import React from 'react'
 
-const InfoCircle = ({ content, color }: any) => {
-  const fontColor = color ? color : '#000000'
+const InfoCircle = ({ content, color, styleClass }: any) => {
+  const defaultClass = `mx-2 text-[15px]`
 
   return (
     <>
       <Tooltip title={content}>
-        <Icon type="info-circle-o" style={{ margin: '0 10px', fontSize: '15px', color: fontColor }} />
+        <Icon type="info-circle-o" className={`${defaultClass} ${styleClass || ''}`} />
       </Tooltip>
     </>
   )

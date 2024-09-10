@@ -1,11 +1,12 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 
-const ColumnLabel = ({ required, label }: any) => {
+const ColumnLabel = ({ required, label, tooptipTitle }: any) => {
   return (
     <ColumnLabelWrapper>
       <span className={`${required ? 'text-red-500' : 'hidden'}`}>* </span>
       <Label>{label}</Label>
+      {tooptipTitle && <InfoCircle content={tooptipTitle} styleClass="ml-2 text-sm" />}
     </ColumnLabelWrapper>
   )
 }

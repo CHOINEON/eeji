@@ -84,11 +84,15 @@ const DataProperties = () => {
     //날짜 컬럼 유효한지 검증
     const isValid = validateDatetime(param, uploadedData.content)
 
-    if (isValid) setInputOption({ ...inputOption, date_col: param })
-    else message.error('처리할 수 없는 날짜 형식입니다.')
+    if (isValid) {
+      setInputOption({ ...inputOption, date_col: param })
 
-    //시작 종료일 찾기
-    searchStartEndDate(param, uploadedData.content)
+      //시작 종료일 찾기
+      searchStartEndDate(param, uploadedData.content)
+    } else {
+      message.error('처리할 수 없는 날짜 형식입니다. 데이터 업로드 가이드를 참고하세요')
+      return false
+    }
   }
 
   const searchStartEndDate = (colName: string, array: Array<any>) => {
@@ -98,19 +102,20 @@ const DataProperties = () => {
     })
     if (!newArr[0].dateTime.getTime()) {
       alert('날짜 컬럼이 아닙니다.')
+    } else {
+      //Sort in Ascending order(low to high)
+      const sortedAsc = newArr.sort((a, b) => Number(a.dateTime) - Number(b.dateTime))
+      const lengthOfArray = array.length
+
+      const start = sortedAsc[0].dateTime
+      const end = sortedAsc[lengthOfArray - 1].dateTime
+
+      setUploadedData({
+        ...uploadedData,
+        startDate: dateTimeToString(start).length === 19 ? dateTimeToString(start) : '-',
+        endDate: dateTimeToString(end).length === 19 ? dateTimeToString(end) : '-',
+      })
     }
-    //Sort in Ascending order(low to high)
-    const sortedAsc = newArr.sort((a, b) => Number(a.dateTime) - Number(b.dateTime))
-    const lengthOfArray = array.length
-
-    const start = sortedAsc[0].dateTime
-    const end = sortedAsc[lengthOfArray - 1].dateTime
-
-    setUploadedData({
-      ...uploadedData,
-      startDate: dateTimeToString(start).length === 19 ? dateTimeToString(start) : '-',
-      endDate: dateTimeToString(end).length === 19 ? dateTimeToString(end) : '-',
-    })
   }
 
   const handleSelectY = (param: any) => {
@@ -158,7 +163,13 @@ const DataProperties = () => {
         />
       </Row>
       <Row style={{ display: inputOption.algo_type === 0 ? 'block' : 'none' }}>
-        <ColumnLabel required={true} label={t('Timestamp')} />
+        <ColumnLabel
+          required={true}
+          label={t('Timestamp')}
+          tooptipTitle={t(
+            'The types of date formats supported by EEJI can be found in the guide document. Please check the document for more details.'
+          )}
+        />
         <Select
           style={{
             width: '100%',
@@ -170,7 +181,7 @@ const DataProperties = () => {
         />
       </Row>
       <Row>
-        <ColumnLabel required={false} label={`${t('Description')} ${t('Optional')}`} />
+        <ColumnLabel required={false} label={`${t('Description')} (${t('Optional')})`} />
         <TextArea
           value={inputOption.desc}
           onChange={(e) => setInputOption({ ...inputOption, desc: e.target.value })}

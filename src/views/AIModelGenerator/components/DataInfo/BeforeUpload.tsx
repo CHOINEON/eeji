@@ -22,7 +22,7 @@ const BeforeUpload = () => {
               encoding: fileInfo.encoding,
             })
           } else {
-            message.error('UTF-8 형식의 파일만 처리 가능합니다.')
+            message.error(`UTF-8 형식의 파일만 처리 가능합니다. EEJI 업로드 가이드를 참고하세요.`)
           }
         })
       } else {
