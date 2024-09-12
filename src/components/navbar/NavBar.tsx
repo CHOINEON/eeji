@@ -78,11 +78,12 @@ const NavBar = (props: { routes: RoutesType[] }) => {
   }
 
   return (
-    <NavBarContainer {...props}>
-      <Logo w="100px" color={['primary.500', 'primary.500']} style={{ flexShrink: 0, width: '15%', minWidth: 252 }} />
+    <div>
+      <Logo w="100px" color={['primary.500', 'primary.500']} style={{ flexShrink: 0, width: 252 }} />
 
-      <MenuLinks isOpen={isOpen} routes={routes} style={{ flexGrow: 1 }} />
-      <div>
+      <MenuLinks isOpen={isOpen} routes={routes} />
+
+      <div className="border w-[320px]">
         <HStack spacing="13">
           <Feedback />
           <Button
@@ -148,7 +149,7 @@ const NavBar = (props: { routes: RoutesType[] }) => {
           </Menu>
         </HStack>
       </div>
-    </NavBarContainer>
+    </div>
   )
 }
 
@@ -161,13 +162,13 @@ const MenuItem = ({ children, isLast, to, ...rest }: any) => {
   return (
     <Link href={to}>
       <Text
-        className="text-menu"
+        // className="text-menu"
         display="block"
         {...rest}
         opacity={activeRoute(to.toLowerCase()) ? 1 : 0.5}
         fontWeight={activeRoute(to.toLowerCase()) ? 'bold' : 'normal'}
         letterSpacing="0.5px"
-        fontSize={15}
+        fontSize={13}
         fontFamily="Helvetica Neue"
         // color={activeRoute(to.toLowerCase()) ? activeColor : inactiveColor}
       >
@@ -180,7 +181,7 @@ const MenuItem = ({ children, isLast, to, ...rest }: any) => {
 const MenuLinks = ({ isOpen, routes }: any) => {
   const { t } = useTranslation()
   return (
-    <Box display={{ base: isOpen ? 'block' : 'none', md: 'block' }} flexBasis={{ base: '100%', md: 'auto' }}>
+    <Box display={{ base: isOpen ? 'block' : 'none', md: 'block' }}>
       <Stack
         spacing={8}
         align="center"
@@ -208,9 +209,9 @@ const NavBarContainer = ({ children, ...props }: any) => {
       align="center"
       justify="space-between"
       wrap="nowrap"
-      w="100%"
-      h="5vh"
-      p={8}
+      w="1280px"
+      h="55px"
+      padding="0 30px"
       bg={'#242185'}
       color={['white', 'white', 'primary.700', 'primary.700']}
       background={'linear-gradient( to left, #332bbf, #000000 )'}
@@ -221,19 +222,6 @@ const NavBarContainer = ({ children, ...props }: any) => {
   )
 }
 export default NavBar
-
-const DatasetAddButton = styled.button`
-  width: 140px;
-  height: 35px;
-  padding: 5px 3px 5px 0;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #fff !important;
-  background-color: #4338f7;
-  box-shadow: 0 2px 0 rgba(55, 5, 255, 0.06);
-  margin-bottom: 20px;
-`
 
 const LangParentBox = styled.div`
   display: flex;

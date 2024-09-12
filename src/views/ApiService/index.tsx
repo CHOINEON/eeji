@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import XaiApi from 'apis/XaiApi'
 import { useEffect, useState } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
@@ -45,22 +44,13 @@ const ApiService = () => {
   }
 
   return (
-    <>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Title style={{ marginLeft: '30px', marginBottom: 10 }}>{t('API Generator')}</Title>
+    <div className="mx-[30px] p-5">
+      <p className="mr-12 text-[20px] lg:text-[32px] font-bold text-[#002D65]">{t('API Generator')}</p>
+      <div>
+        <SavedModelList data={data} onSelect={handleSelect} />
       </div>
-      <SavedModelList data={data} onSelect={handleSelect} />
       <ApiSyntax />
-    </>
+    </div>
   )
 }
 export default ApiService
-
-const Title = styled.div`
-  font-family: 'Helvetica Neue';
-  font-weight: bold;
-  color: #002d65;
-  font-size: 32px;
-  display: flex;
-  float: left;
-`

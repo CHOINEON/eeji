@@ -10,13 +10,15 @@ export interface IDatasetEditReq extends IDatasetReq {
   ds_desc: string
 }
 
-export interface IDatasetRes {
+export interface IDataset {
   col_list: string
   com_id: string
   create_date: string
   date_col: string
   descr: string
   ds_id: string
+  is_classification: number
+  target_y: string
   end_date: string
   loc: string
   name: string
@@ -24,9 +26,11 @@ export interface IDatasetRes {
   start_date: string
   update_date: string
   user_id: string
+  numeric_cols: string
+  non_numeric_cols: string
 }
 
-export type IDatasetList = Array<IDatasetRes>
+export type IDatasetList = Array<IDataset>
 
 export type UploadStateType = 'start' | 'cancel' | 'fail' | 'success'
 

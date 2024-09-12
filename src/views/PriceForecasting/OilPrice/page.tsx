@@ -45,7 +45,7 @@ const Page = () => {
   }
 
   return (
-    <div className="bg-[#F5F8FF] h-[calc(90vh)]">
+    <div className="bg-[#F5F8FF] h-[calc(90vh)] rounded-[25px]">
       <div className="container p-5 h-full">
         <div className="lg:flex items-center justify-between px-4 space-y-4 lg:space-y-0">
           <div className="lg:flex items-center space-y-4 lg:space-y-0">

@@ -1,11 +1,12 @@
-import { Box, Wrap } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useMenuList } from './MenuList'
 
-const Main = () => {
+const MainContents = () => {
+  const menuList = useMenuList()
+
   return (
     <>
-      <Box my="60px">
+      <div className="mt-[100px] p-5">
         <MainTitle>Cloud AI EEJI</MainTitle>
         <SubText>
           is a comprehensive AI-driven prediction service tailored for businesses. It features automated AI model
@@ -15,38 +16,27 @@ const Main = () => {
           provides explanations for results, offers commodity index forecasts to enhance model accuracy, and includes a
           REST API service enabling users to leverage prediction data for insightful decision-making.
         </SubText>
-      </Box>
-      <Box>
-        <IconList />
-      </Box>
+
+        <div className="flex flex-wrap justify-center gap-8 h-52  my-[50px]">
+          {menuList.map((item: any) => {
+            return (
+              <MenuItem key={item.title}>
+                <IconContainer onClick={() => (window.location.href = `/admin${item.path}`)}>
+                  <img src={item.icon_src} className="w-full max-w-[150px] h-auto" />
+                </IconContainer>
+                <TitleContainer>
+                  <Title_EN>{item.title}</Title_EN>
+                </TitleContainer>
+              </MenuItem>
+            )
+          })}
+        </div>
+      </div>
     </>
   )
 }
 
-const IconList = () => {
-  const menuList = useMenuList()
-
-  return (
-    <>
-      <Wrap spacing="30px" justify="center" height={200} margin={'15vh 0'}>
-        {menuList.map((item: any) => {
-          return (
-            <MenuItem key={item.title}>
-              <IconContainer onClick={() => (window.location.href = `/admin${item.path}`)}>
-                <img src={item.icon_src} style={{ opacity: 1 }} />
-              </IconContainer>
-              <TitleContainer>
-                <Title_EN>{item.title}</Title_EN>
-              </TitleContainer>
-            </MenuItem>
-          )
-        })}
-      </Wrap>
-    </>
-  )
-}
-
-export default Main
+export default MainContents
 
 const MainTitle = styled.p`
   font-size: 32px;
@@ -74,8 +64,7 @@ const MenuItem = styled.div`
 
 const IconContainer = styled.button`
   display: block;
-  // width: 200px;
-  // height: 200px;
+  margin: auto;
   margin-bottom: 10px;
 `
 const TitleContainer = styled.div`

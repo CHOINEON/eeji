@@ -43,13 +43,14 @@ const SavedModelList = ({ data, onSelect }: any) => {
 export default SavedModelList
 
 const PublishableModelList = styled.div`
+  margin: 20px auto;
   width: 100%;
   height: 300px;
   box-shadow: 0px 0px 10px #5951db33;
   background-color: #fff;
   border: 1px solid #d5dcef;
   border-radius: 25px;
-  padding: 40px 20px;
+  padding: 20px;
   overflow: auto;
 
   overflow-y: scroll;
@@ -108,4 +109,5 @@ const PredictionListWrapper = styled.div`
 
 const ColumnLabel = styled.h2`
   // border: 1px solid red;
+  text-align: center;
 `

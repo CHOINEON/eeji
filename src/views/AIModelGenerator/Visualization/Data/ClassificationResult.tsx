@@ -26,7 +26,7 @@ const ClassificationResult = () => {
           float: 'left',
         }}
       >
-        <div className={`block float-right w-[38%] ${viewType === 'list' ? 'mt-[70px]' : ''}`}>
+        <div className={`block float-right w-[42%] ${viewType === 'list' ? 'mt-[70px]' : ''}`}>
           <button className="mr-1" onClick={() => handleClick('list')}>
             <img src={viewType === 'list' ? view_list_on : view_list_off} />
           </button>

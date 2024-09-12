@@ -23,8 +23,6 @@ const XaiAnalysisResult = () => {
 
   const { mutate: mutateXaiResult } = useMutation(XaiApi.getPaginatedXaiResult, {
     onSuccess: (result: any) => {
-      console.log('result:', result)
-
       if (Object.keys(result).length > 0)
         setXaiResult({
           ...xaiResult,
@@ -86,7 +84,7 @@ const XaiAnalysisResult = () => {
   return (
     <>
       <Container>
-        <div>
+        <div className="mt-[30px] ml-[30px] h-[47px]">
           <p
             style={{
               color: '#002D65',

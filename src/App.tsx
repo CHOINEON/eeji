@@ -5,7 +5,7 @@ import { useQueryClient } from 'react-query'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import HealthCheck from 'views/HealthCheck'
 import { useApiError } from './hooks/useApiError'
-import AdminLayout from './layouts/admin'
+import MainLayout from './layouts/admin'
 import AuthLayout from './layouts/auth'
 import Join from './layouts/join/join'
 import Login from './layouts/login/login'
@@ -53,7 +53,7 @@ export function App() {
     <>
       <Switch>
         <Route path={`/auth`} component={AuthLayout} />
-        <PrivateRoute path={`/admin`} component={AdminLayout} isAuthenticated={isAuthenticated} />
+        <PrivateRoute path={`/admin`} component={MainLayout} isAuthenticated={isAuthenticated} />
         <Route path={`/login`} component={Login} />
         <Route path={`/404`} component={NotFound} />
         <Route path={`/500`} component={NetworkError} />

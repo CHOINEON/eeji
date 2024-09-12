@@ -179,7 +179,7 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
             <div className="row-item">
               {rowData.state === '9' && (
                 <button className="btn-run" onClick={() => handleClick(rowData)}>
-                  {t('View result')}
+                  {t('View')}
                 </button>
               )}
             </div>

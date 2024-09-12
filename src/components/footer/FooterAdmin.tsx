@@ -1,45 +1,21 @@
-/*eslint-disable*/
-
-import { Flex, Link, List, ListItem, Text, useColorModeValue } from '@chakra-ui/react'
 import ineeji_logo from 'assets/img/ineeji/ineeji_logo_main.svg'
 
 export default function Footer() {
-  const textColor = useColorModeValue('gray.400', 'white')
   return (
-    <div style={{ position: 'absolute', width: '94vw', bottom: 10, textAlign: 'center' }}>
-      <Flex
-        zIndex="3"
-        flexDirection={{
-          base: 'column',
-          xl: 'row',
-        }}
-        alignItems={{
-          base: 'center',
-          xl: 'start',
-        }}
-        justifyContent="center"
-        px={{ base: '40px', md: '50px' }}
-        // pb="30px"
-        pt="40px"
-      >
-        <Text
-          color={textColor}
-          textAlign={{
-            base: 'center',
-            xl: 'start',
-          }}
-          // mb={{ base: '10px', xl: '0px' }}
-        >
-          {' '}
-          {/* &copy; {new Date().getFullYear()} */}
-          <Text as="span" fontWeight="500" ms="4px">
-            <Link mx="3px" color={textColor} href="https://www.ineeji.com" target="_blank" fontWeight="700">
-              <img src={ineeji_logo} style={{ marginLeft: '7px' }} />
-            </Link>
-            Ⓒ INEEJI Corp. All rights reserved.
-          </Text>
-        </Text>
-      </Flex>
+    <div className="flex flex-col xl:flex-row items-center xl:items-start justify-center">
+      <div className="text-gray-400 text-center xl:text-left">
+        <span className="font-medium">
+          <a
+            href="https://www.ineeji.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mx-1 text-gray-400 font-bold"
+          >
+            <img src={ineeji_logo} alt="INEEJI Logo" className="inline ml-2" />
+          </a>
+          <p>Ⓒ INEEJI Corp. All rights reserved.</p>
+        </span>
+      </div>
     </div>
   )
 }
