@@ -12,7 +12,6 @@ import { loadingAtom, stepCountStore } from './store/global/atom'
 import './style/styles.css'
 import { theme } from './theme/theme'
 
-//TODO: <TabContainer/> 컴포넌트 단순화하기
 const AIModelGenerator = () => {
   const { t } = useTranslation()
   const loading = useRecoilValue(loadingAtom)

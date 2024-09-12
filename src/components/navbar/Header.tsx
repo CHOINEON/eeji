@@ -18,7 +18,6 @@ const MenuLinks = ({ routes }: any) => {
     return (
       <Link href={to}>
         <Text
-          // className="text-menu"
           display="block"
           {...rest}
           opacity={activeRoute(to.toLowerCase()) ? 1 : 0.5}
@@ -26,7 +25,6 @@ const MenuLinks = ({ routes }: any) => {
           letterSpacing="0.5px"
           fontSize={13}
           fontFamily="Helvetica Neue"
-          // color={activeRoute(to.toLowerCase()) ? activeColor : inactiveColor}
         >
           {children}
         </Text>

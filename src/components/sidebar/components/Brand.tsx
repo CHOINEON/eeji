@@ -7,7 +7,6 @@ import { HSeparator } from 'components/separator/Separator'
 import { default as ineeji, default as ineeji_bl } from 'components/sidebar/components/nav_bar_logo.png'
 
 const Logo = styled.div<{ colorMode: string }>`
-  // width: 100%;
   height: 85px;
   background-repeat: no-repeat;
   margin-left: 20%;

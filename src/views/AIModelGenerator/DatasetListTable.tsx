@@ -4,7 +4,7 @@ import { TableRowSelection } from 'antd/es/table/interface'
 import { IDataset, IDatasetList } from 'apis/type/Dataset'
 import { t } from 'i18next'
 import { useState } from 'react'
-import { useRecoilState } from 'recoil'
+import { useSetRecoilState } from 'recoil'
 import { selectedDataState } from './store/dataset/atom'
 
 const formatSize = (size: number) => {
@@ -28,9 +28,9 @@ const renderDetails = (record: IDataset) => (
   </div>
 )
 
-const NewDatasetList = ({ data }: { data: IDatasetList }) => {
+const DatasetListTable = ({ data }: { data: IDatasetList }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
+  const setSelectedData = useSetRecoilState(selectedDataState)
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys)
@@ -106,4 +106,4 @@ const NewDatasetList = ({ data }: { data: IDatasetList }) => {
   )
 }
 
-export default NewDatasetList
+export default DatasetListTable

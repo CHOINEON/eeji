@@ -17,13 +17,6 @@ import Actions from '../Button/Actions'
 
 const { Column } = Table
 
-interface ITag {
-  key: number
-  name: string
-  color: string
-  icon?: any
-}
-
 interface IBadge {
   key: number
   text: string
@@ -70,7 +63,7 @@ const ModelListTable = () => {
     },
   })
 
-  //TODO : Dataset name 가져오기 위한 mutation
+  //TODO : Dataset name 가져오기 위한 mutation(백엔드 작업 대기)
   const { mutate: mutateModelDescription } = useMutation(ModelApi.getModelDescription, {
     // onSuccess: (result: IModelInfo[]) => {
     //     setModelList((prevModelList) => ({

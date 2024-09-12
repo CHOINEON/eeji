@@ -76,32 +76,10 @@ const ModelGeneratorResult = () => {
     }
   }, [analysisResponse])
 
-  // useEffect(() => {
-  //   console.log('selectedModel:', selectedModel)
-
-  //   //Dataset list 컴포넌트 로드될 때 chaining effect 차단하기 위해 분기 처리
-  //   if (selectedData.name !== '') {
-  //     const payload = {
-  //       set_auto: true,
-  //       user_id: localStorage.getItem('userId'),
-  //       com_id: localStorage.getItem('companyId') || 'google',
-  //       dataset_id: selectedData.ds_id,
-  //       date_col: selectedData.dateCol,
-  //       start_date: selectedData.startDate,
-  //       end_date: selectedData.endDate,
-  //       y_value: selectedData.targetY || '',
-  //       if_classification: selectedData.isClassification,
-  //     }
-  //     mutateRunning({ type: 'request', payload: payload })
-  //   }
-  //   return () => {
-  //     resetSelectedData()
-  //   }
-  // }, [selectedData])
-
-  const handleRegenerate = () => {
-    setModalState(true)
-  }
+  // TODO : 위치 잡고 기능 다시 살려놓기
+  // const handleRegenerate = () => {
+  //   setModalState(true)
+  // }
 
   const handleChange = (value: string) => {
     setModelIdx(parseInt(value))

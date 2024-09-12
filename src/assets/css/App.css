@@ -7,9 +7,7 @@
 @import 'assets/fonts/fontStyle.css';
 
 body {
-  /* width:100%; */
   font-family: 'DM Sans', sans-serif, 'ITC Avant Garde Gothic Pro';
-  /* background-color:#f4f7fe !important; */
 }
 img {
   border: none;

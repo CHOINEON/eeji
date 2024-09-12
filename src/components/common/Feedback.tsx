@@ -22,9 +22,6 @@ const Feedback = () => {
       <Button
         onClick={handleClick}
         style={{
-          // position: 'absolute',
-          // top: '17px',
-          // left: '1609px',
           width: '82px',
           height: '30px',
           backgroundImage: `url(${CustomerService})`,
