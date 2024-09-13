@@ -158,7 +158,7 @@ const Title = styled.div`
 
 const CustomTableContainer = styled.div`
   width: 820px;
-  height: 540px;
+  height: 570px;
   overflow: auto;
   white-space: nowrap;
   padding: 0 5px;
@@ -187,8 +187,6 @@ const CustomTableContainer = styled.div`
 `
 
 const RowItem = styled.div`
-  display: inline-block;
-  width: 100%;
   float: left;
   height: 45px;
   border: 1px solid #d5dcef;

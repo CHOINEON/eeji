@@ -24,7 +24,7 @@ i18n.use(initReactI18next).init({
     default: ['ko-KR'],
   },
   debug: true,
-  keySeparator: false,
+  keySeparator: '.', //계층 구분자로 점(.)사용,
   interpolation: {
     escapeValue: false,
   },

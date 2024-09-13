@@ -75,27 +75,16 @@
   "Clear Filter": "필터 초기화",
   "Total row count": "총 행 개수",
 
-  "meanAbsoluteError": {
-    "title": "평균절대오차",
-    "description": "{{error}}. 모든 오차 절대값의 합을 평균 (0에 가까울 수록 좋은 모델)"
+  "errors": {
+    "MAE": "평균절대오차. 모든 오차 절대값의 합을 평균 (0에 가까울 수록 좋은 모델)",
+    "MSE": "평균제곱오차. 오차를 제곱한 값의 평균 (알고리즘이 예측한 값과 실제 정답과의 차이)",
+    "RMSE": "평균 제곱근 오차. 예측 모델에서 예측한 값과 실제 값 사이의 평균 차이. 예측 모델이 목표 값(정확도)를 얼마나 잘 예측할 수 있는지 추정",
+    "R2": "회귀 모델의 성능을 평가하는 지표로, 모델이 주어진 데이터를 얼마나 잘 설명하는지를 나타냅니다. 0에서 1 사이의 값을 가지며, 1에 가까울수록 모델이 데이터를 잘 설명합니다."
   },
-  "meanSquaredError": {
-    "title": "평균제곱오차",
-    "description": "{{error}}. 오차를 제곱한 값의 평균 (알고리즘이 예측한 값과 실제 정답과의 차이)"
+  "performance": {
+    "F1_SCORE": "F1 점수. 정확성과 재현율을 균형있게 평가하는 성능 지표(0~1 사이의 값을 가지며, 높을 수록 좋음)",
+    "ACCURACY": "정확도. 분류 모델이 얼마나 정확하게 분류했는지 평가하는 지표"
   },
-  "rootMeanSquaredError": {
-    "title": "평균 제곱근 오차",
-    "description": "{{error}}. 예측 모델에서 예측한 값과 실제 값 사이의 평균 차이. 예측 모델이 목표 값(정확도)를 얼마나 잘 예측할 수 있는지 추정"
-  },
-  "f1Score": {
-    "title": "F1 점수",
-    "description": "정확성과 재현율을 균형있게 평가하는 성능 지표(0~1 사이의 값을 가지며, 높을 수록 좋음)"
-  },
-  "accuracy": {
-    "title": "정확도",
-    "description": "분류 모델이 얼마나 정확하게 분류했는지 평가하는 지표"
-  },
-  "Mean Absolute Error. The average of the absolute values of all errors (The closer to 0, the better the model)": "평균절대오차. 모든 오차 절대값의 합을 평균 (0에 가까울 수록 좋은 모델)",
 
   "report": "보고서",
   "Feature importance": "변수 중요도",

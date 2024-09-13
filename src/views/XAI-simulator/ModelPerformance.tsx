@@ -12,22 +12,6 @@ interface IErrorInfo {
   [key: string]: string
 }
 
-const errorInfo: IErrorInfo = {
-  MAE: '평균절대오차. 모든 오차 절대값의 합을 평균 (0에 가까울 수록 좋은 모델)',
-  MSE: '평균제곱오차. 오차를 제곱한 값의 평균 (알고리즘이 예측한 값과 실제 정답과의 차이)',
-  RMSE: '평균 제곱근 오차. 예측 모델에서 예측한 값과 실제 값 사이의 평균 차이. 예측 모델이 목표 값(정확도)를 얼마나 잘 예측할 수 있는지 추정',
-  F1_SCORE: '정확성과 재현율을 균형있게 평가하는 성능 지표 (0~1 사이의 값을 가지며, 높을 수록 좋음)',
-  ACCURACY: '분류 모델이 얼마나 정확하게 분류했는지 평가하는 지표',
-}
-
-// const errorInfo: IErrorInfo = {
-//   MAE: 'Mean Absolute Error. The average of the absolute values of all errors (The closer to 0, the better the model)',
-//   MSE: 'Mean Squared Error. The average of the squared errors (The difference between the value predicted by the algorithm and the actual correct answer)',
-//   RMSE: 'Root Mean Squared Error. The average difference between the value predicted by the model and the actual value. It estimates how well the prediction model can predict the target value (accuracy)',
-//   F1_SCORE: 'Performance indicator that balances precision and recall (It ranges from 0 to 1, and higher is better)',
-//   ACCURACY: 'A metric to evaluate how accurately the classification model classified',
-// }
-
 const ModelPerformance = () => {
   const { t } = useTranslation()
   const { message } = App.useApp()
@@ -35,8 +19,17 @@ const ModelPerformance = () => {
   const selectedModel = useRecoilValue(selectedModelAtom)
   const data = useRecoilValue(filteredResultState('error'))
 
+  const errorInfo: IErrorInfo = {
+    mae: t('errors.MAE'),
+    mse: t('errors.MSE'),
+    rmse: t('errors.RMSE'),
+    r2: t('errors.R2'),
+    F1_SCORE: t('performance.F1_SCORE'),
+    ACCURACY: t('performance.ACCURACY'),
+  }
+
   const handleReport = () => {
-    message.info('9월 서비스 준비 중입니다.')
+    message.info('10월 서비스 준비 중입니다.')
   }
 
   // 데이터 값이 일정값을 넘을 시 B/M/K로 구분하여 내보내게 설정해놓았습니다.
@@ -69,7 +62,10 @@ const ModelPerformance = () => {
         {selectedModel.is_classification ? (
           <PerformanceContentsWrap>
             <PerformanceContentsBox>
-              <PerformanceContents>{t('Prediction Accuracy')}</PerformanceContents>
+              <PerformanceContents>
+                <InfoCircle content={errorInfo.ACCURACY} styleClass="text-[#F2F5FC]" />
+                {t('Prediction Accuracy')}
+              </PerformanceContents>
               <PerformanceModelValue>{(Number(data[0]['ACCURACY']) * 100).toFixed(0)} %</PerformanceModelValue>
             </PerformanceContentsBox>
             <PerformanceContentsBox>
@@ -84,26 +80,24 @@ const ModelPerformance = () => {
           </PerformanceContentsWrap>
         ) : (
           <PerformanceContentsWrap>
-            {Object.keys(data[0])
-              // .filter((item) => ['ACCURACY', 'F1_SCORE'].includes(item))
-              .map((key, index) => {
-                const modelKey = key as keyof PerformanceModel
-                const isFirstItem = index === 0
-                const boxStyle = isFirstItem
-                  ? {}
-                  : { borderLeft: '1px solid rgba(255, 255, 255, 0.5)', paddingLeft: '10px' }
-                return (
-                  <PerformanceContentsBox style={boxStyle} key={modelKey}>
-                    <div>
-                      <PerformanceContents>
-                        {modelKey.toString().toUpperCase()}
-                        <InfoCircle content={errorInfo[modelKey]} styleClass="text-[#F2F5FC]" />
-                      </PerformanceContents>
-                      <PerformanceValue>{formatNumber(data[0][modelKey as keyof (typeof data)[0]])}</PerformanceValue>
-                    </div>
-                  </PerformanceContentsBox>
-                )
-              })}
+            {Object.keys(data[0]).map((key, index) => {
+              const modelKey = key as keyof PerformanceModel
+              const isFirstItem = index === 0
+              const boxStyle = isFirstItem
+                ? {}
+                : { borderLeft: '1px solid rgba(255, 255, 255, 0.5)', paddingLeft: '10px' }
+              return (
+                <PerformanceContentsBox style={boxStyle} key={modelKey}>
+                  <div>
+                    <PerformanceContents>
+                      {modelKey.toString().toUpperCase()}
+                      <InfoCircle content={errorInfo[modelKey]} styleClass="text-[#F2F5FC]" />
+                    </PerformanceContents>
+                    <PerformanceValue>{formatNumber(data[0][modelKey as keyof (typeof data)[0]])}</PerformanceValue>
+                  </div>
+                </PerformanceContentsBox>
+              )
+            })}
           </PerformanceContentsWrap>
         )}
         <PerformanceButtonWrap>

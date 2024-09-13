@@ -4,6 +4,7 @@ import { Tooltip } from 'antd'
 const InfoCircle = ({ content, styleClass }: any) => {
   const defaultClass = `mx-2 text-[15px]`
 
+  console.log('content:', content)
   return (
     <>
       <Tooltip title={content}>
