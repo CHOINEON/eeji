@@ -1,6 +1,7 @@
 import { EllipsisOutlined, ExclamationCircleFilled } from '@ant-design/icons'
 import { App, Button, Dropdown, MenuProps } from 'antd'
 import DatasetApi from 'apis/DatasetApi'
+import axios from 'axios'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from 'react-query'
@@ -20,8 +21,12 @@ const Actions = () => {
       message.success(t('The dataset has been successfully deleted.'))
       queryClient.invalidateQueries('datasets')
     },
-    onError: (error: any) => {
-      message.error(`${t('Deletion failed.')} ${t('Please contact the administrator.')}`)
+    onError: (error: unknown) => {
+      if (axios.isAxiosError(error)) {
+        message.error(`${t('Deletion failed.')} ${t('Please contact the administrator.')}`)
+      } else {
+        message.error(t('An unknown error occurred.'))
+      }
     },
   })
 
