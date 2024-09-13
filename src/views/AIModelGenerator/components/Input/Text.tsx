@@ -8,6 +8,9 @@ export const Text = styled.p`
 export const Title = styled(Text)`
   font-weight: bolder;
 `
+export const MenuTitle = styled(Title)`
+  font-size: 32px;
+`
 
 export const SubTitle = styled(Title)`
   font-size: 20px;

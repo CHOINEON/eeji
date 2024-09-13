@@ -24,6 +24,7 @@ const antdCustomTheme = {
   components: {
     Button: {
       colorPrimary: '#4338f7 !important',
+      colorPrimaryHover: '#fff',
     },
     Modal: {
       borderRadius: 12,
@@ -33,6 +34,9 @@ const antdCustomTheme = {
     },
     Select: {
       borderRadius: 12,
+    },
+    Table: {
+      headerColor: '#E5EBFF',
     },
   },
 }

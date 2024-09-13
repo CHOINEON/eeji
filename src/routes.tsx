@@ -5,7 +5,7 @@ import { MdOutlineAnalytics, MdOutlineModelTraining } from 'react-icons/md'
 // Admin Imports
 import AIModelGenerator from 'views/AIModelGenerator'
 import ApiService from 'views/ApiService'
-import Main from 'views/Main/Main'
+import MainContents from 'views/Main/Main'
 import PriceForecasting from 'views/PriceForecasting/OilPrice'
 import XAIsimulator from 'views/XAI-simulator'
 
@@ -17,7 +17,7 @@ const routes = [
     layout: '/admin',
     path: '/main',
     icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
-    component: Main,
+    component: MainContents,
   },
   {
     name: 'AI Model Generator',

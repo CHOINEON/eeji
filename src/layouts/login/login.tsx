@@ -209,78 +209,80 @@ export const Login: React.FC = () => {
 
   return (
     <>
-      <Home_Bg />
-      <Logo />
-      <SidebarBrand />
-      <AboveTitle />
-      <Title />
-      <BottomBox>
-        <Circle />
-        <BottomTitleParent>
-          <BottomTitle>Cloud AI EEJI</BottomTitle>
-          <BottomCotents>
-            is a comprehensive AI-driven prediction service tailored for businesses. It features automated AI model
-            generation, provides explanations for results, offers commodity index forecasts to enhance model accuracy,
-            and includes a REST API service enabling users to leverage prediction data for insightful decision-making.
-          </BottomCotents>
-        </BottomTitleParent>
-        <AvailableServiceIcon />
-      </BottomBox>
-      <FormWrap>
-        <Login_ineejiIcon />
-        <LoginTitle>Login</LoginTitle>
-        <LoginSubTitle>Enter Your ID and password to sign in.</LoginSubTitle>
-        <LoginIcon />
-        <FormControl>
-          <Select
-            id="company"
-            size="large"
-            placeholder={'Select Company'}
-            onChange={handleChange}
-            style={{ width: '100%', marginBottom: '30px', border: 0 }}
-            options={companyList}
-          />
-          <Input
-            id="id"
-            color={'black'}
-            type="text"
-            size="large"
-            placeholder={'ID'}
-            onChange={(e: any) => ChangeId(e)}
-            style={{ width: '100%', marginBottom: '1.3vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
-          />
-          <Input
-            id="password"
-            color={'black'}
-            type="password"
-            size="large"
-            placeholder={'Password'}
-            onChange={(e: never) => ChangePassword(e)}
-            onKeyDown={(e: unknown) => onEnterLogin(e)}
-            style={{ width: '100%', marginBottom: '1.3vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
-          />
-        </FormControl>
-        <Button
-          type="submit"
-          onClick={() => setLogin(id, password)}
-          style={{
-            fontFamily: 'Noto Sans',
-            backgroundColor: '#4338f7',
-            color: '#fff',
-            width: '100%',
-            height: 46,
-          }}
-        >
-          Login
-        </Button>
-        <OrWrapper>or</OrWrapper>
-        <GoogleSignin />
-        <TextMenuWrapper>
-          <TextWrapper onClick={() => message.info('관리자에게 문의하세요')}>Find ID | </TextWrapper>
-          <TextWrapper onClick={() => message.info('관리자에게 문의하세요')}>Find Password | </TextWrapper>
-          <TextWrapper onClick={() => message.info('관리자에게 문의하세요')}>Join</TextWrapper>
-        </TextMenuWrapper>
-      </FormWrap>
+      <div className="relative">
+        <Home_Bg />
+        <Logo />
+        <SidebarBrand />
+        <AboveTitle />
+        <Title />
+        <BottomBox>
+          <Circle />
+          <BottomTitleParent>
+            <BottomTitle>Cloud AI EEJI</BottomTitle>
+            <BottomCotents>
+              is a comprehensive AI-driven prediction service tailored for businesses. It features automated AI model
+              generation, provides explanations for results, offers commodity index forecasts to enhance model accuracy,
+              and includes a REST API service enabling users to leverage prediction data for insightful decision-making.
+            </BottomCotents>
+          </BottomTitleParent>
+          <AvailableServiceIcon />
+        </BottomBox>
+        <FormWrap>
+          <Login_ineejiIcon />
+          <LoginTitle>Login</LoginTitle>
+          <LoginSubTitle>Enter Your ID and password to sign in.</LoginSubTitle>
+          <LoginIcon />
+          <FormControl>
+            <Select
+              id="company"
+              size="large"
+              placeholder={'Select Company'}
+              onChange={handleChange}
+              style={{ width: '100%', marginBottom: '30px', border: 0 }}
+              options={companyList}
+            />
+            <Input
+              id="id"
+              color={'black'}
+              type="text"
+              size="large"
+              placeholder={'ID'}
+              onChange={(e: any) => ChangeId(e)}
+              style={{ width: '100%', marginBottom: '1.3vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
+            />
+            <Input
+              id="password"
+              color={'black'}
+              type="password"
+              size="large"
+              placeholder={'Password'}
+              onChange={(e: never) => ChangePassword(e)}
+              onKeyDown={(e: unknown) => onEnterLogin(e)}
+              style={{ width: '100%', marginBottom: '1.3vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
+            />
+          </FormControl>
+          <Button
+            type="submit"
+            onClick={() => setLogin(id, password)}
+            style={{
+              fontFamily: 'Noto Sans',
+              backgroundColor: '#4338f7',
+              color: '#fff',
+              width: '100%',
+              height: 46,
+            }}
+          >
+            Login
+          </Button>
+          <OrWrapper>or</OrWrapper>
+          <GoogleSignin />
+          <TextMenuWrapper>
+            <TextWrapper onClick={() => message.info('관리자에게 문의하세요')}>Find ID | </TextWrapper>
+            <TextWrapper onClick={() => message.info('관리자에게 문의하세요')}>Find Password | </TextWrapper>
+            <TextWrapper onClick={() => message.info('관리자에게 문의하세요')}>Join</TextWrapper>
+          </TextMenuWrapper>
+        </FormWrap>
+      </div>
     </>
   )
 }
@@ -320,15 +322,11 @@ const Home_Bg = styled(BgStyle)`
 `
 
 const FormWrap = styled.div`
-  min-width: 398px;
-  width: 18vw;
-  padding-top: 1.5vw;
-  padding-left: 1.5vw;
-  padding-right: 1.5vw;
-  padding-bottom: 1vw;
-  position: absolute;
-  right: 4vw;
-  top: 200px;
+  width: 350px;
+  padding: 20px;
+  position: fixed;
+  right: 100px;
+  top: 140px;
   z-index: 999;
   background-color: #fff;
   border-radius: 30px;
@@ -367,8 +365,8 @@ const Logo = styled(BgStyle)`
 `
 const BottomBox = styled.div`
   position: fixed;
-  left: 7vw;
-  bottom: 2vw;
+  left: 80px;
+  bottom: 30px;
   border-top: 1px solid #fff;
   padding: 0.5vw;
   z-index: 999;

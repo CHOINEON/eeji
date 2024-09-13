@@ -1,57 +1,20 @@
 // Chakra imports
-import { Box, useDisclosure } from '@chakra-ui/react'
-import ConfirmDialog from 'components/dialogs/ConfirmDialog'
 import Footer from 'components/footer/FooterAdmin'
-import NavBar from 'components/navbar/NavBar'
+import Header from 'components/navbar/Header'
 // Layout components
 // import Navbar from 'components/navbar/NavbarAdmin'
-import { useState } from 'react'
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import routes from 'routes'
-import Main from 'views/Main/Main'
+import MainContents from 'views/Main/Main'
 
 // Custom Chakra theme
-export default function Dashboard(props: { [x: string]: any }) {
-  const { ...rest } = props
-  // states and functions
-  const [fixed] = useState(false)
+export default function Main() {
+  document.documentElement.dir = 'ltr'
 
-  const [toggleSidebar, setToggleSidebar] = useState(false)
-  // functions for changing the states from components
-
-  const location = useLocation()
-
-  const getRoute = () => {
-    return window.location.pathname !== '/admin/main'
+  const isMain = () => {
+    return window.location.pathname === '/admin/main'
   }
 
-  const getActiveRoute = (routes: RoutesType[]): string => {
-    const activeRoute = 'Default Brand Text'
-    for (let i = 0; i < routes.length; i++) {
-      if (window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1) {
-        return routes[i].name
-      }
-    }
-    return activeRoute
-  }
-  const getActiveNavbar = (routes: RoutesType[]): boolean => {
-    const activeNavbar = false
-    for (let i = 0; i < routes.length; i++) {
-      if (window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1) {
-        return routes[i].secondary
-      }
-    }
-    return activeNavbar
-  }
-  const getActiveNavbarText = (routes: RoutesType[]): string | boolean => {
-    const activeNavbar = false
-    for (let i = 0; i < routes.length; i++) {
-      if (window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1) {
-        return routes[i].name
-      }
-    }
-    return activeNavbar
-  }
   const getRoutes = (routes: RoutesType[]): any => {
     return routes.map((route: RoutesType, key: any) => {
       if (route.layout === '/admin') {
@@ -61,55 +24,29 @@ export default function Dashboard(props: { [x: string]: any }) {
       }
     })
   }
-  document.documentElement.dir = 'ltr'
-  const { onOpen } = useDisclosure()
 
   return (
-    <Box position="fixed" left={0} right={0} top={0} bottom={0}>
-      {/* <SidebarContext.Provider
-        value={{
-          toggleSidebar,
-          setToggleSidebar,
-        }}
-      > */}
-      <ConfirmDialog>
-        {/* <Sidebar routes={routes} display="none" {...rest} /> */}
-        <NavBar routes={routes} />
-        {getRoute() ? (
-          location.pathname === '/admin/ai-model-generator' ? (
-            <Box minH="90vh" p="30px" overflow="auto" height="90vh" width="100vw">
-              <Switch>
-                {getRoutes(routes)}
-                <Redirect from="/" to="/admin/main" />
-              </Switch>
-            </Box>
-          ) : (
-            <Box mx="auto" p="30px" minH="90vh">
-              <Switch>
-                {getRoutes(routes)}
-                <Redirect from="/" to="/admin/main" />
-              </Switch>
-            </Box>
-          )
-        ) : (
+    <div className="relative w-[1280px] mx-auto">
+      <div className="w-[1340px] m-auto">
+        <Header routes={routes}></Header>
+        {isMain() ? (
           <>
-            <Box
-              mx="auto"
-              h="100vh"
-              p={{ base: '20px', md: '40px' }}
-              // pe="20px"
-              // minH="94vh"
-              // maxH="90vh"
-              // pt="50px"
-              background={'linear-gradient(to left, #4338f7, #000000)'}
-            >
-              <Main />
+            <div className="my-[10px] mx-[30px] min-h-[780px]">
+              <MainContents />
+            </div>
+            <div className="absolute bottom-[70px] w-[1280px] text-center background-red">
               <Footer />
-            </Box>
+            </div>
           </>
+        ) : (
+          <div className=" w-[1340px] min-h-[860px] bg-[#F3F7FE] rounded-[25px]">
+            <Switch>
+              {getRoutes(routes)}
+              <Redirect from="/" to="/admin/main" />
+            </Switch>
+          </div>
         )}
-      </ConfirmDialog>
-      {/* </SidebarContext.Provider> */}
-    </Box>
+      </div>
+    </div>
   )
 }

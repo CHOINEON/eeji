@@ -1,9 +1,9 @@
-import styled from '@emotion/styled'
 import XaiApi from 'apis/XaiApi'
 import { useEffect, useState } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
+import { MenuTitle } from 'views/AIModelGenerator/components/Input/Text'
 import ApiSyntax from './ApiSyntax'
 import SavedModelList from './PublishableModelList'
 
@@ -40,27 +40,16 @@ const ApiService = () => {
     setSelectedRow(param)
   }
 
-  const handleClick = () => {
-    console.log('click')
-  }
-
   return (
     <>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Title style={{ marginLeft: '30px', marginBottom: 10 }}>{t('API Generator')}</Title>
+      <div className="mx-[30px] pt-5">
+        <MenuTitle>{t('API Generator')}</MenuTitle>
       </div>
-      <SavedModelList data={data} onSelect={handleSelect} />
-      <ApiSyntax />
+      <div className="mx-5">
+        <SavedModelList data={data} onSelect={handleSelect} />
+        <ApiSyntax />
+      </div>
     </>
   )
 }
 export default ApiService
-
-const Title = styled.div`
-  font-family: 'Helvetica Neue';
-  font-weight: bold;
-  color: #002d65;
-  font-size: 32px;
-  display: flex;
-  float: left;
-`

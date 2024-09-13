@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import DatasetList from './DatasetList'
 import DataEditModal from './components/DataInfo/DataEditModal'
-import DataInfoBox from './components/DataInfo/DataInfoBox'
+import { MenuTitle } from './components/Input/Text'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
 import { analysisResponseAtom } from './store/response/atoms'
 import './style/data-analysis-style.css'
@@ -55,27 +55,20 @@ const DataSet = () => {
   }
 
   return (
-    <div className="h-[80vh] p-10 border-r-2">
-      <p className="font-['Helvetica Neue'] font-bold text-[23px] text-[#002D65] ">{t('Dataset')}</p>
-      <div className="h-[93vh]">
-        <div className="w-100 h-3/5 overflow-scroll text-center">
-          <div className="flex justify-center flex-wrap">
-            <DatasetList />
-          </div>
-        </div>
-        <div className="w-100 flex align-center justify-center">{selectedData[0].ds_id && <DataInfoBox />}</div>
-        <div className="w-100 flex align-center justify-center mt-2 px-[10px]">
-          <Button
-            className="w-100 float-right h-[46px] rounded-lg bg-[#4338F7] text-white text-[15px] font-bold font-lg "
-            disabled={!selectedData[0].ds_id}
-            onClick={handleGenerateModel}
-            loading={loading}
-          >
-            {t('Generate Model')}
-          </Button>
-        </div>
-        <DataEditModal />
+    <div className="px-5 py-10">
+      <MenuTitle className="ml-[25px]">{t('Dataset')}</MenuTitle>
+      <div className="m-5">
+        <DatasetList />
       </div>
+      <Button
+        className="w-100 float-right h-[46px] rounded-lg bg-[#4338F7] text-white text-[15px] font-bold font-lg "
+        disabled={!selectedData[0].ds_id}
+        onClick={handleGenerateModel}
+        loading={loading}
+      >
+        {t('Generate Model')}
+      </Button>
+      <DataEditModal />
     </div>
   )
 }

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
-import { Box } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import { useRecoilState, useResetRecoilState } from 'recoil'
@@ -27,11 +26,15 @@ const XAIsimulator = () => {
 
   return (
     <>
-      <Box style={{ position: 'relative', zIndex: 1000, width: '100%', height: '100%' }}>
-        {analysisResult?.feature_length > 0 ? <XaiAnalysisResult /> : <UploadPage />}
-        {/* <AnalysisResult /> */}
-        {/* <Page /> */}
-      </Box>
+      {analysisResult?.feature_length > 0 ? (
+        <XaiAnalysisResult />
+      ) : (
+        <div className="relative w-full h-full">
+          <UploadPage />
+        </div>
+      )}
+      {/* <AnalysisResult /> */}
+      {/* <Page /> */}
     </>
   )
 }

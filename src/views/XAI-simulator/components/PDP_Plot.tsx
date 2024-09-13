@@ -72,13 +72,13 @@ const PDP_Plot = ({ data }: any) => {
   return (
     <>
       <ComponentContainer>
-        <div className="mt-1 ml-[20px]">
+        <div className="mt-2 ml-[20px]">
           <Title>{t('Prediction of Variable Impact')}</Title>
           <InfoCircle
             content={t('Surrounding effect of a single variable on prediction results')}
             styleClass="text-[#9E9E9E]"
           />
-          <div className="w-100 mt-3 pr-4 text-right">
+          <div className="w-100 my-3 pr-4 text-right">
             <Select
               className="w-[200px] mx-5 text-left"
               defaultValue={options[0]?.value}
@@ -86,7 +86,7 @@ const PDP_Plot = ({ data }: any) => {
               options={options}
             />
           </div>
-          <div className="mt-1 h-[175px]">
+          <div className="my-2 h-[200px]">
             <ChartWrapper>
               <Line data={chartData} options={chartOptions} />
             </ChartWrapper>
@@ -101,9 +101,8 @@ export default PDP_Plot
 
 const ComponentContainer = styled.div`
   border: 1px solid red;
-  // height: 100px;
   width: 100%;
-  height: 45%;
+  height: 41%;
   display: block;
   float: left;
   justify-content: space-evenly;

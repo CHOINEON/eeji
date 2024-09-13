@@ -5,14 +5,13 @@ import { useEffect } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import { useTranslation } from 'react-i18next'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import ModelList from './components/Model/ModelList'
 import DataSet from './DataSet'
 import ModelGeneratorResult from './ModelGeneratorResult'
-import ModelList from './components/Model/ModelList'
 import { loadingAtom, stepCountStore } from './store/global/atom'
 import './style/styles.css'
 import { theme } from './theme/theme'
 
-//TODO: <TabContainer/> 컴포넌트 단순화하기
 const AIModelGenerator = () => {
   const { t } = useTranslation()
   const loading = useRecoilValue(loadingAtom)
@@ -37,11 +36,11 @@ const AIModelGenerator = () => {
       <Box style={{ position: 'relative', zIndex: 1000 }}>
         <Spin tip={t('loading')} size="small" spinning={loading} style={{ top: 300 }}>
           {activeStep === 0 && (
-            <div className="w-100 h-dvh block float-left">
-              <div className="w-2/6 float-left">
+            <div className="h-[500px] block float-left m-auto">
+              <div className="w-[500px] float-left">
                 <DataSet />
               </div>
-              <div className="w-4/6 min-h-fit block float-left">
+              <div className="w-[800px] float-left">
                 <ModelList />
               </div>
             </div>

@@ -1,7 +1,8 @@
 import { UndoOutlined } from '@ant-design/icons'
 import styled from '@emotion/styled'
 import { Button, Select } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { t } from 'i18next'
+import { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { filteredResultState, filterWithConstraint } from 'views/AIModelGenerator/store/response/atoms'
 
@@ -82,11 +83,11 @@ const CustomTable = () => {
 
   return (
     <>
-      <div className="mt-5 mb-7">
-        <Title>데이터 필터링</Title>
+      <div className="w-[820px] mt-5 mb-7">
+        <Title>{t('Data Filtering')}</Title>
         <div className="ml-1">
           <div className="mr-3 inline-block ">
-            실제값 :{' '}
+            {t('Truth')} :{' '}
             <Select
               className="w-[120px]"
               placeholder="Select..."
@@ -97,7 +98,7 @@ const CustomTable = () => {
             />
           </div>
           <div className="mr-3 inline-block">
-            예측값 :{' '}
+            {t('Predict')} :{' '}
             <Select
               className="w-[120px]"
               placeholder="Select..."
@@ -108,16 +109,16 @@ const CustomTable = () => {
             />
           </div>
           <Button type="text" icon={<UndoOutlined />} onClick={handleClearFilter}>
-            Clear Filter
+            {t('Clear Filter')}
           </Button>
         </div>
       </div>
 
       <CustomTableContainer>
         <LabelContainer>
-          <CellItem>인덱스</CellItem>
-          <CellItem>실제</CellItem>
-          <CellItem>예측결과</CellItem>
+          <CellItem>{t('Index')}</CellItem>
+          <CellItem>{t('Truth')}</CellItem>
+          <CellItem>{t('Pred')}</CellItem>
           {columns?.map((col: string, idx: number) => (
             <CellItem key={idx}>{col}</CellItem>
           ))}
@@ -138,7 +139,9 @@ const CustomTable = () => {
             })}
         </>
       </CustomTableContainer>
-      <p>Total row count : {Object.keys(data).length}</p>
+      <p>
+        {t('Total row count')} : {Object.keys(data).length}
+      </p>
     </>
   )
 }
@@ -154,8 +157,7 @@ const Title = styled.div`
 `
 
 const CustomTableContainer = styled.div`
-  // background-color: pink;
-  width: 68%;
+  width: 820px;
   height: 540px;
   overflow: auto;
   white-space: nowrap;

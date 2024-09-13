@@ -17,13 +17,6 @@ import Actions from '../Button/Actions'
 
 const { Column } = Table
 
-interface ITag {
-  key: number
-  name: string
-  color: string
-  icon?: any
-}
-
 interface IBadge {
   key: number
   text: string
@@ -70,7 +63,7 @@ const ModelListTable = () => {
     },
   })
 
-  //Dataset name 가져오기 위한 mutation
+  //TODO : Dataset name 가져오기 위한 mutation(백엔드 작업 대기)
   const { mutate: mutateModelDescription } = useMutation(ModelApi.getModelDescription, {
     // onSuccess: (result: IModelInfo[]) => {
     //     setModelList((prevModelList) => ({
@@ -83,16 +76,20 @@ const ModelListTable = () => {
     //   }
 
     onSuccess: (result: any) => {
-      setModelList((prevModelList) => ({
-        ...prevModelList,
-        [result[0].id]: { ...prevModelList[result[0].id], dataset_name: result[0].dataset_name },
-      }))
+      // setModelList((prevModelList) => ({
+      //   ...prevModelList,
+      //   [result[0].id]: { ...prevModelList[result[0].id], dataset_name: result[0].dataset_name },
+      // }))
     },
   })
 
   useEffect(() => {
     if (Array.isArray(data)) {
-      setModelList(data as IModelList)
+      const updatedData = data.map((item, index) => ({
+        ...item,
+        key: index.toString(),
+      }))
+      setModelList(updatedData as IModelList)
 
       // TODO: 한꺼번에 전부 돌면 n번. pagination 먼저 처리해야됨
       // data.map((item: IModelInfo) => {
@@ -159,16 +156,18 @@ const ModelListTable = () => {
     mutateTrainingResult({ model_id: model.id, is_xai: 'false' })
   }
 
+  const renderStateBadge = (state: string, status: IBadge[]) => {
+    const model_state = status.filter((item: IBadge) => item.key.toString() === state)[0]
+    return <Badge className="row-item-tag m-auto" status={model_state?.status} text={model_state?.text}></Badge>
+  }
+
   return (
     <>
       <Table
-        className="w-100"
+        className="w-[780px]"
         size="small"
         dataSource={modelList}
         pagination={{ pageSize: 10, position: ['bottomCenter'], pageSizeOptions: [10] }}
-        // expandable={{
-        //   expandedRowRender: (record) => <p style={{ margin: 0 }}>작업 중입니다</p>,
-        // }}
       >
         <Column
           title={t('Model Name')}
@@ -177,19 +176,14 @@ const ModelListTable = () => {
           align="center"
           render={(name: string) => <Ellipsis ref={contentRef}>{name}</Ellipsis>}
         />
-        <Column title={t('Target')} dataIndex="target" key="target" align="center" />
+        <Column title={t('Target')} dataIndex="target" key="target" align="center" ellipsis={false} />
         <Column title={t('Created')} dataIndex="created_at" key="created_at" align="center" />
         <Column
           title={t('State')}
           dataIndex="state"
           key="state"
           align="center"
-          render={(state: string) => {
-            const model_state = status.filter((item: IBadge) => item.key.toString() == state)[0]
-            return (
-              <Badge className="row-item-tag m-auto" status={model_state?.status} text={t(model_state?.text)}></Badge>
-            )
-          }}
+          render={(state: string) => renderStateBadge(state, status)}
         />
         <Column
           title={t('Model Type')}
@@ -215,7 +209,7 @@ const ModelListTable = () => {
             <>
               {record.state === '9' && (
                 <button className="text-[#1677ff] cursor-pointer" onClick={() => handleClick(record)}>
-                  {t('View result')}
+                  {t('View')}
                 </button>
               )}
             </>

@@ -306,9 +306,9 @@ const ChartItem = (props: any) => {
               {t('1m')}
             </div>
 
-            <div className={`item-disabled`}>
+            {/* <div className={`item-disabled`}>
               <img src="/img/icon/candle.svg" alt="" />
-            </div>
+            </div> */}
 
             <div className={`item item-active`}>
               <img src="/img/icon/line.svg" alt="" />

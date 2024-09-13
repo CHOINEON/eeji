@@ -1,7 +1,5 @@
-import React from 'react'
-import { QuestionCircleOutlined } from '@ant-design/icons'
-import useModal from 'hooks/useModal'
 import { Button } from 'antd'
+import useModal from 'hooks/useModal'
 import CustomerService from './../icons/CustomerService.png'
 
 const Feedback = () => {
@@ -20,19 +18,18 @@ const Feedback = () => {
   }
 
   return (
-    <Button
-      onClick={handleClick}
-      style={{
-        // position: 'absolute',
-        // top: '17px',
-        // left: '1609px',
-        width: '82px',
-        height: '30px',
-        backgroundImage: `url(${CustomerService})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-      }}
-    ></Button>
+    <div className="flex justify-center items-center">
+      <Button
+        onClick={handleClick}
+        style={{
+          width: '82px',
+          height: '30px',
+          backgroundImage: `url(${CustomerService})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+        }}
+      ></Button>
+    </div>
   )
 }
 

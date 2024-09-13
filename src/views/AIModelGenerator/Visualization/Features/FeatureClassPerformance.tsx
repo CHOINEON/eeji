@@ -1,3 +1,4 @@
+import { t } from 'i18next'
 import { useState } from 'react'
 import { Bar } from 'react-chartjs-2'
 import { useRecoilValue } from 'recoil'
@@ -82,13 +83,11 @@ const FeatureClassPerformance = () => {
     <>
       {Object.keys(performanceData).length > 0 && (
         <ComponentContainer>
-          <PerformanceTitle>모델 분석</PerformanceTitle>
+          <PerformanceTitle>{t('Model Analysis')}</PerformanceTitle>
           <PerformanceTitleWrap>
             <div>
               <AiIcon>AI</AiIcon>
-              <SubTitle>
-                {maxKey}에 대한 정확도가 가장 높고, {minKey}에 대한 정확도가 낮습니다.
-              </SubTitle>
+              <SubTitle>{t('accuracyMessage', { maxKey, minKey })}</SubTitle>
             </div>
           </PerformanceTitleWrap>
           <div>

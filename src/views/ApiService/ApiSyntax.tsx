@@ -39,15 +39,6 @@ const ApiSyntax = () => {
     const newDefaultValue: string = JSON.stringify(apiInfo?.response?.syntax)
     setDefaultValue(newDefaultValue)
   }, [apiInfo])
-  // const [columns, setColumns] = useState<TableProps<DataType>['columns']>([])
-
-  // useEffect(() => {
-  //   if (result.api_key.length > 0) {
-  //     //
-  //   }
-  // }, [result])
-
-  // console.log('result?.response.syntax:', result?.response.syntax)
 
   const columns: TableProps<SyntaxDataType>['columns'] = [
     {
@@ -139,34 +130,25 @@ const ApiSyntax = () => {
 
   return (
     <SyntaxTableWrapper>
-      <div className="w-1/4 p-3 inline-block float-left">
-        {/* <div className="mb-5">
-          <TableName>Model Input Variables</TableName>
-        </div> */}
-
+      <div className="w-[35%] p-3 inline-block float-left">
         <div className="mb-5">
           <TableName>{t('Request Syntax')}</TableName>
-          <Table columns={columns} dataSource={data} pagination={false} />
+          <Table size="small" columns={columns} dataSource={data} pagination={false} />
         </div>
         <div className="mb-5">
           <TableName>{t('Request Header')}</TableName>
-          <Table columns={columns_header} dataSource={data_header} pagination={false} />
+          <Table size="small" columns={columns_header} dataSource={data_header} pagination={false} />
         </div>
       </div>
-      <div className="w-1/4 p-3 inline-block float-left">
+      <div className="w-[35%] p-3 inline-block float-left">
         <div className="mb-5">
           <TableName>{t('Request Elements')}</TableName>
-          <Table columns={columns_element} dataSource={data_element} pagination={false} />
+          <Table size="small" columns={columns_element} dataSource={data_element} pagination={false} />
         </div>
       </div>
-      <div className="w-2/4 p-3 inline-block float-left">
+      <div className="w-[30%] p-3 inline-block float-right">
         <TableName>{t('Response Syntax')}</TableName>
-        <TextArea
-          rows={12}
-          value={defaultValue}
-          // onChange={onChange}
-          // style={{ height: 300, resize: 'none' }}
-        />
+        <TextArea rows={10} value={defaultValue} />
       </div>
     </SyntaxTableWrapper>
   )

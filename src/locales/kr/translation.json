@@ -28,9 +28,10 @@
   "Column": "열",
   "Start": "시작",
   "End": "끝",
-  "Dataset Name": "데이터셋 이름",
+  "Dataset Name": "데이터셋",
   "Optional": "선택 사항",
   "Timestamp": "타임스탬프",
+  "Size": "용량",
 
   "The types of date formats supported by EEJI can be found in the guide document. Please check the document for more details.": "EEJI에서 지원하는 날짜 포맷의 종류는 가이드 문서를 확인해주세요",
   "The model training has been successfully requested.": "모델 학습이 정상적으로 요청되었습니다.",
@@ -46,7 +47,7 @@
   "Created": "생성일",
   "State": "상태",
   "Result": "결과",
-  "View result": "결과 보기",
+  "View": "보기",
   "Update Model Details": "모델 정보 수정",
   "Sorry. This request has expired.": "데이터 유효기간이 만료되었습니다.",
   "The result is not available. Please contact the administrator.": "결과를 확인할 수 없습니다. 관리자에게 문의하세요",
@@ -66,6 +67,13 @@
   "Model Performance": "모델 성능",
   "is trained by optimized EEJI model": "데이터로 학습을 진행한 결과입니다",
   "Prediction Accuracy": "예측 정확도",
+
+  "Index": "인덱스",
+  "Data Filtering": "데이터 필터링",
+  "Model Analysis": "모델 분석",
+  "accuracyMessage": "{{maxKey}}에 대한 정확도가 가장 높고, {{minKey}}에 대한 정확도가 낮습니다.",
+  "Clear Filter": "필터 초기화",
+  "Total row count": "총 행 개수",
 
   "meanAbsoluteError": {
     "title": "평균절대오차",

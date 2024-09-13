@@ -31,6 +31,7 @@
   "Start": "Start",
   "End": "End",
   "Dataset Name": "Dataset Name",
+  "Size": "Size",
   "Optional": "Optional",
   "Timestamp": "Timestamp",
 
@@ -44,7 +45,7 @@
   "Created": "Created",
   "State": "State",
   "Result": "Result",
-  "View result": "View result",
+  "View": "View",
   "Update Model Details": "Update Model Details",
   "Sorry. This request has expired.": "Sorry. This request has expired.",
   "The result is not available. Please contact the administrator.": "The result is not available. Please contact the administrator.",
@@ -63,7 +64,14 @@
   "Prediction Results of": "Prediction Results of {{target_var}}",
   "Model Performance": "Model Performance",
   "is trained by optimized EEJI model": "is trained by optimized EEJI model",
-  "Prediction Accuracy": "예측 정확도",
+  "Prediction Accuracy": "Prediction Accuracy",
+
+  "Index": "Index",
+  "Data Filtering": "Data Filtering",
+  "Model Analysis": "Model Analysis",
+  "accuracyMessage": "The accuracy is highest for {{maxKey}} and lowest for {{minKey}}.",
+  "Clear Filter": "Clear Filter",
+  "Total row count": "Total row count",
 
   "meanAbsoluteError": {
     "title": "평균절대오차",
@@ -86,7 +94,7 @@
     "description": "분류 모델이 얼마나 정확하게 분류했는지 평가하는 지표"
   },
 
-  "report": "report",
+  "report": "Report",
   "Feature importance": "Feature importance",
   "The higher the feature importance, the greater its impact on the prediction model.": "The higher the feature importance, the greater its impact on the prediction model.",
   "The most important feature in this prediction model is": "The most important feature in this prediction model is",

@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { colorChips, colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
+import { MenuTitle } from 'views/AIModelGenerator/components/Input/Text'
 import GlobalFeatureImportance from './components/GlobalFeatureImportance'
 import PDP_Plot from './components/PDP_Plot'
 import { transformDataByRow } from './functions'
@@ -23,8 +24,6 @@ const XaiAnalysisResult = () => {
 
   const { mutate: mutateXaiResult } = useMutation(XaiApi.getPaginatedXaiResult, {
     onSuccess: (result: any) => {
-      console.log('result:', result)
-
       if (Object.keys(result).length > 0)
         setXaiResult({
           ...xaiResult,
@@ -85,8 +84,9 @@ const XaiAnalysisResult = () => {
 
   return (
     <>
-      <Container>
-        <div>
+      <div className="container p-5 h-full">
+        <MenuTitle className="ml-4">XAI</MenuTitle>
+        {/* 
           <p
             style={{
               color: '#002D65',
@@ -98,60 +98,59 @@ const XaiAnalysisResult = () => {
             }}
           >
             XAI
-          </p>
-          <div className="w-100">
-            <div className="w-[70%] h-[77vh] mr-2 block float-left">
-              <RoundedBox height="77vh">
-                <div className="w-1/7 text-left ">
-                  <Title>{t('Input Variable Filtering')}</Title>
-                  <Button
-                    className="inline-block float-right"
-                    type="text"
-                    icon={<UndoOutlined />}
-                    onClick={handleClearFilter}
-                  >
-                    {t('Clear')}
-                  </Button>
+          </p> */}
+        <div className="w-100 mt-4">
+          <div className="w-[70%] h-[77vh] mr-2 block float-left">
+            <RoundedBox height="75vh">
+              <div className="w-1/7 text-left ">
+                <Title>{t('Input Variable Filtering')}</Title>
+                <Button
+                  className="inline-block float-right"
+                  type="text"
+                  icon={<UndoOutlined />}
+                  onClick={handleClearFilter}
+                >
+                  {t('Clear')}
+                </Button>
+              </div>
+              <VariableRow>
+                <div className="w-6/7 p-3">
+                  {xaiResult.feature_list.map((value: number, index) => (
+                    <DynamicBadgeButton
+                      className="px-4 rounded-full m-1 min-w-[70px] h-[28px] font-['Helvetica Neue'] border-[#D5DCEF]}"
+                      key={index}
+                      toggle={activeVars[value]}
+                      color={colorChips[index]}
+                      onClick={handleClick}
+                    >
+                      <Badge
+                        className={`${activeVars[value] ? 'border-white' : `border-[${colorChips[index]}]`} mr-4`}
+                        color={activeVars[value] ? 'white' : colorChips[index]}
+                      />
+                      {value}
+                    </DynamicBadgeButton>
+                  ))}
                 </div>
-                <VariableRow>
-                  <div className="w-6/7 p-3">
-                    {xaiResult.feature_list.map((value: number, index) => (
-                      <DynamicBadgeButton
-                        className="px-4 rounded-full m-1 min-w-[70px] h-[28px] font-['Helvetica Neue'] border-[#D5DCEF]}"
-                        key={index}
-                        toggle={activeVars[value]}
-                        color={colorChips[index]}
-                        onClick={handleClick}
-                      >
-                        <Badge
-                          className={`${activeVars[value] ? 'border-white' : `border-[${colorChips[index]}]`} mr-4`}
-                          color={activeVars[value] ? 'white' : colorChips[index]}
-                        />
-                        {value}
-                      </DynamicBadgeButton>
-                    ))}
-                  </div>
-                </VariableRow>
-                <div className="mt-[50px]">
-                  <Title>{t('Prediction Model Explanation Results')}</Title>
-                  <AnalysisGrid
-                    featureList={xaiResult?.feature_list}
-                    localWeight={filteredData}
-                    localValue={xaiResult?.input_data}
-                    predResult={xaiResult?.predict_result.predict_result}
-                  />
-                </div>
-              </RoundedBox>
-            </div>
-            <div className="w-[28%] h-[77vh] ml-1 bg-red block float-left">
-              {xaiResult?.xai_pdp ? <PDP_Plot data={xaiResult?.xai_pdp} /> : null}
-              {xaiResult?.xai_global ? (
-                <GlobalFeatureImportance data={xaiResult?.xai_global} colors={xaiResult?.colors} />
-              ) : null}
-            </div>
+              </VariableRow>
+              <div className="mt-[50px]">
+                <Title>{t('Prediction Model Explanation Results')}</Title>
+                <AnalysisGrid
+                  featureList={xaiResult?.feature_list}
+                  localWeight={filteredData}
+                  localValue={xaiResult?.input_data}
+                  predResult={xaiResult?.predict_result.predict_result}
+                />
+              </div>
+            </RoundedBox>
+          </div>
+          <div className="w-[28%] h-[77vh] ml-1 bg-red block float-left">
+            {xaiResult?.xai_pdp ? <PDP_Plot data={xaiResult?.xai_pdp} /> : null}
+            {xaiResult?.xai_global ? (
+              <GlobalFeatureImportance data={xaiResult?.xai_global} colors={xaiResult?.colors} />
+            ) : null}
           </div>
         </div>
-      </Container>
+      </div>
     </>
   )
 }
