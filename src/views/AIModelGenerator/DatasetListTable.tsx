@@ -66,7 +66,7 @@ const DatasetListTable = ({ data }: { data: IDatasetList }) => {
       title: t('Dataset Name'),
       dataIndex: 'name',
       key: 'name',
-      width: 130,
+      width: 140,
       ellipsis: true,
       align: 'center',
       filters: data?.map((item) => ({

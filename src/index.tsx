@@ -1,4 +1,3 @@
-import { ChakraProvider } from '@chakra-ui/react'
 import { App as Antd, ConfigProvider } from 'antd'
 import GlobalModal from 'components/modal/GlobalModal'
 import ToastList from 'components/toast/List'
@@ -13,7 +12,6 @@ import { RecoilRoot } from 'recoil'
 import App from './App'
 import './assets/css/App.css'
 import './locales'
-import theme from './theme/theme'
 
 const antdCustomTheme = {
   token: {
@@ -27,13 +25,13 @@ const antdCustomTheme = {
       colorPrimaryHover: '#fff',
     },
     Modal: {
-      borderRadius: 12,
+      borderRadius: 10,
     },
     Input: {
-      borderRadius: 12,
+      borderRadius: 10,
     },
     Select: {
-      borderRadius: 12,
+      borderRadius: 10,
     },
     Table: {
       headerColor: '#E5EBFF',
@@ -52,17 +50,15 @@ ReactDOM.render(
   <RecoilRoot>
     <I18nextProvider i18n={i18n}>
       <ConfigProvider theme={antdCustomTheme}>
-        <ChakraProvider theme={theme}>
-          <QueryClientProvider client={queryClient}>
-            <Antd>
-              <BrowserRouter>
-                <App />
-                <ToastList />
-              </BrowserRouter>
-              <GlobalModal />
-            </Antd>
-          </QueryClientProvider>
-        </ChakraProvider>
+        <QueryClientProvider client={queryClient}>
+          <Antd>
+            <BrowserRouter>
+              <App />
+              <ToastList />
+            </BrowserRouter>
+            <GlobalModal />
+          </Antd>
+        </QueryClientProvider>
       </ConfigProvider>
     </I18nextProvider>
   </RecoilRoot>,

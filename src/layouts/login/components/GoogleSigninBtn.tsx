@@ -1,5 +1,3 @@
-import { Button } from '@chakra-ui/react'
-import styled from '@emotion/styled'
 import GoogleBtn from 'assets/img/components/google.svg'
 
 const GoogleSignin = () => {
@@ -15,39 +13,20 @@ const GoogleSignin = () => {
   }
 
   return (
-    <div
-      style={{ marginTop: '20px', textAlign: 'center', height: '46px', display: 'block', float: 'left', width: '100%' }}
-    >
-      <Button
-        type="submit"
-        variant="outline"
-        style={{
-          fontFamily: 'Noto Sans',
-          backgroundColor: '#fff',
-          color: '#002D65',
-          width: '100%',
-          height: '100%',
-          border: '1px solid #A3AFCF',
-          justifyContent: 'space-evenly',
-          textAlign: 'center',
-          position: 'relative',
-          padding: '10px',
-        }}
+    <div className="mt-5 text-center h-[45px] block float-left w-full">
+      <button
+        type="button"
+        className="font-sans bg-white text-[#002D65] w-full h-full border border-[#A3AFCF] flex justify-evenly items-center relative p-2 rounded-lg"
         onClick={handleGoogleLogin}
       >
-        <GoogleLogin />
-        <span style={{ flex: '7' }}>Login with Google</span>
-      </Button>
+        <div
+          className="inline-block w-[38px] h-[38px] bg-no-repeat"
+          style={{ backgroundImage: `url(${GoogleBtn})` }}
+        ></div>
+        <span className="flex-grow text-center font-bold text-[15px] text-[#002D65]">Login with Google</span>
+      </button>
     </div>
   )
 }
 
 export default GoogleSignin
-
-const GoogleLogin = styled.div`
-  display: inline-block;
-  width: 38px;
-  height: 38px;
-  background-image: url(${GoogleBtn});
-  background-repeat: no-repeat;
-`

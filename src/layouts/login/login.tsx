@@ -7,13 +7,12 @@
  * 수정 : 조미라
  */
 
-import { Button, FormControl } from '@chakra-ui/react'
+// import { Button } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { App, Input, Select } from 'antd'
+import { App, Button, Form, Input, Select } from 'antd'
 import UserApi from 'apis/UserApi'
 import logo from 'assets/img/ineeji/logo_wh.svg'
 import axios from 'axios'
-import SidebarBrand from 'components/sidebar/components/Brand'
 import useGetCompanies from 'hooks/queries/useGetCompanies'
 import React, { useEffect } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
@@ -29,9 +28,10 @@ import circle from './img/package.png'
 axios.defaults.withCredentials = true // withCredentials 전역 설정
 
 export const Login: React.FC = () => {
+  const [form] = Form.useForm()
   const { modal, message } = App.useApp()
-  const [id, setId] = React.useState()
-  const [password, setPassword] = React.useState()
+  const [id, setId] = React.useState<string>()
+  const [password, setPassword] = React.useState<string>()
   const [company, setCompany] = React.useState<any>('')
   const [companyList, setCompanyList] = React.useState<any>()
 
@@ -207,12 +207,25 @@ export const Login: React.FC = () => {
     setCompany(value)
   }
 
+  const handleLogin = () => {
+    if (!company || !id || !password) {
+      message.error('모든 필드를 입력해주세요.')
+      return
+    }
+
+    const payload = {
+      com_id: company,
+      user_id: id,
+      user_pass: password,
+    }
+    mutateLogin(payload)
+  }
+
   return (
     <>
       <div className="relative">
         <Home_Bg />
         <Logo />
-        <SidebarBrand />
         <AboveTitle />
         <Title />
         <BottomBox>
@@ -232,48 +245,57 @@ export const Login: React.FC = () => {
           <LoginTitle>Login</LoginTitle>
           <LoginSubTitle>Enter Your ID and password to sign in.</LoginSubTitle>
           <LoginIcon />
-          <FormControl>
-            <Select
-              id="company"
-              size="large"
-              placeholder={'Select Company'}
-              onChange={handleChange}
-              style={{ width: '100%', marginBottom: '30px', border: 0 }}
-              options={companyList}
-            />
-            <Input
-              id="id"
-              color={'black'}
-              type="text"
-              size="large"
-              placeholder={'ID'}
-              onChange={(e: any) => ChangeId(e)}
-              style={{ width: '100%', marginBottom: '1.3vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
-            />
-            <Input
-              id="password"
-              color={'black'}
-              type="password"
-              size="large"
-              placeholder={'Password'}
-              onChange={(e: never) => ChangePassword(e)}
-              onKeyDown={(e: unknown) => onEnterLogin(e)}
-              style={{ width: '100%', marginBottom: '1.3vh', backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
-            />
-          </FormControl>
-          <Button
-            type="submit"
-            onClick={() => setLogin(id, password)}
-            style={{
-              fontFamily: 'Noto Sans',
-              backgroundColor: '#4338f7',
-              color: '#fff',
-              width: '100%',
-              height: 46,
-            }}
-          >
-            Login
-          </Button>
+          <div className="relative">
+            <Form form={form} name="loginForm" layout="vertical" onFinish={handleLogin}>
+              <Form.Item name="company" rules={[{ required: true, message: '회사를 선택해주세요.' }]}>
+                <Select
+                  className="mb-[10px]"
+                  placeholder="Select Company"
+                  onChange={(value) => setCompany(value)}
+                  options={companyList}
+                />
+              </Form.Item>
+
+              <Form.Item name="id" rules={[{ required: true, message: '아이디를 입력해주세요.' }]}>
+                <Input
+                  className="h-[45px]"
+                  placeholder="ID"
+                  onChange={(e) => setId(e.target.value)}
+                  style={{ backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
+                />
+              </Form.Item>
+
+              <Form.Item name="password" rules={[{ required: true, message: '패스워드를 입력해주세요.' }]}>
+                <Input.Password
+                  className="h-[45px] "
+                  placeholder="Password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleLogin()
+                  }}
+                  style={{ backgroundColor: '#F5F8FF', border: '1px solid #A3AFCF' }}
+                />
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{
+                    fontFamily: 'Noto Sans',
+                    backgroundColor: '#4338f7',
+                    color: '#fff',
+                    width: '100%',
+                    height: 45,
+                    fontSize: 15,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  Login
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
           <OrWrapper>or</OrWrapper>
           <GoogleSignin />
           <TextMenuWrapper>

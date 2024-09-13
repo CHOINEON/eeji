@@ -1,4 +1,3 @@
-import { Box } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import Page from './page'
@@ -17,10 +16,9 @@ const PriceForecasting = () => {
   }, [])
 
   return (
-    <Box>
-      {/* <OilPriceChart /> */}
+    <div className="container mx-auto">
       <Page />
-    </Box>
+    </div>
   )
 }
 

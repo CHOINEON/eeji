@@ -6,7 +6,6 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import HealthCheck from 'views/HealthCheck'
 import { useApiError } from './hooks/useApiError'
 import MainLayout from './layouts/admin'
-import AuthLayout from './layouts/auth'
 import Join from './layouts/join/join'
 import Login from './layouts/login/login'
 
@@ -52,7 +51,7 @@ export function App() {
   return (
     <>
       <Switch>
-        <Route path={`/auth`} component={AuthLayout} />
+        {/* <Route path={`/auth`} component={AuthLayout} /> */}
         <PrivateRoute path={`/admin`} component={MainLayout} isAuthenticated={isAuthenticated} />
         <Route path={`/login`} component={Login} />
         <Route path={`/404`} component={NotFound} />
