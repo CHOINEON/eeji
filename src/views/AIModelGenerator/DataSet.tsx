@@ -1,34 +1,52 @@
 import { App, Button } from 'antd'
+import DatasetApi from 'apis/DatasetApi'
 import ModelApi from 'apis/ModelApi'
+import { useApiError } from 'hooks/useApiError'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import DatasetList from './DatasetList'
-import DataEditModal from './components/DataInfo/DataEditModal'
+import DataEditModal, { IDataInfo } from './components/DataInfo/DataEditModal'
 import { MenuTitle } from './components/Input/Text'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
+import { datasetEditModalState } from './store/modal/atom'
 import { analysisResponseAtom } from './store/response/atoms'
 import './style/data-analysis-style.css'
 
 const DataSet = () => {
   const { message } = App.useApp()
-  const queryClient = useQueryClient()
   const { t } = useTranslation()
+  const queryClient = useQueryClient()
+  const { handleError } = useApiError()
+
   const [loading, setLoading] = useState(false)
 
   const selectedData = useRecoilState(selectedDataState)
   const setUserInfo = useSetRecoilState(userInfoState)
   const resetAnalysisResponse = useResetRecoilState(analysisResponseAtom)
+  const [modalState, setModalState] = useRecoilState(datasetEditModalState)
 
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
-    onSuccess: (result: any) => {
+    onSuccess: () => {
       message.success(t('The model training has been successfully requested.'))
       queryClient.invalidateQueries('models')
       setLoading(false)
     },
+    onError: () => {
+      message.error(t('The request has failed. Please try again later.'))
+    },
+  })
+
+  const { mutate: mutateEdit } = useMutation(DatasetApi.editDataset, {
+    onSuccess: () => {
+      message.success(t('Successfully saved'))
+      queryClient.invalidateQueries('datasets')
+      setModalState(false)
+    },
     onError: (error: any) => {
-      message.error('요청이 실패하였습니다. 다음에 다시 시도해주세요.')
+      console.log('DataProperties/ onError :', error)
+      handleError(error)
     },
   })
 
@@ -54,6 +72,15 @@ const DataSet = () => {
     setLoading(true)
   }
 
+  const handleEdit = (param: IDataInfo) => {
+    const payload = {
+      ...param,
+      com_id: localStorage.getItem('companyId'),
+      user_id: localStorage.getItem('userId'),
+    }
+    mutateEdit(payload)
+  }
+
   return (
     <div className="px-5 py-10">
       <MenuTitle className="ml-[25px]">{t('Dataset')}</MenuTitle>
@@ -68,7 +95,7 @@ const DataSet = () => {
       >
         {t('Generate Model')}
       </Button>
-      <DataEditModal />
+      <DataEditModal onSave={handleEdit} />
     </div>
   )
 }
