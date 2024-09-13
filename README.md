@@ -1,5 +1,12 @@
+## Local 환경에서 실행하기
 
+```
+$ git clone
+$ cp .env.development .env
+$ npm start
+```
 
+(개발계의 환경을 이용해서 local 에서 테스트 해 볼 수 있습니다. )
 
 
 ## cloudfnt-web service의 배포 가이드
