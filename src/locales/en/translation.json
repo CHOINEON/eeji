@@ -17,11 +17,17 @@
   "Regression": "Regression",
   "Classification": "Classification",
   "No data": "No data",
+  "Please contact the administrator.": "Please contact the administrator.",
 
   "Dataset": "Dataset",
   "Generate Model": "Generate Model",
   "Edit": "Edit",
   "Delete": "Delete",
+  "Deletion failed.": "Deletion failed.",
+  "Do you want to delete this dataset?": "Do you want to delete this dataset?",
+  "Deletion is permanent and you will not be able to undo it.": "Deletion is permanent and you will not be able to undo it.",
+  "The dataset name can be up to 100 characters long.": "The dataset name can be up to 100 characters long.",
+
   "Data Upload": "Data Upload",
   "Browse": "Browse",
   "EEJI Upload Guide": "EEJI Upload Guide",
@@ -34,6 +40,8 @@
   "Size": "Size",
   "Optional": "Optional",
   "Timestamp": "Timestamp",
+  "The dataset has been successfully deleted.": "The dataset has been successfully deleted.",
+  "Deletion failed": "Deletion failed",
 
   "The model training has been successfully requested.": "The model training has been successfully requested.",
   "The request has failed. Please try again later.": "The request has failed. Please try again later.",

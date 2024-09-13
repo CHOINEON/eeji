@@ -13,7 +13,7 @@ import { v4 } from 'uuid'
 import { loadingAtom, stepCountStore } from 'views/AIModelGenerator/store/global/atom'
 import { modelListAtom, selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
-import Actions from '../Button/Actions'
+import Actions from '../Button/ModelActions'
 
 const { Column } = Table
 

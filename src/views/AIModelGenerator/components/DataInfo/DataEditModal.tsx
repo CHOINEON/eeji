@@ -1,57 +1,44 @@
-import { App, Input, Modal, Row, Space, Typography } from 'antd'
+import { Input, Modal, Row, Space, Typography } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
-import DatasetApi from 'apis/DatasetApi'
-import { useApiError } from 'hooks/useApiError'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useMutation, useQueryClient } from 'react-query'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { datasetEditModalState } from 'views/AIModelGenerator/store/modal/atom'
 const { Text } = Typography
 
-const DataEditModal = () => {
+export interface IDataInfo {
+  ds_id: string
+  ds_name: string
+  ds_desc: string
+}
+
+interface DatasetEditProps {
+  onSave: (payload: IDataInfo) => void
+}
+
+const DataEditModal = ({ onSave }: DatasetEditProps) => {
   const { t } = useTranslation()
-  const { message } = App.useApp()
-  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const [modalState, setModalState] = useRecoilState(datasetEditModalState)
-  const [selectedData, setSelectedData] = useRecoilState(selectedDataState)
+  const selectedData = useRecoilValue(selectedDataState)
   const [inputData, setInputData] = useState({ name: '', desc: '' })
-
-  //API
-  const { handleError } = useApiError()
-  const { mutate: mutateEdit } = useMutation(DatasetApi.editDataset, {
-    onSuccess: (response: any) => {
-      message.success(response?.message)
-      //refetching
-      queryClient.invalidateQueries('datasets')
-      setModalState(false)
-    },
-    onError: (error: any) => {
-      console.log('DataProperties/ onError :', error)
-      handleError(error)
-    },
-  })
 
   useEffect(() => {
     setOpen(modalState)
 
     if (modalState) {
-      //기존 데이터 바인딩
       setInputData({ name: selectedData.name, desc: selectedData.descr })
     }
   }, [modalState])
 
   const handleOk = () => {
-    const param = {
-      com_id: localStorage.getItem('companyId'),
-      user_id: localStorage.getItem('userId'),
+    const param: IDataInfo = {
       ds_id: selectedData.ds_id,
       ds_name: inputData.name,
       ds_desc: inputData.desc,
     }
-    mutateEdit(param)
+    onSave(param)
   }
 
   const handleCancel = () => {
@@ -67,7 +54,7 @@ const DataEditModal = () => {
             <span> {t('Dataset Name')}</span>
             <Input
               style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
-              placeholder={t('Dataset Name')}
+              placeholder={t('The dataset name can be up to 100 characters long.')}
               maxLength={20}
               onChange={(e) => setInputData({ ...inputData, name: e.target.value })}
               value={inputData.name}
@@ -75,7 +62,6 @@ const DataEditModal = () => {
             />
           </Row>
           <Row>
-            {' '}
             <span> {t('Description')}</span>
             <TextArea
               style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}

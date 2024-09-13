@@ -18,15 +18,23 @@
   "Regression": "回帰",
   "Classification": "分類",
   "No data": "データなし",
+  "Please contact the administrator.": "管理者にお問い合わせください。",
 
   "Dataset": "データセット",
   "Generate Model": "モデルを生成する",
   "Edit": "編集",
   "Delete": "削除",
+  "Deletion failed.": "削除に失敗しました。",
+  "Do you want to delete this dataset?": "このデータセットを削除しますか？",
+  "Deletion is permanent and you will not be able to undo it.": "削除は永久に行われ、元に戻すことはできません。",
+  "The dataset name can be up to 100 characters long.": "データセットの名前は最大100文字まで指定できます。",
+
   "Data Upload": "データアップロード",
   "Browse": "ファイルを選択",
   "The data is too large (maximum 400MB)": "データが大きすぎます（最大400MB）",
   "EEJI Upload Guide": "EEJIアップロードガイド",
+  "The dataset has been successfully deleted.": "データセットが正常に削除されました。",
+  "Deletion failed": "Deletion failed",
 
   "Model List": "モデルリスト",
   "Model Name": "モデル名",

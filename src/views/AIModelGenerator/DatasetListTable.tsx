@@ -5,6 +5,7 @@ import { IDataset, IDatasetList } from 'apis/type/Dataset'
 import { t } from 'i18next'
 import { useState } from 'react'
 import { useSetRecoilState } from 'recoil'
+import Actions from './components/Button/DatasetActions'
 import { selectedDataState } from './store/dataset/atom'
 
 const formatSize = (size: number) => {
@@ -40,6 +41,7 @@ const DatasetListTable = ({ data }: { data: IDatasetList }) => {
       ds_id: filteredData.ds_id,
       name: filteredData.name,
       size: filteredData.size,
+      descr: filteredData.descr,
       rowCount: 0,
       colCount: 0,
       startDate: filteredData.start_date,
@@ -64,7 +66,7 @@ const DatasetListTable = ({ data }: { data: IDatasetList }) => {
       title: t('Dataset Name'),
       dataIndex: 'name',
       key: 'name',
-      width: 150,
+      width: 130,
       ellipsis: true,
       align: 'center',
       filters: data?.map((item) => ({
@@ -89,6 +91,12 @@ const DatasetListTable = ({ data }: { data: IDatasetList }) => {
       render: (size: number) => formatSize(size),
       sorter: (a, b) => a.size - b.size,
     },
+    {
+      title: '',
+      key: 'ds_id',
+      width: 40,
+      render: (text, record: IDataset) => <Actions />,
+    },
   ]
 
   return (
@@ -101,6 +109,11 @@ const DatasetListTable = ({ data }: { data: IDatasetList }) => {
       pagination={{ pageSize: 5, pageSizeOptions: [5], position: ['bottomCenter'] }}
       expandable={{
         expandedRowRender: renderDetails,
+      }}
+      onRow={(record: IDataset) => {
+        return {
+          onClick: () => onSelectChange([record.ds_id]), // Row 클릭 시 호출되는 함수
+        }
       }}
     />
   )
