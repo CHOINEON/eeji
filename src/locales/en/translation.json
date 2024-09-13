@@ -64,7 +64,7 @@
   "Prediction Results of": "Prediction Results of {{target_var}}",
   "Model Performance": "Model Performance",
   "is trained by optimized EEJI model": "is trained by optimized EEJI model",
-  "Prediction Accuracy": "Prediction Accuracy",
+  "Prediction Accuracy": "Accuracy",
 
   "Index": "Index",
   "Data Filtering": "Data Filtering",
@@ -73,25 +73,15 @@
   "Clear Filter": "Clear Filter",
   "Total row count": "Total row count",
 
-  "meanAbsoluteError": {
-    "title": "평균절대오차",
-    "description": "{{error}}. 모든 오차 절대값의 합을 평균 (0에 가까울 수록 좋은 모델)"
+  "errors": {
+    "MAE": "Mean Absolute Error. The average of the absolute values of all errors (the closer to 0, the better the model).",
+    "MSE": "Mean Squared Error. The average of the squared errors (difference between predicted and actual values).",
+    "RMSE": "Root Mean Squared Error. The average difference between the predicted and actual values in the model. It estimates how well the model predicts the target value (accuracy).",
+    "R2": "R² (Coefficient of Determination) is a metric that evaluates the performance of a regression model by indicating how well the model explains the given data. It ranges from 0 to 1, with values closer to 1 indicating a better fit."
   },
-  "meanSquaredError": {
-    "title": "평균제곱오차",
-    "description": "{{error}}. 오차를 제곱한 값의 평균 (알고리즘이 예측한 값과 실제 정답과의 차이)"
-  },
-  "rootMeanSquaredError": {
-    "title": "평균 제곱근 오차",
-    "description": "{{error}}. 예측 모델에서 예측한 값과 실제 값 사이의 평균 차이. 예측 모델이 목표 값(정확도)를 얼마나 잘 예측할 수 있는지 추정"
-  },
-  "f1Score": {
-    "title": "F1 점수",
-    "description": "정확성과 재현율을 균형있게 평가하는 성능 지표(0~1 사이의 값을 가지며, 높을 수록 좋음)"
-  },
-  "accuracy": {
-    "title": "정확도",
-    "description": "분류 모델이 얼마나 정확하게 분류했는지 평가하는 지표"
+  "performance": {
+    "F1_SCORE": "F1 Score. A performance metric that balances precision and recall (values range from 0 to 1, with higher values being better).",
+    "ACCURACY": "Accuracy. A metric that evaluates how accurately a classification model has classified the data."
   },
 
   "report": "Report",
