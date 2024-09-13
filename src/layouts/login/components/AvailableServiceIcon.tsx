@@ -1,4 +1,3 @@
-import { Wrap } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'react-i18next'
 import { useMenuList } from 'views/Main/MenuList'
@@ -9,7 +8,7 @@ const AvailableServiceIcon = () => {
 
   return (
     <div style={{ display: 'block', float: 'left', marginLeft: '20px' }}>
-      <Wrap spacing="1px" justify="left">
+      <div className="flex flex-wrap justify-start gap-1">
         {MenuList.map((item: any, idx: number) => {
           return (
             <MenuItem key={idx}>
@@ -23,7 +22,7 @@ const AvailableServiceIcon = () => {
             </MenuItem>
           )
         })}
-      </Wrap>
+      </div>
     </div>
   )
 }
@@ -31,7 +30,6 @@ const AvailableServiceIcon = () => {
 export default AvailableServiceIcon
 
 const MenuItem = styled.div`
-  // height: 90px;
   width: 120px;
   display: flex;
   flex-direction: column;
@@ -45,7 +43,6 @@ const IconContainer = styled.div`
 const TitleContainer = styled.div`
   display: block;
   text-align: center;
-  // margin: 10px 0px;
 `
 
 const Title_EN = styled.p`
@@ -54,11 +51,4 @@ const Title_EN = styled.p`
   letter-spacing: 0.02vw;
   color: #ffffff;
   margin: 1px 0;
-`
-
-const Title_KR = styled.p`
-  font-family: 'Noto Sans';
-  size: 12px;
-  color: #ffffff;
-  margin: 2px 0;
 `

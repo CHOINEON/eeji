@@ -49,3 +49,6 @@ option {
 .ant-btn-primary {
   background-color: #1677fe;
 }
+.ant-form-item {
+  margin-bottom: 10px;
+}
