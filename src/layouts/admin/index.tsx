@@ -2,7 +2,6 @@
 import Footer from 'components/footer/FooterAdmin'
 import Header from 'components/navbar/Header'
 // Layout components
-// import Navbar from 'components/navbar/NavbarAdmin'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import routes from 'routes'
 import MainContents from 'views/Main/Main'

@@ -1,4 +1,4 @@
-import { Button, Dropdown, MenuProps } from 'antd'
+import { Dropdown, MenuProps } from 'antd'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -35,9 +35,7 @@ const LanguageBox = () => {
   return (
     <div className="flex justify-center items-center">
       <Dropdown menu={{ items, onClick: changeLanguage }} trigger={['click']}>
-        <Button type="text" className="text-white hover:bg-blue-600 rounded-sm">
-          {language}
-        </Button>
+        <button className="text-white hover:text-white hover:font-bold rounded-sm">{language}</button>
       </Dropdown>
     </div>
   )
