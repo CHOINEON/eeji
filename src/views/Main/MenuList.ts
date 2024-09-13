@@ -1,12 +1,10 @@
 import icon_01_inbox from 'assets/img/icons/main/service_01.png'
 import icon_02_inbox from 'assets/img/icons/main/service_02.png'
 import icon_03_inbox from 'assets/img/icons/main/service_03.png'
-import icon_04_inbox from 'assets/img/icons/main/service_04.png'
 
 import icon_01_b from 'assets/img/icons/main/icon_01_b.png'
 import icon_02_b from 'assets/img/icons/main/icon_02_b.png'
 import icon_03_b from 'assets/img/icons/main/icon_03_b.png'
-import icon_04_b from 'assets/img/icons/main/icon_04_b.png'
 import { useTranslation } from 'react-i18next'
 
 export const useMenuList = () => {
@@ -43,6 +41,7 @@ export const useMenuList = () => {
       img_hover_url: 'assets/img/icons/main/icon_03_b.png',
       path: '/price-forecast',
     },
+    /*
     {
       id: 4,
       title: t('Prediction API'),
@@ -53,6 +52,7 @@ export const useMenuList = () => {
       img_hover_url: 'assets/img/icons/main/icon_04_b.png',
       path: '/api-service',
     },
+    */
   ]
   return Menu
 }
