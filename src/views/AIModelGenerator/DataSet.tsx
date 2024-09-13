@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import DatasetList from './DatasetList'
 import DataEditModal from './components/DataInfo/DataEditModal'
+import { MenuTitle } from './components/Input/Text'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
 import { analysisResponseAtom } from './store/response/atoms'
 import './style/data-analysis-style.css'
@@ -55,7 +56,7 @@ const DataSet = () => {
 
   return (
     <div className="px-5 py-10">
-      <p className="ml-6 font-['Helvetica Neue'] font-bold text-[32px] text-[#002D65] ">{t('Dataset')}</p>
+      <MenuTitle className="ml-[25px]">{t('Dataset')}</MenuTitle>
       <div className="m-5">
         <DatasetList />
       </div>

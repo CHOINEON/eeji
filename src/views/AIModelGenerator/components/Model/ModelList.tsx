@@ -3,6 +3,7 @@ import { IModelInfo, IModelList } from 'apis/type/Model'
 import useGetModelList from 'hooks/queries/useGetModelList'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { MenuTitle } from '../Input/Text'
 import ModelListTable from './ModelListTable'
 
 const ModelList = () => {
@@ -18,7 +19,7 @@ const ModelList = () => {
 
   return (
     <div className="px-5 py-10 flex flex-wrap overflow-y-scroll ">
-      <p className="ml-2 w-100 font-['Helvetica Neue'] font-bold text-[32px] text-[#002D65]">{t('Model List')}</p>
+      <MenuTitle>{t('Model List')}</MenuTitle>
       <div className="my-10">
         {list?.length > 0 ? (
           <ModelListTable />

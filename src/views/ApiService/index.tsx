@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import TagManager, { DataLayerArgs } from 'react-gtm-module'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
+import { MenuTitle } from 'views/AIModelGenerator/components/Input/Text'
 import ApiSyntax from './ApiSyntax'
 import SavedModelList from './PublishableModelList'
 
@@ -39,18 +40,16 @@ const ApiService = () => {
     setSelectedRow(param)
   }
 
-  const handleClick = () => {
-    console.log('click')
-  }
-
   return (
-    <div className="mx-[30px] p-5">
-      <p className="mr-12 text-[20px] lg:text-[32px] font-bold text-[#002D65]">{t('API Generator')}</p>
-      <div>
-        <SavedModelList data={data} onSelect={handleSelect} />
+    <>
+      <div className="mx-[30px] pt-5">
+        <MenuTitle>{t('API Generator')}</MenuTitle>
       </div>
-      <ApiSyntax />
-    </div>
+      <div className="mx-5">
+        <SavedModelList data={data} onSelect={handleSelect} />
+        <ApiSyntax />
+      </div>
+    </>
   )
 }
 export default ApiService
