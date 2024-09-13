@@ -18,7 +18,7 @@ const Actions = ({ model_id, model_name }: ActionsProps) => {
 
   const { openModal, closeModal } = useModal()
   const { mutate: mutateRenameModel } = useMutation(ModelApi.renameModel, {
-    onSuccess: (result: any) => {
+    onSuccess: () => {
       message.success(t('Successfully saved'))
       closeModal()
       queryClient.invalidateQueries('models')
