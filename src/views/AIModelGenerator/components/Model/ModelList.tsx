@@ -20,9 +20,11 @@ const ModelList = () => {
   return (
     <div className="px-5 py-10 flex flex-wrap overflow-y-scroll ">
       <MenuTitle>{t('Model List')}</MenuTitle>
-      <div className="my-10">
+      <div>
         {list?.length > 0 ? (
-          <ModelListTable />
+          <div className="mt-10">
+            <ModelListTable />
+          </div>
         ) : (
           <div className="m-auto flex items-center min-h-[50vh]">
             <Empty />

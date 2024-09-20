@@ -46,7 +46,7 @@ const Header = (props: { routes: RoutesType[] }) => {
   const { routes } = props
 
   return (
-    <div className="w-[1280px] mx-[30px]">
+    <div className="w-[1280px] m-auto">
       <nav className="h-16 text-white flex justify-between items-center px-8">
         {/* Left: Logo */}
         <div className="flex-shrink-0">

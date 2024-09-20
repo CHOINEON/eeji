@@ -134,3 +134,5 @@ body {
   text-align: 'center';
   letter-spacing: 0.1;
 }
+
+.ant-table table { font-size: 12px; }
