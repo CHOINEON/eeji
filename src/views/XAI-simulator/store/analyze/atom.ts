@@ -54,6 +54,7 @@ export const xaiResultStore = atom({
     xai_pdp: {},
     xai_global: {},
     colors: {},
+    target: '', //240920 XAI 결과 페이지 그래프에 x,y label로 사용하기 위해 추가함
   },
 })
 

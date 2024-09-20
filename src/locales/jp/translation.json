@@ -150,5 +150,10 @@
   "Request Elements": "リクエスト要素",
   "Response Syntax": "レスポンス構文",
   "Authentication Key": "認証キー",
-  "Data to input into the model": "モデルに入力するデータ"
+  "Data to input into the model": "モデルに入力するデータ",
+
+  "quantile": "分位数",
+  "quantile_of_variable": "{{variable}}の{{quantile}}",
+  "change": "変化量",
+  "change_in_target": "{{variable}}の変化量"
 }

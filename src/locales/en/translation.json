@@ -114,7 +114,7 @@
   "Model Save": "Model Save",
   "Input Variable Filtering": "Input Variable Filtering",
   "Prediction Model Explanation Results": "Prediction Model Explanation Results",
-  "Prediction of Variable Impact": "Prediction of Variable Impact",
+  "Prediction of Variable Impact": "Variable Impact Prediction",
   "Surrounding effect of a single variable on prediction results": "Surrounding effect of a single variable on prediction results",
   "No": "No",
   "Prediction Result": "Prediction Result",
@@ -147,5 +147,10 @@
   "Request Elements": "Request Elements",
   "Response Syntax": "Response Syntax",
   "Authentication Key": "Authentication Key",
-  "Data to input into the model": "Data to input into the model"
+  "Data to input into the model": "Data to input into the model",
+
+  "quantile": "Quantile",
+  "quantile_of_variable": "{{variable}}'s {{quantile}}",
+  "change": "Change",
+  "change_in_target": "Change in {{variable}}"
 }

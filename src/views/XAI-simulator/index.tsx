@@ -33,8 +33,6 @@ const XAIsimulator = () => {
           <UploadPage />
         </div>
       )}
-      {/* <AnalysisResult /> */}
-      {/* <Page /> */}
     </>
   )
 }
