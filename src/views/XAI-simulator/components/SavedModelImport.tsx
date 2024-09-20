@@ -129,8 +129,10 @@ const SavedModelImport = () => {
   //   }
   // }
 
-  const handleSelect = (model_id: string) => {
-    setModelId(model_id)
+  const handleSelect = (data: IModelInfo) => {
+    console.log('data:', data)
+    setModelId(data?.id)
+    setXaiResult({ ...xaiResult, model_id: data?.id, target: data?.target })
   }
 
   return (

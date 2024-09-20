@@ -10,16 +10,12 @@ import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
 
 ChartJS.register(ChartDataLabels)
 
-const PDP_Plot = ({ data }: any) => {
+const PDP_Plot = ({ pdpData, target }: any) => {
   const { t } = useTranslation()
-  const keys: Array<string> = Object.keys(data)
-  const values: Array<Array<unknown>> = Object.values(data)
 
+  const values: Array<Array<unknown>> = Object.values(pdpData)
+  const [selectedOption, setSelectedOption] = useState<string | null>(null)
   const chartOptions = {
-    layout: {
-      padding: 20,
-      margin: 'auto',
-    },
     responsive: true,
     // maintainAspectRatio: false, //will take up entire container
     plugins: {
@@ -30,20 +26,32 @@ const PDP_Plot = ({ data }: any) => {
         display: false,
       },
     },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: t('quantile_of_variable', { variable: selectedOption, quantile: t('quantile') }) || 'X Axis', // 부모로부터 전달된 target의 x축 레이블
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: t('change_in_target', { variable: target, change: t('change') }) || 'Y Axis', // 부모로부터 전달된 target의 y축 레이블
+        },
+      },
+    },
   }
 
-  const options: SelectProps['options'] = Object.keys(data)?.map((key) => ({
+  const options: SelectProps['options'] = Object.keys(pdpData)?.map((key) => ({
     value: key,
     label: key,
   }))
-
-  const [selectedOption, setSelectedOption] = useState<string | null>(null)
 
   const [chartData, setChartData] = useState<{ datasets: any[]; labels: string[] }>({
     datasets: [
       {
         label: `Dataset 0`,
-        data: Object.values(data)[0],
+        data: Object.values(pdpData)[0],
         borderColor: '#86C162',
         backgroundColor: '#1B73FF69',
       },
@@ -53,8 +61,7 @@ const PDP_Plot = ({ data }: any) => {
 
   const handleChange = (value: any) => {
     setSelectedOption(value)
-    const selectedData = data[value]
-    // console.log('selectedData:', selectedData)
+    const selectedData = pdpData[value]
 
     setChartData({
       datasets: [
@@ -124,8 +131,5 @@ const Title = styled.div`
 `
 
 const ChartWrapper = styled.div`
-  // width: 100%;
-  // height: 100%;
-  // margin-top: 10px;
   padding-right: 20px;
 `

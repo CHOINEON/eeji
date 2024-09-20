@@ -65,12 +65,12 @@ const ModelList = ({ data, onSelect }: any) => {
   const [btnActive, setBtnActive] = useState(0)
 
   useEffect(() => {
-    onSelect(data[0].id)
+    onSelect(data[0])
   }, [])
 
   const toggleActive = (idx: number) => {
     setBtnActive(idx)
-    onSelect(data[idx].id)
+    onSelect(data[idx])
   }
 
   return (

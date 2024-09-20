@@ -148,5 +148,10 @@
   "Request Elements": "요청 요소",
   "Response Syntax": "응답 구문",
   "Authentication Key": "인증 키",
-  "Data to input into the model": "모델에 입력할 데이터"
+  "Data to input into the model": "모델에 입력할 데이터",
+
+  "quantile": "분위수",
+  "quantile_of_variable": "{{variable}}의 {{quantile}}",
+  "change": "변화량",
+  "change_in_target": "{{variable}}의 {{change}}"
 }
