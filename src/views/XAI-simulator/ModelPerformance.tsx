@@ -134,6 +134,7 @@ const PerformanceTitle = styled.span`
 const PerformanceContentsWrap = styled.div`
   display: flex;
   padding-top: 11.5px;
+  text-align: center;
 `
 const PerformanceContentsBox = styled.span`
   flex: 1;
@@ -143,7 +144,7 @@ const PerformanceContents = styled.span`
   // float: left;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
   color: #fff;
-  font-size: 18px;
+  font-size: 14px;
   // padding-right: 10px;
   font-weight: bold;
   margin-right: 10px;
@@ -151,12 +152,12 @@ const PerformanceContents = styled.span`
 const PerformanceModelValue = styled.span`
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
   color: #95eb61;
-  font-size: 25px;
+  font-size: 21px;
   font-weight: bold;
 `
 const PerformanceValueAccuracy = styled.span`
   color: #95eb61;
-  font-size: 25px;
+  font-size: 21px;
   font-weight: bold;
 `
 const PerformanceValue = styled.div`
