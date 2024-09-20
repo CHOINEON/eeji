@@ -1,3 +1,4 @@
+import { Tooltip } from 'antd'
 import {
   BubbleDataPoint,
   CategoryScale,
@@ -9,7 +10,6 @@ import {
   Point,
   PointElement,
   Title,
-  Tooltip,
 } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import zoomPlugin from 'chartjs-plugin-zoom'
@@ -23,17 +23,7 @@ import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atom
 import FeatureAnalysis from '../Features/FeatureAnalysis'
 import '../style.css'
 
-ChartJS.register(
-  ChartDataLabels,
-  CategoryScale,
-  LinearScale,
-  LineElement,
-  PointElement,
-  zoomPlugin,
-  Title,
-  Tooltip,
-  Legend
-)
+ChartJS.register(ChartDataLabels, CategoryScale, LinearScale, LineElement, PointElement, zoomPlugin, Title, Legend)
 
 const RegressionResult = () => {
   const [dataset, setDataset] = useState([])
@@ -282,7 +272,19 @@ const RegressionResult = () => {
       >
         <ChartWrapper>
           <div id="legend-container"></div>
-          <div className="container">
+          <div className="tooltip-container">
+            <Tooltip
+              title={t(
+                'You can scroll the chart horizontally, drag the x-axis to zoom in, and double-click the chart to zoom out.'
+              )}
+              placement="top"
+            >
+              <p className="info-icon" style={{ fontSize: '18px', cursor: 'pointer' }}>
+                ℹ️
+              </p>
+            </Tooltip>
+          </div>
+          <div className="chart-container">
             <div className="containerBody">
               <div className="x-axis-label">{t('Index')}</div>
               <div className="y-axis-label">{`${selectedModel.target}`}</div>

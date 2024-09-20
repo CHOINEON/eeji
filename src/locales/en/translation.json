@@ -152,5 +152,7 @@
   "quantile": "Quantile",
   "quantile_of_variable": "{{variable}}'s {{quantile}}",
   "change": "Change",
-  "change_in_target": "Change in {{variable}}"
+  "change_in_target": "Change in {{variable}}",
+
+  "You can scroll the chart horizontally, drag the x-axis to zoom in, and double-click the chart to zoom out.": "You can scroll the chart horizontally, drag the x-axis to zoom in, and double-click the chart to zoom out."
 }
