@@ -153,5 +153,7 @@
   "quantile": "분위수",
   "quantile_of_variable": "{{variable}}의 {{quantile}}",
   "change": "변화량",
-  "change_in_target": "{{variable}}의 {{change}}"
+  "change_in_target": "{{variable}}의 {{change}}",
+
+  "You can scroll the chart horizontally, drag the x-axis to zoom in, and double-click the chart to zoom out.": "차트는 가로 스크롤, x축 드래그로 확대, 차트 더블클릭으로 축소할 수 있습니다."
 }

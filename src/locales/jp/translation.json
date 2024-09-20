@@ -155,5 +155,7 @@
   "quantile": "分位数",
   "quantile_of_variable": "{{variable}}の{{quantile}}",
   "change": "変化量",
-  "change_in_target": "{{variable}}の変化量"
+  "change_in_target": "{{variable}}の変化量",
+
+  "You can scroll the chart horizontally, drag the x-axis to zoom in, and double-click the chart to zoom out.": "チャートを横にスクロールし、x軸をドラッグして拡大、チャートをダブルクリックして縮小できます。"
 }
