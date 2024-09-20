@@ -18,6 +18,9 @@ const formatSize = (size: number) => {
 const renderDetails = (record: IDataset) => (
   <div>
     <p>
+      <strong>{t('Created')} :</strong> {record.create_date}
+    </p>
+    <p>
       <strong>{t('Type')} :</strong> {record.is_classification ? t('Classification') : t('Regression')}
     </p>
     <p>
@@ -66,9 +69,9 @@ const DatasetListTable = ({ data }: { data: IDatasetList }) => {
       title: t('Dataset Name'),
       dataIndex: 'name',
       key: 'name',
-      width: 140,
+      width: 240,
       ellipsis: true,
-      align: 'center',
+      align: 'left',
       filters: data?.map((item) => ({
         text: item.name,
         value: item.name,
@@ -76,13 +79,13 @@ const DatasetListTable = ({ data }: { data: IDatasetList }) => {
       onFilter: (value, record) => record.name.includes(value as string),
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
-    {
-      title: t('Created'),
-      dataIndex: 'create_date',
-      key: 'create_date',
-      align: 'center',
-      sorter: (a, b) => new Date(a.create_date).getTime() - new Date(b.create_date).getTime(),
-    },
+    // {
+    //   title: t('Created'),
+    //   dataIndex: 'create_date',
+    //   key: 'create_date',
+    //   align: 'center',
+    //   sorter: (a, b) => new Date(a.create_date).getTime() - new Date(b.create_date).getTime(),
+    // },
     {
       title: t('Size'),
       dataIndex: 'size',
@@ -106,7 +109,7 @@ const DatasetListTable = ({ data }: { data: IDatasetList }) => {
       columns={columns}
       dataSource={data}
       rowKey="ds_id"
-      pagination={{ pageSize: 5, pageSizeOptions: [5], position: ['bottomCenter'] }}
+      pagination={{ pageSize: 10, pageSizeOptions: [10], position: ['bottomCenter'] }}
       expandable={{
         expandedRowRender: renderDetails,
       }}

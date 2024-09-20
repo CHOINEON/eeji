@@ -25,27 +25,29 @@ export default function Main() {
   }
 
   return (
-    <div className="relative w-[1280px] mx-auto">
-      <div className="w-[1340px] m-auto">
-        <Header routes={routes}></Header>
-        {isMain() ? (
-          <>
-            <div className="my-[10px] mx-[30px] min-h-[780px]">
-              <MainContents />
+    <>
+      <div className="relative w-[1280px] mx-auto">
+        <div className="w-[1280px] m-auto">
+          <Header routes={routes}></Header>
+          {isMain() ? (
+            <>
+              <div className="my-[10px] mx-[30px] min-h-[780px]">
+                <MainContents />
+              </div>
+            </>
+          ) : (
+            <div className=" w-[1280px] min-h-[850px] bg-[#F3F7FE] rounded-[25px]">
+              <Switch>
+                {getRoutes(routes)}
+                <Redirect from="/" to="/admin/main" />
+              </Switch>
             </div>
-            <div className="absolute bottom-[70px] w-[1280px] text-center background-red">
-              <Footer />
-            </div>
-          </>
-        ) : (
-          <div className=" w-[1340px] min-h-[860px] bg-[#F3F7FE] rounded-[25px]">
-            <Switch>
-              {getRoutes(routes)}
-              <Redirect from="/" to="/admin/main" />
-            </Switch>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+      <div className="bottom-0 m-auto text-center">
+        <Footer />
+      </div>
+    </>
   )
 }

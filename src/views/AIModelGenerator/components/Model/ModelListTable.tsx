@@ -14,6 +14,7 @@ import { loadingAtom, stepCountStore } from 'views/AIModelGenerator/store/global
 import { modelListAtom, selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import Actions from '../Button/ModelActions'
+import './style.css'
 
 const { Column } = Table
 
@@ -164,7 +165,7 @@ const ModelListTable = () => {
   return (
     <>
       <Table
-        className="w-[780px]"
+        className="w-[720px]"
         size="small"
         dataSource={modelList}
         pagination={{ pageSize: 10, position: ['bottomCenter'], pageSizeOptions: [10] }}

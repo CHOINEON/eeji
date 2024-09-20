@@ -7,7 +7,7 @@ import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/Fea
 import { keyColors } from 'views/AIModelGenerator/components/Chart/colors'
 
 const ChartItem = (props: any) => {
-  // console.log('id', props)
+  // console.log('ChartItem props(id)', props)
   const { t } = useTranslation()
 
   // TODO 2024-03-06 심볼명, 심볼설명 배열 생성
@@ -34,78 +34,80 @@ const ChartItem = (props: any) => {
   }, [props.is_reset])
 
   useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_API_SERVER_URL}/api/index_predict/get_symbol_predict/admin?is_daily=${
-          frequency === 'daily' ? 1 : 0
-        }&symbol=${symbol}`
-      )
-      .then(({ data }) => {
-        // console.log(data['xai']['xai_global'][0])
-        // TODO 2024-03-07 '2024-02-06' 형식을 unix timestamp로 변환
-        // console.log('data', data)
-        setTruthData([])
-        setPredictData([])
-        setFeaturedData([])
+    if (symbol) {
+      axios
+        .get(
+          `${process.env.REACT_APP_API_SERVER_URL}/api/index_predict/get_symbol_predict/admin?is_daily=${
+            frequency === 'daily' ? 1 : 0
+          }&symbol=${symbol}`
+        )
+        .then(({ data }) => {
+          // console.log(data['xai']['xai_global'][0])
+          // TODO 2024-03-07 '2024-02-06' 형식을 unix timestamp로 변환
+          // console.log('data', data)
+          setTruthData([])
+          setPredictData([])
+          setFeaturedData([])
 
-        let tmpCnt = 0
-        data.map((item: any, index: number) => {
-          const date = new Date(item.date).getTime()
-          // TODO truth Data 초기화
-          setTruthData((prev) => [...prev, [date, item.ground_truth]])
-          if (tmpCnt > 0) {
-            // 2024-03-25 전달 데이터의 pred_1값을 넣는다.
-            setPredictData((prev) => [...prev, [date, data[index - 1].pred_1]])
+          let tmpCnt = 0
+          data.map((item: any, index: number) => {
+            const date = new Date(item.date).getTime()
+            // TODO truth Data 초기화
+            setTruthData((prev) => [...prev, [date, item.ground_truth]])
+            if (tmpCnt > 0) {
+              // 2024-03-25 전달 데이터의 pred_1값을 넣는다.
+              setPredictData((prev) => [...prev, [date, data[index - 1].pred_1]])
+            } else {
+              // TODO 첫 번째 배열에는 동일한 값을 넣는다.
+              setPredictData((prev) => [...prev, [date, item.ground_truth]])
+            }
+            // TODO predict Data 초기화
+            tmpCnt++
+          }, [])
+
+          // TODO 2024-03-25 Featured Data 처리
+          // TODO 2024-03-25 xai는 데이터의 마지막 값을 참고한다.
+          if (data[data.length - 1]['xai']['xai_global'][0]) {
+            setFeaturedData((prev) => [...prev, data[data.length - 1]['xai']['xai_global'][0]])
+          }
+
+          if (frequency === 'daily') {
+            // TODO 마지막 배열에 pred_1~pred_5까지의 값을 넣는다.
+            for (let i = 1; i < 6; i++) {
+              const date = new Date(data[data.length - 1].date).getTime() + 86400000 * i
+              setPredictData((prev) => [...prev, [date, data[data.length - 1][`pred_${i}`]]])
+
+              // TODO truth
+              setTruthData((prev) => [...prev, [date, null]])
+            }
           } else {
-            // TODO 첫 번째 배열에는 동일한 값을 넣는다.
-            setPredictData((prev) => [...prev, [date, item.ground_truth]])
+            for (let i = 1; i < 4; i++) {
+              const date = new Date(data[data.length - 1].date).getTime() + 86400000 * i
+
+              // TODO 2024-03-25 해당 date의 다음달 마지막 날짜를 구한다.
+              const lastDate = new Date(date)
+              const nextMonth = lastDate.getMonth() + i
+
+              lastDate.setMonth(nextMonth)
+              lastDate.setDate(0)
+              // console.log(lastDate)
+              // console.log('lastDate', lastDate.toISOString().split('T')[0])
+
+              // TODO 2024-03-25 lastDate를 unix timestamp로 변환
+              setPredictData((prev) => [...prev, [new Date(lastDate).getTime(), data[data.length - 1][`pred_${i}`]]])
+              // console.log(data[data.length - 1][`pred_${i}`])
+              // TODO truth
+              setTruthData((prev) => [...prev, [date, null]])
+            }
           }
-          // TODO predict Data 초기화
-          tmpCnt++
-        }, [])
 
-        // TODO 2024-03-25 Featured Data 처리
-        // TODO 2024-03-25 xai는 데이터의 마지막 값을 참고한다.
-        if (data[data.length - 1]['xai']['xai_global'][0]) {
-          setFeaturedData((prev) => [...prev, data[data.length - 1]['xai']['xai_global'][0]])
-        }
-
-        if (frequency === 'daily') {
-          // TODO 마지막 배열에 pred_1~pred_5까지의 값을 넣는다.
-          for (let i = 1; i < 6; i++) {
-            const date = new Date(data[data.length - 1].date).getTime() + 86400000 * i
-            setPredictData((prev) => [...prev, [date, data[data.length - 1][`pred_${i}`]]])
-
-            // TODO truth
-            setTruthData((prev) => [...prev, [date, null]])
-          }
-        } else {
-          for (let i = 1; i < 4; i++) {
-            const date = new Date(data[data.length - 1].date).getTime() + 86400000 * i
-
-            // TODO 2024-03-25 해당 date의 다음달 마지막 날짜를 구한다.
-            const lastDate = new Date(date)
-            const nextMonth = lastDate.getMonth() + i
-
-            lastDate.setMonth(nextMonth)
-            lastDate.setDate(0)
-            // console.log(lastDate)
-            // console.log('lastDate', lastDate.toISOString().split('T')[0])
-
-            // TODO 2024-03-25 lastDate를 unix timestamp로 변환
-            setPredictData((prev) => [...prev, [new Date(lastDate).getTime(), data[data.length - 1][`pred_${i}`]]])
-            // console.log(data[data.length - 1][`pred_${i}`])
-            // TODO truth
-            setTruthData((prev) => [...prev, [date, null]])
-          }
-        }
-
-        setIsReload((prev) => !isReload)
-      })
-      .catch((error) => console.error(error))
-      .then(() => {
-        //
-      })
+          setIsReload((prev) => !isReload)
+        })
+        .catch((error) => console.error(error))
+        .then(() => {
+          //
+        })
+    }
   }, [symbol])
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -151,15 +153,17 @@ const ChartItem = (props: any) => {
       return symbolList.map((item: any, index: number) => {
         // console.log('item', item)
         // TODO 2024-04-04 props.chart_id에서 숫자만 추출
-        const tmp_index = parseInt(props.chart_id.replace('chart-', ''))
+
         return (
-          <option key={index} value={item[0]} selected={index === tmp_index - 1}>
+          <option key={index} value={item[0]}>
             {item[1]}
           </option>
         )
       })
     }
   }, [symbolList])
+
+  const tmp_index = parseInt(props.chart_id.replace('chart-', ''))
 
   const data = useMemo(() => {
     return {
@@ -276,6 +280,7 @@ const ChartItem = (props: any) => {
           <select
             className=" bg-gray-50 border border-gray-300 text-gray-900 text-[12px] rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 mr-3"
             onChange={handleSelect}
+            value={symbolList[tmp_index - 1]?.[0]}
           >
             {/* {symbolList.map((item, index) => {
               return (
