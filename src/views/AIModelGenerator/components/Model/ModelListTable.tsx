@@ -1,17 +1,17 @@
 import { App, Badge, Table, Tag } from 'antd'
 import ModelApi from 'apis/ModelApi'
-import { IModelInfo, IModelList } from 'apis/type/Model'
-import useGetModelList from 'hooks/queries/useGetModelList'
+import { IModelDetailInfo, IModelInfo } from 'apis/type/Model'
+import { useGetModelList_v1 } from 'hooks/queries/useGetModelList'
 import { t } from 'i18next'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useSetRecoilState } from 'recoil'
 import { Ellipsis } from 'styles/common'
 import { validationCheck } from 'utils/DateFunction'
 import { v4 } from 'uuid'
 import { loadingAtom, stepCountStore } from 'views/AIModelGenerator/store/global/atom'
-import { modelListAtom, selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
+import { selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import Actions from '../Button/ModelActions'
 import './style.css'
@@ -41,8 +41,15 @@ const status: IBadge[] = [
 
 const ModelListTable = () => {
   const { t } = useTranslation()
-  const { data } = useGetModelList(localStorage.getItem('userId'))
-  const [modelList, setModelList] = useRecoilState(modelListAtom)
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+
+  const { models, total_count, refetch } = useGetModelList_v1(
+    ((currentPage - 1) * pageSize).toString(),
+    pageSize.toString()
+  )
+  const [modelList, setModelList] = useState([])
 
   const MAX_DATA_COUNT = 5000
   const contentRef = useRef(null)
@@ -64,40 +71,22 @@ const ModelListTable = () => {
     },
   })
 
-  //TODO : Dataset name 가져오기 위한 mutation(백엔드 작업 대기)
-  const { mutate: mutateModelDescription } = useMutation(ModelApi.getModelDescription, {
-    // onSuccess: (result: IModelInfo[]) => {
-    //     setModelList((prevModelList) => ({
-    //       ...prevModelList,
-    //       [result[0].id]: {
-    //         ...prevModelList[result[0].id],
-    //         dataset_name: result[0].dataset_name,
-    //       }
-    //     }));
-    //   }
-
-    onSuccess: (result: any) => {
-      // setModelList((prevModelList) => ({
-      //   ...prevModelList,
-      //   [result[0].id]: { ...prevModelList[result[0].id], dataset_name: result[0].dataset_name },
-      // }))
+  const { mutate: mutateModelDetail } = useMutation(ModelApi.getModelDescription, {
+    onSuccess: (result: IModelDetailInfo[]) => {
+      const updatedModelList = models?.map((model, index) => ({
+        ...model,
+        key: index.toString(),
+        dataset_name: result[0].dataset_name,
+      }))
+      setModelList(updatedModelList)
     },
   })
 
   useEffect(() => {
-    if (Array.isArray(data)) {
-      const updatedData = data.map((item, index) => ({
-        ...item,
-        key: index.toString(),
-      }))
-      setModelList(updatedData as IModelList)
-
-      // TODO: 한꺼번에 전부 돌면 n번. pagination 먼저 처리해야됨
-      // data.map((item: IModelInfo) => {
-      //   mutateModelDescription({ model_id: item.id })
-      // })
-    }
-  }, [data])
+    models?.map((model) => {
+      mutateModelDetail({ model_id: model.id })
+    })
+  }, [models])
 
   const downloadData = async (url: string) => {
     try {
@@ -162,13 +151,35 @@ const ModelListTable = () => {
     return <Badge className="row-item-tag m-auto" status={model_state?.status} text={model_state?.text}></Badge>
   }
 
+  useEffect(() => {
+    refetch()
+  }, [currentPage])
+
   return (
     <>
       <Table
-        className="w-[720px]"
+        className="w-[720px] h-[530px]"
         size="small"
         dataSource={modelList}
-        pagination={{ pageSize: 10, position: ['bottomCenter'], pageSizeOptions: [10] }}
+        pagination={{
+          total: total_count,
+          pageSize: pageSize,
+          position: ['bottomCenter'],
+          showSizeChanger: false,
+          onChange: (page, pageSize) => {
+            setCurrentPage(page)
+          },
+        }}
+        expandable={{
+          expandedRowRender: (record) => {
+            return (
+              <>
+                <p style={{ margin: 0 }}>Dataset : {record.dataset_name}</p>
+              </>
+            )
+          },
+          // rowExpandable: (record) => record.name !== 'Not Expandable',
+        }}
       >
         <Column
           title={t('Model Name')}

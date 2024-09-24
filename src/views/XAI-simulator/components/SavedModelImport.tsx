@@ -1,15 +1,15 @@
-import { App, Empty, Spin } from 'antd'
+import { App, Button, Empty, Spin } from 'antd'
 import { IModelInfo } from 'apis/type/Model'
 import XaiApi from 'apis/XaiApi'
 import { AxiosError } from 'axios'
-import useGetModelList from 'hooks/queries/useGetModelList'
+import { useGetModelList } from 'hooks/queries/useGetModelList'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
 import { colorChips as STACKED_BAR_CHART_COLORS } from 'views/AIModelGenerator/components/Chart/colors'
-import { CancelButton, CustomButton } from '../../AIModelGenerator/components/Modal/DataImportModal'
+import { CancelButton } from '../../AIModelGenerator/components/Modal/DataImportModal'
 import { transformDataByRow } from '../functions'
 import { xaiPaginationStore, xaiResultStore } from '../store/analyze/atom'
 import ModelList from './ModelSelect/ModelList'
@@ -143,9 +143,14 @@ const SavedModelImport = () => {
         </div>
         <div className="mt-[25px]">
           <CancelButton onClick={() => setModal(null)}>{t('Cancel')}</CancelButton>
-          <CustomButton disabled={false} onClick={handleRunModel}>
+          <Button
+            type="primary"
+            className="w-100  h-[46px] rounded-lg bg-[#4338F7] text-white text-[14px] font-medium"
+            disabled={false}
+            onClick={handleRunModel}
+          >
             {t('Run')}
-          </CustomButton>
+          </Button>
         </div>
       </Spin>
     </>
