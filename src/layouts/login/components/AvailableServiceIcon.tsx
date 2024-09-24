@@ -1,9 +1,7 @@
 import styled from '@emotion/styled'
-import { useTranslation } from 'react-i18next'
 import { useMenuList } from 'views/Main/MenuList'
 
 const AvailableServiceIcon = () => {
-  const { t } = useTranslation()
   const MenuList = useMenuList()
 
   return (
@@ -16,7 +14,7 @@ const AvailableServiceIcon = () => {
                 <img src={item.icon_src} />
               </IconContainer>
               <TitleContainer>
-                <Title_EN>{t(item.title)}</Title_EN>
+                <Title_EN>{item.title}</Title_EN>
                 {/* <Title_KR>{item.title_KR}</Title_KR> */}
               </TitleContainer>
             </MenuItem>

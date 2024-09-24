@@ -1,17 +1,17 @@
 import { App, Badge, Table, Tag } from 'antd'
 import ModelApi from 'apis/ModelApi'
-import { IModelInfo, IModelList } from 'apis/type/Model'
-import useGetModelList from 'hooks/queries/useGetModelList'
+import { IModelDetailInfo, IModelInfo } from 'apis/type/Model'
+import { useGetModelList_v1 } from 'hooks/queries/useGetModelList'
 import { t } from 'i18next'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useSetRecoilState } from 'recoil'
 import { Ellipsis } from 'styles/common'
 import { validationCheck } from 'utils/DateFunction'
 import { v4 } from 'uuid'
 import { loadingAtom, stepCountStore } from 'views/AIModelGenerator/store/global/atom'
-import { modelListAtom, selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
+import { selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 import Actions from '../Button/ModelActions'
 import './style.css'
@@ -39,10 +39,38 @@ const status: IBadge[] = [
   { key: 10, text: t('failed'), status: 'error' },
 ]
 
+const error_codes: { [key: number]: string } = {
+  0: '정상 종료 (DB default value)',
+  1: 'GCS와 연결 실패',
+  2: '고객 데이터 연결 실패',
+  3: '데이터 전처리 단계에서 에러 발생',
+  4: 'EEJI 모델 객체를 생성 단계에서 에러 발생',
+  5: 'EEJI 모델 학습 단계에서 에러 발생',
+  6: 'EEJI 모델 Inference 단계에서 에러 발생',
+  7: 'EEJI 모델의 Status를 DB에 저장 단계에서 에러 발생',
+  8: 'EEJI 모델의 예측 결과를 GCS에 저장 단계에서 에러 발생',
+  9: '학습된 EEJI 모델 객체를 GCS에 저장 단계에서 에러 발생',
+  10: '학습된 모델 설명 XAI 단계에서 에러 발생',
+  11: '모델 설명 XAI의 결과를 GCS에 저장단계에서 에러 발생',
+  111: 'UNKNOWN ERROR',
+  1001: '데이터 샘플이 너무 적거나 많습니다.',
+  1002: '데이터의 변수가 너무 많습니다.',
+  1003: '분류 문제 데이터의 unique한 class의 수가 너무 많습니다.',
+  1004: 'Target 변수의 값이 단일 class 입니다.',
+  1005: 'Target 변수의 값이 수치 데이터로 변환할 수 없는 형식입니다.',
+}
+
 const ModelListTable = () => {
   const { t } = useTranslation()
-  const { data } = useGetModelList(localStorage.getItem('userId'))
-  const [modelList, setModelList] = useRecoilState(modelListAtom)
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+
+  const { models, total_count, refetch } = useGetModelList_v1(
+    ((currentPage - 1) * pageSize).toString(),
+    pageSize.toString()
+  )
+  const [modelList, setModelList] = useState([])
 
   const MAX_DATA_COUNT = 5000
   const contentRef = useRef(null)
@@ -64,40 +92,22 @@ const ModelListTable = () => {
     },
   })
 
-  //TODO : Dataset name 가져오기 위한 mutation(백엔드 작업 대기)
-  const { mutate: mutateModelDescription } = useMutation(ModelApi.getModelDescription, {
-    // onSuccess: (result: IModelInfo[]) => {
-    //     setModelList((prevModelList) => ({
-    //       ...prevModelList,
-    //       [result[0].id]: {
-    //         ...prevModelList[result[0].id],
-    //         dataset_name: result[0].dataset_name,
-    //       }
-    //     }));
-    //   }
-
-    onSuccess: (result: any) => {
-      // setModelList((prevModelList) => ({
-      //   ...prevModelList,
-      //   [result[0].id]: { ...prevModelList[result[0].id], dataset_name: result[0].dataset_name },
-      // }))
+  const { mutate: mutateModelDetail } = useMutation(ModelApi.getModelDescription, {
+    onSuccess: (result: IModelDetailInfo[]) => {
+      const updatedModelList = models?.map((model, index) => ({
+        ...model,
+        key: index.toString(),
+        dataset_name: result[0].dataset_name,
+      }))
+      setModelList(updatedModelList)
     },
   })
 
   useEffect(() => {
-    if (Array.isArray(data)) {
-      const updatedData = data.map((item, index) => ({
-        ...item,
-        key: index.toString(),
-      }))
-      setModelList(updatedData as IModelList)
-
-      // TODO: 한꺼번에 전부 돌면 n번. pagination 먼저 처리해야됨
-      // data.map((item: IModelInfo) => {
-      //   mutateModelDescription({ model_id: item.id })
-      // })
-    }
-  }, [data])
+    models?.map((model) => {
+      mutateModelDetail({ model_id: model.id })
+    })
+  }, [models])
 
   const downloadData = async (url: string) => {
     try {
@@ -162,13 +172,40 @@ const ModelListTable = () => {
     return <Badge className="row-item-tag m-auto" status={model_state?.status} text={model_state?.text}></Badge>
   }
 
+  useEffect(() => {
+    refetch()
+  }, [currentPage])
+
   return (
     <>
       <Table
-        className="w-[720px]"
+        className="w-[720px] h-[530px]"
         size="small"
         dataSource={modelList}
-        pagination={{ pageSize: 10, position: ['bottomCenter'], pageSizeOptions: [10] }}
+        pagination={{
+          total: total_count,
+          pageSize: pageSize,
+          position: ['bottomCenter'],
+          showSizeChanger: false,
+          onChange: (page, pageSize) => {
+            setCurrentPage(page)
+          },
+        }}
+        expandable={{
+          expandedRowRender: (record) => {
+            return (
+              <>
+                <p style={{ margin: 0 }}>
+                  {t('Dataset')} : {record.dataset_name}
+                </p>
+                <p style={{ margin: 0 }}>
+                  {t('Issue Summary')} : {error_codes[record.error_code] || 'Unknown error'}
+                </p>
+              </>
+            )
+          },
+          // rowExpandable: (record) => record.name !== 'Not Expandable',
+        }}
       >
         <Column
           title={t('Model Name')}

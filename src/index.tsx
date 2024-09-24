@@ -16,13 +16,13 @@ import './locales'
 const antdCustomTheme = {
   token: {
     fontFamily: 'Helvetica Neue',
-    colorPrimary: '#1677ff',
+    colorPrimary: '#4338F7',
     borderRadius: 10,
   },
   components: {
     Button: {
-      colorPrimary: '#4338f7 !important',
-      colorPrimaryHover: '#fff',
+      // colorPrimary: '#4338f7 !important',
+      // colorPrimaryHover: '#fff',
     },
     Modal: {
       borderRadius: 10,
@@ -34,7 +34,7 @@ const antdCustomTheme = {
       borderRadius: 10,
     },
     Table: {
-      headerColor: '#E5EBFF',
+      headerColor: '#002D65',
     },
   },
 }

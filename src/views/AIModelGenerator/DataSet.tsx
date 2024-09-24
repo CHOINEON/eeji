@@ -89,7 +89,8 @@ const DataSet = () => {
       </div>
       <div className="m-5">
         <Button
-          className="w-100 float-right h-[46px] rounded-lg bg-[#4338F7] text-white text-[15px] font-bold font-lg "
+          type="primary"
+          className="w-100 float-right h-[46px] rounded-lg bg-[#4338F7] text-white text-[14px] font-medium"
           disabled={!selectedData[0].ds_id}
           onClick={handleGenerateModel}
           loading={loading}

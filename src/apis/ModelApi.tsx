@@ -1,5 +1,6 @@
 import { axiosPrivate, axiosPublic } from './axios'
-import { IModelList } from './type/Model'
+import { TResponseType } from './type/commonResponse'
+import { IModelDetailInfo, IModelList } from './type/Model'
 import {
   IGetSurlReq,
   IModelApiGeneratorParam,
@@ -9,7 +10,6 @@ import {
   IModelPostReq,
   IModelSaveReqParam,
 } from './type/ModelOption'
-import { TResponseType } from './type/commonResponse'
 
 const controller = new AbortController()
 
@@ -23,6 +23,16 @@ const ModelApi = {
     }
 
     const { data } = await axiosPrivate.get('api/v1/list_model', config)
+
+    return data
+  },
+
+  // 24.09.24 페이지네이션 추가
+  getModelStatusList_v1: async (param: {
+    offset: string
+    limit: string
+  }): Promise<{ models: IModelList; total_count: number }> => {
+    const { data } = await axiosPrivate.get(`api/v1/list_model_test?offset=${param.offset}&limit=${param.limit}`)
     return data
   },
 
@@ -84,7 +94,7 @@ const ModelApi = {
     return data
   },
 
-  getModelDescription: async (params: IModelModifyRequest): Promise<TResponseType<object>> => {
+  getModelDescription: async (params: IModelModifyRequest): Promise<IModelDetailInfo[]> => {
     const { data } = await axiosPrivate.get(`/api/v1/describe_model/${params.model_id}`)
 
     return data
