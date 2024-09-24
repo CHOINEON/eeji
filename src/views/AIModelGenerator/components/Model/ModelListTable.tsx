@@ -58,7 +58,7 @@ const ModelListTable = () => {
       if (validationCheck(result.expiration, 9)) downloadData(result.signed_url)
       else message.error(t('Sorry. This request has expired.'))
     },
-    onError: (error: Error) => {
+    onError: () => {
       message.error(t('The result is not available. Please contact the administrator.'))
     },
   })
@@ -75,7 +75,7 @@ const ModelListTable = () => {
     //     }));
     //   }
 
-    onSuccess: (result: any) => {
+    onSuccess: () => {
       // setModelList((prevModelList) => ({
       //   ...prevModelList,
       //   [result[0].id]: { ...prevModelList[result[0].id], dataset_name: result[0].dataset_name },
