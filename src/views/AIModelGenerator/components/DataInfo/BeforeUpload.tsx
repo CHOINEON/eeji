@@ -1,4 +1,4 @@
-import { message } from 'antd'
+import { App } from 'antd'
 import Banner from 'components/card/Banner'
 import Uploader from 'components/uploader/Uploader'
 import languageEncoding from 'detect-file-encoding-and-language'
@@ -6,6 +6,7 @@ import { useRecoilState, useResetRecoilState } from 'recoil'
 import { uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 
 const BeforeUpload = () => {
+  const { message } = App.useApp()
   const [uploadedData, setUploadedData] = useRecoilState(uploadedDataState)
   const resetUploadFileState = useResetRecoilState(uploadedDataState)
 
