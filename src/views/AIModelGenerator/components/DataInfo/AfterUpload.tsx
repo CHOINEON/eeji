@@ -1,7 +1,8 @@
-import { Spin, message } from 'antd'
+import { App, Spin } from 'antd'
 import thumbnailImg from 'assets/img/dataAnalysis/thumbnail_circle.svg'
 import close_blue_icon from 'assets/img/icons/common/close_blue.png'
 import ProgressbarSimple from 'components/progressbar/ProgressbarSimple'
+import { t } from 'i18next'
 import { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { modalState } from 'stores/modal'
@@ -18,6 +19,7 @@ interface ILoadingState {
 }
 
 const AfterUpload = () => {
+  const { message } = App.useApp()
   const progress = useRecoilValue(ProgressState)
   const setModal = useSetRecoilState(modalState)
   const resetUpload = useResetRecoilState(uploadedDataState)
@@ -30,7 +32,7 @@ const AfterUpload = () => {
   }, [])
 
   const readFile = (file: any) => {
-    setLoading({ isLoading: true, message: '데이터 로드 중 ...' })
+    setLoading({ isLoading: true, message: t('Loading data...') })
 
     const fileReader = new FileReader()
     const fileFormat: string = file.name.split('.').pop()
@@ -40,10 +42,10 @@ const AfterUpload = () => {
         fileReader.onload = function (event: any) {
           const text = event.target.result
 
-          if (text.length === 0) message.error('컬럼 정보를 확인할 수 없습니다.')
+          if (text.length === 0) message.error(t('Failed to load data.'))
           else {
             if (new TextEncoder().encode(text).length > Number(process.env.REACT_APP_MAX_FILE_SIZE)) {
-              message.info('최대 처리 가능한 용량은 400MB 입니다.')
+              message.info(t('The data is too large (maximum 400MB)'))
               setLoading({ isLoading: false })
             } else {
               csvFileToArray(text)
@@ -69,7 +71,7 @@ const AfterUpload = () => {
       } else {
         message.open({
           type: 'error',
-          content: '지원하지 않는 파일 유형입니다.',
+          content: t('The file type is not supported.'),
           duration: 1,
           style: {
             margin: 'auto',
@@ -80,13 +82,34 @@ const AfterUpload = () => {
     }
   }
 
+  function fileValidationCheck(dataLength: number, headerLength: number) {
+    let result = true
+
+    if (dataLength < 100) {
+      message.error(t('The data is too small. (Minimum 100 items)'))
+      result = false
+    }
+
+    if (dataLength > 100000) {
+      message.error(t('The data is too large. (Maximum 100,000 items)'))
+      result = false
+    }
+
+    if (headerLength > 50) {
+      message.error(t('There are too many variables. (Maximum 50 variables)'))
+      result = false
+    }
+    console.log(result)
+    return result
+  }
+
   const xlsFileParser = (data: string[][]) => {
-    // console.log('data:', data)
     const csvHeader = data[0]
     const csvRows = data.slice(1)
 
-    if (data.length < 100) {
-      message.error('학습을 위해 최소 100개의 데이터가 필요합니다.')
+    if (!fileValidationCheck(csvRows.length, csvHeader.length)) {
+      setLoading({ isLoading: false })
+      return false
     } else {
       //전체 데이터의 top10 샘플링하여 iteration to classify numeric/non-nuemric column list
       const sampleCnt = 10
@@ -136,8 +159,9 @@ const AfterUpload = () => {
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',')
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n')
 
-    if (csvRows.length < 100) {
-      message.error('학습을 위해 최소 100개의 데이터가 필요합니다.')
+    if (!fileValidationCheck(csvRows.length, csvHeader.length)) {
+      setLoading({ isLoading: false })
+      return false
     } else {
       //Prepare iteration to classify numeric/non-numeric column list
       const sampleCnt = 10 //only 10rows are tested

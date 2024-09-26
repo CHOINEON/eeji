@@ -173,13 +173,7 @@ const DataProperties = () => {
         />
       </Row>
       <Row style={{ display: inputOption.algo_type === 0 ? 'block' : 'none' }}>
-        <ColumnLabel
-          required={true}
-          label={t('Timestamp')}
-          tooptipTitle={t(
-            'The types of date formats supported by EEJI can be found in the guide document. Please check the document for more details.'
-          )}
-        />
+        <ColumnLabel required={true} label={t('Timestamp')} />
         <Select
           style={{
             width: '100%',
