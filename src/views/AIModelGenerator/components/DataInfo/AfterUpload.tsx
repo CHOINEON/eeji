@@ -83,24 +83,21 @@ const AfterUpload = () => {
   }
 
   function fileValidationCheck(dataLength: number, headerLength: number) {
-    let result = true
-
     if (dataLength < 100) {
       message.error(t('The data is too small. (Minimum 100 items)'))
-      result = false
+      return false
     }
 
     if (dataLength > 100000) {
       message.error(t('The data is too large. (Maximum 100,000 items)'))
-      result = false
+      return false
     }
 
     if (headerLength > 50) {
       message.error(t('There are too many variables. (Maximum 50 variables)'))
-      result = false
+      return false
     }
-    console.log(result)
-    return result
+    return true
   }
 
   const xlsFileParser = (data: string[][]) => {
