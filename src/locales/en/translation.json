@@ -42,6 +42,7 @@
   "Timestamp": "Timestamp",
   "The dataset has been successfully deleted.": "The dataset has been successfully deleted.",
   "Deletion failed": "Deletion failed",
+  "Unable to confirm the start/end date for the relevant column.": "Unable to confirm the start/end date for the relevant column.",
 
   "The model training has been successfully requested.": "The model training has been successfully requested.",
   "The request has failed. Please try again later.": "The request has failed. Please try again later.",

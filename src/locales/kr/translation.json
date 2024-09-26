@@ -39,6 +39,7 @@
   "Timestamp": "타임스탬프",
   "Size": "용량",
   "Please contact the administrator.": "관리자에게 문의해주세요.",
+  "Unable to confirm the start/end date for the relevant column.": "해당 컬럼의 시작/종료일을 확인할 수 없습니다.",
 
   "The types of date formats supported by EEJI can be found in the guide document. Please check the document for more details.": "EEJI에서 지원하는 날짜 포맷의 종류는 가이드 문서를 확인해주세요",
   "The model training has been successfully requested.": "모델 학습이 정상적으로 요청되었습니다.",

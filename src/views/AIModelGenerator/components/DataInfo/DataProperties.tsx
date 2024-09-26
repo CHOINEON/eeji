@@ -106,7 +106,7 @@ const DataProperties = () => {
     })
 
     if (!newArr[0].dateTime.getTime()) {
-      message.error('해당 컬럼의 시작/종료일을 확인할 수 없습니다.')
+      message.error(t('Unable to confirm the start/end date for the relevant column.'))
       setUploadedData({
         ...uploadedData,
         startDate: 'N/A',
