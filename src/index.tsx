@@ -1,4 +1,3 @@
-import { ChakraProvider } from '@chakra-ui/react'
 import { App as Antd, ConfigProvider } from 'antd'
 import GlobalModal from 'components/modal/GlobalModal'
 import ToastList from 'components/toast/List'
@@ -13,30 +12,31 @@ import { RecoilRoot } from 'recoil'
 import App from './App'
 import './assets/css/App.css'
 import './locales'
-import theme from './theme/theme'
 
 const antdCustomTheme = {
   token: {
     fontFamily: 'Helvetica Neue',
-    colorPrimary: '#1677ff',
+    colorPrimary: '#4338F7',
     borderRadius: 10,
   },
   components: {
     Button: {
-      colorPrimary: '#4338f7 !important',
-      colorPrimaryHover: '#fff',
+      colorPrimary: '#4338f7', // Button background color
+      colorText: '#000000', // Default font color
+      colorPrimaryHover: '#5a50ff', // Button background color on hover
+      fontSize: 13,
     },
     Modal: {
-      borderRadius: 12,
+      borderRadius: 10,
     },
     Input: {
-      borderRadius: 12,
+      borderRadius: 10,
     },
     Select: {
-      borderRadius: 12,
+      borderRadius: 10,
     },
     Table: {
-      headerColor: '#E5EBFF',
+      headerColor: '#002D65',
     },
   },
 }
@@ -52,17 +52,15 @@ ReactDOM.render(
   <RecoilRoot>
     <I18nextProvider i18n={i18n}>
       <ConfigProvider theme={antdCustomTheme}>
-        <ChakraProvider theme={theme}>
-          <QueryClientProvider client={queryClient}>
-            <Antd>
-              <BrowserRouter>
-                <App />
-                <ToastList />
-              </BrowserRouter>
-              <GlobalModal />
-            </Antd>
-          </QueryClientProvider>
-        </ChakraProvider>
+        <QueryClientProvider client={queryClient}>
+          <Antd>
+            <BrowserRouter>
+              <App />
+              <ToastList />
+            </BrowserRouter>
+            <GlobalModal />
+          </Antd>
+        </QueryClientProvider>
       </ConfigProvider>
     </I18nextProvider>
   </RecoilRoot>,

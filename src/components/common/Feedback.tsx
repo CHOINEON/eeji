@@ -1,4 +1,4 @@
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import useModal from 'hooks/useModal'
 import CustomerService from './../icons/CustomerService.png'
 
@@ -6,15 +6,16 @@ const Feedback = () => {
   const { openModal, closeModal } = useModal()
 
   const handleClick = () => {
-    openModal({
-      modalTitle: "We'd love your feedback!",
-      modalType: 'SendFeedback',
-      modalProps: {
-        onClick: () => {
-          closeModal()
-        },
-      },
-    })
+    message.info('서비스 점검 중입니다.')
+    // openModal({
+    //   modalTitle: "We'd love your feedback!",
+    //   modalType: 'SendFeedback',
+    //   modalProps: {
+    //     onClick: () => {
+    //       closeModal()
+    //     },
+    //   },
+    // })
   }
 
   return (

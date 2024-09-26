@@ -144,7 +144,7 @@ const XaiAnalysisResult = () => {
             </RoundedBox>
           </div>
           <div className="w-[28%] h-[77vh] ml-1 bg-red block float-left">
-            {xaiResult?.xai_pdp ? <PDP_Plot data={xaiResult?.xai_pdp} /> : null}
+            {xaiResult?.xai_pdp && <PDP_Plot pdpData={xaiResult.xai_pdp} target={xaiResult.target} />}
             {xaiResult?.xai_global ? (
               <GlobalFeatureImportance data={xaiResult?.xai_global} colors={xaiResult?.colors} />
             ) : null}

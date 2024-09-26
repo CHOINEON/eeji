@@ -1,7 +1,47 @@
-.container{
-    overflow-x: scroll;
+.chart-container{
+  overflow-x: scroll;
 }
 
 .containerBody{
-    height:600px;
+  height:600px;
 }
+
+.x-axis-label {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  /* font-weight: bold; */
+  padding-top: 10px;
+}
+  
+.y-axis-label {
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  transform: translateY(-50%) rotate(-90deg); /* y축 레이블 회전 */
+  font-size: 13px;
+  /* font-weight: bold; */
+  padding-right: 10px;
+}
+
+#legend-container {
+  position: absolute;
+  top: 0;
+  left: 100%; /* 차트 옆에 고정 */
+  transform: translateX(-100%); /* 범례를 차트의 오른쪽에 고정 */
+  white-space: nowrap;
+  padding-left: 20px;
+  padding-right:45px;
+}
+
+.info-icon {
+  font-size: 18px;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  line-height:13px;
+}
+

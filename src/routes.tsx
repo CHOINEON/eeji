@@ -1,6 +1,4 @@
 /* eslint-disable prettier/prettier */
-import { Icon } from '@chakra-ui/react'
-import { MdOutlineAnalytics, MdOutlineModelTraining } from 'react-icons/md'
 
 // Admin Imports
 import AIModelGenerator from 'views/AIModelGenerator'
@@ -15,28 +13,28 @@ const routes = [
     name: 'Main',
     layout: '/admin',
     path: '/main',
-    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+    icon: '',
     component: MainContents,
   },
   {
     name: 'AI Model Generator',
     layout: '/admin',
     path: '/ai-model-generator',
-    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+    icon: '',
     component: AIModelGenerator,
   },
   {
     name: 'Explainable AI',
     layout: '/admin',
     path: '/xai-simulator',
-    icon: <Icon as={MdOutlineModelTraining} width="20px" height="20px" color="inherit" />,
+    icon: '',
     component: XAIsimulator,
   },
   {
     name: 'Commodity Index Forecast',
     layout: '/admin',
     path: '/price-forecast',
-    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+    icon: '',
     component: PriceForecasting,
   },
   /*
@@ -44,7 +42,7 @@ const routes = [
     name: 'Prediction API',
     layout: '/admin',
     path: '/api-service',
-    icon: <Icon as={MdOutlineAnalytics} width="20px" height="20px" color="inherit" />,
+     icon: '',
     component: ApiService,
   },
   */

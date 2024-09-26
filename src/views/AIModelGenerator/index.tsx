@@ -1,4 +1,3 @@
-import { Box } from '@chakra-ui/react'
 import { ThemeProvider } from '@mui/material/styles'
 import { Spin } from 'antd'
 import { useEffect } from 'react'
@@ -33,21 +32,21 @@ const AIModelGenerator = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box style={{ position: 'relative', zIndex: 1000 }}>
+      <div className="relative z-[1000]">
         <Spin tip={t('loading')} size="small" spinning={loading} style={{ top: 300 }}>
           {activeStep === 0 && (
-            <div className="h-[500px] block float-left m-auto">
-              <div className="w-[500px] float-left">
+            <div className="h-[500px] flex">
+              <div className="w-[500px]">
                 <DataSet />
               </div>
-              <div className="w-[800px] float-left">
+              <div className="w-[780px]">
                 <ModelList />
               </div>
             </div>
           )}
         </Spin>
         {activeStep === 1 && <ModelGeneratorResult />}
-      </Box>
+      </div>
     </ThemeProvider>
   )
 }

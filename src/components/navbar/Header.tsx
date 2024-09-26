@@ -1,10 +1,10 @@
-import { Link, Stack, Text } from '@chakra-ui/react'
 import Feedback from 'components/common/Feedback'
 import { useTranslation } from 'react-i18next'
 import Faq from './Faq'
 import LanguageBox from './LanguageBox'
 import Logo from './Logo'
 import Logout from './Logout'
+import UserProfile from './UserProfile'
 
 const MenuLinks = ({ routes }: any) => {
   const { t } = useTranslation()
@@ -13,42 +13,32 @@ const MenuLinks = ({ routes }: any) => {
   const activeRoute = (routeName: string) => {
     return location.pathname.includes(routeName)
   }
-
   const MenuItem = ({ children, isLast, to, ...rest }: any) => {
     return (
-      <Link href={to}>
-        <Text
-          display="block"
-          {...rest}
-          opacity={activeRoute(to.toLowerCase()) ? 1 : 0.5}
-          fontWeight={activeRoute(to.toLowerCase()) ? 'bold' : 'normal'}
-          letterSpacing="0.5px"
-          fontSize={13}
-          fontFamily="Helvetica Neue"
-        >
-          {children}
-        </Text>
-      </Link>
+      <a
+        href={to}
+        {...rest}
+        className={`block ${
+          activeRoute(to.toLowerCase()) ? 'font-bold opacity-100' : 'font-normal opacity-50'
+        } text-sm tracking-wide`}
+      >
+        {children}
+      </a>
     )
   }
 
   return (
-    <Stack
-      spacing={8}
-      align="center"
-      justify={['center', 'space-between', 'flex-end', 'flex-end']}
-      direction={['column', 'row', 'row', 'row']}
-      pt={[4, 4, 0, 0]}
-    >
+    <div className="flex flex-col md:flex-row md:justify-between md:items-center space-y-4 md:space-y-0 md:space-x-8">
       {routes.map((value: any, i: number) => {
-        if (value.path !== '/main')
+        if (value.path !== '/main') {
           return (
             <MenuItem key={i} to={value.layout + value.path}>
               {t(value.name)}
             </MenuItem>
           )
+        }
       })}
-    </Stack>
+    </div>
   )
 }
 
@@ -56,7 +46,7 @@ const Header = (props: { routes: RoutesType[] }) => {
   const { routes } = props
 
   return (
-    <div className="w-[1280px] mx-[30px]">
+    <div className="w-[1280px] m-auto">
       <nav className="h-16 text-white flex justify-between items-center px-8">
         {/* Left: Logo */}
         <div className="flex-shrink-0">
@@ -74,6 +64,7 @@ const Header = (props: { routes: RoutesType[] }) => {
           <LanguageBox />
           <Logout />
           <Feedback />
+          <UserProfile />
         </div>
       </nav>
     </div>

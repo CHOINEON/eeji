@@ -7,4 +7,9 @@ export interface IModelInfo {
   is_classification?: boolean
 }
 
+export interface IModelDetailInfo extends IModelInfo {
+  dataset_name?: string
+  updated_at?: string
+}
+
 export type IModelList = Array<IModelInfo>

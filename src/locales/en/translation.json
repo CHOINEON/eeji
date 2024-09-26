@@ -32,6 +32,12 @@
   "Browse": "Browse",
   "EEJI Upload Guide": "EEJI Upload Guide",
   "The data is too large (maximum 400MB)": "The data is too large (maximum 400MB)",
+  "Failed to load data.": "Failed to load data.",
+  "The data is too small. (Minimum 100 items)": "The data is too small. (Minimum 100 items)",
+  "The data is too large. (Maximum 100,000 items)": "The data is too large. (Maximum 100,000 items)",
+  "There are too many variables. (Maximum 50 variables)": "There are too many variables. (Maximum 50 variables",
+  "Loading data...": "Loading data...",
+  "The file type is not supported.": "The file type is not supported.",
   "Row": "Row",
   "Column": "Column",
   "Start": "Start",
@@ -42,12 +48,14 @@
   "Timestamp": "Timestamp",
   "The dataset has been successfully deleted.": "The dataset has been successfully deleted.",
   "Deletion failed": "Deletion failed",
+  "Unable to confirm the start/end date for the relevant column.": "Unable to confirm the start/end date for the relevant column.",
 
   "The model training has been successfully requested.": "The model training has been successfully requested.",
   "The request has failed. Please try again later.": "The request has failed. Please try again later.",
 
   "Model List": "Model List",
   "Model Name": "Model Name",
+  "Issue Summary": "Issue Summary",
   "Target": "Target",
   "Target Variable": "Target Variable",
   "Created": "Created",
@@ -114,7 +122,7 @@
   "Model Save": "Model Save",
   "Input Variable Filtering": "Input Variable Filtering",
   "Prediction Model Explanation Results": "Prediction Model Explanation Results",
-  "Prediction of Variable Impact": "Prediction of Variable Impact",
+  "Prediction of Variable Impact": "Variable Impact Prediction",
   "Surrounding effect of a single variable on prediction results": "Surrounding effect of a single variable on prediction results",
   "No": "No",
   "Prediction Result": "Prediction Result",
@@ -147,5 +155,12 @@
   "Request Elements": "Request Elements",
   "Response Syntax": "Response Syntax",
   "Authentication Key": "Authentication Key",
-  "Data to input into the model": "Data to input into the model"
+  "Data to input into the model": "Data to input into the model",
+
+  "quantile": "Quantile",
+  "quantile_of_variable": "{{variable}}'s {{quantile}}",
+  "change": "Change",
+  "change_in_target": "Change in {{variable}}",
+
+  "You can scroll the chart horizontally, drag the x-axis to zoom in, and double-click the chart to zoom out.": "You can scroll the chart horizontally, drag the x-axis to zoom in, and double-click the chart to zoom out."
 }

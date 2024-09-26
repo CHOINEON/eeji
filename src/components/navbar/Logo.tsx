@@ -1,8 +1,5 @@
-import React from 'react'
-import { Box, Text } from '@chakra-ui/react'
-import LogoHorizontal from 'assets/img/ineeji/logo_horizontal.svg'
-import { useHistory } from 'react-router-dom'
 import ineeji from 'assets/img/ineeji/ineeji.svg'
+import { useHistory } from 'react-router-dom'
 
 export default function Logo(props: any) {
   const history = useHistory()
@@ -11,8 +8,8 @@ export default function Logo(props: any) {
     history.replace('/admin/main')
   }
   return (
-    <Box {...props} as="button">
-      <img src={ineeji} onClick={handleLogoClick} />
-    </Box>
+    <button {...props} className="focus:outline-none">
+      <img src={ineeji} onClick={handleLogoClick} alt="Logo" />
+    </button>
   )
 }

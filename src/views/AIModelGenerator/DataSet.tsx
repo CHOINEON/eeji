@@ -91,17 +91,20 @@ const DataSet = () => {
   return (
     <div className="px-5 py-10">
       <MenuTitle className="ml-[25px]">{t('Dataset')}</MenuTitle>
-      <div className="m-5">
+      <div className="mx-5 mx-3 max-h-[620px] overflow-scroll">
         <DatasetList />
       </div>
-      <Button
-        className="w-100 float-right h-[46px] rounded-lg bg-[#4338F7] text-white text-[15px] font-bold font-lg "
-        disabled={!selectedData[0].ds_id}
-        onClick={handleGenerateModel}
-        loading={loading}
-      >
-        {t('Generate Model')}
-      </Button>
+      <div className="m-5">
+        <Button
+          type="primary"
+          className="w-100 float-right h-[46px] rounded-lg bg-[#4338F7] font-medium "
+          disabled={!selectedData[0].ds_id}
+          onClick={handleGenerateModel}
+          loading={loading}
+        >
+          {t('Generate Model')}
+        </Button>
+      </div>
       <DataEditModal onSave={handleEdit} />
     </div>
   )

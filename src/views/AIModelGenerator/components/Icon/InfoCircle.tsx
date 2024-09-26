@@ -1,4 +1,4 @@
-import { Icon } from '@chakra-ui/react'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 import { Tooltip } from 'antd'
 
 interface InfoCircleProps {
@@ -12,7 +12,7 @@ const InfoCircle = ({ content, styleClass }: InfoCircleProps) => {
   return (
     <>
       <Tooltip title={content}>
-        <Icon type="info-circle-o" className={`${defaultClass} ${styleClass || ''}`} />
+        <QuestionCircleOutlined className={`${defaultClass} ${styleClass || ''}`} />
       </Tooltip>
     </>
   )

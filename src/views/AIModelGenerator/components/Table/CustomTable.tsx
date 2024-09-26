@@ -157,7 +157,7 @@ const Title = styled.div`
 `
 
 const CustomTableContainer = styled.div`
-  width: 820px;
+  width: 800px;
   height: 570px;
   overflow: auto;
   white-space: nowrap;
@@ -209,21 +209,13 @@ const LabelContainer = styled.div`
 `
 
 const CellItem = styled.div`
-  // border: 1px solid lightblue;
   width: 100px;
   height: 45px;
   font-family: 'Helvetica Neue';
-  font-size: 14px;
+  font-size: 13px;
   display: inline-block;
-
   text-align: center;
   line-height: 35px;
   overflow: hidden;
   padding: 5px 10px;
-`
-
-const RowWrapper = styled.div`
-  width: 100%;
-  height: 46px;
-  // oveflow: hidden;
 `
