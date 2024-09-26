@@ -39,6 +39,7 @@
   "Timestamp": "타임스탬프",
   "Size": "용량",
   "Please contact the administrator.": "관리자에게 문의해주세요.",
+  "Unable to confirm the start/end date for the relevant column.": "해당 컬럼의 시작/종료일을 확인할 수 없습니다.",
 
   "The types of date formats supported by EEJI can be found in the guide document. Please check the document for more details.": "EEJI에서 지원하는 날짜 포맷의 종류는 가이드 문서를 확인해주세요",
   "The model training has been successfully requested.": "모델 학습이 정상적으로 요청되었습니다.",
@@ -46,6 +47,12 @@
 
   "Browse": "파일 선택",
   "The data is too large (maximum 400MB)": "데이터가 너무 큽니다(최대 400MB)",
+  "Failed to load data.": "데이터를 불러오기 실패",
+  "The data is too small. (Minimum 100 items)": "데이터가 너무 적습니다. (최소 100개)",
+  "The data is too large. (Maximum 100,000 items)": "데이터가 너무 많습니다. (최대 10만개)",
+  "There are too many variables. (Maximum 50 variables)": "변수가 너무 많습니다. (최대 50개)",
+  "Loading data...": "데이터 로드 중...",
+  "The file type is not supported.": "지원하지 않는 파일 유형입니다.",
   "EEJI Upload Guide": "EEJI 업로드 가이드",
   "Model List": "모델 리스트",
   "Model Name": "모델 이름",

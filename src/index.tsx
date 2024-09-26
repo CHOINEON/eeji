@@ -21,8 +21,10 @@ const antdCustomTheme = {
   },
   components: {
     Button: {
-      // colorPrimary: '#4338f7 !important',
-      // colorPrimaryHover: '#fff',
+      colorPrimary: '#4338f7', // Button background color
+      colorText: '#000000', // Default font color
+      colorPrimaryHover: '#5a50ff', // Button background color on hover
+      fontSize: 13,
     },
     Modal: {
       borderRadius: 10,

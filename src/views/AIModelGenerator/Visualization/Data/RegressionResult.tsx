@@ -286,7 +286,7 @@ const RegressionResult = () => {
           </div>
           <div className="chart-container">
             <div className="containerBody">
-              <div className="x-axis-label">{t('Index')}</div>
+              <div className="x-axis-label">{t('Timestamp')}</div>
               <div className="y-axis-label">{`${selectedModel.target}`}</div>
               <canvas id="predChart" ref={chartRef}></canvas>
             </div>
