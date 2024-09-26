@@ -8,6 +8,7 @@ import { modalState } from 'stores/modal'
 import { ProgressState } from 'stores/progress'
 import { styled } from 'styled-components'
 import { uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import * as XLSX from 'xlsx'
 import DataProperties from './DataProperties'
 import DataSummary from './DataSummary'
 
@@ -33,10 +34,9 @@ const AfterUpload = () => {
 
     const fileReader = new FileReader()
     const fileFormat: string = file.name.split('.').pop()
-    const acceptedFormats = ['csv', 'xls', 'xlsx']
 
     if (file.name) {
-      if (acceptedFormats.includes(fileFormat.toLowerCase())) {
+      if (fileFormat.toLowerCase() === 'csv') {
         fileReader.onload = function (event: any) {
           const text = event.target.result
 
@@ -51,6 +51,21 @@ const AfterUpload = () => {
           }
         }
         fileReader.readAsText(file)
+      } else if (fileFormat.toLowerCase().includes('xls')) {
+        fileReader.onload = (e) => {
+          setLoading({ isLoading: false })
+
+          const data = new Uint8Array(e.target?.result as ArrayBuffer) // Read as array buffer
+          const workbook = XLSX.read(data, { type: 'array' })
+
+          const sheetName = workbook.SheetNames[0] // Get first sheet
+          const worksheet = workbook.Sheets[sheetName]
+
+          const jsonData = XLSX.utils.sheet_to_json<string[]>(worksheet, { header: 1 })
+          xlsFileParser(jsonData)
+        }
+
+        fileReader.readAsArrayBuffer(file) // Read file as ArrayBuffer
       } else {
         message.open({
           type: 'error',
@@ -62,6 +77,58 @@ const AfterUpload = () => {
         })
         setLoading({ isLoading: false })
       }
+    }
+  }
+
+  const xlsFileParser = (data: string[][]) => {
+    // console.log('data:', data)
+    const csvHeader = data[0]
+    const csvRows = data.slice(1)
+
+    if (data.length < 100) {
+      message.error('학습을 위해 최소 100개의 데이터가 필요합니다.')
+    } else {
+      //전체 데이터의 top10 샘플링하여 iteration to classify numeric/non-nuemric column list
+      const sampleCnt = 10
+      const sampleRows = csvRows.slice(0, sampleCnt)
+      const numericColums = []
+      const nonNumericColumns = []
+
+      for (let i = 0; i < csvHeader.length; i++) {
+        let isNumber = false
+
+        for (let j = 0; j < sampleCnt; j++) {
+          const selectedData = Number(sampleRows[j][i])
+
+          if (isNaN(selectedData)) isNumber = false
+          else isNumber = true
+        }
+
+        if (isNumber) numericColums.push(csvHeader[i])
+        else nonNumericColumns.push(csvHeader[i])
+      }
+
+      type CsvObject = { [key: string]: string }
+
+      const contentObjArray = csvRows.map((item) => {
+        if (item.length > 0) {
+          const obj = csvHeader.reduce((object: CsvObject, header, index) => {
+            object[header] = item[index]
+            return object
+          }, {})
+          return obj
+        }
+      })
+
+      setUploadedData({
+        ...uploadedData,
+        columns: csvHeader,
+        numericCols: numericColums,
+        nonNumericCols: nonNumericColumns,
+        content: contentObjArray,
+        rowCount: data.length,
+        colCount: csvHeader.length,
+      })
     }
   }
 
@@ -130,7 +197,7 @@ const AfterUpload = () => {
     <>
       <Spin tip={loading?.message} spinning={loading?.isLoading} style={{ marginTop: '80px' }}>
         <DatasetImageContainer>
-          <div className="absolute w-[352px] mt-[10px]">
+          <div className="absolute w-100 mt-[10px]">
             <img src={thumbnailImg} style={{ margin: '0 auto' }} />
             <div className="mt-3">
               <div className="text-center">

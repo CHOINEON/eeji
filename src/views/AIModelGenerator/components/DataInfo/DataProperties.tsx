@@ -81,18 +81,22 @@ const DataProperties = () => {
   }
 
   const handleSelectDateCol = (param: any) => {
-    //날짜 컬럼 유효한지 검증
-    const isValid = validateDatetime(param, uploadedData.content)
+    setInputOption({ ...inputOption, date_col: param })
+    searchStartEndDate(param, uploadedData.content)
 
-    if (isValid) {
-      setInputOption({ ...inputOption, date_col: param })
+    // 24.09.25 날짜컬럼 유효성 검증 부분 삭제
+    // //날짜 컬럼 유효한지 검증
+    // const isValid = validateDatetime(param, uploadedData.content)
 
-      //시작 종료일 찾기
-      searchStartEndDate(param, uploadedData.content)
-    } else {
-      message.error('처리할 수 없는 날짜 형식입니다. 데이터 업로드 가이드를 참고하세요')
-      return false
-    }
+    // if (isValid) {
+    //   setInputOption({ ...inputOption, date_col: param })
+
+    //   //시작 종료일 찾기
+    //   searchStartEndDate(param, uploadedData.content)
+    // } else {
+    //   message.error('처리할 수 없는 날짜 형식입니다. 데이터 업로드 가이드를 참고하세요')
+    //   return false
+    // }
   }
 
   const searchStartEndDate = (colName: string, array: Array<any>) => {
@@ -100,8 +104,14 @@ const DataProperties = () => {
     const newArr = array.map((obj) => {
       return { ...obj, dateTime: new Date(obj[colName]) }
     })
+
     if (!newArr[0].dateTime.getTime()) {
-      alert('날짜 컬럼이 아닙니다.')
+      message.error('해당 컬럼의 시작/종료일을 확인할 수 없습니다.')
+      setUploadedData({
+        ...uploadedData,
+        startDate: 'N/A',
+        endDate: 'N/A',
+      })
     } else {
       //Sort in Ascending order(low to high)
       const sortedAsc = newArr.sort((a, b) => Number(a.dateTime) - Number(b.dateTime))
@@ -137,7 +147,7 @@ const DataProperties = () => {
         <Input
           style={{ backgroundColor: '#fff', border: '1px solid #A3AFCF', borderRadius: '10px' }}
           placeholder={t('Dataset Name')}
-          maxLength={20}
+          maxLength={100}
           onChange={handleChange}
           value={inputOption.name}
           allowClear
