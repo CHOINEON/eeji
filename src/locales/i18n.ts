@@ -1,11 +1,10 @@
-import i18n from 'i18next'
-// import i18n, { Resource } from 'i18next'
+import i18n, { Resource } from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import en from './en/translation.json'
 import jp from './jp/translation.json'
 import ko from './kr/translation.json'
 
-const resources: any = {
+const resources: Resource = {
   'us-US': { translation: en },
   'ko-KR': { translation: ko },
   'jp-JP': { translation: jp },

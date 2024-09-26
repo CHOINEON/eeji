@@ -87,10 +87,11 @@ const ModelListTable = () => {
       if (validationCheck(result.expiration, 9)) downloadData(result.signed_url)
       else message.error(t('Sorry. This request has expired.'))
     },
-    onError: (error: Error) => {
+    onError: () => {
       message.error(t('The result is not available. Please contact the administrator.'))
     },
   })
+
 
   const { mutate: mutateModelDetail } = useMutation(ModelApi.getModelDescription, {
     onSuccess: (result: IModelDetailInfo[]) => {

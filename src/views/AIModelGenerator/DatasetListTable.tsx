@@ -91,7 +91,7 @@ const DatasetListTable = ({ data }: { data: IDatasetList }) => {
       title: '',
       key: 'ds_id',
       width: 40,
-      render: (text, record: IDataset) => <Actions />,
+      render: () => <Actions />,
     },
   ]
 

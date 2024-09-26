@@ -1,14 +1,15 @@
 import { App, Button } from 'antd'
 import DatasetApi from 'apis/DatasetApi'
 import ModelApi from 'apis/ModelApi'
+import axios from 'axios'
 import { useApiError } from 'hooks/useApiError'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
-import DatasetList from './DatasetList'
 import DataEditModal, { IDataInfo } from './components/DataInfo/DataEditModal'
 import { MenuTitle } from './components/Input/Text'
+import DatasetList from './DatasetList'
 import { selectedDataState, userInfoState } from './store/dataset/atom'
 import { datasetEditModalState } from './store/modal/atom'
 import { analysisResponseAtom } from './store/response/atoms'
@@ -25,7 +26,7 @@ const DataSet = () => {
   const selectedData = useRecoilState(selectedDataState)
   const setUserInfo = useSetRecoilState(userInfoState)
   const resetAnalysisResponse = useResetRecoilState(analysisResponseAtom)
-  const [modalState, setModalState] = useRecoilState(datasetEditModalState)
+  const setModalState = useSetRecoilState(datasetEditModalState)
 
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: () => {
@@ -44,9 +45,15 @@ const DataSet = () => {
       queryClient.invalidateQueries('datasets')
       setModalState(false)
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.log('DataProperties/ onError :', error)
-      handleError(error)
+
+      // Check if error is an AxiosError
+      if (axios.isAxiosError(error)) {
+        handleError(error)
+      } else {
+        console.error('An unknown error occurred:', error)
+      }
     },
   })
 
