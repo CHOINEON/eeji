@@ -29,7 +29,7 @@ const ChartItem = (props: any) => {
 
   useEffect(() => {
     if (props.is_reset) {
-      setIsFeature((prev) => false)
+      setIsFeature(false)
     }
   }, [props.is_reset])
 
@@ -112,9 +112,9 @@ const ChartItem = (props: any) => {
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log(e.target)
-    setSelection((prev) => 'all')
-    setSymbol((prev) => e.target.value)
-    setIsFeature((prev) => false)
+    setSelection('all')
+    setSymbol(e.target.value)
+    setIsFeature(false)
   }
 
   useEffect(() => {
@@ -162,8 +162,6 @@ const ChartItem = (props: any) => {
       })
     }
   }, [symbolList])
-
-  const tmp_index = parseInt(props.chart_id.replace('chart-', ''))
 
   const data = useMemo(() => {
     return {
@@ -280,15 +278,8 @@ const ChartItem = (props: any) => {
           <select
             className=" bg-gray-50 border border-gray-300 text-gray-900 text-[12px] rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 mr-3"
             onChange={handleSelect}
-            value={symbolList[tmp_index - 1]?.[0]}
+            value={symbol}
           >
-            {/* {symbolList.map((item, index) => {
-              return (
-                <option key={index} value={item.symbol}>
-                  {ttt}
-                </option>
-              )
-            })} */}
             {symbolOption}
           </select>
           <div className="flex items-center space-x-2">

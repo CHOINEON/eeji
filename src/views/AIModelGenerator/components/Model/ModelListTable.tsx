@@ -92,7 +92,6 @@ const ModelListTable = () => {
     },
   })
 
-
   const { mutate: mutateModelDetail } = useMutation(ModelApi.getModelDescription, {
     onSuccess: (result: IModelDetailInfo[]) => {
       const updatedModelList = models?.map((model, index) => ({
