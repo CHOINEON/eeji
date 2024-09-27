@@ -38,9 +38,8 @@ export default GlobalFeatureImportance
 
 const ComponentContainer = styled.div`
   border: 1px solid red;
-  // width: 470px;
   width: 100%;
-  height: 55%;
+  height: 410px;
   margin-top: 2%;
   display: block;
   float: left;

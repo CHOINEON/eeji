@@ -100,8 +100,8 @@ const XaiAnalysisResult = () => {
             XAI
           </p> */}
         <div className="w-100 mt-4">
-          <div className="w-[70%] h-[77vh] mr-2 block float-left">
-            <RoundedBox height="75vh">
+          <div className="w-[70%] mr-2 block float-left">
+            <RoundedBox className="max-h-[720px]">
               <div className="w-1/7 text-left ">
                 <Title>{t('Input Variable Filtering')}</Title>
                 <Button
@@ -143,7 +143,7 @@ const XaiAnalysisResult = () => {
               </div>
             </RoundedBox>
           </div>
-          <div className="w-[28%] h-[77vh] ml-1 bg-red block float-left">
+          <div className="w-[28%] max-h-[720px] ml-1 bg-red block float-left">
             {xaiResult?.xai_pdp && <PDP_Plot pdpData={xaiResult.xai_pdp} target={xaiResult.target} />}
             {xaiResult?.xai_global ? (
               <GlobalFeatureImportance data={xaiResult?.xai_global} colors={xaiResult?.colors} />
