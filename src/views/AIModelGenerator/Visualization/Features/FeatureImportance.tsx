@@ -1,12 +1,27 @@
-import React, { useEffect, useState } from 'react'
-import { styled } from 'styled-components'
-import { Chart, ArcElement, CategoryScale, LinearScale, registerables, Tooltip } from 'chart.js'
-import { Doughnut, Bar } from 'react-chartjs-2'
-import zoomPlugin from 'chartjs-plugin-zoom'
-import { colorChips } from '../../components/Chart/colors'
+import { ArcElement, CategoryScale, Chart, LinearScale, registerables, Tooltip } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import zoomPlugin from 'chartjs-plugin-zoom'
+import { useEffect, useState } from 'react'
+import { Bar, Doughnut } from 'react-chartjs-2'
+import { styled } from 'styled-components'
 
 Chart.register(ArcElement, CategoryScale, LinearScale, ChartDataLabels, zoomPlugin, Tooltip, ...registerables)
+
+// Function to generate random color code
+const generateDistinctColor = (index: number, total: number): string => {
+  const hue = Math.floor((index / total) * 360) // Evenly distribute hue values
+  const saturation = 65 + Math.random() * 10 // Saturation between 70% and 80%
+  const lightness = 50 + Math.random() * 10 // Lightness between 50% and 60%
+
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)` // Return HSL color as a string
+}
+
+// Function to generate an array of distinct colors based on the length of the input data
+const generateColorArray = (length: number): string[] => {
+  const randomColors = Array.from({ length: length - 1 }, (_, index) => generateDistinctColor(index, length))
+  randomColors.push('#D5DCEF') // Add #D5DCEF as the last color
+  return randomColors
+}
 
 const FeatureImportance = ({ data, colors }: any) => {
   const [colorChips, setColorChips] = useState([])
@@ -22,7 +37,7 @@ const FeatureImportance = ({ data, colors }: any) => {
       })
       setColorChips(newColor)
     } else {
-      setColorChips(colorChips.slice(0, data?.labels?.length))
+      setColorChips(generateColorArray(data?.labels?.length))
     }
   }, [data])
 
@@ -128,6 +143,14 @@ const FeatureImportance = ({ data, colors }: any) => {
       title: {
         display: false,
         text: 'TOP 3 Features',
+      },
+    },
+    tooltip: {
+      marker: {
+        show: true,
+        fillColors: undefined as string | string[], // Explicitly type it as string or string[]
+        strokeColors: 'transparent', // Remove the white border
+        strokeWidth: 0, // Set the border width to 0
       },
     },
     // pointLabels: {

@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react'
 import Chart from 'react-apexcharts'
 import { useTranslation } from 'react-i18next'
 import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
-import { keyColors } from 'views/AIModelGenerator/components/Chart/colors'
 
 const ChartItem = (props: any) => {
   // console.log('ChartItem props(id)', props)
@@ -388,7 +387,7 @@ const ChartItem = (props: any) => {
             </button>
           </div>
           {/* Feature Importance 본문 */}
-          <FeatureImportance data={featuredData[0]} colors={keyColors} />
+          <FeatureImportance data={featuredData[0]} />
         </div>
       )}
       <Chart
