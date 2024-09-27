@@ -7,7 +7,7 @@ import UploadPage from './UploadPage'
 import XaiAnalysisResult from './XaiAnalysisResult'
 
 const XAIsimulator = () => {
-  const [analysisResult, setAnalysisResult] = useRecoilState(xaiResultStore)
+  const [analysisResult] = useRecoilState(xaiResultStore)
   const resetAnalysisResult = useResetRecoilState(xaiResultStore)
 
   useEffect(() => {

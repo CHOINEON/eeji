@@ -3,8 +3,8 @@ import styled from '@emotion/styled'
 interface CardButtonItem {
   title: string
   description: string
-  icon: any
-  handleClick: any
+  icon: string
+  handleClick: () => void
   buttonName: string
 }
 
@@ -47,13 +47,13 @@ const IconWrapper = styled.div`
   margin-bottom: 5%;
 `
 
-const Icon = styled.div<{ icon: any }>`
+const Icon = styled.div<{ icon: string }>`
   display: block;
   margin: auto;
   border: 0;
   width: 93px;
   height: 91px;
-  background-image: url(${(props: any) => props.icon});
+  background-image: url(${(props) => props.icon});
   background-size: contain;
 `
 
