@@ -6,7 +6,7 @@ export const customModelStore = atom({
 })
 
 interface IPredictResult {
-  predict_result: any
+  predict_result: unknown
 }
 
 interface IActiveVariables {
@@ -85,7 +85,7 @@ export const transformedXaiResultStore = atom({
 
 export const localAttrState = selector({
   key: 'localAttrState',
-  get: ({ get }: any) => {
+  get: ({ get }) => {
     const localAttr = get(xaiResultStore).xai_local
     const activeList = get(activeVariables)
     const filterValuesArray = Object.keys(activeList).filter((key) => !activeList[key])
