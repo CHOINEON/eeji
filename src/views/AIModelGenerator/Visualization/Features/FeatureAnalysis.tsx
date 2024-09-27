@@ -134,14 +134,14 @@ export const AITextContainer = styled.div`
   display: block;
   float: left;
   color: #002d65;
-  fontsize: 12px;
+  font-size: 12px;
   margin-bottom: 5px;
 `
 
 const Ellipsis = styled.div`
   position: relative;
   display: -webkit-box;
-  max-height: 3rem;
+  max-height: 3.5rem;
   overflow: hidden;
   -webkit-line-clamp: 2;
   &.show {

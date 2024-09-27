@@ -40,6 +40,7 @@ const Container = styled.div`
   border: 1px solid #d5dcef;
   border-radius: 20px;
   margin-left: 1%;
+  position: relative;
 `
 
 const IconWrapper = styled.div`
@@ -64,10 +65,11 @@ const Title = styled.p`
   //   font-weight: bold;
 `
 
-const Description = styled.p`
+const Description = styled.div`
   font-family: 'Helvetica Neue';
   color: #a3afcf;
   font-size: 10px;
+  padding: 15px;
 `
 
 const UploadButton = styled.button`
@@ -80,5 +82,8 @@ const UploadButton = styled.button`
   font-family: 'Helvetica Neue';
   font-weight: Bold;
   font-size: 12px;
-  margin-top: 30px;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
 `

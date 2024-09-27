@@ -198,13 +198,16 @@ const ModelListTable = () => {
                 <p style={{ margin: 0 }}>
                   {t('Dataset')} : {record.dataset_name}
                 </p>
-                <p style={{ margin: 0 }}>
-                  {t('Issue Summary')} : {error_codes[record.error_code] || 'Unknown error'}
-                </p>
+                {record.error_code ? (
+                  <p style={{ margin: 0 }}>
+                    {t('Issue Summary')} : {error_codes[record.error_code] || t('Please contact the administrator.')}
+                  </p>
+                ) : (
+                  ''
+                )}
               </>
             )
           },
-          // rowExpandable: (record) => record.name !== 'Not Expandable',
         }}
       >
         <Column

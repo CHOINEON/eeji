@@ -24,6 +24,7 @@ const ModelPerformance = () => {
     mse: t('errors.MSE'),
     rmse: t('errors.RMSE'),
     r2: t('errors.R2'),
+    mape: t('errors.MAPE'),
     F1_SCORE: t('performance.F1_SCORE'),
     ACCURACY: t('performance.ACCURACY'),
   }
@@ -83,15 +84,15 @@ const ModelPerformance = () => {
             {Object.keys(data[0]).map((key, index) => {
               const modelKey = key as keyof PerformanceModel
               const isFirstItem = index === 0
-              const boxStyle = isFirstItem
-                ? {}
-                : { borderLeft: '1px solid rgba(255, 255, 255, 0.5)', paddingLeft: '10px' }
+              const boxStyle = isFirstItem ? {} : { borderLeft: '1px solid rgba(255, 255, 255, 0.5)', padding: '0 5px' }
               return (
                 <PerformanceContentsBox style={boxStyle} key={modelKey}>
                   <div>
                     <PerformanceContents>
-                      {modelKey.toString().toUpperCase()}
-                      <InfoCircle content={errorInfo[modelKey]} styleClass="text-[#F2F5FC]" />
+                      <div>{modelKey.toString().toUpperCase()}</div>
+                      <div className="text-center">
+                        <InfoCircle content={errorInfo[modelKey]} styleClass="text-[#F2F5FC]" />
+                      </div>
                     </PerformanceContents>
                     <PerformanceValue>{formatNumber(data[0][modelKey as keyof (typeof data)[0]])}</PerformanceValue>
                   </div>
@@ -140,14 +141,11 @@ const PerformanceContentsBox = styled.span`
   flex: 1;
 `
 const PerformanceContents = styled.span`
-  // display: inline-block;
-  // float: left;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
   color: #fff;
   font-size: 14px;
-  // padding-right: 10px;
   font-weight: bold;
-  margin-right: 10px;
+  // margin-right: 10px;
 `
 const PerformanceModelValue = styled.span`
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
@@ -157,13 +155,13 @@ const PerformanceModelValue = styled.span`
 `
 const PerformanceValueAccuracy = styled.span`
   color: #95eb61;
-  font-size: 21px;
+  font-size: 19px;
   font-weight: bold;
 `
 const PerformanceValue = styled.div`
   font-weight: bold;
   color: #95eb61;
-  font-size: 22px;
+  font-size: 19px;
 `
 const PerformanceButtonWrap = styled.div`
   text-align: center;
@@ -180,9 +178,6 @@ const PerformanceButton = styled.button`
   line-height: 40px;
   flex: 1;
   font-weight: bold;
-`
-const SaveButton = styled(PerformanceButton)`
-  margin-right: 5px;
 `
 const ExportButton = styled(PerformanceButton)`
   margin-left: 5px;

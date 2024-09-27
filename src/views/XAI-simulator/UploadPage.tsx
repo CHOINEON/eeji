@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { App } from 'antd'
 import IconServerUpload from 'assets/img/icons/XAI/upload_b_io.png'
 import IconCustomerUpload from 'assets/img/icons/XAI/upload_b_user.png'
 import useModal from 'hooks/useModal'
@@ -8,7 +7,6 @@ import CardButton from './components/button/CardButton'
 
 const UploadPage = () => {
   const { t } = useTranslation()
-  const { message } = App.useApp()
   const { openModal, closeModal } = useModal()
 
   const buttonItems = [
