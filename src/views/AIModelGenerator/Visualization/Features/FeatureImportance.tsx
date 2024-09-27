@@ -1,4 +1,4 @@
-import { ArcElement, CategoryScale, Chart, LinearScale, registerables, Tooltip } from 'chart.js'
+import { ArcElement, CategoryScale, Chart, LinearScale, registerables, Tooltip, TooltipItem } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import { useEffect, useState } from 'react'
@@ -23,6 +23,23 @@ const generateColorArray = (length: number): string[] => {
   return randomColors
 }
 
+export const shuffleArray = (array: string[]) => {
+  let currentIndex = array.length,
+    randomIndex
+
+  // While there remain elements to shuffle.
+  while (currentIndex !== 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex--
+
+    // Swap it with the current element.
+    ;[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+  }
+
+  return array
+}
+
 const FeatureImportance = ({ data, colors }: any) => {
   const [colorChips, setColorChips] = useState([])
 
@@ -33,7 +50,7 @@ const FeatureImportance = ({ data, colors }: any) => {
       const newColor: Array<any> = []
       colorOrder?.map((el: number) => {
         if (el === -1) newColor.push('#9E9E9E')
-        else newColor.push(colors[el])
+        else newColor.push(shuffleArray(colors)[el])
       })
       setColorChips(newColor)
     } else {
@@ -48,8 +65,6 @@ const FeatureImportance = ({ data, colors }: any) => {
         label: '',
         data: data?.values?.map((val: any) => (val * 100).toFixed(1)),
         backgroundColor: colorChips,
-        borderColor: data?.labels?.map(() => '#F6F8FF'),
-        borderWidth: 3,
       },
     ],
   }
@@ -65,10 +80,6 @@ const FeatureImportance = ({ data, colors }: any) => {
         borderColor: data?.labels?.map(() => '#F6F8FF'),
       },
     ],
-  }
-
-  const footer = (tooptipItems: any) => {
-    return tooptipItems + '%'
   }
 
   ///bar
@@ -91,6 +102,14 @@ const FeatureImportance = ({ data, colors }: any) => {
       title: {
         display: false,
         text: 'TOP 3 Features',
+      },
+      tooltip: {
+        callbacks: {
+          label: (tooltipItem: TooltipItem<'bar'>) => {
+            const value = tooltipItem.raw // Use raw value from the tooltip item
+            return value + '%' // Append % to the value
+          },
+        },
       },
     },
     scales: {
@@ -119,6 +138,17 @@ const FeatureImportance = ({ data, colors }: any) => {
         },
       },
     },
+    options: {
+      tooltips: {
+        callbacks: {
+          label: (tooltipItem: TooltipItem<'bar'>) => {
+            console.log(tooltipItem)
+            const value = tooltipItem.raw // The Y value of the tooltip
+            return value + '%' // Append % to the value
+          },
+        },
+      },
+    },
   }
 
   const doughnutOptions = {
@@ -131,7 +161,6 @@ const FeatureImportance = ({ data, colors }: any) => {
     },
     responsive: true,
     plugins: {
-      //왜 안되냐고....
       datalabels: {
         display: false,
         backgroundColor: '#ccc',
@@ -144,19 +173,15 @@ const FeatureImportance = ({ data, colors }: any) => {
         display: false,
         text: 'TOP 3 Features',
       },
-    },
-    tooltip: {
-      marker: {
-        show: true,
-        fillColors: undefined as string | string[], // Explicitly type it as string or string[]
-        strokeColors: 'transparent', // Remove the white border
-        strokeWidth: 0, // Set the border width to 0
+      tooltip: {
+        callbacks: {
+          label: (tooltipItem: TooltipItem<'doughnut'>) => {
+            const value = tooltipItem.raw // Use raw value from the tooltip item
+            return value + '%' // Append % to the value
+          },
+        },
       },
     },
-    // pointLabels: {
-    //   fontSize: 20,
-    //   fontColor: 'ff0000',
-    // },
   }
 
   return (

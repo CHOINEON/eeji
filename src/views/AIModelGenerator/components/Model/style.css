@@ -127,7 +127,7 @@ body {
 }
 
 .row-item-tag {
-  font-size: 12;
+  font-size: 12px;
   line-height: '15px';
   margin: 'auto !important';
   display: 'block';
