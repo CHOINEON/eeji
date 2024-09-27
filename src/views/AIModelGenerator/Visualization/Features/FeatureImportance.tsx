@@ -24,7 +24,9 @@ const generateColorArray = (length: number): string[] => {
 }
 
 export const shuffleArray = (array: string[]) => {
-  let currentIndex = array.length,
+  // Create a shallow copy of the array to prevent modifying the original array
+  const newArray = [...array]
+  let currentIndex = newArray.length,
     randomIndex
 
   // While there remain elements to shuffle.
@@ -34,10 +36,10 @@ export const shuffleArray = (array: string[]) => {
     currentIndex--
 
     // Swap it with the current element.
-    ;[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+    ;[newArray[currentIndex], newArray[randomIndex]] = [newArray[randomIndex], newArray[currentIndex]]
   }
 
-  return array
+  return newArray // Return the shuffled copy
 }
 
 const FeatureImportance = ({ data, colors }: any) => {
