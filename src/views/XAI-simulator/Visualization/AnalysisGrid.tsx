@@ -74,6 +74,7 @@ const AnalysisGrid = (props: any) => {
         onShowSizeChange={onShowSizeChange}
         onChange={onChange}
         showTotal={(total) => `Total ${total} items`}
+        align="center"
       />
     </>
   )

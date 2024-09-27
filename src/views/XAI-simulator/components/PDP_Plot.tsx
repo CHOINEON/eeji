@@ -109,7 +109,7 @@ export default PDP_Plot
 const ComponentContainer = styled.div`
   border: 1px solid red;
   width: 100%;
-  height: 41%;
+  height: 300px;
   display: block;
   float: left;
   justify-content: space-evenly;
