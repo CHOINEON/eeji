@@ -1,27 +1,26 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
+import { Chart, ChartConfiguration, LegendItem, TooltipItem } from 'chart.js'
+import { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2'
 import { useRecoilValue } from 'recoil'
 import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import { selectedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
 
+interface CustomTooltipItem {
+  z: string // Specify the expected structure
+}
+
 const ClassificationChart = () => {
   const analysisResponse = useRecoilValue(analysisResponseAtom)
   const selectedData = useRecoilValue(selectedDataState)
   const [dataset, setDataset] = useState([])
 
-  // useEffect(() => {
-  //   console.log('selectedData:', selectedData)
-  //   console.log('PredictionResult analysisResponse:', analysisResponse)
-  // }, [])
-
   useEffect(() => {
-    const arr: Array<any> = []
+    const arr: Array<unknown> = []
 
     //TODO: 일단 Classification 은 50개만 보여주게 slice 처리함
-
-    analysisResponse.map((_d: any, i: number) => {
+    analysisResponse.map((_d: unknown, i: number) => {
       if (i === 0) {
         arr.push(generateSeriesForClassification(`Ground-truth`, analysisResponse[i]['pred_data']['truth'], '#617EFF'))
         arr.push(
@@ -37,14 +36,13 @@ const ClassificationChart = () => {
     setDataset(arr)
   }, [analysisResponse])
 
-  const generateSeriesForClassification = (label: string, dataArr: any, color: string) => {
+  const generateSeriesForClassification = (label: string, dataArr: Array<unknown>, color: string) => {
     return {
       key: color,
       type: 'scatter' as const,
       label: label === 'truth' ? `${label} (${selectedData.targetY})` : label,
       borderColor: color,
       backgroundColor: label === 'INEEJI prediction' ? 'rgba(69, 58, 246, 0)' : color,
-      // pointStyle: label === 'truth' ? 'circle' : 'triangle',
       borderWidth: label === 'truth' ? 1 : 1,
       fill: label === 'INEEJI prediction' ? true : false,
       data: dataArr,
@@ -59,54 +57,25 @@ const ClassificationChart = () => {
         : Array(analysisResponse[0]['pred_data']['pred'].length)
             .fill(null)
             .map((value, i) => i),
-    // datasets: selectedData.isClassification == 1 ? dataset.slice(0, 50) : dataset,
     datasets: dataset,
   }
 
-  const footer = (tooltipItems: any) => {
-    // console.log('tooltipItems', tooltipItems)
+  const footer = (tooltipItems: Array<TooltipItem<'line'>>) => {
     let tooltipText
-    // let sum = 0
 
-    tooltipItems.forEach(function (tooltipItem: any) {
-      tooltipText = tooltipItem.raw.z
+    tooltipItems.forEach(function (tooltipItem) {
+      const raw = tooltipItem.raw as CustomTooltipItem
+      tooltipText = raw.z
     })
 
     return 'Label Name : ' + tooltipText
-  }
-  const options = {
-    radius: 2,
-    layout: {
-      padding: 20,
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      datalabels: {
-        display: false,
-      },
-      htmlLegend: {
-        // ID of the container to put the legend in
-        containerID: 'legend-container',
-      },
-      legend: {
-        display: false,
-      },
-      title: {
-        display: false,
-        text: '',
-      },
-    },
-    interaction: {
-      mode: 'index' as const,
-      intersect: false,
-    },
   }
 
   const optionsForClassification = {
     radius: 2,
     layout: {
-      padding: 20,
+      margin: 20,
+      padding: 40,
     },
     responsive: true,
     maintainAspectRatio: false,
@@ -143,10 +112,7 @@ const ClassificationChart = () => {
           display: true,
           text: 'Value',
         },
-        // min: -0.5,
-        // max: 1.5,
         ticks: {
-          // forces step size to be 50 units
           stepSize: 1,
           padding: 10,
         },
@@ -154,7 +120,7 @@ const ClassificationChart = () => {
     },
   }
 
-  const getOrCreateLegendList = (chart: any, id: any) => {
+  const getOrCreateLegendList = (chart: Chart<'line'>, id: string) => {
     const legendContainer = document.getElementById(id)
     let listContainer = legendContainer.querySelector('ul')
 
@@ -163,9 +129,7 @@ const ClassificationChart = () => {
       listContainer.style.display = 'flex'
       listContainer.style.flexDirection = 'row'
       listContainer.style.justifyContent = 'right'
-      listContainer.style.margin = '15px'
-
-      // listContainer.style.padding = '100px'
+      listContainer.style.margin = '5px'
 
       legendContainer.appendChild(listContainer)
     }
@@ -173,12 +137,10 @@ const ClassificationChart = () => {
     return listContainer
   }
 
-  const htmlLegendPlugin: any = {
+  const htmlLegendPlugin = {
     id: 'htmlLegend',
-    afterUpdate(chart: any, args: any, options: any) {
+    afterUpdate(chart: Chart<'line'>, args: any, options: { containerID: string }) {
       const ul = getOrCreateLegendList(chart, options.containerID)
-
-      // console.log('ul::', ul)
 
       // Remove old legend items
       while (ul.firstChild) {
@@ -188,8 +150,7 @@ const ClassificationChart = () => {
       // Reuse the built-in legendItems generator
       const items = chart.options.plugins.legend.labels.generateLabels(chart)
 
-      // console.log('items:', items)
-      items.forEach((item: any) => {
+      items.forEach((item: LegendItem) => {
         const li = document.createElement('li')
         li.style.alignItems = 'center'
         li.style.cursor = 'pointer'
@@ -198,8 +159,11 @@ const ClassificationChart = () => {
         li.style.marginLeft = '40px'
 
         li.onclick = () => {
-          const { type } = chart.config
-          if (type === 'pie' || type === 'doughnut') {
+          const chartConfig = chart.config as ChartConfiguration<any>
+          // Now you can safely access 'type'
+          const chartType = chartConfig.type
+
+          if (chartType === 'pie' || chartType === 'doughnut') {
             // Pie and doughnut charts only have a single dataset and visibility is per item
             chart.toggleDataVisibility(item.index)
           } else {
@@ -210,13 +174,23 @@ const ClassificationChart = () => {
 
         // Color box
         const boxSpan = document.createElement('span')
-        boxSpan.style.background = item.fillStyle
-        boxSpan.style.borderColor = item.strokeStyle
+        // Type check for CanvasGradient or CanvasPattern
+        if (typeof item.fillStyle === 'string') {
+          boxSpan.style.background = item.fillStyle // Use fillStyle if it's a string
+        } else {
+          // Provide a fallback color or handle CanvasGradient or CanvasPattern differently
+          boxSpan.style.background = 'black' // fallback color
+        }
+
+        if (typeof item.strokeStyle === 'string') {
+          boxSpan.style.borderColor = item.strokeStyle
+        } else {
+          boxSpan.style.borderColor = 'transparent' // Fallback or alternative handling
+        }
         boxSpan.style.borderWidth = item.lineWidth + 'px'
         boxSpan.style.display = 'inline-block'
         boxSpan.style.marginRight = '10px'
         boxSpan.style.borderRadius = '20px'
-        // boxSpan.style.flexShrink = 0
 
         if (selectedData.isClassification === 1) {
           if (item.text === 'INEEJI prediction') {
@@ -233,9 +207,7 @@ const ClassificationChart = () => {
 
         // Text
         const textContainer = document.createElement('p')
-        textContainer.style.color = item.fontColor
-        // textContainer.style.margin = 0
-        // textContainer.style.padding = 0
+        textContainer.style.color = item.fontColor as string
         textContainer.style.textDecoration = item.hidden ? 'line-through' : ''
 
         const text = document.createTextNode(item.text)
@@ -249,35 +221,22 @@ const ClassificationChart = () => {
   }
 
   return (
-    <>
-      <div
-        style={{
-          // border: '1px solid red',
-          width: '68%',
-          padding: '5px 30px',
-          display: 'block',
-          float: 'left',
-        }}
-      >
-        <ChartWrapper>
-          <div id="legend-container"></div>
-          <Line options={optionsForClassification} data={chartData} plugins={[htmlLegendPlugin]} />
-        </ChartWrapper>
-      </div>
-    </>
+    <ChartWrapper>
+      <div id="legend-container"></div>
+      <Line options={optionsForClassification} data={chartData} plugins={[htmlLegendPlugin]} />
+    </ChartWrapper>
   )
 }
 
 export default ClassificationChart
 
 const ChartWrapper = styled.div`
-  //   border: 1px solid pink;
   display: block;
   float: left;
   width: 100%;
-  min-width: 900px;
+  margin: 10px;
+  min-width: 760px;
   height: 570px;
   position: relative;
   float: left;
-  margin: 0 10px;
 `

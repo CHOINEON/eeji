@@ -265,6 +265,7 @@ const RegressionResult = () => {
       <div
         style={{
           width: '68%',
+          marginTop: 50,
           padding: '5px 30px',
           display: 'block',
           float: 'left',

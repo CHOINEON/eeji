@@ -20,13 +20,13 @@ const ClassificationResult = () => {
     <>
       <div
         style={{
-          width: '100%',
+          width: '68%',
           padding: '5px 30px',
           display: 'block',
           float: 'left',
         }}
       >
-        <div className={`block float-right w-[42%] ${viewType === 'list' ? 'mt-[70px]' : ''}`}>
+        <div className={`block float-right mt-[30px] mx-[20px]`}>
           <button className="mr-1" onClick={() => handleClick('list')}>
             <img src={viewType === 'list' ? view_list_on : view_list_off} />
           </button>
