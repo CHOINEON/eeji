@@ -128,7 +128,7 @@
   "No": "번호",
   "Prediction Result": "예측 결과",
   "Input Variables": "입력 변수",
-  "Variable Contribution Statistics(Average)": "변수 기여도 통계(평균)",
+  "Variable Contribution Stats": "변수 기여도 통계(평균)",
   "The impact of each variable on the overall prediction": "각 변수가 전체 예측에 미치는 영향도",
   "The most influential variable in the current AI prediction model is": "현재 예측 모델에서 가장 영향력이 큰 변수는 <strong>{{var}}</strong>입니다.",
 

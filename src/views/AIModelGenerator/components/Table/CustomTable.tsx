@@ -83,7 +83,7 @@ const CustomTable = () => {
 
   return (
     <>
-      <div className="w-[820px] mt-5 mb-7">
+      <div className="w-[820px] m-5">
         <Title>{t('Data Filtering')}</Title>
         <div className="ml-1">
           <div className="mr-3 inline-block ">
