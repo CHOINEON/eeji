@@ -222,6 +222,11 @@ const ChartItem = (props: any) => {
         },
         xaxis: {
           type: 'datetime',
+          labels: {
+            formatter: function (val: number) {
+              return new Date(val).toLocaleDateString('en-CA') // Format to YYYY-MM-DD
+            },
+          },
         },
         stroke: {
           width: 1,

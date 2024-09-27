@@ -10,17 +10,6 @@ import './style.css'
 
 const Page = () => {
   const { t } = useTranslation()
-  // TODO 2024-03-06
-
-  // useEffect(() => {
-  //   axios
-  //     .get('/api/index_predict/get_symbol_list/admin?is_daily=1&symbol=BCOMZS.INDX')
-  //     .then(({ data }) => {
-  //       console.log(data)
-  //     })
-  //     .catch((error) => console.error(error))
-  //     .then(() => {})
-  // }, [])
 
   const [chartType, setChartType] = useState('line')
 
