@@ -7,11 +7,13 @@
 @import 'assets/fonts/fontStyle.css';
 
 body {
-  font-family: 'DM Sans', sans-serif, 'ITC Avant Garde Gothic Pro';
+  font-family: 'DM Sans', 'ITC Avant Garde Gothic', sans-serif;
 }
+
 img {
   border: none;
 }
+
 /* Chrome, Whale, Edge */
 
 /* 스크롤바 전체 기본 꾸미기 */
@@ -44,7 +46,8 @@ option {
 }
 
 .ant-tabs-nav {
-  display: none !important; /*임시처리*/
+  display: none !important;
+  /*임시처리*/
 }
 
 .ant-form-item {
