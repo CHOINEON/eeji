@@ -80,6 +80,27 @@ const ModelListTable = () => {
     { key: 10, text: t('failed'), status: 'error' },
   ]
 
+  const error_codes: { [key: number]: string } = {
+    0: t('errorCodes.0'),
+    1: t('errorCodes.1'),
+    2: t('errorCodes.2'),
+    3: t('errorCodes.3'),
+    4: t('errorCodes.4'),
+    5: t('errorCodes.5'),
+    6: t('errorCodes.6'),
+    7: t('errorCodes.7'),
+    8: t('errorCodes.8'),
+    9: t('errorCodes.9'),
+    10: t('errorCodes.10'),
+    11: t('errorCodes.11'),
+    111: t('errorCodes.111'),
+    1001: t('errorCodes.1001'),
+    1002: t('errorCodes.1002'),
+    1003: t('errorCodes.1003'),
+    1004: t('errorCodes.1004'),
+    1005: t('errorCodes.1005'),
+  }
+
   const { mutate: mutateTrainingResult } = useMutation(ModelApi.getTrainingResultUrl, {
     onSuccess: (result: any) => {
       // GCS에서 받아온 만료시간이 GMT으로 설정되어 있어 한국 시간대(GMT + 9)로 변경하여 확인함
@@ -214,6 +235,7 @@ const ModelListTable = () => {
           dataIndex="name"
           key="name"
           align="center"
+          width={130}
           render={(name: string) => <Ellipsis ref={contentRef}>{name}</Ellipsis>}
         />
         <Column title={t('Target')} dataIndex="target" key="target" align="center" ellipsis={false} />
@@ -223,6 +245,7 @@ const ModelListTable = () => {
           dataIndex="state"
           key="state"
           align="center"
+          width={95}
           render={(state: string) => renderStateBadge(state, status)}
         />
         <Column
@@ -245,6 +268,7 @@ const ModelListTable = () => {
           dataIndex="state"
           key="customKey"
           align="center"
+          width={50}
           render={(text, record: IModelInfo) => (
             <>
               {record.state === '9' && (

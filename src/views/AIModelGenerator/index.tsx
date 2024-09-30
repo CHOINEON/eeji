@@ -36,10 +36,10 @@ const AIModelGenerator = () => {
         <Spin tip={t('loading')} size="small" spinning={loading} style={{ top: 300 }}>
           {activeStep === 0 && (
             <div className="h-[500px] flex">
-              <div className="w-[500px]">
+              <div className="w-[498px]">
                 <DataSet />
               </div>
-              <div className="w-[780px]">
+              <div className="w-[782px]">
                 <ModelList />
               </div>
             </div>
