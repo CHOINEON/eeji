@@ -129,7 +129,6 @@ const PerformanceTitle = styled.span`
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
   color: #95eb61;
   font-weight: bold;
-  // margin-bottom: 7.5px;
   font-size: 20px;
 `
 const PerformanceContentsWrap = styled.div`
@@ -185,4 +184,5 @@ const ExportButton = styled(PerformanceButton)`
 const PerformanceTitleImgWrap = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 5px;
 `

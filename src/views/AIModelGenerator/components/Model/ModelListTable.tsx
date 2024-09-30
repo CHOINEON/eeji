@@ -186,7 +186,7 @@ const ModelListTable = () => {
           pageSize: pageSize,
           position: ['bottomCenter'],
           showSizeChanger: false,
-          onChange: (page, pageSize) => {
+          onChange: (page) => {
             setCurrentPage(page)
           },
         }}
