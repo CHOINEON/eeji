@@ -2,7 +2,6 @@ import { App, Badge, Table, Tag } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import { IModelDetailInfo, IModelInfo } from 'apis/type/Model'
 import { useGetModelList_v1 } from 'hooks/queries/useGetModelList'
-import { t } from 'i18next'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
@@ -23,21 +22,6 @@ interface IBadge {
   text: string
   status: 'default' | 'processing' | 'success' | 'error' | 'warning'
 }
-
-//메타데이터 구조 상세 참고 (https://docs.google.com/document/d/19lP80LLDBsnNQ27foyVKtP81Jc8XqRLM6GE1POXQIVQ/edit)
-const status: IBadge[] = [
-  { key: 0, text: t('waiting'), status: 'default' },
-  { key: 1, text: t('created'), status: 'warning' },
-  { key: 2, text: t('started'), status: 'processing' },
-  { key: 3, text: t('preprocessing'), status: 'processing' },
-  { key: 4, text: t('model training'), status: 'processing' },
-  { key: 5, text: t('model training'), status: 'processing' },
-  { key: 6, text: t('model training'), status: 'processing' },
-  { key: 7, text: t('train completed'), status: 'processing' },
-  { key: 8, text: t('analyzing'), status: 'processing' },
-  { key: 9, text: t('result saved'), status: 'success' },
-  { key: 10, text: t('failed'), status: 'error' },
-]
 
 const error_codes: { [key: number]: string } = {
   0: '정상 종료 (DB default value)',
@@ -80,6 +64,21 @@ const ModelListTable = () => {
   const setActiveStep = useSetRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
   const setSelectedModel = useSetRecoilState(selectedModelAtom)
   const setLoading = useSetRecoilState(loadingAtom)
+
+  //메타데이터 구조 상세 참고 (https://docs.google.com/document/d/19lP80LLDBsnNQ27foyVKtP81Jc8XqRLM6GE1POXQIVQ/edit)
+  const status: IBadge[] = [
+    { key: 0, text: t('waiting'), status: 'default' },
+    { key: 1, text: t('created'), status: 'warning' },
+    { key: 2, text: t('started'), status: 'processing' },
+    { key: 3, text: t('preprocessing'), status: 'processing' },
+    { key: 4, text: t('model training'), status: 'processing' },
+    { key: 5, text: t('model training'), status: 'processing' },
+    { key: 6, text: t('model training'), status: 'processing' },
+    { key: 7, text: t('train completed'), status: 'processing' },
+    { key: 8, text: t('analyzing'), status: 'processing' },
+    { key: 9, text: t('result saved'), status: 'success' },
+    { key: 10, text: t('failed'), status: 'error' },
+  ]
 
   const { mutate: mutateTrainingResult } = useMutation(ModelApi.getTrainingResultUrl, {
     onSuccess: (result: any) => {
