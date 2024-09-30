@@ -38,7 +38,7 @@ const ToastContainer = styled.div<{ type?: string }>`
 
 const ToastTitle = styled.span`
   letter-spacing: 0.4px;
-  font-family: 'ITC Avant Garde Gothic Pro';
+  font-family: 'ITC Avant Garde Gothic';
   font-weight: bolder;
   color: white;
   float: left;
