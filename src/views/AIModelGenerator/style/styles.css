@@ -164,3 +164,7 @@ template {
   border: '1px solid #A3AFCF' !important;
   border-radius: '10px';
 }
+
+.ant-badge.ant-badge-status .ant-badge-status-text{
+  font-size:12px;
+}

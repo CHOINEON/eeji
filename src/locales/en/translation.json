@@ -163,5 +163,26 @@
   "change": "Change",
   "change_in_target": "Change in {{variable}}",
 
-  "You can scroll the chart horizontally, drag the x-axis to zoom in, and double-click the chart to zoom out.": "You can scroll the chart horizontally, drag the x-axis to zoom in, and double-click the chart to zoom out."
+  "You can scroll the chart horizontally, drag the x-axis to zoom in, and double-click the chart to zoom out.": "You can scroll the chart horizontally, drag the x-axis to zoom in, and double-click the chart to zoom out.",
+
+  "errorCodes": {
+    "0": "Normal termination",
+    "1": "Failed to connect to GCS",
+    "2": "Failed to connect to customer data",
+    "3": "Error occurred during data preprocessing",
+    "4": "Error occurred while creating EEJI model object",
+    "5": "Error occurred during EEJI model training",
+    "6": "Error occurred during EEJI model inference",
+    "7": "Error occurred while saving EEJI model status to DB",
+    "8": "Error occurred while saving EEJI model prediction results to GCS",
+    "9": "Error occurred while saving trained EEJI model object to GCS",
+    "10": "Error occurred during trained model explanation (XAI)",
+    "11": "Error occurred while saving model explanation (XAI) results to GCS",
+    "111": "UNKNOWN ERROR",
+    "1001": "Too few or too many data samples",
+    "1002": "Too many variables in the data",
+    "1003": "Too many unique classes in classification problem data",
+    "1004": "Target variable has a single class",
+    "1005": "Target variable values cannot be converted to numerical data"
+  }
 }

@@ -23,27 +23,6 @@ interface IBadge {
   status: 'default' | 'processing' | 'success' | 'error' | 'warning'
 }
 
-const error_codes: { [key: number]: string } = {
-  0: '정상 종료 (DB default value)',
-  1: 'GCS와 연결 실패',
-  2: '고객 데이터 연결 실패',
-  3: '데이터 전처리 단계에서 에러 발생',
-  4: 'EEJI 모델 객체를 생성 단계에서 에러 발생',
-  5: 'EEJI 모델 학습 단계에서 에러 발생',
-  6: 'EEJI 모델 Inference 단계에서 에러 발생',
-  7: 'EEJI 모델의 Status를 DB에 저장 단계에서 에러 발생',
-  8: 'EEJI 모델의 예측 결과를 GCS에 저장 단계에서 에러 발생',
-  9: '학습된 EEJI 모델 객체를 GCS에 저장 단계에서 에러 발생',
-  10: '학습된 모델 설명 XAI 단계에서 에러 발생',
-  11: '모델 설명 XAI의 결과를 GCS에 저장단계에서 에러 발생',
-  111: 'UNKNOWN ERROR',
-  1001: '데이터 샘플이 너무 적거나 많습니다.',
-  1002: '데이터의 변수가 너무 많습니다.',
-  1003: '분류 문제 데이터의 unique한 class의 수가 너무 많습니다.',
-  1004: 'Target 변수의 값이 단일 class 입니다.',
-  1005: 'Target 변수의 값이 수치 데이터로 변환할 수 없는 형식입니다.',
-}
-
 const ModelListTable = () => {
   const { t } = useTranslation()
 
@@ -79,6 +58,27 @@ const ModelListTable = () => {
     { key: 9, text: t('result saved'), status: 'success' },
     { key: 10, text: t('failed'), status: 'error' },
   ]
+
+  const error_codes: { [key: number]: string } = {
+    0: t('errorCodes.0'),
+    1: t('errorCodes.1'),
+    2: t('errorCodes.2'),
+    3: t('errorCodes.3'),
+    4: t('errorCodes.4'),
+    5: t('errorCodes.5'),
+    6: t('errorCodes.6'),
+    7: t('errorCodes.7'),
+    8: t('errorCodes.8'),
+    9: t('errorCodes.9'),
+    10: t('errorCodes.10'),
+    11: t('errorCodes.11'),
+    111: t('errorCodes.111'),
+    1001: t('errorCodes.1001'),
+    1002: t('errorCodes.1002'),
+    1003: t('errorCodes.1003'),
+    1004: t('errorCodes.1004'),
+    1005: t('errorCodes.1005'),
+  }
 
   const { mutate: mutateTrainingResult } = useMutation(ModelApi.getTrainingResultUrl, {
     onSuccess: (result: any) => {
@@ -186,7 +186,7 @@ const ModelListTable = () => {
           pageSize: pageSize,
           position: ['bottomCenter'],
           showSizeChanger: false,
-          onChange: (page, pageSize) => {
+          onChange: (page) => {
             setCurrentPage(page)
           },
         }}
@@ -214,6 +214,7 @@ const ModelListTable = () => {
           dataIndex="name"
           key="name"
           align="center"
+          width={130}
           render={(name: string) => <Ellipsis ref={contentRef}>{name}</Ellipsis>}
         />
         <Column title={t('Target')} dataIndex="target" key="target" align="center" ellipsis={false} />
@@ -223,6 +224,7 @@ const ModelListTable = () => {
           dataIndex="state"
           key="state"
           align="center"
+          width={95}
           render={(state: string) => renderStateBadge(state, status)}
         />
         <Column
@@ -245,6 +247,7 @@ const ModelListTable = () => {
           dataIndex="state"
           key="customKey"
           align="center"
+          width={50}
           render={(text, record: IModelInfo) => (
             <>
               {record.state === '9' && (
