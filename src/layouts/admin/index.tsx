@@ -4,14 +4,13 @@ import Header from 'components/navbar/Header'
 // Layout components
 import { Redirect, Route, Switch } from 'react-router-dom'
 import routes from 'routes'
-import MainContents from 'views/Main/Main'
 
 // Custom Chakra theme
 export default function Main() {
   document.documentElement.dir = 'ltr'
 
-  const isMain = () => {
-    return window.location.pathname === '/admin/main'
+  const needBackgroundBox = () => {
+    return window.location.pathname === '/admin/main' || window.location.pathname === '/admin/mypage'
   }
 
   const getRoutes = (routes: RoutesType[]): any => {
@@ -29,14 +28,10 @@ export default function Main() {
       <div className="relative w-[1280px] mx-auto">
         <div className="w-[1280px] m-auto">
           <Header routes={routes}></Header>
-          {isMain() ? (
-            <>
-              <div className="my-[10px] mx-[30px] min-h-[780px]">
-                <MainContents />
-              </div>
-            </>
+          {needBackgroundBox() ? (
+            <div className="my-[10px] mx-[30px] min-h-[780px]">{getRoutes(routes)}</div>
           ) : (
-            <div className=" w-[1280px] min-h-screen bg-[#F3F7FE] rounded-[25px]">
+            <div className="w-[1280px] min-h-screen bg-[#F3F7FE] rounded-[25px]">
               <Switch>
                 {getRoutes(routes)}
                 <Redirect from="/" to="/admin/main" />

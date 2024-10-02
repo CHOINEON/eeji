@@ -30,7 +30,7 @@ const ModelPerformance = () => {
   }
 
   const handleReport = () => {
-    message.info('10월 서비스 준비 중입니다.')
+    message.info(t('서비스 준비 중입니다.'))
   }
 
   // 데이터 값이 일정값을 넘을 시 B/M/K로 구분하여 내보내게 설정해놓았습니다.
