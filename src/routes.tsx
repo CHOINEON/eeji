@@ -3,12 +3,11 @@
 // Admin Imports
 import AIModelGenerator from 'views/AIModelGenerator'
 import MainContents from 'views/Main/Main'
+import MyPage from 'views/MyPage'
 import PriceForecasting from 'views/PriceForecasting/OilPrice'
 import XAIsimulator from 'views/XAI-simulator'
 
-// Auth Imports
-
-const routes = [
+const routes: RoutesType[] = [
   {
     name: 'Main',
     layout: '/admin',
@@ -36,6 +35,14 @@ const routes = [
     path: '/price-forecast',
     icon: '',
     component: PriceForecasting,
+  },
+  {
+    name: 'My Profile',
+    layout: '/admin',
+    path: '/mypage',
+    icon: '',
+    component: MyPage,
+    showInHeader: false,
   },
   /*
   {

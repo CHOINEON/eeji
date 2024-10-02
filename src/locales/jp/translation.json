@@ -20,7 +20,7 @@
   "No data": "データなし",
   "Please contact the administrator.": "管理者にお問い合わせください。",
   "Unable to confirm the start/end date for the relevant column.": "該当する列の開始日/終了日を確認できません。",
-
+  "The service is under preparation.": "サービスは準備中です。",
   "Dataset": "データセット",
   "Generate Model": "モデルを生成する",
   "Edit": "編集",

@@ -56,7 +56,7 @@ const SubText = styled.p`
 `
 
 const MenuItem = styled.div`
-  width: 210px;
+  width: 216px;
   height: 210px;
   display: flex;
   flex-direction: column;
