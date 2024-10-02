@@ -101,6 +101,7 @@ export const Login: React.FC = () => {
 
   const { mutate: mutateGoogleLogin } = useMutation(UserApi.signinWithgoogle, {
     onSuccess: (response: any) => {
+      console.log('google login response:', response)
       if (response.user_info) {
         //로그인 상태 확인되면 localStorage에 user정보 저장 ->  datasetList 페이지로 redirect
         localStorage.setItem('userId', response.user_info.email)

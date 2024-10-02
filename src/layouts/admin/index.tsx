@@ -36,7 +36,7 @@ export default function Main() {
               </div>
             </>
           ) : (
-            <div className=" w-[1280px] min-h-[850px] bg-[#F3F7FE] rounded-[25px]">
+            <div className=" w-[1280px] min-h-screen bg-[#F3F7FE] rounded-[25px]">
               <Switch>
                 {getRoutes(routes)}
                 <Redirect from="/" to="/admin/main" />
