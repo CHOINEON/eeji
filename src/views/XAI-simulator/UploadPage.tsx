@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import IconServerUpload from 'assets/img/icons/XAI/upload_b_io.png'
-import IconCustomerUpload from 'assets/img/icons/XAI/upload_b_user.png'
 import useModal from 'hooks/useModal'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import CardButton from './components/button/CardButton'
 
@@ -17,13 +17,6 @@ const UploadPage = () => {
       handleClick: () => handleClick('SavedModelImport'),
       buttonName: t('Select Model'),
     },
-    {
-      title: 'USER',
-      description: t('Retrieve the model data stored on the user’s PC.'),
-      icon: IconCustomerUpload,
-      handleClick: () => handleClick('UserModelImport'),
-      buttonName: t('Upload Model'),
-    },
   ]
 
   function handleClick(type: string) {
@@ -38,12 +31,17 @@ const UploadPage = () => {
     })
   }
 
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 첫 번째 버튼의 handleClick 호출
+    buttonItems[0].handleClick()
+  }, []) // 빈 배열을 전달하여 한 번만 실행되도록 함
+
   return (
     <>
       <UploadContainer>
         <div style={{ width: '100%', textAlign: 'center', marginTop: 32, flexDirection: 'row' }}>
           <IconContainer>
-            {buttonItems.map((item: any, index: number) => (
+            {buttonItems.map((item, index) => (
               <CardButton item={item} key={index} />
             ))}
           </IconContainer>
