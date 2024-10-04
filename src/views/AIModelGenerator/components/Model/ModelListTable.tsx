@@ -1,4 +1,4 @@
-import { EllipsisOutlined } from '@ant-design/icons'
+import { CloseCircleOutlined, EllipsisOutlined } from '@ant-design/icons'
 import { App, Badge, Button, Dropdown, MenuProps, Table, Tag } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import { IModelDetailInfo, IModelInfo } from 'apis/type/Model'
@@ -27,8 +27,7 @@ const ModelListTable = () => {
   const { t } = useTranslation()
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
-  const [actionItems, setActionItems] = useState([])
+  const pageSize = 9
 
   const { models, total_count, refetch } = useGetModelList_v1(
     ((currentPage - 1) * pageSize).toString(),
@@ -103,6 +102,12 @@ const ModelListTable = () => {
     },
   })
 
+  const { mutate: mutateCancelTraning } = useMutation(ModelApi.cancelModelTraining, {
+    onSuccess: () => {
+      message.info(t('Successfully Requested'))
+    },
+  })
+
   useEffect(() => {
     models?.map((model) => {
       mutateModelDetail({ model_id: model.id })
@@ -167,7 +172,17 @@ const ModelListTable = () => {
     mutateTrainingResult({ model_id: model.id, is_xai: 'false' })
   }
 
-  const renderStateBadge = (state: string, status: IBadge[]) => {
+  const renderStateBadge = (state: string, status: IBadge[], is_canceled: number) => {
+    if (is_canceled === 1) {
+      // If the model is cancelled, render a custom "취소됨" badge
+      return (
+        <p>
+          <CloseCircleOutlined />
+          <span className="mx-1">{t('stopped')}</span>
+        </p>
+      )
+    }
+
     const model_state = status.filter((item: IBadge) => item.key.toString() === state)[0]
     return <Badge className="row-item-tag m-auto" status={model_state?.status} text={model_state?.text}></Badge>
   }
@@ -176,27 +191,27 @@ const ModelListTable = () => {
     refetch()
   }, [currentPage])
 
-  const items: MenuProps['items'] = [
-    {
-      key: '1',
-      label: (
-        <button onClick={() => message.info('개발 중입니다.')}>
-          <p className="text-[#FF3D50]">{t('Stop')}</p>
-        </button>
-      ),
-    },
-    {
-      key: '2',
-      label: <button onClick={() => message.info('개발 중입니다.')}>{t('Edit')}</button>,
-    },
-    {
-      key: '3',
-      label: <button onClick={() => message.info('개발 중입니다.')}>{t('Delete')}</button>,
-    },
-  ]
+  const getFilteredItems = (rowData: IModelInfo) => {
+    const items: MenuProps['items'] = [
+      {
+        key: '1',
+        label: (
+          <button onClick={() => mutateCancelTraning(rowData.id)}>
+            <p className="text-[#FF3D50]">{t('Stop')}</p>
+          </button>
+        ),
+      },
+      {
+        key: '2',
+        label: <button onClick={() => message.info('개발 중입니다.')}>{t('Edit')}</button>,
+      },
+      {
+        key: '3',
+        label: <button onClick={() => message.info('개발 중입니다.')}>{t('Delete')}</button>,
+      },
+    ]
 
-  const getFilteredItems = (state: string) => {
-    if (state === '9' || state === '10') {
+    if (rowData.state === '9' || rowData.state === '10') {
       return items.slice(1) // Return only the second and third items
     }
     return items // Return all items for other states
@@ -208,7 +223,7 @@ const ModelListTable = () => {
         className="w-[740px] h-[530px]"
         size="small"
         dataSource={modelList}
-        scroll={{ y: 530 }}
+        scroll={{ y: 490 }}
         pagination={{
           total: total_count,
           pageSize: pageSize,
@@ -268,7 +283,7 @@ const ModelListTable = () => {
           key="state"
           align="center"
           width={95}
-          render={(state: string) => renderStateBadge(state, status)}
+          render={(text, record: IModelInfo) => renderStateBadge(text, status, record.is_canceled)}
         />
         <Column
           title={t('Result')}
@@ -292,7 +307,7 @@ const ModelListTable = () => {
           align="center"
           render={(text, record: IModelInfo) => (
             <>
-              <Dropdown menu={{ items: getFilteredItems(record.state) }} placement="bottom">
+              <Dropdown menu={{ items: getFilteredItems(record) }} placement="bottom">
                 <Button type="text" icon={<EllipsisOutlined />}></Button>
               </Dropdown>
             </>

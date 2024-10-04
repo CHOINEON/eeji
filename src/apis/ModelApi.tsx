@@ -61,8 +61,9 @@ const ModelApi = {
     return data
   },
 
-  cancelPostModel: async (): Promise<any> => {
-    controller.abort()
+  cancelModelTraining: async (model_id: string): Promise<any> => {
+    const { data } = await axiosPrivate.patch(`api/v1/cancel_model/${model_id}`)
+    return data
   },
 
   //Model Generator결과 페이지에서 모델 저장

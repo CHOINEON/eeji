@@ -78,6 +78,7 @@
   "analyzing": "分析中",
   "result saved": "結果保存済み",
   "failed": "学習失敗",
+  "stopped": "停止しました",
 
   "Prediction Results of the Model": "モデルの予測結果",
   "Prediction Results of": "{{target_var}}の予測結果",
@@ -188,5 +189,6 @@
     "1003": "分類問題データのユニークなクラス数が多すぎます",
     "1004": "ターゲット変数の値が単一クラスです",
     "1005": "ターゲット変数の値を数値データに変換できない形式です"
-  }
+  },
+  "Successfully Requested": "リクエストが成功しました"
 }

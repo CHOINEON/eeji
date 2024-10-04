@@ -77,6 +77,7 @@
   "analyzing": "분석 중",
   "result saved": "결과 저장됨",
   "failed": "학습 실패",
+  "stopped": "중단됨",
 
   "Prediction Results of the Model": "모델��� 예측 결과",
   "Prediction Results of": "{{target_var}}의 예측 결과",
@@ -186,5 +187,6 @@
     "1003": "분류 문제 데이터의 unique한 class의 수가 너무 많습니다.",
     "1004": "Target 변수의 값이 단일 class 입니다.",
     "1005": "Target 변수의 값이 수치 데이터로 변환할 수 없는 형식입니다."
-  }
+  },
+  "Successfully Requested": "성공적으로 요청되었습니다."
 }

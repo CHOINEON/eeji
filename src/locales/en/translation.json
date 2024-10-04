@@ -76,6 +76,7 @@
   "analyzing": "analyzing",
   "result saved": "result saved",
   "failed": "failed",
+  "stopped": "stopped",
 
   "Prediction Results of the Model": "Prediction Results of the Model",
   "Prediction Results of": "Prediction Results of {{target_var}}",
@@ -185,5 +186,6 @@
     "1003": "Too many unique classes in classification problem data",
     "1004": "Target variable has a single class",
     "1005": "Target variable values cannot be converted to numerical data"
-  }
+  },
+  "Successfully Requested": "Successfully Requested"
 }
