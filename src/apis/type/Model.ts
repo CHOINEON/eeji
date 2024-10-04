@@ -5,6 +5,7 @@ export interface IModelInfo {
   state?: string
   created_at?: string
   is_classification?: boolean
+  is_canceled?: number
 }
 
 export interface IModelDetailInfo extends IModelInfo {

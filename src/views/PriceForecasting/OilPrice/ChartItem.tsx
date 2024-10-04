@@ -41,7 +41,6 @@ const ChartItem = (props: any) => {
           }&symbol=${symbol}`
         )
         .then(({ data }) => {
-          // console.log(data['xai']['xai_global'][0])
           // TODO 2024-03-07 '2024-02-06' 형식을 unix timestamp로 변환
           // console.log('data', data)
           setTruthData([])
@@ -315,7 +314,7 @@ const ChartItem = (props: any) => {
             </div>
           </div>
         </div>
-        <div className="flex space-x-2 mt-2">
+        <div className="flex space-x-1 mt-2">
           <div className="mx-1">{t('View Period')} : </div>
           <div
             className={`${

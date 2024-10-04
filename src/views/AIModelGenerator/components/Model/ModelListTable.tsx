@@ -1,4 +1,5 @@
-import { App, Badge, Table, Tag } from 'antd'
+import { CloseCircleOutlined, EllipsisOutlined } from '@ant-design/icons'
+import { App, Badge, Button, Dropdown, MenuProps, Table, Tag } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import { IModelDetailInfo, IModelInfo } from 'apis/type/Model'
 import { useGetModelList_v1 } from 'hooks/queries/useGetModelList'
@@ -12,7 +13,6 @@ import { v4 } from 'uuid'
 import { loadingAtom, stepCountStore } from 'views/AIModelGenerator/store/global/atom'
 import { selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
-import Actions from '../Button/ModelActions'
 import './style.css'
 
 const { Column } = Table
@@ -27,7 +27,7 @@ const ModelListTable = () => {
   const { t } = useTranslation()
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
+  const pageSize = 9
 
   const { models, total_count, refetch } = useGetModelList_v1(
     ((currentPage - 1) * pageSize).toString(),
@@ -102,6 +102,12 @@ const ModelListTable = () => {
     },
   })
 
+  const { mutate: mutateCancelTraning } = useMutation(ModelApi.cancelModelTraining, {
+    onSuccess: () => {
+      message.info(t('Successfully Requested'))
+    },
+  })
+
   useEffect(() => {
     models?.map((model) => {
       mutateModelDetail({ model_id: model.id })
@@ -166,7 +172,17 @@ const ModelListTable = () => {
     mutateTrainingResult({ model_id: model.id, is_xai: 'false' })
   }
 
-  const renderStateBadge = (state: string, status: IBadge[]) => {
+  const renderStateBadge = (state: string, status: IBadge[], is_canceled: number) => {
+    if (is_canceled === 1) {
+      // If the model is cancelled, render a custom "취소됨" badge
+      return (
+        <p>
+          <CloseCircleOutlined />
+          <span className="mx-1">{t('stopped')}</span>
+        </p>
+      )
+    }
+
     const model_state = status.filter((item: IBadge) => item.key.toString() === state)[0]
     return <Badge className="row-item-tag m-auto" status={model_state?.status} text={model_state?.text}></Badge>
   }
@@ -175,12 +191,39 @@ const ModelListTable = () => {
     refetch()
   }, [currentPage])
 
+  const getFilteredItems = (rowData: IModelInfo) => {
+    const items: MenuProps['items'] = [
+      {
+        key: '1',
+        label: (
+          <button onClick={() => mutateCancelTraning(rowData.id)}>
+            <p className="text-[#FF3D50]">{t('Stop')}</p>
+          </button>
+        ),
+      },
+      {
+        key: '2',
+        label: <button onClick={() => message.info('개발 중입니다.')}>{t('Edit')}</button>,
+      },
+      {
+        key: '3',
+        label: <button onClick={() => message.info('개발 중입니다.')}>{t('Delete')}</button>,
+      },
+    ]
+
+    if (rowData.state === '9' || rowData.state === '10') {
+      return items.slice(1) // Return only the second and third items
+    }
+    return items // Return all items for other states
+  }
+
   return (
     <>
       <Table
-        className="w-[720px] h-[530px]"
+        className="w-[740px] h-[530px]"
         size="small"
         dataSource={modelList}
+        scroll={{ y: 490 }}
         pagination={{
           total: total_count,
           pageSize: pageSize,
@@ -218,15 +261,6 @@ const ModelListTable = () => {
           render={(name: string) => <Ellipsis ref={contentRef}>{name}</Ellipsis>}
         />
         <Column title={t('Target')} dataIndex="target" key="target" align="center" ellipsis={false} />
-        <Column title={t('Created')} dataIndex="created_at" key="created_at" align="center" />
-        <Column
-          title={t('State')}
-          dataIndex="state"
-          key="state"
-          align="center"
-          width={95}
-          render={(state: string) => renderStateBadge(state, status)}
-        />
         <Column
           title={t('Model Type')}
           dataIndex="is_classification"
@@ -241,6 +275,15 @@ const ModelListTable = () => {
               }
             </>
           )}
+        />
+        <Column title={t('Created')} dataIndex="created_at" key="created_at" align="center" />
+        <Column
+          title={t('State')}
+          dataIndex="state"
+          key="state"
+          align="center"
+          width={95}
+          render={(text, record: IModelInfo) => renderStateBadge(text, status, record.is_canceled)}
         />
         <Column
           title={t('Result')}
@@ -262,7 +305,13 @@ const ModelListTable = () => {
           title={''}
           key="id"
           align="center"
-          render={(text, record: IModelInfo) => <Actions model_id={record?.id} model_name={record?.name} />}
+          render={(text, record: IModelInfo) => (
+            <>
+              <Dropdown menu={{ items: getFilteredItems(record) }} placement="bottom">
+                <Button type="text" icon={<EllipsisOutlined />}></Button>
+              </Dropdown>
+            </>
+          )}
         />
       </Table>
     </>
