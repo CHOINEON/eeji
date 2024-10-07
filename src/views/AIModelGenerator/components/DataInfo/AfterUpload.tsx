@@ -82,126 +82,117 @@ const AfterUpload = () => {
     }
   }
 
-  function fileValidationCheck(dataLength: number, headerLength: number) {
-    if (dataLength < 100) {
-      message.error(t('The data is too small. (Minimum 100 items)'))
-      return false
-    }
+  // 24.07.10 업로드 파일 유효성 검증 부분 비활성화(엔진에서 처리 후 에러 반환하는 것으로 변경)
+  // function fileValidationCheck(dataLength: number, headerLength: number) {
+  //   if (dataLength < 100) {
+  //     message.error(t('The data is too small. (Minimum 100 items)'))
+  //     return false
+  //   }
 
-    if (dataLength > 100000) {
-      message.error(t('The data is too large. (Maximum 100,000 items)'))
-      return false
-    }
+  //   if (dataLength > 100000) {
+  //     message.error(t('The data is too large. (Maximum 100,000 items)'))
+  //     return false
+  //   }
 
-    if (headerLength > 50) {
-      message.error(t('There are too many variables. (Maximum 50 variables)'))
-      return false
-    }
-    return true
-  }
+  //   if (headerLength > 50) {
+  //     message.error(t('There are too many variables. (Maximum 50 variables)'))
+  //     return false
+  //   }
+  //   return true
+  // }
 
   const xlsFileParser = (data: string[][]) => {
     const csvHeader = data[0]
     const csvRows = data.slice(1)
 
-    if (!fileValidationCheck(csvRows.length, csvHeader.length)) {
-      setLoading({ isLoading: false })
-      return false
-    } else {
-      //전체 데이터의 top10 샘플링하여 iteration to classify numeric/non-nuemric column list
-      const sampleCnt = 10
-      const sampleRows = csvRows.slice(0, sampleCnt)
-      const numericColums = []
-      const nonNumericColumns = []
+    //전체 데이터의 top10 샘플링하여 iteration to classify numeric/non-nuemric column list
+    const sampleCnt = 10
+    const sampleRows = csvRows.slice(0, sampleCnt)
+    const numericColums = []
+    const nonNumericColumns = []
 
-      for (let i = 0; i < csvHeader.length; i++) {
-        let isNumber = false
+    for (let i = 0; i < csvHeader.length; i++) {
+      let isNumber = false
 
-        for (let j = 0; j < sampleCnt; j++) {
-          const selectedData = Number(sampleRows[j][i])
+      for (let j = 0; j < sampleCnt; j++) {
+        const selectedData = Number(sampleRows[j][i])
 
-          if (isNaN(selectedData)) isNumber = false
-          else isNumber = true
-        }
-
-        if (isNumber) numericColums.push(csvHeader[i])
-        else nonNumericColumns.push(csvHeader[i])
+        if (isNaN(selectedData)) isNumber = false
+        else isNumber = true
       }
 
-      type CsvObject = { [key: string]: string }
-
-      const contentObjArray = csvRows.map((item) => {
-        if (item.length > 0) {
-          const obj = csvHeader.reduce((object: CsvObject, header, index) => {
-            object[header] = item[index]
-            return object
-          }, {})
-          return obj
-        }
-      })
-
-      setUploadedData({
-        ...uploadedData,
-        columns: csvHeader,
-        numericCols: numericColums,
-        nonNumericCols: nonNumericColumns,
-        content: contentObjArray,
-        rowCount: data.length,
-        colCount: csvHeader.length,
-      })
+      if (isNumber) numericColums.push(csvHeader[i])
+      else nonNumericColumns.push(csvHeader[i])
     }
+
+    type CsvObject = { [key: string]: string }
+
+    const contentObjArray = csvRows.map((item) => {
+      if (item.length > 0) {
+        const obj = csvHeader.reduce((object: CsvObject, header, index) => {
+          object[header] = item[index]
+          return object
+        }, {})
+        return obj
+      }
+    })
+
+    setUploadedData({
+      ...uploadedData,
+      columns: csvHeader,
+      numericCols: numericColums,
+      nonNumericCols: nonNumericColumns,
+      content: contentObjArray,
+      rowCount: data.length,
+      colCount: csvHeader.length,
+    })
   }
 
   const csvFileToArray = (string: string) => {
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',')
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n')
 
-    if (!fileValidationCheck(csvRows.length, csvHeader.length)) {
-      setLoading({ isLoading: false })
-      return false
-    } else {
-      //Prepare iteration to classify numeric/non-numeric column list
-      const sampleCnt = 10 //only 10rows are tested
-      const sampleRows = csvRows.slice(0, sampleCnt)
-      const numericColums = []
-      const nonNumericColumns = []
+    //Prepare iteration to classify numeric/non-numeric column list
+    const sampleCnt = 10 //only 10rows are tested
+    const sampleRows = csvRows.slice(0, sampleCnt)
+    const numericColums = []
+    const nonNumericColumns = []
 
-      for (let i = 0; i < csvHeader.length; i++) {
-        let isNumber = false
+    for (let i = 0; i < csvHeader.length; i++) {
+      let isNumber = false
 
-        for (let j = 0; j < sampleRows.length; j++) {
-          const selectedData = Number(sampleRows[j].split(',')[i])
+      for (let j = 0; j < sampleRows.length; j++) {
+        const selectedData = Number(sampleRows[j].split(',')[i])
 
-          //테스트 추출한 row 돌면서 isNumber 결과 값 업데이트
-          if (isNaN(selectedData)) isNumber = false
-          else isNumber = true
-        }
-
-        if (isNumber) numericColums.push(csvHeader[i])
-        else nonNumericColumns.push(csvHeader[i])
+        //테스트 추출한 row 돌면서 isNumber 결과 값 업데이트
+        if (isNaN(selectedData)) isNumber = false
+        else isNumber = true
       }
 
-      const array = csvRows.map((item) => {
-        if (item != '') {
-          const values = item.split(',')
-          const obj = csvHeader.reduce((object: any, header, index) => {
-            object[header] = values[index]
-            return object
-          }, {})
-          return obj
-        }
-      })
-
-      setUploadedData({
-        ...uploadedData,
-        columns: csvHeader,
-        numericCols: numericColums,
-        nonNumericCols: nonNumericColumns,
-        content: array.slice(0, -1),
-        rowCount: array.length,
-        colCount: csvHeader.length,
-      })
+      if (isNumber) numericColums.push(csvHeader[i])
+      else nonNumericColumns.push(csvHeader[i])
     }
+
+    const array = csvRows.map((item) => {
+      if (item != '') {
+        const values = item.split(',')
+        const obj = csvHeader.reduce((object: any, header, index) => {
+          object[header] = values[index]
+          return object
+        }, {})
+        return obj
+      }
+    })
+
+    setUploadedData({
+      ...uploadedData,
+      columns: csvHeader,
+      numericCols: numericColums,
+      nonNumericCols: nonNumericColumns,
+      content: array.slice(0, -1),
+      rowCount: array.length,
+      colCount: csvHeader.length,
+    })
 
     setLoading({ isLoading: false })
   }
