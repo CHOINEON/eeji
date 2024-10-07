@@ -105,6 +105,7 @@ const ModelListTable = () => {
   const { mutate: mutateCancelTraning } = useMutation(ModelApi.cancelModelTraining, {
     onSuccess: () => {
       message.info(t('Successfully Requested'))
+      refetch()
     },
   })
 
