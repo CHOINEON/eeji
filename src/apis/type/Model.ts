@@ -11,6 +11,7 @@ export interface IModelInfo {
 export interface IModelDetailInfo extends IModelInfo {
   dataset_name?: string
   updated_at?: string
+  error_code?: number
 }
 
 export type IModelList = Array<IModelInfo>
