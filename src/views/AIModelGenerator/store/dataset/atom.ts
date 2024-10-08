@@ -14,16 +14,16 @@ export const startEndDateAtom = atom({
   default: [dayjs(), dayjs()],
 })
 
-interface UploadData {
+export interface UploadData {
   error?: string
   file?: File
   name?: string
-  content?: Array<any>
+  content?: Array<unknown>
   rowCount?: number
   colCount?: number
   startDate?: string
   endDate?: string
-  columns?: Array<any>
+  columns?: Array<unknown>
   numericCols?: Array<string>
   nonNumericCols?: Array<string>
   objectName?: string

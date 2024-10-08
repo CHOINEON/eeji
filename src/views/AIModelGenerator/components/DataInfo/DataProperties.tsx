@@ -5,13 +5,13 @@ import ColumnLabel from 'components/fields/ColumnLabel'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRecoilState } from 'recoil'
-import { dateTimeToString, isValidDatetimeFormat } from 'utils/DateFunction'
-import { dataPropertyState, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
+import { dateTimeToString } from 'utils/DateFunction'
+import { dataPropertyState, UploadData, uploadedDataState } from 'views/AIModelGenerator/store/dataset/atom'
 
 interface Option {
   value: string
   label: string
-  disabled: boolean
+  disabled?: boolean
 }
 
 const DataProperties = () => {
@@ -36,43 +36,16 @@ const DataProperties = () => {
     generateOptions(uploadedData)
   }, [uploadedData, inputOption.algo_type])
 
-  function generateOptions(data: any) {
+  function generateOptions(data: UploadData) {
     const col_list = data['columns'].filter(Boolean) //유효하지 않은 값(빈 값)제거 필터링
-    const non_numeric_cols = data['nonNumericCols']
-    const numeric_cols = data['numericCols']
 
-    const targetArr: Array<any> = []
-    const timestampArr: Array<any> = []
+    const optionArr: Array<Option> = []
 
-    //regression 과 classification 타입에 따라 선택 가능한 컬럼 바인딩
-    if (inputOption.algo_type === 0) {
-      col_list.map((value: string) => {
-        if (numeric_cols.includes(value)) {
-          targetArr.push({ value: value, label: value })
-        } else if (non_numeric_cols.includes(value)) {
-          targetArr.push({ value: value, label: `${value} (non-numeric column)`, disabled: true })
-        }
-      })
-      setTargetOptions(targetArr)
-    } else if (inputOption.algo_type === 1) {
-      //classification 의 경우 numeric 무관함
-      col_list.map((value: string) => targetArr.push({ value: value, label: value }))
-      setTargetOptions(targetArr)
-    }
+    //24.10.07 regression 과 classification 타입에 무관하게 타겟변수를 선택할 수 있는 제한을 해제함(엔진에서 처리)
+    col_list.map((value: string) => optionArr.push({ value: value, label: value }))
 
-    //Generate datetime column options
-    col_list.map((value: string) => timestampArr.push({ value: value, label: value }))
-    setDateColOptions(timestampArr)
-  }
-
-  const validateDatetime = (columnLabel: string, data: Array<any>) => {
-    let result: boolean
-    const sample = data.slice(0, 10)
-    for (let i = 0; i < 10; i++) {
-      result = isValidDatetimeFormat(sample[i][columnLabel])
-    }
-
-    return result
+    setTargetOptions(optionArr)
+    setDateColOptions(optionArr)
   }
 
   const clearInputs = () => {

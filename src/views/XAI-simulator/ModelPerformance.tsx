@@ -33,19 +33,20 @@ const ModelPerformance = () => {
     message.info(t('서비스 준비 중입니다.'))
   }
 
+  // 24.10.07 데이터 자릿수 엔진에서 잘라주기로 함
   // 데이터 값이 일정값을 넘을 시 B/M/K로 구분하여 내보내게 설정해놓았습니다.
-  const formatNumber = (num: any) => {
-    if (num >= 1e9) {
-      return (num / 1e9).toFixed(1).replace(/\.0$/, '') + 'B'
-    }
-    if (num >= 1e6) {
-      return (num / 1e6).toFixed(1).replace(/\.0$/, '') + 'M'
-    }
-    if (num >= 1e3) {
-      return (num / 1e3).toFixed(1).replace(/\.0$/, '') + 'K'
-    }
-    return num
-  }
+  // const formatNumber = (num: any) => {
+  //   if (num >= 1e9) {
+  //     return (num / 1e9).toFixed(1).replace(/\.0$/, '') + 'B'
+  //   }
+  //   if (num >= 1e6) {
+  //     return (num / 1e6).toFixed(1).replace(/\.0$/, '') + 'M'
+  //   }
+  //   if (num >= 1e3) {
+  //     return (num / 1e3).toFixed(1).replace(/\.0$/, '') + 'K'
+  //   }
+  //   return num
+  // }
 
   return (
     <>
@@ -94,7 +95,9 @@ const ModelPerformance = () => {
                         <InfoCircle content={errorInfo[modelKey]} styleClass="text-[#F2F5FC]" />
                       </div>
                     </PerformanceContents>
-                    <PerformanceValue>{formatNumber(data[0][modelKey as keyof (typeof data)[0]])}</PerformanceValue>
+                    <PerformanceValue>
+                      {Number(data[0][modelKey as keyof (typeof data)[0]]).toFixed(2)}
+                    </PerformanceValue>
                   </div>
                 </PerformanceContentsBox>
               )
