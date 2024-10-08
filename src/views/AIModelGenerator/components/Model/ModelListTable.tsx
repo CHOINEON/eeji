@@ -317,7 +317,7 @@ const ModelListTable = () => {
           width={50}
           render={(text, record: IModelInfo) => (
             <>
-              {record.state === '9' && (
+              {record.state === '9' && record.is_canceled === 0 && (
                 <button className="text-[#1677ff] cursor-pointer" onClick={() => handleClick(record)}>
                   {t('View')}
                 </button>
