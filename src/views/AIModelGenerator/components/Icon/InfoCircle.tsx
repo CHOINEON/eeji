@@ -1,17 +1,19 @@
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { Tooltip } from 'antd'
+import { TooltipPlacement } from 'antd/es/tooltip'
 
 interface InfoCircleProps {
-  content: string
+  content: string | unknown
   styleClass?: string
+  placement?: string
 }
 
-const InfoCircle = ({ content, styleClass }: InfoCircleProps) => {
-  const defaultClass = `mx-2 text-[15px]`
+const InfoCircle = ({ content, styleClass, placement }: InfoCircleProps) => {
+  const defaultClass = `mx-1 text-[14px]`
 
   return (
     <>
-      <Tooltip title={content}>
+      <Tooltip title={content} placement={placement as TooltipPlacement}>
         <QuestionCircleOutlined className={`${defaultClass} ${styleClass || ''}`} />
       </Tooltip>
     </>

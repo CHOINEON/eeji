@@ -193,20 +193,6 @@ const ModelStateRow = ({ rowData }: IModelStateRow) => {
   )
 }
 
-// const ModelStateInfo = () => {
-//   return (
-//     <>
-//       {status.map((tag: ITag, idx: number) => {
-//         return (
-//           <Tag className="row-item-tag m-auto mr-2" color={tag?.color} icon={tag?.icon} key={idx}>
-//             <span className="tracking-normal">{tag?.name}</span>
-//           </Tag>
-//         )
-//       })}
-//     </>
-//   )
-// }
-
 const ModelStateList = ({ data }: ModelStateListProps) => {
   const { fireToast } = useToast()
   const { t } = useTranslation()
