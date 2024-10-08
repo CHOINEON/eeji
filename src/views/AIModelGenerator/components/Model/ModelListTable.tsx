@@ -1,5 +1,5 @@
-import { CloseCircleOutlined, EllipsisOutlined } from '@ant-design/icons'
-import { App, Badge, Button, Dropdown, MenuProps, Table, Tag } from 'antd'
+import { EllipsisOutlined } from '@ant-design/icons'
+import { App, Badge, Button, Dropdown, MenuProps, Space, Table, Tag } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import { IModelDetailInfo, IModelInfo } from 'apis/type/Model'
 import { useGetModelList_v1 } from 'hooks/queries/useGetModelList'
@@ -13,11 +13,12 @@ import { v4 } from 'uuid'
 import { loadingAtom, stepCountStore } from 'views/AIModelGenerator/store/global/atom'
 import { selectedModelAtom } from 'views/AIModelGenerator/store/model/atom'
 import { analysisResponseAtom } from 'views/AIModelGenerator/store/response/atoms'
+import InfoCircle from '../Icon/InfoCircle'
 import './style.css'
 
 const { Column } = Table
 
-interface IBadge {
+export interface IBadge {
   key: number
   text: string
   status: 'default' | 'processing' | 'success' | 'error' | 'warning'
@@ -27,6 +28,7 @@ const ModelListTable = () => {
   const { t } = useTranslation()
 
   const [currentPage, setCurrentPage] = useState(1)
+  const [isModalVisible, setIsModalVisible] = useState(false)
   const pageSize = 9
 
   const { models, total_count, refetch } = useGetModelList_v1(
@@ -175,10 +177,8 @@ const ModelListTable = () => {
 
   const renderStateBadge = (state: string, status: IBadge[], is_canceled: number) => {
     if (is_canceled === 1) {
-      // If the model is cancelled, render a custom "취소됨" badge
       return (
         <p>
-          <CloseCircleOutlined />
           <span className="mx-1">{t('stopped')}</span>
         </p>
       )
@@ -186,6 +186,20 @@ const ModelListTable = () => {
 
     const model_state = status.filter((item: IBadge) => item.key.toString() === state)[0]
     return <Badge className="row-item-tag m-auto" status={model_state?.status} text={model_state?.text}></Badge>
+  }
+
+  const ModelStateInfo: React.FC<{ status: IBadge[] }> = ({ status }) => {
+    // 중복 제거 함수
+    const uniqueStatus = status.filter((item, index, self) => index === self.findIndex((t) => t.text === item.text))
+    uniqueStatus.push({ key: 0, text: t('stopped'), status: 'default' })
+
+    return (
+      <Space direction="vertical">
+        {uniqueStatus.map((item) => (
+          <Badge key={item.key} status={item.status} text={<span className="text-white">{item.text}</span>} />
+        ))}
+      </Space>
+    )
   }
 
   useEffect(() => {
@@ -279,7 +293,16 @@ const ModelListTable = () => {
         />
         <Column title={t('Created')} dataIndex="created_at" key="created_at" align="center" />
         <Column
-          title={t('State')}
+          title={
+            <>
+              {t('State')}{' '}
+              <InfoCircle
+                placement="rightBottom"
+                content={<ModelStateInfo status={status} />}
+                styleClass="text-[12px]"
+              />
+            </>
+          }
           dataIndex="state"
           key="state"
           align="center"
@@ -294,7 +317,7 @@ const ModelListTable = () => {
           width={50}
           render={(text, record: IModelInfo) => (
             <>
-              {record.state === '9' && (
+              {record.state === '9' && record.is_canceled === 0 && (
                 <button className="text-[#1677ff] cursor-pointer" onClick={() => handleClick(record)}>
                   {t('View')}
                 </button>
