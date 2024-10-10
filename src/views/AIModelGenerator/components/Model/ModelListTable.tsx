@@ -1,7 +1,7 @@
 import { EllipsisOutlined } from '@ant-design/icons'
 import { App, Badge, Button, Dropdown, MenuProps, Space, Table, Tag } from 'antd'
 import ModelApi from 'apis/ModelApi'
-import { IModelDetailInfo, IModelInfo } from 'apis/type/Model'
+import { IModelDetailInfo, IModelInfo, IModelList } from 'apis/type/Model'
 import { useGetModelList_v1 } from 'hooks/queries/useGetModelList'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -28,14 +28,13 @@ const ModelListTable = () => {
   const { t } = useTranslation()
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [isModalVisible, setIsModalVisible] = useState(false)
   const pageSize = 9
 
   const { models, total_count, refetch } = useGetModelList_v1(
     ((currentPage - 1) * pageSize).toString(),
     pageSize.toString()
   )
-  const [modelList, setModelList] = useState([])
+  const [modelList, setModelList] = useState<Array<unknown>>()
 
   const MAX_DATA_COUNT = 5000
   const contentRef = useRef(null)
@@ -95,12 +94,21 @@ const ModelListTable = () => {
 
   const { mutate: mutateModelDetail } = useMutation(ModelApi.getModelDescription, {
     onSuccess: (result: IModelDetailInfo[]) => {
-      const updatedModelList = models?.map((model, index) => ({
-        ...model,
-        key: index.toString(),
-        dataset_name: result[0].dataset_name,
-      }))
-      setModelList(updatedModelList)
+      // models 배열에서 id가 result[0].id와 일치하는 요소를 찾음
+      const targetModel = models?.find((model) => model.id === result[0].id)
+
+      if (models && targetModel) {
+        // 이전 상태를 기반으로 업데이트하는 방식 사용
+        setModelList((prevModelList: IModelList) => {
+          // 기존 modelList에서 특정 id의 dataset_name만 업데이트
+          return prevModelList.map(
+            (model) =>
+              model.id === targetModel.id
+                ? { ...model, dataset_name: result[0].dataset_name } // id가 일치하는 경우 dataset_name 업데이트
+                : model // id가 일치하지 않으면 기존 model 반환
+          )
+        })
+      }
     },
   })
 
@@ -112,6 +120,9 @@ const ModelListTable = () => {
   })
 
   useEffect(() => {
+    //default
+    setModelList(models)
+
     models?.map((model) => {
       mutateModelDetail({ model_id: model.id })
     })
@@ -183,13 +194,13 @@ const ModelListTable = () => {
         </p>
       )
     }
-
     const model_state = status.filter((item: IBadge) => item.key.toString() === state)[0]
+
     return <Badge className="row-item-tag m-auto" status={model_state?.status} text={model_state?.text}></Badge>
   }
 
   const ModelStateInfo: React.FC<{ status: IBadge[] }> = ({ status }) => {
-    // 중복 제거 함수
+    // 중복 제거
     const uniqueStatus = status.filter((item, index, self) => index === self.findIndex((t) => t.text === item.text))
     uniqueStatus.push({ key: 0, text: t('stopped'), status: 'default' })
 
@@ -237,19 +248,20 @@ const ModelListTable = () => {
       <Table
         className="w-[740px] h-[530px]"
         size="small"
-        dataSource={modelList}
+        dataSource={modelList || []}
         scroll={{ y: 490 }}
         pagination={{
-          total: total_count,
-          pageSize: pageSize,
+          total: total_count || 0,
+          pageSize: pageSize || 10,
           position: ['bottomCenter'],
           showSizeChanger: false,
           onChange: (page) => {
             setCurrentPage(page)
           },
         }}
+        rowKey="id"
         expandable={{
-          expandedRowRender: (record) => {
+          expandedRowRender: (record: IModelDetailInfo) => {
             return (
               <>
                 <p style={{ margin: 0 }}>
