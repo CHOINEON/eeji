@@ -80,14 +80,14 @@ const ModelPerformance = () => {
         {selectedModel.is_classification ? (
           <PerformanceContentsWrap>
             <PerformanceContentsBox>
-              <PerformanceContents>
+              <PerformanceContents className="text-[15px]">
                 <InfoCircle content={errorInfo.ACCURACY} styleClass="text-[#F2F5FC]" />
                 {t('Prediction Accuracy')}
               </PerformanceContents>
               <PerformanceModelValue>{errorData?.['accuracy']}</PerformanceModelValue>
             </PerformanceContentsBox>
             <PerformanceContentsBox>
-              <PerformanceContents>
+              <PerformanceContents className="text-[15px]">
                 <InfoCircle content={errorInfo.F1_SCORE} styleClass="text-[#F2F5FC]" />
                 F-SCORE
               </PerformanceContents>
@@ -111,7 +111,7 @@ const ModelPerformance = () => {
                   return (
                     <PerformanceContentsBox style={boxStyle} key={modelKey}>
                       <div>
-                        <PerformanceContents>
+                        <PerformanceContents className="text-[10px]">
                           <span>{modelKey.toString().toUpperCase()}</span>
                           <span>
                             <InfoCircle content={errorInfo?.[modelKey]} styleClass="text-[#F2F5FC]" />
@@ -165,7 +165,6 @@ const PerformanceContentsBox = styled.span`
 const PerformanceContents = styled.div`
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
   color: #fff;
-  font-size: 10px;
   font-weight: bold;
 `
 const PerformanceModelValue = styled.span`
