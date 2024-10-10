@@ -18,13 +18,14 @@ export interface ModelGetRes {
 }
 
 export interface PerformanceModel {
-  [key: string]: PerformanceModelTyeps
+  [key: string]: PerformanceModelType
 }
-export type PerformanceModelTyeps = {
-  f1_score?: number
-  accuracy?: number
-  mae?: number
-  mse?: number
-  rmse?: number
-  r2: number
+export type PerformanceModelType = {
+  f1_score?: number | string
+  accuracy?: number | string
+  mae?: number | string
+  mse?: number | string
+  rmse?: number | string
+  mape?: number | string
+  r2: number | string
 }

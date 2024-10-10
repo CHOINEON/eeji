@@ -1,6 +1,7 @@
 import { App } from 'antd'
-import { PerformanceModel } from 'apis/type/ModelPerformanceOption'
+import { PerformanceModelType } from 'apis/type/ModelPerformanceOption'
 import IcoPerformance from 'assets/img/icons/XAI/icon_perfromanceModel.png'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
@@ -18,6 +19,7 @@ const ModelPerformance = () => {
 
   const selectedModel = useRecoilValue(selectedModelAtom)
   const data = useRecoilValue(filteredResultState('error'))
+  const [errorData, setErrorData] = useState<PerformanceModelType>()
 
   const errorInfo: IErrorInfo = {
     mae: t('errors.MAE'),
@@ -33,20 +35,34 @@ const ModelPerformance = () => {
     message.info(t('서비스 준비 중입니다.'))
   }
 
+  useEffect(() => {
+    //2024.10.10 수정 전 버전의 텍스트 길이 지원을 위한 임시 처리(추후 삭제)
+    setErrorData({
+      ...errorData,
+      mae: typeof data[0]['mae'] === 'number' ? formatNumber(Number(data[0]['mae']).toFixed(2)) : data[0]['mae'],
+      mse: typeof data[0]['mse'] === 'number' ? formatNumber(Number(data[0]['mse']).toFixed(2)) : data[0]['mse'],
+      rmse: typeof data[0]['rmse'] === 'number' ? formatNumber(Number(data[0]['rmse']).toFixed(2)) : data[0]['rmse'],
+      r2: typeof data[0]['r2'] === 'number' ? formatNumber(Number(data[0]['r2']).toFixed(2)) : data[0]['r2'],
+      mape: typeof data[0]['mape'] === 'number' ? Number(data[0]['mape']).toFixed(2) : data[0]['rmse'],
+      f1_score: typeof data[0]['F1_SCORE'] === 'number' ? Number(data[0]['F1_SCORE']).toFixed(2) : data[0]['F1_SCORE'],
+      accuracy: typeof data[0]['ACCURACY'] === 'number' ? Number(data[0]['ACCURACY']).toFixed(2) : data[0]['ACCURACY'],
+    })
+  }, [data])
+
   // 24.10.07 데이터 자릿수 엔진에서 잘라주기로 함
   // 데이터 값이 일정값을 넘을 시 B/M/K로 구분하여 내보내게 설정해놓았습니다.
-  // const formatNumber = (num: any) => {
-  //   if (num >= 1e9) {
-  //     return (num / 1e9).toFixed(1).replace(/\.0$/, '') + 'B'
-  //   }
-  //   if (num >= 1e6) {
-  //     return (num / 1e6).toFixed(1).replace(/\.0$/, '') + 'M'
-  //   }
-  //   if (num >= 1e3) {
-  //     return (num / 1e3).toFixed(1).replace(/\.0$/, '') + 'K'
-  //   }
-  //   return num
-  // }
+  const formatNumber = (num: any) => {
+    if (num >= 1e9) {
+      return (num / 1e9).toFixed(1).replace(/\.0$/, '') + 'B'
+    }
+    if (num >= 1e6) {
+      return (num / 1e6).toFixed(1).replace(/\.0$/, '') + 'M'
+    }
+    if (num >= 1e3) {
+      return (num / 1e3).toFixed(1).replace(/\.0$/, '') + 'K'
+    }
+    return num
+  }
 
   return (
     <>
@@ -68,7 +84,7 @@ const ModelPerformance = () => {
                 <InfoCircle content={errorInfo.ACCURACY} styleClass="text-[#F2F5FC]" />
                 {t('Prediction Accuracy')}
               </PerformanceContents>
-              <PerformanceModelValue>{(Number(data[0]['ACCURACY']) * 100).toFixed(0)} %</PerformanceModelValue>
+              <PerformanceModelValue>{errorData?.['accuracy']}</PerformanceModelValue>
             </PerformanceContentsBox>
             <PerformanceContentsBox>
               <PerformanceContents>
@@ -76,32 +92,36 @@ const ModelPerformance = () => {
                 F-SCORE
               </PerformanceContents>
               <PerformanceContentsBox>
-                <PerformanceValueAccuracy>{Number(data[0]['F1_SCORE']).toFixed(2)}</PerformanceValueAccuracy>
+                <PerformanceValueAccuracy>{errorData?.['f1_score']}</PerformanceValueAccuracy>
               </PerformanceContentsBox>
             </PerformanceContentsBox>
           </PerformanceContentsWrap>
         ) : (
           <PerformanceContentsWrap>
-            {Object.keys(data[0]).map((key, index) => {
-              const modelKey = key as keyof PerformanceModel
-              const isFirstItem = index === 0
-              const boxStyle = isFirstItem ? {} : { borderLeft: '1px solid rgba(255, 255, 255, 0.5)', padding: '0 5px' }
-              return (
-                <PerformanceContentsBox style={boxStyle} key={modelKey}>
-                  <div>
-                    <PerformanceContents>
-                      <div>{modelKey.toString().toUpperCase()}</div>
-                      <div className="text-center">
-                        <InfoCircle content={errorInfo[modelKey]} styleClass="text-[#F2F5FC]" />
+            {errorData &&
+              Object.keys(errorData)
+                .filter((key) => errorData[key as keyof typeof errorData] !== undefined)
+                .map((key, index) => {
+                  const modelKey = key as keyof typeof errorData
+                  const isFirstItem = index === 0
+                  const boxStyle = isFirstItem
+                    ? {}
+                    : { borderLeft: '1px solid rgba(255, 255, 255, 0.5)', padding: '0 5px' }
+
+                  return (
+                    <PerformanceContentsBox style={boxStyle} key={modelKey}>
+                      <div>
+                        <PerformanceContents>
+                          <span>{modelKey.toString().toUpperCase()}</span>
+                          <span>
+                            <InfoCircle content={errorInfo?.[modelKey]} styleClass="text-[#F2F5FC]" />
+                          </span>
+                        </PerformanceContents>
+                        <PerformanceValue>{errorData?.[modelKey as keyof typeof errorData]}</PerformanceValue>
                       </div>
-                    </PerformanceContents>
-                    <PerformanceValue>
-                      {Number(data[0][modelKey as keyof (typeof data)[0]]).toFixed(2)}
-                    </PerformanceValue>
-                  </div>
-                </PerformanceContentsBox>
-              )
-            })}
+                    </PerformanceContentsBox>
+                  )
+                })}
           </PerformanceContentsWrap>
         )}
         <PerformanceButtonWrap>
@@ -132,7 +152,7 @@ const PerformanceTitle = styled.span`
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
   color: #95eb61;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 19px;
 `
 const PerformanceContentsWrap = styled.div`
   display: flex;
@@ -142,12 +162,11 @@ const PerformanceContentsWrap = styled.div`
 const PerformanceContentsBox = styled.span`
   flex: 1;
 `
-const PerformanceContents = styled.span`
+const PerformanceContents = styled.div`
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
   color: #fff;
-  font-size: 14px;
+  font-size: 10px;
   font-weight: bold;
-  // margin-right: 10px;
 `
 const PerformanceModelValue = styled.span`
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
