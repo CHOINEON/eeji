@@ -79,6 +79,7 @@ const ModelListTable = () => {
     1003: t('errorCodes.1003'),
     1004: t('errorCodes.1004'),
     1005: t('errorCodes.1005'),
+    1006: t('errorCodes.1006'),
   }
 
   const { mutate: mutateTrainingResult } = useMutation(ModelApi.getTrainingResultUrl, {
@@ -120,7 +121,6 @@ const ModelListTable = () => {
   })
 
   useEffect(() => {
-    //default
     setModelList(models)
 
     models?.map((model) => {
@@ -237,7 +237,7 @@ const ModelListTable = () => {
       },
     ]
 
-    if (rowData.state === '9' || rowData.state === '10') {
+    if (rowData.state === '9' || rowData.state === '10' || rowData.is_canceled === 1) {
       return items.slice(1) // Return only the second and third items
     }
     return items // Return all items for other states

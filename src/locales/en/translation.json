@@ -185,7 +185,8 @@
     "1002": "Too many variables in the data",
     "1003": "Too many unique classes in classification problem data",
     "1004": "Target variable has a single class",
-    "1005": "Target variable values cannot be converted to numerical data"
+    "1005": "Target variable values cannot be converted to numerical data",
+    "1006": "Your request to cancel the model has been received."
   },
   "Successfully Requested": "Successfully Requested"
 }
