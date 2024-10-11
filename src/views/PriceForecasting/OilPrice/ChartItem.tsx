@@ -353,7 +353,7 @@ const ChartItem = (props: any) => {
         </div>
       </div>
       <div
-        className={`text-[13px] absolute top-[55px] z-[1000] right-3 bg-white border-solid border border-[#D5DCEF] border-primary text-primary font-bold py-2 px-4 cursor-pointer rounded-xl text-sm transition-all hover:bg-[#E5EBFF] hover:text-[#372dd5] hover:border-[#372dd5] select-none`}
+        className={`text-[11px] absolute top-[55px] z-[1000] right-2 bg-white border-solid border border-[#D5DCEF] border-primary text-primary font-bold py-1 px-4 cursor-pointer rounded-lg transition-all hover:bg-[#E5EBFF] hover:text-[#372dd5] hover:border-[#372dd5] select-none`}
         onClick={() => {
           setIsFeature((prev) => !isFeature)
         }}

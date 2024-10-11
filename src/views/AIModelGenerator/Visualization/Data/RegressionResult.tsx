@@ -2,8 +2,8 @@ import { Tooltip } from 'antd'
 import {
   BubbleDataPoint,
   CategoryScale,
-  ChartConfiguration,
   Chart as ChartJS,
+  ChartConfiguration,
   Legend,
   LinearScale,
   LineElement,
@@ -175,8 +175,6 @@ const RegressionResult = () => {
       },
       legend: {
         display: false,
-        // position: 'top' as const,
-        // align: 'start' as const,
       },
       title: {
         display: false,
@@ -194,6 +192,21 @@ const RegressionResult = () => {
             enabled: true,
           },
           mode: 'x' as const,
+        },
+      },
+    },
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: selectedModel.target,
+          font: {
+            size: 14,
+          },
+          color: '#575757',
+        },
+        ticks: {
+          padding: 10, // y축 텍스트(라벨)와 축 간의 마진 설정 (단위: 픽셀)
         },
       },
     },
@@ -287,8 +300,8 @@ const RegressionResult = () => {
           </div>
           <div className="chart-container">
             <div className="containerBody">
-              <div className="x-axis-label">{t('Timestamp')}</div>
-              <div className="y-axis-label">{`${selectedModel.target}`}</div>
+              <div className="x-axis-label">Timestamp</div>
+              {/* <div className="y-axis-label">{`${selectedModel.target}`}</div> */}
               <canvas id="predChart" ref={chartRef}></canvas>
             </div>
           </div>
