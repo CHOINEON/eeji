@@ -95,7 +95,7 @@
     "MAE": "Mean Absolute Error. The average of the absolute values of all errors (the closer to 0, the better the model).",
     "MSE": "Mean Squared Error. The average of the squared errors (difference between predicted and actual values).",
     "RMSE": "Root Mean Squared Error. The average difference between the predicted and actual values in the model. It estimates how well the model predicts the target value (accuracy).",
-    "R2": "R² (Coefficient of Determination) is a metric that evaluates the performance of a regression model by indicating how well the model explains the given data. A value closer to 0 indicates lower prediction accuracy, while a value closer to 1 signifies more accurate predictions.",
+    "R2": "R² (Coefficient of Determination). A metric for evaluating the performance of a regression model, R² generally takes values between 0 and 1. The closer it is to 1, the higher the prediction accuracy, while the closer it is to 0, the more the AI model tends to predict based on the average, indicating lower predictive performance. A negative value less than 0 indicates very low prediction accuracy.",
     "MAPE": "A metric that measures the average percentage error between predicted and actual values. A lower value indicates higher performance."
   },
   "performance": {
