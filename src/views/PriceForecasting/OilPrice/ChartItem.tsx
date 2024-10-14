@@ -1,3 +1,4 @@
+import { App } from 'antd'
 import { ApexOptions } from 'apexcharts'
 import axios from 'axios'
 import { useEffect, useMemo, useState } from 'react'
@@ -7,6 +8,7 @@ import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/Fea
 
 const ChartItem = (props: any) => {
   // console.log('ChartItem props(id)', props)
+  const { message } = App.useApp()
   const { t } = useTranslation()
 
   // TODO 2024-03-06 심볼명, 심볼설명 배열 생성
@@ -289,6 +291,7 @@ const ChartItem = (props: any) => {
             <div
               className={`item ${frequency === 'daily' ? 'item-active' : ''}`}
               onClick={() => {
+                message.info(t('Your selection will be reset.'))
                 setFrequency((prev) => 'daily')
                 setIsFeature((prev) => false)
               }}
@@ -298,6 +301,7 @@ const ChartItem = (props: any) => {
             <div
               className={`item ${frequency === 'monthly' ? 'item-active' : ''} whitespace-nowrap`}
               onClick={() => {
+                message.info(t('Your selection will be reset.'))
                 setFrequency((prev) => 'monthly')
                 setIsFeature((prev) => false)
               }}
