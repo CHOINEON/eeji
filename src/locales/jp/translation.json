@@ -191,5 +191,6 @@
     "1005": "ターゲット変数の値を数値データに変換できない形式です",
     "1006": "モデルのキャンセルリクエストが受け付けられました"
   },
-  "Successfully Requested": "リクエストが成功しました"
+  "Successfully Requested": "リクエストが成功しました",
+  "Your selection will be reset.": "選択がリセットされます。"
 }

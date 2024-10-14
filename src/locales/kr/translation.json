@@ -189,5 +189,6 @@
     "1005": "Target 변수의 값이 수치 데이터로 변환할 수 없는 형식입니다.",
     "1006": "모델 취소 요청이 접수되었습니다."
   },
-  "Successfully Requested": "성공적으로 요청되었습니다."
+  "Successfully Requested": "성공적으로 요청되었습니다.",
+  "Your selection will be reset.": "선택이 초기화됩니다"
 }

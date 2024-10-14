@@ -291,7 +291,7 @@ const ChartItem = (props: any) => {
             <div
               className={`item ${frequency === 'daily' ? 'item-active' : ''}`}
               onClick={() => {
-                message.info('선택이 초기화됩니다.')
+                message.info(t('Your selection will be reset.'))
                 setFrequency((prev) => 'daily')
                 setIsFeature((prev) => false)
               }}
@@ -301,7 +301,7 @@ const ChartItem = (props: any) => {
             <div
               className={`item ${frequency === 'monthly' ? 'item-active' : ''} whitespace-nowrap`}
               onClick={() => {
-                message.info('선택이 초기화됩니다.')
+                message.info(t('Your selection will be reset.'))
                 setFrequency((prev) => 'monthly')
                 setIsFeature((prev) => false)
               }}
