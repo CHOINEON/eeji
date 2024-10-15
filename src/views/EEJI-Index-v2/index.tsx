@@ -62,10 +62,12 @@ const Index = (props: ChartProps) => {
   return (
     <div className="">
       <div className="">
-        <h3 className="text-white">Symbol : {symbol}</h3>
+        <h3 className="text-white inline-block mx-5">Symbol : {symbol}</h3>
         <Radio.Group options={options} optionType="button" buttonStyle="solid" onChange={onChange} value={period} />
       </div>
-      <ChartComponent {...props} series={chartData}></ChartComponent>
+      <div className="m-5">
+        <ChartComponent {...props} series={chartData}></ChartComponent>
+      </div>
     </div>
   )
 }
