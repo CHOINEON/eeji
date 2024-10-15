@@ -60,7 +60,7 @@ const Index = (props: ChartProps) => {
   }
 
   return (
-    <div className="">
+    <div className="mt-7">
       <div className="">
         <h3 className="text-white inline-block mx-5">Symbol : {symbol}</h3>
         <Radio.Group options={options} optionType="button" buttonStyle="solid" onChange={onChange} value={period} />
