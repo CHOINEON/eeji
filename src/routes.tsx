@@ -2,6 +2,7 @@
 
 // Admin Imports
 import AIModelGenerator from 'views/AIModelGenerator'
+import Index from 'views/EEJI-Index-v2'
 import MainContents from 'views/Main/Main'
 import MyPage from 'views/MyPage'
 import PriceForecasting from 'views/PriceForecasting/OilPrice'
@@ -44,8 +45,15 @@ const routes: RoutesType[] = [
     component: MyPage,
     showInHeader: false,
   },
-  /*
   {
+    name: 'Index v2',
+    layout: '/admin',
+    path: '/index-v2',
+    icon: '',
+    component: Index,
+    showInHeader: false,
+  },
+  /*
     name: 'Prediction API',
     layout: '/admin',
     path: '/api-service',
