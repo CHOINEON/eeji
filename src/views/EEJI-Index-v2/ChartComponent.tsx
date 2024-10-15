@@ -1,28 +1,25 @@
 import { ColorType, createChart } from 'lightweight-charts'
 import { useEffect, useRef } from 'react'
 
-export interface ChartProps {
+export interface SeriesData {
   data: { time: string; value: number }[]
+  // colors?: {
+  lineColor?: string
+  //   areaTopColor?: string
+  //   areaBottomColor?: string
+  // }
+}
+
+export interface ChartProps {
+  series: SeriesData[]
   colors?: {
     backgroundColor?: string
-    lineColor?: string
     textColor?: string
-    areaTopColor?: string
-    areaBottomColor?: string
   }
 }
 
 const ChartComponent = (props: ChartProps) => {
-  const {
-    data,
-    colors: {
-      backgroundColor = 'black',
-      lineColor = '#2962FF',
-      textColor = 'white',
-      areaTopColor = '#2962FF',
-      areaBottomColor = 'rgba(41, 98, 255, 0.28)',
-    } = {},
-  } = props
+  const { series, colors: { backgroundColor = 'black', textColor = 'white' } = {} } = props
 
   const chartContainerRef = useRef<HTMLDivElement | null>(null)
 
@@ -41,19 +38,33 @@ const ChartComponent = (props: ChartProps) => {
       width: chartContainerRef.current.clientWidth,
       height: 300,
     })
+
+    if (series && series.length > 0) {
+      // Iterate over each series and add it to the chart
+      series?.forEach((singleSeries) => {
+        const { data, lineColor } = singleSeries
+
+        // Check if data is defined and is an array
+        if (Array.isArray(data) && data.length > 0) {
+          const newSeries = chart.addAreaSeries({
+            lineColor,
+          })
+
+          newSeries.setData(data)
+        } else {
+          console.warn('Invalid data for series:', singleSeries)
+        }
+      })
+    }
+
     chart.timeScale().fitContent()
-
-    const newSeries = chart.addAreaSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor })
-    newSeries.setData(data)
-
     window.addEventListener('resize', handleResize)
 
     return () => {
       window.removeEventListener('resize', handleResize)
-
       chart.remove()
     }
-  }, [data, backgroundColor, lineColor, textColor, areaTopColor, areaBottomColor])
+  }, [series, backgroundColor, textColor])
 
   return <div ref={chartContainerRef} />
 }

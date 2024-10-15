@@ -1,22 +1,71 @@
+import IndexApi from 'apis/IndexApi'
+import { useEffect, useState } from 'react'
+import { useMutation } from 'react-query'
 import ChartComponent, { ChartProps } from './ChartComponent'
 
+import { Radio, RadioChangeEvent } from 'antd'
+
+const options = [
+  { label: 'Daily', value: 1 },
+  { label: 'Weekly', value: 2 },
+  { label: 'Monthly', value: 3 },
+]
+
 const Index = (props: ChartProps) => {
-  const initialData = [
-    { time: '2018-12-22', value: 32.51 },
-    { time: '2018-12-23', value: 31.11 },
-    { time: '2018-12-24', value: 27.02 },
-    { time: '2018-12-25', value: 27.32 },
-    { time: '2018-12-26', value: 25.17 },
-    { time: '2018-12-27', value: 28.89 },
-    { time: '2018-12-28', value: 25.46 },
-    { time: '2018-12-29', value: 23.92 },
-    { time: '2018-12-30', value: 22.68 },
-    { time: '2018-12-31', value: 22.67 },
-  ]
+  const [symbol, setSymbol] = useState('Nickel')
+  const [initialData, setInitialData] = useState([])
+  const [chartData, setChartData] = useState([])
+  const [period, setPeriod] = useState(1)
+
+  const { mutate: fetchPredictionData } = useMutation(IndexApi.getPredictiondata, {
+    onSuccess: (response: { data: Array<unknown> }) => {
+      setInitialData(response?.data)
+    },
+  })
+
+  useEffect(() => {
+    if (initialData.length > 0) {
+      const newArr = []
+
+      // Filter and map the initialData for both prediction and groundTruth in one pass
+      const filteredData = initialData
+        .filter((item) => item.horizon === period)
+        .map((item) => ({
+          time: new Date(item.date).getTime() / 1000, // Convert to UNIX timestamp in seconds
+          pred: item.pred,
+          groundTruth: item.ground_truth,
+        }))
+        .sort((a, b) => a.time - b.time) // Sort by time in ascending order
+
+      // Split the filtered data into prediction and groundTruth
+      const prediction = filteredData.map(({ time, pred }) => ({ time, value: pred }))
+      const groundTruth = filteredData.map(({ time, groundTruth }) => ({ time, value: groundTruth }))
+
+      newArr.push(prediction)
+      newArr.push(groundTruth)
+
+      setChartData([
+        { data: prediction, lineColor: '#2962FF' },
+        { data: groundTruth, lineColor: 'rgb(225, 87, 90)' },
+      ])
+    }
+  }, [initialData, period])
+
+  useEffect(() => {
+    fetchPredictionData(symbol)
+  }, [])
+
+  const onChange = ({ target: { value } }: RadioChangeEvent) => {
+    setPeriod(value)
+  }
 
   return (
-    <div className="border bg-white w-full h-full">
-      <ChartComponent {...props} data={initialData}></ChartComponent>
+    <div className="">
+      <div className="">
+        <h3 className="text-white">Symbol : {symbol}</h3>
+        <Radio.Group options={options} optionType="button" buttonStyle="solid" onChange={onChange} value={period} />
+      </div>
+      <ChartComponent {...props} series={chartData}></ChartComponent>
     </div>
   )
 }
