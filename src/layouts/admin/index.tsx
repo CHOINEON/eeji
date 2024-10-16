@@ -9,8 +9,12 @@ import routes from 'routes'
 export default function Main() {
   document.documentElement.dir = 'ltr'
 
-  const needBackgroundBox = () => {
-    return window.location.pathname === '/admin/main' || window.location.pathname === '/admin/mypage'
+  const needFullScreenBox = () => {
+    const needScreenWidthRoutes = routes
+      .filter((value) => value.widthScreen === true)
+      .map((item) => item.layout + item.path)
+
+    return Boolean(needScreenWidthRoutes.includes(window.location.pathname))
   }
 
   const getRoutes = (routes: RoutesType[]): any => {
@@ -25,10 +29,10 @@ export default function Main() {
 
   return (
     <>
-      <div className="relative w-[1280px] mx-auto">
-        <div className="w-[1280px] m-auto">
+      <div className={`relative ${needFullScreenBox() ? '' : 'w-[1280px] mx-auto'}`}>
+        <div className={`${needFullScreenBox() ? '' : 'w-[1280px] m-auto'}`}>
           <Header routes={routes}></Header>
-          {needBackgroundBox() ? (
+          {needFullScreenBox() ? (
             <div className="my-[10px] mx-[30px] min-h-[780px]">{getRoutes(routes)}</div>
           ) : (
             <div className="w-[1280px] min-h-screen bg-[#F3F7FE] rounded-[25px]">

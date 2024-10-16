@@ -5,6 +5,7 @@ import AIModelGenerator from 'views/AIModelGenerator'
 import MainContents from 'views/Main/Main'
 import MyPage from 'views/MyPage'
 import PriceForecasting from 'views/PriceForecasting/OilPrice'
+import Index from 'views/ViewIndex'
 import XAIsimulator from 'views/XAI-simulator'
 
 const routes: RoutesType[] = [
@@ -14,6 +15,7 @@ const routes: RoutesType[] = [
     path: '/main',
     icon: '',
     component: MainContents,
+    widthScreen: true,
   },
   {
     name: 'AI Model Generator',
@@ -21,6 +23,7 @@ const routes: RoutesType[] = [
     path: '/ai-model-generator',
     icon: '',
     component: AIModelGenerator,
+    widthScreen: false,
   },
   {
     name: 'Explainable AI',
@@ -28,6 +31,7 @@ const routes: RoutesType[] = [
     path: '/xai-simulator',
     icon: '',
     component: XAIsimulator,
+    widthScreen: false,
   },
   {
     name: 'Commodity Index Forecast',
@@ -35,6 +39,7 @@ const routes: RoutesType[] = [
     path: '/price-forecast',
     icon: '',
     component: PriceForecasting,
+    widthScreen: false,
   },
   {
     name: 'My Profile',
@@ -43,9 +48,18 @@ const routes: RoutesType[] = [
     icon: '',
     component: MyPage,
     showInHeader: false,
+    widthScreen: true,
+  },
+  {
+    name: 'Index v2',
+    layout: '/admin',
+    path: '/view-index',
+    icon: '',
+    component: Index,
+    showInHeader: false,
+    widthScreen: true,
   },
   /*
-  {
     name: 'Prediction API',
     layout: '/admin',
     path: '/api-service',
