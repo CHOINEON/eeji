@@ -11,8 +11,7 @@ declare global {
     component?: (props?: any) => JSX.Element
     icon: JSX.Element | string
     path: string
-    secondary?: boolean
-    sub?: any
     showInHeader?: boolean
+    widthScreen?: boolean //take the entire width of the view port
   }
 }

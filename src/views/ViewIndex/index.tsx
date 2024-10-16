@@ -11,7 +11,7 @@ const options = [
   { label: 'Monthly', value: 3 },
 ]
 
-const Index = (props: ChartProps) => {
+const ViewIndex = (props: ChartProps) => {
   const [symbol, setSymbol] = useState('Nickel')
   const [initialData, setInitialData] = useState([])
   const [chartData, setChartData] = useState([])
@@ -72,4 +72,4 @@ const Index = (props: ChartProps) => {
   )
 }
 
-export default Index
+export default ViewIndex

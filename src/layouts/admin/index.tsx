@@ -10,8 +10,11 @@ export default function Main() {
   document.documentElement.dir = 'ltr'
 
   const needFullScreenBox = () => {
-    const fullScreenPages = ['/admin/main', '/admin/mypage', '/admin/index-v2']
-    return Boolean(fullScreenPages.includes(window.location.pathname))
+    const needScreenWidthRoutes = routes
+      .filter((value) => value.widthScreen === true)
+      .map((item) => item.layout + item.path)
+
+    return Boolean(needScreenWidthRoutes.includes(window.location.pathname))
   }
 
   const getRoutes = (routes: RoutesType[]): any => {
