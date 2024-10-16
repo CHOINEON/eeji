@@ -5,7 +5,7 @@ import AIModelGenerator from 'views/AIModelGenerator'
 import MainContents from 'views/Main/Main'
 import MyPage from 'views/MyPage'
 import PriceForecasting from 'views/PriceForecasting/OilPrice'
-import Index from 'views/ViewIndex'
+import ViewIndex from 'views/ViewIndex/Main'
 import XAIsimulator from 'views/XAI-simulator'
 
 const routes: RoutesType[] = [
@@ -55,7 +55,7 @@ const routes: RoutesType[] = [
     layout: '/admin',
     path: '/view-index',
     icon: '',
-    component: Index,
+    component: ViewIndex,
     showInHeader: false,
     widthScreen: true,
   },

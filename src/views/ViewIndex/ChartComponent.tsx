@@ -3,11 +3,7 @@ import { useEffect, useRef } from 'react'
 
 export interface SeriesData {
   data: { time: string; value: number }[]
-  // colors?: {
   lineColor?: string
-  //   areaTopColor?: string
-  //   areaBottomColor?: string
-  // }
 }
 
 export interface ChartProps {
@@ -19,19 +15,17 @@ export interface ChartProps {
 }
 
 const ChartComponent = (props: ChartProps) => {
-  const { series, colors: { backgroundColor = 'black', textColor = 'white' } = {} } = props
-
+  const { series, colors: { backgroundColor = 'white', textColor = 'black' } = {} } = props
   const chartContainerRef = useRef<HTMLDivElement | null>(null)
+  const chartInstanceRef = useRef<any>(null) // To store the chart instance
 
   useEffect(() => {
-    const handleResize = () => {
-      if (chartContainerRef.current) {
-        chart.applyOptions({ width: chartContainerRef.current.clientWidth })
-      }
-    }
+    if (!chartContainerRef.current) return
 
+    // Create chart instance
     const chart = createChart(chartContainerRef.current, {
       layout: {
+        fontFamily: 'Helvetica Neue',
         background: { type: ColorType.Solid, color: backgroundColor },
         textColor,
       },
@@ -39,17 +33,14 @@ const ChartComponent = (props: ChartProps) => {
       height: 300,
     })
 
+    chartInstanceRef.current = chart // Store the chart instance for future use
+
     if (series && series.length > 0) {
-      // Iterate over each series and add it to the chart
-      series?.forEach((singleSeries) => {
+      series.forEach((singleSeries) => {
         const { data, lineColor } = singleSeries
 
-        // Check if data is defined and is an array
         if (Array.isArray(data) && data.length > 0) {
-          const newSeries = chart.addAreaSeries({
-            lineColor,
-          })
-
+          const newSeries = chart.addAreaSeries({ lineColor })
           newSeries.setData(data)
         } else {
           console.warn('Invalid data for series:', singleSeries)
@@ -58,15 +49,22 @@ const ChartComponent = (props: ChartProps) => {
     }
 
     chart.timeScale().fitContent()
-    window.addEventListener('resize', handleResize)
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (chartContainerRef.current) {
+        chart.applyOptions({ width: chartContainerRef.current.clientWidth })
+      }
+    })
+
+    resizeObserver.observe(chartContainerRef.current)
 
     return () => {
-      window.removeEventListener('resize', handleResize)
+      resizeObserver.disconnect()
       chart.remove()
     }
   }, [series, backgroundColor, textColor])
 
-  return <div ref={chartContainerRef} />
+  return <div ref={chartContainerRef} style={{ width: '100%', height: '100%' }} />
 }
 
 export default ChartComponent

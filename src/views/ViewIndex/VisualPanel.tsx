@@ -1,9 +1,8 @@
+import { Radio, RadioChangeEvent } from 'antd'
 import IndexApi from 'apis/IndexApi'
 import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
-import ChartComponent, { ChartProps } from './ChartComponent'
-
-import { Radio, RadioChangeEvent } from 'antd'
+import ChartComponent from './ChartComponent'
 
 const options = [
   { label: 'Daily', value: 1 },
@@ -11,7 +10,7 @@ const options = [
   { label: 'Monthly', value: 3 },
 ]
 
-const ViewIndex = (props: ChartProps) => {
+const VisualPanel = () => {
   const [symbol, setSymbol] = useState('Nickel')
   const [initialData, setInitialData] = useState([])
   const [chartData, setChartData] = useState([])
@@ -60,16 +59,16 @@ const ViewIndex = (props: ChartProps) => {
   }
 
   return (
-    <div className="mt-7">
+    <div className="m-3">
       <div className="">
-        <h3 className="text-white inline-block mx-5">Symbol : {symbol}</h3>
+        <h3 className="text-black inline-block mx-5">Symbol : {symbol}</h3>
         <Radio.Group options={options} optionType="button" buttonStyle="solid" onChange={onChange} value={period} />
       </div>
       <div className="m-5">
-        <ChartComponent {...props} series={chartData}></ChartComponent>
+        <ChartComponent series={chartData}></ChartComponent>
       </div>
     </div>
   )
 }
 
-export default ViewIndex
+export default VisualPanel
