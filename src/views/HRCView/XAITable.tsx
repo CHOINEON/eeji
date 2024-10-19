@@ -91,7 +91,7 @@ const XAITable = ({ xaiData, onChangeFeature }: XAITableProps) => {
       <div className="m-3">
         <div className="text-center">
           <div className="m-auto">
-            <p className="text-lg font-bold text-center m-5">예측 기간</p>
+            <p className="text-lg font-bold text-center m-2">예측 기간</p>
             <Radio.Group defaultValue="a" buttonStyle="solid" onChange={handleRadioClick} value={buttonValue}>
               <Radio.Button value={0}>1일</Radio.Button>
               <Radio.Button value={1}>7일</Radio.Button>
@@ -104,7 +104,7 @@ const XAITable = ({ xaiData, onChangeFeature }: XAITableProps) => {
         </div>
         <Divider />
         <div className="mt-3">
-          <p className="text-lg font-bold text-center m-5">HRC가격 변동 요인</p>
+          <p className="text-lg font-bold text-center m-2">HRC가격 변동 요인</p>
           <Table<DataType>
             size="small"
             rowSelection={{ type: 'radio', ...rowSelection }}
@@ -116,8 +116,8 @@ const XAITable = ({ xaiData, onChangeFeature }: XAITableProps) => {
 
         <Divider />
         <div>
-          <p className="text-lg font-bold text-center m-5">예측 설명</p>
-          <div className="overflow-scroll h-[255px]" dangerouslySetInnerHTML={{ __html: description }} />
+          <p className="text-lg font-bold text-center m-2">예측 설명</p>
+          <div className="overflow-scroll h-[230px]" dangerouslySetInnerHTML={{ __html: description }} />
         </div>
       </div>
     </>
