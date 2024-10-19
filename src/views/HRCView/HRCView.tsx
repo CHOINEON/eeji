@@ -74,7 +74,6 @@ const HRCView = () => {
 
   const fetchInputData = async () => {
     const result = await ModelApi.getJsonResult(url_input_data)
-    console.log('result:', result)
 
     setInputData(result)
     setHrcData(formatObjectToArray(result['중국 HRC 가격']))
@@ -296,13 +295,9 @@ const HRCView = () => {
   }
 
   const onChangeFeature = (value: string) => {
-    console.log(value)
-
     const filteredData = inputData[value as keyof typeof inputData]
-    console.log('data:', filteredData)
 
     //chartdata로 push하기 위한 formatting
-    // const newFeatureData = formatObjectToArray(featureName)
     setSelectedFeature({ name: value, data: formatObjectToArray(filteredData) })
   }
 
