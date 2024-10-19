@@ -25,6 +25,7 @@ const columns: TableColumnsType<DataType> = [
 
 interface XAITableProps {
   xaiData?: XAIDataType
+  onChangeFeature?: (name: string) => void
 }
 
 // Update the XAIDataType to allow dynamic keys
@@ -40,7 +41,7 @@ type XAIDataType = {
   }
 }
 
-const XAITable = ({ xaiData }: XAITableProps) => {
+const XAITable = ({ xaiData, onChangeFeature }: XAITableProps) => {
   const [buttonValue, setButtonValue] = useState(0)
   const [tableData, setTableData] = useState([])
   const [description, setDescriptipn] = useState('')
@@ -73,6 +74,7 @@ const XAITable = ({ xaiData }: XAITableProps) => {
   const rowSelection: TableProps<DataType>['rowSelection'] = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
+      onChangeFeature(selectedRows[0].name)
     },
     getCheckboxProps: (record: DataType) => ({
       disabled: record.name === 'Disabled User', // Column configuration not to be checked
@@ -89,7 +91,7 @@ const XAITable = ({ xaiData }: XAITableProps) => {
       <div className="m-3">
         <div className="text-center">
           <div className="m-auto">
-            <span className="mx-3">예측 기간</span>
+            <p className="text-lg font-bold text-center m-2">예측 기간</p>
             <Radio.Group defaultValue="a" buttonStyle="solid" onChange={handleRadioClick} value={buttonValue}>
               <Radio.Button value={0}>1일</Radio.Button>
               <Radio.Button value={1}>7일</Radio.Button>
@@ -102,7 +104,7 @@ const XAITable = ({ xaiData }: XAITableProps) => {
         </div>
         <Divider />
         <div className="mt-3">
-          <p className="text-center m-5">HRC가격 변동 요인</p>
+          <p className="text-lg font-bold text-center m-2">HRC가격 변동 요인</p>
           <Table<DataType>
             size="small"
             rowSelection={{ type: 'radio', ...rowSelection }}
@@ -114,8 +116,8 @@ const XAITable = ({ xaiData }: XAITableProps) => {
 
         <Divider />
         <div>
-          <p className="text-center m-5">예측 설명</p>
-          <div dangerouslySetInnerHTML={{ __html: description }} />
+          <p className="text-lg font-bold text-center m-2">예측 설명</p>
+          <div className="overflow-scroll h-[230px]" dangerouslySetInnerHTML={{ __html: description }} />
         </div>
       </div>
     </>
