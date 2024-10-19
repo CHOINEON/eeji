@@ -65,7 +65,7 @@ const XAITable = ({ xaiData, onChangeFeature }: XAITableProps) => {
       return {
         key: (index + 1).toString(), // 1부터 시작하는 key
         name: key, // Feature + index 값
-        impact: Math.abs(value), // impact는 절대값으로
+        impact: value, // impact는 절대값으로
       }
     })
   }
