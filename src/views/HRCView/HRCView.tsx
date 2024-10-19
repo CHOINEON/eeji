@@ -19,6 +19,16 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Line } from 'react-chartjs-2'
 import XAITable from './XAITable'
 
+type DataType = {
+  time: string
+  value: number
+}
+
+type DatasetType = {
+  name: string
+  data: Array<DataType>
+}
+
 // Define the type for featureData
 type FeatureDataType = {
   [date: string]: {
@@ -42,10 +52,11 @@ ChartJS.register(zoomPlugin, CategoryScale, LinearScale, PointElement, LineEleme
 
 const HRCView = () => {
   //서버에서 가져온 데이터
+  const [inputData, setInputData] = useState([])
   const [featureData, setFeatureData] = useState<FeatureDataType>()
 
   //차트에 렌더링할 데이터
-  const [data, setData] = useState([])
+  const [hrcData, setHrcData] = useState([])
   const [predData, setPredData] = useState([])
 
   const [selectedPoint, setSelectedPoint] = useState<number | null>(null) // 클릭된 포인트를 고정하기 위한 상태
@@ -53,13 +64,20 @@ const HRCView = () => {
 
   const [verticalLine, setVerticalLine] = useState<number>() // 클릭된 점선 위치를 저장
   const [focusedDate, setFocusedDate] = useState<string>('')
+  const [selectedFeature, setSelectedFeature] = useState<DatasetType>({
+    name: '',
+    data: [],
+  })
 
   const [xaiData, setXaiData] = useState({})
   const [loading, setLoading] = useState(true)
 
   const fetchInputData = async () => {
     const result = await ModelApi.getJsonResult(url_input_data)
-    setData(formatObjectToArray(result['HRC:4.75mm']))
+    console.log('result:', result)
+
+    setInputData(result)
+    setHrcData(formatObjectToArray(result['중국 HRC 가격']))
   }
 
   const fetchResultData = async () => {
@@ -68,17 +86,16 @@ const HRCView = () => {
     setFeatureData(result)
   }
 
-  function formatObjectToArray(inputObj: { [key: string]: number }) {
-    return Object.entries(inputObj).map(([key, value]) => ({
-      time: key,
-      value: value,
-    }))
-  }
-
   useEffect(() => {
     fetchInputData()
     fetchResultData()
   }, [])
+
+  useEffect(() => {
+    if (focusedDate) {
+      generateChartData(focusedDate)
+    }
+  }, [focusedDate])
 
   // Memoize the customHoverPlugin to prevent re-creation on every render
   const customHoverPlugin = useMemo(() => {
@@ -131,36 +148,49 @@ const HRCView = () => {
     }
   }, [verticalLine])
 
+  function formatObjectToArray(inputObj: { [key: string]: number }) {
+    return Object.entries(inputObj).map(([key, value]) => ({
+      time: key,
+      value: value,
+    }))
+  }
+
   // Register the plugin
   ChartJS.register(customHoverPlugin)
 
-  useEffect(() => {
-    if (focusedDate) {
-      generateChartData(focusedDate)
-    }
-  }, [focusedDate])
-
   const chartData = {
-    labels: data.map((d) => d.time),
+    labels: hrcData.map((d) => d.time),
     datasets: [
       {
         label: 'HRC Line Data',
-        data: data.map((d) => d.value),
+        data: hrcData.map((d) => d.value),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         fill: true,
         pointRadius: 0, // 포인트 마커를 없앰
         borderWidth: 1.5,
+        yAxisID: 'y',
       },
       {
         label: 'Prediction',
         data: predData.map((d) => d.value),
-        borderColor: 'rgb(255,100,132)',
-        backgroundColor: 'rgba(255,100,132, 0.2)',
+        borderColor: 'rgb(228,1,119)',
+        backgroundColor: 'rgb(228,1,119, 0.2)',
         fill: true,
         pointRadius: 0, // 포인트 마커를 없앰
         spanGaps: true,
         borderWidth: 1.5,
+        yAxisID: 'y',
+      },
+      {
+        label: selectedFeature?.name,
+        data: selectedFeature?.data.map((d) => d.value),
+        borderColor: 'rgb(87,87,87)',
+        fill: false,
+        pointRadius: 0, // 포인트 마커를 없앰
+        spanGaps: true,
+        borderWidth: 1.5,
+        yAxisID: 'y1',
       },
     ],
   }
@@ -214,6 +244,16 @@ const HRCView = () => {
           display: false,
         },
       },
+      y1: {
+        type: 'linear' as const,
+        display: true,
+        position: 'right' as const,
+
+        // grid line settings
+        grid: {
+          drawOnChartArea: false, // only want the grid lines for one axis to show up
+        },
+      },
     },
     onClick: (event: ChartEvent, elements: ActiveElement[], chart: ChartJS) => {
       const activeElements = chart.tooltip.getActiveElements()
@@ -243,7 +283,7 @@ const HRCView = () => {
         })
 
         //기존의 x축과 동기화하기 위해 비교 후 null값 주입
-        const mergedArr = data.map((item) => {
+        const mergedArr = hrcData.map((item) => {
           const found = predData.find((i) => i.time === item.time)
           return found ? found : { time: item.time, value: null }
         })
@@ -253,6 +293,17 @@ const HRCView = () => {
     }
 
     return result
+  }
+
+  const onChangeFeature = (value: string) => {
+    console.log(value)
+
+    const filteredData = inputData[value as keyof typeof inputData]
+    console.log('data:', filteredData)
+
+    //chartdata로 push하기 위한 formatting
+    // const newFeatureData = formatObjectToArray(featureName)
+    setSelectedFeature({ name: value, data: formatObjectToArray(filteredData) })
   }
 
   return (
@@ -273,7 +324,7 @@ const HRCView = () => {
       {/* 오른쪽 영역 (20%) */}
       <div className="w-2/6 bg-gray-100 p-4">
         <Spin spinning={loading} tip="Loading...">
-          <XAITable xaiData={xaiData} />
+          <XAITable xaiData={xaiData} onChangeFeature={onChangeFeature} />
         </Spin>
       </div>
     </div>
