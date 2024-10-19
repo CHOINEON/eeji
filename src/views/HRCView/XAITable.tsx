@@ -23,49 +23,6 @@ const columns: TableColumnsType<DataType> = [
   },
 ]
 
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'Feature1',
-    impact: 32,
-  },
-  {
-    key: '2',
-    name: 'Feature2',
-    impact: 42,
-  },
-  {
-    key: '3',
-    name: 'Feature3',
-    impact: 32,
-  },
-  {
-    key: '4',
-    name: 'Feature4',
-    impact: 99,
-  },
-  {
-    key: '5',
-    name: 'Feature1',
-    impact: 32,
-  },
-  {
-    key: '6',
-    name: 'Feature2',
-    impact: 42,
-  },
-  {
-    key: '7',
-    name: 'Feature3',
-    impact: 32,
-  },
-  {
-    key: '8',
-    name: 'Feature4',
-    impact: 99,
-  },
-]
-
 interface XAITableProps {
   xaiData?: XAIDataType
 }
@@ -84,32 +41,13 @@ type XAIDataType = {
 }
 
 const XAITable = ({ xaiData }: XAITableProps) => {
-  //차트에서 선택된 날짜에 예측기간이 더해진 날짜
-  const [predDate, setPredDate] = useState('')
-
-  //선택 가능한 모든 날짜
-  const [allDates, setAllDates] = useState([])
   const [buttonValue, setButtonValue] = useState(0)
-
   const [tableData, setTableData] = useState([])
   const [description, setDescriptipn] = useState('')
 
   useEffect(() => {
-    setPredDate(allDates[0])
-  }, [allDates, predDate])
-
-  useEffect(() => {
-    // console.log('xai:', xaiData)
-
-    //현재 날짜 기준 담긴 모든 데이터 날짜
-    setAllDates(Object.keys(xaiData).slice(0, 7))
-  }, [xaiData])
-
-  useEffect(() => {
     //예측 날짜 바뀔때마다 테이블과 텍스트 변경함
-    if (xaiData && predDate) {
-      //사용자에게 보여줄 날짜는 predDate(배열 0번째 값이 디폴트)
-      // setPredDate(Object.keys(xaiData).slice(0, 7)[buttonValue])
+    if (xaiData) {
       const pred = Object.keys(xaiData).slice(0, 7)[buttonValue]
 
       //디스크립션
@@ -121,7 +59,7 @@ const XAITable = ({ xaiData }: XAITableProps) => {
   }, [xaiData, buttonValue])
 
   function formatArray(arr: Array<Record<string, number>>): Array<{ key: string; name: string; impact: number }> {
-    return arr.map((item, index) => {
+    return arr?.map((item, index) => {
       const [key, value] = Object.entries(item)[0] // 각 객체의 키와 값을 추출
       return {
         key: (index + 1).toString(), // 1부터 시작하는 key
@@ -148,7 +86,7 @@ const XAITable = ({ xaiData }: XAITableProps) => {
 
   return (
     <>
-      <div>
+      <div className="m-3">
         <div className="text-center">
           <div className="m-auto">
             <span className="mx-3">예측 기간</span>
@@ -162,10 +100,9 @@ const XAITable = ({ xaiData }: XAITableProps) => {
             </Radio.Group>
           </div>
         </div>
-
+        <Divider />
         <div className="mt-3">
-          <h2 className="text-center">HRC가격 변동 요인</h2>
-          <Divider />
+          <p className="text-center m-5">HRC가격 변동 요인</p>
           <Table<DataType>
             size="small"
             rowSelection={{ type: 'radio', ...rowSelection }}
@@ -175,7 +112,11 @@ const XAITable = ({ xaiData }: XAITableProps) => {
           />
         </div>
 
-        <div dangerouslySetInnerHTML={{ __html: description }} />
+        <Divider />
+        <div>
+          <p className="text-center m-5">예측 설명</p>
+          <div dangerouslySetInnerHTML={{ __html: description }} />
+        </div>
       </div>
     </>
   )

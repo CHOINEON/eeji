@@ -1,3 +1,4 @@
+import { Spin } from 'antd'
 import ModelApi from 'apis/ModelApi'
 import {
   CategoryScale,
@@ -54,7 +55,7 @@ const HRCView = () => {
   const [focusedDate, setFocusedDate] = useState<string>('')
 
   const [xaiData, setXaiData] = useState({})
-  // const [textData, setTextData] = useState('')
+  const [loading, setLoading] = useState(true)
 
   const fetchInputData = async () => {
     const result = await ModelApi.getJsonResult(url_input_data)
@@ -63,7 +64,7 @@ const HRCView = () => {
 
   const fetchResultData = async () => {
     const result = await ModelApi.getJsonResult(url_hrc_result)
-    console.log('feature data:', result)
+    setLoading(false)
     setFeatureData(result)
   }
 
@@ -164,11 +165,6 @@ const HRCView = () => {
     ],
   }
 
-  useEffect(() => {
-    // console.log('data:', data)
-    // console.log('data2:', data2)
-  }, [predData])
-
   const chartOptions = {
     responsive: true,
     interaction: {
@@ -233,7 +229,6 @@ const HRCView = () => {
 
   function generateChartData(keyDate: string): Record<string, object> {
     const result: Record<string, any[]> = {}
-
     if (featureData) {
       const selectedData = featureData[keyDate]
       setXaiData(selectedData)
@@ -264,7 +259,7 @@ const HRCView = () => {
     <div className="flex h-screen">
       {/* 왼쪽 영역 (차트 영역, 80%) */}
       <div className="w-4/6 bg-white p-4">
-        <div>
+        <div className="m-3">
           <h2>선택된 날짜 : {focusedDate}</h2>
           <Line ref={chartRef} data={chartData} options={chartOptions} />
           {selectedPoint !== null && (
@@ -277,7 +272,9 @@ const HRCView = () => {
 
       {/* 오른쪽 영역 (20%) */}
       <div className="w-2/6 bg-gray-100 p-4">
-        <XAITable xaiData={xaiData} />
+        <Spin spinning={loading} tip="Loading...">
+          <XAITable xaiData={xaiData} />
+        </Spin>
       </div>
     </div>
   )
