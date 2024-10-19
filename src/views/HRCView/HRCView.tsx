@@ -136,7 +136,6 @@ const HRCView = () => {
   useEffect(() => {
     if (focusedDate) {
       generateChartData(focusedDate)
-      generateTextData(focusedDate)
     }
   }, [focusedDate])
 
@@ -232,30 +231,20 @@ const HRCView = () => {
     },
   }
 
-  function generateTextData(keyDate: string) {
-    // empty value
-    // console.log('key:', keyDate)
-    // console.log(`hrc_result_d 에서 ${keyDate} 값 :`, featureData[keyDate])
-  }
-
   function generateChartData(keyDate: string): Record<string, object> {
     const result: Record<string, any[]> = {}
 
     if (featureData) {
-      const focusedData = featureData[keyDate]
-      console.log('focusedData:', focusedData)
+      const selectedData = featureData[keyDate]
+      setXaiData(selectedData)
+
       // 해당 날짜에 포함된 예측 데이터 날짜 추출
       const innerKeyDate = Object.keys(featureData[keyDate]).slice(0, 7)
-
-      //delta_info_list
-      console.log(Object.keys(featureData[keyDate])[8])
-      //turning_point_list
-      console.log(Object.keys(featureData[keyDate])[9])
 
       if (innerKeyDate) {
         const predData: Array<any> = []
         innerKeyDate.map((x) => {
-          predData.push({ time: x, value: focusedData[x].value })
+          predData.push({ time: x, value: selectedData[x].value })
         })
 
         //기존의 x축과 동기화하기 위해 비교 후 null값 주입
@@ -274,7 +263,7 @@ const HRCView = () => {
   return (
     <div className="flex h-screen">
       {/* 왼쪽 영역 (차트 영역, 80%) */}
-      <div className="w-4/5 bg-white p-4">
+      <div className="w-4/6 bg-white p-4">
         <div>
           <h2>선택된 날짜 : {focusedDate}</h2>
           <Line ref={chartRef} data={chartData} options={chartOptions} />
@@ -287,8 +276,8 @@ const HRCView = () => {
       </div>
 
       {/* 오른쪽 영역 (20%) */}
-      <div className="w-1/5 bg-gray-100 p-4">
-        <XAITable focusedDate={focusedDate} />
+      <div className="w-2/6 bg-gray-100 p-4">
+        <XAITable xaiData={xaiData} />
       </div>
     </div>
   )
