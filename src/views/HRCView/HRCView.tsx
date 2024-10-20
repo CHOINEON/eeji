@@ -74,6 +74,9 @@ const HRCView = () => {
   const chartRef = useRef<Chart<'line'> | null>(null) // Chart.js 참조를 위한 ref
 
   const [selectedX, setSelectedX] = useState<{ pixel: number; value: string }>() //클릭된 점선 위치(pixel)와 실제값(날짜)
+  const [shadeRange, setShadeRange] = useState<{ start: number; end: number }>()
+  const [date, setDate] = useState<{ start: string; end: string }>()
+
   const [selectedFeature, setSelectedFeature] = useState<DatasetType>({
     //우측 패널에서 선택된 변수
     name: '',
@@ -104,8 +107,26 @@ const HRCView = () => {
   useEffect(() => {
     if (selectedX) {
       generateChartData(selectedX.value)
+
+      //shading 효과를 더하기 위한 x범위 찾기
+      getPreviousNElements(selectedX, 50)
     }
   }, [selectedX])
+
+  function getPreviousNElements(endDate: { pixel: number; value: string }, n: number) {
+    //선택된 날짜의 인덱스 번호 찾기
+    const endIndex = hrcData.findIndex((element) => element.time == endDate.value)
+    const chart = chartRef.current
+
+    //인덱스가 50보다 크면, -50번째의 날짜 찾기
+    if (endIndex > n) {
+      const startDate = hrcData[endIndex - 50].time
+      const startPixel = chart.scales.x.getPixelForValue(startDate)
+
+      setDate({ start: startDate, end: selectedX.value })
+      setShadeRange({ start: startPixel, end: endDate.pixel })
+    }
+  }
 
   // Memoize the customHoverPlugin to prevent re-creation on every render
   const customHoverPlugin = useMemo(() => {
@@ -120,13 +141,6 @@ const HRCView = () => {
         const activeElements = chart.tooltip.getActiveElements()
         if (activeElements.length) {
           const { x } = activeElements[0].element
-
-          // Get the actual x-axis value (the label from the x-axis)
-          const index = chart.scales.x.getValueForPixel(x) // This gives you the index in the data.labels array
-          // const actualLabel = chart.data.labels[index] as string // Fetch the actual x-axis label (e.g., '2023-01-01')
-
-          // console.log('Hovered x-axis value (label):', actualLabel) // This prints the correct label (e.g., '2023-01-01')
-          // setFocusedDate(actualLabel)
 
           // Draw dotted hover line
           ctx.save()
@@ -143,8 +157,30 @@ const HRCView = () => {
     }
   }, [selectedX])
 
+  //TODO. 리렌더링으로 state에 저장된 값을 불러오지 못함
+  const rangeColorPlugin = {
+    id: 'rangeColorPlugin',
+    afterDatasetsDraw: (chart: ChartJS) => {
+      const { ctx, scales } = chart
+      const xAxis = scales.x
+      const yAxis = scales.y
+
+      // 음영 처리 범위가 설정된 경우에만 처리
+      if (shadeRange && shadeRange.start !== null && shadeRange.end !== null) {
+        const rangeStart = xAxis.getPixelForValue(shadeRange.start)
+        const rangeEnd = xAxis.getPixelForValue(shadeRange.end)
+
+        // Set the color and draw the background rectangle for the range
+        ctx.save()
+        ctx.fillStyle = 'rgba(255, 99, 132, 0.2)' // Set the background color for the range
+        ctx.fillRect(rangeStart, yAxis.top, rangeEnd - rangeStart, yAxis.bottom - yAxis.top)
+        ctx.restore()
+      }
+    },
+  }
+
   // Register the plugin
-  ChartJS.register(customHoverPlugin)
+  ChartJS.register([customHoverPlugin, rangeColorPlugin])
 
   const chartData = {
     labels: hrcData.map((d) => d.time),
@@ -197,7 +233,7 @@ const HRCView = () => {
       annotation: {
         annotations: selectedX?.value
           ? {
-              horizontalLine: {
+              horizontalLine1: {
                 type: 'line' as const,
                 borderColor: 'black', // 선 색상
                 borderDash: [5, 5], // 점선 설정
@@ -206,10 +242,28 @@ const HRCView = () => {
                 value: selectedX?.value, // Only set if verticalLine exists
                 label: {
                   display: true, // 라벨 표시 활성화
-                  content: selectedX?.value || '', // 라벨 내용
+                  content: '입력 끝', // 라벨 내용
                   position: 'end' as const, // 라벨 위치
-                  backgroundColor: 'rgba(0,0,0,0.5)', // 라벨 배경 색상
-                  color: 'white', // 라벨 텍스트 색상
+                  backgroundColor: 'rgba(0,0,0,0.1)', // 라벨 배경 색상
+                  color: 'black', // 라벨 텍스트 색상
+                  font: {
+                    size: 12, // 라벨 폰트 크기
+                  },
+                },
+              },
+              horizontalLine2: {
+                type: 'line' as const,
+                borderColor: 'rgb(240,135,0)', // 선 색상
+                borderDash: [5, 5], // 점선 설정
+                borderWidth: 1, // 선 굵기
+                scaleID: 'x',
+                value: date?.start, // Only set if verticalLine exists
+                label: {
+                  display: true, // 라벨 표시 활성화
+                  content: '입력 시작', // 라벨 내용
+                  position: 'start' as const, // 라벨 위치
+                  backgroundColor: 'rgba(0,0,0,0.1)', // 라벨 배경 색상
+                  color: 'black', // 라벨 텍스트 색상
                   font: {
                     size: 12, // 라벨 폰트 크기
                   },
@@ -225,7 +279,7 @@ const HRCView = () => {
         display: true,
       },
       tooltip: {
-        enabled: false, // 툴팁을 비활성화하여 숫자 표시를 없앰
+        enabled: true, // 툴팁을 비활성화하여 숫자 표시를 없앰
       },
       zoom: {
         zoom: {
@@ -330,6 +384,7 @@ const HRCView = () => {
       {/* 왼쪽 영역 (차트 영역, 80%) */}
       <div className="w-4/6 bg-white p-4">
         <div className="mt-8">
+          {selectedX?.value && <p className="text-lg font-bold m-2">선택된 날짜 : {selectedX?.value}</p>}
           <Line ref={chartRef} data={chartData} options={chartOptions} plugins={[customHoverPlugin]} />
         </div>
       </div>
