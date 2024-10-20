@@ -111,6 +111,7 @@ const XAIPanel = ({ xaiData, onChangeFeature }: XAITableProps) => {
               <Radio.Button value={3}>60일</Radio.Button>
               <Radio.Button value={4}>90일</Radio.Button>
               <Radio.Button value={5}>120일</Radio.Button>
+              <Radio.Button value={6}>150일</Radio.Button>
             </Radio.Group>
           </div>
         </div>
@@ -131,7 +132,7 @@ const XAIPanel = ({ xaiData, onChangeFeature }: XAITableProps) => {
 
         <div>
           <p className="text-lg font-bold text-center m-2">예측 설명</p>
-          <div className="overflow-scroll h-[230px]" dangerouslySetInnerHTML={{ __html: description }} />
+          <div className="overflow-scroll h-[195px]" dangerouslySetInnerHTML={{ __html: description }} />
         </div>
       </div>
 

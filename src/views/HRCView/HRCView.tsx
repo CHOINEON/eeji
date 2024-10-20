@@ -14,6 +14,7 @@ import {
   Tooltip,
 } from 'chart.js'
 import { ActiveElement } from 'chart.js/dist/plugins/plugin.tooltip'
+import annotationPlugin from 'chartjs-plugin-annotation'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Line } from 'react-chartjs-2'
@@ -48,7 +49,18 @@ const url_input_data =
   'https://storage.googleapis.com/cloudai-test-bucket/google/seongyeop%40ineeji.com/hrc_input_data.json?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=cloudai-data-uploader%40ineeji-cloudai-test.iam.gserviceaccount.com%2F20241017%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20241017T091553Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=4b860d8e3e73bb03884bb0c469e24e3baeb27f08a5e3edd57bd0039573a679fcbc8dc203916562038cb62ccc83402f73d08ec415b448fcd9a56d010d66993a200cd2e825c87f80c0e1f83a5b194cd2cf06127badc3f636f15771cff78206784274eb9f4957813f6d8b642b438a2399cf0024ae2505ee8db51a0e1c6ba32872bd6a5094b12609631c7bcffe8e583e9bb12473505fc75cfe616036e0bdc0479247bf02504840c1d7e954b11e5045ee1f26ba0b041299ed2a671f9a2a676f123cb0dd1088a7dbf0d6376b186da570bb0d53e3c959f335fc28c99fe43a8c513b40c3442eaad4b5047bba1a99d68253a1b7047471d4f38959a919c24179b2701d614a'
 
 // Registering Chart.js components
-ChartJS.register(zoomPlugin, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
+ChartJS.register(
+  zoomPlugin,
+  annotationPlugin,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+)
 
 const HRCView = () => {
   //서버에서 가져온 데이터
@@ -59,12 +71,14 @@ const HRCView = () => {
   const [hrcData, setHrcData] = useState([])
   const [predData, setPredData] = useState([])
 
-  const [selectedPoint, setSelectedPoint] = useState<number | null>(null) // 클릭된 포인트를 고정하기 위한 상태
   const chartRef = useRef<Chart<'line'> | null>(null) // Chart.js 참조를 위한 ref
 
-  const [verticalLine, setVerticalLine] = useState<number>() // 클릭된 점선 위치를 저장
-  const [focusedDate, setFocusedDate] = useState<string>('')
+  const [selectedX, setSelectedX] = useState<{ pixel: number; value: string }>() //클릭된 점선 위치(pixel)와 실제값(날짜)
+  const [shadeRange, setShadeRange] = useState<{ start: number; end: number }>()
+  const [date, setDate] = useState<{ start: string; end: string }>()
+
   const [selectedFeature, setSelectedFeature] = useState<DatasetType>({
+    //우측 패널에서 선택된 변수
     name: '',
     data: [],
   })
@@ -91,10 +105,28 @@ const HRCView = () => {
   }, [])
 
   useEffect(() => {
-    if (focusedDate) {
-      generateChartData(focusedDate)
+    if (selectedX) {
+      generateChartData(selectedX.value)
+
+      //shading 효과를 더하기 위한 x범위 찾기
+      getPreviousNElements(selectedX, 50)
     }
-  }, [focusedDate])
+  }, [selectedX])
+
+  function getPreviousNElements(endDate: { pixel: number; value: string }, n: number) {
+    //선택된 날짜의 인덱스 번호 찾기
+    const endIndex = hrcData.findIndex((element) => element.time == endDate.value)
+    const chart = chartRef.current
+
+    //인덱스가 50보다 크면, -50번째의 날짜 찾기
+    if (endIndex > n) {
+      const startDate = hrcData[endIndex - 50].time
+      const startPixel = chart.scales.x.getPixelForValue(startDate)
+
+      setDate({ start: startDate, end: selectedX.value })
+      setShadeRange({ start: startPixel, end: endDate.pixel })
+    }
+  }
 
   // Memoize the customHoverPlugin to prevent re-creation on every render
   const customHoverPlugin = useMemo(() => {
@@ -110,14 +142,6 @@ const HRCView = () => {
         if (activeElements.length) {
           const { x } = activeElements[0].element
 
-          // Get the actual x-axis value (the label from the x-axis)
-          const xAxisValue = chart.scales.x.getValueForPixel(x)
-          const index = chart.scales.x.getValueForPixel(x) // This gives you the index in the data.labels array
-          const actualLabel = chart.data.labels[index] as string // Fetch the actual x-axis label (e.g., '2023-01-01')
-
-          // console.log('Hovered x-axis value (label):', actualLabel) // This prints the correct label (e.g., '2023-01-01')
-          setFocusedDate(actualLabel)
-
           // Draw dotted hover line
           ctx.save()
           ctx.beginPath()
@@ -129,33 +153,34 @@ const HRCView = () => {
           ctx.stroke()
           ctx.restore()
         }
-
-        // Draw fixed line at clicked position (if implemented)
-        if (verticalLine !== null) {
-          const fixedX = chart.scales.x.getPixelForValue(verticalLine)
-          ctx.save()
-          ctx.beginPath()
-          ctx.moveTo(fixedX, topY)
-          ctx.lineTo(fixedX, bottomY)
-          ctx.lineWidth = 2
-          ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)'
-          ctx.setLineDash([])
-          ctx.stroke()
-          ctx.restore()
-        }
       },
     }
-  }, [verticalLine])
+  }, [selectedX])
 
-  function formatObjectToArray(inputObj: { [key: string]: number }) {
-    return Object.entries(inputObj).map(([key, value]) => ({
-      time: key,
-      value: value,
-    }))
+  //TODO. 리렌더링으로 state에 저장된 값을 불러오지 못함
+  const rangeColorPlugin = {
+    id: 'rangeColorPlugin',
+    afterDatasetsDraw: (chart: ChartJS) => {
+      const { ctx, scales } = chart
+      const xAxis = scales.x
+      const yAxis = scales.y
+
+      // 음영 처리 범위가 설정된 경우에만 처리
+      if (shadeRange && shadeRange.start !== null && shadeRange.end !== null) {
+        const rangeStart = xAxis.getPixelForValue(shadeRange.start)
+        const rangeEnd = xAxis.getPixelForValue(shadeRange.end)
+
+        // Set the color and draw the background rectangle for the range
+        ctx.save()
+        ctx.fillStyle = 'rgba(255, 99, 132, 0.2)' // Set the background color for the range
+        ctx.fillRect(rangeStart, yAxis.top, rangeEnd - rangeStart, yAxis.bottom - yAxis.top)
+        ctx.restore()
+      }
+    },
   }
 
   // Register the plugin
-  ChartJS.register(customHoverPlugin)
+  ChartJS.register([customHoverPlugin, rangeColorPlugin])
 
   const chartData = {
     labels: hrcData.map((d) => d.time),
@@ -170,27 +195,35 @@ const HRCView = () => {
         borderWidth: 1.5,
         yAxisID: 'y',
       },
-      {
-        label: 'HRC 예측 가격',
-        data: predData.map((d) => d.value),
-        borderColor: 'rgb(228,1,119)',
-        backgroundColor: 'rgb(228,1,119, 0.2)',
-        fill: true,
-        pointRadius: 0, // 포인트 마커를 없앰
-        spanGaps: true,
-        borderWidth: 1.5,
-        yAxisID: 'y',
-      },
-      {
-        label: selectedFeature?.name,
-        data: selectedFeature?.data.map((d) => d.value),
-        borderColor: 'rgb(87,87,87)',
-        fill: false,
-        pointRadius: 0, // 포인트 마커를 없앰
-        spanGaps: true,
-        borderWidth: 1.5,
-        yAxisID: 'y1',
-      },
+      ...(predData && predData.length > 0
+        ? [
+            {
+              label: 'HRC 예측 가격',
+              data: predData.map((d) => d.value),
+              borderColor: 'rgb(228,1,119)',
+              backgroundColor: 'rgb(228,1,119, 0.2)',
+              fill: true,
+              pointRadius: 0, // 포인트 마커를 없앰
+              spanGaps: true,
+              borderWidth: 1.5,
+              yAxisID: 'y',
+            },
+          ]
+        : []),
+      ...(selectedFeature.name !== ''
+        ? [
+            {
+              label: selectedFeature?.name,
+              data: selectedFeature?.data.map((d) => d.value),
+              borderColor: 'rgb(87,87,87)',
+              fill: false,
+              pointRadius: 0, // 포인트 마커를 없앰
+              spanGaps: true,
+              borderWidth: 1.5,
+              yAxisID: 'y1',
+            },
+          ]
+        : []),
     ],
   }
 
@@ -201,6 +234,48 @@ const HRCView = () => {
       intersect: false,
     },
     plugins: {
+      annotation: {
+        annotations: selectedX?.value
+          ? {
+              horizontalLine1: {
+                type: 'line' as const,
+                borderColor: 'black', // 선 색상
+                borderDash: [5, 5], // 점선 설정
+                borderWidth: 1, // 선 굵기
+                scaleID: 'x',
+                value: selectedX?.value, // Only set if verticalLine exists
+                label: {
+                  display: true, // 라벨 표시 활성화
+                  content: '입력 끝', // 라벨 내용
+                  position: 'end' as const, // 라벨 위치
+                  backgroundColor: 'rgba(0,0,0,0.1)', // 라벨 배경 색상
+                  color: 'black', // 라벨 텍스트 색상
+                  font: {
+                    size: 12, // 라벨 폰트 크기
+                  },
+                },
+              },
+              horizontalLine2: {
+                type: 'line' as const,
+                borderColor: 'rgb(240,135,0)', // 선 색상
+                borderDash: [5, 5], // 점선 설정
+                borderWidth: 1, // 선 굵기
+                scaleID: 'x',
+                value: date?.start, // Only set if verticalLine exists
+                label: {
+                  display: true, // 라벨 표시 활성화
+                  content: '입력 시작', // 라벨 내용
+                  position: 'start' as const, // 라벨 위치
+                  backgroundColor: 'rgba(0,0,0,0.1)', // 라벨 배경 색상
+                  color: 'black', // 라벨 텍스트 색상
+                  font: {
+                    size: 12, // 라벨 폰트 크기
+                  },
+                },
+              },
+            }
+          : {}, // Empty annotations object if no verticalLine
+      },
       datalabels: {
         display: false,
       },
@@ -208,16 +283,13 @@ const HRCView = () => {
         display: true,
       },
       tooltip: {
-        enabled: false, // 툴팁을 비활성화하여 숫자 표시를 없앰
+        enabled: true, // 툴팁을 비활성화하여 숫자 표시를 없앰
       },
       zoom: {
         zoom: {
           wheel: {
             enabled: true,
           },
-          // pinch: {
-          //   enabled: true,
-          // },
           mode: 'xy' as const,
         },
       },
@@ -247,7 +319,6 @@ const HRCView = () => {
         type: 'linear' as const,
         display: true,
         position: 'right' as const,
-
         // grid line settings
         grid: {
           drawOnChartArea: false, // only want the grid lines for one axis to show up
@@ -259,11 +330,20 @@ const HRCView = () => {
 
       if (activeElements.length) {
         const activePoint = activeElements[0]
-        const xAxisValue = chart.scales.x.getValueForPixel(activePoint.element.x) // Get the actual x-axis value
 
-        setVerticalLine(xAxisValue) // Store the x-axis value
+        const xValueIndex = activePoint.index // This gives the index of the clicked element
+        const xAxisValue = chart.data.labels?.[xValueIndex] // Get the actual x-axis label value
+
+        setSelectedX({ pixel: xValueIndex, value: xAxisValue as string }) // Store the x-axis value
       }
     },
+  }
+
+  function formatObjectToArray(inputObj: { [key: string]: number }) {
+    return Object.entries(inputObj).map(([key, value]) => ({
+      time: key,
+      value: value,
+    }))
   }
 
   function generateChartData(keyDate: string): Record<string, object> {
@@ -307,14 +387,11 @@ const HRCView = () => {
     <div className="flex h-screen">
       {/* 왼쪽 영역 (차트 영역, 80%) */}
       <div className="w-4/6 bg-white p-4">
-        <div className="m-3">
-          <h2>선택된 날짜 : {focusedDate}</h2>
-          <Line ref={chartRef} data={chartData} options={chartOptions} plugins={[customHoverPlugin]} />
-          {selectedPoint !== null && (
-            <div style={{ marginTop: '10px', color: 'red' }}>
-              Selected Value: {chartData.datasets[0].data[selectedPoint]}
-            </div>
-          )}
+        <div className="mt-8">
+          <p className="text-lg font-bold m-5">선택된 날짜 : {selectedX?.value}</p>
+          <div className="m-6">
+            <Line ref={chartRef} data={chartData} options={chartOptions} plugins={[customHoverPlugin]} />
+          </div>
         </div>
       </div>
 
