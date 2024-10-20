@@ -111,6 +111,7 @@ const XAIPanel = ({ xaiData, onChangeFeature }: XAITableProps) => {
               <Radio.Button value={3}>60일</Radio.Button>
               <Radio.Button value={4}>90일</Radio.Button>
               <Radio.Button value={5}>120일</Radio.Button>
+              <Radio.Button value={6}>150일</Radio.Button>
             </Radio.Group>
           </div>
         </div>
