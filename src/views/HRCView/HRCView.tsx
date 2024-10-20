@@ -17,7 +17,7 @@ import { ActiveElement } from 'chart.js/dist/plugins/plugin.tooltip'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Line } from 'react-chartjs-2'
-import XAITable from './XAITable'
+import XAIPanel from './XAIPanel'
 
 type DataType = {
   time: string
@@ -161,7 +161,7 @@ const HRCView = () => {
     labels: hrcData.map((d) => d.time),
     datasets: [
       {
-        label: 'HRC Line Data',
+        label: 'HRC 가격',
         data: hrcData.map((d) => d.value),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -171,7 +171,7 @@ const HRCView = () => {
         yAxisID: 'y',
       },
       {
-        label: 'Prediction',
+        label: 'HRC 예측 가격',
         data: predData.map((d) => d.value),
         borderColor: 'rgb(228,1,119)',
         backgroundColor: 'rgb(228,1,119, 0.2)',
@@ -272,22 +272,24 @@ const HRCView = () => {
       const selectedData = featureData[keyDate]
       setXaiData(selectedData)
 
-      // 해당 날짜에 포함된 예측 데이터 날짜 추출
-      const innerKeyDate = Object.keys(featureData[keyDate]).slice(0, 7)
+      if (featureData[keyDate]) {
+        // 해당 날짜에 포함된 예측 데이터 날짜 추출
+        const innerKeyDate = Object.keys(featureData[keyDate]).slice(0, 7)
 
-      if (innerKeyDate) {
-        const predData: Array<any> = []
-        innerKeyDate.map((x) => {
-          predData.push({ time: x, value: selectedData[x].value })
-        })
+        if (innerKeyDate) {
+          const predData: Array<any> = []
+          innerKeyDate.map((x) => {
+            predData.push({ time: x, value: selectedData[x].value })
+          })
 
-        //기존의 x축과 동기화하기 위해 비교 후 null값 주입
-        const mergedArr = hrcData.map((item) => {
-          const found = predData.find((i) => i.time === item.time)
-          return found ? found : { time: item.time, value: null }
-        })
+          //기존의 x축과 동기화하기 위해 비교 후 null값 주입
+          const mergedArr = hrcData.map((item) => {
+            const found = predData.find((i) => i.time === item.time)
+            return found ? found : { time: item.time, value: null }
+          })
 
-        setPredData(mergedArr)
+          setPredData(mergedArr)
+        }
       }
     }
 
@@ -307,7 +309,7 @@ const HRCView = () => {
       <div className="w-4/6 bg-white p-4">
         <div className="m-3">
           <h2>선택된 날짜 : {focusedDate}</h2>
-          <Line ref={chartRef} data={chartData} options={chartOptions} />
+          <Line ref={chartRef} data={chartData} options={chartOptions} plugins={[customHoverPlugin]} />
           {selectedPoint !== null && (
             <div style={{ marginTop: '10px', color: 'red' }}>
               Selected Value: {chartData.datasets[0].data[selectedPoint]}
@@ -319,7 +321,7 @@ const HRCView = () => {
       {/* 오른쪽 영역 (20%) */}
       <div className="w-2/6 bg-gray-100 p-4">
         <Spin spinning={loading} tip="Loading...">
-          <XAITable xaiData={xaiData} onChangeFeature={onChangeFeature} />
+          <XAIPanel xaiData={xaiData} onChangeFeature={onChangeFeature} />
         </Spin>
       </div>
     </div>

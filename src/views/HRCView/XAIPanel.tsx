@@ -1,9 +1,11 @@
-import { Radio, Table, TableColumnsType } from 'antd'
+import { LineChartOutlined } from '@ant-design/icons'
+import { Button, Modal, Radio, Table, TableColumnsType } from 'antd'
 
 import { TableProps } from 'antd'
 
 import { Divider } from 'antd'
 import { useEffect, useState } from 'react'
+import WaterfallChart from './WaterfallChart'
 
 interface DataType {
   key: React.Key
@@ -23,28 +25,32 @@ const columns: TableColumnsType<DataType> = [
   },
 ]
 
-interface XAITableProps {
+export interface XAITableProps {
   xaiData?: XAIDataType
   onChangeFeature?: (name: string) => void
 }
 
 // Update the XAIDataType to allow dynamic keys
-type XAIDataType = {
-  [key: string]: {
-    aggregated_xai: Array<Record<string, number>>
-    base_date: string
-    base_value: number
-    time_delta: number
-    value_delta: number
-    value: number
-    xai_description: string
-  }
+export type XAIDataType = {
+  [key: string]: InnerXAIDataType
 }
 
-const XAITable = ({ xaiData, onChangeFeature }: XAITableProps) => {
+export type InnerXAIDataType = {
+  aggregated_xai: Array<Record<string, number>>
+  base_date: string
+  base_value: number
+  time_delta: number
+  value_delta: number
+  value: number
+  xai_description: string
+}
+
+const XAIPanel = ({ xaiData, onChangeFeature }: XAITableProps) => {
+  const [viewChart, setViewChart] = useState(false)
   const [buttonValue, setButtonValue] = useState(0)
   const [tableData, setTableData] = useState([])
   const [description, setDescriptipn] = useState('')
+  const [waterfallData, setWaterfallData] = useState<InnerXAIDataType>()
 
   useEffect(() => {
     //예측 날짜 바뀔때마다 테이블과 텍스트 변경함
@@ -56,6 +62,9 @@ const XAITable = ({ xaiData, onChangeFeature }: XAITableProps) => {
 
       //테이블
       setTableData(formatArray(xaiData[pred]?.aggregated_xai))
+
+      //Waterfall chart
+      setWaterfallData(xaiData[pred])
     }
   }, [xaiData, buttonValue])
 
@@ -65,7 +74,7 @@ const XAITable = ({ xaiData, onChangeFeature }: XAITableProps) => {
       return {
         key: (index + 1).toString(), // 1부터 시작하는 key
         name: key, // Feature + index 값
-        impact: Math.abs(value), // impact는 절대값으로
+        impact: value, // impact는 절대값으로
       }
     })
   }
@@ -73,7 +82,6 @@ const XAITable = ({ xaiData, onChangeFeature }: XAITableProps) => {
   // rowSelection object indicates the need for row selection
   const rowSelection: TableProps<DataType>['rowSelection'] = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
       onChangeFeature(selectedRows[0].name)
     },
     getCheckboxProps: (record: DataType) => ({
@@ -89,6 +97,10 @@ const XAITable = ({ xaiData, onChangeFeature }: XAITableProps) => {
   return (
     <>
       <div className="m-3">
+        <div className="text-right">
+          <Button type="link" onClick={() => setViewChart(!viewChart)} icon={<LineChartOutlined />}></Button>
+        </div>
+
         <div className="text-center">
           <div className="m-auto">
             <p className="text-lg font-bold text-center m-2">예측 기간</p>
@@ -103,6 +115,7 @@ const XAITable = ({ xaiData, onChangeFeature }: XAITableProps) => {
           </div>
         </div>
         <Divider />
+
         <div className="mt-3">
           <p className="text-lg font-bold text-center m-2">HRC가격 변동 요인</p>
           <Table<DataType>
@@ -115,13 +128,25 @@ const XAITable = ({ xaiData, onChangeFeature }: XAITableProps) => {
         </div>
 
         <Divider />
+
         <div>
           <p className="text-lg font-bold text-center m-2">예측 설명</p>
           <div className="overflow-scroll h-[230px]" dangerouslySetInnerHTML={{ __html: description }} />
         </div>
       </div>
+
+      <Modal
+        width={1000}
+        open={viewChart}
+        title=""
+        // onOk={handleOk}
+        onCancel={() => setViewChart(false)}
+        footer={(_) => <></>}
+      >
+        <WaterfallChart data={waterfallData} />
+      </Modal>
     </>
   )
 }
 
-export default XAITable
+export default XAIPanel
