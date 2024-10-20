@@ -229,12 +229,12 @@ const HRCView = () => {
                 const value = context.dataset.data[index]
 
                 if (deltaDataList?.includes(index)) {
-                  return 'black' // deltaDataList 색상 -- 값 변화 큰 지점
+                  return 'red' // deltaDataList 색상 -- 값 변화 큰 지점
                 }
 
                 // turningPointList에 포함된 경우
                 if (turningPointList?.includes(index)) {
-                  return 'red' // turningPointList 색상 -- 변곡점
+                  return 'blue' // turningPointList 색상 -- 변곡점
                 }
 
                 // 둘 다 아닌 경우 기본 색상
@@ -246,12 +246,12 @@ const HRCView = () => {
                 const value = context.dataset.data[index]
 
                 if (deltaDataList?.includes(index)) {
-                  return 'black' // deltaDataList 색상 -- 값 변화 큰 지점
+                  return 'red' // deltaDataList 색상 -- 값 변화 큰 지점
                 }
 
                 // turningPointList에 포함된 경우
                 if (turningPointList?.includes(index)) {
-                  return 'red' // turningPointList 색상 -- 변곡점
+                  return 'blue' // turningPointList 색상 -- 변곡점
                 }
 
                 // 둘 다 아닌 경우 기본 색상
