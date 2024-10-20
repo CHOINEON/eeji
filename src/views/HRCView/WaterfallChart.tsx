@@ -195,8 +195,8 @@ const WaterfallChart = ({ data }: XAIDataType) => {
       },
       y: {
         stacked: true,
-        min: yAxis?.min - 30 || 0, // y축 시작점을 baseValue로 설정
-        max: yAxis?.max + 30 || 0, // y축 시작점을 baseValue로 설정
+        min: yAxis?.min || 0, // y축 시작점을 baseValue로 설정
+        max: yAxis?.max || 0, // y축 시작점을 baseValue로 설정
       },
     },
   }

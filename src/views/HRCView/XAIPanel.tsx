@@ -27,6 +27,8 @@ const columns: TableColumnsType<DataType> = [
 
 export interface XAITableProps {
   xaiData?: XAIDataType
+  dramatic_delta_date_list?: Array<string>
+  turning_points_date_list?: Array<string>
   onChangeFeature?: (name: string) => void
 }
 
@@ -45,20 +47,34 @@ export type InnerXAIDataType = {
   xai_description: string
 }
 
+type DescriptionDataType = {
+  pred: string
+  deltaInfo: string
+  turningPoints: Array<unknown>
+}
+
 const XAIPanel = ({ xaiData, onChangeFeature }: XAITableProps) => {
   const [viewChart, setViewChart] = useState(false)
   const [buttonValue, setButtonValue] = useState(0)
+  const [descType, setDescType] = useState('pred')
+
   const [tableData, setTableData] = useState([])
-  const [description, setDescriptipn] = useState('')
+  const [description, setDescriptipn] = useState<{ pred: string }>()
+  const [description2, setDescription2] = useState<{ deltaInfo: string; turningPoints: Array<unknown> }>()
+
   const [waterfallData, setWaterfallData] = useState<InnerXAIDataType>()
 
   useEffect(() => {
     //예측 날짜 바뀔때마다 테이블과 텍스트 변경함
     if (xaiData) {
+      // console.log('xaiData:', xaiData)
       const pred = Object.keys(xaiData).slice(0, 7)[buttonValue]
 
       //디스크립션
-      setDescriptipn(xaiData[pred]?.xai_description) // Now this will work without error
+      setDescriptipn({
+        ...description,
+        pred: xaiData[pred]?.xai_description,
+      }) // Now this will work without error
 
       //테이블
       setTableData(formatArray(xaiData[pred]?.aggregated_xai))
@@ -90,21 +106,21 @@ const XAIPanel = ({ xaiData, onChangeFeature }: XAITableProps) => {
     }),
   }
 
-  const handleRadioClick = (args: any) => {
+  const handlePeriodClick = (args: any) => {
     setButtonValue(args.target.value)
+  }
+
+  const handleTypeClick = (args: any) => {
+    setDescType(args.target.value)
   }
 
   return (
     <>
       <div className="m-3">
-        <div className="text-right">
-          <Button type="link" onClick={() => setViewChart(!viewChart)} icon={<LineChartOutlined />}></Button>
-        </div>
-
         <div className="text-center">
           <div className="m-auto">
             <p className="text-lg font-bold text-center m-2">예측 기간</p>
-            <Radio.Group defaultValue="a" buttonStyle="solid" onChange={handleRadioClick} value={buttonValue}>
+            <Radio.Group defaultValue="a" buttonStyle="solid" onChange={handlePeriodClick} value={buttonValue}>
               <Radio.Button value={0}>1일</Radio.Button>
               <Radio.Button value={1}>7일</Radio.Button>
               <Radio.Button value={2}>30일</Radio.Button>
@@ -116,9 +132,11 @@ const XAIPanel = ({ xaiData, onChangeFeature }: XAITableProps) => {
           </div>
         </div>
         <Divider />
-
         <div className="mt-3">
           <p className="text-lg font-bold text-center m-2">HRC가격 변동 요인</p>
+          <div className="text-right">
+            <Button type="link" onClick={() => setViewChart(!viewChart)} icon={<LineChartOutlined />}></Button>
+          </div>
           <Table<DataType>
             size="small"
             rowSelection={{ type: 'radio', ...rowSelection }}
@@ -127,12 +145,14 @@ const XAIPanel = ({ xaiData, onChangeFeature }: XAITableProps) => {
             pagination={{ pageSize: 5, pageSizeOptions: [10], position: ['bottomCenter'], showSizeChanger: false }}
           />
         </div>
-
         <Divider />
-
+        {/* <Radio.Group onChange={handleTypeClick} value={descType}>
+          <Radio value={'pred'}>예측 설명</Radio>
+          <Radio value={'point'}>변곡점 설명</Radio>
+        </Radio.Group> */}
         <div>
           <p className="text-lg font-bold text-center m-2">예측 설명</p>
-          <div className="overflow-scroll h-[195px]" dangerouslySetInnerHTML={{ __html: description }} />
+          <div className="overflow-scroll h-[195px]" dangerouslySetInnerHTML={{ __html: description?.pred }} />
         </div>
       </div>
 
