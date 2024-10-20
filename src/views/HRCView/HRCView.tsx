@@ -195,17 +195,21 @@ const HRCView = () => {
         borderWidth: 1.5,
         yAxisID: 'y',
       },
-      {
-        label: 'HRC 예측 가격',
-        data: predData.map((d) => d.value),
-        borderColor: 'rgb(228,1,119)',
-        backgroundColor: 'rgb(228,1,119, 0.2)',
-        fill: true,
-        pointRadius: 0, // 포인트 마커를 없앰
-        spanGaps: true,
-        borderWidth: 1.5,
-        yAxisID: 'y',
-      },
+      ...(predData && predData.length > 0
+        ? [
+            {
+              label: 'HRC 예측 가격',
+              data: predData.map((d) => d.value),
+              borderColor: 'rgb(228,1,119)',
+              backgroundColor: 'rgb(228,1,119, 0.2)',
+              fill: true,
+              pointRadius: 0, // 포인트 마커를 없앰
+              spanGaps: true,
+              borderWidth: 1.5,
+              yAxisID: 'y',
+            },
+          ]
+        : []),
       ...(selectedFeature.name !== ''
         ? [
             {
@@ -384,8 +388,10 @@ const HRCView = () => {
       {/* 왼쪽 영역 (차트 영역, 80%) */}
       <div className="w-4/6 bg-white p-4">
         <div className="mt-8">
-          {selectedX?.value && <p className="text-lg font-bold m-2">선택된 날짜 : {selectedX?.value}</p>}
-          <Line ref={chartRef} data={chartData} options={chartOptions} plugins={[customHoverPlugin]} />
+          <p className="text-lg font-bold m-5">선택된 날짜 : {selectedX?.value}</p>
+          <div className="m-6">
+            <Line ref={chartRef} data={chartData} options={chartOptions} plugins={[customHoverPlugin]} />
+          </div>
         </div>
       </div>
 

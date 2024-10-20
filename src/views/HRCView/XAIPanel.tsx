@@ -131,7 +131,7 @@ const XAIPanel = ({ xaiData, onChangeFeature }: XAITableProps) => {
 
         <div>
           <p className="text-lg font-bold text-center m-2">예측 설명</p>
-          <div className="overflow-scroll h-[230px]" dangerouslySetInnerHTML={{ __html: description }} />
+          <div className="overflow-scroll h-[195px]" dangerouslySetInnerHTML={{ __html: description }} />
         </div>
       </div>
 
