@@ -10,6 +10,7 @@ import {
   LinearScale,
   LineElement,
   PointElement,
+  ScriptableContext,
   Title,
   Tooltip,
 } from 'chart.js'
@@ -65,7 +66,7 @@ ChartJS.register(
 const HRCView = () => {
   //서버에서 가져온 데이터
   const [inputData, setInputData] = useState([])
-  const [featureData, setFeatureData] = useState<FeatureDataType>()
+  const [featureData, setFeatureData] = useState<any>() ///TODO: 서버에서 날짜 데이터와 key를 분리해달라고 요청하기
 
   //차트에 렌더링할 데이터
   const [hrcData, setHrcData] = useState([])
@@ -76,6 +77,9 @@ const HRCView = () => {
   const [selectedX, setSelectedX] = useState<{ pixel: number; value: string }>() //클릭된 점선 위치(pixel)와 실제값(날짜)
   const [shadeRange, setShadeRange] = useState<{ start: number; end: number }>()
   const [date, setDate] = useState<{ start: string; end: string }>()
+
+  const [deltaDataList, setDeltaDataList] = useState<Array<number>>()
+  const [turningPointList, setTurningPointList] = useState<Array<number>>()
 
   const [selectedFeature, setSelectedFeature] = useState<DatasetType>({
     //우측 패널에서 선택된 변수
@@ -88,7 +92,6 @@ const HRCView = () => {
 
   const fetchInputData = async () => {
     const result = await ModelApi.getJsonResult(url_input_data)
-
     setInputData(result)
     setHrcData(formatObjectToArray(result['중국 HRC 가격']))
   }
@@ -110,8 +113,29 @@ const HRCView = () => {
 
       //shading 효과를 더하기 위한 x범위 찾기
       getPreviousNElements(selectedX, 50)
+
+      if (featureData) {
+        //강조할 point 찾기
+        const DramaticDates = featureData[selectedX.value]?.dramatic_delta_date_list
+        const TurningPointDates = featureData[selectedX.value]?.turning_points_date_list
+
+        const indices1 = findIndicesByDate(hrcData, DramaticDates)
+        const indices2 = findIndicesByDate(hrcData, TurningPointDates)
+        console.log('indices1:', indices1)
+        console.log('indices2:', indices2)
+
+        setDeltaDataList(findIndicesByDate(hrcData, DramaticDates))
+        setTurningPointList(findIndicesByDate(hrcData, TurningPointDates))
+      }
     }
   }, [selectedX])
+
+  function findIndicesByDate(data: Array<DataType>, dates: Array<string>) {
+    // data: 검색할 데이터 배열 (객체 배열)
+    // dates: 찾고자 하는 날짜 배열
+
+    return dates.map((date) => data.findIndex((item) => item.time === date))
+  }
 
   function getPreviousNElements(endDate: { pixel: number; value: string }, n: number) {
     //선택된 날짜의 인덱스 번호 찾기
@@ -190,8 +214,8 @@ const HRCView = () => {
         data: hrcData.map((d) => d.value),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        radius: 0,
         fill: true,
-        pointRadius: 0, // 포인트 마커를 없앰
         borderWidth: 1.5,
         yAxisID: 'y',
       },
@@ -200,10 +224,55 @@ const HRCView = () => {
             {
               label: 'HRC 예측 가격',
               data: predData.map((d) => d.value),
-              borderColor: 'rgb(228,1,119)',
+              borderColor: function (context: ScriptableContext<'line'>) {
+                const index = context.dataIndex
+                const value = context.dataset.data[index]
+
+                if (deltaDataList?.includes(index)) {
+                  return 'black' // deltaDataList 색상 -- 값 변화 큰 지점
+                }
+
+                // turningPointList에 포함된 경우
+                if (turningPointList?.includes(index)) {
+                  return 'red' // turningPointList 색상 -- 변곡점
+                }
+
+                // 둘 다 아닌 경우 기본 색상
+                return 'rgb(228,1,119)'
+              },
               backgroundColor: 'rgb(228,1,119, 0.2)',
+              pointBackgroundColor: function (context: ScriptableContext<'line'>) {
+                const index = context.dataIndex
+                const value = context.dataset.data[index]
+
+                if (deltaDataList?.includes(index)) {
+                  return 'black' // deltaDataList 색상 -- 값 변화 큰 지점
+                }
+
+                // turningPointList에 포함된 경우
+                if (turningPointList?.includes(index)) {
+                  return 'red' // turningPointList 색상 -- 변곡점
+                }
+
+                // 둘 다 아닌 경우 기본 색상
+                return 'rgb(228,1,119)'
+              },
+              pointRadius: function (context: ScriptableContext<'line'>) {
+                const index = context.dataIndex
+                const value = context.dataset.data[index]
+
+                if (deltaDataList?.includes(index)) {
+                  return 4 // deltaDataList 색상
+                }
+
+                // turningPointList에 포함된 경우
+                if (turningPointList?.includes(index)) {
+                  return 4 // turningPointList 색상
+                }
+
+                return 0
+              },
               fill: true,
-              pointRadius: 0, // 포인트 마커를 없앰
               spanGaps: true,
               borderWidth: 1.5,
               yAxisID: 'y',
@@ -358,13 +427,13 @@ const HRCView = () => {
 
         if (innerKeyDate) {
           const predData: Array<any> = []
-          innerKeyDate.map((x) => {
+          innerKeyDate?.map((x) => {
             predData.push({ time: x, value: selectedData[x].value })
           })
 
           //기존의 x축과 동기화하기 위해 비교 후 null값 주입
           const mergedArr = hrcData.map((item) => {
-            const found = predData.find((i) => i.time === item.time)
+            const found = predData?.find((i) => i.time === item.time)
             return found ? found : { time: item.time, value: null }
           })
 
