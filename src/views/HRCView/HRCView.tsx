@@ -290,7 +290,7 @@ const HRCView = () => {
           wheel: {
             enabled: true,
           },
-          mode: 'xy' as const,
+          mode: 'x' as const,
         },
       },
     },
