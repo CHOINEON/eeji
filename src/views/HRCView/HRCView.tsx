@@ -73,9 +73,9 @@ const HRCView = () => {
 
   const chartRef = useRef<Chart<'line'> | null>(null) // Chart.js 참조를 위한 ref
 
-  const [verticalLine, setVerticalLine] = useState<string>('') // 클릭된 점선 위치를 저장
-  const [focusedDate, setFocusedDate] = useState<string>('')
+  const [selectedX, setSelectedX] = useState<{ pixel: number; value: string }>() //클릭된 점선 위치(pixel)와 실제값(날짜)
   const [selectedFeature, setSelectedFeature] = useState<DatasetType>({
+    //우측 패널에서 선택된 변수
     name: '',
     data: [],
   })
@@ -102,10 +102,10 @@ const HRCView = () => {
   }, [])
 
   useEffect(() => {
-    if (verticalLine) {
-      generateChartData(focusedDate)
+    if (selectedX) {
+      generateChartData(selectedX.value)
     }
-  }, [verticalLine])
+  }, [selectedX])
 
   // Memoize the customHoverPlugin to prevent re-creation on every render
   const customHoverPlugin = useMemo(() => {
@@ -123,10 +123,10 @@ const HRCView = () => {
 
           // Get the actual x-axis value (the label from the x-axis)
           const index = chart.scales.x.getValueForPixel(x) // This gives you the index in the data.labels array
-          const actualLabel = chart.data.labels[index] as string // Fetch the actual x-axis label (e.g., '2023-01-01')
+          // const actualLabel = chart.data.labels[index] as string // Fetch the actual x-axis label (e.g., '2023-01-01')
 
           // console.log('Hovered x-axis value (label):', actualLabel) // This prints the correct label (e.g., '2023-01-01')
-          setFocusedDate(actualLabel)
+          // setFocusedDate(actualLabel)
 
           // Draw dotted hover line
           ctx.save()
@@ -141,14 +141,7 @@ const HRCView = () => {
         }
       },
     }
-  }, [verticalLine])
-
-  function formatObjectToArray(inputObj: { [key: string]: number }) {
-    return Object.entries(inputObj).map(([key, value]) => ({
-      time: key,
-      value: value,
-    }))
-  }
+  }, [selectedX])
 
   // Register the plugin
   ChartJS.register(customHoverPlugin)
@@ -202,7 +195,7 @@ const HRCView = () => {
     },
     plugins: {
       annotation: {
-        annotations: verticalLine
+        annotations: selectedX?.value
           ? {
               horizontalLine: {
                 type: 'line' as const,
@@ -210,10 +203,10 @@ const HRCView = () => {
                 borderDash: [5, 5], // 점선 설정
                 borderWidth: 1, // 선 굵기
                 scaleID: 'x',
-                value: verticalLine, // Only set if verticalLine exists
+                value: selectedX?.value, // Only set if verticalLine exists
                 label: {
                   display: true, // 라벨 표시 활성화
-                  content: focusedDate || '', // 라벨 내용
+                  content: selectedX?.value || '', // 라벨 내용
                   position: 'end' as const, // 라벨 위치
                   backgroundColor: 'rgba(0,0,0,0.5)', // 라벨 배경 색상
                   color: 'white', // 라벨 텍스트 색상
@@ -283,9 +276,16 @@ const HRCView = () => {
         const xValueIndex = activePoint.index // This gives the index of the clicked element
         const xAxisValue = chart.data.labels?.[xValueIndex] // Get the actual x-axis label value
 
-        setVerticalLine(xAxisValue as string) // Store the x-axis value
+        setSelectedX({ pixel: xValueIndex, value: xAxisValue as string }) // Store the x-axis value
       }
     },
+  }
+
+  function formatObjectToArray(inputObj: { [key: string]: number }) {
+    return Object.entries(inputObj).map(([key, value]) => ({
+      time: key,
+      value: value,
+    }))
   }
 
   function generateChartData(keyDate: string): Record<string, object> {
