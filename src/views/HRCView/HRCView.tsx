@@ -207,12 +207,10 @@ const HRCView = () => {
     },
   }
 
-  //TODO : 커스텀 HTML 작업중
   const htmlLegendPlugin = {
     id: 'htmlLegend',
     afterUpdate(chart: any, args: any, options: any) {
       const legendContainer = document.getElementById(options.containerID)
-      // console.log('legendContainer:', legendContainer)
       if (!legendContainer) return
 
       // 기존 범례 지우기
@@ -220,8 +218,22 @@ const HRCView = () => {
         legendContainer.firstChild.remove()
       }
 
-      const ul = document.createElement('ul')
+      const ulLeft = document.createElement('ul')
+      const ulRight = document.createElement('ul')
 
+      // 왼쪽 정렬 스타일 (기본 레전드)
+      ulLeft.style.display = 'flex'
+      ulLeft.style.flexDirection = 'column'
+      ulLeft.style.alignItems = 'flex-start'
+
+      // 오른쪽 정렬 스타일 (커스텀 레전드)
+      ulRight.style.display = 'flex'
+      ulRight.style.justifyContent = 'flex-end' // 한 줄에 오른쪽 정렬
+      ulRight.style.listStyleType = 'none'
+      ulRight.style.margin = '0'
+      ulRight.style.padding = '0'
+
+      // 기본 레전드 항목 (왼쪽 정렬)
       chart.legend.legendItems.forEach((item: any) => {
         const li = document.createElement('li')
         li.style.listStyleType = 'none'
@@ -243,10 +255,52 @@ const HRCView = () => {
 
         li.appendChild(boxSpan)
         li.appendChild(textSpan)
-        ul.appendChild(li)
+        ulLeft.appendChild(li)
       })
 
-      legendContainer.appendChild(ul)
+      // 레전드를 한 줄에 나열하기 위한 ulLeft 스타일
+      ulLeft.style.display = 'flex'
+      ulLeft.style.flexDirection = 'row' // 레전드를 가로로 배치
+      ulLeft.style.alignItems = 'center' // 수직 중앙 정렬
+      ulLeft.style.listStyleType = 'none'
+      ulLeft.style.margin = '0'
+      ulLeft.style.padding = '0'
+
+      // 커스텀 레전드 항목 (오른쪽 정렬, 한 줄에 나열)
+      const customLegendItems = [
+        { text: '변곡점', color: 'red' },
+        { text: '급변동 지점', color: 'rgb(255,165,0)' },
+      ]
+
+      customLegendItems.forEach((customItem) => {
+        const li = document.createElement('li')
+        li.style.listStyleType = 'none'
+        li.style.display = 'inline-flex'
+        li.style.alignItems = 'center'
+        li.style.fontSize = '12px'
+        li.style.marginRight = '10px' // 항목 간 간격
+
+        const boxSpan = document.createElement('span')
+        boxSpan.style.backgroundColor = customItem.color
+        boxSpan.style.display = 'inline-block'
+        boxSpan.style.width = '12px' // 원의 너비
+        boxSpan.style.height = '12px' // 원의 높이
+        boxSpan.style.borderRadius = '50%' // 원형으로 만들기
+        boxSpan.style.marginRight = '5px' // 텍스트와의 간격
+
+        const textSpan = document.createElement('span')
+        textSpan.textContent = customItem.text
+
+        li.appendChild(boxSpan)
+        li.appendChild(textSpan)
+        ulRight.appendChild(li)
+        ulRight.style.marginRight = '30px' // Adjust the value as needed for the desired space
+      })
+
+      // 왼쪽 정렬 레전드 추가
+      legendContainer.appendChild(ulLeft)
+      // 오른쪽 정렬 레전드 추가
+      legendContainer.appendChild(ulRight)
     },
   }
 
@@ -276,7 +330,7 @@ const HRCView = () => {
                 const value = context.dataset.data[index]
 
                 if (deltaDataList?.includes(index)) {
-                  return 'rgb(77,81,86)' // deltaDataList 색상 -- 값 변화 큰 지점
+                  return 'rgb(255,165,0)' // deltaDataList 색상 -- 값 변화 큰 지점
                 }
 
                 // turningPointList에 포함된 경우
@@ -293,7 +347,7 @@ const HRCView = () => {
                 const value = context.dataset.data[index]
 
                 if (deltaDataList?.includes(index)) {
-                  return 'rgb(77,81,86)' // deltaDataList 색상 -- 값 변화 큰 지점
+                  return 'rgb(255,165,0)' // deltaDataList 색상 -- 값 변화 큰 지점
                 }
 
                 // turningPointList에 포함된 경우
@@ -331,7 +385,7 @@ const HRCView = () => {
             {
               label: selectedFeature?.name,
               data: selectedFeature?.data.map((d) => d.value),
-              borderColor: 'rgb(87,87,87)',
+              borderColor: 'rgb(140,140,140)',
               fill: false,
               pointRadius: 0, // 포인트 마커를 없앰
               spanGaps: true,
@@ -350,9 +404,12 @@ const HRCView = () => {
       intersect: false,
     },
     plugins: {
-      // htmlLegend: {
-      //   containerID: 'legend-container',
-      // },
+      legend: {
+        display: false,
+      },
+      htmlLegend: {
+        containerID: 'hrc-legend-container',
+      },
       annotation: {
         annotations: selectedX?.value
           ? {
@@ -365,7 +422,7 @@ const HRCView = () => {
                 value: selectedX?.value, // Only set if verticalLine exists
                 label: {
                   display: true, // 라벨 표시 활성화
-                  content: '입력 끝', // 라벨 내용
+                  content: '입력 종료', // 라벨 내용
                   position: 'end' as const, // 라벨 위치
                   backgroundColor: 'rgba(0,0,0,0.1)', // 라벨 배경 색상
                   color: 'black', // 라벨 텍스트 색상
@@ -376,7 +433,7 @@ const HRCView = () => {
               },
               horizontalLine2: {
                 type: 'line' as const,
-                borderColor: 'rgb(240,135,0)', // 선 색상
+                borderColor: 'black', // 선 색상
                 borderDash: [5, 5], // 점선 설정
                 borderWidth: 1.5, // 선 굵기
                 scaleID: 'x',
@@ -396,7 +453,7 @@ const HRCView = () => {
                 type: 'line' as const,
                 borderColor: 'rgb(67,55,246)', // 선 색상
                 // borderDash: [2, 2], // 점선 설정
-                borderWidth: 1, // 선 굵기
+                borderWidth: 2, // 선 굵기
                 scaleID: 'x',
                 value: blinkingIndices[0], // Only set if verticalLine exists
                 label: {
@@ -415,9 +472,6 @@ const HRCView = () => {
       },
       datalabels: {
         display: false,
-      },
-      legend: {
-        display: true,
       },
       tooltip: {
         enabled: true, // 툴팁을 비활성화하여 숫자 표시를 없앰
