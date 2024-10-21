@@ -150,8 +150,8 @@ const XAIPanel = ({ xaiData, onChangeFeature, onChangeDate }: XAITableProps) => 
           <Radio value={'point'}>변곡점 설명</Radio>
         </Radio.Group> */}
         <div>
-          <p className="text-lg font-bold text-center m-2">예측 설명</p>
-          <div className="overflow-scroll h-[195px]" dangerouslySetInnerHTML={{ __html: description?.pred }} />
+          <p className="text-lg font-bold text-center mb-4">예측 설명</p>
+          <div className="overflow-scroll h-[240px]" dangerouslySetInnerHTML={{ __html: description?.pred }} />
         </div>
       </div>
 
