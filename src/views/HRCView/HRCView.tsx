@@ -294,6 +294,7 @@ const HRCView = () => {
         li.appendChild(boxSpan)
         li.appendChild(textSpan)
         ulRight.appendChild(li)
+        ulRight.style.marginRight = '30px' // Adjust the value as needed for the desired space
       })
 
       // 왼쪽 정렬 레전드 추가
