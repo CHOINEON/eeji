@@ -1,5 +1,5 @@
-import { Spin } from 'antd'
-import ModelApi from 'apis/ModelApi'
+import { message, Spin } from 'antd'
+import DemoApi from 'apis/DemoApi'
 import {
   CategoryScale,
   Chart,
@@ -19,6 +19,7 @@ import annotationPlugin from 'chartjs-plugin-annotation'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Line } from 'react-chartjs-2'
+import { useMutation } from 'react-query'
 import XAIPanel from './XAIPanel'
 
 type DataType = {
@@ -63,8 +64,8 @@ ChartJS.register(
   Filler
 )
 
-//GCS fetching
-const HRCView = () => {
+//Backend server fetching
+const HRCView2 = () => {
   //서버에서 가져온 데이터
   const [inputData, setInputData] = useState()
   const [featureData, setFeatureData] = useState<any>([]) ///TODO: 서버에서 날짜 데이터와 key를 분리해달라고 요청하기
@@ -95,21 +96,43 @@ const HRCView = () => {
   // const [isBlinking, setIsBlinking] = useState(true)
   const [blinkingIndices, setBlinkingIndices] = useState<Array<number>>() // Indices for the points you want to blink
 
-  const fetchInputData = async () => {
-    const result = await ModelApi.getJsonResult(url_input_data)
-    setInputData(result)
-    setHrcData(formatObjectToArray(result['중국 HRC 가격']))
-  }
+  const { mutate: mutateHRCInput } = useMutation(DemoApi.getHRCInputList, {
+    onSuccess: (result: any) => {
+      setInputData(result)
+      setHrcData(formatObjectToArray(result['중국 HRC 가격']))
+    },
+    onError: () => {
+      message.error('데이터를 가져오는 데 실패했습니다.')
+    },
+  })
 
-  const fetchResultData = async () => {
-    const result = await ModelApi.getJsonResult(url_hrc_result)
-    setLoading(false)
-    setFeatureData(result)
-  }
+  const { mutate: mutateHRCResult } = useMutation(DemoApi.getHRCResultList, {
+    onSuccess: async (result) => {
+      setLoading(false)
+      setFeatureData(result)
+    },
+    onError: () => {
+      message.error('데이터를 가져오는 데 실패했습니다.')
+    },
+  })
+
+  // const fetchInputData = async () => {
+  //   const result = await ModelApi.getJsonResult(url_input_data)
+  //   setInputData(result)
+  //   setHrcData(formatObjectToArray(result['중국 HRC 가격']))
+  // }
+
+  // const fetchResultData = async () => {
+  //   const result = await ModelApi.getJsonResult(url_hrc_result)
+  //   setLoading(false)
+  //   setFeatureData(result)
+  // }
 
   useEffect(() => {
-    fetchInputData()
-    fetchResultData()
+    // fetchInputData()
+    // fetchResultData()
+    mutateHRCInput()
+    mutateHRCResult()
   }, [])
 
   useEffect(() => {
@@ -604,4 +627,4 @@ const HRCView = () => {
   )
 }
 
-export default HRCView
+export default HRCView2
