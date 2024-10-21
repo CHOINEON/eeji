@@ -18,10 +18,12 @@ const columns: TableColumnsType<DataType> = [
     title: '변수 이름',
     dataIndex: 'name',
     render: (text: string) => <a>{text}</a>,
+    align: 'center',
   },
   {
     title: '영향도',
     dataIndex: 'impact',
+    align: 'center',
   },
 ]
 
@@ -30,6 +32,7 @@ export interface XAITableProps {
   dramatic_delta_date_list?: Array<string>
   turning_points_date_list?: Array<string>
   onChangeFeature?: (name: string) => void
+  onChangeDate?: (date: string) => void
 }
 
 // Update the XAIDataType to allow dynamic keys
@@ -53,14 +56,12 @@ type DescriptionDataType = {
   turningPoints: Array<unknown>
 }
 
-const XAIPanel = ({ xaiData, onChangeFeature }: XAITableProps) => {
+const XAIPanel = ({ xaiData, onChangeFeature, onChangeDate }: XAITableProps) => {
   const [viewChart, setViewChart] = useState(false)
   const [buttonValue, setButtonValue] = useState(0)
-  const [descType, setDescType] = useState('pred')
 
   const [tableData, setTableData] = useState([])
   const [description, setDescriptipn] = useState<{ pred: string }>()
-  const [description2, setDescription2] = useState<{ deltaInfo: string; turningPoints: Array<unknown> }>()
 
   const [waterfallData, setWaterfallData] = useState<InnerXAIDataType>()
 
@@ -81,6 +82,9 @@ const XAIPanel = ({ xaiData, onChangeFeature }: XAITableProps) => {
 
       //Waterfall chart
       setWaterfallData(xaiData[pred])
+
+      //차트로 날짜 보내서 시각화
+      onChangeDate(pred)
     }
   }, [xaiData, buttonValue])
 
@@ -110,30 +114,25 @@ const XAIPanel = ({ xaiData, onChangeFeature }: XAITableProps) => {
     setButtonValue(args.target.value)
   }
 
-  const handleTypeClick = (args: any) => {
-    setDescType(args.target.value)
-  }
-
   return (
     <>
       <div className="m-3">
-        <div className="text-center">
-          <div className="m-auto">
-            <p className="text-lg font-bold text-center m-2">예측 기간</p>
-            <Radio.Group defaultValue="a" buttonStyle="solid" onChange={handlePeriodClick} value={buttonValue}>
-              <Radio.Button value={0}>1일</Radio.Button>
-              <Radio.Button value={1}>7일</Radio.Button>
-              <Radio.Button value={2}>30일</Radio.Button>
-              <Radio.Button value={3}>60일</Radio.Button>
-              <Radio.Button value={4}>90일</Radio.Button>
-              <Radio.Button value={5}>120일</Radio.Button>
-              <Radio.Button value={6}>150일</Radio.Button>
-            </Radio.Group>
-          </div>
-        </div>
-        <Divider />
         <div className="mt-3">
           <p className="text-lg font-bold text-center m-2">HRC가격 변동 요인</p>
+          <div className="text-center">
+            <div className="m-auto">
+              {/* <p className="text-lg font-bold text-center m-2">예측 기간</p> */}
+              <Radio.Group defaultValue="a" onChange={handlePeriodClick} value={buttonValue}>
+                <Radio.Button value={0}>1일</Radio.Button>
+                <Radio.Button value={1}>7일</Radio.Button>
+                <Radio.Button value={2}>30일</Radio.Button>
+                <Radio.Button value={3}>60일</Radio.Button>
+                <Radio.Button value={4}>90일</Radio.Button>
+                <Radio.Button value={5}>120일</Radio.Button>
+                <Radio.Button value={6}>150일</Radio.Button>
+              </Radio.Group>
+            </div>
+          </div>
           <div className="text-right">
             <Button type="link" onClick={() => setViewChart(!viewChart)} icon={<LineChartOutlined />}></Button>
           </div>
