@@ -1,5 +1,4 @@
 import { Spin } from 'antd'
-import ModelApi from 'apis/ModelApi'
 import {
   CategoryScale,
   Chart,
@@ -19,6 +18,8 @@ import annotationPlugin from 'chartjs-plugin-annotation'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Line } from 'react-chartjs-2'
+import hrc_input_data from './hrc_input_data.json'
+import hrc_result_data from './hrc_result_data.json'
 import XAIPanel from './XAIPanel'
 
 type DataType = {
@@ -90,14 +91,37 @@ const HRCView = () => {
   const [xaiData, setXaiData] = useState({})
   const [loading, setLoading] = useState(true)
 
+  //TODO: 추후 현재 사용자가 에측하는 위치 blinking 처리 예정
+  // const [isBlinking, setIsBlinking] = useState(true)
+  const [blinkingIndices, setBlinkingIndices] = useState<Array<number>>() // Indices for the points you want to blink
+
   const fetchInputData = async () => {
-    const result = await ModelApi.getJsonResult(url_input_data)
-    setInputData(result)
-    setHrcData(formatObjectToArray(result['중국 HRC 가격']))
+    // Ensure all values are numbers
+    const result = hrc_input_data
+
+    // Convert the input data to an array format
+    const formattedInputData = Object.entries(result).map(([key, value]) => ({
+      name: key,
+      data: Object.entries(value)
+        .filter(([, val]) => typeof val === 'number') // Filter out non-numeric values
+        .map(([date, val]) => ({ time: date, value: Number(val) })),
+    }))
+
+    setInputData(formattedInputData) // Update to setInputData with the correct format
+    const validData = Object.entries(result['중국 HRC 가격']).reduce((acc, [key, value]) => {
+      if (typeof value === 'number') {
+        acc[key] = value
+      }
+      return acc
+    }, {} as { [key: string]: number })
+
+    setHrcData(formatObjectToArray(validData)) // Ensure only numeric values are passed
   }
 
   const fetchResultData = async () => {
-    const result = await ModelApi.getJsonResult(url_hrc_result)
+    // const result = await ModelApi.getJsonResult(url_hrc_result)
+    const result = hrc_result_data
+
     setLoading(false)
     setFeatureData(result)
   }
@@ -119,13 +143,13 @@ const HRCView = () => {
         const DramaticDates = featureData[selectedX.value]?.dramatic_delta_date_list
         const TurningPointDates = featureData[selectedX.value]?.turning_points_date_list
 
-        const indices1 = findIndicesByDate(hrcData, DramaticDates)
-        const indices2 = findIndicesByDate(hrcData, TurningPointDates)
-        console.log('indices1:', indices1)
-        console.log('indices2:', indices2)
+        // const indices1 = findIndicesByDate(hrcData, DramaticDates)
+        // const indices2 = findIndicesByDate(hrcData, TurningPointDates)
+        // console.log('indices1:', indices1)
+        // console.log('indices2:', indices2)
 
-        setDeltaDataList(findIndicesByDate(hrcData, DramaticDates))
-        setTurningPointList(findIndicesByDate(hrcData, TurningPointDates))
+        if (DramaticDates?.length > 0) setDeltaDataList(findIndicesByDate(hrcData, DramaticDates))
+        if (TurningPointDates?.length > 0) setTurningPointList(findIndicesByDate(hrcData, TurningPointDates))
       }
     }
   }, [selectedX])
@@ -134,7 +158,7 @@ const HRCView = () => {
     // data: 검색할 데이터 배열 (객체 배열)
     // dates: 찾고자 하는 날짜 배열
 
-    return dates.map((date) => data.findIndex((item) => item.time === date))
+    return dates?.map((date) => data.findIndex((item) => item.time === date))
   }
 
   function getPreviousNElements(endDate: { pixel: number; value: string }, n: number) {
@@ -229,12 +253,12 @@ const HRCView = () => {
                 const value = context.dataset.data[index]
 
                 if (deltaDataList?.includes(index)) {
-                  return 'red' // deltaDataList 색상 -- 값 변화 큰 지점
+                  return 'rgb(77,81,86)' // deltaDataList 색상 -- 값 변화 큰 지점
                 }
 
                 // turningPointList에 포함된 경우
                 if (turningPointList?.includes(index)) {
-                  return 'blue' // turningPointList 색상 -- 변곡점
+                  return 'red' // turningPointList 색상 -- 변곡점
                 }
 
                 // 둘 다 아닌 경우 기본 색상
@@ -246,12 +270,12 @@ const HRCView = () => {
                 const value = context.dataset.data[index]
 
                 if (deltaDataList?.includes(index)) {
-                  return 'red' // deltaDataList 색상 -- 값 변화 큰 지점
+                  return 'rgb(77,81,86)' // deltaDataList 색상 -- 값 변화 큰 지점
                 }
 
                 // turningPointList에 포함된 경우
                 if (turningPointList?.includes(index)) {
-                  return 'blue' // turningPointList 색상 -- 변곡점
+                  return 'red' // turningPointList 색상 -- 변곡점
                 }
 
                 // 둘 다 아닌 경우 기본 색상
@@ -310,7 +334,7 @@ const HRCView = () => {
                 type: 'line' as const,
                 borderColor: 'black', // 선 색상
                 borderDash: [5, 5], // 점선 설정
-                borderWidth: 1, // 선 굵기
+                borderWidth: 1.5, // 선 굵기
                 scaleID: 'x',
                 value: selectedX?.value, // Only set if verticalLine exists
                 label: {
@@ -328,13 +352,31 @@ const HRCView = () => {
                 type: 'line' as const,
                 borderColor: 'rgb(240,135,0)', // 선 색상
                 borderDash: [5, 5], // 점선 설정
-                borderWidth: 1, // 선 굵기
+                borderWidth: 1.5, // 선 굵기
                 scaleID: 'x',
                 value: date?.start, // Only set if verticalLine exists
                 label: {
                   display: true, // 라벨 표시 활성화
                   content: '입력 시작', // 라벨 내용
                   position: 'start' as const, // 라벨 위치
+                  backgroundColor: 'rgba(0,0,0,0.1)', // 라벨 배경 색상
+                  color: 'black', // 라벨 텍스트 색상
+                  font: {
+                    size: 12, // 라벨 폰트 크기
+                  },
+                },
+              },
+              selectedPred: {
+                type: 'line' as const,
+                borderColor: 'rgb(67,55,246)', // 선 색상
+                // borderDash: [2, 2], // 점선 설정
+                borderWidth: 1, // 선 굵기
+                scaleID: 'x',
+                value: blinkingIndices[0], // Only set if verticalLine exists
+                label: {
+                  display: true, // 라벨 표시 활성화
+                  content: '', // 라벨 내용
+                  position: 'center' as const, // 라벨 위치
                   backgroundColor: 'rgba(0,0,0,0.1)', // 라벨 배경 색상
                   color: 'black', // 라벨 텍스트 색상
                   font: {
@@ -409,7 +451,7 @@ const HRCView = () => {
   }
 
   function formatObjectToArray(inputObj: { [key: string]: number }) {
-    return Object.entries(inputObj).map(([key, value]) => ({
+    return Object.entries(inputObj)?.map(([key, value]) => ({
       time: key,
       value: value,
     }))
@@ -452,6 +494,11 @@ const HRCView = () => {
     setSelectedFeature({ name: value, data: formatObjectToArray(filteredData) })
   }
 
+  const onChangeDate = (date: string) => {
+    //사용자가 선택한 예측 기간(버튼)의 인덱스 번호 추출해 저장
+    setBlinkingIndices(findIndicesByDate(hrcData, [date]))
+  }
+
   return (
     <div className="flex h-screen">
       {/* 왼쪽 영역 (차트 영역, 80%) */}
@@ -467,7 +514,7 @@ const HRCView = () => {
       {/* 오른쪽 영역 (20%) */}
       <div className="w-2/6 bg-gray-100 p-4">
         <Spin spinning={loading} tip="Loading...">
-          <XAIPanel xaiData={xaiData} onChangeFeature={onChangeFeature} />
+          <XAIPanel xaiData={xaiData} onChangeFeature={onChangeFeature} onChangeDate={onChangeDate} />
         </Spin>
       </div>
     </div>
