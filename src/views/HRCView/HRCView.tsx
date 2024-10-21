@@ -1,4 +1,5 @@
 import { Spin } from 'antd'
+import ModelApi from 'apis/ModelApi'
 import {
   CategoryScale,
   Chart,
@@ -18,8 +19,6 @@ import annotationPlugin from 'chartjs-plugin-annotation'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Line } from 'react-chartjs-2'
-import hrc_input_data from './hrc_input_data.json'
-import hrc_result_data from './hrc_result_data.json'
 import XAIPanel from './XAIPanel'
 
 type DataType = {
@@ -66,8 +65,8 @@ ChartJS.register(
 
 const HRCView = () => {
   //서버에서 가져온 데이터
-  const [inputData, setInputData] = useState([])
-  const [featureData, setFeatureData] = useState<any>() ///TODO: 서버에서 날짜 데이터와 key를 분리해달라고 요청하기
+  const [inputData, setInputData] = useState()
+  const [featureData, setFeatureData] = useState<any>([]) ///TODO: 서버에서 날짜 데이터와 key를 분리해달라고 요청하기
 
   //차트에 렌더링할 데이터
   const [hrcData, setHrcData] = useState([])
@@ -96,32 +95,13 @@ const HRCView = () => {
   const [blinkingIndices, setBlinkingIndices] = useState<Array<number>>() // Indices for the points you want to blink
 
   const fetchInputData = async () => {
-    // Ensure all values are numbers
-    const result = hrc_input_data
-
-    // Convert the input data to an array format
-    const formattedInputData = Object.entries(result).map(([key, value]) => ({
-      name: key,
-      data: Object.entries(value)
-        .filter(([, val]) => typeof val === 'number') // Filter out non-numeric values
-        .map(([date, val]) => ({ time: date, value: Number(val) })),
-    }))
-
-    setInputData(formattedInputData) // Update to setInputData with the correct format
-    const validData = Object.entries(result['중국 HRC 가격']).reduce((acc, [key, value]) => {
-      if (typeof value === 'number') {
-        acc[key] = value
-      }
-      return acc
-    }, {} as { [key: string]: number })
-
-    setHrcData(formatObjectToArray(validData)) // Ensure only numeric values are passed
+    const result = await ModelApi.getJsonResult(url_input_data)
+    setInputData(result)
+    setHrcData(formatObjectToArray(result['중국 HRC 가격']))
   }
 
   const fetchResultData = async () => {
-    // const result = await ModelApi.getJsonResult(url_hrc_result)
-    const result = hrc_result_data
-
+    const result = await ModelApi.getJsonResult(url_hrc_result)
     setLoading(false)
     setFeatureData(result)
   }
@@ -227,8 +207,51 @@ const HRCView = () => {
     },
   }
 
+  //TODO : 커스텀 HTML 작업중
+  const htmlLegendPlugin = {
+    id: 'htmlLegend',
+    afterUpdate(chart: any, args: any, options: any) {
+      const legendContainer = document.getElementById(options.containerID)
+      // console.log('legendContainer:', legendContainer)
+      if (!legendContainer) return
+
+      // 기존 범례 지우기
+      while (legendContainer.firstChild) {
+        legendContainer.firstChild.remove()
+      }
+
+      const ul = document.createElement('ul')
+
+      chart.legend.legendItems.forEach((item: any) => {
+        const li = document.createElement('li')
+        li.style.listStyleType = 'none'
+        li.style.display = 'inline-flex'
+        li.style.alignItems = 'center'
+        li.style.fontSize = '12px'
+
+        const boxSpan = document.createElement('span')
+        boxSpan.style.backgroundColor = item.fillStyle
+        boxSpan.style.borderColor = item.strokeStyle
+        boxSpan.style.borderWidth = item.lineWidth + 'px'
+        boxSpan.style.display = 'inline-block'
+        boxSpan.style.width = '50px'
+        boxSpan.style.height = '2px'
+        boxSpan.style.margin = '15px'
+
+        const textSpan = document.createElement('span')
+        textSpan.textContent = item.text
+
+        li.appendChild(boxSpan)
+        li.appendChild(textSpan)
+        ul.appendChild(li)
+      })
+
+      legendContainer.appendChild(ul)
+    },
+  }
+
   // Register the plugin
-  ChartJS.register([customHoverPlugin, rangeColorPlugin])
+  ChartJS.register([customHoverPlugin, rangeColorPlugin, htmlLegendPlugin])
 
   const chartData = {
     labels: hrcData.map((d) => d.time),
@@ -327,6 +350,9 @@ const HRCView = () => {
       intersect: false,
     },
     plugins: {
+      // htmlLegend: {
+      //   containerID: 'legend-container',
+      // },
       annotation: {
         annotations: selectedX?.value
           ? {
@@ -486,12 +512,13 @@ const HRCView = () => {
 
     return result
   }
-
   const onChangeFeature = (value: string) => {
-    const filteredData = inputData[value as keyof typeof inputData]
+    if (inputData) {
+      const filteredData = inputData[value as keyof typeof inputData]
 
-    //chartdata로 push하기 위한 formatting
-    setSelectedFeature({ name: value, data: formatObjectToArray(filteredData) })
+      //chartdata로 push하기 위한 formatting
+      setSelectedFeature({ name: value, data: formatObjectToArray(filteredData) })
+    }
   }
 
   const onChangeDate = (date: string) => {
@@ -506,6 +533,7 @@ const HRCView = () => {
         <div className="mt-8">
           <p className="text-lg font-bold m-5">선택된 날짜 : {selectedX?.value}</p>
           <div className="m-6">
+            <div id="hrc-legend-container"></div>
             <Line ref={chartRef} data={chartData} options={chartOptions} plugins={[customHoverPlugin]} />
           </div>
         </div>
