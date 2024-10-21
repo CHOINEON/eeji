@@ -1,0 +1,9 @@
+#hrc-legend-container {
+    position: absolute;
+    top: 0;
+    left: 100%; /* 차트 옆에 고정 */
+    transform: translateX(-100%); /* 범례를 차트의 오른쪽에 고정 */
+    white-space: nowrap;
+    padding-left: 20px;
+    padding-right:45px;
+  }
