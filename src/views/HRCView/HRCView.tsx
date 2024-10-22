@@ -1,5 +1,5 @@
-import { Spin } from 'antd'
-import ModelApi from 'apis/ModelApi'
+import { message, Spin } from 'antd'
+import DemoApi from 'apis/DemoApi'
 import {
   CategoryScale,
   Chart,
@@ -19,6 +19,7 @@ import annotationPlugin from 'chartjs-plugin-annotation'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Line } from 'react-chartjs-2'
+import { useMutation } from 'react-query'
 import XAIPanel from './XAIPanel'
 
 type DataType = {
@@ -44,11 +45,6 @@ type FeatureDataType = {
   }
 }
 
-const url_hrc_result =
-  'https://storage.googleapis.com/cloudai-test-bucket/google/seongyeop%40ineeji.com/hrc_result_d.json?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=cloudai-data-uploader%40ineeji-cloudai-test.iam.gserviceaccount.com%2F20241017%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20241017T091854Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=180f6f46380b483a81ae3fdb2fdea352a006d0923b9f953b6aab7672926fabc4a1f2d7ed8cafc234dc8dc8813d278e83a4940793da8cb411bded1cca457132f62e995103138e7e50805b21eec0b9ff7df5548b396e3c06125e16e15579435fb1755f20455e2e502efa7d36d4196f5fdf3acf74231f39614092dee13e7e06d622326ae560306ec780f781e0784a458352c32fc3e98e44c44ff4e28335f6aa085841d7af8ae58b1a0698b3938ac7e11576ec324072f9f6d492b1b34909813c8da5902961b6df3bed1e9149e1d15ce8e949ce30c4aa61ad772a420e8a7645d92648329e756523d4e5592c027eabba744057bf6105422d04e3509e02070535429e34'
-const url_input_data =
-  'https://storage.googleapis.com/cloudai-test-bucket/google/seongyeop%40ineeji.com/hrc_input_data.json?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=cloudai-data-uploader%40ineeji-cloudai-test.iam.gserviceaccount.com%2F20241017%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20241017T091553Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=4b860d8e3e73bb03884bb0c469e24e3baeb27f08a5e3edd57bd0039573a679fcbc8dc203916562038cb62ccc83402f73d08ec415b448fcd9a56d010d66993a200cd2e825c87f80c0e1f83a5b194cd2cf06127badc3f636f15771cff78206784274eb9f4957813f6d8b642b438a2399cf0024ae2505ee8db51a0e1c6ba32872bd6a5094b12609631c7bcffe8e583e9bb12473505fc75cfe616036e0bdc0479247bf02504840c1d7e954b11e5045ee1f26ba0b041299ed2a671f9a2a676f123cb0dd1088a7dbf0d6376b186da570bb0d53e3c959f335fc28c99fe43a8c513b40c3442eaad4b5047bba1a99d68253a1b7047471d4f38959a919c24179b2701d614a'
-
 // Registering Chart.js components
 ChartJS.register(
   zoomPlugin,
@@ -63,7 +59,7 @@ ChartJS.register(
   Filler
 )
 
-//GCS fetching
+//Backend server fetching
 const HRCView = () => {
   //서버에서 가져온 데이터
   const [inputData, setInputData] = useState()
@@ -95,21 +91,43 @@ const HRCView = () => {
   // const [isBlinking, setIsBlinking] = useState(true)
   const [blinkingIndices, setBlinkingIndices] = useState<Array<number>>() // Indices for the points you want to blink
 
-  const fetchInputData = async () => {
-    const result = await ModelApi.getJsonResult(url_input_data)
-    setInputData(result)
-    setHrcData(formatObjectToArray(result['중국 HRC 가격']))
-  }
+  const { mutate: mutateHRCInput } = useMutation(DemoApi.getHRCInputList, {
+    onSuccess: (result: any) => {
+      setInputData(result)
+      setHrcData(formatObjectToArray(result['중국 HRC 가격']))
+    },
+    onError: () => {
+      message.error('데이터를 가져오는 데 실패했습니다.')
+    },
+  })
 
-  const fetchResultData = async () => {
-    const result = await ModelApi.getJsonResult(url_hrc_result)
-    setLoading(false)
-    setFeatureData(result)
-  }
+  const { mutate: mutateHRCResult } = useMutation(DemoApi.getHRCResultList, {
+    onSuccess: async (result) => {
+      setLoading(false)
+      setFeatureData(result)
+    },
+    onError: () => {
+      message.error('데이터를 가져오는 데 실패했습니다.')
+    },
+  })
+
+  // const fetchInputData = async () => {
+  //   const result = await ModelApi.getJsonResult(url_input_data)
+  //   setInputData(result)
+  //   setHrcData(formatObjectToArray(result['중국 HRC 가격']))
+  // }
+
+  // const fetchResultData = async () => {
+  //   const result = await ModelApi.getJsonResult(url_hrc_result)
+  //   setLoading(false)
+  //   setFeatureData(result)
+  // }
 
   useEffect(() => {
-    fetchInputData()
-    fetchResultData()
+    // fetchInputData()
+    // fetchResultData()
+    mutateHRCInput()
+    mutateHRCResult()
   }, [])
 
   useEffect(() => {
