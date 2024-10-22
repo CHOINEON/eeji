@@ -20,10 +20,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
 const connectorPlugin = {
   id: 'connectorPlugin',
   afterDatasetDraw: (chart: ChartJS) => {
-    const {
-      ctx,
-      scales: { x, y },
-    } = chart
+    const { ctx } = chart
 
     chart.data.datasets.forEach((dataset, datasetIndex) => {
       const meta = chart.getDatasetMeta(datasetIndex)
@@ -97,7 +94,6 @@ const WaterfallChart = ({ data }: XAIDataType) => {
 
       currentValue = previousValue + value
 
-      //   result.push([previousValue, previousValue + value])
       if (currentValue > previousValue) {
         result.push([previousValue, currentValue])
       } else {
@@ -142,7 +138,6 @@ const WaterfallChart = ({ data }: XAIDataType) => {
       },
       title: {
         display: true,
-        // text: 'Waterfall Chart with Connector Lines',
       },
       annotation: {
         annotations: {

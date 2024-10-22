@@ -1,10 +1,11 @@
 import { LineChartOutlined } from '@ant-design/icons'
-import { Button, Modal, Radio, Table, TableColumnsType } from 'antd'
+import { Button, Modal, TableColumnsType } from 'antd'
 
 import { TableProps } from 'antd'
 
 import { Divider } from 'antd'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import FeatureImpactTable from './FeatureImpactTable'
 import WaterfallChart from './WaterfallChart'
 
 interface DataType {
@@ -19,11 +20,13 @@ const columns: TableColumnsType<DataType> = [
     dataIndex: 'name',
     render: (text: string) => <a>{text}</a>,
     align: 'center',
+    sorter: (a, b) => a.name.localeCompare(b.name),
   },
   {
     title: '영향도',
     dataIndex: 'impact',
     align: 'center',
+    sorter: (a, b) => b.impact - b.impact,
   },
 ]
 
@@ -36,11 +39,11 @@ export interface XAITableProps {
 }
 
 // Update the XAIDataType to allow dynamic keys
-export type XAIDataType = {
+export interface XAIDataType {
   [key: string]: InnerXAIDataType
 }
 
-export type InnerXAIDataType = {
+export interface InnerXAIDataType {
   aggregated_xai: Array<Record<string, number>>
   base_date: string
   base_value: number
@@ -50,17 +53,11 @@ export type InnerXAIDataType = {
   xai_description: string
 }
 
-type DescriptionDataType = {
-  pred: string
-  deltaInfo: string
-  turningPoints: Array<unknown>
-}
-
 const XAIPanel = ({ xaiData, onChangeFeature, onChangeDate }: XAITableProps) => {
   const [viewChart, setViewChart] = useState(false)
   const [buttonValue, setButtonValue] = useState(0)
 
-  const [tableData, setTableData] = useState([])
+  const [tableData, setTableData] = useState<TableProps['dataSource']>([])
   const [description, setDescriptipn] = useState<{ pred: string }>()
 
   const [waterfallData, setWaterfallData] = useState<InnerXAIDataType>()
@@ -75,10 +72,10 @@ const XAIPanel = ({ xaiData, onChangeFeature, onChangeDate }: XAITableProps) => 
       setDescriptipn({
         ...description,
         pred: xaiData[pred]?.xai_description,
-      }) // Now this will work without error
+      })
 
       //테이블
-      setTableData(formatArray(xaiData[pred]?.aggregated_xai))
+      setTableData(formatArray(xaiData[pred]?.aggregated_xai)?.sort((a, b) => b.impact - a.impact))
 
       //Waterfall chart
       setWaterfallData(xaiData[pred])
@@ -99,70 +96,28 @@ const XAIPanel = ({ xaiData, onChangeFeature, onChangeDate }: XAITableProps) => 
     })
   }
 
-  // rowSelection object indicates the need for row selection
-  const rowSelection: TableProps<DataType>['rowSelection'] = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-      onChangeFeature(selectedRows[0].name)
-    },
-    getCheckboxProps: (record: DataType) => ({
-      disabled: record.name === 'Disabled User', // Column configuration not to be checked
-      name: record.name,
-    }),
-  }
-
-  const handlePeriodClick = (args: any) => {
-    setButtonValue(args.target.value)
-  }
-
   return (
     <>
       <div className="m-3">
         <div className="mt-3">
-          <p className="text-lg font-bold text-center m-2">HRC가격 변동 요인</p>
-          <div className="text-center">
-            <div className="m-auto">
-              {/* <p className="text-lg font-bold text-center m-2">예측 기간</p> */}
-              <Radio.Group defaultValue="a" onChange={handlePeriodClick} value={buttonValue}>
-                <Radio.Button value={0}>1일</Radio.Button>
-                <Radio.Button value={1}>7일</Radio.Button>
-                <Radio.Button value={2}>30일</Radio.Button>
-                <Radio.Button value={3}>60일</Radio.Button>
-                <Radio.Button value={4}>90일</Radio.Button>
-                <Radio.Button value={5}>120일</Radio.Button>
-                <Radio.Button value={6}>150일</Radio.Button>
-              </Radio.Group>
-            </div>
-          </div>
-          <div className="text-right">
+          <div className="text-right m-2">
             <Button type="link" onClick={() => setViewChart(!viewChart)} icon={<LineChartOutlined />}></Button>
           </div>
-          <Table<DataType>
-            size="small"
-            rowSelection={{ type: 'radio', ...rowSelection }}
-            columns={columns}
+          <FeatureImpactTable
             dataSource={tableData}
-            pagination={{ pageSize: 5, pageSizeOptions: [10], position: ['bottomCenter'], showSizeChanger: false }}
+            columns={columns}
+            onSelectFeature={(value: string) => onChangeFeature(value)}
+            onSelectPeriod={(value: number) => setButtonValue(value)}
           />
         </div>
         <Divider />
-        {/* <Radio.Group onChange={handleTypeClick} value={descType}>
-          <Radio value={'pred'}>예측 설명</Radio>
-          <Radio value={'point'}>변곡점 설명</Radio>
-        </Radio.Group> */}
         <div>
           <p className="text-lg font-bold text-center mb-4">예측 설명</p>
           <div className="overflow-scroll h-[240px]" dangerouslySetInnerHTML={{ __html: description?.pred }} />
         </div>
       </div>
 
-      <Modal
-        width={1000}
-        open={viewChart}
-        title=""
-        // onOk={handleOk}
-        onCancel={() => setViewChart(false)}
-        footer={(_) => <></>}
-      >
+      <Modal width={1000} open={viewChart} title="" onCancel={() => setViewChart(false)} footer={() => <></>}>
         <WaterfallChart data={waterfallData} />
       </Modal>
     </>
