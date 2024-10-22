@@ -52,12 +52,6 @@ export type InnerXAIDataType = {
   xai_description: string
 }
 
-type DescriptionDataType = {
-  pred: string
-  deltaInfo: string
-  turningPoints: Array<unknown>
-}
-
 const XAIPanel = ({ xaiData, onChangeFeature, onChangeDate }: XAITableProps) => {
   const [viewChart, setViewChart] = useState(false)
   const [buttonValue, setButtonValue] = useState(0)
@@ -77,7 +71,7 @@ const XAIPanel = ({ xaiData, onChangeFeature, onChangeDate }: XAITableProps) => 
       setDescriptipn({
         ...description,
         pred: xaiData[pred]?.xai_description,
-      }) // Now this will work without error
+      })
 
       //테이블
       setTableData(formatArray(xaiData[pred]?.aggregated_xai)?.sort((a, b) => b.impact - a.impact))

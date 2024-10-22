@@ -97,7 +97,6 @@ const WaterfallChart = ({ data }: XAIDataType) => {
 
       currentValue = previousValue + value
 
-      //   result.push([previousValue, previousValue + value])
       if (currentValue > previousValue) {
         result.push([previousValue, currentValue])
       } else {
@@ -142,7 +141,6 @@ const WaterfallChart = ({ data }: XAIDataType) => {
       },
       title: {
         display: true,
-        // text: 'Waterfall Chart with Connector Lines',
       },
       annotation: {
         annotations: {

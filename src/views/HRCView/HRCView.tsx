@@ -151,12 +151,16 @@ const HRCView = () => {
     const endIndex = hrcData.findIndex((element) => element.time == endDate.value)
     const chart = chartRef.current
 
-    //인덱스가 50보다 크면, -50번째의 날짜 찾기
-    if (endIndex > n) {
-      const startDate = hrcData[endIndex - 50].time
-      const startPixel = chart.scales.x.getPixelForValue(startDate)
+    const startData = {
+      index: hrcData?.findIndex((element) => element?.time === hrcData[endIndex - 50]?.time),
+      value: hrcData[endIndex - 50]?.time,
+    }
 
-      setDate({ start: startDate, end: selectedX.value })
+    //인덱스가 50보다 크면, -50번째의 날짜 찾기
+    if (endIndex >= n) {
+      const startPixel = chart.scales.x.getPixelForValue(startData.value)
+
+      setDate({ start: startData.value, end: selectedX.value })
       setShadeRange({ start: startPixel, end: endDate.pixel })
     }
   }
@@ -546,6 +550,7 @@ const HRCView = () => {
     const result: Record<string, any[]> = {}
     if (featureData) {
       const selectedData = featureData[keyDate]
+
       setXaiData(selectedData)
 
       if (featureData[keyDate]) {
@@ -571,6 +576,7 @@ const HRCView = () => {
 
     return result
   }
+
   const onChangeFeature = (value: string) => {
     if (inputData) {
       const filteredData = inputData[value as keyof typeof inputData]
