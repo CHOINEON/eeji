@@ -111,21 +111,7 @@ const HRCView = () => {
     },
   })
 
-  // const fetchInputData = async () => {
-  //   const result = await ModelApi.getJsonResult(url_input_data)
-  //   setInputData(result)
-  //   setHrcData(formatObjectToArray(result['중국 HRC 가격']))
-  // }
-
-  // const fetchResultData = async () => {
-  //   const result = await ModelApi.getJsonResult(url_hrc_result)
-  //   setLoading(false)
-  //   setFeatureData(result)
-  // }
-
   useEffect(() => {
-    // fetchInputData()
-    // fetchResultData()
     mutateHRCInput()
     mutateHRCResult()
   }, [])

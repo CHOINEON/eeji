@@ -2,7 +2,7 @@
 
 // Admin Imports
 import AIModelGenerator from 'views/AIModelGenerator'
-import { default as HRCView, default as HRCView2 } from 'views/HRCView/HRCView2'
+import { default as HRCView } from 'views/HRCView/HRCView'
 import MainContents from 'views/Main/Main'
 import MyPage from 'views/MyPage'
 import PriceForecasting from 'views/PriceForecasting/OilPrice'
@@ -66,15 +66,6 @@ const routes: RoutesType[] = [
     path: '/hrc-view',
     icon: '',
     component: HRCView,
-    showInHeader: false,
-    widthScreen: true,
-  },
-  {
-    name: 'HRC Prediction View',
-    layout: '/admin',
-    path: '/hrc-view2',
-    icon: '',
-    component: HRCView2,
     showInHeader: false,
     widthScreen: true,
   },

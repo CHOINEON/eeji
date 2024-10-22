@@ -19,11 +19,13 @@ const columns: TableColumnsType<DataType> = [
     dataIndex: 'name',
     render: (text: string) => <a>{text}</a>,
     align: 'center',
+    sorter: (a, b) => a.name.localeCompare(b.name),
   },
   {
     title: '영향도',
     dataIndex: 'impact',
     align: 'center',
+    sorter: (a, b) => b.impact - b.impact,
   },
 ]
 
@@ -78,7 +80,7 @@ const XAIPanel = ({ xaiData, onChangeFeature, onChangeDate }: XAITableProps) => 
       }) // Now this will work without error
 
       //테이블
-      setTableData(formatArray(xaiData[pred]?.aggregated_xai))
+      setTableData(formatArray(xaiData[pred]?.aggregated_xai)?.sort((a, b) => b.impact - a.impact))
 
       //Waterfall chart
       setWaterfallData(xaiData[pred])
@@ -133,7 +135,7 @@ const XAIPanel = ({ xaiData, onChangeFeature, onChangeDate }: XAITableProps) => 
               </Radio.Group>
             </div>
           </div>
-          <div className="text-right">
+          <div className="text-right m-2">
             <Button type="link" onClick={() => setViewChart(!viewChart)} icon={<LineChartOutlined />}></Button>
           </div>
           <Table<DataType>
@@ -145,24 +147,13 @@ const XAIPanel = ({ xaiData, onChangeFeature, onChangeDate }: XAITableProps) => 
           />
         </div>
         <Divider />
-        {/* <Radio.Group onChange={handleTypeClick} value={descType}>
-          <Radio value={'pred'}>예측 설명</Radio>
-          <Radio value={'point'}>변곡점 설명</Radio>
-        </Radio.Group> */}
         <div>
           <p className="text-lg font-bold text-center mb-4">예측 설명</p>
           <div className="overflow-scroll h-[240px]" dangerouslySetInnerHTML={{ __html: description?.pred }} />
         </div>
       </div>
 
-      <Modal
-        width={1000}
-        open={viewChart}
-        title=""
-        // onOk={handleOk}
-        onCancel={() => setViewChart(false)}
-        footer={(_) => <></>}
-      >
+      <Modal width={1000} open={viewChart} title="" onCancel={() => setViewChart(false)} footer={(_) => <></>}>
         <WaterfallChart data={waterfallData} />
       </Modal>
     </>
