@@ -7,6 +7,7 @@ import {
   ChartEvent,
   Filler,
   Legend,
+  LegendItem,
   LinearScale,
   LineElement,
   PointElement,
@@ -32,17 +33,32 @@ type DatasetType = {
   data: Array<DataType>
 }
 
-// Define the type for featureData
-type FeatureDataType = {
-  [date: string]: {
-    [date: string]: {
-      time_delta: number
-      value_delta: number
-      value: number
-      positive_xai: { [key: string]: number }
-      negative_xai: { [key: string]: number }
-    }
-  }
+interface FeatureDateType {
+  time_delta: number
+  value_delta: number
+  value: number
+  positive_xai: { [key: string]: number }
+  negative_xai: { [key: string]: number }
+}
+
+interface FeatureDataCollectionType {
+  [date: string]: FeatureDateType
+}
+
+interface CompleteFeatureDataType {
+  featureData: FeatureDataCollectionType
+  dramatic_delta_date_list: Array<unknown>
+  dramatic_delta_info_list: string
+  turning_points_date_list: Array<unknown>
+  turning_points_list: Array<unknown>
+}
+
+type InnerInputDataType = {
+  [date: string]: number
+}
+
+export interface InputDataType {
+  [key: string]: InnerInputDataType
 }
 
 // Registering Chart.js components
@@ -62,7 +78,7 @@ ChartJS.register(
 //Backend server fetching
 const HRCView = () => {
   //서버에서 가져온 데이터
-  const [inputData, setInputData] = useState()
+  const [inputData, setInputData] = useState<InputDataType>()
   const [featureData, setFeatureData] = useState<any>([]) ///TODO: 서버에서 날짜 데이터와 key를 분리해달라고 요청하기
 
   //차트에 렌더링할 데이터
@@ -93,6 +109,7 @@ const HRCView = () => {
 
   const { mutate: mutateHRCInput } = useMutation(DemoApi.getHRCInputList, {
     onSuccess: (result: any) => {
+      console.log('result:', result)
       setInputData(result)
       setHrcData(formatObjectToArray(result['중국 HRC 가격']))
     },
@@ -103,7 +120,9 @@ const HRCView = () => {
 
   const { mutate: mutateHRCResult } = useMutation(DemoApi.getHRCResultList, {
     onSuccess: async (result) => {
+      console.log('featureData:', result)
       setLoading(false)
+
       setFeatureData(result)
     },
     onError: () => {
@@ -218,7 +237,7 @@ const HRCView = () => {
 
   const htmlLegendPlugin = {
     id: 'htmlLegend',
-    afterUpdate(chart: any, args: any, options: any) {
+    afterUpdate(chart: ChartJS, args: unknown, options: { containerID: string }) {
       const legendContainer = document.getElementById(options.containerID)
       if (!legendContainer) return
 
@@ -243,7 +262,7 @@ const HRCView = () => {
       ulRight.style.padding = '0'
 
       // 기본 레전드 항목 (왼쪽 정렬)
-      chart.legend.legendItems.forEach((item: any) => {
+      chart.legend.legendItems.forEach((item: LegendItem) => {
         const li = document.createElement('li')
         li.style.listStyleType = 'none'
         li.style.display = 'inline-flex'
@@ -251,8 +270,8 @@ const HRCView = () => {
         li.style.fontSize = '12px'
 
         const boxSpan = document.createElement('span')
-        boxSpan.style.backgroundColor = item.fillStyle
-        boxSpan.style.borderColor = item.strokeStyle
+        boxSpan.style.backgroundColor = item.fillStyle as string
+        boxSpan.style.borderColor = item.strokeStyle as string
         boxSpan.style.borderWidth = item.lineWidth + 'px'
         boxSpan.style.display = 'inline-block'
         boxSpan.style.width = '50px'
@@ -336,7 +355,7 @@ const HRCView = () => {
               data: predData.map((d) => d.value),
               borderColor: function (context: ScriptableContext<'line'>) {
                 const index = context.dataIndex
-                const value = context.dataset.data[index]
+                // const value = context.dataset.data[index]
 
                 if (deltaDataList?.includes(index)) {
                   return 'rgb(255,165,0)' // deltaDataList 색상 -- 값 변화 큰 지점
@@ -353,7 +372,6 @@ const HRCView = () => {
               backgroundColor: 'rgb(228,1,119, 0.2)',
               pointBackgroundColor: function (context: ScriptableContext<'line'>) {
                 const index = context.dataIndex
-                const value = context.dataset.data[index]
 
                 if (deltaDataList?.includes(index)) {
                   return 'rgb(255,165,0)' // deltaDataList 색상 -- 값 변화 큰 지점
@@ -369,7 +387,6 @@ const HRCView = () => {
               },
               pointRadius: function (context: ScriptableContext<'line'>) {
                 const index = context.dataIndex
-                const value = context.dataset.data[index]
 
                 if (deltaDataList?.includes(index)) {
                   return 4 // deltaDataList 색상
@@ -547,7 +564,7 @@ const HRCView = () => {
   }
 
   function generateChartData(keyDate: string): Record<string, object> {
-    const result: Record<string, any[]> = {}
+    const result: Record<string, unknown[]> = {}
     if (featureData) {
       const selectedData = featureData[keyDate]
 
@@ -558,7 +575,7 @@ const HRCView = () => {
         const innerKeyDate = Object.keys(featureData[keyDate]).slice(0, 7)
 
         if (innerKeyDate) {
-          const predData: Array<any> = []
+          const predData: Array<DataType> = []
           innerKeyDate?.map((x) => {
             predData.push({ time: x, value: selectedData[x].value })
           })
@@ -580,9 +597,8 @@ const HRCView = () => {
   const onChangeFeature = (value: string) => {
     if (inputData) {
       const filteredData = inputData[value as keyof typeof inputData]
-
-      //chartdata로 push하기 위한 formatting
-      setSelectedFeature({ name: value, data: formatObjectToArray(filteredData) })
+      // Formatting for pushing to chart data
+      setSelectedFeature({ name: value, data: formatObjectToArray(filteredData as { [key: string]: number }) })
     }
   }
 

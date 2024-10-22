@@ -20,10 +20,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
 const connectorPlugin = {
   id: 'connectorPlugin',
   afterDatasetDraw: (chart: ChartJS) => {
-    const {
-      ctx,
-      scales: { x, y },
-    } = chart
+    const { ctx } = chart
 
     chart.data.datasets.forEach((dataset, datasetIndex) => {
       const meta = chart.getDatasetMeta(datasetIndex)
