@@ -119,15 +119,15 @@ jobs:
           kubectl apply -f cloudfnt-web-chart.yaml -n default
           kubectl rollout status deployment/cloudfnt-web-test --timeout 15m
 
-      # Browser test
-      - name: Run Datadog Synthetic tests
-        uses: DataDog/synthetics-ci-github-action@v0.16.0
-        with:
-          api_key: ${{secrets.DD_API_KEY}}
-          app_key: ${{secrets.DD_APP_KEY}}
-          datadog_site: us5.datadoghq.com
-          public_ids: 'uma-d8h-kd5'
-          fail_on_critical_errors: true
+      # Browser test(24.10.28 -- 당분간 사용하지 않음)
+      # - name: Run Datadog Synthetic tests
+      #   uses: DataDog/synthetics-ci-github-action@v0.16.0
+      #   with:
+      #     api_key: ${{secrets.DD_API_KEY}}
+      #     app_key: ${{secrets.DD_APP_KEY}}
+      #     datadog_site: us5.datadoghq.com
+      #     public_ids: 'uma-d8h-kd5'
+      #     fail_on_critical_errors: true
 
       # Print env variables and the event payload for the debugging purpose.
       - name: Debug
