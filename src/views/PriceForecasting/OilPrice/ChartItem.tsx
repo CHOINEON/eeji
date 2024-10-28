@@ -6,13 +6,19 @@ import Chart from 'react-apexcharts'
 import { useTranslation } from 'react-i18next'
 import FeatureImportance from 'views/AIModelGenerator/Visualization/Features/FeatureImportance'
 
-const ChartItem = (props: any) => {
+interface DataItem {
+  date: string // Assuming date is in string format
+  ground_truth: number | null // Assuming ground_truth can be a number or null
+  pred_1?: number | null // Optional property
+  // Add other properties as needed
+}
+
+const ChartItem = (props: { is_reset: string; chart_id: string }) => {
   // console.log('ChartItem props(id)', props)
   const { message } = App.useApp()
   const { t } = useTranslation()
-
   // TODO 2024-03-06 심볼명, 심볼설명 배열 생성
-  const [chartType, setChartType] = useState('candle')
+  const chartType: 'candle' | 'area' = 'candle'
 
   // https://ineeji-solution-tf.du.r.appspot.com/api/index_predict/get_symbol_predict/admin?is_daily=1&symbol=BCOMAL.INDX
 
@@ -50,7 +56,7 @@ const ChartItem = (props: any) => {
           setFeaturedData([])
 
           let tmpCnt = 0
-          data.map((item: any, index: number) => {
+          data.map((item: DataItem, index: number) => {
             const date = new Date(item.date).getTime()
             // TODO truth Data 초기화
             setTruthData((prev) => [...prev, [date, item.ground_truth]])
@@ -101,7 +107,7 @@ const ChartItem = (props: any) => {
             }
           }
 
-          setIsReload((prev) => !isReload)
+          setIsReload(!isReload)
         })
         .catch((error) => console.error(error))
         .then(() => {
@@ -133,10 +139,10 @@ const ChartItem = (props: any) => {
           const tmp_index = parseInt(props.chart_id.replace('chart-', ''))
           // 2024-04-04 해당 index와 일치하는 항목 출력
           if (index === tmp_index - 1) {
-            setSymbol((prev) => item['symbol'])
+            setSymbol(item['symbol'])
             // TODO 2024-04-04 해당 index와 일치하는 option 선택
           }
-          setSymbolList((prev: any) => [...prev, [item['symbol'], item['full_name']]])
+          setSymbolList((prev) => [...prev, [item['symbol'], item['full_name']]])
         })
         // setTimeout(() => {
         //   console.log(symbolList)
@@ -180,7 +186,7 @@ const ChartItem = (props: any) => {
         colors: ['#64d33f', '#372dd5'],
         chart: {
           id: props.chart_id,
-          type: chartType === 'area',
+          type: chartType,
           height: '100%',
           zoom: {
             autoScaleYaxis: true,
@@ -254,7 +260,7 @@ const ChartItem = (props: any) => {
   }, [chartType, props.chart_id, isReload])
 
   const updateChart = (selection: string) => {
-    setSelection((prev) => selection)
+    setSelection(selection)
 
     setTimeout(() => {
       if (truthData.length > 0) {
@@ -292,8 +298,8 @@ const ChartItem = (props: any) => {
               className={`item ${frequency === 'daily' ? 'item-active' : ''}`}
               onClick={() => {
                 message.info(t('Your selection will be reset.'))
-                setFrequency((prev) => 'daily')
-                setIsFeature((prev) => false)
+                setFrequency('daily')
+                setIsFeature(false)
               }}
             >
               {t('1d')}
@@ -302,8 +308,8 @@ const ChartItem = (props: any) => {
               className={`item ${frequency === 'monthly' ? 'item-active' : ''} whitespace-nowrap`}
               onClick={() => {
                 message.info(t('Your selection will be reset.'))
-                setFrequency((prev) => 'monthly')
-                setIsFeature((prev) => false)
+                setFrequency('monthly')
+                setIsFeature(false)
               }}
             >
               {t('1m')}
@@ -359,7 +365,7 @@ const ChartItem = (props: any) => {
       <div
         className={`text-[11px] absolute top-[55px] z-[1000] right-2 bg-white border-solid border border-[#D5DCEF] border-primary text-primary font-bold py-1 px-4 cursor-pointer rounded-lg transition-all hover:bg-[#E5EBFF] hover:text-[#372dd5] hover:border-[#372dd5] select-none`}
         onClick={() => {
-          setIsFeature((prev) => !isFeature)
+          setIsFeature(!isFeature)
         }}
       >
         {t('Feature Importance')}
@@ -373,7 +379,7 @@ const ChartItem = (props: any) => {
               className=""
               onClick={() => {
                 if (isFeature) {
-                  setIsFeature((prev) => false)
+                  setIsFeature(false)
                 }
               }}
             >
