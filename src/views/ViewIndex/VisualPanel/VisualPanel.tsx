@@ -2,16 +2,19 @@ import { Radio, RadioChangeEvent } from 'antd'
 import IndexApi from 'apis/IndexApi'
 import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
-import ChartComponent from './ChartComponent'
+import { useRecoilState } from 'recoil'
+import { capitalizeFirstLetter } from 'utils/StringFormatter'
+import ChartComponent from '../ChartComponent'
+import { SymbolState } from '../stores/atom'
+import HorizonButtonGroup from './HorizonButtonGroup'
+import SymbolDropdown from './SymbolDropdown'
 
-const options = [
-  { label: 'Daily', value: 1 },
-  { label: 'Weekly', value: 2 },
-  { label: 'Monthly', value: 3 },
-]
+const plainOptions = ['History', 'Forecast']
 
 const VisualPanel = () => {
-  const [symbol, setSymbol] = useState('Nickel')
+  const [symbol, setSymbol] = useRecoilState(SymbolState)
+  const [viewType, setViewType] = useState('History')
+
   const [initialData, setInitialData] = useState([])
   const [chartData, setChartData] = useState([])
   const [period, setPeriod] = useState(1)
@@ -51,21 +54,39 @@ const VisualPanel = () => {
   }, [initialData, period])
 
   useEffect(() => {
-    fetchPredictionData(symbol)
+    // fetchPredictionData(symbol.symbol_id)
   }, [])
 
   const onChange = ({ target: { value } }: RadioChangeEvent) => {
     setPeriod(value)
   }
 
+  const onChangeViewType = ({ target: { value } }: RadioChangeEvent) => {
+    setViewType(value)
+  }
+
   return (
     <div className="m-3">
-      <div className="">
-        <h3 className="text-black inline-block mx-5">Symbol : {symbol}</h3>
-        <Radio.Group options={options} optionType="button" buttonStyle="solid" onChange={onChange} value={period} />
+      <SymbolDropdown />
+      <div>
+        <span className="text-black text-xl mr-5">{symbol.symbol_id}</span>
+        <span>{capitalizeFirstLetter(symbol.period)}</span>
+        <div className="my-4">
+          <Radio.Group
+            options={plainOptions}
+            onChange={onChangeViewType}
+            value={viewType}
+            optionType="button"
+            buttonStyle="solid"
+          />
+        </div>
+        <h5 className="text-black text-sm"></h5>
+
+        {/* <Radio.Group options={options} optionType="button" buttonStyle="solid" onChange={onChange} value={period} /> */}
       </div>
       <div className="m-5">
         <ChartComponent series={chartData}></ChartComponent>
+        <HorizonButtonGroup />
       </div>
     </div>
   )
