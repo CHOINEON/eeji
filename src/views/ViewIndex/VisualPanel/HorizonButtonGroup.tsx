@@ -9,7 +9,7 @@ const HorizonButtonGroup = () => {
   const [selectedButton, setSelectedButton] = useRecoilState(selectedIndexState)
 
   useEffect(() => {
-    if (horizons) setSelectedButton({ horizon: JSON.parse(symbol.horizons) })
+    if (symbol.horizons.length > 0) setSelectedButton({ horizon: JSON.parse(symbol.horizons)[0] })
   }, [horizons])
 
   return (
