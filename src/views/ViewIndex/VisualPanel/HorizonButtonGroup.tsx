@@ -23,7 +23,7 @@ const HorizonButtonGroup = () => {
             key={horizon}
             onClick={() => setSelectedButton({ horizon: horizon })}
           >
-            {horizon}D
+            {horizon + symbol.period.charAt(0).toUpperCase()}
           </PeriodButton>
         ))}
       </div>

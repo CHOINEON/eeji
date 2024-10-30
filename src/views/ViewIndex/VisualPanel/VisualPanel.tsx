@@ -28,7 +28,6 @@ const VisualPanel = () => {
   )
 
   useEffect(() => {
-    console.log('data:', data?.data.length)
     if (data?.data && data?.data.length > 0) setInitialData(data?.data)
   }, [data])
 
@@ -59,10 +58,6 @@ const VisualPanel = () => {
       ])
     }
   }, [initialData])
-
-  useEffect(() => {
-    // fetchPredictionData(symbol.symbol_id, symbol.horizons)
-  }, [])
 
   const onChangeViewType = ({ target: { value } }: RadioChangeEvent) => {
     setViewType(value)
