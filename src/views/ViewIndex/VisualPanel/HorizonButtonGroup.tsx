@@ -9,7 +9,7 @@ const HorizonButtonGroup = () => {
   const [selectedButton, setSelectedButton] = useRecoilState(selectedIndexState)
 
   useEffect(() => {
-    if (horizons) setSelectedButton({ horizon: JSON.parse(symbol.horizons) })
+    if (symbol.horizons.length > 0) setSelectedButton({ horizon: JSON.parse(symbol.horizons)[0] })
   }, [horizons])
 
   return (
@@ -23,7 +23,7 @@ const HorizonButtonGroup = () => {
             key={horizon}
             onClick={() => setSelectedButton({ horizon: horizon })}
           >
-            {horizon}D
+            {horizon + symbol.period.charAt(0).toUpperCase()}
           </PeriodButton>
         ))}
       </div>

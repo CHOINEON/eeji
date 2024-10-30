@@ -1,11 +1,11 @@
 import { Radio, RadioChangeEvent } from 'antd'
 import IndexApi from 'apis/IndexApi'
 import { useEffect, useState } from 'react'
-import { useMutation } from 'react-query'
-import { useRecoilState } from 'recoil'
+import { useQuery } from 'react-query'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { capitalizeFirstLetter } from 'utils/StringFormatter'
 import ChartComponent from '../ChartComponent'
-import { SymbolState } from '../stores/atom'
+import { selectedIndexState, SymbolState } from '../stores/atom'
 import HorizonButtonGroup from './HorizonButtonGroup'
 import SymbolDropdown from './SymbolDropdown'
 
@@ -17,13 +17,19 @@ const VisualPanel = () => {
 
   const [initialData, setInitialData] = useState([])
   const [chartData, setChartData] = useState([])
-  const [period, setPeriod] = useState(1)
+  const selectedIndex = useRecoilValue(selectedIndexState)
 
-  const { mutate: fetchPredictionData } = useMutation(IndexApi.getPredictiondata, {
-    onSuccess: (response: { data: Array<unknown> }) => {
-      setInitialData(response?.data)
-    },
-  })
+  const { data } = useQuery(
+    ['predictionData', symbol.symbol_id, selectedIndex.horizon],
+    () => IndexApi.getPredictionData(symbol.symbol_id, selectedIndex.horizon.toString()),
+    {
+      enabled: !!symbol.symbol_id && !!selectedIndex.horizon,
+    }
+  )
+
+  useEffect(() => {
+    if (data?.data && data?.data.length > 0) setInitialData(data?.data)
+  }, [data])
 
   useEffect(() => {
     if (initialData.length > 0) {
@@ -31,7 +37,7 @@ const VisualPanel = () => {
 
       // Filter and map the initialData for both prediction and groundTruth in one pass
       const filteredData = initialData
-        .filter((item) => item.horizon === period)
+        .filter((item) => item.horizon === selectedIndex.horizon)
         .map((item) => ({
           time: new Date(item.date).getTime() / 1000, // Convert to UNIX timestamp in seconds
           pred: item.pred,
@@ -51,15 +57,7 @@ const VisualPanel = () => {
         { data: groundTruth, lineColor: 'rgb(225, 87, 90)' },
       ])
     }
-  }, [initialData, period])
-
-  useEffect(() => {
-    // fetchPredictionData(symbol.symbol_id)
-  }, [])
-
-  const onChange = ({ target: { value } }: RadioChangeEvent) => {
-    setPeriod(value)
-  }
+  }, [initialData])
 
   const onChangeViewType = ({ target: { value } }: RadioChangeEvent) => {
     setViewType(value)
@@ -86,7 +84,9 @@ const VisualPanel = () => {
       </div>
       <div className="m-5">
         <ChartComponent series={chartData}></ChartComponent>
-        <HorizonButtonGroup />
+        <div className="mt-3">
+          <HorizonButtonGroup />
+        </div>
       </div>
     </div>
   )

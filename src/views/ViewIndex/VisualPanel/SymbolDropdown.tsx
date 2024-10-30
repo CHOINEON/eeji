@@ -15,7 +15,6 @@ const SymbolDropdown = () => {
   const [items, setItems] = useState<MenuProps['items']>([])
 
   useEffect(() => {
-    console.log(symbolList)
     if (symbolList.length > 0) {
       setSymbol({
         symbol_id: symbolList[0].symbol_id,
