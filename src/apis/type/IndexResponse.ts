@@ -11,3 +11,15 @@ export interface ISymbolList {
 export interface ISelectedIndex {
   horizon: number
 }
+
+export interface IFeatureImportance {
+  feature_name: string
+  importance: number
+}
+
+export interface IGlobalFeatureImportance {
+  dt: string
+  feature_importance: Array<IFeatureImportance>
+  horizon: number
+  name: string
+}

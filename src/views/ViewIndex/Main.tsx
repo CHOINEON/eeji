@@ -2,6 +2,7 @@ import IndexApi from 'apis/IndexApi'
 import { useEffect } from 'react'
 import { useMutation } from 'react-query'
 import { useSetRecoilState } from 'recoil'
+import GlobalFeatureImportance from './ExplanationPanel/GlobalFeatureImportance'
 import ResizablePanels from './ResizablePanels'
 import { SymbolListState, SymbolState } from './stores/atom'
 import VisualPanel from './VisualPanel/VisualPanel'
@@ -24,12 +25,7 @@ const Main = () => {
   return (
     <ResizablePanels
       panel1={<VisualPanel />}
-      panel2={
-        <div>
-          <h1 className="text-xl font-bold">Panel 2</h1>
-          <p>This is the content of Panel 2.</p>
-        </div>
-      }
+      panel2={<GlobalFeatureImportance />}
       panel3={
         <div>
           <h1 className="text-xl font-bold">Panel 3</h1>

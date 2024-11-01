@@ -89,7 +89,7 @@ const ResizablePanels: React.FC<ResizablePanelsProps> = ({ panel1, panel2, panel
       {/* 우측 패널 */}
       <div className="flex flex-col flex-grow">
         {/* Panel 2 */}
-        <div className="bg-green-300 p-4 overflow-auto" style={{ height: `${panel2Height}%` }}>
+        <div className="bg-white p-4 overflow-auto" style={{ height: `${panel2Height}%` }}>
           {panel2}
         </div>
 
