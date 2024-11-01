@@ -1,5 +1,5 @@
 {
   "service": "cloudfnt-web",
-  "version": "20241030R1",
+  "version": "20241101R1",
   "dockerfile": "./Dockerfile"
 }

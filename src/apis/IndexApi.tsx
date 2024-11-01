@@ -1,5 +1,5 @@
 import { axiosPrivate } from './axios'
-import { ISymbolList } from './type/IndexResponse'
+import { IGlobalFeatureImportance, ISymbolList } from './type/IndexResponse'
 
 const IndexApi = {
   //유저별 종목 리스트
@@ -15,9 +15,15 @@ const IndexApi = {
   },
 
   //특정 symbol의 예측값 가져오기
-  getPredictionData: async (symbol: string, horizons: string): Promise<any> => {
-    const { data } = await axiosPrivate.get(`api/v2/economy/prediction/${symbol}?horizons=${horizons}`)
+  getPredictionData: async (symbol: string): Promise<any> => {
+    const { data } = await axiosPrivate.get(`api/v2/economy/prediction/${symbol}`)
     return data
+  },
+
+  //symbol의 global explanation
+  getGlobalExplanation: async (symbol: string, horizon: string): Promise<IGlobalFeatureImportance> => {
+    const { data } = await axiosPrivate.get(`api/v2/economy/global_feature_importance/${symbol}?horizon=${horizon}`)
+    return data.data[0] as IGlobalFeatureImportance
   },
 }
 
