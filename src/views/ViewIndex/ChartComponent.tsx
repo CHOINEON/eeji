@@ -1,70 +1,90 @@
-import { ColorType, createChart } from 'lightweight-charts'
-import { useEffect, useRef } from 'react'
+import { ApexOptions } from 'apexcharts'
+import { Prediction } from 'apis/type/IndexResponse'
+import { useEffect, useState } from 'react'
+import ReactApexChart from 'react-apexcharts'
+import { useRecoilValue } from 'recoil'
+import { graphDataState } from './stores/atom'
 
-export interface SeriesData {
-  data: { time: string; value: number }[]
-  lineColor?: string
-}
+const PredictionChart = () => {
+  const graphData = useRecoilValue(graphDataState)
 
-export interface ChartProps {
-  series: SeriesData[]
-  colors?: {
-    backgroundColor?: string
-    textColor?: string
+  function ReformatData(data: Prediction[], key: keyof Prediction) {
+    return data?.map((item) => item[key]) || []
   }
-}
 
-const ChartComponent = (props: ChartProps) => {
-  const { series, colors: { backgroundColor = 'white', textColor = 'black' } = {} } = props
-  const chartContainerRef = useRef<HTMLDivElement | null>(null)
-  const chartInstanceRef = useRef<any>(null) // To store the chart instance
+  const [options, setOptions] = useState<ApexOptions>({
+    chart: {
+      height: 350,
+      type: 'line',
+      id: 'areachart-2',
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: 'straight',
+      width: 1.5,
+    },
+    grid: {
+      padding: {
+        right: 30,
+        left: 20,
+        bottom: 30,
+      },
+    },
+    xaxis: {
+      type: 'datetime',
+      categories: [],
+    },
+  })
+
+  const [series, setSeries] = useState([
+    {
+      name: 'Prediction',
+      data: ReformatData(graphData, 'pred'),
+    },
+    {
+      name: 'Ground Truth',
+      data: ReformatData(graphData, 'ground_truth'),
+    },
+  ])
 
   useEffect(() => {
-    if (!chartContainerRef.current) return
-
-    // Create chart instance
-    const chart = createChart(chartContainerRef.current, {
-      layout: {
-        fontFamily: 'Helvetica Neue',
-        background: { type: ColorType.Solid, color: backgroundColor },
-        textColor,
-      },
-      width: chartContainerRef.current.clientWidth,
-      height: 300,
-    })
-
-    chartInstanceRef.current = chart // Store the chart instance for future use
-
-    if (series && series.length > 0) {
-      series.forEach((singleSeries) => {
-        const { data, lineColor } = singleSeries
-
-        if (Array.isArray(data) && data.length > 0) {
-          const newSeries = chart.addAreaSeries({ lineColor })
-          newSeries.setData(data)
-        } else {
-          console.warn('Invalid data for series:', singleSeries)
-        }
-      })
+    if (graphData?.length) {
+      const newSeries = [
+        {
+          name: 'Prediction',
+          data: ReformatData(graphData, 'pred'),
+        },
+        {
+          name: 'Ground Truth',
+          data: ReformatData(graphData, 'ground_truth'),
+        },
+      ]
+      setSeries(newSeries)
+      setOptions((prevOptions) => ({
+        ...prevOptions,
+        xaxis: {
+          ...prevOptions.xaxis,
+          categories: ReformatData(graphData, 'date_pred'),
+        },
+      }))
     }
+  }, [graphData])
 
-    chart.timeScale().fitContent()
-
-    const resizeObserver = new ResizeObserver(() => {
-      if (chartContainerRef.current) {
-        chart.applyOptions({ width: chartContainerRef.current.clientWidth })
-      }
-    })
-
-    resizeObserver.observe(chartContainerRef.current)
-
-    return () => {
-      resizeObserver.disconnect()
-      chart.remove()
-    }
-  }, [series, backgroundColor, textColor])
-
-  return <div ref={chartContainerRef} style={{ width: '100%', height: '100%' }} />
+  return (
+    <div>
+      <div id="chart">
+        <ReactApexChart
+          options={options as ApexOptions}
+          series={series as ApexAxisChartSeries}
+          type="line"
+          height={350}
+        />
+      </div>
+      <div id="html-dist"></div>
+    </div>
+  )
 }
 
-export default ChartComponent
+export default PredictionChart
