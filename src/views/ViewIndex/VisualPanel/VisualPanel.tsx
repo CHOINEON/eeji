@@ -43,6 +43,8 @@ const VisualPanel = () => {
       <div>
         <span className="text-black text-xl mr-5">{symbol.symbol_id}</span>
         <span>{capitalizeFirstLetter(symbol.period)}</span>
+        <span className="mx-2"> | </span>
+        <span>{symbol.unit}</span>
         {/* <div className="my-4">
           <Radio.Group
             options={plainOptions}

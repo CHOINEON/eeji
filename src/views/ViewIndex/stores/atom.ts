@@ -1,9 +1,9 @@
-import { ISelectedIndex, ISymbol } from 'apis/type/IndexResponse'
+import { ISelectedIndex, ISymbol, Prediction } from 'apis/type/IndexResponse'
 import { atom } from 'recoil'
 
 export const SymbolState = atom({
   key: 'symbolState',
-  default: { symbol_id: '', period: '', horizons: '' } as ISymbol,
+  default: { symbol_id: '', period: '', horizons: '', unit: '' } as ISymbol,
 })
 
 export const SymbolListState = atom({
@@ -18,5 +18,5 @@ export const selectedIndexState = atom({
 
 export const graphDataState = atom({
   key: 'graphDataState',
-  default: [] as any[],
+  default: [] as Prediction[],
 })
