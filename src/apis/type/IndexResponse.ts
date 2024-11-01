@@ -23,3 +23,20 @@ export interface IGlobalFeatureImportance {
   horizon: number
   name: string
 }
+
+export type Prediction = {
+  date_pred: string
+  ground_truth: number | null
+  pred: number
+}
+
+export interface IHorizonData {
+  [horizon: number]: Prediction[]
+}
+
+export interface IPredictionDataResponse {
+  data: {
+    name: string
+    horizon: IHorizonData
+  }
+}

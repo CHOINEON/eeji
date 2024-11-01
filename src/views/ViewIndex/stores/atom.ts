@@ -15,3 +15,8 @@ export const selectedIndexState = atom({
   key: 'selectedIndexState',
   default: { horizon: 0 } as ISelectedIndex,
 })
+
+export const graphDataState = atom({
+  key: 'graphDataState',
+  default: [] as any[],
+})
