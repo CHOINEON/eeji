@@ -1,18 +1,16 @@
 import IndexApi from 'apis/IndexApi'
 import { IFeatureImportance } from 'apis/type/IndexResponse'
-import { TooltipItem } from 'chart.js'
 import { useEffect, useState } from 'react'
-import { Doughnut } from 'react-chartjs-2'
+import ReactApexChart from 'react-apexcharts'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
-import { colorChips } from 'views/AIModelGenerator/components/Chart/colors'
 import { selectedIndexState, SymbolState } from '../stores/atom'
 
 const GlobalFeatureImportance = () => {
   const symbol = useRecoilValue(SymbolState)
   const selectedIndex = useRecoilValue(selectedIndexState)
-
   const [featureImportance, setFeatureImportance] = useState([])
+  const [series, setSeries] = useState([])
 
   const { data } = useQuery(
     ['globalExplanation', symbol.symbol_id, selectedIndex.horizon],
@@ -25,60 +23,52 @@ const GlobalFeatureImportance = () => {
   useEffect(() => {
     if (data) {
       setFeatureImportance(data?.feature_importance)
+      setSeries(
+        data?.feature_importance?.map((el: IFeatureImportance) => ({
+          name: el.feature_name,
+          data: [(el.importance * 100).toFixed(1)],
+        }))
+      )
     }
   }, [data])
 
-  const doughnutData = {
-    labels: featureImportance?.map((el: IFeatureImportance) => el.feature_name),
-    datasets: [
-      {
-        label: '',
-        data: featureImportance?.map((el: IFeatureImportance) => (el.importance * 100).toFixed(1)),
-        backgroundColor: colorChips,
-      },
-    ],
-  }
-
-  const doughnutOptions = {
-    maintainAspectRatio: false,
-    indexAxis: 'y' as const,
-    elements: {
-      bar: {
-        borderWidth: 2,
-      },
+  const options = {
+    chart: {
+      width: 380,
+      type: 'donut' as const,
     },
-    responsive: true,
-    plugins: {
-      datalabels: {
-        display: false,
-        backgroundColor: '#ccc',
-        borderRadius: 3,
-      },
-      legend: {
-        display: false,
-      },
-      title: {
-        display: false,
-        text: 'TOP 3 Features',
-      },
-      tooltip: {
-        callbacks: {
-          label: (tooltipItem: TooltipItem<'doughnut'>) => {
-            const value = tooltipItem.raw // Use raw value from the tooltip item
-            return value + '%' // Append % to the value
+    dataLabels: {
+      enabled: false,
+    },
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200,
+          },
+          legend: {
+            show: false,
           },
         },
       },
+    ],
+    legend: {
+      show: false,
+      position: 'bottom' as const,
+      offsetY: 0,
+      height: 230,
     },
+    labels: series.map((s) => s.name), // Series 이름을 표시
   }
 
   return (
     <>
-      <h3 className="text-lg font-bold">Global Feature Importance</h3>
-      <div className="m-5 h-[200px]">
+      <h3 className="text-black text-xl">Global Feature Importance</h3>
+      <div className="m-5">
         {featureImportance?.length > 0 && (
           <>
-            <Doughnut data={doughnutData} options={doughnutOptions} />
+            <ReactApexChart options={options} series={series.map((s) => Number(s.data[0]))} type="donut" height={250} />
             <div className="my-5">
               가장 영향력이 큰 변수는 <strong>{featureImportance[0]?.feature_name} </strong>입니다.
             </div>

@@ -20,6 +20,7 @@ const SymbolDropdown = () => {
         symbol_id: symbolList[0].symbol_id,
         period: symbolList[0].period,
         horizons: symbolList[0].horizons,
+        unit: symbolList[0].unit,
       })
 
       setItems(generateItems())

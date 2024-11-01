@@ -1,7 +1,7 @@
 import IndexApi from 'apis/IndexApi'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { capitalizeFirstLetter } from 'utils/StringFormatter'
 import ChartComponent from '../ChartComponent'
 import { graphDataState, selectedIndexState, SymbolState } from '../stores/atom'
@@ -13,10 +13,9 @@ import SymbolDropdown from './SymbolDropdown'
 // const [viewType, setViewType] = useState('History')
 
 const VisualPanel = () => {
-  const [symbol, setSymbol] = useRecoilState(SymbolState)
+  const symbol = useRecoilValue(SymbolState)
   const selectedIndex = useRecoilValue(selectedIndexState)
-
-  const [graphData, setGraphData] = useRecoilState(graphDataState)
+  const setGraphData = useSetRecoilState(graphDataState)
 
   const { data } = useQuery(
     ['predictionData', symbol.symbol_id, selectedIndex.horizon],
@@ -44,6 +43,8 @@ const VisualPanel = () => {
       <div>
         <span className="text-black text-xl mr-5">{symbol.symbol_id}</span>
         <span>{capitalizeFirstLetter(symbol.period)}</span>
+        <span className="mx-2"> | </span>
+        <span>{symbol.unit}</span>
         {/* <div className="my-4">
           <Radio.Group
             options={plainOptions}
