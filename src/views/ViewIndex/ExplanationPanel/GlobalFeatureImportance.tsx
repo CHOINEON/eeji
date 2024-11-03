@@ -63,8 +63,8 @@ const GlobalFeatureImportance = () => {
   }
 
   return (
-    <>
-      <h3 className="text-black text-xl">Global Feature Importance</h3>
+    <div className="m-3">
+      <h3 className="text-black text-lg">Global Feature Importance</h3>
       <div className="m-5">
         {featureImportance?.length > 0 && (
           <>
@@ -75,7 +75,7 @@ const GlobalFeatureImportance = () => {
           </>
         )}
       </div>
-    </>
+    </div>
   )
 }
 

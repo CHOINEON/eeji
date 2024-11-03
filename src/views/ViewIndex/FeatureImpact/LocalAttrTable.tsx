@@ -8,10 +8,12 @@ const columns = [
   {
     title: 'Name',
     dataIndex: 'name',
+    align: 'center' as const,
   },
   {
     title: 'Importance',
     dataIndex: 'importance',
+    align: 'center' as const,
   },
 ]
 
@@ -20,7 +22,6 @@ const LocalAttrTable = () => {
   const [data, setData] = useState([])
 
   useEffect(() => {
-    console.log(selectedIndex.features)
     if (selectedIndex.features && Object.keys(selectedIndex?.features).length > 0) {
       const keyArr = Object.keys(selectedIndex.features)
       const data = keyArr.map((key) => ({
@@ -33,15 +34,17 @@ const LocalAttrTable = () => {
   }, [selectedIndex])
 
   return (
-    <>
+    <div className="m-3">
+      <h3 className="text-black text-lg">Local Attribution</h3>
       <Table
+        className="mt-2"
         columns={columns}
         dataSource={data}
         rowSelection={{ type: 'radio' }}
         size="small"
         pagination={{ pageSize: 5, pageSizeOptions: [5], position: ['bottomCenter'], showSizeChanger: false }}
       />
-    </>
+    </div>
   )
 }
 
