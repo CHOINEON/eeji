@@ -1,7 +1,7 @@
 import IndexApi from 'apis/IndexApi'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { capitalizeFirstLetter } from 'utils/StringFormatter'
 import ChartComponent from '../ChartComponent'
 import { graphDataState, selectedIndexState, SymbolState } from '../stores/atom'
@@ -14,7 +14,7 @@ import SymbolDropdown from './SymbolDropdown'
 
 const VisualPanel = () => {
   const symbol = useRecoilValue(SymbolState)
-  const selectedIndex = useRecoilValue(selectedIndexState)
+  const [selectedIndex, setSelectedIndex] = useRecoilState(selectedIndexState)
   const setGraphData = useSetRecoilState(graphDataState)
 
   const { data } = useQuery(
@@ -25,14 +25,19 @@ const VisualPanel = () => {
     }
   )
 
-  // const { data: rawData } = useQuery(['rawData', symbol.symbol_id], () => IndexApi.getRawData(symbol.symbol_id), {
-  //   enabled: !!symbol.symbol_id,
-  // })
+  const { data: rawData } = useQuery(['rawData', symbol.symbol_id], () => IndexApi.getRawData(symbol.symbol_id), {
+    enabled: !!symbol.symbol_id,
+  })
 
   useEffect(() => {
     if (data) setGraphData(data[selectedIndex.horizon])
   }, [data, selectedIndex])
 
+  useEffect(() => {
+    if (rawData) setSelectedIndex({ ...selectedIndex, features: rawData })
+  }, [rawData])
+
+  // const onChangeViewType = ({ target: { value } }: RadioChangeEvent) => {
   // const onChangeViewType = ({ target: { value } }: RadioChangeEvent) => {
   //   setViewType(value)
   // }

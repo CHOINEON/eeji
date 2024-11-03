@@ -10,7 +10,8 @@ export interface ISymbolList {
 }
 
 export interface ISelectedIndex {
-  horizon: number
+  horizon?: number
+  features?: IRawDataResponse
 }
 
 export interface IFeatureImportance {
@@ -40,4 +41,8 @@ export interface IPredictionDataResponse {
     name: string
     horizon: IHorizonData
   }
+}
+
+export interface IRawDataResponse {
+  [feature: string]: Array<{ date: string; value: number }>
 }

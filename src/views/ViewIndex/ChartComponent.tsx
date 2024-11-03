@@ -7,6 +7,7 @@ import { graphDataState } from './stores/atom'
 
 const PredictionChart = () => {
   const graphData = useRecoilValue(graphDataState)
+
   function ReformatData(data: Prediction[], key: keyof Prediction) {
     return data?.map((item) => item[key]) || []
   }

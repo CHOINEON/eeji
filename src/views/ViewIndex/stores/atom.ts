@@ -11,9 +11,10 @@ export const SymbolListState = atom({
   default: [] as ISymbol[],
 })
 
+//현재 차트에서 선택된 Index 정보(horizon, features...)
 export const selectedIndexState = atom({
   key: 'selectedIndexState',
-  default: { horizon: 0 } as ISelectedIndex,
+  default: { horizon: 0, features: {} } as ISelectedIndex,
 })
 
 export const graphDataState = atom({
