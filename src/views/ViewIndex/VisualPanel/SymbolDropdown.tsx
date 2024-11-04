@@ -9,14 +9,14 @@ const categoryItems = [
 ]
 
 const SymbolDropdown = () => {
-  const [symbol, setSymbol] = useRecoilState(SymbolState)
   const symbolList = useRecoilValue(SymbolListState)
-  // const [dropdown, setDropdown] = useState(false)
+  const [symbol, setSymbol] = useRecoilState(SymbolState)
   const [items, setItems] = useState<MenuProps['items']>([])
 
   useEffect(() => {
     if (symbolList.length > 0) {
       setSymbol({
+        ...symbol,
         symbol_id: symbolList[0].symbol_id,
         period: symbolList[0].period,
         horizons: symbolList[0].horizons,
@@ -35,7 +35,6 @@ const SymbolDropdown = () => {
   }, [symbolList])
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
-    // console.log(symbolList.find((symbol) => symbol.symbol_id === key))
     setSymbol(symbolList.find((symbol) => symbol.symbol_id === key) as ISymbol)
   }
 

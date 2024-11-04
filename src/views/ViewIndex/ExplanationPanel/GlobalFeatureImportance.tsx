@@ -4,19 +4,18 @@ import { useEffect, useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
-import { selectedIndexState, SymbolState } from '../stores/atom'
+import { SymbolState } from '../stores/atom'
 
 const GlobalFeatureImportance = () => {
   const symbol = useRecoilValue(SymbolState)
-  const selectedIndex = useRecoilValue(selectedIndexState)
   const [featureImportance, setFeatureImportance] = useState([])
   const [series, setSeries] = useState([])
 
   const { data } = useQuery(
-    ['globalExplanation', symbol.symbol_id, selectedIndex.horizon],
-    () => IndexApi.getGlobalExplanation(symbol.symbol_id, selectedIndex.horizon.toString()),
+    ['globalExplanation', symbol.symbol_id, symbol.selectedHorizon],
+    () => IndexApi.getGlobalExplanation(symbol.symbol_id, symbol.selectedHorizon.toString()),
     {
-      enabled: !!symbol.symbol_id && !!selectedIndex.horizon,
+      enabled: !!symbol.symbol_id && !!symbol.selectedHorizon,
     }
   )
 
@@ -63,8 +62,8 @@ const GlobalFeatureImportance = () => {
   }
 
   return (
-    <>
-      <h3 className="text-black text-xl">Global Feature Importance</h3>
+    <div className="m-3">
+      <h3 className="text-black text-lg">Global Feature Importance</h3>
       <div className="m-5">
         {featureImportance?.length > 0 && (
           <>
@@ -75,7 +74,7 @@ const GlobalFeatureImportance = () => {
           </>
         )}
       </div>
-    </>
+    </div>
   )
 }
 

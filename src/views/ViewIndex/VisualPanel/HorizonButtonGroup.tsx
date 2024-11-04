@@ -1,27 +1,29 @@
 import styled from '@emotion/styled'
 import { useEffect } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { selectedIndexState, SymbolState } from '../stores/atom'
+import { useRecoilState } from 'recoil'
+import { SymbolState } from '../stores/atom'
 
 const HorizonButtonGroup = () => {
-  const horizons = useRecoilValue(SymbolState).horizons
-  const symbol = useRecoilValue(SymbolState)
-  const [selectedButton, setSelectedButton] = useRecoilState(selectedIndexState)
+  const [symbol, setSymbol] = useRecoilState(SymbolState) //최초 버튼 생성에만 사용
+
+  // const [filterCondition, setFilterCondition] = useRecoilState(filterConditionState)
 
   useEffect(() => {
-    if (symbol.horizons.length > 0) setSelectedButton({ horizon: JSON.parse(symbol.horizons)[0] })
-  }, [horizons])
+    if (symbol.horizons.length > 0) {
+      setSymbol({ ...symbol, selectedHorizon: JSON.parse(symbol.horizons)[0] })
+    }
+  }, [symbol.horizons])
 
   return (
-    horizons && (
+    symbol.horizons && (
       <div className="flex flex-row justify-center">
-        {JSON.parse(horizons)?.map((horizon: number) => (
+        {JSON.parse(symbol.horizons)?.map((horizon: number, index: number) => (
           <PeriodButton
             className={`rounded border ${
-              selectedButton.horizon === horizon ? 'border-[#4338f7]' : 'border-[#d9d9d9]'
+              symbol.selectedHorizon === horizon ? 'border-[#4338f7]' : 'border-[#d9d9d9]'
             } mx-1`}
-            key={horizon}
-            onClick={() => setSelectedButton({ horizon: horizon })}
+            key={index}
+            onClick={() => setSymbol({ ...symbol, selectedHorizon: horizon })}
           >
             {horizon + symbol.period.charAt(0).toUpperCase()}
           </PeriodButton>

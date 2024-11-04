@@ -1,5 +1,5 @@
 import { axiosPrivate } from './axios'
-import { IGlobalFeatureImportance, IHorizonData, ISymbolList } from './type/IndexResponse'
+import { IGlobalFeatureImportance, IHorizonData, IRawDataResponse, ISymbolList } from './type/IndexResponse'
 
 const IndexApi = {
   //유저별 종목 리스트
@@ -9,9 +9,9 @@ const IndexApi = {
   },
 
   //전체 raw data
-  getRawData: async (symbol: string): Promise<any> => {
+  getRawData: async (symbol: string): Promise<IRawDataResponse> => {
     const { data } = await axiosPrivate.get(`api/v2/economy/rawdata/${symbol}`)
-    return data
+    return data.data
   },
 
   //특정 symbol의 예측값 가져오기

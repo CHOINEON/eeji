@@ -1,9 +1,9 @@
-import { ISelectedIndex, ISymbol, Prediction } from 'apis/type/IndexResponse'
+import { ISelectedFilter, ISymbol, Prediction } from 'apis/type/IndexResponse'
 import { atom } from 'recoil'
 
 export const SymbolState = atom({
   key: 'symbolState',
-  default: { symbol_id: '', period: '', horizons: '', unit: '' } as ISymbol,
+  default: { symbol_id: '', period: '', horizons: '', unit: '', features: {}, selectedHorizon: 0 } as ISymbol,
 })
 
 export const SymbolListState = atom({
@@ -11,9 +11,10 @@ export const SymbolListState = atom({
   default: [] as ISymbol[],
 })
 
-export const selectedIndexState = atom({
-  key: 'selectedIndexState',
-  default: { horizon: 0 } as ISelectedIndex,
+//현재 차트에서 선택된 Index 정보(selectedDate, features...)
+export const selectedFilterState = atom({
+  key: 'selectedFilterState',
+  default: { selectedDate: '' } as ISelectedFilter,
 })
 
 export const graphDataState = atom({

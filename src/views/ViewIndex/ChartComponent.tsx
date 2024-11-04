@@ -2,11 +2,13 @@ import { ApexOptions } from 'apexcharts'
 import { Prediction } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
-import { useRecoilValue } from 'recoil'
-import { graphDataState } from './stores/atom'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { graphDataState, selectedFilterState } from './stores/atom'
 
 const PredictionChart = () => {
+  const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const graphData = useRecoilValue(graphDataState)
+
   function ReformatData(data: Prediction[], key: keyof Prediction) {
     return data?.map((item) => item[key]) || []
   }
@@ -16,6 +18,36 @@ const PredictionChart = () => {
       height: 350,
       type: 'line',
       id: 'areachart-2',
+      events: {
+        click(event, chartContext, config) {
+          const xValue = config.globals?.seriesX[0][config.dataPointIndex]
+          setSelectedFilter({ ...selectedFilter, selectedDate: xValue })
+
+          if (xValue) {
+            setOptions((prevOptions) => ({
+              ...prevOptions,
+              annotations: {
+                ...prevOptions.annotations,
+                xaxis: [
+                  {
+                    x: xValue,
+                    borderColor: '#FF4560',
+                    strokeDashArray: 4,
+                    label: {
+                      borderColor: '#FF4560',
+                      style: {
+                        color: '#fff',
+                        background: '#FF4560',
+                      },
+                      text: `${new Date(xValue).toLocaleDateString()}`,
+                    },
+                  },
+                ],
+              },
+            }))
+          }
+        },
+      },
     },
     dataLabels: {
       enabled: false,
