@@ -2,7 +2,9 @@ export interface ISymbol {
   symbol_id: string
   period: string
   horizons: string //서버에서 string으로 받아 Array로 parsing해 사용
+  selectedHorizon: number
   unit: string
+  features: IRawDataResponse
 }
 
 export interface ISymbolList {

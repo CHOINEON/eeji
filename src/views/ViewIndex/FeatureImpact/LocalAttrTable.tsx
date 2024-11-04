@@ -22,6 +22,8 @@ const LocalAttrTable = () => {
   const [data, setData] = useState([])
 
   useEffect(() => {
+    console.log('selectedIndex:', selectedIndex)
+
     if (selectedIndex.features && Object.keys(selectedIndex?.features).length > 0) {
       const keyArr = Object.keys(selectedIndex.features)
       const data = keyArr.map((key) => ({

@@ -16,6 +16,7 @@ const SymbolDropdown = () => {
   useEffect(() => {
     if (symbolList.length > 0) {
       setSymbol({
+        ...symbol,
         symbol_id: symbolList[0].symbol_id,
         period: symbolList[0].period,
         horizons: symbolList[0].horizons,

@@ -3,7 +3,7 @@ import { atom } from 'recoil'
 
 export const SymbolState = atom({
   key: 'symbolState',
-  default: { symbol_id: '', period: '', horizons: '', unit: '' } as ISymbol,
+  default: { symbol_id: '', period: '', horizons: '', unit: '', features: {}, selectedHorizon: 0 } as ISymbol,
 })
 
 export const SymbolListState = atom({
@@ -20,10 +20,4 @@ export const selectedIndexState = atom({
 export const graphDataState = atom({
   key: 'graphDataState',
   default: [] as Prediction[],
-})
-
-// 현재 선택된 필터 조건(horizon)
-export const filterConditionState = atom({
-  key: 'filterConditionState',
-  default: { horizon: 0 },
 })
