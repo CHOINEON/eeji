@@ -15,7 +15,6 @@ import SymbolDropdown from './SymbolDropdown'
 const VisualPanel = () => {
   const symbol = useRecoilValue(SymbolState)
   const [selectedIndex, setSelectedIndex] = useRecoilState(selectedIndexState)
-  // const filterCondition = useRecoilValue(filterConditionState)
   const setGraphData = useSetRecoilState(graphDataState)
 
   const { data } = useQuery(
@@ -32,7 +31,7 @@ const VisualPanel = () => {
 
   useEffect(() => {
     if (data) setGraphData(data[symbol.selectedHorizon])
-  }, [data, selectedIndex])
+  }, [data, symbol.selectedHorizon])
 
   useEffect(() => {
     if (rawData) setSelectedIndex({ ...selectedIndex, features: rawData })
