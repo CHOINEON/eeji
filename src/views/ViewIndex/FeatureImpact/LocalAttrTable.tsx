@@ -45,13 +45,13 @@ const LocalAttrTable = () => {
   // rowSelection object indicates the need for row selection
   const rowSelection: TableProps<DataType>['rowSelection'] = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-      setSelectedFilter({ ...selectedFilter, selectedFeature: selectedRowKeys[0] as string })
+      setSelectedFilter({ ...selectedFilter, selectedFeatures: selectedRows.map((row) => row.name) })
     },
-  }
 
-  useEffect(() => {
-    console.log('selectedFilter:', selectedFilter)
-  }, [selectedFilter])
+    getCheckboxProps: (record: DataType) => ({
+      name: record.name,
+    }),
+  }
 
   // function getSelectedFeatureData(dataArray: IRawData[], targetDate: string) {
   //   const entry = dataArray.find((item) => item.date === targetDate)
@@ -67,7 +67,7 @@ const LocalAttrTable = () => {
         className="mt-2"
         columns={columns}
         dataSource={data}
-        rowSelection={{ type: 'radio', ...rowSelection }}
+        rowSelection={{ type: 'checkbox', ...rowSelection }}
         size="small"
         pagination={{ pageSize: 5, pageSizeOptions: [5], position: ['bottomCenter'], showSizeChanger: false }}
       />

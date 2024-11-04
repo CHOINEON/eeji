@@ -29,9 +29,12 @@ const PredictionChart = () => {
   const [series, setSeries] = useState<TSeries[]>(defaultSeries)
 
   useEffect(() => {
-    if (selectedFilter.selectedFeature) {
-      const chartData: IRawData[] = symbol.features[selectedFilter.selectedFeature]
-      setSeries([...defaultSeries, { name: selectedFilter.selectedFeature, data: ReformatData(chartData, 'value') }])
+    if (selectedFilter.selectedFeatures) {
+      const newSeries = selectedFilter.selectedFeatures.map((feature) => {
+        const chartData: IRawData[] = symbol.features[feature]
+        return { name: feature, data: ReformatData(chartData, 'value') }
+      })
+      setSeries([...defaultSeries, ...newSeries])
     }
   }, [selectedFilter])
 
@@ -159,7 +162,6 @@ const PredictionChart = () => {
               },
             },
             title: {
-              text: selectedFilter.selectedFeature,
               style: {
                 color: '#247BA0',
               },
