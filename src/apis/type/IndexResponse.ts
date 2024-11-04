@@ -12,7 +12,8 @@ export interface ISymbolList {
 }
 
 export interface ISelectedFilter {
-  selectedDate?: string
+  selectedDate?: string //yyyy-mm-dd
+  selectedFeature?: string
 }
 
 export interface IFeatureImportance {
@@ -45,5 +46,10 @@ export interface IPredictionDataResponse {
 }
 
 export interface IRawDataResponse {
-  [feature: string]: Array<{ date: string; value: number }>
+  [feature: string]: Array<IRawData>
+}
+
+export interface IRawData {
+  date: string
+  value: number
 }
