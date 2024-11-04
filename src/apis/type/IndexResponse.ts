@@ -12,6 +12,7 @@ export interface ISymbolList {
 export interface ISelectedIndex {
   horizon?: number
   features?: IRawDataResponse
+  selectedDate?: string
 }
 
 export interface IFeatureImportance {
