@@ -11,9 +11,7 @@ export interface ISymbolList {
   symbols: Array<ISymbol>
 }
 
-export interface ISelectedIndex {
-  horizon?: number
-  features?: IRawDataResponse
+export interface ISelectedFilter {
   selectedDate?: string
 }
 

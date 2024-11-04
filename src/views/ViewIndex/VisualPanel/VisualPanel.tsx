@@ -1,10 +1,10 @@
 import IndexApi from 'apis/IndexApi'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import { capitalizeFirstLetter } from 'utils/StringFormatter'
 import ChartComponent from '../ChartComponent'
-import { graphDataState, selectedIndexState, SymbolState } from '../stores/atom'
+import { graphDataState, SymbolState } from '../stores/atom'
 import HorizonButtonGroup from './HorizonButtonGroup'
 import SymbolDropdown from './SymbolDropdown'
 
@@ -13,12 +13,11 @@ import SymbolDropdown from './SymbolDropdown'
 // const [viewType, setViewType] = useState('History')
 
 const VisualPanel = () => {
-  const symbol = useRecoilValue(SymbolState)
-  const [selectedIndex, setSelectedIndex] = useRecoilState(selectedIndexState)
+  const [symbol, setSymbol] = useRecoilState(SymbolState)
   const setGraphData = useSetRecoilState(graphDataState)
 
   const { data } = useQuery(
-    ['predictionData', symbol.symbol_id, selectedIndex.horizon],
+    ['predictionData', symbol.symbol_id, symbol.selectedHorizon],
     () => IndexApi.getPredictionData(symbol.symbol_id),
     {
       enabled: !!symbol.symbol_id && !!symbol.selectedHorizon,
@@ -34,7 +33,7 @@ const VisualPanel = () => {
   }, [data, symbol.selectedHorizon])
 
   useEffect(() => {
-    if (rawData) setSelectedIndex({ ...selectedIndex, features: rawData })
+    if (rawData) setSymbol({ ...symbol, features: rawData })
   }, [rawData])
 
   // const onChangeViewType = ({ target: { value } }: RadioChangeEvent) => {

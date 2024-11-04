@@ -3,10 +3,10 @@ import { Prediction } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { graphDataState, selectedIndexState } from './stores/atom'
+import { graphDataState, selectedFilterState } from './stores/atom'
 
 const PredictionChart = () => {
-  const [selectedIndex, setSelectedIndex] = useRecoilState(selectedIndexState)
+  const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const graphData = useRecoilValue(graphDataState)
 
   function ReformatData(data: Prediction[], key: keyof Prediction) {
@@ -21,7 +21,7 @@ const PredictionChart = () => {
       events: {
         click(event, chartContext, config) {
           const xValue = config.globals?.seriesX[0][config.dataPointIndex]
-          setSelectedIndex({ ...selectedIndex, selectedDate: xValue })
+          setSelectedFilter({ ...selectedFilter, selectedDate: xValue })
 
           if (xValue) {
             setOptions((prevOptions) => ({

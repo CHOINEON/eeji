@@ -1,7 +1,7 @@
 import { Table } from 'antd'
 import { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
-import { selectedIndexState } from '../stores/atom'
+import { SymbolState } from '../stores/atom'
 // import { indexRawDataState } from '../stores/atom'
 
 const columns = [
@@ -18,14 +18,14 @@ const columns = [
 ]
 
 const LocalAttrTable = () => {
-  const [selectedIndex, setSelectedIndex] = useRecoilState(selectedIndexState)
+  const [symbol, setSymbol] = useRecoilState(SymbolState)
   const [data, setData] = useState([])
 
   useEffect(() => {
-    console.log('selectedIndex:', selectedIndex)
+    console.log('symbol:', symbol)
 
-    if (selectedIndex.features && Object.keys(selectedIndex?.features).length > 0) {
-      const keyArr = Object.keys(selectedIndex.features)
+    if (symbol.features && Object.keys(symbol?.features).length > 0) {
+      const keyArr = Object.keys(symbol.features)
       const data = keyArr.map((key) => ({
         key: key,
         name: key,
@@ -33,7 +33,7 @@ const LocalAttrTable = () => {
       }))
       setData(data)
     }
-  }, [selectedIndex])
+  }, [symbol])
 
   return (
     <div className="m-3">

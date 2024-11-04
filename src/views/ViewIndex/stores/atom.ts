@@ -1,4 +1,4 @@
-import { ISelectedIndex, ISymbol, Prediction } from 'apis/type/IndexResponse'
+import { ISelectedFilter, ISymbol, Prediction } from 'apis/type/IndexResponse'
 import { atom } from 'recoil'
 
 export const SymbolState = atom({
@@ -12,9 +12,9 @@ export const SymbolListState = atom({
 })
 
 //현재 차트에서 선택된 Index 정보(selectedDate, features...)
-export const selectedIndexState = atom({
-  key: 'selectedIndexState',
-  default: { features: {}, selectedDate: '' } as ISelectedIndex,
+export const selectedFilterState = atom({
+  key: 'selectedFilterState',
+  default: { selectedDate: '' } as ISelectedFilter,
 })
 
 export const graphDataState = atom({
