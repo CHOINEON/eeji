@@ -1,16 +1,51 @@
 import { ApexOptions } from 'apexcharts'
-import { Prediction } from 'apis/type/IndexResponse'
+import { IRawData, Prediction } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { graphDataState, selectedFilterState } from './stores/atom'
+import { formatTimestampToYYYYMMDD } from 'utils/DateFunction'
+import { graphDataState, selectedFilterState, SymbolState } from './stores/atom'
+
+type TSeries = {
+  name: string
+  data: Array<string | number>
+}
 
 const PredictionChart = () => {
+  const symbol = useRecoilValue(SymbolState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const graphData = useRecoilValue(graphDataState)
 
-  function ReformatData(data: Prediction[], key: keyof Prediction) {
-    return data?.map((item) => item[key]) || []
+  const defaultSeries = [
+    {
+      name: 'Prediction',
+      data: ReformatData(graphData, 'pred'),
+    },
+    {
+      name: 'Ground Truth',
+      data: ReformatData(graphData, 'ground_truth'),
+    },
+  ]
+  const [series, setSeries] = useState<TSeries[]>(defaultSeries)
+
+  useEffect(() => {
+    if (selectedFilter.selectedFeature) {
+      const chartData: IRawData[] = symbol.features[selectedFilter.selectedFeature]
+      setSeries([...defaultSeries, { name: selectedFilter.selectedFeature, data: ReformatData(chartData, 'value') }])
+    }
+  }, [selectedFilter])
+
+  function ReformatData(
+    data: Prediction[] | IRawData[],
+    key: keyof Prediction | keyof IRawData
+  ): (Prediction[keyof Prediction] | IRawData[keyof IRawData] | null)[] {
+    return (
+      data?.map((item) => {
+        // Type assertion to ensure item is of the correct type
+        const typedItem = item as Prediction | IRawData
+        return typedItem[key as keyof typeof typedItem] || null // Return null if the key doesn't exist
+      }) || []
+    )
   }
 
   const [options, setOptions] = useState<ApexOptions>({
@@ -21,7 +56,7 @@ const PredictionChart = () => {
       events: {
         click(event, chartContext, config) {
           const xValue = config.globals?.seriesX[0][config.dataPointIndex]
-          setSelectedFilter({ ...selectedFilter, selectedDate: xValue })
+          setSelectedFilter({ ...selectedFilter, selectedDate: formatTimestampToYYYYMMDD(xValue) })
 
           if (xValue) {
             setOptions((prevOptions) => ({
@@ -69,17 +104,6 @@ const PredictionChart = () => {
     },
   })
 
-  const [series, setSeries] = useState([
-    {
-      name: 'Prediction',
-      data: ReformatData(graphData, 'pred'),
-    },
-    {
-      name: 'Ground Truth',
-      data: ReformatData(graphData, 'ground_truth'),
-    },
-  ])
-
   useEffect(() => {
     if (graphData?.length) {
       const newSeries = [
@@ -99,6 +123,49 @@ const PredictionChart = () => {
           ...prevOptions.xaxis,
           categories: ReformatData(graphData, 'date_pred'),
         },
+        yaxis: [
+          {
+            axisTicks: {
+              show: true,
+            },
+            axisBorder: {
+              show: true,
+              // color: '#FF1654',
+            },
+            labels: {
+              style: {
+                // colors: '#FF1654',
+              },
+            },
+            title: {
+              // text: 'Pred',
+              style: {
+                // color: '#FF1654',
+              },
+            },
+          },
+          {
+            opposite: true,
+            axisTicks: {
+              show: true,
+            },
+            axisBorder: {
+              show: true,
+              // color: '#247BA0',
+            },
+            labels: {
+              style: {
+                colors: '#247BA0',
+              },
+            },
+            title: {
+              text: selectedFilter.selectedFeature,
+              style: {
+                color: '#247BA0',
+              },
+            },
+          },
+        ],
       }))
     }
   }, [graphData])

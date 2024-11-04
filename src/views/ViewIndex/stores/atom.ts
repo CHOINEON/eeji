@@ -3,7 +3,14 @@ import { atom } from 'recoil'
 
 export const SymbolState = atom({
   key: 'symbolState',
-  default: { symbol_id: '', period: '', horizons: '', unit: '', features: {}, selectedHorizon: 0 } as ISymbol,
+  default: {
+    symbol_id: '',
+    period: '',
+    horizons: '',
+    unit: '',
+    features: {},
+    selectedHorizon: 0,
+  } as ISymbol,
 })
 
 export const SymbolListState = atom({
@@ -11,10 +18,10 @@ export const SymbolListState = atom({
   default: [] as ISymbol[],
 })
 
-//현재 차트에서 선택된 Index 정보(selectedDate, features...)
+//현재 시각화에 사용되는 데이터(selectedDate, selectedFeature)
 export const selectedFilterState = atom({
   key: 'selectedFilterState',
-  default: { selectedDate: '' } as ISelectedFilter,
+  default: { selectedDate: '', selectedFeature: '' } as ISelectedFilter,
 })
 
 export const graphDataState = atom({

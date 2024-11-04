@@ -1,8 +1,13 @@
-import { Table } from 'antd'
+import { Table, TableProps } from 'antd'
 import { useEffect, useState } from 'react'
-import { useRecoilState } from 'recoil'
-import { SymbolState } from '../stores/atom'
-// import { indexRawDataState } from '../stores/atom'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { selectedFilterState, SymbolState } from '../stores/atom'
+
+interface DataType {
+  key: React.Key
+  name: string
+  importance: number
+}
 
 const columns = [
   {
@@ -19,21 +24,41 @@ const columns = [
 
 const LocalAttrTable = () => {
   const [symbol, setSymbol] = useRecoilState(SymbolState)
+  const filterCondition = useRecoilValue(selectedFilterState)
+  const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [data, setData] = useState([])
 
   useEffect(() => {
-    console.log('symbol:', symbol)
-
     if (symbol.features && Object.keys(symbol?.features).length > 0) {
-      const keyArr = Object.keys(symbol.features)
-      const data = keyArr.map((key) => ({
-        key: key,
-        name: key,
-        importance: 0,
-      }))
-      setData(data)
+      if (filterCondition.selectedDate === '') {
+        const keyArr = Object.keys(symbol.features)
+        const data = keyArr.map((key) => ({
+          key: key,
+          name: key,
+          importance: undefined,
+        }))
+        setData(data)
+      }
     }
-  }, [symbol])
+  }, [symbol, filterCondition])
+
+  // rowSelection object indicates the need for row selection
+  const rowSelection: TableProps<DataType>['rowSelection'] = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+      setSelectedFilter({ ...selectedFilter, selectedFeature: selectedRowKeys[0] as string })
+    },
+  }
+
+  useEffect(() => {
+    console.log('selectedFilter:', selectedFilter)
+  }, [selectedFilter])
+
+  // function getSelectedFeatureData(dataArray: IRawData[], targetDate: string) {
+  //   const entry = dataArray.find((item) => item.date === targetDate)
+
+  //   console.log('entry:', entry)
+  //   return entry ? entry.value : null
+  // }
 
   return (
     <div className="m-3">
@@ -42,7 +67,7 @@ const LocalAttrTable = () => {
         className="mt-2"
         columns={columns}
         dataSource={data}
-        rowSelection={{ type: 'radio' }}
+        rowSelection={{ type: 'radio', ...rowSelection }}
         size="small"
         pagination={{ pageSize: 5, pageSizeOptions: [5], position: ['bottomCenter'], showSizeChanger: false }}
       />
