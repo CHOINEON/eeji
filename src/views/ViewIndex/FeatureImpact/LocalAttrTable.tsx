@@ -53,13 +53,6 @@ const LocalAttrTable = () => {
     }),
   }
 
-  // function getSelectedFeatureData(dataArray: IRawData[], targetDate: string) {
-  //   const entry = dataArray.find((item) => item.date === targetDate)
-
-  //   console.log('entry:', entry)
-  //   return entry ? entry.value : null
-  // }
-
   return (
     <div className="m-3">
       <h3 className="text-black text-lg">Local Attribution</h3>
