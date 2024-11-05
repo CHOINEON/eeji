@@ -15,7 +15,6 @@ const PredictionChart = () => {
   const symbol = useRecoilValue(SymbolState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const graphData = useRecoilValue(graphDataState)
-
   const defaultSeries = [
     {
       name: 'Prediction',
@@ -29,11 +28,20 @@ const PredictionChart = () => {
   const [series, setSeries] = useState<TSeries[]>(defaultSeries)
 
   useEffect(() => {
-    if (selectedFilter.selectedFeature) {
-      const chartData: IRawData[] = symbol.features[selectedFilter.selectedFeature]
-      setSeries([...defaultSeries, { name: selectedFilter.selectedFeature, data: ReformatData(chartData, 'value') }])
+    if (selectedFilter.selectedFeatures) {
+      setSeries(generateSeries())
     }
-  }, [selectedFilter])
+  }, [symbol.selectedHorizon, selectedFilter])
+
+  function generateSeries() {
+    if (selectedFilter.selectedFeatures) {
+      const newSeries = selectedFilter.selectedFeatures.map((feature) => {
+        const chartData: IRawData[] = symbol.features[feature]
+        return { name: feature, data: ReformatData(chartData, 'value') }
+      })
+      return [...defaultSeries, ...newSeries]
+    }
+  }
 
   function ReformatData(
     data: Prediction[] | IRawData[],
@@ -56,7 +64,11 @@ const PredictionChart = () => {
       events: {
         click(event, chartContext, config) {
           const xValue = config.globals?.seriesX[0][config.dataPointIndex]
-          setSelectedFilter({ ...selectedFilter, selectedDate: formatTimestampToYYYYMMDD(xValue) })
+          console.log('selectedFilter:', selectedFilter)
+          setSelectedFilter({
+            selectedFeatures: selectedFilter.selectedFeatures,
+            selectedDate: formatTimestampToYYYYMMDD(xValue),
+          })
 
           if (xValue) {
             setOptions((prevOptions) => ({
@@ -106,17 +118,7 @@ const PredictionChart = () => {
 
   useEffect(() => {
     if (graphData?.length) {
-      const newSeries = [
-        {
-          name: 'Prediction',
-          data: ReformatData(graphData, 'pred'),
-        },
-        {
-          name: 'Ground Truth',
-          data: ReformatData(graphData, 'ground_truth'),
-        },
-      ]
-      setSeries(newSeries)
+      setSeries(generateSeries())
       setOptions((prevOptions) => ({
         ...prevOptions,
         xaxis: {
@@ -159,7 +161,6 @@ const PredictionChart = () => {
               },
             },
             title: {
-              text: selectedFilter.selectedFeature,
               style: {
                 color: '#247BA0',
               },

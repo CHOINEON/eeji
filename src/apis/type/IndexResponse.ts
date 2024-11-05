@@ -13,7 +13,7 @@ export interface ISymbolList {
 
 export interface ISelectedFilter {
   selectedDate?: string //yyyy-mm-dd
-  selectedFeature?: string
+  selectedFeatures?: string[]
 }
 
 export interface IFeatureImportance {

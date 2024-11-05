@@ -21,7 +21,7 @@ export const SymbolListState = atom({
 //현재 시각화에 사용되는 데이터(selectedDate, selectedFeature)
 export const selectedFilterState = atom({
   key: 'selectedFilterState',
-  default: { selectedDate: '', selectedFeature: '' } as ISelectedFilter,
+  default: { selectedDate: '', selectedFeatures: [] } as ISelectedFilter,
 })
 
 export const graphDataState = atom({
