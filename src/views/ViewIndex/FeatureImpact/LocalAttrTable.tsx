@@ -9,7 +9,7 @@ import { selectedFilterState, SymbolState } from '../stores/atom'
 interface DataType {
   key: React.Key
   name: string
-  importance: number
+  impact: number
 }
 
 const columns = [
@@ -19,8 +19,8 @@ const columns = [
     align: 'center' as const,
   },
   {
-    title: 'Importance',
-    dataIndex: 'importance',
+    title: 'Impact',
+    dataIndex: 'impact',
     align: 'center' as const,
     render: (number: number) => (
       <Statistic
@@ -57,7 +57,7 @@ const LocalAttrTable = () => {
       const data = featureImpactData?.feature_impact.map((item) => ({
         key: item.feature_name,
         name: item.feature_name,
-        importance: item.impact,
+        impact: item.impact,
       }))
       setData(data)
     }

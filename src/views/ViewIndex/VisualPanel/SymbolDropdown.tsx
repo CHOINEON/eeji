@@ -2,7 +2,7 @@ import { Dropdown, MenuProps, Space } from 'antd'
 import { ISymbol } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { SymbolListState, SymbolState } from '../stores/atom'
+import { selectedFilterState, SymbolListState, SymbolState } from '../stores/atom'
 
 const categoryItems = [
   { label: 'Metal', key: 'metal' }, // remember to pass the key prop
@@ -10,6 +10,7 @@ const categoryItems = [
 
 const SymbolDropdown = () => {
   const symbolList = useRecoilValue(SymbolListState)
+  const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [symbol, setSymbol] = useRecoilState(SymbolState)
   const [items, setItems] = useState<MenuProps['items']>([])
 
@@ -20,6 +21,7 @@ const SymbolDropdown = () => {
         symbol_id: symbolList[0].symbol_id,
         period: symbolList[0].period,
         horizons: symbolList[0].horizons,
+        selectedHorizon: JSON.parse(symbolList[0].horizons)[0],
         unit: symbolList[0].unit,
       })
 
@@ -35,7 +37,16 @@ const SymbolDropdown = () => {
   }, [symbolList])
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
-    setSymbol(symbolList.find((symbol) => symbol.symbol_id === key) as ISymbol)
+    const selectedSymbol = symbolList.find((symbol) => symbol.symbol_id === key) as ISymbol
+    setSymbol({
+      symbol_id: selectedSymbol.symbol_id,
+      period: selectedSymbol.period,
+      horizons: selectedSymbol.horizons,
+      selectedHorizon: JSON.parse(selectedSymbol.horizons)[0],
+      unit: selectedSymbol.unit,
+      features: selectedSymbol.features,
+    })
+    setSelectedFilter({ ...selectedFilter, selectedFeatures: [] })
   }
 
   return (
