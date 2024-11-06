@@ -1,4 +1,5 @@
-import { Table, TableProps } from 'antd'
+import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons'
+import { Statistic, Table, TableProps } from 'antd'
 import IndexApi from 'apis/IndexApi'
 import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -21,11 +22,18 @@ const columns = [
     title: 'Importance',
     dataIndex: 'importance',
     align: 'center' as const,
+    render: (text: string) => (
+      <Statistic
+        value={text}
+        valueStyle={{ color: Number(text) > 0 ? '#3f8600' : '#cf1322', fontSize: '12px' }}
+        prefix={Number(text) > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+      />
+    ),
   },
 ]
 
 const LocalAttrTable = () => {
-  const [symbol, setSymbol] = useRecoilState(SymbolState)
+  const symbol = useRecoilValue(SymbolState)
   const filterCondition = useRecoilValue(selectedFilterState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [data, setData] = useState([])

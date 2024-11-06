@@ -38,11 +38,9 @@ interface FeatureImpactTableProps {
 }
 
 const FeatureImpactTable = ({ dataSource, columns, onSelectFeature, onSelectPeriod }: FeatureImpactTableProps) => {
-  const [viewChart, setViewChart] = useState(false)
   const [buttonValue, setButtonValue] = useState(0)
 
   const handlePeriodClick = (args: any) => {
-    console.log(args.target.value)
     setButtonValue(args.target.value)
     onSelectPeriod(args.target.value)
   }
@@ -61,7 +59,7 @@ const FeatureImpactTable = ({ dataSource, columns, onSelectFeature, onSelectPeri
   return (
     <>
       <p className="text-lg font-bold text-center m-2">HRC가격 변동 요인</p>
-      <div className="text-center">
+      <div className="text-center mb-3">
         <div className="m-auto">
           <Radio.Group defaultValue={0} onChange={handlePeriodClick} value={buttonValue}>
             <Radio.Button value={0}>1일</Radio.Button>
