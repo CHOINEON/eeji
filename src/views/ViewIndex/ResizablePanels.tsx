@@ -97,7 +97,7 @@ const ResizablePanels: React.FC<ResizablePanelsProps> = ({ panel1, panel2, panel
         <div className="h-1 bg-gray-500 cursor-ns-resize" onMouseDown={handleMouseDownRow2} />
 
         {/* Panel 4 */}
-        <div className="bg-red-300 p-4 overflow-auto" style={{ height: `${100 - panel2Height}%` }}>
+        <div className="bg-white p-4 overflow-auto" style={{ height: `${100 - panel2Height}%` }}>
           {panel4}
         </div>
       </div>

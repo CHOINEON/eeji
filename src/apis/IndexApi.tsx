@@ -3,6 +3,7 @@ import {
   IGlobalFeatureImportance,
   IHorizonData,
   ILocalAttribution,
+  IMetrics,
   IRawDataResponse,
   ISymbolList,
 } from './type/IndexResponse'
@@ -42,6 +43,12 @@ const IndexApi = {
     const { data } = await axiosPrivate.get(
       `api/v2/economy/local_attribution_by_date/${symbol}?horizon=${horizon}&date=${date}&is_pred_date=${isPredDate}`
     )
+    return data.data
+  },
+
+  //symbol의 metrics
+  getMetrics: async (symbol: string, horizon: string): Promise<IMetrics> => {
+    const { data } = await axiosPrivate.get(`api/v2/economy/get_prediction_metric/${symbol}?horizon=${horizon}`)
     return data.data
   },
 }
