@@ -63,3 +63,15 @@ export interface IRawData {
   date: string
   value: number
 }
+
+export interface IMetricInformation {
+  metric_name: string
+  score: number
+}
+
+export interface IMetrics {
+  name: string
+  horizon: number
+  dt: string
+  metric_information: Array<IMetricInformation>
+}
