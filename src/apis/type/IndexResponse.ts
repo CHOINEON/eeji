@@ -28,6 +28,16 @@ export interface IGlobalFeatureImportance {
   name: string
 }
 
+export interface ILocalAttribution {
+  feature_impact: Array<{ feature_name: string; impact: number }>
+  name: string
+  horizon: number
+  date: string
+  is_pred_date: number //1: 예측날짜, 0:기준날짜
+  date_pred: string //예측 결과 날짜
+  dt: string //데이터 생성일
+}
+
 export type Prediction = {
   date_pred: string
   ground_truth: number | null

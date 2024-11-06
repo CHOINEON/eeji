@@ -1,5 +1,11 @@
 import { axiosPrivate } from './axios'
-import { IGlobalFeatureImportance, IHorizonData, IRawDataResponse, ISymbolList } from './type/IndexResponse'
+import {
+  IGlobalFeatureImportance,
+  IHorizonData,
+  ILocalAttribution,
+  IRawDataResponse,
+  ISymbolList,
+} from './type/IndexResponse'
 
 const IndexApi = {
   //유저별 종목 리스트
@@ -24,6 +30,19 @@ const IndexApi = {
   getGlobalExplanation: async (symbol: string, horizon: string): Promise<IGlobalFeatureImportance> => {
     const { data } = await axiosPrivate.get(`api/v2/economy/global_feature_importance/${symbol}?horizon=${horizon}`)
     return data.data[0]
+  },
+
+  //symbol의 local attribution by date
+  getLocalAttributionByDate: async (
+    symbol: string,
+    horizon: string,
+    date: string,
+    isPredDate: number
+  ): Promise<ILocalAttribution> => {
+    const { data } = await axiosPrivate.get(
+      `api/v2/economy/local_attribution_by_date/${symbol}?horizon=${horizon}&date=${date}&is_pred_date=${isPredDate}`
+    )
+    return data.data
   },
 }
 
