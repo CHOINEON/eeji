@@ -1,5 +1,7 @@
 import { Table, TableProps } from 'antd'
+import IndexApi from 'apis/IndexApi'
 import { useEffect, useState } from 'react'
+import { useQuery } from 'react-query'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { selectedFilterState, SymbolState } from '../stores/atom'
 
@@ -28,19 +30,30 @@ const LocalAttrTable = () => {
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [data, setData] = useState([])
 
-  useEffect(() => {
-    if (symbol.features && Object.keys(symbol?.features).length > 0) {
-      if (filterCondition.selectedDate === '') {
-        const keyArr = Object.keys(symbol.features)
-        const data = keyArr.map((key) => ({
-          key: key,
-          name: key,
-          importance: undefined,
-        }))
-        setData(data)
-      }
+  const { data: featureImpactData } = useQuery(
+    ['localAttribution', symbol.symbol_id, filterCondition.selectedDate],
+    () =>
+      IndexApi.getLocalAttributionByDate(
+        symbol.symbol_id,
+        symbol.selectedHorizon.toString(),
+        filterCondition.selectedDate,
+        1 // 예측날짜 기준 조회
+      ),
+    {
+      enabled: !!symbol.symbol_id && !!symbol.selectedHorizon && !!filterCondition.selectedDate,
     }
-  }, [symbol, filterCondition])
+  )
+
+  useEffect(() => {
+    if (filterCondition.selectedDate !== '') {
+      const data = featureImpactData?.feature_impact.map((item) => ({
+        key: item.feature_name,
+        name: item.feature_name,
+        importance: item.impact,
+      }))
+      setData(data)
+    }
+  }, [symbol, filterCondition, featureImpactData])
 
   // rowSelection object indicates the need for row selection
   const rowSelection: TableProps<DataType>['rowSelection'] = {
@@ -60,9 +73,9 @@ const LocalAttrTable = () => {
         className="mt-2"
         columns={columns}
         dataSource={data}
-        rowSelection={{ type: 'checkbox', ...rowSelection }}
+        rowSelection={{ type: 'checkbox', selectedRowKeys: selectedFilter.selectedFeatures, ...rowSelection }}
         size="small"
-        pagination={{ pageSize: 5, pageSizeOptions: [5], position: ['bottomCenter'], showSizeChanger: false }}
+        pagination={{ pageSize: 4, pageSizeOptions: [4], position: ['bottomCenter'], showSizeChanger: false }}
       />
     </div>
   )
