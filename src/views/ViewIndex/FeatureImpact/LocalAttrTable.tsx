@@ -22,11 +22,11 @@ const columns = [
     title: 'Importance',
     dataIndex: 'importance',
     align: 'center' as const,
-    render: (text: string) => (
+    render: (number: number) => (
       <Statistic
-        value={text}
-        valueStyle={{ color: Number(text) > 0 ? '#3f8600' : '#cf1322', fontSize: '12px' }}
-        prefix={Number(text) > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+        value={number}
+        valueStyle={{ color: number > 0 ? '#3f8600' : '#cf1322', fontSize: '12px' }}
+        prefix={number > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
       />
     ),
   },
