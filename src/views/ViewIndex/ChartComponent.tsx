@@ -6,6 +6,7 @@ import ReactApexChart from 'react-apexcharts'
 import { useQuery } from 'react-query'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { formatTimestampToYYYYMMDD } from 'utils/DateFunction'
+import { colorChips } from './Colors'
 import { graphDataState, selectedFilterState, SymbolState } from './stores/atom'
 
 type TSeries = {
@@ -121,7 +122,14 @@ const PredictionChart = () => {
     if (selectedFilter.selectedFeatures) {
       const newSeries = selectedFilter.selectedFeatures.map((feature, idx: number) => {
         const chartData: IRawData[] = symbol.features[feature]
-        return { key: idx, name: feature, data: ReformatData(chartData, 'value'), yaxisIndex: 1, type: 'line' }
+        return {
+          key: idx,
+          name: feature,
+          data: ReformatData(chartData, 'value'),
+          yaxisIndex: 1,
+          type: 'line',
+          color: colorChips[(defaultSeries.length + idx) % colorChips.length],
+        }
       })
       return [...defaultSeries, ...newSeries]
     }
@@ -149,6 +157,11 @@ const PredictionChart = () => {
     chart: {
       stacked: false,
       height: 350,
+      zoom: {
+        enabled: true, // 확대/축소 기능 활성화
+        type: 'x', // x축 기준 확대/축소 ('x', 'y', 'xy' 중 선택 가능)
+        autoScaleYaxis: true, // 확대/축소 시 y축 자동 스케일링
+      },
       type: 'line',
       id: 'areachart-2',
       events: {
@@ -193,9 +206,9 @@ const PredictionChart = () => {
     stroke: {
       // show: true,
       curve: 'straight',
-      width: [2, 2, 1, 1],
+      width: 1,
       dashArray: [0, 0, 4, 4],
-      colors: ['#008FFB', '#00E396', '#008FFB', '#008FFB'],
+      colors: colorChips.slice(0, series.length),
     },
     dataLabels: {
       enabled: false,
@@ -219,12 +232,12 @@ const PredictionChart = () => {
           style: {},
         },
       },
-      {
-        opposite: true,
-      },
+      // {
+      //   opposite: true,
+      // },
     ],
     legend: {
-      show: false,
+      show: true,
     },
   })
 
