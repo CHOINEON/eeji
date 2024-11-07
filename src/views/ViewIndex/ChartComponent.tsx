@@ -204,7 +204,6 @@ const PredictionChart = () => {
       type: 'solid',
     },
     stroke: {
-      // show: true,
       curve: 'straight',
       width: 1,
       dashArray: [0, 0, 4, 4],
@@ -226,16 +225,6 @@ const PredictionChart = () => {
       type: 'datetime',
       categories: [],
     },
-    yaxis: [
-      {
-        labels: {
-          style: {},
-        },
-      },
-      // {
-      //   opposite: true,
-      // },
-    ],
     legend: {
       show: true,
     },
