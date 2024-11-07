@@ -75,3 +75,17 @@ export interface IMetrics {
   dt: string
   metric_information: Array<IMetricInformation>
 }
+
+export interface IPredictionConfidenceInterval {
+  date_pred: string
+  ground_truth: number | null
+  lower_bound: number
+  upper_bound: number
+}
+
+export interface IPredictionConfidenceIntervalResponse {
+  name: string
+  dt: string
+  horizon: number
+  confidence_interval: IPredictionConfidenceInterval[]
+}
