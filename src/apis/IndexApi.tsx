@@ -4,6 +4,7 @@ import {
   IHorizonData,
   ILocalAttribution,
   IMetrics,
+  IPredictionConfidenceIntervalResponse,
   IRawDataResponse,
   ISymbolList,
 } from './type/IndexResponse'
@@ -49,6 +50,17 @@ const IndexApi = {
   //symbol의 metrics
   getMetrics: async (symbol: string, horizon: string): Promise<IMetrics> => {
     const { data } = await axiosPrivate.get(`api/v2/economy/get_prediction_metric/${symbol}?horizon=${horizon}`)
+    return data.data
+  },
+
+  //에측값의 신뢰구간 데이터 가져오기
+  getPredictionConfidenceInterval: async (
+    symbol: string,
+    horizon: string
+  ): Promise<IPredictionConfidenceIntervalResponse> => {
+    const { data } = await axiosPrivate.get(
+      `api/v2/economy/get_prediction_confidence_interval/${symbol}?horizon=${horizon}`
+    )
     return data.data
   },
 }

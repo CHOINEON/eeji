@@ -16,7 +16,7 @@ const VisualPanel = () => {
   const [symbol, setSymbol] = useRecoilState(SymbolState)
   const setGraphData = useSetRecoilState(graphDataState)
 
-  const { data } = useQuery(
+  const { data: predictionData } = useQuery(
     ['predictionData', symbol.symbol_id, symbol.selectedHorizon],
     () => IndexApi.getPredictionData(symbol.symbol_id),
     {
@@ -29,8 +29,8 @@ const VisualPanel = () => {
   })
 
   useEffect(() => {
-    if (data) setGraphData(data[symbol.selectedHorizon])
-  }, [data, symbol.selectedHorizon])
+    if (predictionData) setGraphData(predictionData[symbol.selectedHorizon])
+  }, [predictionData, symbol.selectedHorizon])
 
   useEffect(() => {
     if (rawData) setSymbol({ ...symbol, features: rawData })

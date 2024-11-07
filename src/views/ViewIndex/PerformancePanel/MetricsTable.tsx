@@ -4,7 +4,6 @@ import { IMetricInformation } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
-
 import { SymbolState } from '../stores/atom'
 
 const columns = [
