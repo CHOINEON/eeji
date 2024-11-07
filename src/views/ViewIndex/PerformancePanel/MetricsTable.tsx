@@ -53,13 +53,13 @@ const MetricsTable = () => {
       acc[item.metric_name as keyof MetricsDataType] = item.score
       return acc
     }, {})
-    setMetricsData([metricsData])
+    setMetricsData([{ key: 1, ...metricsData }])
   }, [data])
 
   return (
     <div className="m-3">
       <h3 className="text-black text-lg">Metrics</h3>
-      <Table className="mt-2" columns={columns} dataSource={metricsData} size="small" pagination={false} />
+      <Table className="mt-2" columns={columns} dataSource={metricsData} size="small" pagination={false} rowKey="key" />
     </div>
   )
 }
