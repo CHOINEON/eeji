@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useMutation } from 'react-query'
 import { useSetRecoilState } from 'recoil'
 import GlobalFeatureImportance from './ExplanationPanel/GlobalFeatureImportance'
-import LocalAttrTable from './FeatureImpact/LocalAttrTable'
+import FeaturePanel from './FeaturePanel/FeaturePanel'
 import MetricsTable from './PerformancePanel/MetricsTable'
 import ResizablePanels from './ResizablePanels'
 import { SymbolListState, SymbolState } from './stores/atom'
@@ -29,7 +29,7 @@ const Main = () => {
     <ResizablePanels
       panel1={<VisualPanel />}
       panel2={<GlobalFeatureImportance />}
-      panel3={<LocalAttrTable />}
+      panel3={<FeaturePanel />}
       panel4={<MetricsTable />}
     />
   )

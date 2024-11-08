@@ -14,7 +14,7 @@ interface DataType {
 
 const columns = [
   {
-    title: 'Name',
+    title: 'Feature Name',
     dataIndex: 'name',
     align: 'center' as const,
   },
@@ -76,7 +76,7 @@ const LocalAttrTable = () => {
 
   return (
     <div className="m-3">
-      <h3 className="text-black text-lg">Local Attribution</h3>
+      {/* <h3 className="text-black text-lg">Local Attribution</h3> */}
       <Table
         className="mt-2"
         columns={columns}

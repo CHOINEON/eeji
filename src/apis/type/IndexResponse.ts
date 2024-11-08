@@ -1,6 +1,8 @@
+import { PeriodType } from 'utils/TextTranslator'
+
 export interface ISymbol {
   symbol_id: string
-  period: string
+  period: PeriodType
   horizons: string //서버에서 string으로 받아 Array로 parsing해 사용
   selectedHorizon: number
   unit: string
@@ -88,4 +90,19 @@ export interface IPredictionConfidenceIntervalResponse {
   dt: string
   horizon: number
   confidence_interval: IPredictionConfidenceInterval[]
+}
+
+export interface ILeadingIndicator {
+  feature_name: string
+  leading_period: number
+  correlation: number
+  description: string
+  source: string
+}
+
+export interface ILeadingIndicatorResponse {
+  name: string
+  horizon: number
+  dt: string
+  leading_indicator: Array<ILeadingIndicator>
 }
