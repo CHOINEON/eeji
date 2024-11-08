@@ -2,6 +2,7 @@ import { axiosPrivate } from './axios'
 import {
   IGlobalFeatureImportance,
   IHorizonData,
+  ILeadingIndicatorResponse,
   ILocalAttribution,
   IMetrics,
   IPredictionConfidenceIntervalResponse,
@@ -60,6 +61,14 @@ const IndexApi = {
   ): Promise<IPredictionConfidenceIntervalResponse> => {
     const { data } = await axiosPrivate.get(
       `api/v2/economy/get_prediction_confidence_interval/${symbol}?horizon=${horizon}`
+    )
+    return data.data
+  },
+
+  //symbol의 leading indicator
+  getLeadingIndicator: async (symbol: string, horizon: number): Promise<ILeadingIndicatorResponse> => {
+    const { data } = await axiosPrivate.get(
+      `api/v2/economy/get_explanation_leading_indicator/${symbol}?horizon=${horizon}`
     )
     return data.data
   },

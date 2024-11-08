@@ -89,3 +89,18 @@ export interface IPredictionConfidenceIntervalResponse {
   horizon: number
   confidence_interval: IPredictionConfidenceInterval[]
 }
+
+export interface ILeadingIndicator {
+  feature_name: string
+  leading_period: number
+  correlation: number
+  description: string
+  source: string
+}
+
+export interface ILeadingIndicatorResponse {
+  name: string
+  horizon: number
+  dt: string
+  leading_indicator: Array<ILeadingIndicator>
+}
