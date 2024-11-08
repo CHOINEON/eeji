@@ -4,6 +4,7 @@ import { ILeadingIndicator } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
+import { PeriodType, translatePeriodToKorean } from 'utils/TextTranslator'
 import { selectedFilterState, SymbolState } from '../stores/atom'
 
 const LeadingIndicatorTable = () => {
@@ -45,6 +46,12 @@ const LeadingIndicatorTable = () => {
       title: '선행기간',
       dataIndex: 'leading_period',
       align: 'center' as const,
+      render: (number: number) => (
+        <span>
+          {number}
+          {translatePeriodToKorean(symbol.period as PeriodType)}
+        </span>
+      ),
     },
     {
       title: '출처',

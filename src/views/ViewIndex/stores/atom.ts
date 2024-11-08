@@ -1,11 +1,12 @@
 import { ISelectedFilter, ISymbol, Prediction } from 'apis/type/IndexResponse'
 import { atom } from 'recoil'
+import { PeriodType } from 'utils/TextTranslator'
 
 export const SymbolState = atom({
   key: 'symbolState',
   default: {
     symbol_id: '',
-    period: '',
+    period: 'yearly' as PeriodType,
     horizons: '',
     unit: '',
     features: {},
