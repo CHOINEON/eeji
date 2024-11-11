@@ -172,28 +172,46 @@ const PredictionChart = () => {
             selectedDate: formatTimestampToYYYYMMDD(xValue),
           })
 
+          //clear annotation before adding new one
+          chartContext.removeAnnotation('date-annotation')
+
           if (xValue) {
-            setOptions((prevOptions) => ({
-              ...prevOptions,
-              annotations: {
-                ...prevOptions.annotations,
-                xaxis: [
-                  {
-                    x: xValue,
-                    borderColor: '#FF4560',
-                    strokeDashArray: 4,
-                    label: {
-                      borderColor: '#FF4560',
-                      style: {
-                        color: '#fff',
-                        background: '#FF4560',
-                      },
-                      text: `${new Date(xValue).toLocaleDateString()}`,
-                    },
-                  },
-                ],
+            chartContext.addXaxisAnnotation({
+              id: 'date-annotation',
+              x: xValue,
+              borderColor: '#FF4560',
+              strokeDashArray: 4,
+              label: {
+                borderColor: '#FF4560',
+                style: {
+                  color: '#fff',
+                  background: '#FF4560',
+                },
+                text: `${new Date(xValue).toLocaleDateString()}`,
               },
-            }))
+            })
+
+            // setOptions((prevOptions) => ({
+            //   ...prevOptions,
+            //   annotations: {
+            //     ...prevOptions.annotations,
+            //     xaxis: [
+            //       {
+            //         x: xValue,
+            //         borderColor: '#FF4560',
+            //         strokeDashArray: 4,
+            //         label: {
+            //           borderColor: '#FF4560',
+            //           style: {
+            //             color: '#fff',
+            //             background: '#FF4560',
+            //           },
+            //           text: `${new Date(xValue).toLocaleDateString()}`,
+            //         },
+            //       },
+            //     ],
+            //   },
+            // }))
           }
         },
       },
