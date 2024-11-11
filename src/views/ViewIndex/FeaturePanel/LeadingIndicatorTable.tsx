@@ -41,6 +41,7 @@ const LeadingIndicatorTable = () => {
       title: '상관계수',
       dataIndex: 'correlation',
       align: 'center' as const,
+      sorter: (a: ILeadingIndicator, b: ILeadingIndicator) => a.correlation - b.correlation,
     },
     {
       title: '선행기간',
