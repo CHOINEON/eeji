@@ -39,6 +39,7 @@ const SymbolDropdown = () => {
   const onClick: MenuProps['onClick'] = ({ key }) => {
     const selectedSymbol = symbolList.find((symbol) => symbol.symbol_id === key) as ISymbol
     setSymbol({
+      ...symbol,
       symbol_id: selectedSymbol.symbol_id,
       period: selectedSymbol.period,
       horizons: selectedSymbol.horizons,

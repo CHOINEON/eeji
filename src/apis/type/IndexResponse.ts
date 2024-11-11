@@ -7,6 +7,8 @@ export interface ISymbol {
   selectedHorizon: number
   unit: string
   features: IRawDataResponse
+  description: string
+  source: string
 }
 
 export interface ISymbolList {

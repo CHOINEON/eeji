@@ -2,7 +2,7 @@ import IndexApi from 'apis/IndexApi'
 import { useEffect } from 'react'
 import { useMutation } from 'react-query'
 import { useSetRecoilState } from 'recoil'
-import GlobalFeatureImportance from './ExplanationPanel/GlobalFeatureImportance'
+import ExplanationPanel from './ExplanationPanel/ExplanationPanel'
 import FeaturePanel from './FeaturePanel/FeaturePanel'
 import MetricsTable from './PerformancePanel/MetricsTable'
 import ResizablePanels from './ResizablePanels'
@@ -28,7 +28,7 @@ const Main = () => {
   return (
     <ResizablePanels
       panel1={<VisualPanel />}
-      panel2={<GlobalFeatureImportance />}
+      panel2={<ExplanationPanel />}
       panel3={<FeaturePanel />}
       panel4={<MetricsTable />}
     />
