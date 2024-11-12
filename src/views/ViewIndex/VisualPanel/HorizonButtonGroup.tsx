@@ -1,16 +1,9 @@
 import styled from '@emotion/styled'
-import { useEffect } from 'react'
 import { useRecoilState } from 'recoil'
 import { SymbolState } from '../stores/atom'
 
 const HorizonButtonGroup = () => {
   const [symbol, setSymbol] = useRecoilState(SymbolState) //최초 버튼 생성에만 사용
-
-  useEffect(() => {
-    if (symbol.horizons.length > 0) {
-      setSymbol({ ...symbol, selectedHorizon: JSON.parse(symbol.horizons)[0] })
-    }
-  }, [symbol.horizons])
 
   return (
     symbol.horizons && (

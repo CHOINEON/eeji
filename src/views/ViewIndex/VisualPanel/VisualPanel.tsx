@@ -33,7 +33,8 @@ const VisualPanel = () => {
   }, [predictionData, symbol.selectedHorizon])
 
   useEffect(() => {
-    if (rawData) setSymbol({ ...symbol, features: rawData })
+    // console.log('rawData:', rawData)
+    if (rawData) setSymbol({ ...symbol, features: rawData.features })
   }, [rawData])
 
   // const onChangeViewType = ({ target: { value } }: RadioChangeEvent) => {
