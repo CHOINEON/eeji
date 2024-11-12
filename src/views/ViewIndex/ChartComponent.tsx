@@ -1,3 +1,4 @@
+import { Switch } from 'antd'
 import { ApexOptions } from 'apexcharts'
 import IndexApi from 'apis/IndexApi'
 import { IPredictionConfidenceInterval, IRawData, Prediction } from 'apis/type/IndexResponse'
@@ -6,7 +7,7 @@ import ReactApexChart from 'react-apexcharts'
 import { useQuery } from 'react-query'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { formatTimestampToYYYYMMDD } from 'utils/DateFunction'
-import { colorChips } from './Colors'
+import { colorChipsForFill, colorChipsForStroke } from './Colors'
 import { graphDataState, selectedFilterState, SymbolState } from './stores/atom'
 
 type TSeries = {
@@ -21,6 +22,7 @@ const PredictionChart = () => {
   const graphData = useRecoilValue(graphDataState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [bounds, setBounds] = useState<{ lowerBounds: Array<number>; upperBounds: Array<number> }>()
+  const [viewInterval, setViewInterval] = useState(true)
   const defaultSeries = [
     {
       name: 'Prediction',
@@ -34,22 +36,6 @@ const PredictionChart = () => {
       type: 'line' as const,
       yaxisIndex: 0,
     },
-    ...(bounds?.lowerBounds && bounds?.upperBounds
-      ? [
-          {
-            name: 'Upper Bound',
-            data: bounds?.upperBounds,
-            type: 'area' as const,
-            yaxisIndex: 0,
-          },
-          {
-            name: 'Lower Bound',
-            data: bounds?.lowerBounds,
-            type: 'area' as const,
-            yaxisIndex: 0,
-          },
-        ]
-      : []),
   ]
   const [series, setSeries] = useState<TSeries[]>(defaultSeries)
 
@@ -62,62 +48,61 @@ const PredictionChart = () => {
   )
 
   useEffect(() => {
-    if (graphData && bounds) {
-      setSeries([
-        {
-          name: 'Prediction',
-          data: ReformatData(graphData, 'pred'),
-          yaxisIndex: 0,
-          type: 'line',
+    if (graphData?.length) {
+      initializeSeries()
+
+      ApexCharts.exec('chart-main', 'updateOptions', {
+        xaxis: {
+          categories: ReformatData(graphData, 'date_pred'),
         },
-        {
-          name: 'Ground Truth',
-          data: ReformatData(graphData, 'ground_truth'),
-          yaxisIndex: 0,
-          type: 'line',
-        },
-        {
-          name: 'Upper Bound',
-          data: bounds.upperBounds,
-          yaxisIndex: 0,
-          type: 'area',
-        },
-        {
-          name: 'Lower Bound',
-          data: bounds.lowerBounds,
-          yaxisIndex: 0,
-          type: 'area',
-        },
-      ])
+      })
     }
   }, [graphData, bounds])
+
+  //horizon, selected date (필터 값) 업데이트 될 때마다 초기화
+  useEffect(() => {
+    if (selectedFilter.selectedFeatures) {
+      initializeSeries()
+    }
+  }, [symbol.selectedHorizon, selectedFilter])
 
   useEffect(() => {
     if (graphData && confidenceIntervalData) {
       const dateArr = graphData?.map((item) => item.date_pred)
-      const bounds = getBounds(dateArr, confidenceIntervalData?.confidence_interval)
 
-      setBounds(bounds)
+      const lowerBounds = dateArr.map((date) => {
+        return (
+          confidenceIntervalData?.confidence_interval.filter((item) => item.date_pred === date)[0]?.lower_bound ?? null
+        )
+      })
+      const upperBounds = dateArr.map((date) => {
+        return (
+          confidenceIntervalData?.confidence_interval.filter((item) => item.date_pred === date)[0]?.upper_bound ?? null
+        )
+      })
+      setBounds({ lowerBounds, upperBounds })
     }
   }, [graphData, confidenceIntervalData])
 
-  function getBounds(arr: string[], data: IPredictionConfidenceInterval[]): any {
-    const dataDict: { [key: string]: IPredictionConfidenceInterval } = {}
-    data.forEach((entry) => (dataDict[entry.date_pred] = entry))
-
-    // Iterate over arr and retrieve lower_bound if the date exists in dataDict
-    const lowerBounds = arr.map((date) => dataDict[date]?.lower_bound ?? null)
-    const upperBounds = arr.map((date) => dataDict[date]?.upper_bound ?? null)
-
-    return { lowerBounds, upperBounds }
+  const initializeSeries = () => {
+    setSeries([
+      ...defaultSeries,
+      {
+        name: 'Upper Bound',
+        data: bounds?.upperBounds,
+        type: 'area' as const,
+        yaxisIndex: 0,
+      },
+      {
+        name: 'Lower Bound',
+        data: bounds?.lowerBounds,
+        type: 'area' as const,
+        yaxisIndex: 0,
+      },
+    ])
   }
 
-  useEffect(() => {
-    if (selectedFilter.selectedFeatures) {
-      setSeries(generateFeatureSeries() as TSeries[])
-    }
-  }, [symbol.selectedHorizon, selectedFilter])
-
+  //TODO: 다시 연결 작업중
   function generateFeatureSeries() {
     if (selectedFilter.selectedFeatures) {
       const newSeries = selectedFilter.selectedFeatures.map((feature, idx: number) => {
@@ -128,10 +113,9 @@ const PredictionChart = () => {
           data: ReformatData(chartData, 'value'),
           yaxisIndex: 1,
           type: 'line',
-          color: colorChips[(defaultSeries.length + idx) % colorChips.length],
         }
       })
-      return [...defaultSeries, ...newSeries]
+      return [...series, ...newSeries]
     }
   }
 
@@ -163,7 +147,7 @@ const PredictionChart = () => {
         autoScaleYaxis: true, // 확대/축소 시 y축 자동 스케일링
       },
       type: 'line',
-      id: 'areachart-2',
+      id: 'chart-main',
       events: {
         click(event, chartContext, config) {
           const xValue = config.globals?.seriesX[0][config.dataPointIndex]
@@ -190,42 +174,19 @@ const PredictionChart = () => {
                 text: `${new Date(xValue).toLocaleDateString()}`,
               },
             })
-
-            // setOptions((prevOptions) => ({
-            //   ...prevOptions,
-            //   annotations: {
-            //     ...prevOptions.annotations,
-            //     xaxis: [
-            //       {
-            //         x: xValue,
-            //         borderColor: '#FF4560',
-            //         strokeDashArray: 4,
-            //         label: {
-            //           borderColor: '#FF4560',
-            //           style: {
-            //             color: '#fff',
-            //             background: '#FF4560',
-            //           },
-            //           text: `${new Date(xValue).toLocaleDateString()}`,
-            //         },
-            //       },
-            //     ],
-            //   },
-            // }))
           }
         },
       },
     },
-    fill: {
-      colors: ['#008FFB', '#00E396', '#008FFB', '#FFFFFF'],
-      opacity: [1, 1, 0.1, 1],
-      type: 'solid',
-    },
     stroke: {
       curve: 'straight',
-      width: 1,
-      dashArray: [0, 0, 4, 4],
-      colors: colorChips.slice(0, series.length),
+      width: [1.5, 1.5, 0, 0],
+      colors: colorChipsForStroke.slice(0, series.length + 1),
+    },
+    fill: {
+      colors: colorChipsForFill.slice(0, series.length),
+      opacity: [1, 1, 0.2, 1],
+      type: 'solid',
     },
     dataLabels: {
       enabled: false,
@@ -241,32 +202,34 @@ const PredictionChart = () => {
     },
     xaxis: {
       type: 'datetime',
-      categories: [],
     },
     legend: {
       show: true,
+      customLegendItems: ['Prediction', 'Ground Truth'],
     },
   })
 
-  useEffect(() => {
-    if (graphData?.length) {
-      setSeries(generateFeatureSeries() as TSeries[])
-      setOptions((prevOptions) => ({
-        ...prevOptions,
-        xaxis: {
-          ...prevOptions.xaxis,
-          categories: ReformatData(graphData, 'date_pred'),
-        },
-      }))
+  const onSwitchChange = (value: boolean) => {
+    setViewInterval(value)
+
+    if (value) {
+      ApexCharts.exec('chart-main', 'showSeries', 'Upper Bound')
+      ApexCharts.exec('chart-main', 'showSeries', 'Lower Bound')
+    } else {
+      ApexCharts.exec('chart-main', 'hideSeries', 'Upper Bound')
+      ApexCharts.exec('chart-main', 'hideSeries', 'Lower Bound')
     }
-  }, [graphData])
+  }
 
   return (
     <div>
+      <div className="flex flex-row justify-end">
+        <span className="mr-2">Confidence Interval</span>
+        <Switch onChange={onSwitchChange} checkedChildren="on" unCheckedChildren="off" value={viewInterval} />
+      </div>
       <div id="chart">
         <ReactApexChart options={options as ApexOptions} series={series as ApexAxisChartSeries} height={350} />
       </div>
-      <div id="html-dist"></div>
     </div>
   )
 }

@@ -17,7 +17,7 @@ const Main = () => {
     mutationFn: IndexApi.getSymbolList,
     onSuccess: (response) => {
       setSymbolList(response.symbols)
-      setSymbol(response.symbols[0])
+      setSymbol({ ...response.symbols[0], selectedHorizon: JSON.parse(response.symbols[0].horizons)[0] })
     },
   })
 

@@ -6,7 +6,7 @@ export interface ISymbol {
   horizons: string //서버에서 string으로 받아 Array로 parsing해 사용
   selectedHorizon: number
   unit: string
-  features: IRawDataResponse
+  features: IRawDataFeatures
   description: string
   source: string
 }
@@ -43,7 +43,8 @@ export interface ILocalAttribution {
 }
 
 export type Prediction = {
-  date_pred: string
+  date: string //예측 기준 날짜
+  date_pred: string //예측 결과 날짜
   ground_truth: number | null
   pred: number
 }
@@ -60,6 +61,12 @@ export interface IPredictionDataResponse {
 }
 
 export interface IRawDataResponse {
+  dt: string
+  features: IRawDataFeatures
+  name: string
+}
+
+export interface IRawDataFeatures {
   [feature: string]: Array<IRawData>
 }
 
