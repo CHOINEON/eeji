@@ -251,7 +251,7 @@ const PredictionChart = () => {
       const seriesData = w.globals.series
         .map((s: number[], i: number) => {
           if (w.globals.seriesNames[i] === 'Prediction' || w.globals.seriesNames[i] === 'Ground Truth')
-            return `<div><strong>${w.globals.seriesNames[i]}:</strong> ${s[dataPointIndex]}</div>`
+            return `<div className="text-[10px]"><strong>${w.globals.seriesNames[i]}:</strong> ${s[dataPointIndex]}</div>`
         })
         .join('')
 
@@ -263,9 +263,8 @@ const PredictionChart = () => {
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
         color: black;
       ">
-      <strong><p className="text-lg">Today: ${xValue}<br/></p></strong>
         ${seriesData}
-        <div className="text-sm"><strong>Prediction Date:</strong> ${filteredGraphData[0].date}</div>
+        <div className="text-[8px]">(Forecast at ${filteredGraphData[0].date})</div>
       </div>
     `
     },
