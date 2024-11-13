@@ -48,7 +48,7 @@ const LocalAttrTable = () => {
         1 // 예측날짜 기준 조회
       ),
     {
-      enabled: !!symbol.symbol_id && !!symbol.selectedHorizon && !!filterCondition.selectedDate,
+      enabled: !!symbol.symbol_id && !!symbol.selectedHorizon && filterCondition.selectedDate !== '',
     }
   )
 
