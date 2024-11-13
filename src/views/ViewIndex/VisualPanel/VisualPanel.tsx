@@ -1,4 +1,5 @@
 import IndexApi from 'apis/IndexApi'
+import { IRawData } from 'apis/type/IndexResponse'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilState, useSetRecoilState } from 'recoil'
@@ -33,11 +34,16 @@ const VisualPanel = () => {
   }, [predictionData, symbol.selectedHorizon])
 
   useEffect(() => {
-    // console.log('rawData:', rawData)
-    if (rawData) setSymbol({ ...symbol, features: rawData.features })
+    if (rawData) {
+      const firstFeatureKey = Object.keys(rawData?.features)[0] as keyof typeof rawData.features
+      setSymbol({
+        ...symbol,
+        features: rawData.features,
+        dates: rawData.features[firstFeatureKey].map((item: IRawData) => item.date),
+      })
+    }
   }, [rawData])
 
-  // const onChangeViewType = ({ target: { value } }: RadioChangeEvent) => {
   //   setViewType(value)
   // }
 

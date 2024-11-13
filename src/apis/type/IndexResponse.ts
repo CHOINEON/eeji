@@ -9,6 +9,7 @@ export interface ISymbol {
   features: IRawDataFeatures
   description: string
   source: string
+  dates: string[] //전체 날짜 리스트
 }
 
 export interface ISymbolList {
