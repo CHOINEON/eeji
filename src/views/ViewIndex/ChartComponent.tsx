@@ -39,7 +39,7 @@ const PredictionChart = () => {
   ]
 
   const [series1, setSeries1] = useState<TSeries[]>(defaultSeries)
-  const [series2, setSeries2] = useState<TSeries[]>([])
+  const [series2, setSeries2] = useState<TSeries[]>([{ name: '', data: [], type: 'line' }])
 
   const { data: confidenceIntervalData } = useQuery(
     ['confidenceIntervalData', symbol.symbol_id, symbol.selectedHorizon],
@@ -59,27 +59,31 @@ const PredictionChart = () => {
         },
       })
     }
-  }, [symbol.dates, graphData])
+  }, [symbol?.dates, graphData])
 
   //horizon, selected date (필터 값) 업데이트 될 때마다 초기화
   useEffect(() => {
-    if (selectedFilter.selectedFeatures) {
-      // generateFeatureSeries()
+    if (selectedFilter?.selectedFeatures) {
+      ApexCharts.exec('chart-sub', 'updateOptions', {
+        xaxis: {
+          categories: symbol?.dates,
+        },
+      })
     }
     initializeSeries()
-  }, [graphData, bounds, symbol.selectedHorizon, selectedFilter])
+  }, [symbol?.selectedHorizon, selectedFilter])
 
   useEffect(() => {
     if (symbol.dates?.length > 0 && graphData && confidenceIntervalData) {
       // const dateArr = graphData?.map((item) => item.date_pred)
       const dateArr = symbol.dates
 
-      const lowerBounds = dateArr.map((date) => {
+      const lowerBounds = dateArr?.map((date) => {
         return (
           confidenceIntervalData?.confidence_interval.filter((item) => item.date_pred === date)[0]?.lower_bound ?? null
         )
       })
-      const upperBounds = dateArr.map((date) => {
+      const upperBounds = dateArr?.map((date) => {
         return (
           confidenceIntervalData?.confidence_interval.filter((item) => item.date_pred === date)[0]?.upper_bound ?? null
         )
@@ -94,12 +98,12 @@ const PredictionChart = () => {
       ...defaultSeries,
       {
         name: 'Upper Bound',
-        data: bounds?.upperBounds,
+        data: bounds?.upperBounds ?? [],
         type: 'area' as const,
       },
       {
         name: 'Lower Bound',
-        data: bounds?.lowerBounds,
+        data: bounds?.lowerBounds ?? [],
         type: 'area' as const,
       },
     ])
@@ -119,9 +123,9 @@ const PredictionChart = () => {
   //   })
   // }, [symbol.dates])
 
-  // useEffect(() => {
-  //   console.log(series2)
-  // }, [series2])
+  useEffect(() => {
+    console.log(series2)
+  }, [series2])
 
   //TODO: 다시 연결 작업중
   function updateFeatureSeries() {
@@ -132,7 +136,7 @@ const PredictionChart = () => {
 
         return {
           name: feature,
-          data: ReformatData(chartData, 'value'),
+          data: chartData.map((item) => item.value),
           type: 'line' as const,
           // color: colorChipsForStroke[idx],
         }
@@ -205,7 +209,7 @@ const PredictionChart = () => {
     },
     stroke: {
       curve: 'straight',
-      width: [1.5, 1.5, 0, 0],
+      width: [1.5, 1.5, 0, 0, 0],
       colors: colorChipsForStroke?.slice(0, series1?.length + 1),
     },
     fill: {
@@ -216,7 +220,7 @@ const PredictionChart = () => {
         '#FFFFFF', //lower bounds (white)
         '#FFFFFF', //왜 다섯개여야 하는지 모르겠음...이해 안됨..
       ],
-      opacity: [1, 1, 0.2, 1],
+      opacity: [1, 1, 0.2, 0.2, 1],
       type: 'solid',
     },
     dataLabels: {
@@ -243,6 +247,7 @@ const PredictionChart = () => {
     ],
     legend: {
       show: true,
+      position: 'top',
       customLegendItems: ['Prediction', 'Ground Truth'],
     },
   })
@@ -270,6 +275,10 @@ const PredictionChart = () => {
       },
       // Ensure the y-axis is set to allow for the data range
     },
+    stroke: {
+      curve: 'straight',
+      width: 1,
+    },
     grid: {
       strokeDashArray: 0,
       position: 'front',
@@ -291,16 +300,6 @@ const PredictionChart = () => {
       ApexCharts.exec('chart-main', 'hideSeries', 'Upper Bound')
       ApexCharts.exec('chart-main', 'hideSeries', 'Lower Bound')
     }
-  }
-
-  //전체 날짜에서 값이 빠진 부분 null로 채워 반환
-  const fillNullData = (data: IRawData[]) => {
-    const dates = ReformatData(graphData, 'date_pred')
-
-    const result = dates.map((date) => {
-      const found = data.find((item) => item.date === date)
-      return found ? found.value : null
-    })
   }
 
   // 최신 graphData를 참조하는 tooltip.custom 함수 생성
@@ -349,8 +348,8 @@ const PredictionChart = () => {
         <Switch onChange={onSwitchChange} checkedChildren="on" unCheckedChildren="off" value={viewInterval} />
       </div>
       <div id="chart">
-        <ReactApexChart options={options as ApexOptions} series={series1 as ApexAxisChartSeries} />
-        {/* <ReactApexChart options={options2 as ApexOptions} series={series2 as ApexAxisChartSeries} /> */}
+        <ReactApexChart options={options as ApexOptions} series={series1 as ApexAxisChartSeries} height={400} />
+        <ReactApexChart options={options2 as ApexOptions} series={series2 as ApexAxisChartSeries} height={200} />
       </div>
     </div>
   )
