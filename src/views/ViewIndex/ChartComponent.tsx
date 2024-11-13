@@ -2,7 +2,8 @@ import { Switch } from 'antd'
 import { ApexOptions } from 'apexcharts'
 import IndexApi from 'apis/IndexApi'
 import { IPredictionConfidenceInterval, IRawData, Prediction } from 'apis/type/IndexResponse'
-import { useEffect, useState } from 'react'
+import dayjs from 'dayjs'
+import { useCallback, useEffect, useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import { useQuery } from 'react-query'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -48,7 +49,7 @@ const PredictionChart = () => {
   )
 
   useEffect(() => {
-    if (graphData?.length) {
+    if (graphData?.length > 0) {
       initializeSeries()
 
       ApexCharts.exec('chart-main', 'updateOptions', {
@@ -63,6 +64,7 @@ const PredictionChart = () => {
   useEffect(() => {
     if (selectedFilter.selectedFeatures) {
       initializeSeries()
+      generateFeatureSeries()
     }
   }, [symbol.selectedHorizon, selectedFilter])
 
@@ -104,15 +106,19 @@ const PredictionChart = () => {
 
   //TODO: 다시 연결 작업중
   function generateFeatureSeries() {
-    if (selectedFilter.selectedFeatures) {
+    if (selectedFilter.selectedFeatures.length > 0) {
+      console.log('selectedFilter.selectedFeatures:', selectedFilter.selectedFeatures)
+      console.log(symbol.features)
       const newSeries = selectedFilter.selectedFeatures.map((feature, idx: number) => {
         const chartData: IRawData[] = symbol.features[feature]
+
         return {
           key: idx,
           name: feature,
           data: ReformatData(chartData, 'value'),
           yaxisIndex: 1,
           type: 'line',
+          color: colorChipsForStroke[series.length + idx],
         }
       })
       return [...series, ...newSeries]
@@ -203,6 +209,19 @@ const PredictionChart = () => {
     xaxis: {
       type: 'datetime',
     },
+    // yaxis: [
+    //   {
+    //     title: {
+    //       text: 'Prediction / Ground Truth',
+    //     },
+    //   },
+    //   {
+    //     opposite: true,
+    //     title: {
+    //       text: 'Feature',
+    //     },
+    //   },
+    // ],
     legend: {
       show: true,
       customLegendItems: ['Prediction', 'Ground Truth'],
@@ -220,6 +239,55 @@ const PredictionChart = () => {
       ApexCharts.exec('chart-main', 'hideSeries', 'Lower Bound')
     }
   }
+
+  // 최신 graphData를 참조하는 tooltip.custom 함수 생성
+  const customTooltip = useCallback(
+    ({ series, dataPointIndex, w }: { series: ApexAxisChartSeries; dataPointIndex: number; w: any }) => {
+      // graphData에서 해당 날짜에 맞는 데이터 찾기
+      const xValue = dayjs(w.globals.seriesX[0][dataPointIndex]).format('YYYY-MM-DD')
+      const filteredGraphData = graphData?.filter((item) => item.date_pred === xValue)
+
+      //Prediction, Ground Truth, Upper Bound, Lower Bound 순서로 series 데이터 들어있음
+      const seriesData = w.globals.series
+        .map((s: number[], i: number) => {
+          if (w.globals.seriesNames[i] === 'Prediction' || w.globals.seriesNames[i] === 'Ground Truth')
+            return `<div><strong>${w.globals.seriesNames[i]}:</strong> ${s[dataPointIndex]}</div>`
+        })
+        .join('')
+
+      return `
+      <div style="
+        background: white; 
+        padding: 10px; 
+        border-radius: 5px; 
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+        color: black;
+      ">
+      <strong><p className="text-lg">Today: ${xValue}<br/></p></strong>
+        ${seriesData}
+        <div className="text-sm"><strong>Prediction Date:</strong> ${filteredGraphData[0].date}</div>
+      </div>
+    `
+    },
+    [graphData]
+  )
+
+  useEffect(() => {
+    // graphData 변경 시마다 options 업데이트
+    // setOptions((prevOptions) => ({
+    //   ...prevOptions,
+    //   tooltip: {
+    //     ...prevOptions.tooltip,
+    //     custom: customTooltip,
+    //   },
+    // }))
+
+    ApexCharts.exec('chart-main', 'updateOptions', {
+      tooltip: {
+        custom: customTooltip,
+      },
+    })
+  }, [customTooltip])
 
   return (
     <div>
