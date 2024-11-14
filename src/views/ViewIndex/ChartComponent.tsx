@@ -49,8 +49,9 @@ const PredictionChart = () => {
     }
   )
 
+  //prediction data에서 추출한 graphData와, confidenceIntervalData가 있을 때만 초기화
   useEffect(() => {
-    if (symbol.dates?.length > 0) {
+    if (symbol?.dates && graphData) {
       initializeSeries()
 
       ApexCharts.exec('chart-main', 'updateOptions', {
@@ -59,7 +60,7 @@ const PredictionChart = () => {
         },
       })
     }
-  }, [symbol?.dates, graphData])
+  }, [symbol?.dates, graphData, bounds?.lowerBounds])
 
   //horizon, selected date (필터 값) 업데이트 될 때마다 초기화
   useEffect(() => {
@@ -74,26 +75,21 @@ const PredictionChart = () => {
   }, [symbol?.selectedHorizon, selectedFilter])
 
   useEffect(() => {
-    if (symbol.dates?.length > 0 && graphData && confidenceIntervalData) {
-      // const dateArr = graphData?.map((item) => item.date_pred)
+    if (symbol?.dates?.length > 0 && confidenceIntervalData) {
       const dateArr = symbol.dates
 
       const lowerBounds = dateArr?.map((date) => {
-        return (
-          confidenceIntervalData?.confidence_interval.filter((item) => item.date_pred === date)[0]?.lower_bound ?? null
-        )
+        return confidenceIntervalData?.confidence_interval.find((item) => item.date_pred === date)?.lower_bound || null
       })
       const upperBounds = dateArr?.map((date) => {
-        return (
-          confidenceIntervalData?.confidence_interval.filter((item) => item.date_pred === date)[0]?.upper_bound ?? null
-        )
+        return confidenceIntervalData?.confidence_interval.find((item) => item.date_pred === date)?.upper_bound || null
       })
-
       setBounds({ lowerBounds, upperBounds })
     }
-  }, [graphData, confidenceIntervalData])
+  }, [confidenceIntervalData, symbol?.dates])
 
   const initializeSeries = () => {
+    //upper bounds 먼저 그리고 lower bounds 그려야, lower의 fill로 아래를 하얗게 칠할 수 있음
     setSeries1([
       ...defaultSeries,
       {
@@ -115,19 +111,6 @@ const PredictionChart = () => {
     }
   }, [selectedFilter])
 
-  // useEffect(() => {
-  //   ApexCharts.exec('chart-main', 'updateOptions', {
-  //     xaxis: {
-  //       categories: symbol.dates,
-  //     },
-  //   })
-  // }, [symbol.dates])
-
-  useEffect(() => {
-    console.log(series2)
-  }, [series2])
-
-  //TODO: 다시 연결 작업중
   function updateFeatureSeries() {
     if (selectedFilter.selectedFeatures?.length > 0) {
       const newSeries = selectedFilter.selectedFeatures.map((feature, idx: number) => {
@@ -169,7 +152,6 @@ const PredictionChart = () => {
     chart: {
       stacked: false,
       group: 'group',
-      height: 250,
       zoom: {
         enabled: true, // 확대/축소 기능 활성화
         type: 'x', // x축 기준 확대/축소 ('x', 'y', 'xy' 중 선택 가능)
@@ -220,7 +202,7 @@ const PredictionChart = () => {
         '#FFFFFF', //lower bounds (white)
         '#FFFFFF', //왜 다섯개여야 하는지 모르겠음...이해 안됨..
       ],
-      opacity: [1, 1, 0.2, 0.2, 1],
+      opacity: [1, 1, 0.2, 1, 1],
       type: 'solid',
     },
     dataLabels: {
@@ -229,11 +211,6 @@ const PredictionChart = () => {
     grid: {
       strokeDashArray: 0,
       position: 'front',
-      // padding: {
-      //   right: 30,
-      //   left: 20,
-      //   bottom: 30,
-      // },
     },
     xaxis: {
       type: 'datetime',
@@ -249,6 +226,9 @@ const PredictionChart = () => {
       show: true,
       position: 'top',
       customLegendItems: ['Prediction', 'Ground Truth'],
+      onItemClick: {
+        toggleDataSeries: true, // Enable toggling of the series
+      },
     },
   })
 
@@ -258,14 +238,12 @@ const PredictionChart = () => {
       id: 'chart-sub',
       group: 'group',
       type: 'line',
-      height: 100,
       zoom: {
         enabled: true, // 확대/축소 기능 활성화
         type: 'x', // x축 기준 확대/축소 ('x', 'y', 'xy' 중 선택 가능)
         autoScaleYaxis: true, // 확대/축소 시 y축 자동 스케일링
       },
     },
-    // colors: colorChipsForStroke.slice(0, series2.length),
     xaxis: {
       type: 'datetime',
     },
@@ -348,7 +326,7 @@ const PredictionChart = () => {
         <Switch onChange={onSwitchChange} checkedChildren="on" unCheckedChildren="off" value={viewInterval} />
       </div>
       <div id="chart">
-        <ReactApexChart options={options as ApexOptions} series={series1 as ApexAxisChartSeries} height={400} />
+        <ReactApexChart options={options as ApexOptions} series={series1 as ApexAxisChartSeries} height={350} />
         <ReactApexChart options={options2 as ApexOptions} series={series2 as ApexAxisChartSeries} height={200} />
       </div>
     </div>
