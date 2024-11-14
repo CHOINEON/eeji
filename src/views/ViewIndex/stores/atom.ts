@@ -11,6 +11,7 @@ export const SymbolState = atom({
     unit: '',
     features: {},
     selectedHorizon: 0,
+    dates: [], //모든 x축 날짜 (rawData 기준으로 데이터 포맷팅을 위해 저장)
   } as ISymbol,
 })
 
