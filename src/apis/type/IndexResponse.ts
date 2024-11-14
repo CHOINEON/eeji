@@ -33,8 +33,15 @@ export interface IGlobalFeatureImportance {
   name: string
 }
 
+export interface IFeatureImpact {
+  feature_name: string
+  impact: number
+  input_value_delta: number
+  input_value_delta_percentage: number
+}
+
 export interface ILocalAttribution {
-  feature_impact: Array<{ feature_name: string; impact: number }>
+  feature_impact: Array<IFeatureImpact>
   name: string
   horizon: number
   date: string
