@@ -1,8 +1,8 @@
 export const colorChipsForStroke = [
   '#008FFB', //prediction(blue)
   '#00E396', //ground truth(green)
-  '#008FFB', //bounds (prediction과 색상 맞춤)
-  '#008FFB', //bounds (prediction과 색상 맞춤)
+  '#FFFFFF', //upper bounds(white)
+  '#FFFFFF', //lower bounds(white)
   '#FF9936',
   '#FFE346',
   '#893CC1',

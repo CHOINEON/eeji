@@ -36,6 +36,7 @@ const VisualPanel = () => {
   useEffect(() => {
     if (rawData) {
       const firstFeatureKey = Object.keys(rawData?.features)[0] as keyof typeof rawData.features
+
       setSymbol({
         ...symbol,
         features: rawData.features,
