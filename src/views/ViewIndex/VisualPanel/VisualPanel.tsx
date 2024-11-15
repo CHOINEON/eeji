@@ -30,23 +30,25 @@ const VisualPanel = () => {
   })
 
   useEffect(() => {
-    if (predictionData) setGraphData(predictionData[symbol.selectedHorizon])
+    if (predictionData) {
+      setGraphData(predictionData[symbol.selectedHorizon])
+    }
   }, [predictionData, symbol.selectedHorizon])
 
   useEffect(() => {
-    if (rawData) {
+    if (rawData && predictionData) {
       const firstFeatureKey = Object.keys(rawData?.features)[0] as keyof typeof rawData.features
+
+      const datesInPred = predictionData?.[symbol.selectedHorizon]?.map((item) => item.date)
+      const datesInRawData = rawData.features[firstFeatureKey].map((item: IRawData) => item.date)
 
       setSymbol({
         ...symbol,
         features: rawData.features,
-        dates: rawData.features[firstFeatureKey].map((item: IRawData) => item.date),
+        dates: datesInPred.length > datesInRawData.length ? datesInPred : datesInRawData,
       })
     }
-  }, [rawData])
-
-  //   setViewType(value)
-  // }
+  }, [rawData, predictionData])
 
   return (
     <div className="m-3">
