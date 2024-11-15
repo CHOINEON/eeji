@@ -4,8 +4,8 @@ import IndexApi from 'apis/IndexApi'
 import { IFeatureImpact } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { selectedFilterState, SymbolState } from '../stores/atom'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { chartOptionDataState, selectedFilterState, SymbolState } from '../stores/atom'
 
 interface DataType {
   key: React.Key
@@ -49,6 +49,8 @@ const LocalAttrTable = () => {
   const filterCondition = useRecoilValue(selectedFilterState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [data, setData] = useState([])
+  const setChartOptionData = useSetRecoilState(chartOptionDataState)
+  const chartOptionData = useRecoilValue(chartOptionDataState)
 
   const { data: featureImpactData } = useQuery(
     ['localAttribution', symbol.symbol_id, filterCondition.selectedDate],
@@ -60,20 +62,28 @@ const LocalAttrTable = () => {
         1 // 예측날짜 기준 조회
       ),
     {
-      enabled: !!symbol.symbol_id && !!symbol.selectedHorizon && filterCondition.selectedDate !== '',
+      enabled: !!symbol.symbol_id && !!symbol.selectedHorizon && !!filterCondition.selectedDate,
     }
   )
 
   useEffect(() => {
-    if (filterCondition.selectedDate !== '' && featureImpactData?.feature_impact) {
+    if (featureImpactData) {
+      setChartOptionData({ xAxisRange: { x1: featureImpactData.date_input, x2: featureImpactData.date } })
+    }
+  }, [featureImpactData])
+
+  useEffect(() => {
+    setData([])
+
+    if (featureImpactData?.feature_impact) {
       const data = featureImpactData.feature_impact.map((item: IFeatureImpact) => ({
         key: item.feature_name,
         name: item.feature_name,
         impact: item.impact,
         input_value_delta: item.input_value_delta,
         input_value_delta_percentage: item.input_value_delta_percentage,
-        date_input: featureImpactData.date_input,
       }))
+      console.log('new datasource:', data)
       setData(data)
     }
   }, [symbol, filterCondition, featureImpactData])
@@ -90,10 +100,10 @@ const LocalAttrTable = () => {
   }
 
   return (
-    <div className="m-3">
-      <span>
-        {' '}
-        입력 구간 : {data[0]?.date_input} ~ {filterCondition.selectedDate}
+    <>
+      <span className={`text-lg mr-2`}>Local Attribution</span>
+      <span className={`${chartOptionData?.xAxisRange ? 'text-[12px] text-gray-500' : 'hidden'}`}>
+        (입력 구간 : {chartOptionData.xAxisRange?.x1} - {chartOptionData.xAxisRange?.x2})
       </span>
       <Table
         className="mt-2"
@@ -103,7 +113,7 @@ const LocalAttrTable = () => {
         size="small"
         pagination={{ pageSize: 4, pageSizeOptions: [4], position: ['bottomCenter'], showSizeChanger: false }}
       />
-    </div>
+    </>
   )
 }
 

@@ -9,7 +9,7 @@ import { useQuery } from 'react-query'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { formatTimestampToYYYYMMDD } from 'utils/DateFunction'
 import { colorChipsForStroke } from './Colors'
-import { graphDataState, selectedFilterState, SymbolState } from './stores/atom'
+import { chartOptionDataState, graphDataState, selectedFilterState, SymbolState } from './stores/atom'
 
 type TSeries = {
   name: string
@@ -21,6 +21,7 @@ type TSeries = {
 const PredictionChart = () => {
   const symbol = useRecoilValue(SymbolState)
   const graphData = useRecoilValue(graphDataState)
+  const chartOptionData = useRecoilValue(chartOptionDataState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [bounds, setBounds] = useState<{ lowerBounds: Array<number>; upperBounds: Array<number> }>()
   const [viewInterval, setViewInterval] = useState(true)
@@ -49,10 +50,26 @@ const PredictionChart = () => {
     }
   )
 
+  useEffect(() => {
+    // Check if selectedDate is valid before updating annotations
+    if (chartOptionData?.xAxisRange?.x1 && chartOptionData?.xAxisRange?.x2) {
+      ApexCharts.exec('chart-main', 'removeAnnotation', 'x-axis-range')
+      ApexCharts.exec('chart-main', 'addXaxisAnnotation', {
+        id: 'x-axis-range',
+        x: new Date(chartOptionData.xAxisRange?.x1).getTime(),
+        x2: new Date(chartOptionData.xAxisRange?.x2).getTime(),
+        fillColor: '#FF3200',
+        // label: {
+        //   text: `입력 : ${chartOptionData.xAxisRange?.x1} ~ ${chartOptionData.xAxisRange?.x2}`,
+        // },
+      })
+    }
+  }, [chartOptionData])
+
   //prediction data에서 추출한 graphData와, confidenceIntervalData가 있을 때만 초기화
   useEffect(() => {
     if (symbol?.dates && graphData) {
-      initializeSeries()
+      initializeChart()
 
       ApexCharts.exec('chart-main', 'updateOptions', {
         xaxis: {
@@ -71,7 +88,7 @@ const PredictionChart = () => {
         },
       })
     }
-    initializeSeries()
+    initializeChart()
   }, [symbol?.selectedHorizon, selectedFilter])
 
   useEffect(() => {
@@ -88,7 +105,7 @@ const PredictionChart = () => {
     }
   }, [confidenceIntervalData, symbol?.dates])
 
-  const initializeSeries = () => {
+  const initializeChart = () => {
     //upper bounds 먼저 그리고 lower bounds 그려야, lower의 fill로 아래를 하얗게 칠할 수 있음
     setSeries1([
       ...defaultSeries,
@@ -103,25 +120,33 @@ const PredictionChart = () => {
         type: 'area' as const,
       },
     ])
+
+    //annotation initialize
+    ApexCharts.exec('chart-main', 'clearAnnotations')
+    ApexCharts.exec('chart-sub', 'clearAnnotations')
   }
 
   useEffect(() => {
     if (selectedFilter?.selectedFeatures) {
       updateFeatureSeries()
+      ApexCharts.exec('chart-sub', 'addXaxisAnnotation', {
+        id: 'x-axis-range',
+        x: new Date(chartOptionData.xAxisRange?.x1).getTime(),
+        x2: new Date(chartOptionData.xAxisRange?.x2).getTime(),
+        fillColor: '#FF3200',
+      })
     }
   }, [selectedFilter])
 
   function updateFeatureSeries() {
     if (selectedFilter.selectedFeatures?.length > 0) {
       const newSeries = selectedFilter.selectedFeatures.map((feature, idx: number) => {
-        //rawData의 x값 범위에 맞추기로 협의함(24.11.13)
         const chartData: IRawData[] = symbol.features[feature]
 
         return {
           name: feature,
           data: chartData.map((item) => item.value),
           type: 'line' as const,
-          // color: colorChipsForStroke[idx],
         }
       })
       setSeries2(newSeries)
@@ -215,13 +240,6 @@ const PredictionChart = () => {
     xaxis: {
       type: 'datetime',
     },
-    yaxis: [
-      {
-        title: {
-          text: 'Prediction / Ground Truth',
-        },
-      },
-    ],
     legend: {
       show: true,
       position: 'top',
@@ -229,6 +247,18 @@ const PredictionChart = () => {
       onItemClick: {
         toggleDataSeries: true, // Enable toggling of the series
       },
+    },
+    annotations: {
+      xaxis: [
+        {
+          x: new Date(chartOptionData?.xAxisRange?.x1).getTime(),
+          x2: new Date(chartOptionData?.xAxisRange?.x2).getTime(),
+          fillColor: '#B3F7CA',
+          label: {
+            text: 'X-axis range',
+          },
+        },
+      ],
     },
   })
 
@@ -246,12 +276,6 @@ const PredictionChart = () => {
     },
     xaxis: {
       type: 'datetime',
-    },
-    yaxis: {
-      title: {
-        text: 'Features',
-      },
-      // Ensure the y-axis is set to allow for the data range
     },
     stroke: {
       curve: 'straight',
@@ -327,7 +351,10 @@ const PredictionChart = () => {
       </div>
       <div id="chart">
         <ReactApexChart options={options as ApexOptions} series={series1 as ApexAxisChartSeries} height={350} />
-        <ReactApexChart options={options2 as ApexOptions} series={series2 as ApexAxisChartSeries} height={200} />
+
+        {selectedFilter?.selectedFeatures?.length > 0 && (
+          <ReactApexChart options={options2 as ApexOptions} series={series2 as ApexAxisChartSeries} height={200} />
+        )}
       </div>
     </div>
   )

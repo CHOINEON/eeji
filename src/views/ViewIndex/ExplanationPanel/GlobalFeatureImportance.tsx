@@ -67,7 +67,7 @@ const GlobalFeatureImportance = () => {
       <div className="m-5">
         {featureImportance?.length > 0 && (
           <>
-            <ReactApexChart options={options} series={series.map((s) => Number(s.data[0]))} type="donut" height={250} />
+            <ReactApexChart options={options} series={series.map((s) => Number(s.data[0]))} type="donut" height={180} />
             <div className="my-5">
               가장 영향력이 큰 변수는 <strong>{featureImportance[0]?.feature_name} </strong>입니다.
             </div>
