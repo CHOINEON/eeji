@@ -1,3 +1,4 @@
+import FeaturePanel from '../FeaturePanel/FeaturePanel'
 import DataSummary from './DataSummary'
 import GlobalFeatureImportance from './GlobalFeatureImportance'
 
@@ -6,6 +7,7 @@ const ExplanationPanel = () => {
     <div>
       <DataSummary />
       <GlobalFeatureImportance />
+      <FeaturePanel />
     </div>
   )
 }
