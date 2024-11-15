@@ -48,6 +48,7 @@ export interface ILocalAttribution {
   is_pred_date: number //1: 예측날짜, 0:기준날짜
   date_pred: string //예측 결과 날짜
   dt: string //데이터 생성일
+  date_input: string //입력 데이터 구간의 시작날짜
 }
 
 export type Prediction = {

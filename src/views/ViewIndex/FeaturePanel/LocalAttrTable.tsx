@@ -11,6 +11,9 @@ interface DataType {
   key: React.Key
   name: string
   impact: number
+  input_value_delta: number
+  input_value_delta_percentage: number
+  date_input: string
 }
 
 const columns = [
@@ -36,12 +39,8 @@ const columns = [
     dataIndex: 'input_value_delta',
     align: 'center' as const,
     sorter: (a: IFeatureImpact, b: IFeatureImpact) => a.input_value_delta - b.input_value_delta,
-  },
-  {
-    title: 'Input Value Delta Percentage',
-    dataIndex: 'input_value_delta_percentage',
-    align: 'center' as const,
-    sorter: (a: IFeatureImpact, b: IFeatureImpact) => a.input_value_delta_percentage - b.input_value_delta_percentage,
+    render: (number: number, record: DataType) =>
+      `${number} (${(record.input_value_delta_percentage * 100).toFixed(2)}%)`,
   },
 ]
 
@@ -73,6 +72,7 @@ const LocalAttrTable = () => {
         impact: item.impact,
         input_value_delta: item.input_value_delta,
         input_value_delta_percentage: item.input_value_delta_percentage,
+        date_input: featureImpactData.date_input,
       }))
       setData(data)
     }
@@ -91,6 +91,10 @@ const LocalAttrTable = () => {
 
   return (
     <div className="m-3">
+      <span>
+        {' '}
+        입력 구간 : {data[0]?.date_input} ~ {filterCondition.selectedDate}
+      </span>
       <Table
         className="mt-2"
         columns={columns}
