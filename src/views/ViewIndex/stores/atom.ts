@@ -1,4 +1,4 @@
-import { ISelectedFilter, ISymbol, Prediction } from 'apis/type/IndexResponse'
+import { IChartOptionData, ISelectedFilter, ISymbol, Prediction } from 'apis/type/IndexResponse'
 import { atom } from 'recoil'
 import { PeriodType } from 'utils/TextTranslator'
 
@@ -29,4 +29,9 @@ export const selectedFilterState = atom({
 export const graphDataState = atom({
   key: 'graphDataState',
   default: [] as Prediction[],
+})
+
+export const chartOptionDataState = atom({
+  key: 'chartOptionDataState',
+  default: {} as IChartOptionData,
 })
