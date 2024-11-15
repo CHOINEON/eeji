@@ -69,7 +69,7 @@ const PredictionChart = () => {
   //prediction data에서 추출한 graphData와, confidenceIntervalData가 있을 때만 초기화
   useEffect(() => {
     if (symbol?.dates && graphData) {
-      initializeSeries()
+      initializeChart()
 
       ApexCharts.exec('chart-main', 'updateOptions', {
         xaxis: {
@@ -88,7 +88,7 @@ const PredictionChart = () => {
         },
       })
     }
-    initializeSeries()
+    initializeChart()
   }, [symbol?.selectedHorizon, selectedFilter])
 
   useEffect(() => {
@@ -105,7 +105,7 @@ const PredictionChart = () => {
     }
   }, [confidenceIntervalData, symbol?.dates])
 
-  const initializeSeries = () => {
+  const initializeChart = () => {
     //upper bounds 먼저 그리고 lower bounds 그려야, lower의 fill로 아래를 하얗게 칠할 수 있음
     setSeries1([
       ...defaultSeries,
@@ -120,6 +120,10 @@ const PredictionChart = () => {
         type: 'area' as const,
       },
     ])
+
+    //annotation initialize
+    ApexCharts.exec('chart-main', 'clearAnnotations')
+    ApexCharts.exec('chart-sub', 'clearAnnotations')
   }
 
   useEffect(() => {
