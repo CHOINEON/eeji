@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { ThemeProvider } from '@mui/material/styles'
 import { App, Select } from 'antd'
 import ModelApi from 'apis/ModelApi'
+import { useGetModelList } from 'hooks/queries/useGetModelList'
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
@@ -30,6 +31,8 @@ const ModelGeneratorResult = () => {
   const [selectedFeatureX, setSelectedFeatureX] = useState([])
 
   const selectedModel = useRecoilValue(selectedModelAtom)
+  const setSelectedModel = useSetRecoilState(selectedModelAtom)
+
   const selectedData = useRecoilValue(selectedDataState)
   const resetSelectedData = useResetRecoilState(selectedDataState)
 
@@ -43,16 +46,16 @@ const ModelGeneratorResult = () => {
   const [analysisResponse, setAnalysisResponse] = useRecoilState(analysisResponseAtom)
 
   const { id } = useParams<{ id: string }>()
+  const userid = localStorage.getItem('userId')
+
+  const { data } = useGetModelList(userid)
 
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: (result: any) => {
-      console.log('here?')
-
       // 한 번에 한 개의 요청만 처리하도록 변경하여, 서버 응답메시지를 사용자에게 표출함(2024-04-29)
       if (result?.detail) {
         message.warning({ content: result.detail, style: { marginTop: '5vh' } }).then(() => setActiveStep(0))
       } else {
-        console.log('here?')
         setAnalysisResponse([
           ...analysisResponse,
           {
@@ -144,16 +147,17 @@ const ModelGeneratorResult = () => {
   })
 
   useEffect(() => {
-    if (id !== null) {
-      console.log({ id })
+    if (id !== null && data) {
+      const dataArray = Array.isArray(data) ? data : []
+      const foundItem = dataArray.find((item) => item.id === id)
 
+      if (foundItem) {
+        setSelectedModel(foundItem)
+      }
+      // console.log(foundItem)
       mutateTrainingResult({ model_id: id, is_xai: 'false' })
-      //
-      // TODO: fill selectedModel using id
-      //
-      // console.log(selectedModel)
     }
-  }, [id])
+  }, [id, data])
 
   useEffect(() => {
     if (analysisResponse.length > 0) {
@@ -161,8 +165,6 @@ const ModelGeneratorResult = () => {
       analysisResponse.map((value: any, index: number) => {
         newOption.push({ value: index, label: index === 0 ? 'INEEJI Pred' : `Prediction ${index}` })
       })
-      console.log('here?')
-
       setOptions(newOption)
     }
   }, [analysisResponse])
