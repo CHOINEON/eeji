@@ -2,6 +2,7 @@
 
 // Admin Imports
 import AIModelGenerator from 'views/AIModelGenerator'
+import ModelGeneratorResult from 'views/AIModelGenerator/ModelGeneratorResult'
 import { default as HRCView } from 'views/HRCView/HRCView'
 import MainContents from 'views/Main/Main'
 import MyPage from 'views/MyPage'
@@ -24,6 +25,15 @@ const routes: RoutesType[] = [
     path: '/ai-model-generator',
     icon: '',
     component: AIModelGenerator,
+    widthScreen: false,
+  },
+  {
+    name: 'View Model Results',
+    layout: '/admin',
+    path: '/view-model-results/:id',
+    icon: '',
+    component: ModelGeneratorResult,
+    showInHeader: false,
     widthScreen: false,
   },
   {
