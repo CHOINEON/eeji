@@ -7,7 +7,7 @@ const DataSummary = () => {
 
   return (
     <div className="m-3">
-      <h3 className="text-black text-lg">Data Summary</h3>
+      <h3 className="text-black text-lg font-bold">Data Summary</h3>
       {symbolList?.filter((s) => s.symbol_id === symbol.symbol_id)[0]?.description}
       (출처 : {symbolList?.filter((s) => s.symbol_id === symbol.symbol_id)[0]?.source})
     </div>

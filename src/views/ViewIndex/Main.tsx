@@ -3,7 +3,6 @@ import { useEffect } from 'react'
 import { useMutation } from 'react-query'
 import { useSetRecoilState } from 'recoil'
 import ExplanationPanel from './ExplanationPanel/ExplanationPanel'
-import MetricsTable from './PerformancePanel/MetricsTable'
 import ResizablePanels from './ResizablePanels'
 import { SymbolListState, SymbolState } from './stores/atom'
 import VisualPanel from './VisualPanel/VisualPanel'
@@ -24,9 +23,7 @@ const Main = () => {
     getSymbolList()
   }, [])
 
-  return (
-    <ResizablePanels panel1={<VisualPanel />} panel2={<ExplanationPanel />} panel3={null} panel4={<MetricsTable />} />
-  )
+  return <ResizablePanels panel1={<VisualPanel />} panel2={<ExplanationPanel />} panel3={null} panel4={null} />
 }
 
 export default Main

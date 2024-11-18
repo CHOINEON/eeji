@@ -100,8 +100,8 @@ const LocalAttrTable = () => {
   }
 
   return (
-    <>
-      <span className={`text-lg mr-2`}>Local Attribution</span>
+    <div className="mb-8">
+      <span className="text-lg mr-2 font-bold">Local Attribution</span>
       <span className={`${chartOptionData?.xAxisRange ? 'text-[12px] text-gray-500' : 'hidden'}`}>
         (입력 구간 : {chartOptionData.xAxisRange?.x1} - {chartOptionData.xAxisRange?.x2})
       </span>
@@ -113,7 +113,7 @@ const LocalAttrTable = () => {
         size="small"
         pagination={{ pageSize: 4, pageSizeOptions: [4], position: ['bottomCenter'], showSizeChanger: false }}
       />
-    </>
+    </div>
   )
 }
 

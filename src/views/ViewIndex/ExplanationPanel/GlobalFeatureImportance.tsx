@@ -63,8 +63,8 @@ const GlobalFeatureImportance = () => {
 
   return (
     <div className="m-3 mt-5">
-      <h3 className="text-black text-lg">Global Feature Importance</h3>
-      <div className="m-5">
+      <h3 className="text-black text-lg font-bold">Global Feature Importance</h3>
+      <div className="m-5 h-[220px]">
         {featureImportance?.length > 0 && (
           <>
             <ReactApexChart options={options} series={series.map((s) => Number(s.data[0]))} type="donut" height={180} />
