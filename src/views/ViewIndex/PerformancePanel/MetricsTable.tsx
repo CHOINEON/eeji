@@ -58,7 +58,7 @@ const MetricsTable = () => {
 
   return (
     <div className="m-3">
-      <h3 className="text-black text-lg">Metrics</h3>
+      <h3 className="text-black text-lg font-bold">Metrics</h3>
       <Table className="mt-2" columns={columns} dataSource={metricsData} size="small" pagination={false} rowKey="key" />
     </div>
   )

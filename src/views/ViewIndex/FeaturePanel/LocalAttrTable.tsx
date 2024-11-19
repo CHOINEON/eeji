@@ -73,8 +73,6 @@ const LocalAttrTable = () => {
   }, [featureImpactData])
 
   useEffect(() => {
-    setData([])
-
     if (featureImpactData?.feature_impact) {
       const data = featureImpactData.feature_impact.map((item: IFeatureImpact) => ({
         key: item.feature_name,
@@ -83,7 +81,6 @@ const LocalAttrTable = () => {
         input_value_delta: item.input_value_delta,
         input_value_delta_percentage: item.input_value_delta_percentage,
       }))
-      console.log('new datasource:', data)
       setData(data)
     }
   }, [symbol, filterCondition, featureImpactData])
@@ -100,8 +97,8 @@ const LocalAttrTable = () => {
   }
 
   return (
-    <>
-      <span className={`text-lg mr-2`}>Local Attribution</span>
+    <div className="mb-8">
+      <span className="text-lg mr-2 font-bold">Local Attribution</span>
       <span className={`${chartOptionData?.xAxisRange ? 'text-[12px] text-gray-500' : 'hidden'}`}>
         (입력 구간 : {chartOptionData.xAxisRange?.x1} - {chartOptionData.xAxisRange?.x2})
       </span>
@@ -113,7 +110,7 @@ const LocalAttrTable = () => {
         size="small"
         pagination={{ pageSize: 4, pageSizeOptions: [4], position: ['bottomCenter'], showSizeChanger: false }}
       />
-    </>
+    </div>
   )
 }
 
