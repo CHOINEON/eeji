@@ -69,7 +69,7 @@ const PredictionChart = () => {
   //prediction data에서 추출한 graphData와, confidenceIntervalData가 있을 때만 초기화
   useEffect(() => {
     if (symbol?.dates && graphData) {
-      initializeChart()
+      initializeMainChart()
 
       ApexCharts.exec('chart-main', 'updateOptions', {
         xaxis: {
@@ -78,18 +78,6 @@ const PredictionChart = () => {
       })
     }
   }, [symbol?.dates, graphData, bounds?.lowerBounds])
-
-  //horizon, selected date (필터 값) 업데이트 될 때마다 초기화
-  useEffect(() => {
-    if (selectedFilter?.selectedFeatures) {
-      ApexCharts.exec('chart-sub', 'updateOptions', {
-        xaxis: {
-          categories: symbol?.dates,
-        },
-      })
-    }
-    initializeChart()
-  }, [symbol?.selectedHorizon, selectedFilter])
 
   useEffect(() => {
     if (symbol?.dates?.length > 0 && confidenceIntervalData) {
@@ -105,7 +93,7 @@ const PredictionChart = () => {
     }
   }, [confidenceIntervalData, symbol?.dates])
 
-  const initializeChart = () => {
+  const initializeMainChart = () => {
     //upper bounds 먼저 그리고 lower bounds 그려야, lower의 fill로 아래를 하얗게 칠할 수 있음
     setSeries1([
       ...defaultSeries,
@@ -128,17 +116,30 @@ const PredictionChart = () => {
 
   useEffect(() => {
     if (selectedFilter?.selectedFeatures) {
-      updateFeatureSeries()
-      ApexCharts.exec('chart-sub', 'addXaxisAnnotation', {
-        id: 'x-axis-range',
-        x: new Date(chartOptionData.xAxisRange?.x1).getTime(),
-        x2: new Date(chartOptionData.xAxisRange?.x2).getTime(),
-        fillColor: '#FF3200',
+      //차트 옵션 업데이트
+      ApexCharts.exec('chart-sub', 'updateOptions', {
+        xaxis: {
+          categories: symbol?.dates,
+        },
+        annotations: {
+          xaxis: [
+            {
+              id: 'x-axis-range',
+              x: new Date(chartOptionData?.xAxisRange?.x1).getTime(),
+              x2: new Date(chartOptionData?.xAxisRange?.x2).getTime(),
+              fillColor: '#FF3200',
+            },
+          ],
+        },
       })
+
+      //Series data 업데이트
+      updateFeatureSeries()
     }
-  }, [selectedFilter])
+  }, [selectedFilter, symbol?.selectedHorizon])
 
   function updateFeatureSeries() {
+    console.log('symbol:', symbol)
     if (selectedFilter.selectedFeatures?.length > 0) {
       const newSeries = selectedFilter.selectedFeatures.map((feature, idx: number) => {
         const chartData: IRawData[] = symbol.features[feature]
@@ -149,7 +150,7 @@ const PredictionChart = () => {
           type: 'line' as const,
         }
       })
-      setSeries2(newSeries)
+      ApexCharts.exec('chart-sub', 'updateSeries', newSeries)
     }
   }
 
@@ -240,6 +241,11 @@ const PredictionChart = () => {
     xaxis: {
       type: 'datetime',
     },
+    yaxis: {
+      labels: {
+        minWidth: 40,
+      },
+    },
     legend: {
       show: true,
       position: 'top',
@@ -276,6 +282,11 @@ const PredictionChart = () => {
     },
     xaxis: {
       type: 'datetime',
+    },
+    yaxis: {
+      labels: {
+        minWidth: 40,
+      },
     },
     stroke: {
       curve: 'straight',

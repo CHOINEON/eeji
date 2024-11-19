@@ -73,8 +73,6 @@ const LocalAttrTable = () => {
   }, [featureImpactData])
 
   useEffect(() => {
-    setData([])
-
     if (featureImpactData?.feature_impact) {
       const data = featureImpactData.feature_impact.map((item: IFeatureImpact) => ({
         key: item.feature_name,
@@ -83,7 +81,6 @@ const LocalAttrTable = () => {
         input_value_delta: item.input_value_delta,
         input_value_delta_percentage: item.input_value_delta_percentage,
       }))
-      console.log('new datasource:', data)
       setData(data)
     }
   }, [symbol, filterCondition, featureImpactData])
