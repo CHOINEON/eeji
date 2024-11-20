@@ -96,8 +96,13 @@ const PredictionChart = () => {
       data: rawData.features[feature]?.map((item) => item.value),
       type: 'line' as const,
     }))
-    ApexCharts.exec('chart-sub', 'updateSeries', newSeries)
-  }, [selectedFilter.selectedFeatures, symbol.horizons])
+
+    // updateSeries()를 호출하니까 차트 전체가 re-render되면서 defaultSeries가 다시 할당됨
+    // 문제는 updateSeries()를 통해서 series가 override하는데, 이전 상태 값과 동일해서 이 부분 리렌더가 제대로 이루어지지 않음(나중에 버그리포팅...?)
+    // 따라서 차트 내부 데이터만 업데이트하는 방법으로 구현함
+
+    setSeries2(newSeries)
+  }, [selectedFilter.selectedFeatures])
 
   const options1: ApexOptions = {
     ...defaultOptions,
@@ -110,7 +115,7 @@ const PredictionChart = () => {
 
           //차트 데이터 필터링에 사용하는 상태 변수 업데이트
           setSelectedFilter({
-            selectedFeatures: [], //클릭하면 해당 날짜의 local attribution이 렌더링되므로 초기화시킴
+            ...selectedFilter,
             selectedDate: formatTimestampToYYYYMMDD(xValue), //사용자가 선택한 날짜
           })
 
@@ -135,16 +140,6 @@ const PredictionChart = () => {
             })
           }
         },
-        // zoomed: ({ xaxis }: any) => {
-        //   console.log('zoomed:', xaxis)
-        //   // 'chart-sub'의 xaxis를 업데이트
-        //   ApexCharts.exec('chart-main', 'updateOptions', {
-        //     xaxis: {
-        //       min: xaxis?.min,
-        //       max: xaxis?.max,
-        //     },
-        //   })
-        // },
       },
     },
     stroke: {
@@ -265,6 +260,16 @@ const PredictionChart = () => {
     ApexCharts.exec('chart-main', 'updateOptions', {
       tooltip: {
         custom: customTooltip,
+      },
+      chart: {
+        zoom: {
+          enabled: true,
+        },
+        events: {
+          zoomed: ({ xaxis }: any) => {
+            console.log('zoomed:', xaxis)
+          },
+        },
       },
     })
   }, [customTooltip])
