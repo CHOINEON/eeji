@@ -6,6 +6,7 @@ import { useGetModelList_v1 } from 'hooks/queries/useGetModelList'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
+import { useHistory } from 'react-router-dom'
 import { useSetRecoilState } from 'recoil'
 import { Ellipsis } from 'styles/common'
 import { validationCheck } from 'utils/DateFunction'
@@ -44,6 +45,7 @@ const ModelListTable = () => {
   const setActiveStep = useSetRecoilState(stepCountStore) /*activeStep = 실제step - 1 */
   const setSelectedModel = useSetRecoilState(selectedModelAtom)
   const setLoading = useSetRecoilState(loadingAtom)
+  const history = useHistory()
 
   //메타데이터 구조 상세 참고 (https://docs.google.com/document/d/19lP80LLDBsnNQ27foyVKtP81Jc8XqRLM6GE1POXQIVQ/edit)
   const status: IBadge[] = [
@@ -181,9 +183,13 @@ const ModelListTable = () => {
   }
 
   const handleClick = (model: IModelInfo) => {
-    setLoading(true)
+    // setLoading(true)
     setSelectedModel(model)
-    mutateTrainingResult({ model_id: model.id, is_xai: 'false' })
+    // mutateTrainingResult({ model_id: model.id, is_xai: 'false' })
+
+    if (model) {
+      history.push(`/admin/view-model-results/${model.id}`)
+    }
   }
 
   const renderStateBadge = (state: string, status: IBadge[], is_canceled: number) => {
