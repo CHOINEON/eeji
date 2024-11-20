@@ -51,27 +51,20 @@ export interface ILocalAttribution {
   date_input: string //음영구간(입력 데이터 구간) 시작일
 }
 
-//chart에 사용할 static option 정보들(xAxis Range annotation)
-export interface IChartOptionData {
-  xAxisRange: { x1: string; x2: string }
-}
-
-export type Prediction = {
-  date: string //예측 기준 날짜
+export interface IPrediction {
+  date: string | null //예측 기준 날짜
   date_pred: string //예측 결과 날짜
-  ground_truth: number | null
-  pred: number
-}
-
-export interface IHorizonData {
-  [horizon: number]: Prediction[]
+  ground_truth: number | null //실제값
+  pred: number | null //예측값
+  lower_bound: number | null
+  upper_bound: number | null
 }
 
 export interface IPredictionDataResponse {
-  data: {
-    name: string
-    horizon: IHorizonData
-  }
+  name: string
+  horizon: number
+  dt: string
+  prediction: IPrediction[]
 }
 
 export interface IRawDataResponse {

@@ -1,15 +1,12 @@
 import { Switch } from 'antd'
 import { ApexOptions } from 'apexcharts'
-import IndexApi from 'apis/IndexApi'
-import { IPredictionConfidenceInterval, IRawData, Prediction } from 'apis/type/IndexResponse'
 import dayjs from 'dayjs'
 import { useCallback, useEffect, useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
-import { useQuery } from 'react-query'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { formatTimestampToYYYYMMDD } from 'utils/DateFunction'
 import { colorChipsForStroke } from './Colors'
-import { chartOptionDataState, graphDataState, selectedFilterState, SymbolState } from './stores/atom'
+import { FeatureImpactDataState, graphDataState, RawDataState, selectedFilterState, SymbolState } from './stores/atom'
 
 type TSeries = {
   name: string
@@ -18,184 +15,109 @@ type TSeries = {
   type?: 'line' | 'area'
 }
 
+const defaultSeries: TSeries[] = [{ name: '', data: [] }]
+//공통적으로 사용된 옵션
+const defaultOptions: ApexOptions = {
+  chart: {
+    stacked: false,
+    group: 'group',
+    zoom: {
+      enabled: true,
+      type: 'xy',
+      autoScaleYaxis: true,
+    },
+    type: 'line',
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  grid: {
+    position: 'front' as const,
+  },
+  stroke: {
+    curve: 'straight' as const,
+    width: 1.5,
+  },
+  yaxis: {
+    labels: {
+      minWidth: 40,
+    },
+  },
+}
+
 const PredictionChart = () => {
   const symbol = useRecoilValue(SymbolState)
   const graphData = useRecoilValue(graphDataState)
-  const chartOptionData = useRecoilValue(chartOptionDataState)
+  const rawData = useRecoilValue(RawDataState)
+  const featureImpactData = useRecoilValue(FeatureImpactDataState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
-  const [bounds, setBounds] = useState<{ lowerBounds: Array<number>; upperBounds: Array<number> }>()
+  // const [bounds, setBounds] = useState<{ lowerBounds: Array<number>; upperBounds: Array<number> }>()
   const [viewInterval, setViewInterval] = useState(true)
 
-  const defaultSeries = [
-    {
-      name: 'Prediction',
-      data: ReformatData(graphData, 'pred'),
-      type: 'line' as const,
-    },
-    {
-      name: 'Ground Truth',
-      data: ReformatData(graphData, 'ground_truth'),
-      type: 'line' as const,
-    },
-  ]
+  useEffect(() => {
+    if (graphData) {
+      const initialSeries = [
+        {
+          name: 'Prediction',
+          data: graphData.map((item) => item.pred),
+          type: 'line' as const,
+        },
+        {
+          name: 'Ground Truth',
+          data: graphData.map((item) => item.ground_truth),
+          type: 'line' as const,
+        },
+        {
+          name: 'Upper Bound',
+          data: graphData.map((item) => item.upper_bound),
+          type: 'area' as const,
+        },
+        {
+          name: 'Lower Bound',
+          data: graphData.map((item) => item.lower_bound),
+          type: 'area' as const,
+        },
+      ]
+      setSeries1(initialSeries)
+    }
+  }, [graphData])
 
   const [series1, setSeries1] = useState<TSeries[]>(defaultSeries)
-  const [series2, setSeries2] = useState<TSeries[]>([{ name: '', data: [], type: 'line' }])
+  const [series2, setSeries2] = useState<TSeries[]>(defaultSeries)
 
-  const { data: confidenceIntervalData } = useQuery(
-    ['confidenceIntervalData', symbol.symbol_id, symbol.selectedHorizon],
-    () => IndexApi.getPredictionConfidenceInterval(symbol.symbol_id, symbol.selectedHorizon.toString()),
-    {
-      enabled: !!symbol.symbol_id && !!symbol.selectedHorizon,
-    }
-  )
+  //   //annotation initialize
+  //   ApexCharts.exec('chart-main', 'clearAnnotations')
+  //   ApexCharts.exec('chart-sub', 'clearAnnotations')
 
+  //24-11-20 series append/remove를 내장 메서드로 처리하려고 했으나 삭제메서드가 존재하지 않아 re-rendering를 감안하고 updateSeries()로 구현함
   useEffect(() => {
-    // Check if selectedDate is valid before updating annotations
-    if (chartOptionData?.xAxisRange?.x1 && chartOptionData?.xAxisRange?.x2) {
-      ApexCharts.exec('chart-main', 'removeAnnotation', 'x-axis-range')
-      ApexCharts.exec('chart-main', 'addXaxisAnnotation', {
-        id: 'x-axis-range',
-        x: new Date(chartOptionData.xAxisRange?.x1).getTime(),
-        x2: new Date(chartOptionData.xAxisRange?.x2).getTime(),
-        fillColor: '#FF3200',
-        // label: {
-        //   text: `입력 : ${chartOptionData.xAxisRange?.x1} ~ ${chartOptionData.xAxisRange?.x2}`,
-        // },
-      })
-    }
-  }, [chartOptionData])
+    const newSeries = selectedFilter.selectedFeatures?.map((feature) => ({
+      name: feature,
+      data: rawData.features[feature]?.map((item) => item.value),
+      type: 'line' as const,
+    }))
+    ApexCharts.exec('chart-sub', 'updateSeries', newSeries)
+  }, [selectedFilter.selectedFeatures, symbol.horizons])
 
-  //prediction data에서 추출한 graphData와, confidenceIntervalData가 있을 때만 초기화
-  useEffect(() => {
-    if (symbol?.dates && graphData) {
-      initializeMainChart()
-
-      ApexCharts.exec('chart-main', 'updateOptions', {
-        xaxis: {
-          categories: symbol?.dates,
-        },
-      })
-    }
-  }, [symbol?.dates, graphData, bounds?.lowerBounds])
-
-  useEffect(() => {
-    if (symbol?.dates?.length > 0 && confidenceIntervalData) {
-      const dateArr = symbol.dates
-
-      const lowerBounds = dateArr?.map((date) => {
-        return confidenceIntervalData?.confidence_interval.find((item) => item.date_pred === date)?.lower_bound || null
-      })
-      const upperBounds = dateArr?.map((date) => {
-        return confidenceIntervalData?.confidence_interval.find((item) => item.date_pred === date)?.upper_bound || null
-      })
-      setBounds({ lowerBounds, upperBounds })
-    }
-  }, [confidenceIntervalData, symbol?.dates])
-
-  const initializeMainChart = () => {
-    //upper bounds 먼저 그리고 lower bounds 그려야, lower의 fill로 아래를 하얗게 칠할 수 있음
-    setSeries1([
-      ...defaultSeries,
-      {
-        name: 'Upper Bound',
-        data: bounds?.upperBounds ?? [],
-        type: 'area' as const,
-      },
-      {
-        name: 'Lower Bound',
-        data: bounds?.lowerBounds ?? [],
-        type: 'area' as const,
-      },
-    ])
-
-    //annotation initialize
-    ApexCharts.exec('chart-main', 'clearAnnotations')
-    ApexCharts.exec('chart-sub', 'clearAnnotations')
-  }
-
-  useEffect(() => {
-    if (selectedFilter?.selectedFeatures) {
-      //차트 옵션 업데이트
-      ApexCharts.exec('chart-sub', 'updateOptions', {
-        xaxis: {
-          categories: symbol?.dates,
-        },
-        annotations: {
-          xaxis: [
-            {
-              id: 'x-axis-range',
-              x: new Date(chartOptionData?.xAxisRange?.x1).getTime(),
-              x2: new Date(chartOptionData?.xAxisRange?.x2).getTime(),
-              fillColor: '#FF3200',
-            },
-          ],
-        },
-      })
-
-      //Series data 업데이트
-      updateFeatureSeries()
-    }
-  }, [selectedFilter, symbol?.selectedHorizon])
-
-  function updateFeatureSeries() {
-    console.log('symbol:', symbol)
-    if (selectedFilter.selectedFeatures?.length > 0) {
-      const newSeries = selectedFilter.selectedFeatures.map((feature, idx: number) => {
-        const chartData: IRawData[] = symbol.features[feature]
-
-        return {
-          name: feature,
-          data: chartData.map((item) => item.value),
-          type: 'line' as const,
-        }
-      })
-      ApexCharts.exec('chart-sub', 'updateSeries', newSeries)
-    }
-  }
-
-  function ReformatData(
-    data: Prediction[] | IRawData[] | IPredictionConfidenceInterval[],
-    key: keyof Prediction | keyof IRawData | keyof IPredictionConfidenceInterval
-  ): (
-    | Prediction[keyof Prediction]
-    | IRawData[keyof IRawData]
-    | IPredictionConfidenceInterval[keyof IPredictionConfidenceInterval]
-    | null
-  )[] {
-    const result = symbol.dates
-      ?.map((d) =>
-        (data as (Prediction | IRawData | IPredictionConfidenceInterval)[]).find(
-          (item) => 'date_pred' in item && item.date_pred === d // Type guard to check for date_pred
-        )
-      )
-      ?.map((item) => item?.[key as keyof typeof item] || null)
-
-    return result
-  }
-
-  const [options, setOptions] = useState<ApexOptions>({
+  const options1: ApexOptions = {
+    ...defaultOptions,
     chart: {
-      stacked: false,
-      group: 'group',
-      zoom: {
-        enabled: true, // 확대/축소 기능 활성화
-        type: 'x', // x축 기준 확대/축소 ('x', 'y', 'xy' 중 선택 가능)
-        autoScaleYaxis: true, // 확대/축소 시 y축 자동 스케일링
-      },
       type: 'line',
       id: 'chart-main',
       events: {
-        click(event, chartContext, config) {
+        click(event: MouseEvent, chartContext: any, config: { dataPointIndex: number; globals: any }) {
           const xValue = config.globals?.seriesX[0][config.dataPointIndex]
+
+          //차트 데이터 필터링에 사용하는 상태 변수 업데이트
           setSelectedFilter({
-            selectedFeatures: selectedFilter.selectedFeatures,
-            selectedDate: formatTimestampToYYYYMMDD(xValue),
+            selectedFeatures: [], //클릭하면 해당 날짜의 local attribution이 렌더링되므로 초기화시킴
+            selectedDate: formatTimestampToYYYYMMDD(xValue), //사용자가 선택한 날짜
           })
 
           //clear annotation before adding new one
           chartContext.removeAnnotation('date-annotation')
 
+          //main chart에 선택된 날짜 annotation 추가
           if (xValue) {
             chartContext.addXaxisAnnotation({
               id: 'date-annotation',
@@ -213,10 +135,20 @@ const PredictionChart = () => {
             })
           }
         },
+        // zoomed: ({ xaxis }: any) => {
+        //   console.log('zoomed:', xaxis)
+        //   // 'chart-sub'의 xaxis를 업데이트
+        //   ApexCharts.exec('chart-main', 'updateOptions', {
+        //     xaxis: {
+        //       min: xaxis?.min,
+        //       max: xaxis?.max,
+        //     },
+        //   })
+        // },
       },
     },
     stroke: {
-      curve: 'straight',
+      curve: 'straight' as const,
       width: [1.5, 1.5, 0, 0, 0],
       colors: colorChipsForStroke?.slice(0, series1?.length + 1),
     },
@@ -231,24 +163,13 @@ const PredictionChart = () => {
       opacity: [1, 1, 0.2, 1, 1],
       type: 'solid',
     },
-    dataLabels: {
-      enabled: false,
-    },
-    grid: {
-      strokeDashArray: 0,
-      position: 'front',
-    },
     xaxis: {
-      type: 'datetime',
-    },
-    yaxis: {
-      labels: {
-        minWidth: 40,
-      },
+      type: 'datetime' as const,
+      categories: graphData?.map((item) => item.date_pred),
     },
     legend: {
       show: true,
-      position: 'top',
+      position: 'top' as const,
       customLegendItems: ['Prediction', 'Ground Truth'],
       onItemClick: {
         toggleDataSeries: true, // Enable toggling of the series
@@ -257,49 +178,43 @@ const PredictionChart = () => {
     annotations: {
       xaxis: [
         {
-          x: new Date(chartOptionData?.xAxisRange?.x1).getTime(),
-          x2: new Date(chartOptionData?.xAxisRange?.x2).getTime(),
-          fillColor: '#B3F7CA',
-          label: {
-            text: 'X-axis range',
-          },
+          x: new Date(featureImpactData?.date_input).getTime(),
+          x2: new Date(featureImpactData?.date).getTime(),
+          fillColor: '#FF3200',
         },
       ],
     },
-  })
+  }
 
-  // Define independent options for `chart-sub`
   const options2: ApexOptions = {
+    ...defaultOptions,
     chart: {
       id: 'chart-sub',
-      group: 'group',
-      type: 'line',
-      zoom: {
-        enabled: true, // 확대/축소 기능 활성화
-        type: 'x', // x축 기준 확대/축소 ('x', 'y', 'xy' 중 선택 가능)
-        autoScaleYaxis: true, // 확대/축소 시 y축 자동 스케일링
-      },
+      // group: 'group',
+      // events: {
+      //   zoomed: ({ xaxis }: any) => {
+      //     // 'chart-main'의 xaxis를 업데이트
+      //     ApexCharts.exec('chart-main', 'updateOptions', {
+      //       xaxis: {
+      //         min: xaxis.min,
+      //         max: xaxis.max,
+      //       },
+      //     })
+      //   },
+      // },
     },
     xaxis: {
-      type: 'datetime',
+      type: 'datetime' as const,
+      categories: graphData?.map((item) => item.date_pred),
     },
-    yaxis: {
-      labels: {
-        minWidth: 40,
-      },
-    },
-    stroke: {
-      curve: 'straight',
-      width: 1,
-    },
-    grid: {
-      strokeDashArray: 0,
-      position: 'front',
-      // padding: {
-      //   right: 30,
-      //   left: 20,
-      //   bottom: 30,
-      // },
+    annotations: {
+      xaxis: [
+        {
+          x: new Date(featureImpactData?.date_input).getTime(),
+          x2: new Date(featureImpactData?.date).getTime(),
+          fillColor: '#FF3200',
+        },
+      ],
     },
   }
 
@@ -361,11 +276,11 @@ const PredictionChart = () => {
         <Switch onChange={onSwitchChange} checkedChildren="on" unCheckedChildren="off" value={viewInterval} />
       </div>
       <div id="chart">
-        <ReactApexChart options={options as ApexOptions} series={series1 as ApexAxisChartSeries} height={350} />
+        <ReactApexChart options={options1 as ApexOptions} series={series1 as ApexAxisChartSeries} height={350} />
 
-        {selectedFilter?.selectedFeatures?.length > 0 && (
-          <ReactApexChart options={options2 as ApexOptions} series={series2 as ApexAxisChartSeries} height={200} />
-        )}
+        {/* {selectedFilter?.selectedFeatures?.length > 0 && ( */}
+        <ReactApexChart options={options2 as ApexOptions} series={series2 as ApexAxisChartSeries} height={200} />
+        {/* )} */}
       </div>
     </div>
   )

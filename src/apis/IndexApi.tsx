@@ -1,11 +1,10 @@
 import { axiosPrivate } from './axios'
 import {
   IGlobalFeatureImportance,
-  IHorizonData,
   ILeadingIndicatorResponse,
   ILocalAttribution,
   IMetrics,
-  IPredictionConfidenceIntervalResponse,
+  IPredictionDataResponse,
   IRawDataResponse,
   ISymbolList,
 } from './type/IndexResponse'
@@ -19,14 +18,14 @@ const IndexApi = {
 
   //전체 raw data
   getRawData: async (symbol: string): Promise<IRawDataResponse> => {
-    const { data } = await axiosPrivate.get(`api/v2/economy/rawdata/${symbol}`)
+    const { data } = await axiosPrivate.get(`api/v2/economy/rawdata_v2/${symbol}`)
     return data.data
   },
 
   //특정 symbol의 예측값 가져오기
-  getPredictionData: async (symbol: string): Promise<IHorizonData> => {
-    const { data } = await axiosPrivate.get(`api/v2/economy/prediction/${symbol}`)
-    return data.data.horizon
+  getPredictionData: async (symbol: string, horizon: string): Promise<IPredictionDataResponse> => {
+    const { data } = await axiosPrivate.get(`api/v2/economy/prediction_v2/${symbol}?horizon=${horizon}`)
+    return data.data
   },
 
   //symbol의 global explanation
@@ -55,15 +54,15 @@ const IndexApi = {
   },
 
   //에측값의 신뢰구간 데이터 가져오기
-  getPredictionConfidenceInterval: async (
-    symbol: string,
-    horizon: string
-  ): Promise<IPredictionConfidenceIntervalResponse> => {
-    const { data } = await axiosPrivate.get(
-      `api/v2/economy/get_prediction_confidence_interval/${symbol}?horizon=${horizon}`
-    )
-    return data.data
-  },
+  // getPredictionConfidenceInterval: async (
+  //   symbol: string,
+  //   horizon: string
+  // ): Promise<IPredictionConfidenceIntervalResponse> => {
+  //   const { data } = await axiosPrivate.get(
+  //     `api/v2/economy/get_prediction_confidence_interval/${symbol}?horizon=${horizon}`
+  //   )
+  //   return data.data
+  // },
 
   //symbol의 leading indicator
   getLeadingIndicator: async (symbol: string, horizon: number): Promise<ILeadingIndicatorResponse> => {

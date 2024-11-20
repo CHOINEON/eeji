@@ -1,4 +1,4 @@
-import { IChartOptionData, ISelectedFilter, ISymbol, Prediction } from 'apis/type/IndexResponse'
+import { ILocalAttribution, IPrediction, IRawDataResponse, ISelectedFilter, ISymbol } from 'apis/type/IndexResponse'
 import { atom } from 'recoil'
 import { PeriodType } from 'utils/TextTranslator'
 
@@ -28,10 +28,19 @@ export const selectedFilterState = atom({
 
 export const graphDataState = atom({
   key: 'graphDataState',
-  default: [] as Prediction[],
+  default: [] as IPrediction[],
 })
 
-export const chartOptionDataState = atom({
-  key: 'chartOptionDataState',
-  default: {} as IChartOptionData,
+export const FeatureImpactDataState = atom({
+  key: 'featureImpactDataState',
+  default: {} as ILocalAttribution,
 })
+
+export const RawDataState = atom({
+  key: 'rawDataState',
+  default: {} as IRawDataResponse,
+})
+// export const chartOptionDataState = atom({
+//   key: 'chartOptionDataState',
+//   default: {} as IChartOptionData,
+// })

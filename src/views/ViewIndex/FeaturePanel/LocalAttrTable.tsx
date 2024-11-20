@@ -5,7 +5,7 @@ import { IFeatureImpact } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { chartOptionDataState, selectedFilterState, SymbolState } from '../stores/atom'
+import { FeatureImpactDataState, selectedFilterState, SymbolState } from '../stores/atom'
 
 interface DataType {
   key: React.Key
@@ -49,8 +49,7 @@ const LocalAttrTable = () => {
   const filterCondition = useRecoilValue(selectedFilterState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [data, setData] = useState([])
-  const setChartOptionData = useSetRecoilState(chartOptionDataState)
-  const chartOptionData = useRecoilValue(chartOptionDataState)
+  const setFeatureImpactData = useSetRecoilState(FeatureImpactDataState)
 
   const { data: featureImpactData } = useQuery(
     ['localAttribution', symbol.symbol_id, filterCondition.selectedDate],
@@ -63,14 +62,11 @@ const LocalAttrTable = () => {
       ),
     {
       enabled: !!symbol.symbol_id && !!symbol.selectedHorizon && !!filterCondition.selectedDate,
+      onSuccess: (data) => {
+        setFeatureImpactData(data)
+      },
     }
   )
-
-  useEffect(() => {
-    if (featureImpactData) {
-      setChartOptionData({ xAxisRange: { x1: featureImpactData.date_input, x2: featureImpactData.date } })
-    }
-  }, [featureImpactData])
 
   useEffect(() => {
     if (featureImpactData?.feature_impact) {
@@ -99,8 +95,8 @@ const LocalAttrTable = () => {
   return (
     <div className="mb-8">
       <span className="text-lg mr-2 font-bold">Local Attribution</span>
-      <span className={`${chartOptionData?.xAxisRange ? 'text-[12px] text-gray-500' : 'hidden'}`}>
-        (입력 구간 : {chartOptionData.xAxisRange?.x1} - {chartOptionData.xAxisRange?.x2})
+      <span className={`${featureImpactData?.date_input ? 'text-[12px] text-gray-500' : 'hidden'}`}>
+        (입력 구간 : {featureImpactData?.date_input} - {featureImpactData?.date})
       </span>
       <Table
         className="mt-2"
