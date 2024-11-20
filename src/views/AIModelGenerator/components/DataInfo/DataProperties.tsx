@@ -146,7 +146,7 @@ const DataProperties = () => {
         />
       </Row>
       <Row style={{ display: inputOption.algo_type === 0 ? 'block' : 'none' }}>
-        <ColumnLabel required={true} label={t('Timestamp')} />
+        <ColumnLabel required={false} label={t('Timestamp')} />
         <Select
           style={{
             width: '100%',
