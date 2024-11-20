@@ -183,12 +183,9 @@ const ModelListTable = () => {
   }
 
   const handleClick = (model: IModelInfo) => {
-    // setLoading(true)
-    setSelectedModel(model)
-    // mutateTrainingResult({ model_id: model.id, is_xai: 'false' })
-
     if (model) {
-      history.push(`/admin/view-model-results/${model.id}`)
+      const user_id = localStorage.getItem('userId')
+      history.push(`/${user_id}/view-model-results/${model.id}`)
     }
   }
 
