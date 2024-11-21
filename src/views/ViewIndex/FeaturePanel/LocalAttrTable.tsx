@@ -129,21 +129,41 @@ const LocalAttrTable = () => {
         rowSelection={{ type: 'checkbox', selectedRowKeys: selectedFilter.selectedFeatures, ...rowSelection }}
         size="small"
         pagination={{ pageSize: 4, pageSizeOptions: [4], position: ['bottomCenter'], showSizeChanger: false }}
-        summary={() => (
-          <Table.Summary fixed>
-            <Table.Summary.Row>
-              <Table.Summary.Cell index={1}>Summary</Table.Summary.Cell>
-              <Table.Summary.Cell index={2}>
-                {/* <Statistic
-                  value={summary}
-                  valueStyle={{ color: summary > 0 ? '#3f8600' : '#cf1322', fontSize: '12px' }}
-                  prefix={summary > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-                /> */}
-                {summary !== 0 ? (summary > 0 ? `${summary} 상승` : `${summary} 하락`) : ''}
-              </Table.Summary.Cell>
-            </Table.Summary.Row>
-          </Table.Summary>
-        )}
+        summary={(pageData) => {
+          let positiveVal = 0
+          let negativeVal = 0
+          let summaryVal = 0
+          pageData.forEach(({ impact }) => {
+            positiveVal += impact > 0 ? impact : 0
+            negativeVal += impact < 0 ? impact : 0
+            summaryVal += impact
+          })
+
+          return (
+            <>
+              <Table.Summary.Row>
+                <Table.Summary.Cell index={0}>Positive</Table.Summary.Cell>
+                <Table.Summary.Cell index={1}>
+                  <p className="text-[#43880E]">{Number(positiveVal).toFixed(4)}</p>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={0}>Negative</Table.Summary.Cell>
+                <Table.Summary.Cell index={2}>
+                  <p className="text-[#D84247]">{Number(negativeVal).toFixed(4)}</p>
+                </Table.Summary.Cell>
+              </Table.Summary.Row>
+              <Table.Summary.Row>
+                <Table.Summary.Cell index={0}>Summary</Table.Summary.Cell>
+                <Table.Summary.Cell index={1} rowSpan={2}>
+                  {summaryVal !== 0 && (
+                    <p className={`${summaryVal > 0 ? 'text-[#43880E]' : 'text-[#D84247]'}`}>
+                      {Number(summaryVal).toFixed(4)}
+                    </p>
+                  )}
+                </Table.Summary.Cell>
+              </Table.Summary.Row>
+            </>
+          )
+        }}
       />
     </div>
   )
