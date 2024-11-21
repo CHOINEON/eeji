@@ -20,7 +20,8 @@ const routes: RoutesType[] = [
     widthScreen: true,
   },
   {
-    name: 'AI Model Generator',
+    // name: 'AI Model Generator',
+    name: 'Studio',
     layout: '/admin',
     path: '/ai-model-generator',
     icon: '',
@@ -42,6 +43,7 @@ const routes: RoutesType[] = [
     path: '/xai-simulator',
     icon: '',
     component: XAIsimulator,
+    showInHeader: false,
     widthScreen: false,
   },
   {
@@ -54,7 +56,7 @@ const routes: RoutesType[] = [
     widthScreen: false,
   },
   {
-    name: 'Commodity Index Forecast',
+    name: 'Index',
     layout: '/admin',
     path: '/price-forecast',
     icon: '',
