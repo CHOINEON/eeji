@@ -45,6 +45,15 @@ const routes: RoutesType[] = [
     widthScreen: false,
   },
   {
+    name: 'View XAI Results',
+    layout: '/admin',
+    path: '/view-xai-results/:id',
+    icon: '',
+    component: XAIsimulator,
+    showInHeader: false,
+    widthScreen: false,
+  },
+  {
     name: 'Commodity Index Forecast',
     layout: '/admin',
     path: '/price-forecast',
