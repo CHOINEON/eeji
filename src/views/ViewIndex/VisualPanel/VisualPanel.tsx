@@ -1,54 +1,38 @@
 import IndexApi from 'apis/IndexApi'
-import { IRawData } from 'apis/type/IndexResponse'
-import { useEffect } from 'react'
+import { IPrediction } from 'apis/type/IndexResponse'
 import { useQuery } from 'react-query'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { capitalizeFirstLetter } from 'utils/StringFormatter'
 import ChartComponent from '../ChartComponent'
-import { graphDataState, SymbolState } from '../stores/atom'
+import { graphDataState, RawDataState, SymbolState } from '../stores/atom'
 import HorizonButtonGroup from './HorizonButtonGroup'
 import SymbolDropdown from './SymbolDropdown'
 
-// 개발 보류
-// const plainOptions = ['History', 'Forecast']
-// const [viewType, setViewType] = useState('History')
-
 const VisualPanel = () => {
-  const [symbol, setSymbol] = useRecoilState(SymbolState)
+  const symbol = useRecoilValue(SymbolState)
   const setGraphData = useSetRecoilState(graphDataState)
+  const setRawData = useSetRecoilState(RawDataState)
+
+  const fetchPredictionData = () => IndexApi.getPredictionData(symbol.symbol_id, symbol.selectedHorizon.toString())
+  const fetchRawData = () => IndexApi.getRawData(symbol.symbol_id)
 
   const { data: predictionData } = useQuery(
     ['predictionData', symbol.symbol_id, symbol.selectedHorizon],
-    () => IndexApi.getPredictionData(symbol.symbol_id),
+    fetchPredictionData,
     {
       enabled: !!symbol.symbol_id && !!symbol.selectedHorizon,
+      onSuccess: (data) => {
+        setGraphData(data?.prediction as IPrediction[])
+      },
     }
   )
 
-  const { data: rawData } = useQuery(['rawData', symbol.symbol_id], () => IndexApi.getRawData(symbol.symbol_id), {
+  const { data: rawData } = useQuery(['rawData', symbol.symbol_id], fetchRawData, {
     enabled: !!symbol.symbol_id,
+    onSuccess: (data) => {
+      setRawData(data)
+    },
   })
-
-  useEffect(() => {
-    if (predictionData) {
-      setGraphData(predictionData[symbol.selectedHorizon])
-    }
-  }, [predictionData, symbol.selectedHorizon])
-
-  useEffect(() => {
-    if (rawData && predictionData) {
-      const firstFeatureKey = Object.keys(rawData?.features)[0] as keyof typeof rawData.features
-
-      const datesInPred = predictionData?.[symbol.selectedHorizon]?.map((item) => item.date)
-      const datesInRawData = rawData.features[firstFeatureKey].map((item: IRawData) => item.date)
-
-      setSymbol({
-        ...symbol,
-        features: rawData.features,
-        dates: datesInPred.length > datesInRawData.length ? datesInPred : datesInRawData,
-      })
-    }
-  }, [rawData, predictionData])
 
   return (
     <div className="m-3">
@@ -58,15 +42,6 @@ const VisualPanel = () => {
         <span>{capitalizeFirstLetter(symbol.period)}</span>
         <span className="mx-2"> | </span>
         <span>{symbol.unit}</span>
-        {/* <div className="my-4">
-          <Radio.Group
-            options={plainOptions}
-            onChange={onChangeViewType}
-            value={viewType}
-            optionType="button"
-            buttonStyle="solid"
-          />
-        </div> */}
       </div>
       <div className="m-5">
         <ChartComponent />
