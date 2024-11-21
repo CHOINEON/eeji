@@ -195,7 +195,6 @@ const ModelGeneratorResult = () => {
                     <Trans i18nKey="Prediction Results of" values={{ target_var: selectedModel.target }}>
                       Prediction Results of {selectedModel.target}
                     </Trans>
-                    <p>Received ID: {id}</p>
                   </Title>
                   <InfoCircle content={t('Prediction Results of the Model')} />
                 </div>
