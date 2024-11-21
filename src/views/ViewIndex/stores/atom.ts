@@ -40,7 +40,3 @@ export const RawDataState = atom({
   key: 'rawDataState',
   default: {} as IRawDataResponse,
 })
-// export const chartOptionDataState = atom({
-//   key: 'chartOptionDataState',
-//   default: {} as IChartOptionData,
-// })
