@@ -155,9 +155,12 @@ const LocalAttrTable = () => {
                 <Table.Summary.Cell index={0}>Summary</Table.Summary.Cell>
                 <Table.Summary.Cell index={1} rowSpan={2}>
                   {summaryVal !== 0 && (
-                    <p className={`${summaryVal > 0 ? 'text-[#43880E]' : 'text-[#D84247]'}`}>
-                      {Number(summaryVal).toFixed(4)}
-                    </p>
+                    <>
+                      <span className={`${summaryVal > 0 ? 'text-[#43880E]' : 'text-[#D84247]'}`}>
+                        {Number(summaryVal).toFixed(4)}
+                        {summaryVal > 0 ? ' 가격 상승' : ' 가격 하락'}
+                      </span>
+                    </>
                   )}
                 </Table.Summary.Cell>
               </Table.Summary.Row>
