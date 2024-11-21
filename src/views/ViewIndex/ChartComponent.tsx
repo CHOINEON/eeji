@@ -88,16 +88,17 @@ const PredictionChart = () => {
 
   //24-11-20 series append/remove를 내장 메서드로 처리하려고 했으나 삭제메서드가 존재하지 않아 re-rendering를 감안하고 updateSeries()로 구현함
   useEffect(() => {
-    const newSeries = selectedFilter.selectedFeatures?.map((feature) => ({
-      name: feature,
-      data: rawData.features[feature]?.map((item) => item.value),
-      type: 'line' as const,
-    }))
-
-    // updateSeries()를 호출하니까 차트 전체가 re-render되면서 defaultSeries가 다시 할당됨
-    // 문제는 updateSeries()를 통해서 series가 override하는데, 이전 상태 값과 동일해서 이 부분 리렌더가 제대로 이루어지지 않음(나중에 버그리포팅...?)
-    // 따라서 차트 내부 데이터만 업데이트하는 방법으로 구현함
-    setSeries2(newSeries)
+    if (rawData) {
+      const newSeries = selectedFilter.selectedFeatures?.map((feature) => ({
+        name: feature,
+        data: rawData?.features[feature]?.map((item) => item.value),
+        type: 'line' as const,
+      }))
+      // updateSeries()를 호출하니까 차트 전체가 re-render되면서 defaultSeries가 다시 할당됨
+      // 문제는 updateSeries()를 통해서 series가 override하는데, 이전 상태 값과 동일해서 이 부분 리렌더가 제대로 이루어지지 않음(나중에 버그리포팅...?)
+      // 따라서 차트 내부 데이터만 업데이트하는 방법으로 구현함
+      setSeries2(newSeries)
+    }
   }, [selectedFilter.selectedFeatures])
 
   const options1: ApexOptions = useMemo(

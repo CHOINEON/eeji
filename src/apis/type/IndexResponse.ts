@@ -38,6 +38,18 @@ export interface IFeatureImpact {
   impact: number
   input_value_delta: number
   input_value_delta_percentage: number
+  type?: string //positive, negative
+}
+
+export interface ILocalAttributionResponse {
+  feature_impact: { positive: Array<IFeatureImpact>; negative: Array<IFeatureImpact> }
+  name: string
+  horizon: number
+  is_pred_date: number //1: 예측날짜, 0:기준날짜
+  date_pred: string //예측 결과 날짜
+  dt: string //데이터 생성일
+  date: string //음영구간(입력 데이터 구간) 종료일
+  date_input: string //음영구간(입력 데이터 구간) 시작일
 }
 
 export interface ILocalAttribution {

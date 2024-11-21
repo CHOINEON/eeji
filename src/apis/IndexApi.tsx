@@ -2,7 +2,7 @@ import { axiosPrivate } from './axios'
 import {
   IGlobalFeatureImportance,
   ILeadingIndicatorResponse,
-  ILocalAttribution,
+  ILocalAttributionResponse,
   IMetrics,
   IPredictionDataResponse,
   IRawDataResponse,
@@ -39,10 +39,11 @@ const IndexApi = {
     symbol: string,
     horizon: string,
     date: string,
-    isPredDate: number
-  ): Promise<ILocalAttribution> => {
+    isPredDate: number,
+    isSorted: number
+  ): Promise<ILocalAttributionResponse> => {
     const { data } = await axiosPrivate.get(
-      `api/v2/economy/local_attribution_by_date/${symbol}?horizon=${horizon}&date=${date}&is_pred_date=${isPredDate}`
+      `api/v2/economy/local_attribution_by_date/${symbol}?horizon=${horizon}&date=${date}&is_pred_date=${isPredDate}&is_sorted=${isSorted}`
     )
     return data.data
   },
