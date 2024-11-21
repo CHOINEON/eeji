@@ -22,7 +22,7 @@ const VisualPanel = () => {
     {
       enabled: !!symbol.symbol_id && !!symbol.selectedHorizon,
       onSuccess: (data) => {
-        setGraphData(data?.prediction as IPrediction[])
+        if (data) setGraphData(data?.prediction as IPrediction[])
       },
     }
   )
@@ -30,7 +30,7 @@ const VisualPanel = () => {
   const { data: rawData } = useQuery(['rawData', symbol.symbol_id], fetchRawData, {
     enabled: !!symbol.symbol_id,
     onSuccess: (data) => {
-      setRawData(data)
+      if (data) setRawData(data)
     },
   })
 
