@@ -3,6 +3,7 @@ import { PerformanceModelType } from 'apis/type/ModelPerformanceOption'
 import IcoPerformance from 'assets/img/icons/XAI/icon_perfromanceModel.png'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
 import InfoCircle from 'views/AIModelGenerator/components/Icon/InfoCircle'
@@ -16,6 +17,7 @@ interface IErrorInfo {
 const ModelPerformance = () => {
   const { t } = useTranslation()
   const { message } = App.useApp()
+  const history = useHistory()
 
   const selectedModel = useRecoilValue(selectedModelAtom)
   const data = useRecoilValue(filteredResultState('error'))
@@ -32,7 +34,8 @@ const ModelPerformance = () => {
   }
 
   const handleReport = () => {
-    message.info(t('서비스 준비 중입니다.'))
+    const user_id = localStorage.getItem('userId')
+    history.push(`/${user_id}/view-xai-results/${selectedModel.id}`)
   }
 
   useEffect(() => {
@@ -126,7 +129,7 @@ const ModelPerformance = () => {
         )}
         <PerformanceButtonWrap>
           {/* <SaveButton onClick={handleSave}>SAVE</SaveButton> */}
-          <ExportButton onClick={handleReport}>{t('report')}</ExportButton>
+          <ExportButton onClick={handleReport}>{t('Explainable AI')}</ExportButton>
         </PerformanceButtonWrap>
       </ComponentContainer>
     </>
