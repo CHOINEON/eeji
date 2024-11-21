@@ -88,7 +88,7 @@ const PredictionChart = () => {
 
   //24-11-20 series append/remove를 내장 메서드로 처리하려고 했으나 삭제메서드가 존재하지 않아 re-rendering를 감안하고 updateSeries()로 구현함
   useEffect(() => {
-    if (rawData) {
+    if (Object.keys(rawData).length > 0) {
       const newSeries = selectedFilter.selectedFeatures?.map((feature) => ({
         name: feature,
         data: rawData?.features[feature]?.map((item) => item.value),
