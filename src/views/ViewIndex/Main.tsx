@@ -14,10 +14,8 @@ const Main = () => {
   const { mutate: getSymbolList } = useMutation({
     mutationFn: IndexApi.getSymbolList,
     onSuccess: (response) => {
-      const filterResponse = response.symbols.filter((s) => s.symbol_id !== 'HRC Internal')
-
-      setSymbolList(filterResponse)
-      setSymbol({ ...filterResponse[0], selectedHorizon: JSON.parse(filterResponse[0].horizons)[0] })
+      setSymbolList(response.symbols)
+      setSymbol({ ...response.symbols[0], selectedHorizon: JSON.parse(response.symbols[0].horizons)[0] })
     },
   })
 
