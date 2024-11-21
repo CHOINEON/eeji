@@ -34,8 +34,7 @@ const ModelPerformance = () => {
   }
 
   const handleReport = () => {
-    const user_id = localStorage.getItem('userId')
-    history.push(`/${user_id}/view-xai-results/${selectedModel.id}`)
+    history.push(`/admin/view-xai-results/${selectedModel.id}`)
   }
 
   useEffect(() => {
