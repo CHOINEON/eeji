@@ -184,8 +184,7 @@ const ModelListTable = () => {
 
   const handleClick = (model: IModelInfo) => {
     if (model) {
-      const user_id = localStorage.getItem('userId')
-      history.push(`/${user_id}/view-model-results/${model.id}`)
+      history.push(`/admin/view-model-results/${model.id}`)
     }
   }
 
