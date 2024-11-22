@@ -190,11 +190,6 @@ const PredictionChart = () => {
               text: `${new Date(selectedFilter.selectedDate).toLocaleDateString()}`,
             },
           },
-          {
-            x: new Date(featureImpactData?.date_input).getTime(),
-            x2: new Date(featureImpactData?.date).getTime(),
-            fillColor: '#FF3200',
-          },
         ],
       },
     }),
