@@ -10,7 +10,7 @@ interface ResizablePanelsProps {
 const ResizablePanels: React.FC<ResizablePanelsProps> = ({ panel1, panel2, panel3, panel4 }) => {
   const [panel1Height, setPanel1Height] = useState(100) // 첫 번째 패널의 높이 (%)
   const [panel2Height, setPanel2Height] = useState(100) // 두 번째 패널의 높이 (%)
-  const [leftPanelWidth, setLeftPanelWidth] = useState(70) // 좌측 패널의 너비 (%)
+  const [leftPanelWidth, setLeftPanelWidth] = useState(65) // 좌측 패널의 너비 (%)
   const isResizingRow1 = useRef(false) // panel1과 panel3의 높이 조정 중인지 추적
   const isResizingRow2 = useRef(false) // panel2와 panel4의 높이 조정 중인지 추적
   const isResizingColumn = useRef(false) // 좌우 패널의 너비 조정 중인지 추적
