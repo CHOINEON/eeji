@@ -57,13 +57,18 @@ const PredictionChart = () => {
 
   useEffect(() => {
     if (graphData) {
-      let temp: { prediction: number[]; groundTruth: number[]; upperBound: number[]; lowerBound: number[] }
+      const temp: { prediction: number[]; groundTruth: number[]; upperBound: number[]; lowerBound: number[] } = {
+        prediction: [],
+        groundTruth: [],
+        upperBound: [],
+        lowerBound: [],
+      }
 
       graphData.map((item) => {
-        temp?.prediction?.push(item.pred)
-        temp?.groundTruth?.push(item.ground_truth)
-        temp?.upperBound?.push(item.upper_bound)
-        temp?.lowerBound?.push(item.lower_bound)
+        temp.prediction.push(item.pred)
+        temp.groundTruth.push(item.ground_truth)
+        temp.upperBound.push(item.upper_bound)
+        temp.lowerBound.push(item.lower_bound)
       })
 
       const initialSeries = [
