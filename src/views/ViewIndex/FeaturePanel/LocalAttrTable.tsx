@@ -151,7 +151,7 @@ const LocalAttrTable = () => {
               <Table.Summary.Row>
                 <Table.Summary.Cell index={0}>Positive</Table.Summary.Cell>
                 <Table.Summary.Cell index={1}>
-                  <p className="text-[#43880E]">{Number(summary.positive).toFixed(4)}</p>
+                  <p className="text-[#4337F6]">{Number(summary.positive).toFixed(4)}</p>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={0}>Negative</Table.Summary.Cell>
                 <Table.Summary.Cell index={2}>
