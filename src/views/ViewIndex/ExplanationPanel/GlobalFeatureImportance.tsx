@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
+import { translatePeriodToKorean } from 'utils/TextTranslator'
 import { SymbolState } from '../stores/atom'
 
 const GlobalFeatureImportance = () => {
@@ -31,7 +32,6 @@ const GlobalFeatureImportance = () => {
       )
     }
   }, [data])
-
   const options = {
     chart: {
       width: 380,
@@ -70,7 +70,8 @@ const GlobalFeatureImportance = () => {
           <>
             <ReactApexChart options={options} series={series.map((s) => Number(s.data[0]))} type="donut" height={180} />
             <div className="my-5">
-              가장 영향력이 큰 변수는 <strong>{featureImportance[0]?.feature_name} </strong>입니다.
+              {`${symbol.selectedHorizon}${translatePeriodToKorean(symbol.period)} `}예측에서 가장 영향력이 큰 변수는{' '}
+              <strong>{featureImportance[0]?.feature_name} </strong>입니다.
             </div>
           </>
         )}
