@@ -52,7 +52,7 @@ const LocalAttrTable = () => {
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [data, setData] = useState([])
   const setFeatureImpactData = useSetRecoilState(FeatureImpactDataState)
-  const [summary, setSummary] = useState(0)
+  const [summary, setSummary] = useState({ positive: 0, negative: 0, total: 0 })
 
   const { data: featureData } = useQuery(
     ['localAttribution', symbol.symbol_id, filterCondition.selectedDate],
@@ -67,40 +67,54 @@ const LocalAttrTable = () => {
     {
       enabled: !!symbol.symbol_id && !!symbol.selectedHorizon && !!filterCondition.selectedDate,
       onSuccess: (data) => {
-        const positive = data.feature_impact.positive.map((item: IFeatureImpact) => ({
-          ...item,
-          key: item.feature_name,
-          type: 'positive',
-        }))
+        if (data) {
+          const positive = data.feature_impact.positive.map((item: IFeatureImpact) => ({
+            ...item,
+            key: item.feature_name,
+            type: 'positive',
+          }))
 
-        const negative = data.feature_impact.negative.map((item: IFeatureImpact) => ({
-          ...item,
-          key: item.feature_name,
-          type: 'negative',
-        }))
+          const negative = data.feature_impact.negative.map((item: IFeatureImpact) => ({
+            ...item,
+            key: item.feature_name,
+            type: 'negative',
+          }))
 
-        const mergedResult = [...positive, ...negative]
-        setData(mergedResult)
+          const mergedResult = [...positive, ...negative]
+          setData(mergedResult)
 
-        setFeatureImpactData({
-          name: data.name,
-          feature_impact: mergedResult,
-          horizon: data.horizon,
-          is_pred_date: data.is_pred_date,
-          date_pred: data.date_pred,
-          dt: data.dt,
-          date: data.date,
-          date_input: data.date_input,
-        })
+          setFeatureImpactData({
+            name: data.name,
+            feature_impact: mergedResult,
+            horizon: data.horizon,
+            is_pred_date: data.is_pred_date,
+            date_pred: data.date_pred,
+            dt: data.dt,
+            date: data.date,
+            date_input: data.date_input,
+          })
 
-        setSummary(
-          Number(
-            mergedResult
-              .map((item) => item.impact)
-              .reduce((a, b) => a + b, 0)
-              .toFixed(4)
-          )
-        )
+          setSummary({
+            positive: Number(
+              positive
+                .map((item) => item.impact)
+                .reduce((a, b) => a + b, 0)
+                .toFixed(4)
+            ),
+            negative: Number(
+              negative
+                .map((item) => item.impact)
+                .reduce((a, b) => a + b, 0)
+                .toFixed(4)
+            ),
+            total: Number(
+              mergedResult
+                .map((item) => item.impact)
+                .reduce((a, b) => a + b, 0)
+                .toFixed(4)
+            ),
+          })
+        }
       },
     }
   )
@@ -129,36 +143,27 @@ const LocalAttrTable = () => {
         rowSelection={{ type: 'checkbox', selectedRowKeys: selectedFilter.selectedFeatures, ...rowSelection }}
         size="small"
         pagination={{ pageSize: 4, pageSizeOptions: [4], position: ['bottomCenter'], showSizeChanger: false }}
-        summary={(pageData) => {
-          let positiveVal = 0
-          let negativeVal = 0
-          let summaryVal = 0
-          pageData.forEach(({ impact }) => {
-            positiveVal += impact > 0 ? impact : 0
-            negativeVal += impact < 0 ? impact : 0
-            summaryVal += impact
-          })
-
+        summary={() => {
           return (
             <>
               <Table.Summary.Row>
                 <Table.Summary.Cell index={0}>Positive</Table.Summary.Cell>
                 <Table.Summary.Cell index={1}>
-                  <p className="text-[#43880E]">{Number(positiveVal).toFixed(4)}</p>
+                  <p className="text-[#43880E]">{Number(summary.positive).toFixed(4)}</p>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={0}>Negative</Table.Summary.Cell>
                 <Table.Summary.Cell index={2}>
-                  <p className="text-[#D84247]">{Number(negativeVal).toFixed(4)}</p>
+                  <p className="text-[#D84247]">{Number(summary.negative).toFixed(4)}</p>
                 </Table.Summary.Cell>
               </Table.Summary.Row>
               <Table.Summary.Row>
                 <Table.Summary.Cell index={0}>Summary</Table.Summary.Cell>
                 <Table.Summary.Cell index={1} rowSpan={2}>
-                  {summaryVal !== 0 && (
+                  {summary.total !== 0 && (
                     <>
-                      <span className={`${summaryVal > 0 ? 'text-[#43880E]' : 'text-[#D84247]'}`}>
-                        {Number(summaryVal).toFixed(4)}
-                        {summaryVal > 0 ? ' 가격 상승' : ' 가격 하락'}
+                      <span className={`${summary.total > 0 ? 'text-[#43880E]' : 'text-[#D84247]'}`}>
+                        {Number(summary.total).toFixed(4)}
+                        {summary.total > 0 ? ' 가격 상승' : ' 가격 하락'}
                       </span>
                     </>
                   )}
