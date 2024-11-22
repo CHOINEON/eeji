@@ -23,7 +23,8 @@ const PredictionChart = () => {
   const rawData = useRecoilValue(RawDataState)
   const featureImpactData = useRecoilValue(FeatureImpactDataState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
-  const [viewInterval, setViewInterval] = useState(true)
+  const [viewInterval, setViewInterval] = useState(false)
+  const [disableCI, setDisableCI] = useState(false)
 
   //공통적으로 사용된 옵션
   const defaultOptions: ApexOptions = {
@@ -36,6 +37,7 @@ const PredictionChart = () => {
         type: 'xy',
         autoScaleYaxis: true,
       },
+      redrawOnParentResize: false,
     },
     dataLabels: {
       enabled: false,
@@ -46,13 +48,6 @@ const PredictionChart = () => {
     stroke: {
       curve: 'straight' as const,
       width: 1.5,
-    },
-    xaxis: {
-      type: 'datetime' as const,
-      title: {
-        text: '날짜', // X축 레이블
-      },
-      categories: graphData?.map((item) => item.date_pred),
     },
   }
 
@@ -96,6 +91,9 @@ const PredictionChart = () => {
       ]
       setSeries1(initialSeries)
     }
+
+    setViewInterval(selectedFilter.has_ci)
+    setDisableCI(!selectedFilter.has_ci)
   }, [graphData])
 
   const [series1, setSeries1] = useState<TSeries[]>(defaultSeries)
@@ -189,6 +187,13 @@ const PredictionChart = () => {
           toggleDataSeries: false, // Enable toggling of the series
         },
       },
+      xaxis: {
+        type: 'datetime' as const,
+        title: {
+          text: '날짜', // X축 레이블
+        },
+        categories: graphData?.map((item) => item.date_pred),
+      },
       // yaxis: {
       //   title: {
       //     rotate: 0, // 회전 각도 (0으로 설정하면 가로로 표시됨)
@@ -239,14 +244,21 @@ const PredictionChart = () => {
       legend: {
         offsetY: 10,
       },
-      yaxis: {
+      xaxis: {
+        type: 'datetime' as const,
         title: {
-          rotate: 0, // 회전 각도 (0으로 설정하면 가로로 표시됨)
-          offsetX: 40, // 타이틀을 X축 기준으로 이동 (필요시 조정)
-          offsetY: -160, // 타이틀을 위로 이동 (양수: 아래로 이동, 음수: 위로 이동)
-          title: 'N/A',
+          text: '날짜', // X축 레이블
         },
+        categories: graphData?.map((item) => item.date_pred),
       },
+      // yaxis: {
+      //   title: {
+      //     rotate: 0, // 회전 각도 (0으로 설정하면 가로로 표시됨)
+      //     offsetX: 40, // 타이틀을 X축 기준으로 이동 (필요시 조정)
+      //     offsetY: -160, // 타이틀을 위로 이동 (양수: 아래로 이동, 음수: 위로 이동)
+      //     title: 'N/A',
+      //   },
+      // },
       annotations: {
         xaxis: [
           {
@@ -262,6 +274,13 @@ const PredictionChart = () => {
     }),
     [graphData, featureImpactData]
   )
+  // useEffect(() => {
+  //   console.log(series1)
+  // }, [series1])
+
+  // useEffect(() => {
+  //   console.log(options1)
+  // }, [options1])
 
   const onSwitchChange = (value: boolean) => {
     setViewInterval(value)
@@ -326,7 +345,13 @@ const PredictionChart = () => {
     <div>
       <div className="flex flex-row justify-end">
         <span className="mr-2">Confidence Interval</span>
-        <Switch onChange={onSwitchChange} checkedChildren="on" unCheckedChildren="off" value={viewInterval} />
+        <Switch
+          onChange={onSwitchChange}
+          checkedChildren="on"
+          unCheckedChildren="off"
+          value={viewInterval}
+          disabled={disableCI}
+        />
       </div>
       <div id="chart">
         <ReactApexChart options={options1 as ApexOptions} series={series1 as ApexAxisChartSeries} height={350} />

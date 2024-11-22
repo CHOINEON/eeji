@@ -19,6 +19,7 @@ export interface ISymbolList {
 export interface ISelectedFilter {
   selectedDate?: string //yyyy-mm-dd
   selectedFeatures?: string[]
+  has_ci?: boolean
 }
 
 export interface IFeatureImportance {
@@ -77,6 +78,7 @@ export interface IPredictionDataResponse {
   horizon: number
   dt: string
   prediction: IPrediction[]
+  is_ci: boolean
 }
 
 export interface IRawDataResponse {

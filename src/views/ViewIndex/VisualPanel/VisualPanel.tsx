@@ -4,7 +4,7 @@ import { useQuery } from 'react-query'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { capitalizeFirstLetter } from 'utils/StringFormatter'
 import ChartComponent from '../ChartComponent'
-import { graphDataState, RawDataState, SymbolState } from '../stores/atom'
+import { graphDataState, RawDataState, selectedFilterState, SymbolState } from '../stores/atom'
 import HorizonButtonGroup from './HorizonButtonGroup'
 import SymbolDropdown from './SymbolDropdown'
 
@@ -12,6 +12,7 @@ const VisualPanel = () => {
   const symbol = useRecoilValue(SymbolState)
   const setGraphData = useSetRecoilState(graphDataState)
   const setRawData = useSetRecoilState(RawDataState)
+  const setSelectedFilter = useSetRecoilState(selectedFilterState)
 
   const fetchPredictionData = () => IndexApi.getPredictionData(symbol.symbol_id, symbol.selectedHorizon.toString())
   const fetchRawData = () => IndexApi.getRawData(symbol.symbol_id)
@@ -22,7 +23,11 @@ const VisualPanel = () => {
     {
       enabled: !!symbol.symbol_id && !!symbol.selectedHorizon,
       onSuccess: (data) => {
-        if (data) setGraphData(data?.prediction as IPrediction[])
+        console.log('data:', data)
+        if (data) {
+          setGraphData(data?.prediction as IPrediction[])
+          setSelectedFilter((prev) => ({ ...prev, has_ci: data?.is_ci }))
+        }
       },
       refetchOnWindowFocus: false,
       // refetchOnMount: true,
