@@ -1,10 +1,12 @@
+import { Spin } from 'antd'
 import IndexApi from 'apis/IndexApi'
 import { IPrediction } from 'apis/type/IndexResponse'
+import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { capitalizeFirstLetter } from 'utils/StringFormatter'
 import ChartComponent from '../ChartComponent'
-import { graphDataState, RawDataState, SymbolState } from '../stores/atom'
+import { graphDataState, RawDataState, selectedFilterState, SymbolState } from '../stores/atom'
 import HorizonButtonGroup from './HorizonButtonGroup'
 import SymbolDropdown from './SymbolDropdown'
 
@@ -12,9 +14,17 @@ const VisualPanel = () => {
   const symbol = useRecoilValue(SymbolState)
   const setGraphData = useSetRecoilState(graphDataState)
   const setRawData = useSetRecoilState(RawDataState)
+  const setSelectedFilter = useSetRecoilState(selectedFilterState)
 
-  const fetchPredictionData = () => IndexApi.getPredictionData(symbol.symbol_id, symbol.selectedHorizon.toString())
-  const fetchRawData = () => IndexApi.getRawData(symbol.symbol_id)
+  const [loading, setLoading] = useState(true)
+  const fetchPredictionData = () => {
+    setLoading(true)
+    return IndexApi.getPredictionData(symbol.symbol_id, symbol.selectedHorizon.toString())
+  }
+  const fetchRawData = () => {
+    setLoading(true)
+    return IndexApi.getRawData(symbol.symbol_id)
+  }
 
   const { data: predictionData } = useQuery(
     ['predictionData', symbol.symbol_id, symbol.selectedHorizon],
@@ -22,7 +32,10 @@ const VisualPanel = () => {
     {
       enabled: !!symbol.symbol_id && !!symbol.selectedHorizon,
       onSuccess: (data) => {
-        if (data) setGraphData(data?.prediction as IPrediction[])
+        if (data) {
+          setGraphData(data?.prediction as IPrediction[])
+          setSelectedFilter((prev) => ({ ...prev, has_ci: data?.is_ci }))
+        }
       },
       refetchOnWindowFocus: false,
       // refetchOnMount: true,
@@ -38,6 +51,10 @@ const VisualPanel = () => {
     // refetchOnMount: true,
   })
 
+  useEffect(() => {
+    if (predictionData && rawData) setLoading(false)
+  }, [predictionData, rawData])
+
   return (
     <div className="m-3">
       <SymbolDropdown />
@@ -47,12 +64,14 @@ const VisualPanel = () => {
         <span className="mx-2"> | </span>
         <span>{symbol.unit}</span>
       </div>
-      <div className="m-5">
-        <ChartComponent />
-        <div className="mt-3">
-          <HorizonButtonGroup />
+      <Spin tip="Loading" size="large" spinning={loading}>
+        <div className="m-5">
+          <ChartComponent />
+          <div className="mt-3">
+            <HorizonButtonGroup />
+          </div>
         </div>
-      </div>
+      </Spin>
     </div>
   )
 }

@@ -16,54 +16,54 @@ type TSeries = {
 }
 
 const defaultSeries: TSeries[] = [{ name: '', data: [] }]
-//공통적으로 사용된 옵션
-const defaultOptions: ApexOptions = {
-  chart: {
-    stacked: false,
-    group: 'group',
-    zoom: {
-      enabled: true,
-      type: 'xy',
-      autoScaleYaxis: true,
-    },
-    type: 'line',
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  grid: {
-    position: 'front' as const,
-  },
-  stroke: {
-    curve: 'straight' as const,
-    width: 1.5,
-  },
-  xaxis: {
-    type: 'datetime' as const,
-  },
-  yaxis: {
-    labels: {
-      minWidth: 40,
-    },
-  },
-}
 
 const PredictionChart = () => {
   const graphData = useRecoilValue(graphDataState)
   const rawData = useRecoilValue(RawDataState)
   const featureImpactData = useRecoilValue(FeatureImpactDataState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
-  const [viewInterval, setViewInterval] = useState(true)
+  const [viewInterval, setViewInterval] = useState(false)
+  const [disableCI, setDisableCI] = useState(false)
+
+  //공통적으로 사용된 옵션
+  const defaultOptions: ApexOptions = {
+    chart: {
+      type: 'line',
+      group: 'group',
+      stacked: false,
+      zoom: {
+        enabled: true,
+        type: 'xy',
+        autoScaleYaxis: true,
+      },
+      redrawOnParentResize: false,
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    grid: {
+      position: 'front' as const,
+    },
+    stroke: {
+      curve: 'straight' as const,
+      width: 1.5,
+    },
+  }
 
   useEffect(() => {
     if (graphData) {
-      let temp: { prediction: number[]; groundTruth: number[]; upperBound: number[]; lowerBound: number[] }
+      const temp: { prediction: number[]; groundTruth: number[]; upperBound: number[]; lowerBound: number[] } = {
+        prediction: [],
+        groundTruth: [],
+        upperBound: [],
+        lowerBound: [],
+      }
 
       graphData.map((item) => {
-        temp?.prediction?.push(item.pred)
-        temp?.groundTruth?.push(item.ground_truth)
-        temp?.upperBound?.push(item.upper_bound)
-        temp?.lowerBound?.push(item.lower_bound)
+        temp.prediction.push(item.pred)
+        temp.groundTruth.push(item.ground_truth)
+        temp.upperBound.push(item.upper_bound)
+        temp.lowerBound.push(item.lower_bound)
       })
 
       const initialSeries = [
@@ -90,6 +90,9 @@ const PredictionChart = () => {
       ]
       setSeries1(initialSeries)
     }
+
+    setViewInterval(selectedFilter.has_ci)
+    setDisableCI(!selectedFilter.has_ci)
   }, [graphData])
 
   const [series1, setSeries1] = useState<TSeries[]>(defaultSeries)
@@ -174,15 +177,30 @@ const PredictionChart = () => {
       legend: {
         show: true,
         position: 'top' as const,
+        offsetY: 10,
         customLegendItems: ['Prediction', 'Ground Truth'],
+        markers: {
+          fillColors: ['#008FFB', '#FF7F00'],
+        },
         onItemClick: {
-          toggleDataSeries: true, // Enable toggling of the series
+          toggleDataSeries: false, // Enable toggling of the series
         },
       },
       xaxis: {
         type: 'datetime' as const,
+        title: {
+          text: '날짜', // X축 레이블
+        },
         categories: graphData?.map((item) => item.date_pred),
       },
+      // yaxis: {
+      //   title: {
+      //     rotate: 0, // 회전 각도 (0으로 설정하면 가로로 표시됨)
+      //     offsetX: 40, // 타이틀을 X축 기준으로 이동 (필요시 조정)
+      //     offsetY: -160, // 타이틀을 위로 이동 (양수: 아래로 이동, 음수: 위로 이동)
+      //     text: `(${symbol.unit})`,
+      //   },
+      // },
       annotations: {
         xaxis: [
           {
@@ -222,22 +240,46 @@ const PredictionChart = () => {
           },
         },
       },
+      legend: {
+        offsetY: 10,
+      },
       xaxis: {
         type: 'datetime' as const,
+        title: {
+          text: '날짜', // X축 레이블
+        },
         categories: graphData?.map((item) => item.date_pred),
       },
+      // yaxis: {
+      //   title: {
+      //     rotate: 0, // 회전 각도 (0으로 설정하면 가로로 표시됨)
+      //     offsetX: 40, // 타이틀을 X축 기준으로 이동 (필요시 조정)
+      //     offsetY: -160, // 타이틀을 위로 이동 (양수: 아래로 이동, 음수: 위로 이동)
+      //     title: 'N/A',
+      //   },
+      // },
       annotations: {
         xaxis: [
           {
             x: new Date(featureImpactData?.date_input).getTime(),
             x2: new Date(featureImpactData?.date).getTime(),
             fillColor: '#FF3200',
+            label: {
+              text: '입력 구간',
+            },
           },
         ],
       },
     }),
     [graphData, featureImpactData]
   )
+  // useEffect(() => {
+  //   console.log(series1)
+  // }, [series1])
+
+  // useEffect(() => {
+  //   console.log(options1)
+  // }, [options1])
 
   const onSwitchChange = (value: boolean) => {
     setViewInterval(value)
@@ -261,12 +303,19 @@ const PredictionChart = () => {
       //Prediction, Ground Truth, Upper Bound, Lower Bound 순서로 series 데이터 들어있음
       const seriesData = w.globals.series
         ?.map((s: number[], i: number) => {
-          if (w.globals.seriesNames[i] === 'Prediction' || w.globals.seriesNames[i] === 'Ground Truth')
-            return `<div className="text-[10px]"><strong>${w.globals.seriesNames[i]}:</strong> ${s[dataPointIndex]}</div>`
+          if (w.globals.seriesNames[i] === 'Prediction' || w.globals.seriesNames[i] === 'Ground Truth') {
+            if (w.globals.seriesNames[i] && s[dataPointIndex]) {
+              return `<div className="text-[10px]"><strong>${w.globals.seriesNames[i]}:</strong> ${s[dataPointIndex]}</div>`
+            } else {
+              null
+            }
+          }
+          return `<div className="text-[10px]"><strong>${w.globals.seriesNames[i]}:</strong> ${s[dataPointIndex]}</div>`
         })
         .join('')
 
-      return `
+      return filteredGraphData[0]?.date
+        ? `
       <div style="
         background: white; 
         padding: 10px; 
@@ -276,8 +325,9 @@ const PredictionChart = () => {
       ">
         ${seriesData}
         <div className="text-[8px]">(Forecast at ${filteredGraphData[0]?.date})</div>
-      </div>
-    `
+        </div>
+        `
+        : null
     },
     [graphData]
   )
@@ -294,7 +344,13 @@ const PredictionChart = () => {
     <div>
       <div className="flex flex-row justify-end">
         <span className="mr-2">Confidence Interval</span>
-        <Switch onChange={onSwitchChange} checkedChildren="on" unCheckedChildren="off" value={viewInterval} />
+        <Switch
+          onChange={onSwitchChange}
+          checkedChildren="on"
+          unCheckedChildren="off"
+          value={viewInterval}
+          disabled={disableCI}
+        />
       </div>
       <div id="chart">
         <ReactApexChart options={options1 as ApexOptions} series={series1 as ApexAxisChartSeries} height={350} />
