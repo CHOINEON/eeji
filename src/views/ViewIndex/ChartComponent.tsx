@@ -119,9 +119,10 @@ const PredictionChart = () => {
           },
           click(event, chartContext, config) {
             const xValue = config.globals?.seriesX[0][config.dataPointIndex]
+            console.log(xValue)
             setSelectedFilter({
               selectedFeatures: selectedFilter.selectedFeatures,
-              selectedDate: formatTimestampToYYYYMMDD(xValue),
+              selectedDate: xValue ? formatTimestampToYYYYMMDD(xValue) : '',
             })
 
             //clear annotation before adding new one
