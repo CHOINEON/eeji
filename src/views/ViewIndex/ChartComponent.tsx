@@ -60,10 +60,10 @@ const PredictionChart = () => {
       let temp: { prediction: number[]; groundTruth: number[]; upperBound: number[]; lowerBound: number[] }
 
       graphData.map((item) => {
-        temp.prediction.push(item.pred)
-        temp.groundTruth.push(item.ground_truth)
-        temp.upperBound.push(item.upper_bound)
-        temp.lowerBound.push(item.lower_bound)
+        temp?.prediction?.push(item.pred)
+        temp?.groundTruth?.push(item.ground_truth)
+        temp?.upperBound?.push(item.upper_bound)
+        temp?.lowerBound?.push(item.lower_bound)
       })
 
       const initialSeries = [

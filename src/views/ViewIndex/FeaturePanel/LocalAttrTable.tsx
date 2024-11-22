@@ -31,7 +31,7 @@ const columns = [
     render: (number: number) => (
       <Statistic
         value={number}
-        valueStyle={{ color: number > 0 ? '#3f8600' : '#cf1322', fontSize: '12px' }}
+        valueStyle={{ color: number > 0 ? '#4337F6' : '#cf1322', fontSize: '12px' }}
         prefix={number > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
       />
     ),
@@ -137,6 +137,7 @@ const LocalAttrTable = () => {
       <span className={`${featureData?.date_input ? 'text-[12px] text-gray-500' : 'hidden'}`}>
         (입력 구간 : {featureData?.date_input} - {featureData?.date})
       </span>
+      <div className="text-right text-[12px]">(단위 : {symbol.unit})</div>
       <Table
         className="mt-2"
         columns={columns}
@@ -158,13 +159,12 @@ const LocalAttrTable = () => {
                 </Table.Summary.Cell>
               </Table.Summary.Row>
               <Table.Summary.Row>
-                <Table.Summary.Cell index={0}>Summary</Table.Summary.Cell>
+                <Table.Summary.Cell index={0}>Prediction</Table.Summary.Cell>
                 <Table.Summary.Cell index={1} rowSpan={2}>
                   {summary.total !== 0 && (
                     <>
-                      <span className={`${summary.total > 0 ? 'text-[#43880E]' : 'text-[#D84247]'}`}>
+                      <span className={`${summary.total > 0 ? 'text-[#4337F6]' : 'text-[#D84247]'}`}>
                         {Number(summary.total).toFixed(4)}
-                        {summary.total > 0 ? ' 가격 상승' : ' 가격 하락'}
                       </span>
                     </>
                   )}
