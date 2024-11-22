@@ -57,25 +57,34 @@ const PredictionChart = () => {
 
   useEffect(() => {
     if (graphData) {
+      let temp: { prediction: number[]; groundTruth: number[]; upperBound: number[]; lowerBound: number[] }
+
+      graphData.map((item) => {
+        temp.prediction.push(item.pred)
+        temp.groundTruth.push(item.ground_truth)
+        temp.upperBound.push(item.upper_bound)
+        temp.lowerBound.push(item.lower_bound)
+      })
+
       const initialSeries = [
         {
           name: 'Prediction',
-          data: graphData.map((item) => item.pred),
+          data: temp?.prediction,
           type: 'line' as const,
         },
         {
           name: 'Ground Truth',
-          data: graphData.map((item) => item.ground_truth),
+          data: temp?.groundTruth,
           type: 'line' as const,
         },
         {
           name: 'Upper Bound',
-          data: graphData.map((item) => item.upper_bound),
+          data: temp?.upperBound,
           type: 'area' as const,
         },
         {
           name: 'Lower Bound',
-          data: graphData.map((item) => item.lower_bound),
+          data: temp?.lowerBound,
           type: 'area' as const,
         },
       ]
@@ -189,11 +198,6 @@ const PredictionChart = () => {
               },
               text: `${new Date(selectedFilter.selectedDate).toLocaleDateString()}`,
             },
-          },
-          {
-            x: new Date(featureImpactData?.date_input).getTime(),
-            x2: new Date(featureImpactData?.date).getTime(),
-            fillColor: '#FF3200',
           },
         ],
       },
