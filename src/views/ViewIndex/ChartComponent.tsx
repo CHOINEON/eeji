@@ -240,6 +240,9 @@ const PredictionChart = () => {
             x: new Date(featureImpactData?.date_input).getTime(),
             x2: new Date(featureImpactData?.date).getTime(),
             fillColor: '#FF3200',
+            label: {
+              text: '입력 구간',
+            },
           },
         ],
       },
