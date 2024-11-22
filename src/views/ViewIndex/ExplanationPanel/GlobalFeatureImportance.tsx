@@ -16,6 +16,7 @@ const GlobalFeatureImportance = () => {
     () => IndexApi.getGlobalExplanation(symbol.symbol_id, symbol.selectedHorizon.toString()),
     {
       enabled: !!symbol.symbol_id && !!symbol.selectedHorizon,
+      refetchOnWindowFocus: false,
     }
   )
 

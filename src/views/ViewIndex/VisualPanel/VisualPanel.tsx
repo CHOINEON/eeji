@@ -24,6 +24,8 @@ const VisualPanel = () => {
       onSuccess: (data) => {
         if (data) setGraphData(data?.prediction as IPrediction[])
       },
+      refetchOnWindowFocus: false,
+      // refetchOnMount: true,
     }
   )
 
@@ -32,6 +34,8 @@ const VisualPanel = () => {
     onSuccess: (data) => {
       if (data) setRawData(data)
     },
+    refetchOnWindowFocus: false,
+    // refetchOnMount: true,
   })
 
   return (

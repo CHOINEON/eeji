@@ -66,6 +66,7 @@ const LocalAttrTable = () => {
       ),
     {
       enabled: !!symbol.symbol_id && !!symbol.selectedHorizon && !!filterCondition.selectedDate,
+      refetchOnWindowFocus: false,
       onSuccess: (data) => {
         if (data) {
           const positive = data.feature_impact.positive.map((item: IFeatureImpact) => ({

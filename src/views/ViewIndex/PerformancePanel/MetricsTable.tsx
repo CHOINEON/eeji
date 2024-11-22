@@ -45,6 +45,7 @@ const MetricsTable = () => {
     () => IndexApi.getMetrics(symbol.symbol_id, symbol.selectedHorizon.toString()),
     {
       enabled: !!symbol.symbol_id && !!symbol.selectedHorizon,
+      refetchOnWindowFocus: false,
     }
   )
 
