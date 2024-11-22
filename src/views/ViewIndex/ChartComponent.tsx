@@ -180,8 +180,11 @@ const PredictionChart = () => {
         show: true,
         position: 'top' as const,
         customLegendItems: ['Prediction', 'Ground Truth'],
+        markers: {
+          fillColors: ['#008FFB', '#FF7F00'],
+        },
         onItemClick: {
-          toggleDataSeries: true, // Enable toggling of the series
+          toggleDataSeries: false, // Enable toggling of the series
         },
       },
       xaxis: {

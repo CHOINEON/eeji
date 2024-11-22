@@ -1,6 +1,6 @@
 export const colorChipsForStroke = [
   '#008FFB', //prediction(blue)
-  '#00E396', //ground truth(green)
+  '#FF7F00', //ground truth(orange)
   '#FFFFFF', //upper bounds(white)
   '#FFFFFF', //lower bounds(white)
   '#FF9936',
