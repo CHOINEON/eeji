@@ -266,12 +266,19 @@ const PredictionChart = () => {
       //Prediction, Ground Truth, Upper Bound, Lower Bound 순서로 series 데이터 들어있음
       const seriesData = w.globals.series
         ?.map((s: number[], i: number) => {
-          if (w.globals.seriesNames[i] === 'Prediction' || w.globals.seriesNames[i] === 'Ground Truth')
-            return `<div className="text-[10px]"><strong>${w.globals.seriesNames[i]}:</strong> ${s[dataPointIndex]}</div>`
+          if (w.globals.seriesNames[i] === 'Prediction' || w.globals.seriesNames[i] === 'Ground Truth') {
+            if (w.globals.seriesNames[i] && s[dataPointIndex]) {
+              return `<div className="text-[10px]"><strong>${w.globals.seriesNames[i]}:</strong> ${s[dataPointIndex]}</div>`
+            } else {
+              null
+            }
+          }
+          return `<div className="text-[10px]"><strong>${w.globals.seriesNames[i]}:</strong> ${s[dataPointIndex]}</div>`
         })
         .join('')
 
-      return `
+      return filteredGraphData[0]?.date
+        ? `
       <div style="
         background: white; 
         padding: 10px; 
@@ -281,8 +288,9 @@ const PredictionChart = () => {
       ">
         ${seriesData}
         <div className="text-[8px]">(Forecast at ${filteredGraphData[0]?.date})</div>
-      </div>
-    `
+        </div>
+        `
+        : null
     },
     [graphData]
   )
