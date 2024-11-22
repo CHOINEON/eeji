@@ -119,7 +119,6 @@ const PredictionChart = () => {
           },
           click(event, chartContext, config) {
             const xValue = config.globals?.seriesX[0][config.dataPointIndex]
-            console.log(xValue)
             setSelectedFilter({
               selectedFeatures: selectedFilter.selectedFeatures,
               selectedDate: xValue ? formatTimestampToYYYYMMDD(xValue) : '',
