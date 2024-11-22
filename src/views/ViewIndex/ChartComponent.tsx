@@ -6,7 +6,7 @@ import ReactApexChart from 'react-apexcharts'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { formatTimestampToYYYYMMDD } from 'utils/DateFunction'
 import { colorChipsForStroke } from './Colors'
-import { FeatureImpactDataState, graphDataState, RawDataState, selectedFilterState, SymbolState } from './stores/atom'
+import { FeatureImpactDataState, graphDataState, RawDataState, selectedFilterState } from './stores/atom'
 
 type TSeries = {
   name: string
@@ -18,7 +18,6 @@ type TSeries = {
 const defaultSeries: TSeries[] = [{ name: '', data: [] }]
 
 const PredictionChart = () => {
-  const symbol = useRecoilValue(SymbolState)
   const graphData = useRecoilValue(graphDataState)
   const rawData = useRecoilValue(RawDataState)
   const featureImpactData = useRecoilValue(FeatureImpactDataState)
