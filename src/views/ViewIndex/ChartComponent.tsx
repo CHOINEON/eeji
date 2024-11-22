@@ -6,7 +6,7 @@ import ReactApexChart from 'react-apexcharts'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { formatTimestampToYYYYMMDD } from 'utils/DateFunction'
 import { colorChipsForStroke } from './Colors'
-import { FeatureImpactDataState, graphDataState, RawDataState, selectedFilterState } from './stores/atom'
+import { FeatureImpactDataState, graphDataState, RawDataState, selectedFilterState, SymbolState } from './stores/atom'
 
 type TSeries = {
   name: string
@@ -16,44 +16,45 @@ type TSeries = {
 }
 
 const defaultSeries: TSeries[] = [{ name: '', data: [] }]
-//공통적으로 사용된 옵션
-const defaultOptions: ApexOptions = {
-  chart: {
-    stacked: false,
-    group: 'group',
-    zoom: {
-      enabled: true,
-      type: 'xy',
-      autoScaleYaxis: true,
-    },
-    type: 'line',
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  grid: {
-    position: 'front' as const,
-  },
-  stroke: {
-    curve: 'straight' as const,
-    width: 1.5,
-  },
-  xaxis: {
-    type: 'datetime' as const,
-  },
-  yaxis: {
-    labels: {
-      minWidth: 40,
-    },
-  },
-}
 
 const PredictionChart = () => {
+  const symbol = useRecoilValue(SymbolState)
   const graphData = useRecoilValue(graphDataState)
   const rawData = useRecoilValue(RawDataState)
   const featureImpactData = useRecoilValue(FeatureImpactDataState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [viewInterval, setViewInterval] = useState(true)
+
+  //공통적으로 사용된 옵션
+  const defaultOptions: ApexOptions = {
+    chart: {
+      type: 'line',
+      group: 'group',
+      stacked: false,
+      zoom: {
+        enabled: true,
+        type: 'xy',
+        autoScaleYaxis: true,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    grid: {
+      position: 'front' as const,
+    },
+    stroke: {
+      curve: 'straight' as const,
+      width: 1.5,
+    },
+    xaxis: {
+      type: 'datetime' as const,
+      title: {
+        text: '날짜', // X축 레이블
+      },
+      categories: graphData?.map((item) => item.date_pred),
+    },
+  }
 
   useEffect(() => {
     if (graphData) {
@@ -179,6 +180,7 @@ const PredictionChart = () => {
       legend: {
         show: true,
         position: 'top' as const,
+        offsetY: 10,
         customLegendItems: ['Prediction', 'Ground Truth'],
         markers: {
           fillColors: ['#008FFB', '#FF7F00'],
@@ -187,10 +189,14 @@ const PredictionChart = () => {
           toggleDataSeries: false, // Enable toggling of the series
         },
       },
-      xaxis: {
-        type: 'datetime' as const,
-        categories: graphData?.map((item) => item.date_pred),
-      },
+      // yaxis: {
+      //   title: {
+      //     rotate: 0, // 회전 각도 (0으로 설정하면 가로로 표시됨)
+      //     offsetX: 40, // 타이틀을 X축 기준으로 이동 (필요시 조정)
+      //     offsetY: -160, // 타이틀을 위로 이동 (양수: 아래로 이동, 음수: 위로 이동)
+      //     text: `(${symbol.unit})`,
+      //   },
+      // },
       annotations: {
         xaxis: [
           {
@@ -230,9 +236,16 @@ const PredictionChart = () => {
           },
         },
       },
-      xaxis: {
-        type: 'datetime' as const,
-        categories: graphData?.map((item) => item.date_pred),
+      legend: {
+        offsetY: 10,
+      },
+      yaxis: {
+        title: {
+          rotate: 0, // 회전 각도 (0으로 설정하면 가로로 표시됨)
+          offsetX: 40, // 타이틀을 X축 기준으로 이동 (필요시 조정)
+          offsetY: -160, // 타이틀을 위로 이동 (양수: 아래로 이동, 음수: 위로 이동)
+          title: 'N/A',
+        },
       },
       annotations: {
         xaxis: [
