@@ -24,6 +24,10 @@ const PredictionChart = () => {
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [viewInterval, setViewInterval] = useState(false)
   const [disableCI, setDisableCI] = useState(false)
+  const [zoomRange, setZoomRange] = useState<{ min: number | null; max: number | null }>({
+    min: null,
+    max: null,
+  })
 
   //공통적으로 사용된 옵션
   const defaultOptions: ApexOptions = {
@@ -31,10 +35,11 @@ const PredictionChart = () => {
       type: 'line',
       group: 'group',
       stacked: false,
-      zoom: {
-        enabled: true,
-        type: 'xy',
-        autoScaleYaxis: true,
+      toolbar: {
+        show: true, // 툴바 표시
+        tools: {
+          reset: true, // 초기화 버튼 활성화
+        },
       },
       redrawOnParentResize: false,
     },
@@ -49,6 +54,9 @@ const PredictionChart = () => {
       width: 1.5,
     },
   }
+
+  const [series1, setSeries1] = useState<TSeries[]>(defaultSeries)
+  const [series2, setSeries2] = useState<TSeries[]>(defaultSeries)
 
   useEffect(() => {
     if (graphData) {
@@ -88,15 +96,14 @@ const PredictionChart = () => {
           type: 'area' as const,
         },
       ]
-      setSeries1(initialSeries)
+      if (JSON.stringify(initialSeries) !== JSON.stringify(series1)) {
+        setSeries1(initialSeries)
+      }
     }
 
     setViewInterval(selectedFilter.has_ci)
     setDisableCI(!selectedFilter.has_ci)
   }, [graphData])
-
-  const [series1, setSeries1] = useState<TSeries[]>(defaultSeries)
-  const [series2, setSeries2] = useState<TSeries[]>(defaultSeries)
 
   //24-11-20 series append/remove를 내장 메서드로 처리하려고 했으나 삭제메서드가 존재하지 않아 re-rendering를 감안하고 updateSeries()로 구현함
   useEffect(() => {
@@ -110,6 +117,14 @@ const PredictionChart = () => {
       // 문제는 updateSeries()를 통해서 series가 override하는데, 이전 상태 값과 동일해서 이 부분 리렌더가 제대로 이루어지지 않음(나중에 버그리포팅...?)
       // 따라서 차트 내부 데이터만 업데이트하는 방법으로 구현함
       setSeries2(newSeries)
+
+      //기존에 있던 chart-main의 줌 범위 적용
+      ApexCharts.exec('chart-sub', 'updateOptions', {
+        xaxis: {
+          min: zoomRange.min,
+          max: zoomRange.max,
+        },
+      })
     }
   }, [selectedFilter.selectedFeatures])
 
@@ -119,8 +134,14 @@ const PredictionChart = () => {
       chart: {
         type: 'line',
         id: 'chart-main',
+        zoom: {
+          enabled: true, // 줌 활성화
+          type: 'xy', // x축, y축 모두 줌 가능
+          autoScaleYaxis: true, // 줌에 따라 Y축 스케일 자동 조정
+        },
         events: {
           zoomed: (chartContext, { xaxis }) => {
+            setZoomRange({ min: xaxis.min, max: xaxis.max })
             // 서브 차트의 xaxis 업데이트
             ApexCharts.exec('chart-sub', 'updateOptions', {
               xaxis: {
@@ -138,6 +159,23 @@ const PredictionChart = () => {
 
             //clear annotation before adding new one
             chartContext.removeAnnotation('date-annotation')
+
+            if (xValue) {
+              ApexCharts.exec('chart-main', 'updateOptions', {
+                id: 'date-annotation',
+                x: xValue,
+                borderColor: '#FF4560',
+                strokeDashArray: 4,
+                label: {
+                  borderColor: '#FF4560',
+                  style: {
+                    color: '#fff',
+                    background: '#FF4560',
+                  },
+                  text: `${new Date(xValue).toLocaleDateString()}`,
+                },
+              })
+            }
 
             if (xValue) {
               chartContext.addXaxisAnnotation({
@@ -201,26 +239,8 @@ const PredictionChart = () => {
       //     text: `(${symbol.unit})`,
       //   },
       // },
-      annotations: {
-        xaxis: [
-          {
-            id: 'date-annotation',
-            x: new Date(selectedFilter.selectedDate).getTime(),
-            borderColor: '#FF4560',
-            strokeDashArray: 4,
-            label: {
-              borderColor: '#FF4560',
-              style: {
-                color: '#fff',
-                background: '#FF4560',
-              },
-              text: `${new Date(selectedFilter.selectedDate).toLocaleDateString()}`,
-            },
-          },
-        ],
-      },
     }),
-    [graphData, featureImpactData]
+    [graphData, featureImpactData, series1]
   )
 
   const options2: ApexOptions = useMemo(
@@ -228,17 +248,6 @@ const PredictionChart = () => {
       ...defaultOptions,
       chart: {
         id: 'chart-sub',
-        events: {
-          zoomed: (chartContext, { xaxis }) => {
-            // 서브 차트의 xaxis 업데이트
-            ApexCharts.exec('chart-main', 'updateOptions', {
-              xaxis: {
-                min: xaxis.min,
-                max: xaxis.max,
-              },
-            })
-          },
-        },
       },
       legend: {
         offsetY: 10,
@@ -250,14 +259,6 @@ const PredictionChart = () => {
         },
         categories: graphData?.map((item) => item.date_pred),
       },
-      // yaxis: {
-      //   title: {
-      //     rotate: 0, // 회전 각도 (0으로 설정하면 가로로 표시됨)
-      //     offsetX: 40, // 타이틀을 X축 기준으로 이동 (필요시 조정)
-      //     offsetY: -160, // 타이틀을 위로 이동 (양수: 아래로 이동, 음수: 위로 이동)
-      //     title: 'N/A',
-      //   },
-      // },
       annotations: {
         xaxis: [
           {
@@ -273,13 +274,6 @@ const PredictionChart = () => {
     }),
     [graphData, featureImpactData]
   )
-  // useEffect(() => {
-  //   console.log(series1)
-  // }, [series1])
-
-  // useEffect(() => {
-  //   console.log(options1)
-  // }, [options1])
 
   const onSwitchChange = (value: boolean) => {
     setViewInterval(value)
@@ -338,7 +332,7 @@ const PredictionChart = () => {
         custom: customTooltip,
       },
     })
-  }, [customTooltip])
+  }, [customTooltip, options1])
 
   return (
     <div>
@@ -356,7 +350,7 @@ const PredictionChart = () => {
         <ReactApexChart options={options1 as ApexOptions} series={series1 as ApexAxisChartSeries} height={350} />
 
         {/* {selectedFilter?.selectedFeatures?.length > 0 && ( */}
-        <ReactApexChart options={options2 as ApexOptions} series={series2 as ApexAxisChartSeries} height={200} />
+        <ReactApexChart options={options2 as ApexOptions} series={series2 as ApexAxisChartSeries} height={250} />
         {/* )} */}
       </div>
     </div>

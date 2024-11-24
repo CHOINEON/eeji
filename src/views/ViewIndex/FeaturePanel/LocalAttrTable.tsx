@@ -48,24 +48,24 @@ const columns = [
 
 const LocalAttrTable = () => {
   const symbol = useRecoilValue(SymbolState)
-  const filterCondition = useRecoilValue(selectedFilterState)
+  // const filterCondition = useRecoilValue(selectedFilterState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [data, setData] = useState([])
   const setFeatureImpactData = useSetRecoilState(FeatureImpactDataState)
   const [summary, setSummary] = useState({ positive: 0, negative: 0, total: 0 })
 
   const { data: featureData } = useQuery(
-    ['localAttribution', symbol.symbol_id, filterCondition.selectedDate],
+    ['localAttribution', symbol.symbol_id, selectedFilter.selectedDate],
     () =>
       IndexApi.getLocalAttributionByDate(
         symbol.symbol_id,
         symbol.selectedHorizon.toString(),
-        filterCondition.selectedDate,
+        selectedFilter.selectedDate,
         1, // 예측날짜 기준 조회
         1 // is_sorted 1인경우 positive, negative 별도로 넘어옴
       ),
     {
-      enabled: !!symbol.symbol_id && !!symbol.selectedHorizon && !!filterCondition.selectedDate,
+      enabled: !!symbol.symbol_id && !!symbol.selectedHorizon && !!selectedFilter.selectedDate,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
         if (data) {
