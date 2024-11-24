@@ -161,23 +161,6 @@ const PredictionChart = () => {
             chartContext.removeAnnotation('date-annotation')
 
             if (xValue) {
-              ApexCharts.exec('chart-main', 'updateOptions', {
-                id: 'date-annotation',
-                x: xValue,
-                borderColor: '#FF4560',
-                strokeDashArray: 4,
-                label: {
-                  borderColor: '#FF4560',
-                  style: {
-                    color: '#fff',
-                    background: '#FF4560',
-                  },
-                  text: `${new Date(xValue).toLocaleDateString()}`,
-                },
-              })
-            }
-
-            if (xValue) {
               chartContext.addXaxisAnnotation({
                 id: 'date-annotation',
                 x: xValue,
