@@ -6,7 +6,7 @@ import ReactApexChart from 'react-apexcharts'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { formatTimestampToYYYYMMDD } from 'utils/DateFunction'
 import { colorChipsForStroke } from './Colors'
-import { FeatureImpactDataState, graphDataState, RawDataState, selectedFilterState } from './stores/atom'
+import { FeatureImpactDataState, graphDataState, RawDataState, selectedFilterState, SymbolState } from './stores/atom'
 
 type TSeries = {
   name: string
@@ -18,6 +18,7 @@ type TSeries = {
 const defaultSeries: TSeries[] = [{ name: '', data: [] }]
 
 const PredictionChart = () => {
+  const symbol = useRecoilValue(SymbolState)
   const graphData = useRecoilValue(graphDataState)
   const rawData = useRecoilValue(RawDataState)
   const featureImpactData = useRecoilValue(FeatureImpactDataState)
@@ -104,6 +105,11 @@ const PredictionChart = () => {
     setViewInterval(selectedFilter.has_ci)
     setDisableCI(!selectedFilter.has_ci)
   }, [graphData])
+
+  useEffect(() => {
+    //initialize zooming and selected dates
+    setZoomRange({ min: null, max: null })
+  }, [symbol.selectedHorizon])
 
   //24-11-20 series append/remove를 내장 메서드로 처리하려고 했으나 삭제메서드가 존재하지 않아 re-rendering를 감안하고 updateSeries()로 구현함
   useEffect(() => {
@@ -250,6 +256,11 @@ const PredictionChart = () => {
             fillColor: '#FF3200',
             label: {
               text: '입력 구간',
+              orientation: 'horizontal',
+              style: {
+                color: 'black',
+                borderColor: '#FFF',
+              },
             },
           },
         ],
