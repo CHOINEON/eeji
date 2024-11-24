@@ -6,7 +6,7 @@ import ReactApexChart from 'react-apexcharts'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { formatTimestampToYYYYMMDD } from 'utils/DateFunction'
 import { colorChipsForStroke } from './Colors'
-import { FeatureImpactDataState, graphDataState, RawDataState, selectedFilterState, SymbolState } from './stores/atom'
+import { FeatureImpactDataState, graphDataState, RawDataState, selectedFilterState } from './stores/atom'
 
 type TSeries = {
   name: string
@@ -18,7 +18,6 @@ type TSeries = {
 const defaultSeries: TSeries[] = [{ name: '', data: [] }]
 
 const PredictionChart = () => {
-  const symbol = useRecoilValue(SymbolState)
   const graphData = useRecoilValue(graphDataState)
   const rawData = useRecoilValue(RawDataState)
   const featureImpactData = useRecoilValue(FeatureImpactDataState)
@@ -102,14 +101,30 @@ const PredictionChart = () => {
       }
     }
 
+    //zoom 초기화
+    ApexCharts.exec('chart-main', 'resetZoom') // 메인 차트 줌 초기화
+    setZoomRange({ min: null, max: null }) //서브 차트 초기화 (zoomRange 상태 값으로 조절함)
+
+    ApexCharts.exec('chart-main', 'updateOptions', {
+      yaxis: {
+        min: undefined, // 전체 데이터의 최소값으로 갱신
+        max: undefined, // 전체 데이터의 최대값으로 갱신
+      },
+    })
+
     setViewInterval(selectedFilter.has_ci)
     setDisableCI(!selectedFilter.has_ci)
   }, [graphData])
 
+  //메인 차트의 줌이 변경될 때마다 서브 차트의 줌도 동일하게 변경
   useEffect(() => {
-    //initialize zooming and selected dates
-    setZoomRange({ min: null, max: null })
-  }, [symbol.selectedHorizon])
+    ApexCharts.exec('chart-sub', 'updateOptions', {
+      xaxis: {
+        min: zoomRange.min,
+        max: zoomRange.max,
+      },
+    })
+  }, [zoomRange])
 
   //24-11-20 series append/remove를 내장 메서드로 처리하려고 했으나 삭제메서드가 존재하지 않아 re-rendering를 감안하고 updateSeries()로 구현함
   useEffect(() => {
@@ -241,6 +256,10 @@ const PredictionChart = () => {
       legend: {
         offsetY: 10,
       },
+      zoom: {
+        enabled: false, // 줌 비활성화
+        autoScaleYaxis: true, // 줌에 따라 Y축 스케일 자동 조정
+      },
       xaxis: {
         type: 'datetime' as const,
         title: {
@@ -248,6 +267,7 @@ const PredictionChart = () => {
         },
         categories: graphData?.map((item) => item.date_pred),
       },
+
       annotations: {
         xaxis: [
           {
@@ -255,7 +275,7 @@ const PredictionChart = () => {
             x2: new Date(featureImpactData?.date).getTime(),
             fillColor: '#FF3200',
             label: {
-              text: '입력 구간',
+              text: featureImpactData?.date ? '입력 구간' : '',
               orientation: 'horizontal',
               style: {
                 color: 'black',
@@ -343,9 +363,9 @@ const PredictionChart = () => {
       <div id="chart">
         <ReactApexChart options={options1 as ApexOptions} series={series1 as ApexAxisChartSeries} height={350} />
 
-        {/* {selectedFilter?.selectedFeatures?.length > 0 && ( */}
-        <ReactApexChart options={options2 as ApexOptions} series={series2 as ApexAxisChartSeries} height={250} />
-        {/* )} */}
+        {selectedFilter?.selectedFeatures?.length > 0 && (
+          <ReactApexChart options={options2 as ApexOptions} series={series2 as ApexAxisChartSeries} height={250} />
+        )}
       </div>
     </div>
   )
