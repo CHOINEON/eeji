@@ -128,14 +128,6 @@ const PredictionChart = () => {
       // 문제는 updateSeries()를 통해서 series가 override하는데, 이전 상태 값과 동일해서 이 부분 리렌더가 제대로 이루어지지 않음(나중에 버그리포팅...?)
       // 따라서 차트 내부 데이터만 업데이트하는 방법으로 구현함
       setSeries2(newSeries)
-
-      //기존에 있던 chart-main의 줌 범위 적용
-      ApexCharts.exec('chart-sub', 'updateOptions', {
-        xaxis: {
-          min: zoomRange.min,
-          max: zoomRange.max,
-        },
-      })
     }
   }, [selectedFilter.selectedFeatures])
 
