@@ -36,7 +36,7 @@ const PredictionChart = () => {
       group: 'group',
       stacked: false,
       toolbar: {
-        show: true, // 툴바 표시
+        show: false, // 툴바 표시
         tools: {
           reset: true, // 초기화 버튼 활성화
         },
@@ -187,6 +187,10 @@ const PredictionChart = () => {
                 },
               })
             }
+
+            // //zoom 초기화 테스트
+            // ApexCharts.exec('chart-main', 'resetZoom')
+            // ApexCharts.exec('chart-sub', 'resetZoom')
           },
         },
       },
@@ -197,9 +201,9 @@ const PredictionChart = () => {
       },
       fill: {
         colors: [
-          '#008FFB', //prediction(blue)
+          '#FF7F00', //prediction(blue)
           '#FFFFFF', //ground truth(white)
-          '#008FFB', //upper bounds (prediction과 색상 맞춤)
+          '#FF7F00', //upper bounds (prediction과 색상 맞춤)
           '#FFFFFF', //lower bounds (white)
           '#FFFFFF', //왜 다섯개여야 하는지 모르겠음...이해 안됨..
         ],
@@ -212,7 +216,7 @@ const PredictionChart = () => {
         offsetY: 10,
         customLegendItems: ['Prediction', 'Ground Truth'],
         markers: {
-          fillColors: ['#008FFB', '#FF7F00'],
+          fillColors: ['#FF7F00', '#008FFB'],
         },
         onItemClick: {
           toggleDataSeries: false, // Enable toggling of the series
@@ -229,7 +233,7 @@ const PredictionChart = () => {
       //   title: {
       //     rotate: 0, // 회전 각도 (0으로 설정하면 가로로 표시됨)
       //     offsetX: 40, // 타이틀을 X축 기준으로 이동 (필요시 조정)
-      //     offsetY: -160, // 타이틀을 위로 이동 (양수: 아래로 이동, 음수: 위로 이동)
+      //     offsetY: -160, // 타이틀을 위로 이동 (양수: 아래로 이동, 수: 위로 이동)
       //     text: `(${symbol.unit})`,
       //   },
       // },
@@ -355,6 +359,37 @@ const PredictionChart = () => {
     })
   }, [customTooltip, options1])
 
+  // 테스트중
+  // const resetZoom = () => {
+  //   ApexCharts.exec('chart-main', 'updateOptions', {
+  //     chart: {
+  //       selection: {
+  //         xaxis: {
+  //           min: undefined,
+  //           max: undefined,
+  //         },
+  //       },
+  //     },
+  //   })
+
+  //   ApexCharts.exec('chart-sub', 'updateOptions', {
+  //     chart: {
+  //       selection: {
+  //         xaxis: {
+  //           min: undefined,
+  //           max: undefined,
+  //         },
+  //       },
+  //     },
+  //   })
+
+  //   ApexCharts.exec('chart-main', 'zoomX', zoomRange.min, zoomRange.max)
+  // }
+
+  // useEffect(() => {
+  //   console.log('option1 changed:', options1)
+  // }, [options1])
+
   return (
     <div>
       <div className="flex flex-row justify-end">
@@ -367,6 +402,7 @@ const PredictionChart = () => {
           disabled={disableCI}
         />
       </div>
+      {/* <button onClick={resetZoom}>초기화</button> */}
       <div id="chart">
         <ReactApexChart options={options1 as ApexOptions} series={series1 as ApexAxisChartSeries} height={350} />
 
