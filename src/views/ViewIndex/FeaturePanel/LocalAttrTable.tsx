@@ -53,9 +53,6 @@ const LocalAttrTable = () => {
   const [data, setData] = useState([])
   const [summary, setSummary] = useState({ positive: 0, negative: 0, total: 0 })
 
-  console.log('symbol:', symbol)
-  console.log('selectedFilter:', selectedFilter)
-
   const { data: featureData } = useQuery(
     ['localAttribution', symbol.symbol_id, selectedFilter.selectedDate],
     () =>
