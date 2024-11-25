@@ -24,9 +24,9 @@ const PredictionChart = () => {
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [viewInterval, setViewInterval] = useState(false)
   const [disableCI, setDisableCI] = useState(false)
-  const [zoomRange, setZoomRange] = useState<{ min: number | null; max: number | null }>({
-    min: null,
-    max: null,
+  const [zoomRange, setZoomRange] = useState<{ min: number | undefined; max: number | undefined }>({
+    min: undefined,
+    max: undefined,
   })
 
   //공통적으로 사용된 옵션
@@ -103,7 +103,7 @@ const PredictionChart = () => {
 
     //zoom 초기화
     ApexCharts.exec('chart-main', 'resetZoom') // 메인 차트 줌 초기화
-    setZoomRange({ min: null, max: null }) //서브 차트 초기화 (zoomRange 상태 값으로 조절함)
+    setZoomRange({ min: undefined, max: undefined }) //서브 차트 초기화 (zoomRange 상태 값으로 조절함)
 
     ApexCharts.exec('chart-main', 'updateOptions', {
       yaxis: {
@@ -114,6 +114,8 @@ const PredictionChart = () => {
 
     setViewInterval(selectedFilter.has_ci)
     setDisableCI(!selectedFilter.has_ci)
+
+    ApexCharts.exec('chart-main', 'removeAnnotation', 'date-annotation')
   }, [graphData])
 
   //24-11-20 series append/remove를 내장 메서드로 처리하려고 했으나 삭제메서드가 존재하지 않아 re-rendering를 감안하고 updateSeries()로 구현함
@@ -148,8 +150,8 @@ const PredictionChart = () => {
             // 서브 차트의 xaxis 업데이트
             ApexCharts.exec('chart-sub', 'updateOptions', {
               xaxis: {
-                min: xaxis.min,
-                max: xaxis.max,
+                min: xaxis?.min || undefined,
+                max: xaxis?.max || undefined,
               },
             })
           },
@@ -219,6 +221,8 @@ const PredictionChart = () => {
         title: {
           text: '날짜', // X축 레이블
         },
+        min: zoomRange?.min || undefined,
+        max: zoomRange?.max || undefined,
         categories: graphData?.map((item) => item.date_pred),
       },
       // yaxis: {
@@ -245,12 +249,12 @@ const PredictionChart = () => {
         },
         events: {
           zoomed: (chartContext, { xaxis }) => {
-            setZoomRange({ min: xaxis.min, max: xaxis.max })
+            setZoomRange({ min: xaxis?.min || undefined, max: xaxis?.max || undefined })
             // 서브 차트의 xaxis 업데이트
             ApexCharts.exec('chart-main', 'updateOptions', {
               xaxis: {
-                min: xaxis.min,
-                max: xaxis.max,
+                min: xaxis?.min || undefined,
+                max: xaxis?.max || undefined,
               },
             })
           },
@@ -269,6 +273,8 @@ const PredictionChart = () => {
           text: '날짜', // X축 레이블
         },
         categories: graphData?.map((item) => item.date_pred),
+        min: zoomRange?.min || undefined,
+        max: zoomRange?.max || undefined,
       },
 
       annotations: {
@@ -378,10 +384,6 @@ const PredictionChart = () => {
   //   ApexCharts.exec('chart-main', 'zoomX', zoomRange.min, zoomRange.max)
   // }
 
-  // useEffect(() => {
-  //   console.log('option1 changed:', options1)
-  // }, [options1])
-
   return (
     <div>
       <div className="flex flex-row justify-end">
@@ -394,7 +396,9 @@ const PredictionChart = () => {
           disabled={disableCI}
         />
       </div>
-      {/* <button onClick={resetZoom}>초기화</button> */}
+      {/* <Button color="default" variant="outlined" onClick={resetZoom} className="ml-2 h-[25px]">
+        Clear
+      </Button> */}
       <div id="chart">
         <ReactApexChart options={options1 as ApexOptions} series={series1 as ApexAxisChartSeries} height={350} />
 
