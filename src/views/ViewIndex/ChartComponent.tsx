@@ -116,16 +116,6 @@ const PredictionChart = () => {
     setDisableCI(!selectedFilter.has_ci)
   }, [graphData])
 
-  //메인 차트의 줌이 변경될 때마다 서브 차트의 줌도 동일하게 변경
-  useEffect(() => {
-    ApexCharts.exec('chart-sub', 'updateOptions', {
-      xaxis: {
-        min: zoomRange.min,
-        max: zoomRange.max,
-      },
-    })
-  }, [zoomRange])
-
   //24-11-20 series append/remove를 내장 메서드로 처리하려고 했으나 삭제메서드가 존재하지 않아 re-rendering를 감안하고 updateSeries()로 구현함
   useEffect(() => {
     if (Object.keys(rawData).length > 0) {
@@ -252,6 +242,23 @@ const PredictionChart = () => {
       ...defaultOptions,
       chart: {
         id: 'chart-sub',
+        zoom: {
+          enabled: true, // 줌 활성화
+          type: 'xy', // x축, y축 모두 줌 가능
+          autoScaleYaxis: true, // 줌에 따라 Y축 스케일 자동 조정
+        },
+        events: {
+          zoomed: (chartContext, { xaxis }) => {
+            setZoomRange({ min: xaxis.min, max: xaxis.max })
+            // 서브 차트의 xaxis 업데이트
+            ApexCharts.exec('chart-main', 'updateOptions', {
+              xaxis: {
+                min: xaxis.min,
+                max: xaxis.max,
+              },
+            })
+          },
+        },
       },
       legend: {
         offsetY: 10,
