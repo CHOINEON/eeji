@@ -41,7 +41,6 @@ const SymbolDropdown = () => {
   const onClick: MenuProps['onClick'] = ({ key }) => {
     //prediction, raw data 초기화
     resetGraphData()
-    resetRawData()
 
     const selectedSymbol = symbolList.find((symbol) => symbol.symbol_id === key) as ISymbol
     setSymbol({

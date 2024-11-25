@@ -396,7 +396,9 @@ const PredictionChart = () => {
           disabled={disableCI}
         />
       </div>
-      {/* <button onClick={resetZoom}>초기화</button> */}
+      {/* <Button color="default" variant="outlined" onClick={resetZoom} className="ml-2 h-[25px]">
+        Clear
+      </Button> */}
       <div id="chart">
         <ReactApexChart options={options1 as ApexOptions} series={series1 as ApexAxisChartSeries} height={350} />
 
