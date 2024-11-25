@@ -1,4 +1,4 @@
-import { Button, Switch } from 'antd'
+import { Switch } from 'antd'
 import { ApexOptions } from 'apexcharts'
 import dayjs from 'dayjs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -37,6 +37,9 @@ const PredictionChart = () => {
       stacked: false,
       toolbar: {
         show: false, // 툴바 표시
+        tools: {
+          reset: true, // 초기화 버튼 활성화
+        },
       },
       redrawOnParentResize: false,
     },
@@ -134,9 +137,6 @@ const PredictionChart = () => {
       chart: {
         type: 'line',
         id: 'chart-main',
-        toolbar: {
-          show: false, // 툴바 표시
-        },
         zoom: {
           enabled: true, // 줌 활성화
           type: 'xy', // x축, y축 모두 줌 가능
@@ -180,7 +180,7 @@ const PredictionChart = () => {
               })
             }
 
-            //zoom 초기화 테스트
+            // //zoom 초기화 테스트
             // ApexCharts.exec('chart-main', 'resetZoom')
             // ApexCharts.exec('chart-sub', 'resetZoom')
           },
@@ -230,7 +230,7 @@ const PredictionChart = () => {
       //   },
       // },
     }),
-    [graphData, featureImpactData]
+    [graphData, featureImpactData, series1]
   )
 
   const options2: ApexOptions = useMemo(
@@ -238,9 +238,6 @@ const PredictionChart = () => {
       ...defaultOptions,
       chart: {
         id: 'chart-sub',
-        toolbar: {
-          show: false, // 툴바 표시
-        },
         zoom: {
           enabled: true, // 줌 활성화
           type: 'xy', // x축, y축 모두 줌 가능
@@ -250,7 +247,6 @@ const PredictionChart = () => {
           zoomed: (chartContext, { xaxis }) => {
             setZoomRange({ min: xaxis.min, max: xaxis.max })
             // 서브 차트의 xaxis 업데이트
-
             ApexCharts.exec('chart-main', 'updateOptions', {
               xaxis: {
                 min: xaxis.min,
@@ -273,8 +269,6 @@ const PredictionChart = () => {
           text: '날짜', // X축 레이블
         },
         categories: graphData?.map((item) => item.date_pred),
-        min: zoomRange?.min,
-        max: zoomRange?.max,
       },
 
       annotations: {
@@ -357,35 +351,40 @@ const PredictionChart = () => {
     })
   }, [customTooltip, options1])
 
-  const resetZoom = () => {
-    ApexCharts.exec('chart-main', 'updateOptions', {
-      xaxis: {
-        min: undefined,
-        max: undefined,
-      },
-      yaxis: {
-        min: undefined,
-        max: undefined,
-      },
-    })
+  // 테스트중
+  // const resetZoom = () => {
+  //   ApexCharts.exec('chart-main', 'updateOptions', {
+  //     chart: {
+  //       selection: {
+  //         xaxis: {
+  //           min: undefined,
+  //           max: undefined,
+  //         },
+  //       },
+  //     },
+  //   })
 
-    ApexCharts.exec('chart-sub', 'updateOptions', {
-      xaxis: {
-        min: undefined,
-        max: undefined,
-      },
-      yaxis: {
-        min: undefined,
-        max: undefined,
-      },
-    })
+  //   ApexCharts.exec('chart-sub', 'updateOptions', {
+  //     chart: {
+  //       selection: {
+  //         xaxis: {
+  //           min: undefined,
+  //           max: undefined,
+  //         },
+  //       },
+  //     },
+  //   })
 
-    setZoomRange({ min: null, max: null })
-  }
+  //   ApexCharts.exec('chart-main', 'zoomX', zoomRange.min, zoomRange.max)
+  // }
+
+  // useEffect(() => {
+  //   console.log('option1 changed:', options1)
+  // }, [options1])
 
   return (
     <div>
-      <div className="flex flex-row justify-end items-center">
+      <div className="flex flex-row justify-end">
         <span className="mr-2">Confidence Interval</span>
         <Switch
           onChange={onSwitchChange}
@@ -394,10 +393,8 @@ const PredictionChart = () => {
           value={viewInterval}
           disabled={disableCI}
         />
-        <Button color="default" variant="outlined" onClick={resetZoom} className="ml-2 h-[25px]">
-          Clear
-        </Button>
       </div>
+      {/* <button onClick={resetZoom}>초기화</button> */}
       <div id="chart">
         <ReactApexChart options={options1 as ApexOptions} series={series1 as ApexAxisChartSeries} height={350} />
 
