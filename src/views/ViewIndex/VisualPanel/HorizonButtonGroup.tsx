@@ -1,11 +1,10 @@
 import styled from '@emotion/styled'
 import { useRecoilState, useResetRecoilState } from 'recoil'
-import { graphDataState, RawDataState, SymbolState } from '../stores/atom'
+import { graphDataState, SymbolState } from '../stores/atom'
 
 const HorizonButtonGroup = () => {
   const [symbol, setSymbol] = useRecoilState(SymbolState) //최초 버튼 생성에만 사용
   const resetGraphData = useResetRecoilState(graphDataState)
-  const resetRawData = useResetRecoilState(RawDataState)
 
   const onClick = (horizon: number) => {
     setSymbol({ ...symbol, selectedHorizon: horizon })
