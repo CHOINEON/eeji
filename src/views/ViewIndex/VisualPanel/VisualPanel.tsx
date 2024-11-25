@@ -52,8 +52,6 @@ const VisualPanel = () => {
   })
 
   useEffect(() => {
-    console.log('predictionData:', predictionData)
-    console.log('rawData:', rawData)
     if (predictionData && rawData) setLoading(false)
   }, [predictionData, rawData])
 
