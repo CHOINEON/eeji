@@ -15,8 +15,8 @@ const VisualPanel = () => {
   const setGraphData = useSetRecoilState(graphDataState)
   const setRawData = useSetRecoilState(RawDataState)
   const setSelectedFilter = useSetRecoilState(selectedFilterState)
-
   const [loading, setLoading] = useState(true)
+
   const fetchPredictionData = () => {
     setLoading(true)
     return IndexApi.getPredictionData(symbol.symbol_id, symbol.selectedHorizon.toString())
@@ -52,6 +52,8 @@ const VisualPanel = () => {
   })
 
   useEffect(() => {
+    console.log('predictionData:', predictionData)
+    console.log('rawData:', rawData)
     if (predictionData && rawData) setLoading(false)
   }, [predictionData, rawData])
 

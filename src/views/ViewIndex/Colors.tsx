@@ -1,6 +1,6 @@
 export const colorChipsForStroke = [
-  '#008FFB', //prediction(blue)
-  '#FF7F00', //ground truth(orange)
+  '#FF7F00', //prediction(orange)
+  '#008FFB', //ground truth(blue)
   '#FFFFFF', //upper bounds(white)
   '#FFFFFF', //lower bounds(white)
   '#FF9936',
@@ -21,9 +21,9 @@ export const colorChipsForStroke = [
 ]
 
 export const colorChipsForFill = [
-  '#008FFB', //prediction(blue)
+  '#FF7F00', //prediction(orange)
   '#FFFFFF', //ground truth(white)
-  '#008FFB', //upper bounds (prediction과 색상 맞춤)
+  '#FF7F00', //upper bounds (prediction과 색상 맞춤)
   '#FFFFFF', //lower bounds (white)
   '#FF9936',
   '#FFE346',

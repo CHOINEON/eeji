@@ -48,10 +48,9 @@ const columns = [
 
 const LocalAttrTable = () => {
   const symbol = useRecoilValue(SymbolState)
-  // const filterCondition = useRecoilValue(selectedFilterState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
-  const [data, setData] = useState([])
   const setFeatureImpactData = useSetRecoilState(FeatureImpactDataState)
+  const [data, setData] = useState([])
   const [summary, setSummary] = useState({ positive: 0, negative: 0, total: 0 })
 
   const { data: featureData } = useQuery(
@@ -68,6 +67,7 @@ const LocalAttrTable = () => {
       enabled: !!symbol.symbol_id && !!symbol.selectedHorizon && !!selectedFilter.selectedDate,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
+        setData([])
         if (data) {
           const positive = data.feature_impact.positive.map((item: IFeatureImpact) => ({
             ...item,

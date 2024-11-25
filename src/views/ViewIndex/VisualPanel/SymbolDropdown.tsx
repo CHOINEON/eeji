@@ -1,8 +1,8 @@
 import { Dropdown, MenuProps, Space } from 'antd'
 import { ISymbol } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { selectedFilterState, SymbolListState, SymbolState } from '../stores/atom'
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
+import { graphDataState, RawDataState, selectedFilterState, SymbolListState, SymbolState } from '../stores/atom'
 
 const categoryItems = [
   { label: 'Metal', key: 'metal' }, // remember to pass the key prop
@@ -10,6 +10,8 @@ const categoryItems = [
 
 const SymbolDropdown = () => {
   const symbolList = useRecoilValue(SymbolListState)
+  const resetGraphData = useResetRecoilState(graphDataState)
+  const resetRawData = useResetRecoilState(RawDataState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const [symbol, setSymbol] = useRecoilState(SymbolState)
   const [items, setItems] = useState<MenuProps['items']>([])
@@ -37,6 +39,10 @@ const SymbolDropdown = () => {
   }, [symbolList])
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
+    //prediction, raw data 초기화
+    resetGraphData()
+    resetRawData()
+
     const selectedSymbol = symbolList.find((symbol) => symbol.symbol_id === key) as ISymbol
     setSymbol({
       ...symbol,
