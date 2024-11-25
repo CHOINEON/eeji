@@ -12,7 +12,6 @@ const HorizonButtonGroup = () => {
 
     //prediction, raw data 초기화
     resetGraphData()
-    resetRawData()
   }
 
   return (
