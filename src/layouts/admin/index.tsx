@@ -33,7 +33,7 @@ export default function Main() {
         <div className={`${needFullScreenBox() ? '' : 'w-[1280px] m-auto'}`}>
           <Header routes={routes}></Header>
           {needFullScreenBox() ? (
-            <div className="my-[10px] mx-[30px] min-h-[780px]">{getRoutes(routes)}</div>
+            <div className="min-h-[780px]">{getRoutes(routes)}</div>
           ) : (
             <div className="w-[1280px] min-h-screen bg-[#F3F7FE] rounded-[25px]">
               <Switch>

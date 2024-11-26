@@ -229,9 +229,9 @@ const PredictionChart = () => {
       },
       xaxis: {
         type: 'datetime' as const,
-        title: {
-          text: '날짜', // X축 레이블
-        },
+        // title: {
+        //   text: '날짜', // X축 레이블
+        // },
         min: zoomRange?.min || undefined,
         max: zoomRange?.max || undefined,
         categories: graphData?.map((item) => item.date_pred),
@@ -278,7 +278,7 @@ const PredictionChart = () => {
         },
       },
       legend: {
-        offsetY: 10,
+        offsetY: 5,
       },
       zoom: {
         enabled: false, // 줌 비활성화
@@ -286,9 +286,9 @@ const PredictionChart = () => {
       },
       xaxis: {
         type: 'datetime' as const,
-        title: {
-          text: '날짜', // X축 레이블
-        },
+        // title: {
+        //   text: '날짜', // X축 레이블
+        // },
         categories: graphData?.map((item) => item.date_pred),
         min: zoomRange?.min || undefined,
         max: zoomRange?.max || undefined,
