@@ -4,6 +4,7 @@ import { IMetricInformation } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
+import { ComponentTitle } from '../ExplanationPanel/CommonComponents'
 import { SymbolState } from '../stores/atom'
 
 const columns = [
@@ -58,8 +59,8 @@ const MetricsTable = () => {
   }, [data])
 
   return (
-    <div className="m-3">
-      <h3 className="text-black text-lg font-bold">Metrics</h3>
+    <div className="m-2">
+      <ComponentTitle title="Metrics" />
       <Table className="mt-2" columns={columns} dataSource={metricsData} size="small" pagination={false} rowKey="key" />
     </div>
   )

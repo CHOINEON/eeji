@@ -5,6 +5,7 @@ import { IFeatureImpact } from 'apis/type/IndexResponse'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { ComponentTitle } from '../ExplanationPanel/CommonComponents'
 import { FeatureImpactDataState, selectedFilterState, SymbolState } from '../stores/atom'
 
 interface DataType {
@@ -132,9 +133,9 @@ const LocalAttrTable = () => {
   }
 
   return (
-    <div className="mb-8">
-      <span className="text-lg mr-2 font-bold">Local Attribution</span>
-      <span className={`${featureData?.date_input ? 'text-[12px] text-gray-500' : 'hidden'}`}>
+    <div className="mb-2">
+      <ComponentTitle title="Local Attribution" />
+      <span className={`${featureData?.date_input ? 'text-[12px] text-gray-500' : 'hidden'} mx-3`}>
         (입력 구간 : {featureData?.date_input} - {featureData?.date})
       </span>
       <div className="text-right text-[12px]">(단위 : {symbol.unit})</div>

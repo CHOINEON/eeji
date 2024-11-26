@@ -6,6 +6,7 @@ import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
 import { translatePeriodToKorean } from 'utils/TextTranslator'
 import { SymbolState } from '../stores/atom'
+import { ComponentTitle } from './CommonComponents'
 
 const GlobalFeatureImportance = () => {
   const symbol = useRecoilValue(SymbolState)
@@ -63,13 +64,13 @@ const GlobalFeatureImportance = () => {
   }
 
   return (
-    <div className="m-3 mt-5">
-      <h3 className="text-black text-lg font-bold">Global Feature Importance</h3>
+    <div className="m-2">
+      <ComponentTitle title="Global Feature Importance" />
       <div className="m-5 h-[220px]">
         {featureImportance?.length > 0 && (
           <>
             <ReactApexChart options={options} series={series.map((s) => Number(s.data[0]))} type="donut" height={180} />
-            <div className="my-5">
+            <div className="my-2">
               {`${symbol.selectedHorizon}${translatePeriodToKorean(symbol.period)} `}예측에서 가장 영향력이 큰 변수는{' '}
               <strong>{featureImportance[0]?.feature_name} </strong>입니다.
             </div>
