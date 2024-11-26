@@ -144,6 +144,7 @@ const PredictionChart = () => {
           type: 'xy', // x축, y축 모두 줌 가능
           autoScaleYaxis: true, // 줌에 따라 Y축 스케일 자동 조정
         },
+
         events: {
           zoomed: (chartContext, { xaxis }) => {
             setZoomRange({ min: xaxis.min, max: xaxis.max })
@@ -234,7 +235,7 @@ const PredictionChart = () => {
       //   },
       // },
     }),
-    [graphData, featureImpactData, series1]
+    [graphData, series1]
   )
 
   const options2: ApexOptions = useMemo(
