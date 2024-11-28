@@ -109,14 +109,7 @@ export const Login: React.FC = () => {
         localStorage.setItem('userData', JSON.stringify(response.user_info))
         localStorage.setItem('userPicture', response.user_info.picture)
         localStorage.setItem('authToken', response.user_info.access_token)
-
-        //24-11-28 : userData의 이메일 주소로 회사 찾아서 ineeji의 경우 com_id입력, 그 외는 google
-        //추후 백엔드에서 com_id 받아오는 방식으로 변경
-        if (response.user_info.email.includes('ineeji.com')) {
-          localStorage.setItem('companyId', process.env.REACT_APP_INEEJI_COMPANY_ID)
-        } else {
-          localStorage.setItem('companyId', 'google')
-        }
+        localStorage.setItem('companyId', response.user_info.com_id || 'google')
 
         const args: DataLayerArgs = {
           dataLayer: {
