@@ -52,7 +52,11 @@ export const useMenuList = () => {
       img_url: 'assets/img/icons/main/service_03.png',
       img_hover_url: 'assets/img/icons/main/icon_03_b.png',
       path: '/view-index',
-      visible: localStorage.getItem('companyId') === process.env.REACT_APP_INEEJI_COMPANY_ID ? true : false,
+      visible:
+        localStorage.getItem('companyId') === process.env.REACT_APP_INEEJI_COMPANY_ID ||
+        localStorage.getItem('userId')?.includes('ineeji.com')
+          ? true
+          : false,
     },
     /*
     {

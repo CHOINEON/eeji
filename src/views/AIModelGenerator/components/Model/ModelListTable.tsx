@@ -328,7 +328,7 @@ const ModelListTable = () => {
           dataIndex="state"
           key="customKey"
           align="center"
-          width={50}
+          width={53}
           render={(text, record: IModelInfo) => (
             <>
               {record.state === '9' && record.is_canceled === 0 && (

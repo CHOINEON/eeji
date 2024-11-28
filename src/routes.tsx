@@ -80,7 +80,11 @@ const routes: RoutesType[] = [
     path: '/view-index',
     icon: '',
     component: ViewIndex,
-    visible: localStorage.getItem('companyId') === process.env.REACT_APP_INEEJI_COMPANY_ID ? true : false,
+    visible:
+      localStorage.getItem('companyId') === process.env.REACT_APP_INEEJI_COMPANY_ID ||
+      localStorage.getItem('userId')?.includes('ineeji.com')
+        ? true
+        : false,
     widthScreen: true,
   },
   {
