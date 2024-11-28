@@ -26,6 +26,7 @@ const routes: RoutesType[] = [
     path: '/ai-model-generator',
     icon: '',
     component: AIModelGenerator,
+    visible: true,
     widthScreen: false,
   },
   {
@@ -34,7 +35,7 @@ const routes: RoutesType[] = [
     path: '/view-model-results/:id',
     icon: '',
     component: ModelGeneratorResult,
-    showInHeader: false,
+    visible: false,
     widthScreen: false,
   },
   {
@@ -43,7 +44,7 @@ const routes: RoutesType[] = [
     path: '/xai-simulator',
     icon: '',
     component: XAIsimulator,
-    showInHeader: false,
+    visible: false,
     widthScreen: false,
   },
   {
@@ -52,7 +53,7 @@ const routes: RoutesType[] = [
     path: '/view-xai-results/:id',
     icon: '',
     component: XAIsimulator,
-    showInHeader: false,
+    visible: false,
     widthScreen: false,
   },
   {
@@ -61,6 +62,7 @@ const routes: RoutesType[] = [
     path: '/price-forecast',
     icon: '',
     component: PriceForecasting,
+    visible: true,
     widthScreen: false,
   },
   {
@@ -69,16 +71,16 @@ const routes: RoutesType[] = [
     path: '/mypage',
     icon: '',
     component: MyPage,
-    showInHeader: false,
+    visible: false,
     widthScreen: true,
   },
   {
-    name: 'Index v2',
+    name: 'Index v2(beta)',
     layout: '/admin',
     path: '/view-index',
     icon: '',
     component: ViewIndex,
-    showInHeader: false,
+    visible: localStorage.getItem('companyId') === process.env.REACT_APP_INEEJI_COMPANY_ID ? true : false,
     widthScreen: true,
   },
   {
@@ -87,7 +89,7 @@ const routes: RoutesType[] = [
     path: '/hrc-view',
     icon: '',
     component: HRCView,
-    showInHeader: false,
+    visible: false,
     widthScreen: true,
   },
   /*

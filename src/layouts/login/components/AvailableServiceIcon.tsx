@@ -7,7 +7,7 @@ const AvailableServiceIcon = () => {
   return (
     <div style={{ display: 'block', float: 'left', marginLeft: '20px' }}>
       <div className="flex flex-wrap justify-start gap-1">
-        {MenuList.map((item: any, idx: number) => {
+        {MenuList.slice(0, -1).map((item: any, idx: number) => {
           return (
             <MenuItem key={idx}>
               <IconContainer>

@@ -86,8 +86,9 @@
   "Model Performance": "モデル性能",
   "is trained by optimized EEJI model": "データで学習を行った結果です",
   "Prediction Accuracy": "予測精度",
-
+  "Studio": "スタジオ",
   "Index": "インデックス",
+  "Index v2(beta)": "インデックス v2(beta)",
   "Data Filtering": "データフィルタリング",
   "Model Analysis": "モデル分析",
   "accuracyMessage": "{{maxKey}}に対する精度が最も高く、{{minKey}}に対する精度が低いです。",
