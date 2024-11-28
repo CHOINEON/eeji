@@ -2,7 +2,7 @@ import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons'
 import { Statistic, Table, TableProps } from 'antd'
 import IndexApi from 'apis/IndexApi'
 import { IFeatureImpact } from 'apis/type/IndexResponse'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { ComponentTitle } from '../ExplanationPanel/CommonComponents'
@@ -130,6 +130,15 @@ const LocalAttrTable = () => {
     getCheckboxProps: (record: DataType) => ({
       name: record.feature_name,
     }),
+  }
+
+  useEffect(() => {
+    initializeData()
+  }, [symbol.symbol_id])
+
+  const initializeData = () => {
+    setData([])
+    setSummary({ positive: 0, negative: 0, total: 0 })
   }
 
   return (
