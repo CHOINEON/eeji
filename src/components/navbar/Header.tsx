@@ -29,15 +29,17 @@ const MenuLinks = ({ routes }: any) => {
 
   return (
     <div className="flex flex-col md:flex-row md:justify-between md:items-center space-y-4 md:space-y-0 md:space-x-8">
-      {routes.map((value: any, i: number) => {
-        if (value.path !== '/main' && value.showInHeader != false) {
-          return (
-            <MenuItem key={i} to={value.layout + value.path}>
-              {t(value.name)}
-            </MenuItem>
-          )
-        }
-      })}
+      {routes
+        .filter((item: any) => item.visible === true)
+        .map((value: any, i: number) => {
+          if (value.path !== '/main' && value.showInHeader != false) {
+            return (
+              <MenuItem key={i} to={value.layout + value.path}>
+                {t(value.name)}
+              </MenuItem>
+            )
+          }
+        })}
     </div>
   )
 }

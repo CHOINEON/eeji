@@ -3,7 +3,6 @@ import { useMenuList } from './MenuList'
 
 const MainContents = () => {
   const menuList = useMenuList()
-
   return (
     <>
       <div className="mt-[100px] p-5">
@@ -18,18 +17,21 @@ const MainContents = () => {
         </SubText>
 
         <div className="flex flex-wrap justify-center gap-8 h-52  my-[50px]">
-          {menuList.map((item: any) => {
-            return (
-              <MenuItem key={item.title}>
-                <IconContainer onClick={() => (window.location.href = `/admin${item.path}`)}>
-                  <img src={item.icon_src} className="w-full max-w-[150px] h-auto" />
-                </IconContainer>
-                <TitleContainer>
-                  <Title_EN>{item.title}</Title_EN>
-                </TitleContainer>
-              </MenuItem>
-            )
-          })}
+          {/* TODO : 마지막 요소값 배열에서 삭제(beta메뉴 포함됨) */}
+          {menuList
+            .filter((item: any) => item.visible)
+            .map((item: any) => {
+              return (
+                <MenuItem key={item.title}>
+                  <IconContainer onClick={() => (window.location.href = `/admin${item.path}`)}>
+                    <img src={item.icon_src} className="w-full max-w-[150px] h-auto" />
+                  </IconContainer>
+                  <TitleContainer>
+                    <Title_EN>{item.title}</Title_EN>
+                  </TitleContainer>
+                </MenuItem>
+              )
+            })}
         </div>
       </div>
     </>

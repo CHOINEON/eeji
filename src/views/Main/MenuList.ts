@@ -18,6 +18,7 @@ export const useMenuList = () => {
       img_url: 'assets/img/icons/main/service_01.png',
       img_hover_url: 'assets/img/icons/main/icon_01_b.png',
       path: '/ai-model-generator',
+      visible: true,
     },
     /*
     {
@@ -40,6 +41,18 @@ export const useMenuList = () => {
       img_url: 'assets/img/icons/main/service_03.png',
       img_hover_url: 'assets/img/icons/main/icon_03_b.png',
       path: '/price-forecast',
+      visible: true,
+    },
+    {
+      id: 3,
+      title: t('Index v2(beta)'),
+      // title_KR: '주요 경제 지표 예측',
+      icon_src: icon_03_b,
+      icon_inbox: icon_03_inbox,
+      img_url: 'assets/img/icons/main/service_03.png',
+      img_hover_url: 'assets/img/icons/main/icon_03_b.png',
+      path: '/view-index',
+      visible: localStorage.getItem('companyId') === process.env.REACT_APP_INEEJI_COMPANY_ID ? true : false,
     },
     /*
     {
