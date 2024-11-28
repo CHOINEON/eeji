@@ -138,7 +138,7 @@ const LocalAttrTable = () => {
       <span className={`${featureData?.date_input ? 'text-[12px] text-gray-500' : 'hidden'} mx-3`}>
         (입력 구간 : {featureData?.date_input} - {featureData?.date})
       </span>
-      <div className="text-right text-[12px]">(단위 : {symbol.unit})</div>
+      <div className="text-right text-[12px]">( 단위 : {symbol.unit} )</div>
       <Table
         className="mt-2"
         columns={columns}
