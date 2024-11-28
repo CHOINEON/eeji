@@ -265,28 +265,15 @@ const Title = styled.span`
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
 `
 
-const ButtonSave = styled.button`
-  display: block;
-  float: left;
-  margin-top: 7px;
-  width: 140px;
-  height: 34px;
-  border-radius: 17px;
-  background-color: #4338f7;
-  color: #fff;
-  font-weight: bolder;
-`
 const ComponentContainer = styled.div`
   display: block;
   float: left;
   justify-content: space-evenly;
   background-color: #ffffff;
-  min-height: 800px;
-  height: 100%;
   width: 100%;
+  height: 100vh;
   box-shadow: 0px 0px 10px #5951db33;
   border: 1px solid #d5dcef;
-  // border: 1px solid red;
   border-radius: 25px;
   opacity: 1;
 `
