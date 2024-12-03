@@ -7,7 +7,7 @@ import { default as HRCView } from 'views/HRCView/HRCView'
 import MainContents from 'views/Main/Main'
 import MyPage from 'views/MyPage'
 import PriceForecasting from 'views/PriceForecasting/OilPrice'
-import ViewIndex from 'views/ViewIndex/Main'
+import ViewIndex from 'views/ViewIndex/index'
 import XAIsimulator from 'views/XAI-simulator'
 
 const routes: RoutesType[] = [
