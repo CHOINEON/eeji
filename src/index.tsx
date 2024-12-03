@@ -3,7 +3,7 @@ import GlobalModal from 'components/modal/GlobalModal'
 import ToastList from 'components/toast/List'
 import 'locales/i18n'
 import i18n from 'locales/i18n'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import ReactGA from 'react-ga4'
 import { I18nextProvider } from 'react-i18next'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -48,7 +48,10 @@ if (process.env.REACT_APP_GOOGLE_ANALYTICS) {
   ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS)
 }
 
-ReactDOM.render(
+const rootElement = document.getElementById('root')
+const root = createRoot(rootElement!)
+
+root.render(
   <RecoilRoot>
     <I18nextProvider i18n={i18n}>
       <ConfigProvider theme={antdCustomTheme}>
@@ -63,6 +66,5 @@ ReactDOM.render(
         </QueryClientProvider>
       </ConfigProvider>
     </I18nextProvider>
-  </RecoilRoot>,
-  document.getElementById('root')
+  </RecoilRoot>
 )
