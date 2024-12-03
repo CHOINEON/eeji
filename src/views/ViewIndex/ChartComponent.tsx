@@ -1,5 +1,5 @@
 import { Switch } from 'antd'
-import { ApexOptions } from 'apexcharts'
+import ApexCharts, { ApexOptions } from 'apexcharts'
 import dayjs from 'dayjs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
@@ -32,7 +32,7 @@ const PredictionChart = () => {
   //공통적으로 사용된 옵션
   const defaultOptions: ApexOptions = {
     chart: {
-      type: 'line',
+      type: 'line' as const,
       group: 'group',
       stacked: false,
       redrawOnParentResize: false,
@@ -146,7 +146,7 @@ const PredictionChart = () => {
     () => ({
       ...defaultOptions,
       chart: {
-        type: 'line',
+        type: 'line' as const,
         id: 'chart-main',
         zoom: {
           enabled: true,
@@ -387,10 +387,20 @@ const PredictionChart = () => {
         />
       </div>
       <div id="chart">
-        <ReactApexChart options={options1 as ApexOptions} series={series1 as ApexAxisChartSeries} height={350} />
+        <ReactApexChart
+          options={options1 as ApexOptions}
+          series={series1 as ApexAxisChartSeries}
+          height={350}
+          type="line"
+        />
 
         {selectedFilter?.selectedFeatures?.length > 0 && (
-          <ReactApexChart options={options2 as ApexOptions} series={series2 as ApexAxisChartSeries} height={250} />
+          <ReactApexChart
+            options={options2 as ApexOptions}
+            series={series2 as ApexAxisChartSeries}
+            height={250}
+            type="line"
+          />
         )}
       </div>
     </div>

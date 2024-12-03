@@ -53,3 +53,7 @@ option {
 .ant-form-item {
   margin-bottom: 10px;
 }
+
+.ant-message {
+  top: 80px !important; /* 기본 상단 위치 조정 */
+}

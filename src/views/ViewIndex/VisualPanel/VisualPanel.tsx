@@ -1,4 +1,4 @@
-import { message, Spin } from 'antd'
+import { App, Spin } from 'antd'
 import IndexApi from 'apis/IndexApi'
 import { IPrediction } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
@@ -12,6 +12,8 @@ import HorizonButtonGroup from './HorizonButtonGroup'
 import SymbolDropdown from './SymbolDropdown'
 
 const VisualPanel = () => {
+  const { message } = App.useApp()
+
   const { t } = useTranslation()
   const symbol = useRecoilValue(SymbolState)
   const setGraphData = useSetRecoilState(graphDataState)

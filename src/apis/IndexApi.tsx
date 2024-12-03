@@ -31,7 +31,8 @@ const IndexApi = {
   //symbol의 global explanation
   getGlobalExplanation: async (symbol: string, horizon: string): Promise<IGlobalFeatureImportance> => {
     const { data } = await axiosPrivate.get(`api/v2/economy/global_feature_importance/${symbol}?horizon=${horizon}`)
-    return data.data[0]
+
+    return data.data?.[0]
   },
 
   //symbol의 local attribution by date
