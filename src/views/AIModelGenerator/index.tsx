@@ -30,12 +30,14 @@ const AIModelGenerator = () => {
     <ThemeProvider theme={theme}>
       <div className="relative z-[1000]">
         <Spin tip={t('loading')} size="small" spinning={loading} style={{ top: 300 }}>
-          <div className="h-[500px] flex">
-            <div className="w-[498px]">
-              <DataSet />
-            </div>
-            <div className="w-[782px]">
-              <ModelList />
+          <div className="h-[500px] flex flex-col">
+            <div className="flex justify-center">
+              <div className="w-2/5 justify-center">
+                <DataSet />
+              </div>
+              <div className="w-3/5 justify-center">
+                <ModelList />
+              </div>
             </div>
           </div>
         </Spin>

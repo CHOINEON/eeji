@@ -248,7 +248,7 @@ const ModelListTable = () => {
   return (
     <>
       <Table
-        className="w-[740px] h-[530px]"
+        className="w-100 h-[530px]"
         size="small"
         dataSource={modelList || []}
         scroll={{ y: 490 }}
@@ -286,7 +286,7 @@ const ModelListTable = () => {
           dataIndex="name"
           key="name"
           align="center"
-          width={130}
+          width={200}
           render={(name: string) => <Ellipsis ref={contentRef}>{name}</Ellipsis>}
         />
         <Column title={t('Target')} dataIndex="target" key="target" align="center" ellipsis={false} />
