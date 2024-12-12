@@ -29,13 +29,13 @@ export default function Main() {
 
   return (
     <>
-      <div className={`relative ${needFullScreenBox() ? '' : 'w-[1280px] mx-auto'}`}>
-        <div className={`${needFullScreenBox() ? '' : 'w-[1280px] m-auto'}`}>
+      <div className={`relative ${needFullScreenBox() ? '' : 'w-[1500px] mx-auto'}`}>
+        <div className={`${needFullScreenBox() ? '' : 'w-[1500px] m-auto'}`}>
           <Header routes={routes}></Header>
           {needFullScreenBox() ? (
             <div className="min-h-[780px]">{getRoutes(routes)}</div>
           ) : (
-            <div className="w-[1280px] min-h-screen bg-[#F3F7FE] rounded-[25px]">
+            <div className="w-[1500px] min-h-screen bg-[#F3F7FE] rounded-[25px]">
               <Switch>
                 {getRoutes(routes)}
                 <Redirect from="/" to="/admin/main" />

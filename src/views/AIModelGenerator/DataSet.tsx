@@ -89,7 +89,7 @@ const DataSet = () => {
   }
 
   return (
-    <div className="px-5 py-10">
+    <div className="p-10">
       <MenuTitle className="ml-[25px]">{t('Dataset')}</MenuTitle>
       <div className="mx-5 mx-3 max-h-[620px] overflow-scroll">
         <DatasetList />

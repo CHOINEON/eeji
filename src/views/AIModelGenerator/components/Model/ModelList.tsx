@@ -6,7 +6,7 @@ const ModelList = () => {
   const { t } = useTranslation()
 
   return (
-    <div className="px-5 py-10 flex flex-wrap overflow-y-scroll ">
+    <div className="p-10 flex flex-wrap overflow-y-scroll ">
       <MenuTitle>{t('Model List')}</MenuTitle>
       <div className="mt-[35px]">
         <ModelListTable />
