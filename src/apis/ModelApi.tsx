@@ -100,6 +100,11 @@ const ModelApi = {
 
     return data
   },
+
+  deleteModel: async (model_id: string): Promise<any> => {
+    const { data } = await axiosPrivate.delete(`api/v1/delete_model/${model_id}`)
+    return data
+  },
 }
 
 export default ModelApi

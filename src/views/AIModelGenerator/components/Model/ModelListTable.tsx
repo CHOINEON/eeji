@@ -115,6 +115,13 @@ const ModelListTable = () => {
     },
   })
 
+  const { mutate: mutateDeleteModel } = useMutation(ModelApi.deleteModel, {
+    onSuccess: () => {
+      message.info(t('Successfully Requested'))
+      refetch()
+    },
+  })
+
   const { mutate: mutateCancelTraning } = useMutation(ModelApi.cancelModelTraining, {
     onSuccess: () => {
       message.info(t('Successfully Requested'))
@@ -129,6 +136,10 @@ const ModelListTable = () => {
       mutateModelDetail({ model_id: model.id })
     })
   }, [models])
+
+  useEffect(() => {
+    refetch()
+  }, [currentPage])
 
   const downloadData = async (url: string) => {
     try {
@@ -215,10 +226,6 @@ const ModelListTable = () => {
     )
   }
 
-  useEffect(() => {
-    refetch()
-  }, [currentPage])
-
   const getFilteredItems = (rowData: IModelInfo) => {
     const items: MenuProps['items'] = [
       {
@@ -235,13 +242,15 @@ const ModelListTable = () => {
       },
       {
         key: '3',
-        label: <button onClick={() => message.info('개발 중입니다.')}>{t('Delete')}</button>,
+        label: <button onClick={() => mutateDeleteModel(rowData.id)}>{t('Delete')}</button>,
       },
     ]
 
+    //9: 저장, 10: 실패, 1: 취소
     if (rowData.state === '9' || rowData.state === '10' || rowData.is_canceled === 1) {
       return items.slice(1) // Return only the second and third items
     }
+
     return items // Return all items for other states
   }
 
