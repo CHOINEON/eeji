@@ -45,7 +45,7 @@ const ModelPerformance = () => {
       mse: typeof data[0]['mse'] === 'number' ? formatNumber(Number(data[0]['mse']).toFixed(2)) : data[0]['mse'],
       rmse: typeof data[0]['rmse'] === 'number' ? formatNumber(Number(data[0]['rmse']).toFixed(2)) : data[0]['rmse'],
       r2: typeof data[0]['r2'] === 'number' ? formatNumber(Number(data[0]['r2']).toFixed(2)) : data[0]['r2'],
-      mape: typeof data[0]['mape'] === 'number' ? Number(data[0]['mape']).toFixed(2) : data[0]['rmse'],
+      mape: typeof data[0]['mape'] === 'number' ? Number(data[0]['mape']).toFixed(2) : data[0]['mape'],
       f1_score: typeof data[0]['F1_SCORE'] === 'number' ? Number(data[0]['F1_SCORE']).toFixed(2) : data[0]['F1_SCORE'],
       accuracy: typeof data[0]['ACCURACY'] === 'number' ? Number(data[0]['ACCURACY']).toFixed(2) : data[0]['ACCURACY'],
     })
