@@ -1,8 +1,7 @@
-import { App, Spin } from 'antd'
+import { Spin } from 'antd'
 import IndexApi from 'apis/IndexApi'
 import { IPrediction } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { capitalizeFirstLetter } from 'utils/StringFormatter'
@@ -12,9 +11,6 @@ import HorizonButtonGroup from './HorizonButtonGroup'
 import SymbolDropdown from './SymbolDropdown'
 
 const VisualPanel = () => {
-  const { message } = App.useApp()
-
-  const { t } = useTranslation()
   const symbol = useRecoilValue(SymbolState)
   const setGraphData = useSetRecoilState(graphDataState)
   const setRawData = useSetRecoilState(RawDataState)
@@ -30,7 +26,7 @@ const VisualPanel = () => {
     return IndexApi.getRawData(symbol.symbol_id)
   }
 
-  const { data: predictionData, isFetched: isPredictionFetched } = useQuery(
+  const { data: predictionData } = useQuery(
     ['predictionData', symbol.symbol_id, symbol.selectedHorizon],
     fetchPredictionData,
     {
@@ -46,25 +42,23 @@ const VisualPanel = () => {
     }
   )
 
-  const { data: rawData, isFetched: isRawFetched } = useQuery(['rawData', symbol.symbol_id], fetchRawData, {
+  const { data: rawData } = useQuery(['rawData', symbol.symbol_id], fetchRawData, {
     enabled: !!symbol.symbol_id,
     onSuccess: (data) => {
-      if (data) setRawData(data)
+      if (data) {
+        setRawData(data)
+      }
     },
     refetchOnWindowFocus: false,
     // refetchOnMount: true,
   })
 
   useEffect(() => {
-    if (isPredictionFetched && isRawFetched) {
-      if (predictionData || rawData) {
-        setLoading(false)
-      } else {
-        setLoading(false)
-        message.info(t('No data'))
-      }
+    //간혹 symbol 변경시 발생하는 무한로딩 이슈를 해결하기 위해 isFetched 대신 쿼리가 완료되었을때 반환되는 data의 값으로 로딩 상태를 조절하기로 함
+    if (predictionData && rawData) {
+      setLoading(false)
     }
-  }, [isPredictionFetched, isRawFetched])
+  }, [predictionData, rawData])
 
   return (
     <div className="m-3">
