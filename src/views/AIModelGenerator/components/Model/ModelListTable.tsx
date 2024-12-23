@@ -120,12 +120,18 @@ const ModelListTable = () => {
       message.info(t('Successfully Requested'))
       refetch()
     },
+    onError: () => {
+      message.error(t('The request has failed. Please try again later.'))
+    },
   })
 
   const { mutate: mutateCancelTraning } = useMutation(ModelApi.cancelModelTraining, {
     onSuccess: () => {
       message.info(t('Successfully Requested'))
       refetch()
+    },
+    onError: () => {
+      message.error(t('Please contact the administrator.'))
     },
   })
 
