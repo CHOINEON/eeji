@@ -5,7 +5,7 @@ import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import { graphDataState, selectedFilterState, SymbolListState, SymbolState } from '../stores/atom'
 
 const categoryItems = [
-  { label: 'Metal', key: 'metal' }, // remember to pass the key prop
+  { label: 'All', key: 'all' }, // remember to pass the key prop
 ]
 
 const SymbolDropdown = () => {
@@ -58,7 +58,7 @@ const SymbolDropdown = () => {
     <div>
       <Dropdown menu={{ items: categoryItems }} trigger={['click']}>
         <a onClick={(e) => e.preventDefault()}>
-          <Space>Metal</Space>
+          <Space>All</Space>
         </a>
       </Dropdown>
       <span className="mx-2">/</span>
