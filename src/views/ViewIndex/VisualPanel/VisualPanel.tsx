@@ -1,8 +1,9 @@
-import { Spin } from 'antd'
+import { App, Spin } from 'antd'
 import IndexApi from 'apis/IndexApi'
-import { IPrediction } from 'apis/type/IndexResponse'
+import { IPrediction, IPredictionDataResponse, IRawDataResponse } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
-import { useQuery } from 'react-query'
+import { useTranslation } from 'react-i18next'
+import { useQueries } from 'react-query'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { capitalizeFirstLetter } from 'utils/StringFormatter'
 import ChartComponent from '../ChartComponent'
@@ -11,6 +12,9 @@ import HorizonButtonGroup from './HorizonButtonGroup'
 import SymbolDropdown from './SymbolDropdown'
 
 const VisualPanel = () => {
+  const { t } = useTranslation()
+  const { message } = App.useApp()
+
   const symbol = useRecoilValue(SymbolState)
   const setGraphData = useSetRecoilState(graphDataState)
   const setRawData = useSetRecoilState(RawDataState)
@@ -18,47 +22,53 @@ const VisualPanel = () => {
   const [loading, setLoading] = useState(true)
 
   const fetchPredictionData = () => {
-    setLoading(true)
     return IndexApi.getPredictionData(symbol.symbol_id, symbol.selectedHorizon.toString())
   }
   const fetchRawData = () => {
-    setLoading(true)
     return IndexApi.getRawData(symbol.symbol_id)
   }
 
-  const { data: predictionData } = useQuery(
-    ['predictionData', symbol.symbol_id, symbol.selectedHorizon],
-    fetchPredictionData,
+  const results = useQueries([
     {
+      queryKey: ['predictionData', symbol.symbol_id, symbol.selectedHorizon],
       enabled: !!symbol.symbol_id && !!symbol.selectedHorizon,
-      onSuccess: (data) => {
+      queryFn: fetchPredictionData,
+      onSuccess: (data: IPredictionDataResponse) => {
         if (data) {
           setGraphData(data?.prediction as IPrediction[])
           setSelectedFilter((prev) => ({ ...prev, has_ci: data?.is_ci }))
         }
       },
-      refetchOnWindowFocus: false,
-      // refetchOnMount: true,
-    }
-  )
-
-  const { data: rawData } = useQuery(['rawData', symbol.symbol_id], fetchRawData, {
-    enabled: !!symbol.symbol_id,
-    onSuccess: (data) => {
-      if (data) {
-        setRawData(data)
-      }
     },
-    refetchOnWindowFocus: false,
-    // refetchOnMount: true,
-  })
+    {
+      queryKey: ['rawData', symbol.symbol_id],
+      queryFn: fetchRawData,
+      enabled: !!symbol.symbol_id,
+      onSuccess: (data: IRawDataResponse) => {
+        if (data) {
+          setRawData(data)
+        }
+      },
+    },
+  ])
+
+  const allFetched = results.every((result) => result.isFetched)
+  const allSuccess = results.every((result) => result.isSuccess)
+  const allData = results.every((result) => result.data)
 
   useEffect(() => {
-    //간혹 symbol 변경시 발생하는 무한로딩 이슈를 해결하기 위해 isFetched 대신 쿼리가 완료되었을때 반환되는 data의 값으로 로딩 상태를 조절하기로 함
-    if (predictionData && rawData) {
+    setLoading(true)
+
+    if (allFetched && allSuccess) {
       setLoading(false)
+
+      if (!allData) {
+        message.info(t('No data'))
+      }
+    } else if (allFetched && !allSuccess) {
+      message.info(t('Failed to load data.'))
     }
-  }, [predictionData, rawData])
+  }, [allFetched, allSuccess, allData])
 
   return (
     <div className="m-3">
