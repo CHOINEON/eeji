@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
 import { PeriodType, translatePeriodToKorean } from 'utils/TextTranslator'
-import { selectedFilterState, SymbolState } from '../stores/atom'
+import { selectedFilterState, selectedSymbolSelector } from '../stores/atom'
 
 const LeadingIndicatorTable = () => {
-  const symbol = useRecoilValue(SymbolState)
+  const symbol = useRecoilValue(selectedSymbolSelector)
   const filterCondition = useRecoilValue(selectedFilterState)
 
   const { data } = useQuery(

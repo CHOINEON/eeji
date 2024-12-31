@@ -1,30 +1,31 @@
 import styled from '@emotion/styled'
-import { useRecoilState, useResetRecoilState } from 'recoil'
-import { graphDataState, SymbolState } from '../stores/atom'
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
+import { graphDataState, horizonState, selectedSymbolSelector } from '../stores/atom'
 
 const HorizonButtonGroup = () => {
-  const [symbol, setSymbol] = useRecoilState(SymbolState) //최초 버튼 생성에만 사용
+  const selectedSymbol = useRecoilValue(selectedSymbolSelector) //최초 버튼 생성에만 사용
+  const [horizon, setHorizon] = useRecoilState(horizonState)
   const resetGraphData = useResetRecoilState(graphDataState)
 
-  const onClick = (horizon: number) => {
-    setSymbol({ ...symbol, selectedHorizon: horizon })
+  const onClick = (selectedHorizon: number) => {
+    setHorizon({ ...horizon, selectedHorizon: selectedHorizon })
 
     //prediction, raw data 초기화
     resetGraphData()
   }
 
   return (
-    symbol.horizons && (
+    horizon.horizonList && (
       <div className="flex flex-row justify-center">
-        {JSON.parse(symbol.horizons)?.map((horizon: number, index: number) => (
+        {horizon.horizonList?.map((horizon: number, index: number) => (
           <PeriodButton
-            className={`rounded border ${
-              symbol.selectedHorizon === horizon ? 'border-[#4338f7]' : 'border-[#d9d9d9]'
-            } mx-1`}
+            // className={`rounded border ${
+            //   horizon.selectedHorizon === horizon ? 'border-[#4338f7]' : 'border-[#d9d9d9]'
+            // } mx-1`}
             key={index}
             onClick={() => onClick(horizon)}
           >
-            {horizon + symbol.period.charAt(0).toUpperCase()}
+            {/* {horizon + selectedSymbol.period.charAt(0).toUpperCase()} */}
           </PeriodButton>
         ))}
       </div>

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { ComponentTitle } from '../ExplanationPanel/CommonComponents'
-import { FeatureImpactDataState, selectedFilterState, SymbolState } from '../stores/atom'
+import { FeatureImpactDataState, horizonState, selectedFilterState, selectedSymbolSelector } from '../stores/atom'
 
 interface DataType {
   key: React.Key
@@ -48,24 +48,25 @@ const columns = [
 ]
 
 const LocalAttrTable = () => {
-  const symbol = useRecoilValue(SymbolState)
+  const selectedSymbol = useRecoilValue(selectedSymbolSelector)
+  const horizon = useRecoilValue(horizonState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
   const setFeatureImpactData = useSetRecoilState(FeatureImpactDataState)
   const [data, setData] = useState([])
   const [summary, setSummary] = useState({ positive: 0, negative: 0, total: 0 })
 
   const { data: featureData } = useQuery(
-    ['localAttribution', symbol.symbol_id, selectedFilter.selectedDate],
+    ['localAttribution', selectedSymbol.symbol_id, selectedFilter.selectedDate],
     () =>
       IndexApi.getLocalAttributionByDate(
-        symbol.symbol_id,
-        symbol.selectedHorizon.toString(),
+        selectedSymbol.symbol_id,
+        horizon.selectedHorizon,
         selectedFilter.selectedDate,
         1, // 예측날짜 기준 조회
         1 // is_sorted 1인경우 positive, negative 별도로 넘어옴
       ),
     {
-      enabled: !!symbol.symbol_id && !!symbol.selectedHorizon && !!selectedFilter.selectedDate,
+      enabled: !!selectedSymbol.symbol_id && !!horizon.selectedHorizon && !!selectedFilter.selectedDate,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
         setData([])
@@ -134,7 +135,7 @@ const LocalAttrTable = () => {
 
   useEffect(() => {
     initializeData()
-  }, [symbol.symbol_id])
+  }, [selectedSymbol.symbol_id])
 
   const initializeData = () => {
     setData([])
@@ -147,7 +148,7 @@ const LocalAttrTable = () => {
       <span className={`${featureData?.date_input ? 'text-[12px] text-gray-500' : 'hidden'} mx-3`}>
         (입력 구간 : {featureData?.date_input} - {featureData?.date})
       </span>
-      <div className="text-right text-[12px]">( 단위 : {symbol.unit} )</div>
+      <div className="text-right text-[12px]">( 단위 : {selectedSymbol.unit} )</div>
       <Table
         className="mt-2"
         columns={columns}
