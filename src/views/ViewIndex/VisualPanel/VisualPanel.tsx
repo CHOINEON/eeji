@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueries } from 'react-query'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { graphDataState, horizonState, RawDataState, selectedFilterState, selectedSymbolSelector } from '../stores/atom'
+import { graphDataState, horizonState, RawDataState, selectedFilterState, symbolState } from '../stores/atom'
 import HorizonButtonGroup from './HorizonButtonGroup'
 import SymbolDropdown from './SymbolDropdown'
 
@@ -13,8 +13,7 @@ const VisualPanel = () => {
   const { t } = useTranslation()
   const { message } = App.useApp()
 
-  // const symbol = useRecoilValue(symbolState)
-  const selectedSymbol = useRecoilValue(selectedSymbolSelector)
+  const symbols = useRecoilValue(symbolState)
   const horizon = useRecoilValue(horizonState)
 
   const setGraphData = useSetRecoilState(graphDataState)
@@ -23,16 +22,16 @@ const VisualPanel = () => {
   const [loading, setLoading] = useState(true)
 
   const fetchPredictionData = () => {
-    return IndexApi.getPredictionData(selectedSymbol.symbol_id, horizon.selectedHorizon)
+    return IndexApi.getPredictionData(symbols.selectedSymbolData?.symbol_id, horizon.selectedHorizon)
   }
   const fetchRawData = () => {
-    return IndexApi.getRawData(selectedSymbol.symbol_id)
+    return IndexApi.getRawData(symbols.selectedSymbolData.symbol_id)
   }
 
   const results = useQueries([
     {
-      queryKey: ['predictionData', selectedSymbol.symbol_id, horizon.selectedHorizon],
-      enabled: !!selectedSymbol.symbol_id && !!horizon.selectedHorizon,
+      queryKey: ['predictionData', symbols.selectedSymbolData?.symbol_id, horizon.selectedHorizon],
+      enabled: !!symbols.selectedSymbolData?.symbol_id && !!horizon.selectedHorizon,
       queryFn: fetchPredictionData,
       onSuccess: (data: IPredictionDataResponse) => {
         if (data) {
@@ -42,9 +41,9 @@ const VisualPanel = () => {
       },
     },
     {
-      queryKey: ['rawData', selectedSymbol.symbol_id],
+      queryKey: ['rawData', symbols.selectedSymbolData?.symbol_id],
       queryFn: fetchRawData,
-      enabled: !!selectedSymbol.symbol_id,
+      enabled: !!symbols.selectedSymbolData?.symbol_id,
       onSuccess: (data: IRawDataResponse) => {
         if (data) {
           setRawData(data)
@@ -75,10 +74,10 @@ const VisualPanel = () => {
     <div className="m-3">
       <SymbolDropdown />
       <div>
-        <span className="text-black text-xl mr-5">{selectedSymbol.symbol_id}</span>
-        <span>{selectedSymbol.unit}</span>
+        <span className="text-black text-xl mr-5">{symbols.selectedSymbolData?.symbol_id}</span>
+        <span>{symbols.selectedSymbolData?.unit}</span>
         <span className="mx-2"> | </span>
-        <span>{selectedSymbol.period}</span>
+        <span>{symbols.selectedSymbolData?.period}</span>
       </div>
       <Spin tip="Loading" size="large" spinning={loading}>
         <div className="m-5">

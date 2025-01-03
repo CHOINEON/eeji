@@ -1,9 +1,9 @@
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
-import { graphDataState, horizonState, selectedSymbolSelector } from '../stores/atom'
+import { graphDataState, horizonState, symbolState } from '../stores/atom'
 
 const HorizonButtonGroup = () => {
   const [horizon, setHorizon] = useRecoilState(horizonState)
-  const selectedSymbol = useRecoilValue(selectedSymbolSelector)
+  const symbols = useRecoilValue(symbolState)
   const resetGraphData = useResetRecoilState(graphDataState)
 
   const onClick = (selectedHorizon: number) => {
@@ -24,7 +24,7 @@ const HorizonButtonGroup = () => {
             key={index}
             onClick={() => onClick(h)}
           >
-            {h + selectedSymbol?.period?.charAt(0).toUpperCase()}
+            {h + symbols.selectedSymbolData?.period?.charAt(0).toUpperCase()}
           </button>
         ))}
       </div>

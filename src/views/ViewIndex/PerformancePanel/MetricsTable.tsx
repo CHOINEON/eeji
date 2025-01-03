@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
 import { ComponentTitle } from '../ExplanationPanel/CommonComponents'
-import { horizonState, selectedSymbolSelector } from '../stores/atom'
+import { horizonState, symbolState } from '../stores/atom'
 
 const columns = [
   {
@@ -38,15 +38,16 @@ type MetricsDataType = {
 }
 
 const MetricsTable = () => {
-  const selectedSymbol = useRecoilValue(selectedSymbolSelector)
+  // const selectedSymbol = useRecoilValue(selectedSymbolSelector)
+  const symbols = useRecoilValue(symbolState)
   const horizon = useRecoilValue(horizonState)
   const [metricsData, setMetricsData] = useState([])
 
   const { data } = useQuery(
-    ['metrics', selectedSymbol.symbol_id, horizon.selectedHorizon],
-    () => IndexApi.getMetrics(selectedSymbol.symbol_id, horizon.selectedHorizon),
+    ['metrics', symbols.selectedSymbolData.symbol_id, horizon.selectedHorizon],
+    () => IndexApi.getMetrics(symbols.selectedSymbolData.symbol_id, horizon.selectedHorizon),
     {
-      enabled: !!selectedSymbol.symbol_id && !!horizon.selectedHorizon,
+      enabled: !!symbols.selectedSymbolData.symbol_id && !!horizon.selectedHorizon,
       refetchOnWindowFocus: false,
     }
   )

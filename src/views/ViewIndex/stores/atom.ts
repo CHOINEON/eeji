@@ -1,22 +1,12 @@
-import { ILocalAttribution, IPrediction, IRawDataResponse, ISelectedFilter } from 'apis/type/IndexResponse'
-import { atom, selector } from 'recoil'
+import { ILocalAttribution, IPrediction, IRawDataResponse, ISelectedFilter, ISymbol } from 'apis/type/IndexResponse'
+import { atom } from 'recoil'
 
 export const symbolState = atom({
   key: 'symbolState',
   default: {
     symbolList: [], //전체 symbol data(object)를 리스트로 담음
-    selectedSymbolData: null, //선택된 symbol 정보 object로 가짐
+    selectedSymbolData: {} as ISymbol, //선택된 symbol 정보 object로 가짐
   },
-})
-
-export const selectedSymbolSelector = selector({
-  key: 'selectedSymbolSelector',
-  get: ({ get }) => get(symbolState).selectedSymbolData || {},
-  set: ({ set }, newValue) =>
-    set(symbolState, (prevState) => ({
-      ...prevState,
-      selectedSymbol: prevState.symbolList.find((symbol: any) => symbol.symbol_id === newValue),
-    })),
 })
 
 //선택된 symbol의 Horizon 정보 (리스트, 선택된 horizon)

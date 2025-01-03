@@ -5,20 +5,20 @@ import ReactApexChart from 'react-apexcharts'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
 import { translatePeriodToKorean } from 'utils/TextTranslator'
-import { horizonState, selectedSymbolSelector } from '../stores/atom'
+import { horizonState, symbolState } from '../stores/atom'
 import { ComponentTitle } from './CommonComponents'
 
 const GlobalFeatureImportance = () => {
-  const selectedSymbol = useRecoilValue(selectedSymbolSelector)
+  const symbols = useRecoilValue(symbolState)
   const horizon = useRecoilValue(horizonState)
   const [featureImportance, setFeatureImportance] = useState([])
   const [series, setSeries] = useState([])
 
   const { data } = useQuery(
-    ['globalExplanation', selectedSymbol.symbol_id, horizon.selectedHorizon],
-    () => IndexApi.getGlobalExplanation(selectedSymbol.symbol_id, horizon.selectedHorizon),
+    ['globalExplanation', symbols.selectedSymbolData.symbol_id, horizon.selectedHorizon],
+    () => IndexApi.getGlobalExplanation(symbols.selectedSymbolData.symbol_id, horizon.selectedHorizon),
     {
-      enabled: !!selectedSymbol.symbol_id && !!horizon.selectedHorizon,
+      enabled: !!symbols.selectedSymbolData.symbol_id && !!horizon.selectedHorizon,
       refetchOnWindowFocus: false,
     }
   )
@@ -72,8 +72,8 @@ const GlobalFeatureImportance = () => {
           <>
             <ReactApexChart options={options} series={series.map((s) => Number(s.data[0]))} type="donut" height={180} />
             <div className="my-2">
-              {`${horizon.selectedHorizon}${translatePeriodToKorean(selectedSymbol.period)} `}예측에서 가장 영향력이 큰
-              변수는 <strong>{featureImportance[0]?.feature_name} </strong>입니다.
+              {`${horizon.selectedHorizon}${translatePeriodToKorean(symbols.selectedSymbolData.period)} `}예측에서 가장
+              영향력이 큰 변수는 <strong>{featureImportance[0]?.feature_name} </strong>입니다.
             </div>
           </>
         )}

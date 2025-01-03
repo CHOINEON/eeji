@@ -1,14 +1,13 @@
 import { Dropdown, MenuProps, Space } from 'antd'
 import { ISymbol } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
-import { graphDataState, horizonState, selectedSymbolSelector, symbolState } from '../stores/atom'
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
+import { graphDataState, horizonState, symbolState } from '../stores/atom'
 
 const SymbolDropdown = () => {
-  const symbols = useRecoilValue(symbolState) //전체 리스트
+  const [symbols, setSymbols] = useRecoilState(symbolState) //전체 리스트
+  const setHorizon = useSetRecoilState(horizonState)
   const resetGraphData = useResetRecoilState(graphDataState)
-  const [selectedSymbol, setSelectedSymbol] = useRecoilState(selectedSymbolSelector) //선택된 symbol
-  const [horizon, setHorizon] = useRecoilState(horizonState)
 
   const [category, setCategory] = useState<string>('All')
   const [topItems, setTopItems] = useState<MenuProps['items']>([])
@@ -28,7 +27,10 @@ const SymbolDropdown = () => {
     setSubItems(generateItems(filteredSubItems))
 
     //0번째 값 디폴트로 저장
-    setSelectedSymbol(filteredSubItems[0])
+    setSymbols({
+      ...symbols,
+      selectedSymbolData: filteredSubItems[0],
+    })
   }, [category])
 
   type CategoryOrSymbol = string | ISymbol
@@ -54,9 +56,11 @@ const SymbolDropdown = () => {
   const onClick: MenuProps['onClick'] = ({ key }) => {
     //prediction, raw data 초기화
     resetGraphData()
-
     //symbol 업데이트
-    setSelectedSymbol(key)
+    setSymbols({
+      ...symbols,
+      selectedSymbolData: symbols.symbolList.filter((symbol) => symbol.symbol_id === key)[0],
+    })
 
     const symbol = symbols.symbolList.find((symbol) => symbol.symbol_id === key)
 
@@ -87,7 +91,7 @@ const SymbolDropdown = () => {
         trigger={['click']}
       >
         <Space>
-          <a className="text-blue">{selectedSymbol.symbol_id}</a>
+          <a className="text-blue">{symbols.selectedSymbolData?.symbol_id}</a>
         </Space>
       </Dropdown>
     </div>
