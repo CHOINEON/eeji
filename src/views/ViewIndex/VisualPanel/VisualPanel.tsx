@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueries } from 'react-query'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
+import ChartComponent from '../ChartComponent'
 import { graphDataState, horizonState, RawDataState, selectedFilterState, symbolState } from '../stores/atom'
 import HorizonButtonGroup from './HorizonButtonGroup'
 import SymbolDropdown from './SymbolDropdown'
@@ -81,7 +82,7 @@ const VisualPanel = () => {
       </div>
       <Spin tip="Loading" size="large" spinning={loading}>
         <div className="m-5">
-          {/* <ChartComponent /> */}
+          <ChartComponent />
           <div className="mt-3">
             <HorizonButtonGroup />
           </div>
