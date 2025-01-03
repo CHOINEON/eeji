@@ -2,12 +2,13 @@ import { Dropdown, MenuProps, Space } from 'antd'
 import { ISymbol } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
-import { graphDataState, selectedSymbolSelector, symbolState } from '../stores/atom'
+import { graphDataState, horizonState, selectedSymbolSelector, symbolState } from '../stores/atom'
 
 const SymbolDropdown = () => {
   const symbols = useRecoilValue(symbolState) //전체 리스트
   const resetGraphData = useResetRecoilState(graphDataState)
   const [selectedSymbol, setSelectedSymbol] = useRecoilState(selectedSymbolSelector) //선택된 symbol
+  const [horizon, setHorizon] = useRecoilState(horizonState)
 
   const [category, setCategory] = useState<string>('All')
   const [topItems, setTopItems] = useState<MenuProps['items']>([])
@@ -16,7 +17,6 @@ const SymbolDropdown = () => {
   useEffect(() => {
     if (symbols.symbolList.length > 0) {
       setCategory(symbols.symbolList[0].category)
-
       setTopItems(generateItems([...new Set(symbols.symbolList.map((symbol) => symbol.category))]))
     }
   }, [symbols.symbolList])
@@ -54,6 +54,17 @@ const SymbolDropdown = () => {
   const onClick: MenuProps['onClick'] = ({ key }) => {
     //prediction, raw data 초기화
     resetGraphData()
+
+    //symbol 업데이트
+    setSelectedSymbol(key)
+
+    const symbol = symbols.symbolList.find((symbol) => symbol.symbol_id === key)
+
+    //horizon 업데이트
+    setHorizon({
+      horizonList: JSON.parse(symbol.horizons),
+      selectedHorizon: JSON.parse(symbol.horizons)[0],
+    })
   }
 
   const onTopMenuClick = (e: any) => {

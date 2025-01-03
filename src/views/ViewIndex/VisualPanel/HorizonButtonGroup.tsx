@@ -1,10 +1,9 @@
-import styled from '@emotion/styled'
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import { graphDataState, horizonState, selectedSymbolSelector } from '../stores/atom'
 
 const HorizonButtonGroup = () => {
-  const selectedSymbol = useRecoilValue(selectedSymbolSelector) //최초 버튼 생성에만 사용
   const [horizon, setHorizon] = useRecoilState(horizonState)
+  const selectedSymbol = useRecoilValue(selectedSymbolSelector)
   const resetGraphData = useResetRecoilState(graphDataState)
 
   const onClick = (selectedHorizon: number) => {
@@ -15,18 +14,18 @@ const HorizonButtonGroup = () => {
   }
 
   return (
-    horizon.horizonList && (
+    horizon.horizonList?.length > 0 && (
       <div className="flex flex-row justify-center">
-        {horizon.horizonList?.map((horizon: number, index: number) => (
-          <PeriodButton
-            // className={`rounded border ${
-            //   horizon.selectedHorizon === horizon ? 'border-[#4338f7]' : 'border-[#d9d9d9]'
-            // } mx-1`}
+        {horizon.horizonList.map((h: number, index: number) => (
+          <button
+            className={`rounded-2xl border w-[80px] h-[30px] ${
+              horizon.selectedHorizon === h ? 'border-[#4338f7]' : 'border-[#d9d9d9]'
+            } mx-1`}
             key={index}
-            onClick={() => onClick(horizon)}
+            onClick={() => onClick(h)}
           >
-            {/* {horizon + selectedSymbol.period.charAt(0).toUpperCase()} */}
-          </PeriodButton>
+            {h + selectedSymbol?.period?.charAt(0).toUpperCase()}
+          </button>
         ))}
       </div>
     )
@@ -34,9 +33,3 @@ const HorizonButtonGroup = () => {
 }
 
 export default HorizonButtonGroup
-
-const PeriodButton = styled.button`
-  width: 80px;
-  height: 30px;
-  border-radius: 20px;
-`

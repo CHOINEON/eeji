@@ -1,4 +1,4 @@
-import { App } from 'antd'
+import { App, Spin } from 'antd'
 import IndexApi from 'apis/IndexApi'
 import { IPrediction, IPredictionDataResponse, IRawDataResponse } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useQueries } from 'react-query'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { graphDataState, horizonState, RawDataState, selectedFilterState, selectedSymbolSelector } from '../stores/atom'
+import HorizonButtonGroup from './HorizonButtonGroup'
 import SymbolDropdown from './SymbolDropdown'
 
 const VisualPanel = () => {
@@ -73,21 +74,20 @@ const VisualPanel = () => {
   return (
     <div className="m-3">
       <SymbolDropdown />
-      {/* <div>
-
-        <span className="text-black text-xl mr-5">{selectedSymbol}</span>
-        <span>{capitalizeFirstLetter(horizon.selectedHorizon.toString())}</span>
+      <div>
+        <span className="text-black text-xl mr-5">{selectedSymbol.symbol_id}</span>
+        <span>{selectedSymbol.unit}</span>
         <span className="mx-2"> | </span>
-        <span>{selectedSymbol}</span>
+        <span>{selectedSymbol.period}</span>
       </div>
       <Spin tip="Loading" size="large" spinning={loading}>
         <div className="m-5">
-          <ChartComponent />
+          {/* <ChartComponent /> */}
           <div className="mt-3">
             <HorizonButtonGroup />
           </div>
         </div>
-      </Spin> */}
+      </Spin>
     </div>
   )
 }

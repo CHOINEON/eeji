@@ -4,33 +4,34 @@ import { atom, selector } from 'recoil'
 export const symbolState = atom({
   key: 'symbolState',
   default: {
-    symbolList: [],
-    selectedSymbol: null, //symbol_id
+    symbolList: [], //전체 symbol data(object)를 리스트로 담음
+    selectedSymbolData: null, //선택된 symbol 정보 object로 가짐
   },
 })
 
 export const selectedSymbolSelector = selector({
   key: 'selectedSymbolSelector',
-  get: ({ get }) => get(symbolState).selectedSymbol || '',
+  get: ({ get }) => get(symbolState).selectedSymbolData || {},
   set: ({ set }, newValue) =>
     set(symbolState, (prevState) => ({
       ...prevState,
-      selectedSymbol: newValue,
+      selectedSymbol: prevState.symbolList.find((symbol: any) => symbol.symbol_id === newValue),
     })),
 })
 
-// Horizon 상태
+//선택된 symbol의 Horizon 정보 (리스트, 선택된 horizon)
 export const horizonState = atom({
   key: 'horizonState',
   default: {
     horizonList: [],
-    selectedHorizon: null as number | null,
+    selectedHorizon: 0, //number,
   },
 })
 
+//symbol 정보에서 horizon 정보를 가져와 horizonState를 업데이트하는 함수
 // export const selectedHorizonSelector = selector({
 //   key: 'selectedHorizonSelector',
-//   get: ({ get }) => get(symbolState).symbolList.find((symbol) => symbol.symbol_id === get(symbolState).selectedSymbol),
+//   get: ({ get }) => get(selectedSymbolSelector).horizons,
 //   set: ({ set }, newValue) =>
 //     set(horizonState, (prevState) => ({
 //       ...prevState,
