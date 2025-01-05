@@ -5,17 +5,18 @@ import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
 import { PeriodType, translatePeriodToKorean } from 'utils/TextTranslator'
-import { selectedFilterState, SymbolState } from '../stores/atom'
+import { horizonState, selectedFilterState, symbolState } from '../stores/atom'
 
 const LeadingIndicatorTable = () => {
-  const symbol = useRecoilValue(SymbolState)
+  const symbols = useRecoilValue(symbolState)
+  const horizon = useRecoilValue(horizonState)
   const filterCondition = useRecoilValue(selectedFilterState)
 
   const { data } = useQuery(
-    ['leadingIndicator', symbol, symbol.selectedHorizon],
-    () => IndexApi.getLeadingIndicator(symbol.symbol_id, symbol.selectedHorizon),
+    ['leadingIndicator', symbols.selectedSymbolData.symbol_id, horizon.selectedHorizon],
+    () => IndexApi.getLeadingIndicator(symbols.selectedSymbolData.symbol_id, horizon.selectedHorizon),
     {
-      enabled: !!symbol.symbol_id && !!symbol.selectedHorizon && !!filterCondition.selectedDate,
+      enabled: !!symbols.selectedSymbolData.symbol_id && !!horizon.selectedHorizon && !!filterCondition.selectedDate,
     }
   )
   const [dataSource, setDataSource] = useState<ILeadingIndicator[]>([])
@@ -50,7 +51,7 @@ const LeadingIndicatorTable = () => {
       render: (number: number) => (
         <span>
           {number}
-          {translatePeriodToKorean(symbol.period as PeriodType)}
+          {translatePeriodToKorean(symbols.selectedSymbolData.period as PeriodType)}
         </span>
       ),
     },

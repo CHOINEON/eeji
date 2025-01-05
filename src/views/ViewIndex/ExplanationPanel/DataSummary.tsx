@@ -1,14 +1,12 @@
-import { useRecoilValue } from 'recoil'
-import { SymbolListState, SymbolState } from '../stores/atom'
-import { ComponentTitle } from './CommonComponents'
+// import { SymbolListState, SymbolState } from '../stores/atom'
 
 const DataSummary = () => {
-  const symbolList = useRecoilValue(SymbolListState)
-  const symbol = useRecoilValue(SymbolState)
+  // const symbolList = useRecoilValue(SymbolListState)
+  // const symbol = useRecoilValue(SymbolState)
 
   return (
     <div className="m-2">
-      {symbolList?.filter((s) => s.symbol_id === symbol.symbol_id)[0]?.description && (
+      {/* {symbolList?.filter((s) => s.symbol_id === symbol.symbol_id)[0]?.description && (
         <>
           <ComponentTitle title="Data Summary" />
           <div>
@@ -16,7 +14,7 @@ const DataSummary = () => {
             {''} (출처 : {symbolList?.filter((s) => s.symbol_id === symbol.symbol_id)[0]?.source})
           </div>
         </>
-      )}
+      )} */}
     </div>
   )
 }

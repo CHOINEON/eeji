@@ -12,7 +12,7 @@ import {
 const IndexApi = {
   //유저별 종목 리스트
   getSymbolList: async (): Promise<ISymbolList> => {
-    const { data } = await axiosPrivate.get(`api/v2/economy/get_symbol_info`)
+    const { data } = await axiosPrivate.get(`api/v2/economy/get_symbol_info_v2`)
     return data
   },
 
@@ -23,13 +23,13 @@ const IndexApi = {
   },
 
   //특정 symbol의 예측값 가져오기
-  getPredictionData: async (symbol: string, horizon: string): Promise<IPredictionDataResponse> => {
+  getPredictionData: async (symbol: string, horizon: number): Promise<IPredictionDataResponse> => {
     const { data } = await axiosPrivate.get(`api/v2/economy/prediction_v2/${symbol}?horizon=${horizon}`)
     return data.data
   },
 
   //symbol의 global explanation
-  getGlobalExplanation: async (symbol: string, horizon: string): Promise<IGlobalFeatureImportance> => {
+  getGlobalExplanation: async (symbol: string, horizon: number): Promise<IGlobalFeatureImportance> => {
     const { data } = await axiosPrivate.get(`api/v2/economy/global_feature_importance/${symbol}?horizon=${horizon}`)
 
     return data.data?.[0]
@@ -38,7 +38,7 @@ const IndexApi = {
   //symbol의 local attribution by date
   getLocalAttributionByDate: async (
     symbol: string,
-    horizon: string,
+    horizon: number,
     date: string,
     isPredDate: number,
     isSorted: number
@@ -50,7 +50,7 @@ const IndexApi = {
   },
 
   //symbol의 metrics
-  getMetrics: async (symbol: string, horizon: string): Promise<IMetrics> => {
+  getMetrics: async (symbol: string, horizon: number): Promise<IMetrics> => {
     const { data } = await axiosPrivate.get(`api/v2/economy/get_prediction_metric/${symbol}?horizon=${horizon}`)
     return data.data
   },

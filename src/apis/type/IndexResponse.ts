@@ -4,15 +4,17 @@ export interface ISymbol {
   symbol_id: string
   period: PeriodType
   horizons: string //서버에서 string으로 받아 Array로 parsing해 사용
-  selectedHorizon: number
+  selectedHorizon?: number
   unit: string
   features: IRawDataFeatures
   description: string
   source: string
   dates: string[] //전체 날짜 리스트
+  category: string
 }
 
 export interface ISymbolList {
+  categories: string[]
   symbols: Array<ISymbol>
 }
 

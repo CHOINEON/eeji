@@ -1,31 +1,31 @@
-import styled from '@emotion/styled'
-import { useRecoilState, useResetRecoilState } from 'recoil'
-import { graphDataState, SymbolState } from '../stores/atom'
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
+import { graphDataState, horizonState, symbolState } from '../stores/atom'
 
 const HorizonButtonGroup = () => {
-  const [symbol, setSymbol] = useRecoilState(SymbolState) //최초 버튼 생성에만 사용
+  const [horizon, setHorizon] = useRecoilState(horizonState)
+  const symbols = useRecoilValue(symbolState)
   const resetGraphData = useResetRecoilState(graphDataState)
 
-  const onClick = (horizon: number) => {
-    setSymbol({ ...symbol, selectedHorizon: horizon })
+  const onClick = (selectedHorizon: number) => {
+    setHorizon({ ...horizon, selectedHorizon: selectedHorizon })
 
     //prediction, raw data 초기화
     resetGraphData()
   }
 
   return (
-    symbol.horizons && (
+    horizon.horizonList?.length > 0 && (
       <div className="flex flex-row justify-center">
-        {JSON.parse(symbol.horizons)?.map((horizon: number, index: number) => (
-          <PeriodButton
-            className={`rounded border ${
-              symbol.selectedHorizon === horizon ? 'border-[#4338f7]' : 'border-[#d9d9d9]'
+        {horizon.horizonList.map((h: number, index: number) => (
+          <button
+            className={`rounded-2xl border w-[80px] h-[30px] ${
+              horizon.selectedHorizon === h ? 'border-[#4338f7]' : 'border-[#d9d9d9]'
             } mx-1`}
             key={index}
-            onClick={() => onClick(horizon)}
+            onClick={() => onClick(h)}
           >
-            {horizon + symbol.period.charAt(0).toUpperCase()}
-          </PeriodButton>
+            {h + symbols.selectedSymbolData?.period?.charAt(0).toUpperCase()}
+          </button>
         ))}
       </div>
     )
@@ -33,9 +33,3 @@ const HorizonButtonGroup = () => {
 }
 
 export default HorizonButtonGroup
-
-const PeriodButton = styled.button`
-  width: 80px;
-  height: 30px;
-  border-radius: 20px;
-`
