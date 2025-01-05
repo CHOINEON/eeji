@@ -38,16 +38,15 @@ type MetricsDataType = {
 }
 
 const MetricsTable = () => {
-  // const selectedSymbol = useRecoilValue(selectedSymbolSelector)
   const symbols = useRecoilValue(symbolState)
   const horizon = useRecoilValue(horizonState)
   const [metricsData, setMetricsData] = useState([])
 
   const { data } = useQuery(
-    ['metrics', symbols.selectedSymbolData.symbol_id, horizon.selectedHorizon],
-    () => IndexApi.getMetrics(symbols.selectedSymbolData.symbol_id, horizon.selectedHorizon),
+    ['metrics', symbols.selectedSymbolData?.symbol_id, horizon.selectedHorizon],
+    () => IndexApi.getMetrics(symbols.selectedSymbolData?.symbol_id, horizon.selectedHorizon),
     {
-      enabled: !!symbols.selectedSymbolData.symbol_id && !!horizon.selectedHorizon,
+      enabled: !!symbols.selectedSymbolData?.symbol_id && !!horizon.selectedHorizon,
       refetchOnWindowFocus: false,
     }
   )

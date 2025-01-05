@@ -2,6 +2,7 @@ import IndexApi from 'apis/IndexApi'
 import { useEffect } from 'react'
 import { useMutation } from 'react-query'
 import { useSetRecoilState } from 'recoil'
+import ExplanationPanel from './ExplanationPanel/ExplanationPanel'
 import PanelWrapper from './PanelWrapper'
 import { horizonState, symbolState } from './stores/atom'
 import VisualPanel from './VisualPanel/VisualPanel'
@@ -30,8 +31,7 @@ const Main = () => {
     getSymbolList()
   }, [])
 
-  //<ExplanationPanel />
-  return <PanelWrapper panel1={<VisualPanel />} panel2={null} />
+  return <PanelWrapper panel1={<VisualPanel />} panel2={<ExplanationPanel />} />
 }
 
 export default Main
