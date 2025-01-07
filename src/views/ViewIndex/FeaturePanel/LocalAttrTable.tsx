@@ -48,7 +48,6 @@ const columns = [
 ]
 
 const LocalAttrTable = () => {
-  // const selectedSymbol = useRecoilValue(selectedSymbolSelector)
   const symbols = useRecoilValue(symbolState)
   const horizon = useRecoilValue(horizonState)
   const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState)
@@ -57,17 +56,17 @@ const LocalAttrTable = () => {
   const [summary, setSummary] = useState({ positive: 0, negative: 0, total: 0 })
 
   const { data: featureData } = useQuery(
-    ['localAttribution', symbols.selectedSymbolData.symbol_id, selectedFilter.selectedDate],
+    ['localAttribution', symbols.selectedSymbolData?.symbol_id, selectedFilter.selectedDate],
     () =>
       IndexApi.getLocalAttributionByDate(
-        symbols.selectedSymbolData.symbol_id,
+        symbols.selectedSymbolData?.symbol_id,
         horizon.selectedHorizon,
         selectedFilter.selectedDate,
         1, // 예측날짜 기준 조회
         1 // is_sorted 1인경우 positive, negative 별도로 넘어옴
       ),
     {
-      enabled: !!symbols.selectedSymbolData.symbol_id && !!horizon.selectedHorizon && !!selectedFilter.selectedDate,
+      enabled: !!symbols.selectedSymbolData?.symbol_id && !!horizon.selectedHorizon && !!selectedFilter.selectedDate,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
         setData([])
@@ -136,7 +135,7 @@ const LocalAttrTable = () => {
 
   useEffect(() => {
     initializeData()
-  }, [symbols.selectedSymbolData.symbol_id])
+  }, [symbols.selectedSymbolData?.symbol_id])
 
   const initializeData = () => {
     setData([])
@@ -149,7 +148,7 @@ const LocalAttrTable = () => {
       <span className={`${featureData?.date_input ? 'text-[12px] text-gray-500' : 'hidden'} mx-3`}>
         (입력 구간 : {featureData?.date_input} - {featureData?.date})
       </span>
-      <div className="text-right text-[12px]">( 단위 : {symbols.selectedSymbolData.unit} )</div>
+      <div className="text-right text-[12px]">( 단위 : {symbols.selectedSymbolData?.unit} )</div>
       <Table
         className="mt-2"
         columns={columns}

@@ -15,10 +15,10 @@ const GlobalFeatureImportance = () => {
   const [series, setSeries] = useState([])
 
   const { data } = useQuery(
-    ['globalExplanation', symbols.selectedSymbolData.symbol_id, horizon.selectedHorizon],
-    () => IndexApi.getGlobalExplanation(symbols.selectedSymbolData.symbol_id, horizon.selectedHorizon),
+    ['globalExplanation', symbols.selectedSymbolData?.symbol_id, horizon.selectedHorizon],
+    () => IndexApi.getGlobalExplanation(symbols.selectedSymbolData?.symbol_id, horizon.selectedHorizon),
     {
-      enabled: !!symbols.selectedSymbolData.symbol_id && !!horizon.selectedHorizon,
+      enabled: !!symbols.selectedSymbolData?.symbol_id && !!horizon.selectedHorizon,
       refetchOnWindowFocus: false,
     }
   )
@@ -34,6 +34,7 @@ const GlobalFeatureImportance = () => {
       )
     }
   }, [data])
+
   const options = {
     chart: {
       width: 380,
