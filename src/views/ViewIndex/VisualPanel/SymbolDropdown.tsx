@@ -26,11 +26,19 @@ const SymbolDropdown = () => {
     //하위 드롭다운 렌더
     setSubItems(generateItems(filteredSubItems))
 
-    //0번째 값 디폴트로 저장
-    setSymbols({
-      ...symbols,
-      selectedSymbolData: filteredSubItems[0],
-    })
+    if (filteredSubItems.length > 0) {
+      //0번째 심볼을 디폴트로 선택
+      setSymbols({
+        ...symbols,
+        selectedSymbolData: filteredSubItems[0],
+      })
+
+      //해당 심볼의 horizon 업데이트
+      setHorizon({
+        horizonList: JSON.parse(filteredSubItems[0].horizons),
+        selectedHorizon: JSON.parse(filteredSubItems[0].horizons)[0],
+      })
+    }
   }, [category])
 
   type CategoryOrSymbol = string | ISymbol
@@ -71,8 +79,8 @@ const SymbolDropdown = () => {
     })
   }
 
-  const onTopMenuClick = (e: any) => {
-    setCategory(e.key)
+  const onTopMenuClick: MenuProps['onClick'] = ({ key }) => {
+    setCategory(key)
   }
 
   return (
