@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-export const Text = styled.p`
+export const Text = styled.div`
   color: #002d65;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
 `

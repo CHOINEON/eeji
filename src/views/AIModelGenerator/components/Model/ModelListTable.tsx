@@ -266,7 +266,7 @@ const ModelListTable = () => {
         className="w-100 h-[530px]"
         size="small"
         dataSource={modelList || []}
-        scroll={{ y: 490 }}
+        scroll={{ y: 495 }}
         pagination={{
           total: total_count || 0,
           pageSize: pageSize || 10,
