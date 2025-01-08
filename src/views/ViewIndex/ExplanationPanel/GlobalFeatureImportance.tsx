@@ -1,20 +1,24 @@
 import IndexApi from 'apis/IndexApi'
-import { IFeatureImportance } from 'apis/type/IndexResponse'
+import { IFeatureDescription, IFeatureImportance } from 'apis/type/IndexResponse'
 import { useEffect, useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import { useQuery } from 'react-query'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { translatePeriodToKorean } from 'utils/TextTranslator'
-import { horizonState, symbolState } from '../stores/atom'
+import { featureDescriptionState, horizonState, symbolState } from '../stores/atom'
 import { ComponentTitle } from './CommonComponents'
+import DescriptionCollapsePanel from './DescriptionCollapsePanel'
 
 const GlobalFeatureImportance = () => {
   const symbols = useRecoilValue(symbolState)
   const horizon = useRecoilValue(horizonState)
+
   const [featureImportance, setFeatureImportance] = useState([])
   const [series, setSeries] = useState([])
+  const [featureDescriptionList, setFeatureDescriptionList] = useRecoilState(featureDescriptionState)
+  const [selectedFeature, setSelectedFeature] = useState<IFeatureDescription | null>(null)
 
-  const { data } = useQuery(
+  const { data: globalExplanation } = useQuery(
     ['globalExplanation', symbols.selectedSymbolData?.symbol_id, horizon.selectedHorizon],
     () => IndexApi.getGlobalExplanation(symbols.selectedSymbolData?.symbol_id, horizon.selectedHorizon),
     {
@@ -23,22 +27,48 @@ const GlobalFeatureImportance = () => {
     }
   )
 
+  const { data: featureData } = useQuery({
+    queryKey: ['featureDescription', symbols.selectedSymbolData?.symbol_id, horizon.selectedHorizon],
+    queryFn: () => IndexApi.getFeatureDescription(symbols.selectedSymbolData?.symbol_id, horizon.selectedHorizon),
+    enabled: !!symbols.selectedSymbolData?.symbol_id && !!horizon.selectedHorizon,
+    onSuccess: (data: IFeatureDescription[]) => {
+      setFeatureDescriptionList(data)
+    },
+  })
+
   useEffect(() => {
-    if (data) {
-      setFeatureImportance(data?.feature_importance)
+    if (globalExplanation) {
+      setFeatureImportance(globalExplanation?.feature_importance)
       setSeries(
-        data?.feature_importance?.map((el: IFeatureImportance) => ({
+        globalExplanation?.feature_importance?.map((el: IFeatureImportance) => ({
           name: el.feature_name,
           data: [(el.importance * 100).toFixed(1)],
         }))
       )
+      setSelectedFeature(null)
     }
-  }, [data])
+  }, [globalExplanation])
 
   const options = {
     chart: {
       width: 380,
       type: 'donut' as const,
+      events: {
+        dataPointSelection: (event: any, chartContext: any, config: any) => {
+          // 클릭된 데이터 포인트 정보
+          const { dataPointIndex } = config
+
+          if (featureDescriptionList?.length > 0) {
+            const selectedFeature = series[dataPointIndex].name
+
+            const selectedFeatureDescription = featureDescriptionList.find(
+              (feature) => feature.feature_name === selectedFeature
+            )
+
+            setSelectedFeature(selectedFeatureDescription)
+          }
+        },
+      },
     },
     dataLabels: {
       enabled: false,
@@ -76,6 +106,7 @@ const GlobalFeatureImportance = () => {
               {`${horizon.selectedHorizon}${translatePeriodToKorean(symbols.selectedSymbolData.period)} `}예측에서 가장
               영향력이 큰 변수는 <strong>{featureImportance[0]?.feature_name} </strong>입니다.
             </div>
+            {selectedFeature && <DescriptionCollapsePanel selectedFeature={selectedFeature} />}
           </>
         )}
       </div>

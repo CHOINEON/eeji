@@ -7,9 +7,6 @@ const FeaturePanel = () => {
 
   return (
     <div className="m-3 mt-5">
-      {/* <span className={`text-lg ${activeTab === '2' && 'underline'}`} onClick={() => setActiveTab('2')}>
-        Leading Indicator
-      </span> */}
       <div>{activeTab === '1' ? <LocalAttrTable /> : <LeadingIndicatorTable />}</div>
     </div>
   )
