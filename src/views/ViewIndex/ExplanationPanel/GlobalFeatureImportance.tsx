@@ -18,7 +18,7 @@ const GlobalFeatureImportance = () => {
   const [featureDescriptionList, setFeatureDescriptionList] = useRecoilState(featureDescriptionState)
   const [selectedFeature, setSelectedFeature] = useState<IFeatureDescription | null>(null)
 
-  const { data } = useQuery(
+  const { data: globalExplanation } = useQuery(
     ['globalExplanation', symbols.selectedSymbolData?.symbol_id, horizon.selectedHorizon],
     () => IndexApi.getGlobalExplanation(symbols.selectedSymbolData?.symbol_id, horizon.selectedHorizon),
     {
@@ -32,23 +32,22 @@ const GlobalFeatureImportance = () => {
     queryFn: () => IndexApi.getFeatureDescription(symbols.selectedSymbolData?.symbol_id, horizon.selectedHorizon),
     enabled: !!symbols.selectedSymbolData?.symbol_id && !!horizon.selectedHorizon,
     onSuccess: (data: IFeatureDescription[]) => {
-      console.log('fetching result::', data)
       setFeatureDescriptionList(data)
     },
   })
 
   useEffect(() => {
-    if (data) {
-      setFeatureImportance(data?.feature_importance)
-      console.log('data?.feature_importance:', data?.feature_importance)
+    if (globalExplanation) {
+      setFeatureImportance(globalExplanation?.feature_importance)
       setSeries(
-        data?.feature_importance?.map((el: IFeatureImportance) => ({
+        globalExplanation?.feature_importance?.map((el: IFeatureImportance) => ({
           name: el.feature_name,
           data: [(el.importance * 100).toFixed(1)],
         }))
       )
+      setSelectedFeature(null)
     }
-  }, [data])
+  }, [globalExplanation])
 
   const options = {
     chart: {
@@ -57,14 +56,7 @@ const GlobalFeatureImportance = () => {
       events: {
         dataPointSelection: (event: any, chartContext: any, config: any) => {
           // 클릭된 데이터 포인트 정보
-          // console.log('event::', event)
-          // console.log('chartContext::', chartContext)
-          // console.log('config::', config)
-
           const { dataPointIndex } = config
-          const clickedSeriesName = config.w.config.series[dataPointIndex]
-
-          console.log('Clicked data point:', dataPointIndex)
 
           if (featureDescriptionList?.length > 0) {
             const selectedFeature = series[dataPointIndex].name
