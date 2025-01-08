@@ -1,4 +1,11 @@
-import { ILocalAttribution, IPrediction, IRawDataResponse, ISelectedFilter, ISymbol } from 'apis/type/IndexResponse'
+import {
+  IFeatureDescription,
+  ILocalAttribution,
+  IPrediction,
+  IRawDataResponse,
+  ISelectedFilter,
+  ISymbol,
+} from 'apis/type/IndexResponse'
 import { atom } from 'recoil'
 
 export const symbolState = atom({
@@ -17,39 +24,6 @@ export const horizonState = atom({
     selectedHorizon: 0, //number,
   },
 })
-
-//symbol 정보에서 horizon 정보를 가져와 horizonState를 업데이트하는 함수
-// export const selectedHorizonSelector = selector({
-//   key: 'selectedHorizonSelector',
-//   get: ({ get }) => get(selectedSymbolSelector).horizons,
-//   set: ({ set }, newValue) =>
-//     set(horizonState, (prevState) => ({
-//       ...prevState,
-//       selectedHorizon: newValue,
-//     })),
-// })
-
-// export const SymbolState = atom({
-//   key: 'symbolState',
-//   default: {
-//     symbol_id: '',
-//     period: 'yearly' as PeriodType,
-//     horizons: '',
-//     unit: '',
-//     features: {},
-//     selectedHorizon: 0,
-//     dates: [], //모든 x축 날짜 (rawData 기준으로 데이터 포맷팅을 위해 저장)
-//     category: '',
-//   } as ISymbol,
-// })
-
-// export const SymbolListState = atom({
-//   key: 'symbolListState',
-//   default: {
-//     categories: [],
-//     symbols: [],
-//   } as ISymbolList,
-// })
 
 //현재 시각화에 사용되는 데이터(selectedDate, selectedFeature)
 export const selectedFilterState = atom({
@@ -70,4 +44,9 @@ export const FeatureImpactDataState = atom({
 export const RawDataState = atom({
   key: 'rawDataState',
   default: {} as IRawDataResponse,
+})
+
+export const featureDescriptionState = atom({
+  key: 'featureDescriptionState',
+  default: [] as IFeatureDescription[],
 })

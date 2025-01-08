@@ -138,3 +138,15 @@ export interface ILeadingIndicatorResponse {
   dt: string
   leading_indicator: Array<ILeadingIndicator>
 }
+
+export interface IFeatureDescriptionResponse {
+  data: Array<IFeatureDescription>
+}
+
+export interface IFeatureDescription {
+  feature_name: string
+  description: string
+  causal_relationship: string
+  source: string
+  unit: string
+}

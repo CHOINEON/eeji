@@ -1,5 +1,6 @@
 import { axiosPrivate } from './axios'
 import {
+  IFeatureDescriptionResponse,
   IGlobalFeatureImportance,
   ILeadingIndicatorResponse,
   ILocalAttributionResponse,
@@ -71,6 +72,12 @@ const IndexApi = {
     const { data } = await axiosPrivate.get(
       `api/v2/economy/get_explanation_leading_indicator/${symbol}?horizon=${horizon}`
     )
+    return data.data
+  },
+
+  //feature별 description 받아옴
+  getFeatureDescription: async (symbol: string, horizon: number): Promise<IFeatureDescriptionResponse> => {
+    const { data } = await axiosPrivate.get(`api/v2/economy/feature_description/${symbol}?horizon=${horizon}`)
     return data.data
   },
 }
