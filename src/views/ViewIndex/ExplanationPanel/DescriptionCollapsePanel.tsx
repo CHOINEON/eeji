@@ -23,7 +23,6 @@ const DescriptionCollapsePanel = ({ selectedFeature }: { selectedFeature: IFeatu
             <span>
               <b>{selectedFeature?.feature_name}</b>
             </span>
-            <span> | </span>
             {/* <span> (단위 : {selectedFeature?.unit})</span> */}
             <div>{selectedFeature?.description}</div>
             <div>{selectedFeature?.causal_relationship}</div>
