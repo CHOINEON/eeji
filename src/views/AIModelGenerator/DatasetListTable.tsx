@@ -69,7 +69,7 @@ const DatasetListTable = ({ data }: { data: IDatasetList }) => {
       title: t('Dataset Name'),
       dataIndex: 'name',
       key: 'name',
-      width: 220,
+      width: 250,
       ellipsis: true,
       align: 'left',
       sorter: (a, b) => a.name.localeCompare(b.name),
@@ -102,6 +102,7 @@ const DatasetListTable = ({ data }: { data: IDatasetList }) => {
       columns={columns}
       dataSource={data}
       rowKey="ds_id"
+      scroll={{ y: 490 }}
       pagination={{ pageSize: 10, pageSizeOptions: [10], position: ['bottomCenter'], showSizeChanger: false }}
       expandable={{
         expandedRowRender: renderDetails,

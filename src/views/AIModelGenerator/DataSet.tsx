@@ -1,8 +1,10 @@
+import { UploadOutlined } from '@ant-design/icons'
 import { App, Button } from 'antd'
 import DatasetApi from 'apis/DatasetApi'
 import ModelApi from 'apis/ModelApi'
 import axios from 'axios'
 import { useApiError } from 'hooks/useApiError'
+import useModal from 'hooks/useModal'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from 'react-query'
@@ -27,6 +29,7 @@ const DataSet = () => {
   const setUserInfo = useSetRecoilState(userInfoState)
   const resetAnalysisResponse = useResetRecoilState(analysisResponseAtom)
   const setModalState = useSetRecoilState(datasetEditModalState)
+  const { openModal, closeModal } = useModal()
 
   const { mutate: mutateRunning } = useMutation(ModelApi.postModelwithOption, {
     onSuccess: () => {
@@ -88,13 +91,28 @@ const DataSet = () => {
     mutateEdit(payload)
   }
 
+  const handleAddClick = () => {
+    openModal({
+      modalTitle: t('Data Upload'),
+      modalType: 'DataImport',
+      modalProps: {
+        onClick: () => {
+          closeModal()
+        },
+      },
+    })
+  }
+
   return (
     <div className="p-10">
-      <MenuTitle className="ml-[25px]">{t('Dataset')}</MenuTitle>
-      <div className="mx-5 mx-3 max-h-[620px] overflow-scroll">
-        <DatasetList />
+      <div>
+        <MenuTitle className="ml-[25px] float-left">{t('Dataset')}</MenuTitle>
+        <Button className="ml-5 m-2" type="primary" onClick={handleAddClick} icon={<UploadOutlined />}>
+          {t('Upload')}
+        </Button>
       </div>
-      <div className="m-5">
+      <div className="mt-5 ml-5">
+        <DatasetList />
         <Button
           type="primary"
           className="w-100 float-right h-[46px] rounded-lg bg-[#4338F7] font-medium "

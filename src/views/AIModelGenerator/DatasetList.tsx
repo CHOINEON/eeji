@@ -1,9 +1,5 @@
-import { UploadOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
 import useGetDatasets from 'hooks/queries/useGetDatasets'
-import useModal from 'hooks/useModal'
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useResetRecoilState, useSetRecoilState } from 'recoil'
 import DatasetListTable from './DatasetListTable'
 import { userInfoState } from './store/dataset/atom'
@@ -11,9 +7,6 @@ import { analysisResponseAtom } from './store/response/atoms'
 import './style/data-analysis-style.css'
 
 const DatasetList = () => {
-  const { t } = useTranslation()
-  const { openModal, closeModal } = useModal()
-
   const setUserInfo = useSetRecoilState(userInfoState)
   const resetAnalysisResponse = useResetRecoilState(analysisResponseAtom)
 
@@ -36,25 +29,8 @@ const DatasetList = () => {
     }
   }, [data])
 
-  const handleAddClick = () => {
-    openModal({
-      modalTitle: t('Data Upload'),
-      modalType: 'DataImport',
-      modalProps: {
-        onClick: () => {
-          closeModal()
-        },
-      },
-    })
-  }
-
   return (
     <>
-      <div className="text-right">
-        <Button type="text" onClick={handleAddClick} icon={<UploadOutlined />}>
-          {t('Upload')}
-        </Button>
-      </div>
       <DatasetListTable data={dataArr} />
     </>
   )
